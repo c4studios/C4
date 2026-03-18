@@ -1,0 +1,560 @@
+{
+  "version": 2,
+  "sourceUrl": "https://transformhakea.com/",
+  "slug": "transformhakea-com",
+  "timestamp": "2026-03-17T11:06:22.848Z",
+  "overlays": [],
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 2200
+      },
+      "rawCandidateCount": 5,
+      "selectedCandidateCount": 5,
+      "selected": [
+        {
+          "id": "cand-desktop-6",
+          "selectorHint": "div",
+          "label": "hero",
+          "headingText": "TransformHakea",
+          "textPreview": "Perth, Western AustraliaTransformHakeaPraying that Hakea Prison becomes a place of peace — where multitudes find Jesus, change their lives, and carry that change with them when they leave.Join the Prayer GatheringOur Vis",
+          "textLength": 229,
+          "imageCount": 3,
+          "buttonCount": 5,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 1,
+          "hasBgImage": false,
+          "area": 2787840,
+          "whitespaceRisk": 0.996,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 81,
+            "width": 1440,
+            "height": 1936
+          },
+          "viewportCoverage": 0.88,
+          "score": 71,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-desktop-2",
+          "selectorHint": "section",
+          "label": "faq",
+          "headingText": "Practical questions",
+          "textPreview": "FAQPractical questionsIf you are planning to join us for the first time, these quick answers may help.When is the prayer gathering?Every Tuesday from 3:00 PM to 4:00 PM.Where do you meet?At Hakea Prison Visitor's Centre ",
+          "textLength": 598,
+          "imageCount": 5,
+          "buttonCount": 5,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 7,
+          "hasBgImage": false,
+          "area": 882720,
+          "whitespaceRisk": 0.976,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 3384,
+            "width": 1440,
+            "height": 613
+          },
+          "viewportCoverage": 0.279,
+          "score": 57,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-desktop-1",
+          "selectorHint": "section",
+          "label": "section",
+          "headingText": "Come and pray with us",
+          "textPreview": "Weekly Prayer GatheringCome and pray with usEvery Tuesday, Christians from across Perth gather at Hakea Prison's Visitor's Centre to pray together — for the prison, for the men inside, for their families, for those who w",
+          "textLength": 1086,
+          "imageCount": 3,
+          "buttonCount": 2,
+          "cardCount": 3,
+          "formCount": 0,
+          "paragraphCount": 15,
+          "hasBgImage": false,
+          "area": 1523520,
+          "whitespaceRisk": 0.99,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 2326,
+            "width": 1440,
+            "height": 1058
+          },
+          "viewportCoverage": 0.481,
+          "score": 55.5,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-desktop-5",
+          "selectorHint": "section",
+          "label": "section",
+          "headingText": "Will You Pray With Us?",
+          "textPreview": "Will You Pray With Us?There's no preparation needed, no special knowledge required. Just come. God meets us when we gather in His name.Best next stepCall Liz: 0482 019 336Other ways to connectEvery Tuesday · 3:00–4:00 PM",
+          "textLength": 383,
+          "imageCount": 3,
+          "buttonCount": 6,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 5,
+          "hasBgImage": false,
+          "area": 1068840,
+          "whitespaceRisk": 0.988,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 6310,
+            "width": 1440,
+            "height": 742
+          },
+          "viewportCoverage": 0.337,
+          "score": 51,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-desktop-4",
+          "selectorHint": "section",
+          "label": "section",
+          "headingText": "Prison Fellowship Australia",
+          "textPreview": "In Partnership WithPrison Fellowship AustraliaTransform Hakea works in collaboration with Prison Fellowship Australia — a national Christian organisation committed to restoring lives inside and outside prison through the",
+          "textLength": 409,
+          "imageCount": 1,
+          "buttonCount": 1,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 3,
+          "hasBgImage": false,
+          "area": 786240,
+          "whitespaceRisk": 0.994,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 5764,
+            "width": 1440,
+            "height": 546
+          },
+          "viewportCoverage": 0.248,
+          "score": 45,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        }
+      ],
+      "captures": [
+        {
+          "candidateId": "cand-desktop-6",
+          "label": "hero",
+          "headingText": "TransformHakea",
+          "score": 71,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "01-hero.png",
+          "filePath": "desktop/01-hero.png",
+          "clip": {
+            "x": 0,
+            "y": 53,
+            "width": 1440,
+            "height": 1992
+          },
+          "bytes": 1911487,
+          "dimensions": {
+            "width": 1440,
+            "height": 1992
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-desktop-2",
+          "label": "faq",
+          "headingText": "Practical questions",
+          "score": 57,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "02-faq.png",
+          "filePath": "desktop/02-faq.png",
+          "clip": {
+            "x": 0,
+            "y": 3356,
+            "width": 1440,
+            "height": 669
+          },
+          "bytes": 50414,
+          "dimensions": {
+            "width": 1440,
+            "height": 669
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-desktop-1",
+          "label": "section",
+          "headingText": "Come and pray with us",
+          "score": 55.5,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "03-section.png",
+          "filePath": "desktop/03-section.png",
+          "clip": {
+            "x": 0,
+            "y": 2298,
+            "width": 1440,
+            "height": 1114
+          },
+          "bytes": 88397,
+          "dimensions": {
+            "width": 1440,
+            "height": 1114
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-desktop-5",
+          "label": "section",
+          "headingText": "Will You Pray With Us?",
+          "score": 51,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "04-section.png",
+          "filePath": "desktop/04-section.png",
+          "clip": {
+            "x": 0,
+            "y": 6282,
+            "width": 1440,
+            "height": 798
+          },
+          "bytes": 212653,
+          "dimensions": {
+            "width": 1440,
+            "height": 798
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-desktop-4",
+          "label": "section",
+          "headingText": "Prison Fellowship Australia",
+          "score": 45,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "05-section.png",
+          "filePath": "desktop/05-section.png",
+          "clip": {
+            "x": 0,
+            "y": 5736,
+            "width": 1440,
+            "height": 602
+          },
+          "bytes": 56884,
+          "dimensions": {
+            "width": 1440,
+            "height": 602
+          },
+          "usedFallback": false
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "rawCandidateCount": 5,
+      "selectedCandidateCount": 5,
+      "selected": [
+        {
+          "id": "cand-mobile-6",
+          "selectorHint": "div",
+          "label": "hero",
+          "headingText": "TransformHakea",
+          "textPreview": "Perth, Western AustraliaTransformHakeaPraying that Hakea Prison becomes a place of peace — where multitudes find Jesus, change their lives, and carry that change with them when they leave.Join the Prayer GatheringOur Vis",
+          "textLength": 229,
+          "imageCount": 3,
+          "buttonCount": 5,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 1,
+          "hasBgImage": false,
+          "area": 280528,
+          "whitespaceRisk": 0.956,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 73,
+            "width": 430,
+            "height": 652
+          },
+          "viewportCoverage": 0.7,
+          "score": 71,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-mobile-2",
+          "selectorHint": "section",
+          "label": "faq",
+          "headingText": "Practical questions",
+          "textPreview": "FAQPractical questionsIf you are planning to join us for the first time, these quick answers may help.When is the prayer gathering?Every Tuesday from 3:00 PM to 4:00 PM.Where do you meet?At Hakea Prison Visitor's Centre ",
+          "textLength": 598,
+          "imageCount": 5,
+          "buttonCount": 5,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 7,
+          "hasBgImage": false,
+          "area": 283370,
+          "whitespaceRisk": 0.925,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 2639,
+            "width": 430,
+            "height": 659
+          },
+          "viewportCoverage": 0.707,
+          "score": 69,
+          "warnings": []
+        },
+        {
+          "id": "cand-mobile-5",
+          "selectorHint": "section",
+          "label": "section",
+          "headingText": "Will You Pray With Us?",
+          "textPreview": "Will You Pray With Us?There's no preparation needed, no special knowledge required. Just come. God meets us when we gather in His name.Best next stepCall Liz: 0482 019 336Other ways to connectEvery Tuesday · 3:00–4:00 PM",
+          "textLength": 383,
+          "imageCount": 3,
+          "buttonCount": 6,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 5,
+          "hasBgImage": false,
+          "area": 371413,
+          "whitespaceRisk": 0.966,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 6316,
+            "width": 430,
+            "height": 864
+          },
+          "viewportCoverage": 0.927,
+          "score": 51,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-mobile-1",
+          "selectorHint": "section",
+          "label": "section",
+          "headingText": "Come and pray with us",
+          "textPreview": "Weekly Prayer GatheringCome and pray with usEvery Tuesday, Christians from across Perth gather at Hakea Prison's Visitor's Centre to pray together — for the prison, for the men inside, for their families, for those who w",
+          "textLength": 1086,
+          "imageCount": 3,
+          "buttonCount": 2,
+          "cardCount": 3,
+          "formCount": 0,
+          "paragraphCount": 15,
+          "hasBgImage": false,
+          "area": 649730,
+          "whitespaceRisk": 0.976,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 1128,
+            "width": 430,
+            "height": 1511
+          },
+          "viewportCoverage": 1.621,
+          "score": 45.5,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-mobile-4",
+          "selectorHint": "section",
+          "label": "section",
+          "headingText": "Prison Fellowship Australia",
+          "textPreview": "In Partnership WithPrison Fellowship AustraliaTransform Hakea works in collaboration with Prison Fellowship Australia — a national Christian organisation committed to restoring lives inside and outside prison through the",
+          "textLength": 409,
+          "imageCount": 1,
+          "buttonCount": 1,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 3,
+          "hasBgImage": false,
+          "area": 283800,
+          "whitespaceRisk": 0.983,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 5656,
+            "width": 430,
+            "height": 660
+          },
+          "viewportCoverage": 0.708,
+          "score": 45,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        }
+      ],
+      "captures": [
+        {
+          "candidateId": "cand-mobile-6",
+          "label": "hero",
+          "headingText": "TransformHakea",
+          "score": 71,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "01-hero.png",
+          "filePath": "mobile/01-hero.png",
+          "clip": {
+            "x": 0,
+            "y": 57,
+            "width": 430,
+            "height": 684
+          },
+          "bytes": 244636,
+          "dimensions": {
+            "width": 430,
+            "height": 684
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-mobile-2",
+          "label": "faq",
+          "headingText": "Practical questions",
+          "score": 69,
+          "warnings": [],
+          "fileName": "02-faq.png",
+          "filePath": "mobile/02-faq.png",
+          "clip": {
+            "x": 0,
+            "y": 2623,
+            "width": 430,
+            "height": 691
+          },
+          "bytes": 33142,
+          "dimensions": {
+            "width": 430,
+            "height": 691
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-mobile-5",
+          "label": "section",
+          "headingText": "Will You Pray With Us?",
+          "score": 51,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "03-section.png",
+          "filePath": "mobile/03-section.png",
+          "clip": {
+            "x": 0,
+            "y": 6300,
+            "width": 430,
+            "height": 896
+          },
+          "bytes": 156509,
+          "dimensions": {
+            "width": 430,
+            "height": 896
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-mobile-1",
+          "label": "section",
+          "headingText": "Come and pray with us",
+          "score": 45.5,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "04-section.png",
+          "filePath": "mobile/04-section.png",
+          "clip": {
+            "x": 0,
+            "y": 1112,
+            "width": 430,
+            "height": 1543
+          },
+          "bytes": 79645,
+          "dimensions": {
+            "width": 430,
+            "height": 1543
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-mobile-4",
+          "label": "section",
+          "headingText": "Prison Fellowship Australia",
+          "score": 45,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "05-section.png",
+          "filePath": "mobile/05-section.png",
+          "clip": {
+            "x": 0,
+            "y": 5640,
+            "width": 430,
+            "height": 692
+          },
+          "bytes": 45833,
+          "dimensions": {
+            "width": 430,
+            "height": 692
+          },
+          "usedFallback": false
+        }
+      ]
+    }
+  },
+  "warnings": []
+}

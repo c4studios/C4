@@ -1,0 +1,207 @@
+{
+  "version": 2,
+  "sourceUrl": "https://transformfreo.com",
+  "slug": "transformfreo-com",
+  "timestamp": "2026-03-18T05:21:15.619Z",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 5,
+      "captures": [
+        {
+          "id": "01-hero",
+          "label": "hero",
+          "caption": "Hero — harbour backdrop with mission statement and navigation",
+          "page": "/",
+          "clip": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 900
+          },
+          "bytes": 673887,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-hero.png"
+        },
+        {
+          "id": "02-schedule",
+          "label": "schedule",
+          "caption": "Prayer Meetings — five-day weekly schedule across Fremantle churches",
+          "page": "/",
+          "clip": {
+            "x": 248,
+            "y": 860,
+            "width": 944,
+            "height": 1120
+          },
+          "bytes": 149675,
+          "dimensions": {
+            "width": 944,
+            "height": 1120
+          },
+          "filePath": "desktop/02-schedule.png"
+        },
+        {
+          "id": "03-vision",
+          "label": "vision",
+          "caption": "Vision & Aim — four numbered pillars of the movement",
+          "page": "/VisionAndAim",
+          "clip": {
+            "x": 248,
+            "y": 550,
+            "width": 944,
+            "height": 1450
+          },
+          "bytes": 187722,
+          "dimensions": {
+            "width": 944,
+            "height": 1450
+          },
+          "filePath": "desktop/03-vision.png"
+        },
+        {
+          "id": "04-connect",
+          "label": "connect",
+          "caption": "Connect — contact form with validation and ways to reach us",
+          "page": "/Connect",
+          "clip": {
+            "x": 200,
+            "y": 460,
+            "width": 1040,
+            "height": 760
+          },
+          "bytes": 176703,
+          "dimensions": {
+            "width": 1040,
+            "height": 760
+          },
+          "filePath": "desktop/04-connect.png"
+        },
+        {
+          "id": "05-resources",
+          "label": "resources",
+          "caption": "Resources — downloadable PDF library with branded cards",
+          "page": "/Resources",
+          "clip": {
+            "x": 248,
+            "y": 540,
+            "width": 944,
+            "height": 1010
+          },
+          "bytes": 120689,
+          "dimensions": {
+            "width": 944,
+            "height": 1010
+          },
+          "filePath": "desktop/05-resources.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 5,
+      "captures": [
+        {
+          "id": "01-hero",
+          "label": "hero",
+          "caption": "Hero — harbour backdrop with mission statement and navigation",
+          "page": "/",
+          "clip": {
+            "x": 0,
+            "y": 0,
+            "width": 430,
+            "height": 932
+          },
+          "bytes": 192849,
+          "dimensions": {
+            "width": 430,
+            "height": 932
+          },
+          "filePath": "mobile/01-hero.png"
+        },
+        {
+          "id": "02-schedule",
+          "label": "schedule",
+          "caption": "Prayer Meetings — five-day weekly schedule across Fremantle churches",
+          "page": "/",
+          "clip": {
+            "x": 0,
+            "y": 900,
+            "width": 430,
+            "height": 1520
+          },
+          "bytes": 139314,
+          "dimensions": {
+            "width": 430,
+            "height": 1520
+          },
+          "filePath": "mobile/02-schedule.png"
+        },
+        {
+          "id": "03-vision",
+          "label": "vision",
+          "caption": "Vision & Aim — four numbered pillars of the movement",
+          "page": "/VisionAndAim",
+          "clip": {
+            "x": 0,
+            "y": 424,
+            "width": 430,
+            "height": 2050
+          },
+          "bytes": 177467,
+          "dimensions": {
+            "width": 430,
+            "height": 2050
+          },
+          "filePath": "mobile/03-vision.png"
+        },
+        {
+          "id": "04-connect",
+          "label": "connect",
+          "caption": "Connect — contact form with validation and ways to reach us",
+          "page": "/Connect",
+          "clip": {
+            "x": 0,
+            "y": 456,
+            "width": 430,
+            "height": 1360
+          },
+          "bytes": 126041,
+          "dimensions": {
+            "width": 430,
+            "height": 1360
+          },
+          "filePath": "mobile/04-connect.png"
+        },
+        {
+          "id": "05-resources",
+          "label": "resources",
+          "caption": "Resources — downloadable PDF library with branded cards",
+          "page": "/Resources",
+          "clip": {
+            "x": 0,
+            "y": 456,
+            "width": 430,
+            "height": 1070
+          },
+          "bytes": 110713,
+          "dimensions": {
+            "width": 430,
+            "height": 1070
+          },
+          "filePath": "mobile/05-resources.png"
+        }
+      ]
+    }
+  }
+}

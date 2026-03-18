@@ -1,0 +1,601 @@
+{
+  "generatedAt": "2026-03-15T12:26:00.736Z",
+  "word": "Studios",
+  "pairCount": 7,
+  "validationArtifact": "C:\\Users\\belac\\Downloads\\C4-main\\C4-main\\reports\\c4-wordmark-morph-validation.svg",
+  "summary": {
+    "runtimeReady": 7,
+    "blocked": 0,
+    "signOffRisk": 0
+  },
+  "pairs": [
+    {
+      "index": 0,
+      "letter": "S",
+      "pairId": "studios-0-s",
+      "status": "runtime-ready",
+      "upright": {
+        "exists": true,
+        "contourCount": 1,
+        "segmentCount": 28,
+        "isMultiContour": false,
+        "signatures": [
+          28
+        ]
+      },
+      "italic": {
+        "exists": true,
+        "contourCount": 1,
+        "segmentCount": 29,
+        "isMultiContour": false,
+        "signatures": [
+          29
+        ]
+      },
+      "normalization": {
+        "contourMode": "single-contour",
+        "segmentRepresentation": "absolute-cubic-exact-subdivision",
+        "originalSegmentCounts": {
+          "upright": [
+            28
+          ],
+          "italic": [
+            29
+          ]
+        },
+        "legacyDenseSegmentCount": 28,
+        "optimizedSegmentCount": 29,
+        "preferredRuntimeCandidate": true,
+        "italicSourceOffsetApplied": {
+          "x": -0.64,
+          "y": 243.29
+        },
+        "contourPairs": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "targetSegmentCount": 29,
+            "reversedItalicWinding": false,
+            "italicStartPointShift": 28,
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        ],
+        "errorMetrics": {
+          "pair": {
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        }
+      },
+      "blockingReason": null,
+      "nextPrepPlan": {
+        "contourCountsMatch": true,
+        "pairings": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "uprightArea": 1394.498,
+            "italicArea": 1421.865
+          }
+        ]
+      },
+      "signOffRisk": "none"
+    },
+    {
+      "index": 1,
+      "letter": "t",
+      "pairId": "studios-1-t",
+      "status": "runtime-ready",
+      "upright": {
+        "exists": true,
+        "contourCount": 1,
+        "segmentCount": 17,
+        "isMultiContour": false,
+        "signatures": [
+          17
+        ]
+      },
+      "italic": {
+        "exists": true,
+        "contourCount": 1,
+        "segmentCount": 18,
+        "isMultiContour": false,
+        "signatures": [
+          18
+        ]
+      },
+      "normalization": {
+        "contourMode": "single-contour",
+        "segmentRepresentation": "absolute-cubic-exact-subdivision",
+        "originalSegmentCounts": {
+          "upright": [
+            17
+          ],
+          "italic": [
+            18
+          ]
+        },
+        "legacyDenseSegmentCount": 17,
+        "optimizedSegmentCount": 18,
+        "preferredRuntimeCandidate": true,
+        "italicSourceOffsetApplied": {
+          "x": -0.64,
+          "y": 243.29
+        },
+        "contourPairs": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "targetSegmentCount": 18,
+            "reversedItalicWinding": false,
+            "italicStartPointShift": 0,
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        ],
+        "errorMetrics": {
+          "pair": {
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        }
+      },
+      "blockingReason": null,
+      "nextPrepPlan": {
+        "contourCountsMatch": true,
+        "pairings": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "uprightArea": 844.493,
+            "italicArea": 863.215
+          }
+        ]
+      },
+      "signOffRisk": "none"
+    },
+    {
+      "index": 2,
+      "letter": "u",
+      "pairId": "studios-2-u",
+      "status": "runtime-ready",
+      "upright": {
+        "exists": true,
+        "contourCount": 1,
+        "segmentCount": 18,
+        "isMultiContour": false,
+        "signatures": [
+          18
+        ]
+      },
+      "italic": {
+        "exists": true,
+        "contourCount": 1,
+        "segmentCount": 18,
+        "isMultiContour": false,
+        "signatures": [
+          18
+        ]
+      },
+      "normalization": {
+        "contourMode": "single-contour",
+        "segmentRepresentation": "absolute-cubic-exact-subdivision",
+        "originalSegmentCounts": {
+          "upright": [
+            18
+          ],
+          "italic": [
+            18
+          ]
+        },
+        "legacyDenseSegmentCount": 18,
+        "optimizedSegmentCount": 18,
+        "preferredRuntimeCandidate": true,
+        "italicSourceOffsetApplied": {
+          "x": -0.64,
+          "y": 243.29
+        },
+        "contourPairs": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "targetSegmentCount": 18,
+            "reversedItalicWinding": false,
+            "italicStartPointShift": 0,
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        ],
+        "errorMetrics": {
+          "pair": {
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        }
+      },
+      "blockingReason": null,
+      "nextPrepPlan": {
+        "contourCountsMatch": true,
+        "pairings": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "uprightArea": 1311.355,
+            "italicArea": 1332.477
+          }
+        ]
+      },
+      "signOffRisk": "none"
+    },
+    {
+      "index": 3,
+      "letter": "d",
+      "pairId": "studios-3-d",
+      "status": "runtime-ready",
+      "upright": {
+        "exists": true,
+        "contourCount": 2,
+        "segmentCount": 21,
+        "isMultiContour": true,
+        "signatures": [
+          14,
+          7
+        ]
+      },
+      "italic": {
+        "exists": true,
+        "contourCount": 2,
+        "segmentCount": 22,
+        "isMultiContour": true,
+        "signatures": [
+          15,
+          7
+        ]
+      },
+      "normalization": {
+        "contourMode": "multi-contour",
+        "segmentRepresentation": "absolute-cubic-exact-subdivision",
+        "originalSegmentCounts": {
+          "upright": [
+            14,
+            7
+          ],
+          "italic": [
+            15,
+            7
+          ]
+        },
+        "legacyDenseSegmentCount": 21,
+        "optimizedSegmentCount": 22,
+        "preferredRuntimeCandidate": true,
+        "italicSourceOffsetApplied": {
+          "x": -0.64,
+          "y": 243.29
+        },
+        "contourPairs": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "targetSegmentCount": 15,
+            "reversedItalicWinding": false,
+            "italicStartPointShift": 0,
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          },
+          {
+            "role": "inner-1",
+            "uprightContourIndex": 1,
+            "italicContourIndex": 1,
+            "targetSegmentCount": 7,
+            "reversedItalicWinding": false,
+            "italicStartPointShift": 0,
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        ],
+        "errorMetrics": {
+          "pair": {
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        }
+      },
+      "blockingReason": null,
+      "nextPrepPlan": {
+        "contourCountsMatch": true,
+        "pairings": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "uprightArea": 2024.372,
+            "italicArea": 2061.178
+          },
+          {
+            "role": "inner-1",
+            "uprightContourIndex": 1,
+            "italicContourIndex": 1,
+            "uprightArea": 490.623,
+            "italicArea": 498.048
+          }
+        ]
+      },
+      "signOffRisk": "none"
+    },
+    {
+      "index": 4,
+      "letter": "i",
+      "pairId": "studios-4-i",
+      "status": "runtime-ready",
+      "upright": {
+        "exists": true,
+        "contourCount": 2,
+        "segmentCount": 14,
+        "isMultiContour": true,
+        "signatures": [
+          10,
+          4
+        ]
+      },
+      "italic": {
+        "exists": true,
+        "contourCount": 2,
+        "segmentCount": 14,
+        "isMultiContour": true,
+        "signatures": [
+          10,
+          4
+        ]
+      },
+      "normalization": {
+        "contourMode": "multi-contour",
+        "segmentRepresentation": "absolute-cubic-exact-subdivision",
+        "originalSegmentCounts": {
+          "upright": [
+            10,
+            4
+          ],
+          "italic": [
+            10,
+            4
+          ]
+        },
+        "legacyDenseSegmentCount": 14,
+        "optimizedSegmentCount": 14,
+        "preferredRuntimeCandidate": true,
+        "italicSourceOffsetApplied": {
+          "x": -0.64,
+          "y": 243.29
+        },
+        "contourPairs": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "targetSegmentCount": 10,
+            "reversedItalicWinding": false,
+            "italicStartPointShift": 0,
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          },
+          {
+            "role": "inner-1",
+            "uprightContourIndex": 1,
+            "italicContourIndex": 1,
+            "targetSegmentCount": 4,
+            "reversedItalicWinding": false,
+            "italicStartPointShift": 0,
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        ],
+        "errorMetrics": {
+          "pair": {
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        }
+      },
+      "blockingReason": null,
+      "nextPrepPlan": {
+        "contourCountsMatch": true,
+        "pairings": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "uprightArea": 663.059,
+            "italicArea": 673.5
+          },
+          {
+            "role": "inner-1",
+            "uprightContourIndex": 1,
+            "italicContourIndex": 1,
+            "uprightArea": 147.983,
+            "italicArea": 153.744
+          }
+        ]
+      },
+      "signOffRisk": "none"
+    },
+    {
+      "index": 5,
+      "letter": "o",
+      "pairId": "studios-5-o",
+      "status": "runtime-ready",
+      "upright": {
+        "exists": true,
+        "contourCount": 2,
+        "segmentCount": 16,
+        "isMultiContour": true,
+        "signatures": [
+          10,
+          6
+        ]
+      },
+      "italic": {
+        "exists": true,
+        "contourCount": 2,
+        "segmentCount": 17,
+        "isMultiContour": true,
+        "signatures": [
+          10,
+          7
+        ]
+      },
+      "normalization": {
+        "contourMode": "multi-contour",
+        "segmentRepresentation": "absolute-cubic-exact-subdivision",
+        "originalSegmentCounts": {
+          "upright": [
+            10,
+            6
+          ],
+          "italic": [
+            10,
+            7
+          ]
+        },
+        "legacyDenseSegmentCount": 16,
+        "optimizedSegmentCount": 17,
+        "preferredRuntimeCandidate": true,
+        "italicSourceOffsetApplied": {
+          "x": -0.64,
+          "y": 243.29
+        },
+        "contourPairs": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "targetSegmentCount": 10,
+            "reversedItalicWinding": false,
+            "italicStartPointShift": 0,
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          },
+          {
+            "role": "inner-1",
+            "uprightContourIndex": 1,
+            "italicContourIndex": 1,
+            "targetSegmentCount": 7,
+            "reversedItalicWinding": false,
+            "italicStartPointShift": 6,
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        ],
+        "errorMetrics": {
+          "pair": {
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        }
+      },
+      "blockingReason": null,
+      "nextPrepPlan": {
+        "contourCountsMatch": true,
+        "pairings": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "uprightArea": 1742.655,
+            "italicArea": 1770.349
+          },
+          {
+            "role": "inner-1",
+            "uprightContourIndex": 1,
+            "italicContourIndex": 1,
+            "uprightArea": 529.548,
+            "italicArea": 538.255
+          }
+        ]
+      },
+      "signOffRisk": "none"
+    },
+    {
+      "index": 6,
+      "letter": "s",
+      "pairId": "studios-6-s",
+      "status": "runtime-ready",
+      "upright": {
+        "exists": true,
+        "contourCount": 1,
+        "segmentCount": 29,
+        "isMultiContour": false,
+        "signatures": [
+          29
+        ]
+      },
+      "italic": {
+        "exists": true,
+        "contourCount": 1,
+        "segmentCount": 29,
+        "isMultiContour": false,
+        "signatures": [
+          29
+        ]
+      },
+      "normalization": {
+        "contourMode": "single-contour",
+        "segmentRepresentation": "absolute-cubic-exact-subdivision",
+        "originalSegmentCounts": {
+          "upright": [
+            29
+          ],
+          "italic": [
+            29
+          ]
+        },
+        "legacyDenseSegmentCount": 29,
+        "optimizedSegmentCount": 29,
+        "preferredRuntimeCandidate": true,
+        "italicSourceOffsetApplied": {
+          "x": -0.64,
+          "y": 243.29
+        },
+        "contourPairs": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "targetSegmentCount": 29,
+            "reversedItalicWinding": false,
+            "italicStartPointShift": 0,
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        ],
+        "errorMetrics": {
+          "pair": {
+            "maxDeviation": 0,
+            "meanDeviation": 0
+          }
+        }
+      },
+      "blockingReason": null,
+      "nextPrepPlan": {
+        "contourCountsMatch": true,
+        "pairings": [
+          {
+            "role": "outer",
+            "uprightContourIndex": 0,
+            "italicContourIndex": 0,
+            "uprightArea": 1034.714,
+            "italicArea": 1051.384
+          }
+        ]
+      },
+      "signOffRisk": "none"
+    }
+  ]
+}

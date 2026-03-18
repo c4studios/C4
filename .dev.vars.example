@@ -1,0 +1,8 @@
+# Local development secrets for wrangler (npm run dev:full)
+# Copy this to .dev.vars and fill in real values.
+# .dev.vars is gitignored and will never be committed.
+
+RESEND_API_KEY=re_your_key_here
+CONTACT_EMAIL=hello@c4studios.com
+FROM_EMAIL=C4 Studios <noreply@c4studios.com>
+ALLOWED_ORIGIN=http://localhost:8788

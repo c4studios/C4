@@ -1,0 +1,6 @@
+# SPA fallback: serve index.html for all routes that don't match a static file.
+# Cloudflare Pages reads this file from the build output directory.
+#
+# Docs: https://developers.cloudflare.com/pages/configuration/redirects/
+
+/*  /index.html  200

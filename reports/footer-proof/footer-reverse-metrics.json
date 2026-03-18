@@ -1,0 +1,37 @@
+[
+  {
+    "i": 0,
+    "dLength": 1279,
+    "transform": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+    "i": 1,
+    "dLength": 842,
+    "transform": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+    "i": 2,
+    "dLength": 803,
+    "transform": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+    "i": 3,
+    "dLength": 1003,
+    "transform": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+    "i": 4,
+    "dLength": 679,
+    "transform": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+    "i": 5,
+    "dLength": 775,
+    "transform": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+    "i": 6,
+    "dLength": 1284,
+    "transform": "matrix(1, 0, 0, 1, 0, 0)"
+  }
+]

@@ -1,0 +1,144 @@
+{
+  "footer": {
+    "x": 146,
+    "y": 5382.84375,
+    "width": 123,
+    "height": 56,
+    "cx": 207.5,
+    "cy": 5410.84375,
+    "scrollY": 0,
+    "logoCount": 2
+  },
+  "idleMetrics": [
+    {
+      "i": 0,
+      "dLength": 1279,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 1,
+      "dLength": 842,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 2,
+      "dLength": 803,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 3,
+      "dLength": 1003,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 4,
+      "dLength": 679,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 5,
+      "dLength": 775,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 6,
+      "dLength": 1284,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    }
+  ],
+  "lockMetrics": [
+    {
+      "i": 0,
+      "dLength": 1279,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 1,
+      "dLength": 842,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 2,
+      "dLength": 803,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 3,
+      "dLength": 1003,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 4,
+      "dLength": 679,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 5,
+      "dLength": 775,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 6,
+      "dLength": 1284,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    }
+  ],
+  "reverseMetrics": [
+    {
+      "i": 0,
+      "dLength": 1279,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 1,
+      "dLength": 842,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 2,
+      "dLength": 803,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 3,
+      "dLength": 1003,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 4,
+      "dLength": 679,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 5,
+      "dLength": 775,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    },
+    {
+      "i": 6,
+      "dLength": 1284,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "opacity": "1"
+    }
+  ]
+}
