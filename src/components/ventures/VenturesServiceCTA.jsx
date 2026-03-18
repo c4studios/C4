@@ -27,7 +27,7 @@ export default function VenturesServiceCTA() {
             </p>
           </div>
           <Link
-            to={createPageUrl('Contact')}
+            to={createPageUrl('StartProject')}
             className="group inline-flex items-center gap-2 px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300 shrink-0"
             style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
           >

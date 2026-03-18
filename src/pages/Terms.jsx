@@ -159,8 +159,8 @@ function SectionBlock({ section, index }) {
       {section.content === 'CONTACT_LINK' && (
         <p className="text-[13.5px] leading-[1.75]" style={{ color: 'var(--c4-text-muted)' }}>
           Questions about these terms? Contact us via our{' '}
-          <Link to={createPageUrl('Contact')} className="underline underline-offset-2 transition-colors duration-300" style={{ color: 'var(--c4-text)', textDecorationColor: 'var(--c4-border)' }}>
-            contact page
+          <Link to={createPageUrl('Support')} className="underline underline-offset-2 transition-colors duration-300" style={{ color: 'var(--c4-text)', textDecorationColor: 'var(--c4-border)' }}>
+            support page
           </Link>.
         </p>
       )}

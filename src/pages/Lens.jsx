@@ -144,7 +144,7 @@ export default function Lens() {
               We are currently accepting early enquiries. Reach out to discuss your project.
             </p>
             <Link
-              to={createPageUrl('Contact')}
+              to={createPageUrl('Support')}
               className="group mt-7 inline-flex items-center gap-2 px-6 py-3 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
               style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
             >

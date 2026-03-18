@@ -53,6 +53,28 @@ export async function submitVentureIdea(data) {
 }
 
 /**
+ * Submit a support request (Support page).
+ * @param {Object} data - { name, email, category, priority, order_number, subject, message, _gotcha, _loaded }
+ * @returns {Promise<{ success: boolean, errors?: string[] }>}
+ */
+export async function submitSupportRequest(data) {
+  const res = await fetch(`${API_BASE}/api/support`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+
+  const json = await res.json();
+
+  if (!res.ok || !json.success) {
+    const message = json.errors?.join(' ') || 'Submission failed. Please try again.';
+    throw new Error(message);
+  }
+
+  return json;
+}
+
+/**
  * Upload a file attachment to Cloudflare R2.
  * @param {File} file
  * @returns {Promise<{ file_url: string }>}

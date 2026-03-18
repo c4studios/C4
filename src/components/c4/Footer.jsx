@@ -25,7 +25,7 @@ const groups = [
     title: 'Connect',
     links: [
       { label: 'Start a Project', page: 'StartProject' },
-      { label: 'Contact', page: 'Contact' },
+      { label: 'Support', page: 'Support' },
       { label: 'Instagram', href: 'https://www.instagram.com/c4.studio/' },
     ]
   }

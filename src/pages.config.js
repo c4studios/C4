@@ -49,7 +49,7 @@
  */
 import About from './pages/About';
 import CaseStudy from './pages/CaseStudy';
-import Contact from './pages/Contact';
+import Support from './pages/Support';
 import Home from './pages/Home';
 import Lens from './pages/Lens';
 import Portfolio from './pages/Portfolio';
@@ -64,7 +64,7 @@ import __Layout from './Layout.jsx';
 export const PAGES = {
     "About": About,
     "CaseStudy": CaseStudy,
-    "Contact": Contact,
+    "Support": Support,
     "Home": Home,
     "Lens": Lens,
     "Portfolio": Portfolio,
