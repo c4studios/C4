@@ -54,6 +54,22 @@ export async function onRequestPost(context) {
       return json({ success: true });
     }
 
+    // --- Turnstile verification ---
+    const turnstileResult = await verifyTurnstile(
+      body.turnstileToken,
+      env.TURNSTILE_SECRET_KEY,
+      request.headers.get('CF-Connecting-IP')
+    );
+    if (!turnstileResult.ok) {
+      return json({ success: false, errors: [turnstileResult.error] }, 403);
+    }
+
+    // --- Rate limit ---
+    const allowed = await checkRateLimit(request, 'venture');
+    if (!allowed) {
+      return json({ success: false, errors: ['Too many requests. Please try again later.'] }, 429);
+    }
+
     // --- Timestamp check ---
     if (body._loaded) {
       const elapsed = Date.now() - Number(body._loaded);
@@ -129,6 +145,40 @@ export async function onRequestPost(context) {
 }
 
 // ─── Helpers ──────────────────────────────────────────────
+
+async function verifyTurnstile(token, secretKey, remoteIp) {
+  if (!secretKey) return { ok: true }; // skip if not configured (local dev)
+  if (!token) return { ok: false, error: 'Verification required. Please complete the challenge.' };
+
+  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ secret: secretKey, response: token, remoteip: remoteIp || '' }),
+  });
+  const data = await res.json();
+  if (!data.success) {
+    return { ok: false, error: 'Verification failed. Please refresh the page and try again.' };
+  }
+  return { ok: true };
+}
+
+async function checkRateLimit(request, endpoint, maxRequests = 5, windowSec = 600) {
+  try {
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+    const cacheKey = new Request(`https://ratelimit.c4studios.internal/${ip}/${endpoint}`);
+    const cache = caches.default;
+    const existing = await cache.match(cacheKey);
+    let count = 0;
+    if (existing) count = parseInt(await existing.text(), 10) || 0;
+    if (count >= maxRequests) return false;
+    await cache.put(cacheKey, new Response(String(count + 1), {
+      headers: { 'Cache-Control': `s-maxage=${windowSec}` },
+    }));
+    return true;
+  } catch {
+    return true; // fail open
+  }
+}
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);

@@ -2,11 +2,13 @@ import React, { useState, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { submitVentureIdea } from '@/api/submissions';
-import { Send, CheckCircle } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import SubmissionSuccess from '../c4/SubmissionSuccess';
+import TurnstileWidget from '../c4/TurnstileWidget';
+import SubmitButton from '../c4/SubmitButton';
 import IdeaScorePreview from './IdeaScorePreview';
 import FileUpload from '../c4/FileUpload';
-import { useToast } from '@/components/ui/use-toast';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -18,7 +20,7 @@ const hintClass = "text-[11px] mt-0.5 mb-2";
 
 export default function VentureForm() {
   const loadedAt = useRef(Date.now());
-  const { toast } = useToast();
+  const turnstileToken = useRef(null);
   const [form, setForm] = useState({
     name: '', email: '', idea_title: '', idea_type: '',
     problem: '', target: '', solution: '', features: '',
@@ -30,6 +32,7 @@ export default function VentureForm() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [fileUploading, setFileUploading] = useState(false);
+  const [formError, setFormError] = useState(null);
 
   const update = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
 
@@ -61,6 +64,7 @@ export default function VentureForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+    setFormError(null);
 
     try {
       await submitVentureIdea({
@@ -80,60 +84,34 @@ export default function VentureForm() {
         attachments: form.attachments.map(f => f.url),
         _gotcha: form._gotcha,
         _loaded: loadedAt.current,
+        turnstileToken: turnstileToken.current,
       });
       setSubmitted(true);
     } catch (err) {
       console.error('Venture submission failed:', err);
-      toast({
-        variant: 'destructive',
-        title: 'Submission failed',
-        description: err.message || 'Please try again in a moment.',
-      });
+      setFormError(err);
     } finally {
       setSubmitting(false);
     }
   };
 
-  if (submitted) {
+  if (submitting || submitted || formError) {
     return (
       <section className="py-16 md:py-24" id="submit" style={{ backgroundColor: 'var(--c4-bg)' }}>
-        <div className="max-w-[680px] mx-auto px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease }}
-            className="text-center py-16"
-          >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.15 }}
-              className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6"
-              style={{ backgroundColor: 'color-mix(in srgb, var(--c4-accent) 10%, transparent)' }}
-            >
-              <CheckCircle size={28} strokeWidth={1.5} style={{ color: 'var(--c4-accent)' }} />
-            </motion.div>
-            <h3 className="text-[1.3rem] md:text-[1.5rem] font-semibold tracking-[-0.02em]" style={{ color: 'var(--c4-text)' }}>
-              Submission received.
-            </h3>
-            <p className="mt-3 text-[14px] leading-[1.65] max-w-[400px] mx-auto" style={{ color: 'var(--c4-text-muted)' }}>
-              {"We'll review your idea and get back to you if there's a fit. Here's what happens next:"}
-            </p>
-
-            <div className="mt-8 text-left max-w-[360px] mx-auto space-y-4">
-              {[
-                { num: '01', text: 'We review your submission within 5–10 business days.' },
-                { num: '02', text: "If it scores well, we'll reach out for a conversation." },
-                { num: '03', text: "If it's not the right fit, you'll hear from us too." },
-              ].map((step) => (
-                <div key={step.num} className="flex items-start gap-3">
-                  <span className="text-[11px] font-semibold tabular-nums tracking-[0.1em] mt-0.5" style={{ color: 'var(--c4-accent)' }}>{step.num}</span>
-                  <span className="text-[13px] leading-[1.6]" style={{ color: 'var(--c4-text-muted)' }}>{step.text}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
+        <SubmissionSuccess
+          submitting={submitting}
+          submitted={submitted}
+          error={formError}
+          onRetry={() => setFormError(null)}
+          retryLabel="Back to form"
+          headline="Submission received."
+          message="We'll review your idea and get back to you if there's a fit. Here's what happens next:"
+          steps={[
+            { num: '01', text: 'We review your submission within 5–10 business days.' },
+            { num: '02', text: "If it scores well, we'll reach out for a conversation." },
+            { num: '03', text: "If it's not the right fit, you'll hear from us too." },
+          ]}
+        />
       </section>
     );
   }
@@ -277,17 +255,23 @@ export default function VentureForm() {
               </div>
             </div>
 
+            {/* Turnstile */}
+            <div className="pt-2">
+              <TurnstileWidget
+                onToken={(t) => { turnstileToken.current = t; }}
+                onExpire={() => { turnstileToken.current = null; }}
+              />
+            </div>
+
             {/* Submit */}
             <div className="pt-4">
-              <button
-                type="submit"
-                disabled={submitting || fileUploading}
-                className="group inline-flex items-center gap-2.5 px-6 py-3 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300 disabled:opacity-50"
-                style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-              >
-                {submitting ? 'Submitting...' : 'Submit Idea'}
-                <Send size={13} strokeWidth={2} className="opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
-              </button>
+              <SubmitButton
+                submitting={submitting}
+                disabled={fileUploading}
+                label="Submit Idea"
+                loadingLabel="Submitting"
+                icon={Send}
+              />
               <p className="mt-3 text-[11px] leading-[1.5]" style={{ color: 'var(--c4-text-faint)' }}>
                 By submitting, you agree to our{' '}
                 <Link to={createPageUrl('Terms')} className="underline underline-offset-2 transition-colors duration-300" style={{ color: 'var(--c4-text-muted)', textDecorationColor: 'var(--c4-border)' }}>

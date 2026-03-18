@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Check } from 'lucide-react';
 import { submitProjectInquiry } from '@/api/submissions';
 import FileUpload from '../components/c4/FileUpload';
-import { useToast } from '@/components/ui/use-toast';
+import SubmissionSuccess from '@/components/c4/SubmissionSuccess';
+import TurnstileWidget from '@/components/c4/TurnstileWidget';
+import SubmitButton from '@/components/c4/SubmitButton';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -60,7 +61,7 @@ export default function StartProject() {
   const [searchParams] = useSearchParams();
   const preService = searchParams.get('service') || '';
   const loadedAt = useRef(Date.now());
-  const { toast } = useToast();
+  const turnstileToken = useRef(null);
 
   const [form, setForm] = useState({
     name: '',
@@ -76,12 +77,14 @@ export default function StartProject() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [fileUploading, setFileUploading] = useState(false);
+  const [formError, setFormError] = useState(null);
 
   const update = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+    setFormError(null);
 
     try {
       await submitProjectInquiry({
@@ -98,41 +101,30 @@ export default function StartProject() {
         attachments: form.attachments.map(f => f.url),
         _gotcha: form._gotcha,
         _loaded: loadedAt.current,
+        turnstileToken: turnstileToken.current,
       });
       setSubmitted(true);
     } catch (err) {
       console.error('Submission failed:', err);
-      toast({
-        variant: 'destructive',
-        title: 'Something went wrong',
-        description: err.message || 'Please try again in a moment.',
-      });
+      setFormError(err);
     } finally {
       setSubmitting(false);
     }
   };
 
-  if (submitted) {
+  if (submitting || submitted || formError) {
     return (
       <div className="min-h-screen pt-28 md:pt-36 pb-24" style={{ backgroundColor: 'var(--c4-bg)' }}>
-        <div className="max-w-[560px] mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease }}
-            className="text-center"
-          >
-            <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: 'var(--c4-text)' }}>
-              <Check size={20} strokeWidth={2.5} style={{ color: 'var(--c4-bg)' }} />
-            </div>
-            <h1 className="text-[1.6rem] md:text-[2rem] font-semibold tracking-[-0.03em]" style={{ color: 'var(--c4-text)' }}>
-              Brief received
-            </h1>
-            <p className="mt-3 text-[14px] leading-[1.6] max-w-[400px] mx-auto" style={{ color: 'var(--c4-text-muted)' }}>
-              We&apos;ll review it and reply within 24 hours.
-            </p>
-          </motion.div>
-        </div>
+        <SubmissionSuccess
+          submitting={submitting}
+          submitted={submitted}
+          error={formError}
+          onRetry={() => setFormError(null)}
+          retryLabel="Back to form"
+          accentLabel="Project Brief"
+          headline="Brief received"
+          message="We'll review it and reply within 24 hours."
+        />
       </div>
     );
   }
@@ -308,6 +300,19 @@ export default function StartProject() {
             />
           </div>
 
+          {/* Turnstile */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.7, ease }}
+            className="pt-2"
+          >
+            <TurnstileWidget
+              onToken={(t) => { turnstileToken.current = t; }}
+              onExpire={() => { turnstileToken.current = null; }}
+            />
+          </motion.div>
+
           {/* Submit */}
           <motion.div
             initial={{ opacity: 0, y: 14 }}
@@ -315,15 +320,12 @@ export default function StartProject() {
             transition={{ duration: 0.55, delay: 0.76, ease }}
             className="pt-2"
           >
-            <button
-              type="submit"
-              disabled={submitting || fileUploading}
-              className="group inline-flex items-center gap-2 px-6 py-3 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300 disabled:opacity-50"
-              style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-            >
-              {submitting ? 'Sending...' : 'Send brief'}
-              <ArrowRight size={13} strokeWidth={2} className="opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300" />
-            </button>
+            <SubmitButton
+              submitting={submitting}
+              disabled={fileUploading}
+              label="Send brief"
+              loadingLabel="Sending"
+            />
           </motion.div>
         </form>
       </div>

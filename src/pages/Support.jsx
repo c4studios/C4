@@ -1,8 +1,10 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Check, Search, ChevronDown, Headphones, MessageSquare, ShieldCheck } from 'lucide-react';
+import { Search, ChevronDown, Headphones, MessageSquare, ShieldCheck } from 'lucide-react';
 import { submitSupportRequest } from '@/api/submissions';
-import { useToast } from '@/components/ui/use-toast';
+import SubmissionSuccess from '@/components/c4/SubmissionSuccess';
+import TurnstileWidget from '@/components/c4/TurnstileWidget';
+import SubmitButton from '@/components/c4/SubmitButton';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -193,7 +195,7 @@ function FaqItem({ question, answer }) {
    ═══════════════════════════════════════════ */
 export default function Support() {
   const loadedAt = useRef(Date.now());
-  const { toast } = useToast();
+  const turnstileToken = useRef(null);
 
   /* ── form state ── */
   const [form, setForm] = useState({
@@ -208,6 +210,7 @@ export default function Support() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState(null);
 
   /* ── FAQ search ── */
   const [faqSearch, setFaqSearch] = useState('');
@@ -237,6 +240,7 @@ export default function Support() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+    setFormError(null);
     try {
       await submitSupportRequest({
         name: form.name,
@@ -248,59 +252,34 @@ export default function Support() {
         message: form.message,
         _gotcha: form._gotcha,
         _loaded: loadedAt.current,
+        turnstileToken: turnstileToken.current,
       });
       setSubmitted(true);
     } catch (err) {
       console.error('Support submission failed:', err);
-      toast({
-        variant: 'destructive',
-        title: 'Something went wrong',
-        description: err.message || 'Please try again in a moment.',
-      });
+      setFormError(err);
     } finally {
       setSubmitting(false);
     }
   };
 
-  /* ── Success state ── */
-  if (submitted) {
+  /* ── Loading / Success / Error state ── */
+  if (submitting || submitted || formError) {
     return (
       <div
         className="min-h-screen pt-28 md:pt-36 pb-24"
         style={{ backgroundColor: 'var(--c4-bg)' }}
       >
-        <div className="max-w-[560px] mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease }}
-            className="text-center"
-          >
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-6"
-              style={{ backgroundColor: 'var(--c4-text)' }}
-            >
-              <Check
-                size={20}
-                strokeWidth={2.5}
-                style={{ color: 'var(--c4-bg)' }}
-              />
-            </div>
-            <h1
-              className="text-[1.6rem] md:text-[2rem] font-semibold tracking-[-0.03em]"
-              style={{ color: 'var(--c4-text)' }}
-            >
-              Request received
-            </h1>
-            <p
-              className="mt-3 text-[14px] leading-[1.6] max-w-[400px] mx-auto"
-              style={{ color: 'var(--c4-text-muted)' }}
-            >
-              Our team will review your message and get back to you within 24
-              hours. Check your email for a confirmation.
-            </p>
-          </motion.div>
-        </div>
+        <SubmissionSuccess
+          submitting={submitting}
+          submitted={submitted}
+          error={formError}
+          onRetry={() => setFormError(null)}
+          retryLabel="Back to Support"
+          accentLabel="Support Centre"
+          headline="Request received"
+          message="Our team will review your message and get back to you within 24 hours. Check your email for a confirmation."
+        />
       </div>
     );
   }
@@ -774,24 +753,21 @@ export default function Support() {
               />
             </div>
 
+            {/* Turnstile */}
+            <div className="pt-2">
+              <TurnstileWidget
+                onToken={(t) => { turnstileToken.current = t; }}
+                onExpire={() => { turnstileToken.current = null; }}
+              />
+            </div>
+
             {/* Submit */}
             <div className="pt-2">
-              <button
-                type="submit"
-                disabled={submitting}
-                className="group inline-flex items-center gap-2 px-6 py-3 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300 disabled:opacity-50"
-                style={{
-                  backgroundColor: 'var(--c4-text)',
-                  color: 'var(--c4-bg)',
-                }}
-              >
-                {submitting ? 'Sending…' : 'Submit request'}
-                <ArrowRight
-                  size={13}
-                  strokeWidth={2}
-                  className="opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300"
-                />
-              </button>
+              <SubmitButton
+                submitting={submitting}
+                label="Submit request"
+                loadingLabel="Sending"
+              />
             </div>
           </form>
         </motion.section>
