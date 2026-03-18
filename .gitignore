@@ -29,4 +29,12 @@ dist-ssr
 *.sw?
 
 # Cloudflare
-.wrangler
+.wranglernode_modules/
+dist/
+.wrangler/
+.env
+.env.*
+*.log
+reports/runtime-audit/
+**/edge-profile/
+**/edge-profile-*/
