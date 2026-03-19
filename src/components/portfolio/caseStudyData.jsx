@@ -275,25 +275,24 @@ export const CASE_STUDIES = {
       { url: '/captures/jurassic-pt-vercel-app/desktop/01-hero.png', caption: 'Hero — headline, credentials, and dual CTA above the fold' },
       { url: '/captures/jurassic-pt-vercel-app/desktop/02-section.png', caption: 'Why Jurassic PT — four value propositions in card layout' },
       { url: '/captures/jurassic-pt-vercel-app/desktop/03-team.png', caption: 'Testimonials — community stories grid with expandable cards' },
-      { url: '/captures/jurassic-pt-vercel-app/desktop/04-section.png', caption: 'Classes — six coached class types with descriptions' },
-      { url: '/captures/jurassic-pt-vercel-app/desktop/06-memberships-hero.png', caption: 'Memberships — dedicated pricing page with tiered plans and policy detail' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/04-memberships.png', caption: 'Memberships — dedicated pricing page with tiered plans and feature breakdown' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/05-memberships-plans.png', caption: 'Memberships — plan comparison cards with booking CTAs' },
     ],
 
     desktopScreenshots: [
       { url: '/captures/jurassic-pt-vercel-app/desktop/01-hero.png', caption: 'Hero — headline, credentials, and dual CTA above the fold' },
       { url: '/captures/jurassic-pt-vercel-app/desktop/02-section.png', caption: 'Why Jurassic PT — four value propositions in card layout' },
       { url: '/captures/jurassic-pt-vercel-app/desktop/03-team.png', caption: 'Testimonials — community stories grid with expandable cards' },
-      { url: '/captures/jurassic-pt-vercel-app/desktop/04-section.png', caption: 'Classes — six coached class types with descriptions' },
-      { url: '/captures/jurassic-pt-vercel-app/desktop/06-memberships-hero.png', caption: 'Memberships — dedicated pricing page with tiered plans and policy detail' },
-      { url: '/captures/jurassic-pt-vercel-app/desktop/07-memberships-plans.png', caption: 'Memberships — plan comparison cards with booking CTAs' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/04-memberships.png', caption: 'Memberships — dedicated pricing page with tiered plans and feature breakdown' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/05-memberships-plans.png', caption: 'Memberships — plan comparison cards with booking CTAs' },
     ],
 
     mobileScreenshots: [
       { url: '/captures/jurassic-pt-vercel-app/mobile/01-hero.png', caption: 'Mobile — hero with headline and booking CTAs' },
-      { url: '/captures/jurassic-pt-vercel-app/mobile/02-memberships.png', caption: 'Mobile — memberships page header and pricing' },
-      { url: '/captures/jurassic-pt-vercel-app/mobile/03-memberships-plans.png', caption: 'Mobile — membership plan comparison cards' },
-      { url: '/captures/jurassic-pt-vercel-app/mobile/04-classes.png', caption: 'Mobile — coached class descriptions' },
-      { url: '/captures/jurassic-pt-vercel-app/mobile/05-contact.png', caption: 'Mobile — contact page with enquiry form' },
+      { url: '/captures/jurassic-pt-vercel-app/mobile/02-hero-about.png', caption: 'Mobile — about section and value propositions' },
+      { url: '/captures/jurassic-pt-vercel-app/mobile/03-memberships.png', caption: 'Mobile — memberships page hero and pricing overview' },
+      { url: '/captures/jurassic-pt-vercel-app/mobile/04-memberships-plans.png', caption: 'Mobile — membership plan comparison cards' },
+      { url: '/captures/jurassic-pt-vercel-app/mobile/05-classes.png', caption: 'Mobile — coached class descriptions and booking' },
     ],
 
     delivered: [
@@ -391,26 +390,26 @@ export const CASE_STUDIES = {
 
     screenshots: [
       { url: '/captures/peoplepower-app/desktop/01-intro.png', caption: 'Intro — cinematic brand overlay with mission statement and lightning-bolt mark' },
-      { url: '/captures/peoplepower-app/desktop/02-feed.png', caption: 'Feed — movement discovery with sort modes, early-access banner, and action panel' },
-      { url: '/captures/peoplepower-app/desktop/03-feed-scroll.png', caption: 'Movement cards — tags, momentum indicators, and participation cues' },
-      { url: '/captures/peoplepower-app/desktop/04-search.png', caption: 'Search — movement and user discovery with city and country filtering' },
-      { url: '/captures/peoplepower-app/desktop/05-create.png', caption: 'Create Movement — multi-step form with media, claims, location, and live preview' },
+      { url: '/captures/peoplepower-app/desktop/02-feed.png', caption: 'Feed — movement discovery with sort modes and action panel' },
+      { url: '/captures/peoplepower-app/desktop/03-feed-scroll.png', caption: 'Movement cards — tags, momentum indicators, and participation stats' },
+      { url: '/captures/peoplepower-app/desktop/04-feed-impact.png', caption: 'Impact sort — movements ranked by community reach and engagement' },
+      { url: '/captures/peoplepower-app/desktop/05-feed-impact-scroll.png', caption: 'Impact feed — movement cards with progress indicators and collaboration cues' },
     ],
 
     desktopScreenshots: [
       { url: '/captures/peoplepower-app/desktop/01-intro.png', caption: 'Intro — cinematic brand overlay with mission statement and lightning-bolt mark' },
-      { url: '/captures/peoplepower-app/desktop/02-feed.png', caption: 'Feed — movement discovery with sort modes, early-access banner, and action panel' },
-      { url: '/captures/peoplepower-app/desktop/03-feed-scroll.png', caption: 'Movement cards — tags, momentum indicators, and participation cues' },
-      { url: '/captures/peoplepower-app/desktop/04-search.png', caption: 'Search — movement and user discovery with city and country filtering' },
-      { url: '/captures/peoplepower-app/desktop/05-create.png', caption: 'Create Movement — multi-step form with media, claims, location, and live preview' },
+      { url: '/captures/peoplepower-app/desktop/02-feed.png', caption: 'Feed — movement discovery with sort modes and action panel' },
+      { url: '/captures/peoplepower-app/desktop/03-feed-scroll.png', caption: 'Movement cards — tags, momentum indicators, and participation stats' },
+      { url: '/captures/peoplepower-app/desktop/04-feed-impact.png', caption: 'Impact sort — movements ranked by community reach and engagement' },
+      { url: '/captures/peoplepower-app/desktop/05-feed-impact-scroll.png', caption: 'Impact feed — movement cards with progress indicators and collaboration cues' },
     ],
 
     mobileScreenshots: [
       { url: '/captures/peoplepower-app/mobile/01-intro.png', caption: 'Mobile — intro overlay with bold typography and gradient lighting' },
-      { url: '/captures/peoplepower-app/mobile/02-feed.png', caption: 'Mobile — movement feed with bottom navigation and stacked cards' },
+      { url: '/captures/peoplepower-app/mobile/02-feed.png', caption: 'Mobile — movement feed with sort tabs and stacked movement cards' },
       { url: '/captures/peoplepower-app/mobile/03-feed-scroll.png', caption: 'Mobile — feed scroll with movement cards and participation stats' },
-      { url: '/captures/peoplepower-app/mobile/04-search.png', caption: 'Mobile — search with location filtering' },
-      { url: '/captures/peoplepower-app/mobile/05-create.png', caption: 'Mobile — movement creation flow' },
+      { url: '/captures/peoplepower-app/mobile/04-feed-impact.png', caption: 'Mobile — impact sort showing community-ranked movements' },
+      { url: '/captures/peoplepower-app/mobile/05-feed-impact-scroll.png', caption: 'Mobile — impact feed with movement detail cards' },
     ],
 
     delivered: [
