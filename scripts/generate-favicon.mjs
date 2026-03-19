@@ -28,11 +28,11 @@ async function main() {
     });
     const page = await context.newPage();
 
-    // Render SVG centered on white background
+    // Render SVG centered on transparent background
     const html = `<!DOCTYPE html>
 <html><head><style>
   body { margin: 0; padding: 0; display: flex; align-items: center; justify-content: center;
-         width: ${size}px; height: ${size}px; background: white; overflow: hidden; }
+         width: ${size}px; height: ${size}px; background: transparent; overflow: hidden; }
   svg { width: ${Math.round(size * 0.82)}px; height: ${Math.round(size * 0.82)}px; }
 </style></head><body>${svgContent}</body></html>`;
 
@@ -40,6 +40,7 @@ async function main() {
     await page.screenshot({
       path: path.join(OUT_DIR, name),
       type: 'png',
+      omitBackground: true,
       clip: { x: 0, y: 0, width: size, height: size },
     });
 

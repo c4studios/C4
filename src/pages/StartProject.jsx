@@ -290,7 +290,7 @@ export default function StartProject() {
           </motion.div>
 
           {/* Honeypot – hidden from real users */}
-          <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', tabIndex: -1 }}>
+          <div aria-hidden="true" tabIndex={-1} style={{ position: 'absolute', left: '-9999px' }}>
             <input
               type="text"
               name="_gotcha"

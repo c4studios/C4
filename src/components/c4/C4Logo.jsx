@@ -272,6 +272,7 @@ export default function C4Logo({
 
   const h = typeof size === 'number' ? size : (SIZES[size] || SIZES.default);
   const full = variant === 'full';
+  const showBackdrop = full;
   const { dormant, mono, colour } = useLogoColours(context);
   const uid = useId();
 
@@ -358,7 +359,9 @@ export default function C4Logo({
     });
 
     gsap.set(wordGroupRef.current, { y: 0, opacity: 1 });
-    gsap.set(backdropRef.current, { attr: { cx: 206, cy: 389, rx: 165, ry: 120 }, opacity: 0.15 });
+    if (showBackdrop && backdropRef.current) {
+      gsap.set(backdropRef.current, { attr: { cx: 206, cy: 389, rx: 165, ry: 120 }, opacity: 0.15 });
+    }
 
     /* ================================================================
        STAGE 1 TIMELINE — Dormant → Mono (paused, hover-driven)
@@ -370,10 +373,12 @@ export default function C4Logo({
       onReverseComplete: () => { stageRef.current = 0; },
     });
 
-    monoTl.to(backdropRef.current, {
-      attr: { cx: 255, cy: 398, rx: 215, ry: 132 },
-      duration: 0.5, ease: 'power2.out',
-    }, 0);
+    if (showBackdrop && backdropRef.current) {
+      monoTl.to(backdropRef.current, {
+        attr: { cx: 255, cy: 398, rx: 215, ry: 132 },
+        duration: 0.5, ease: 'power2.out',
+      }, 0);
+    }
 
     monoTl.to(bodyDormantRef.current, { opacity: 0, duration: 0.4, ease: 'power2.inOut' }, 0.05);
     monoTl.to(armDormantRef.current, { opacity: 0, duration: 0.4, ease: 'power2.inOut' }, 0.05);
@@ -533,10 +538,12 @@ export default function C4Logo({
     dormantTl.to(bodyBaseRef.current, { opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 0.70);
     dormantTl.to(armBaseRef.current, { opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 0.70);
 
-    dormantTl.to(backdropRef.current, {
-      attr: { cx: 206, cy: 389, rx: 165, ry: 120 },
-      duration: 0.45, ease: 'power2.inOut',
-    }, 0.80);
+    if (showBackdrop && backdropRef.current) {
+      dormantTl.to(backdropRef.current, {
+        attr: { cx: 206, cy: 389, rx: 165, ry: 120 },
+        duration: 0.45, ease: 'power2.inOut',
+      }, 0.80);
+    }
 
     dormantTl.set(wordLetters, { y: 0, rotation: 0, x: 0, scaleY: 1, opacity: 0 }, 1.30);
 
@@ -547,7 +554,7 @@ export default function C4Logo({
       if (colourTlRef.current) { colourTlRef.current.kill(); colourTlRef.current = null; }
       if (dormantTlRef.current) { dormantTlRef.current.kill(); dormantTlRef.current = null; }
     };
-  }, { scope: rootRef, dependencies: [full] });
+  }, { scope: rootRef, dependencies: [full, showBackdrop] });
 
   /* =================================================================
      HOVER + TOUCH HANDLERS — staged progressive animation
@@ -681,14 +688,16 @@ export default function C4Logo({
 
             <g transform={LOCKUP_TRANSFORM}>
               {/* Backdrop — soft dark-grey translucent bubble */}
-              <ellipse
-                ref={backdropRef}
-                cx="206" cy="389"
-                rx="165" ry="120"
-                fill="#555"
-                opacity="0.15"
-                filter={`url(#${backdropBlurId})`}
-              />
+              {showBackdrop ? (
+                <ellipse
+                  ref={backdropRef}
+                  cx="206" cy="389"
+                  rx="165" ry="120"
+                  fill="#555"
+                  opacity="0.15"
+                  filter={`url(#${backdropBlurId})`}
+                />
+              ) : null}
 
               {/* C — dormant/mono base (always rendered, opacity-controlled) */}
               <path ref={cBaseRef} d={FULL_UPRIGHT.cArc} fill={mono.cArc} filter={`url(#${cPresenceId})`} />

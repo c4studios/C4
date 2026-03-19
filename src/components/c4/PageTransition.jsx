@@ -7,21 +7,18 @@ const ease = [0.22, 1, 0.36, 1];
 const variants = {
   initial: {
     opacity: 0,
-    y: 12,
   },
   animate: {
     opacity: 1,
-    y: 0,
     transition: {
-      duration: 0.5,
+      duration: 0.45,
       ease,
     },
   },
   exit: {
     opacity: 0,
-    y: -8,
     transition: {
-      duration: 0.3,
+      duration: 0.25,
       ease,
     },
   },

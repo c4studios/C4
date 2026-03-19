@@ -65,7 +65,7 @@ function FeaturedCard({ study, index }) {
                 imageClassName="transition-transform duration-700 group-hover:scale-[1.03]"
               />
             )}
-            <div className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full opacity-0 scale-75 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 md:bottom-5 md:right-5" style={{ backgroundColor: 'var(--c4-text)' }}>
+            <div className="absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-full opacity-0 scale-75 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 md:bottom-5 md:right-5" style={{ backgroundColor: 'var(--c4-text)' }}>
               <ArrowUpRight size={15} strokeWidth={2} style={{ color: 'var(--c4-bg)' }} />
             </div>
           </div>

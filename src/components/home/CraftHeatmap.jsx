@@ -1,15 +1,63 @@
 import React, { useEffect, useRef } from 'react';
 
-// Premium, restrained interactive heatmap for hero background
-// - Canvas-based for performance
-// - Hover/touch responsive with smooth decay
-// - Session-randomised neutral palette + subtle brand tint
-export default function CraftHeatmap() {
+/* ── Firefox detection ────────────────────────────────────── */
+const isFirefox =
+  typeof navigator !== 'undefined' && /Firefox/i.test(navigator.userAgent);
+
+/* ── Shared colour utilities (used by Firefox fallback) ──── */
+function makeRng(seed) {
+  let s = seed % 2147483647;
+  if (s <= 0) s += 2147483646;
+  return () => (s = (s * 16807) % 2147483647) / 2147483647;
+}
+
+const LIGHT_PALETTES = [
+  { neutrals: ['#EDE9E4', '#E5E1DB', '#F0ECE7', '#DDD9D3', '#D8D3CC'], accent: '#C23030' },
+  { neutrals: ['#ECE8E3', '#E3DFD9', '#EEEAE5', '#DBD7D1', '#D6D1CA'], accent: '#B82C2C' },
+  { neutrals: ['#EBE6E1', '#E1DDD7', '#EDE9E4', '#D9D5CF', '#D4CFC8'], accent: '#A82828' },
+];
+const DARK_PALETTES = [
+  { neutrals: ['#161A21', '#1C2029', '#1E222B', '#222732', '#191D26'], accent: '#B33A3A' },
+  { neutrals: ['#14181F', '#1A1E27', '#1C2028', '#20252E', '#171B24'], accent: '#A83535' },
+  { neutrals: ['#12161E', '#181C25', '#1A1E26', '#1E222C', '#151922'], accent: '#9E3232' },
+];
+
+const isDarkMode = () => document.documentElement.classList.contains('dark-mode');
+const pickFrom = (rng, arr) => arr[Math.floor(rng() * arr.length) % arr.length];
+
+const hexToRgb = (hex) => {
+  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return m
+    ? { r: parseInt(m[1], 16), g: parseInt(m[2], 16), b: parseInt(m[3], 16) }
+    : { r: 0, g: 0, b: 0 };
+};
+
+const mixRgb = (c1, c2, t) => ({
+  r: Math.round(c1.r + (c2.r - c1.r) * t),
+  g: Math.round(c1.g + (c2.g - c1.g) * t),
+  b: Math.round(c1.b + (c2.b - c1.b) * t),
+});
+
+function getSeed() {
+  let seed = Number(sessionStorage.getItem('c4_heatmap_seed'));
+  if (!seed || Number.isNaN(seed)) {
+    seed = Math.floor(Math.random() * 1e9);
+    sessionStorage.setItem('c4_heatmap_seed', String(seed));
+  }
+  return seed;
+}
+
+/* ══════════════════════════════════════════════════════════
+   Canvas renderer – Chrome / Safari / Edge
+   ══════════════════════════════════════════════════════════ */
+function CanvasHeatmap() {
   const canvasRef = useRef(null);
   const parentRef = useRef(null);
   const rafRef = useRef(0);
-  const gridRef = useRef({ cols: 0, rows: 0, cell: 26, intensities: [], taus: [], baseColors: [] });
-  const stateRef = useRef({ last: 0, isMobile: false, dpr: 1, width: 0, height: 0, driftT: 0, palette: null, seed: 0 });
+  const gridRef = useRef({ cols: 0, rows: 0, cell: 26, intensities: [], taus: [], activatedAt: [], baseColors: [] });
+  const stateRef = useRef({ last: 0, isMobile: false, dpr: 1, width: 0, height: 0, driftT: 0, idleT: 0, lastPointerT: 0, palette: null, seed: 0 });
+  /* ── Premium: parallax offset ── */
+  const parallaxRef = useRef({ ox: 0, oy: 0, tx: 0, ty: 0 }); // current & target
 
   // Simple LCG deterministic RNG (seeded per session)
   function makeRNG(seed) {
@@ -19,14 +67,14 @@ export default function CraftHeatmap() {
   }
 
   const lightPalettes = [
-    { neutrals: ['#F7F5F2', '#F0EDE8', '#F4F2EF', '#EEECE8', '#EAE7E2'], accent: '#C23030' },
-    { neutrals: ['#F9F8F6', '#F0EEEA', '#EFEDE8', '#EDEBE7', '#E9E6E1'], accent: '#B82C2C' },
-    { neutrals: ['#F6F4F1', '#EFEBE6', '#F3F1ED', '#EDEAE5', '#E8E5E0'], accent: '#A82828' },
+    { neutrals: ['#EDE9E4', '#E5E1DB', '#F0ECE7', '#DDD9D3', '#D8D3CC'], accent: '#C23030' },
+    { neutrals: ['#ECE8E3', '#E3DFD9', '#EEEAE5', '#DBD7D1', '#D6D1CA'], accent: '#B82C2C' },
+    { neutrals: ['#EBE6E1', '#E1DDD7', '#EDE9E4', '#D9D5CF', '#D4CFC8'], accent: '#A82828' },
   ];
   const darkPalettes = [
-    { neutrals: ['#0F1115', '#131720', '#161A21', '#121620', '#10141C'], accent: '#B33A3A' },
-    { neutrals: ['#101318', '#14181F', '#151921', '#111520', '#0F131B'], accent: '#A83535' },
-    { neutrals: ['#0E1014', '#12161E', '#141820', '#101419', '#0F1318'], accent: '#9E3232' },
+    { neutrals: ['#161A21', '#1C2029', '#1E222B', '#222732', '#191D26'], accent: '#B33A3A' },
+    { neutrals: ['#14181F', '#1A1E27', '#1C2028', '#20252E', '#171B24'], accent: '#A83535' },
+    { neutrals: ['#12161E', '#181C25', '#1A1E26', '#1E222C', '#151922'], accent: '#9E3232' },
   ];
   const isDark = () => document.documentElement.classList.contains('dark-mode');
   const getPalettes = () => isDark() ? darkPalettes : lightPalettes;
@@ -40,6 +88,20 @@ export default function CraftHeatmap() {
 
   const mix = (c1, c2, t) => ({ r: Math.round(c1.r + (c2.r - c1.r) * t), g: Math.round(c1.g + (c2.g - c1.g) * t), b: Math.round(c1.b + (c2.b - c1.b) * t) });
 
+  /* ── Activate a single cell with timestamp-based peak tracking ── */
+  function activateCell(tx, ty, boost) {
+    const { cols, rows, intensities, taus, activatedAt } = gridRef.current;
+    if (tx < 0 || tx >= cols || ty < 0 || ty >= rows) return;
+    const now = performance.now();
+    const fadeMs = taus[ty][tx] * 2200;
+    const elapsed = now - activatedAt[ty][tx];
+    const curDisplay = elapsed >= fadeMs ? 0 : intensities[ty][tx] * Math.max(0, 1 - elapsed / fadeMs);
+    if (boost > curDisplay) {
+      intensities[ty][tx] = boost;
+      activatedAt[ty][tx] = now;
+    }
+  }
+
   function setupCanvas() {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -48,7 +110,9 @@ export default function CraftHeatmap() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     stateRef.current.dpr = dpr;
 
-    const rect = parent.getBoundingClientRect();
+    const rect = parentRef.current
+      ? parentRef.current.getBoundingClientRect()
+      : parent.getBoundingClientRect();
     stateRef.current.width = rect.width;
     stateRef.current.height = rect.height;
     canvas.width = Math.round(rect.width * dpr);
@@ -76,6 +140,7 @@ export default function CraftHeatmap() {
 
     const intensities = new Array(rows).fill(0).map(() => new Float32Array(cols));
     const taus = new Array(rows).fill(0).map(() => new Float32Array(cols));
+    const activatedAt = new Array(rows).fill(0).map(() => new Float64Array(cols));
     const baseColors = new Array(rows).fill(0).map(() => new Array(cols));
 
     for (let y = 0; y < rows; y++) {
@@ -87,7 +152,32 @@ export default function CraftHeatmap() {
       }
     }
 
-    gridRef.current = { cols, rows, cell, intensities, taus, baseColors };
+    /* ── Logo light zone: lighten tiles behind nav logo ── */
+    const vw = rect.width;
+    const isMob = stateRef.current.isMobile;
+    const containerLeft = Math.max(0, (vw - 1400) / 2);
+    const padLeft = isMob ? 20 : 48;
+    const headerH = isMob ? 60 : 72;
+    const logoLeft = containerLeft + padLeft;
+    const logoTop = (headerH - 48) / 2;
+    const lzX0 = Math.max(0, Math.floor(logoLeft / cell) - 1);
+    const lzX1 = Math.min(cols - 1, Math.ceil((logoLeft + 110) / cell) + 1);
+    const lzY0 = Math.max(0, Math.floor(logoTop / cell) - 1);
+    const lzY1 = Math.min(rows - 1, Math.ceil((logoTop + 48) / cell) + 1);
+    const dark = isDark();
+    const lightenTarget = dark ? { r: 30, g: 35, b: 45 } : { r: 250, g: 247, b: 243 };
+    for (let zy = lzY0; zy <= lzY1; zy++) {
+      for (let zx = lzX0; zx <= lzX1; zx++) {
+        const c = baseColors[zy][zx];
+        baseColors[zy][zx] = {
+          r: Math.round(c.r + (lightenTarget.r - c.r) * 0.55),
+          g: Math.round(c.g + (lightenTarget.g - c.g) * 0.55),
+          b: Math.round(c.b + (lightenTarget.b - c.b) * 0.55),
+        };
+      }
+    }
+
+    gridRef.current = { cols, rows, cell, intensities, taus, activatedAt, baseColors };
   }
 
   function activateAt(clientX, clientY) {
@@ -96,23 +186,24 @@ export default function CraftHeatmap() {
     const rect = canvas.getBoundingClientRect();
     const x = clientX - rect.left;
     const y = clientY - rect.top;
-    const { cell, cols, rows, intensities } = gridRef.current;
+    const { cell } = gridRef.current;
     const cx = Math.floor(x / cell);
     const cy = Math.floor(y / cell);
-    const radius = 2.2; // include neighbours
-    const sigma2 = 1.1 * 1.1;
+    const sigma2 = 1.5 * 1.5;
 
     for (let j = -3; j <= 3; j++) {
       for (let i = -3; i <= 3; i++) {
-        const tx = cx + i;
-        const ty = cy + j;
-        if (tx >= 0 && tx < cols && ty >= 0 && ty < rows) {
-          const d2 = i * i + j * j;
-          const boost = Math.exp(-d2 / (2 * sigma2)); // 0..1 bell curve
-          const v = Math.max(intensities[ty][tx], boost);
-          intensities[ty][tx] = Math.min(1, v);
-        }
+        const d2 = i * i + j * j;
+        const boost = Math.exp(-d2 / (2 * sigma2));
+        activateCell(cx + i, cy + j, boost);
       }
+    }
+
+    /* ── Premium: set parallax target ── */
+    const { width, height } = stateRef.current;
+    if (width > 0 && height > 0) {
+      parallaxRef.current.tx = ((x / width) - 0.5) * -3;
+      parallaxRef.current.ty = ((y / height) - 0.5) * -3;
     }
   }
 
@@ -131,49 +222,80 @@ export default function CraftHeatmap() {
     if (isMobile) {
       stateRef.current.driftT += dt;
       const t = stateRef.current.driftT;
-      const ax = (grid.cols / 2) + Math.sin(t * 0.6) * (grid.cols * 0.25);
-      const ay = (grid.rows / 2) + Math.cos(t * 0.45) * (grid.rows * 0.22);
+      const ax = (grid.cols / 2) + Math.sin(t * 0.6) * (grid.cols * 0.25) + Math.sin(t * 0.23) * (grid.cols * 0.1);
+      const ay = (grid.rows / 2) + Math.cos(t * 0.45) * (grid.rows * 0.22) + Math.cos(t * 0.17) * (grid.rows * 0.08);
       activateAt(ax * grid.cell, ay * grid.cell);
-    }
-
-    // Decay
-    const { intensities, taus, baseColors, cols, rows, cell } = grid;
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        const tau = taus[y][x];
-        const v = intensities[y][x] * Math.exp(-dt / tau);
-        intensities[y][x] = v < 0.001 ? 0 : v;
+    } else {
+      // Desktop idle breathing — subtle pulse when cursor is idle
+      stateRef.current.idleT += dt;
+      const idle = stateRef.current.idleT;
+      if (idle > 2.0) {
+        const breath = (Math.sin(idle * 0.4) * 0.5 + 0.5) * 0.12;
+        const bx = grid.cols / 2 + Math.sin(idle * 0.15) * (grid.cols * 0.12);
+        const by = grid.rows * 0.35 + Math.cos(idle * 0.11) * (grid.rows * 0.08);
+        const cx = Math.floor(bx);
+        const cy = Math.floor(by);
+        for (let j = -2; j <= 2; j++) {
+          for (let i = -2; i <= 2; i++) {
+            const d2 = i * i + j * j;
+            const boost = Math.exp(-d2 / (2 * 2.0 * 2.0)) * breath;
+            activateCell(cx + i, cy + j, boost);
+          }
+        }
       }
     }
 
+    /* ── Premium: scroll-reactive intensity ── */
+    const parentEl = parentRef.current;
+    let scrollBoost = 0;
+    if (parentEl) {
+      const heroRect = parentEl.getBoundingClientRect();
+      // How much of the hero has been scrolled past (0 = top visible, 1 = fully scrolled away)
+      const progress = Math.max(0, Math.min(1, -heroRect.top / Math.max(heroRect.height, 1)));
+      scrollBoost = progress * 0.18; // up to 18% extra intensity as you scroll
+    }
+
+    /* ── Premium: parallax — smooth lerp toward target ── */
+    const px = parallaxRef.current;
+    px.ox += (px.tx - px.ox) * Math.min(1, dt * 4);
+    px.oy += (px.ty - px.oy) * Math.min(1, dt * 4);
+
     // Draw
+    const now = performance.now();
     ctx.save();
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, width, height);
 
+    /* Apply parallax translate */
+    if (!isMobile) ctx.translate(px.ox, px.oy);
+
+    const { intensities, taus, activatedAt, baseColors, cols, rows, cell } = grid;
     const acc = hexToRgb(stateRef.current.palette.accent);
     const dark = isDark();
-    const highlight = dark ? { r: 50, g: 50, b: 50 } : { r: 255, g: 255, b: 255 };
-    const fadeStart = 0.55; // fade begins at 55% down
+    const highlight = dark ? { r: 60, g: 65, b: 78 } : { r: 255, g: 252, b: 248 };
+    const fadeStart = 0.55;
 
     for (let y = 0; y < rows; y++) {
       const yNorm = (y * cell) / height;
       const fade = yNorm <= fadeStart ? 0 : Math.min(1, (yNorm - fadeStart) / (1 - fadeStart));
-      // Ease the fade for smoother transition
       const fadeCurve = fade * fade * (3 - 2 * fade); // smoothstep
       const rowAlpha = 1 - fadeCurve;
 
       if (rowAlpha <= 0.01) continue; // skip fully transparent rows
 
       for (let x = 0; x < cols; x++) {
-        const v = intensities[y][x];
+        /* ── Time-based intensity: linear fade from peak ── */
+        const fadeMs = taus[y][x] * 2200;
+        const elapsed = now - activatedAt[y][x];
+        const rawV = elapsed >= fadeMs ? 0 : intensities[y][x] * Math.max(0, 1 - elapsed / fadeMs);
+        const v = Math.min(1, rawV + scrollBoost);
         const base = baseColors[y][x];
-        const lightMix = mix(base, highlight, v * 0.12);
+        const lightMix = mix(base, highlight, v * 0.38);
         ctx.globalAlpha = rowAlpha;
         ctx.fillStyle = `rgb(${lightMix.r}, ${lightMix.g}, ${lightMix.b})`;
         ctx.fillRect(Math.floor(x * cell), Math.floor(y * cell), cell + 0.5, cell + 0.5);
         if (v > 0) {
-          ctx.fillStyle = `rgba(${acc.r}, ${acc.g}, ${acc.b}, ${Math.min(dark ? 0.18 : 0.12, v * (dark ? 0.18 : 0.12))})`;
+          ctx.fillStyle = `rgba(${acc.r}, ${acc.g}, ${acc.b}, ${Math.min(dark ? 0.28 : 0.22, v * (dark ? 0.28 : 0.22))})`;
           ctx.fillRect(Math.floor(x * cell), Math.floor(y * cell), cell + 0.5, cell + 0.5);
         }
       }
@@ -188,13 +310,17 @@ export default function CraftHeatmap() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    setupCanvas();
-    rafRef.current = requestAnimationFrame(loop);
+    // Defer setup by one frame for Firefox layout timing
+    const setupId = requestAnimationFrame(() => {
+      setupCanvas();
+      rafRef.current = requestAnimationFrame(loop);
+    });
 
     // Pointer interactions (desktop)
     const onPointerMove = (e) => {
       if (stateRef.current.isMobile) return;
       if (e.pointerType === 'mouse' || e.pointerType === 'pen') {
+        stateRef.current.idleT = 0; // reset idle breathing on interaction
         activateAt(e.clientX, e.clientY);
       }
     };
@@ -228,6 +354,7 @@ export default function CraftHeatmap() {
       window.removeEventListener('resize', onResize);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerdown', onPointerDown);
+      cancelAnimationFrame(setupId);
       cancelAnimationFrame(rafRef.current);
       observer.disconnect();
     };
@@ -235,8 +362,356 @@ export default function CraftHeatmap() {
   }, []);
 
   return (
-    <div ref={parentRef} className="absolute inset-0 pointer-events-none">
-      <canvas ref={canvasRef} className="w-full h-full pointer-events-none" />
+    <div
+      ref={parentRef}
+      className="absolute inset-0 pointer-events-none"
+      style={{ zIndex: 0, position: 'absolute' }}
+    >
+      <canvas
+        ref={canvasRef}
+        className="w-full h-full pointer-events-none"
+        style={{ display: 'block', position: 'relative' }}
+      />
     </div>
   );
+}
+
+/* ══════════════════════════════════════════════════════════
+   DOM tile renderer – Firefox fallback
+   ══════════════════════════════════════════════════════════ */
+function FirefoxHeatmap() {
+  const containerRef = useRef(null);
+  const stateRef = useRef({ last: 0, isMobile: false, driftT: 0, idleT: 0 });
+  /* ── Premium: parallax offset ── */
+  const parallaxRef = useRef({ ox: 0, oy: 0, tx: 0, ty: 0 });
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    let currentRaf = 0;
+    let gridState = null;
+
+    function build() {
+      cancelAnimationFrame(currentRaf);
+      container.textContent = '';
+
+      const isMobile = window.innerWidth < 768;
+      stateRef.current.isMobile = isMobile;
+      stateRef.current.last = 0;
+      stateRef.current.driftT = 0;
+
+      const cell = isMobile ? 32 : 30;
+      const rect = container.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      if (w === 0 || h === 0) return { activateAt() {} };
+
+      const cols = Math.ceil(w / cell);
+      const rows = Math.ceil(h / cell);
+
+      const seed = getSeed();
+      const rng = makeRng(seed);
+      const dark = isDarkMode();
+      const palettes = dark ? DARK_PALETTES : LIGHT_PALETTES;
+      const palette = palettes[Math.floor(rng() * palettes.length) % palettes.length];
+      const acc = hexToRgb(palette.accent);
+      const highlight = dark
+        ? { r: 60, g: 65, b: 78 }
+        : { r: 255, g: 252, b: 248 };
+      const accentMax = dark ? 0.28 : 0.22;
+      const fadeStart = 0.55;
+
+      const intensities = [];
+      const taus = [];
+      const activatedAt = [];
+      const baseColors = [];
+      const elements = [];
+
+      /* ── Logo light zone ── */
+      const containerLeft = Math.max(0, (w - 1400) / 2);
+      const padLeft = isMobile ? 20 : 48;
+      const headerH = isMobile ? 60 : 72;
+      const logoLeft = containerLeft + padLeft;
+      const logoTop = (headerH - 48) / 2;
+      const lzX0 = Math.max(0, Math.floor(logoLeft / cell) - 1);
+      const lzX1 = Math.min(cols - 1, Math.ceil((logoLeft + 110) / cell) + 1);
+      const lzY0 = Math.max(0, Math.floor(logoTop / cell) - 1);
+      const lzY1 = Math.min(rows - 1, Math.ceil((logoTop + 48) / cell) + 1);
+      const lightenTarget = dark ? { r: 30, g: 35, b: 45 } : { r: 250, g: 247, b: 243 };
+
+      const frag = document.createDocumentFragment();
+
+      for (let y = 0; y < rows; y++) {
+        const yNorm = (y * cell) / h;
+        const fade =
+          yNorm <= fadeStart
+            ? 0
+            : Math.min(1, (yNorm - fadeStart) / (1 - fadeStart));
+        const fadeCurve = fade * fade * (3 - 2 * fade);
+        const rowAlpha = 1 - fadeCurve;
+
+        if (rowAlpha <= 0.01) {
+          intensities[y] = null;
+          taus[y] = null;
+          activatedAt[y] = null;
+          baseColors[y] = null;
+          elements[y] = null;
+          continue;
+        }
+
+        intensities[y] = new Float32Array(cols);
+        taus[y] = new Float32Array(cols);
+        activatedAt[y] = new Float64Array(cols);
+        baseColors[y] = [];
+        elements[y] = [];
+
+        for (let x = 0; x < cols; x++) {
+          taus[y][x] = 0.6 + rng() * 0.6;
+          const isLogoCell = y >= lzY0 && y <= lzY1 && x >= lzX0 && x <= lzX1;
+          const rawColor = hexToRgb(pickFrom(rng, palette.neutrals));
+          baseColors[y][x] = isLogoCell
+            ? { r: Math.round(rawColor.r + (lightenTarget.r - rawColor.r) * 0.55), g: Math.round(rawColor.g + (lightenTarget.g - rawColor.g) * 0.55), b: Math.round(rawColor.b + (lightenTarget.b - rawColor.b) * 0.55) }
+            : rawColor;
+          const base = baseColors[y][x];
+
+          const el = document.createElement('div');
+          el.style.cssText =
+            'position:absolute;left:' +
+            (x * cell) +
+            'px;top:' +
+            (y * cell) +
+            'px;width:' +
+            (cell + 0.5) +
+            'px;height:' +
+            (cell + 0.5) +
+            'px;background:rgb(' +
+            base.r +
+            ',' +
+            base.g +
+            ',' +
+            base.b +
+            ')' +
+            (rowAlpha < 0.99 ? ';opacity:' + rowAlpha.toFixed(3) : '');
+          frag.appendChild(el);
+          elements[y][x] = el;
+        }
+      }
+
+      container.appendChild(frag);
+
+      const activeTiles = new Set();
+      // Track last written RGB per tile to skip redundant DOM writes
+      const lastRgb = new Array(rows).fill(null).map((_, y) =>
+        elements[y] ? new Uint8Array(cols * 3) : null,
+      );
+      // Seed lastRgb with initial base colours
+      for (let y = 0; y < rows; y++) {
+        if (!baseColors[y]) continue;
+        for (let x = 0; x < cols; x++) {
+          const b = baseColors[y][x];
+          const off = x * 3;
+          lastRgb[y][off] = b.r;
+          lastRgb[y][off + 1] = b.g;
+          lastRgb[y][off + 2] = b.b;
+        }
+      }
+
+      function activateCellLocal(cx, cy, boost) {
+        if (cx < 0 || cx >= cols || cy < 0 || cy >= rows || !elements[cy]) return;
+        const now = performance.now();
+        const fadeMs = taus[cy][cx] * 2200;
+        const elapsed = now - activatedAt[cy][cx];
+        const curDisplay = elapsed >= fadeMs ? 0 : intensities[cy][cx] * Math.max(0, 1 - elapsed / fadeMs);
+        if (boost > curDisplay) {
+          intensities[cy][cx] = boost;
+          activatedAt[cy][cx] = now;
+        }
+        activeTiles.add(cy * cols + cx);
+      }
+
+      function activateLocal(lx, ly) {
+        const cx = Math.floor(lx / cell);
+        const cy = Math.floor(ly / cell);
+        const sigma2 = 1.5 * 1.5;
+        for (let j = -3; j <= 3; j++) {
+          for (let i = -3; i <= 3; i++) {
+            const d2 = i * i + j * j;
+            const boost = Math.exp(-d2 / (2 * sigma2));
+            activateCellLocal(cx + i, cy + j, boost);
+          }
+        }
+      }
+
+      function activateAt(clientX, clientY) {
+        const r = container.getBoundingClientRect();
+        const lx = clientX - r.left;
+        const ly = clientY - r.top;
+        activateLocal(lx, ly);
+
+        /* ── Premium: set parallax target ── */
+        if (w > 0 && h > 0) {
+          parallaxRef.current.tx = ((lx / w) - 0.5) * -3;
+          parallaxRef.current.ty = ((ly / h) - 0.5) * -3;
+        }
+      }
+
+      function loop(ts) {
+        currentRaf = requestAnimationFrame(loop);
+
+        if (!stateRef.current.last) stateRef.current.last = ts;
+        const dt = Math.min(
+          0.05,
+          (ts - stateRef.current.last) / 1000,
+        );
+        stateRef.current.last = ts;
+
+        // Mobile ambient drift
+        if (stateRef.current.isMobile) {
+          stateRef.current.driftT += dt;
+          const t = stateRef.current.driftT;
+          const ax =
+            cols / 2 + Math.sin(t * 0.6) * (cols * 0.25) + Math.sin(t * 0.23) * (cols * 0.1);
+          const ay =
+            rows / 2 + Math.cos(t * 0.45) * (rows * 0.22) + Math.cos(t * 0.17) * (rows * 0.08);
+          activateLocal(ax * cell, ay * cell);
+        } else {
+          // Desktop idle breathing
+          stateRef.current.idleT += dt;
+          const idle = stateRef.current.idleT;
+          if (idle > 2.0) {
+            const breath = (Math.sin(idle * 0.4) * 0.5 + 0.5) * 0.12;
+            const bx = cols / 2 + Math.sin(idle * 0.15) * (cols * 0.12);
+            const by = rows * 0.35 + Math.cos(idle * 0.11) * (rows * 0.08);
+            const cx = Math.floor(bx);
+            const cy = Math.floor(by);
+            for (let j = -2; j <= 2; j++) {
+              for (let i = -2; i <= 2; i++) {
+                const d2 = i * i + j * j;
+                const boost = Math.exp(-d2 / (2 * 2.0 * 2.0)) * breath;
+                activateCellLocal(cx + i, cy + j, boost);
+              }
+            }
+          }
+        }
+
+        /* ── Premium: scroll-reactive intensity ── */
+        const heroRect = container.getBoundingClientRect();
+        const scrollProgress = Math.max(0, Math.min(1, -heroRect.top / Math.max(heroRect.height, 1)));
+        const scrollBoost = scrollProgress * 0.18;
+
+        /* ── Premium: parallax — smooth lerp ── */
+        if (!stateRef.current.isMobile) {
+          const px = parallaxRef.current;
+          px.ox += (px.tx - px.ox) * Math.min(1, dt * 4);
+          px.oy += (px.ty - px.oy) * Math.min(1, dt * 4);
+          container.style.transform = 'translate(' + px.ox.toFixed(2) + 'px,' + px.oy.toFixed(2) + 'px)';
+        }
+
+        const now = performance.now();
+        const toRemove = [];
+        for (const idx of activeTiles) {
+          const ty = Math.floor(idx / cols);
+          const tx = idx % cols;
+          if (!elements[ty]) {
+            toRemove.push(idx);
+            continue;
+          }
+
+          /* ── Time-based intensity: linear fade from peak ── */
+          const fadeMs = taus[ty][tx] * 2200;
+          const elapsed = now - activatedAt[ty][tx];
+          const rawV = elapsed >= fadeMs ? 0 : intensities[ty][tx] * Math.max(0, 1 - elapsed / fadeMs);
+          const useV = Math.min(1, rawV + scrollBoost);
+          const base = baseColors[ty][tx];
+          const lit = mixRgb(base, highlight, useV * 0.38);
+          let c = lit;
+          if (useV > 0) {
+            const a = Math.min(accentMax, useV * accentMax);
+            c = mixRgb(lit, acc, a);
+          }
+
+          // Only write to DOM if colour actually changed
+          const off = tx * 3;
+          if (
+            lastRgb[ty][off] !== c.r ||
+            lastRgb[ty][off + 1] !== c.g ||
+            lastRgb[ty][off + 2] !== c.b
+          ) {
+            lastRgb[ty][off] = c.r;
+            lastRgb[ty][off + 1] = c.g;
+            lastRgb[ty][off + 2] = c.b;
+            elements[ty][tx].style.background =
+              'rgb(' + c.r + ',' + c.g + ',' + c.b + ')';
+          }
+
+          if (rawV === 0) toRemove.push(idx);
+        }
+        for (const idx of toRemove) activeTiles.delete(idx);
+      }
+
+      currentRaf = requestAnimationFrame(loop);
+      return { activateAt };
+    }
+
+    // Initial build (deferred one frame for layout)
+    const setupId = requestAnimationFrame(() => {
+      gridState = build();
+    });
+
+    // Pointer listeners
+    const onPointerMove = (e) => {
+      if (stateRef.current.isMobile) return;
+      if (e.pointerType === 'mouse' || e.pointerType === 'pen') {
+        stateRef.current.idleT = 0;
+        gridState?.activateAt(e.clientX, e.clientY);
+      }
+    };
+    const onPointerDown = (e) => {
+      if (e.pointerType === 'touch') {
+        gridState?.activateAt(e.clientX, e.clientY);
+      }
+    };
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerdown', onPointerDown);
+
+    const onResize = () => {
+      gridState = build();
+    };
+    window.addEventListener('resize', onResize);
+
+    // Watch for theme changes
+    const observer = new MutationObserver(() => {
+      gridState = build();
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => {
+      cancelAnimationFrame(setupId);
+      cancelAnimationFrame(currentRaf);
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerdown', onPointerDown);
+      observer.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="absolute inset-0 pointer-events-none overflow-hidden"
+      style={{ zIndex: 0, position: 'absolute', contain: 'layout style paint' }}
+    />
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   Export – auto-selects renderer based on browser
+   ══════════════════════════════════════════════════════════ */
+export default function CraftHeatmap() {
+  return isFirefox ? <FirefoxHeatmap /> : <CanvasHeatmap />;
 }

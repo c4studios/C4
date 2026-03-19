@@ -103,13 +103,10 @@ export default function HeroSection() {
   const ruleWidth = useTransform(scrollYProgress, [0, 0.3], ['100%', '40%']);
 
   return (
-    <section ref={ref} className="relative flex h-[100svh] flex-col overflow-hidden">
-      <CraftHeatmap />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[42svh]"
-        style={{ background: 'linear-gradient(180deg, var(--c4-bg) 0%, rgba(0, 0, 0, 0) 100%)', opacity: 0.34 }}
-      />
+    <section ref={ref} className="relative flex h-[100svh] flex-col overflow-hidden" style={{ isolation: 'isolate' }}>
+      <div className="absolute inset-0 z-0" style={{ position: 'absolute' }}>
+        <CraftHeatmap />
+      </div>
 
       <motion.div
         style={{ y, opacity }}

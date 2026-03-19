@@ -42,7 +42,7 @@ export default function PortfolioCard({ project, index, onSelect }) {
             className="absolute inset-0 w-full h-full object-cover will-change-transform"
           />
           <motion.div
-            className="absolute bottom-4 right-4 md:bottom-5 md:right-5 w-10 h-10 rounded-full flex items-center justify-center"
+            className="absolute bottom-4 right-4 md:bottom-5 md:right-5 w-11 h-11 rounded-full flex items-center justify-center"
             style={{ backgroundColor: 'var(--c4-text)' }}
             initial={false}
             animate={{

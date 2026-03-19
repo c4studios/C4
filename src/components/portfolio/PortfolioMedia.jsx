@@ -54,7 +54,7 @@ export default function PortfolioMedia({
 
             <div className="flex flex-1 flex-col items-center justify-center text-center">
               <div
-                className={`mb-4 flex items-center justify-center rounded-full ${compact ? 'h-10 w-10' : 'h-12 w-12'}`}
+                className={`mb-4 flex items-center justify-center rounded-full ${compact ? 'h-11 w-11' : 'h-12 w-12'}`}
                 style={{
                   backgroundColor: 'var(--c4-card-bg)',
                   border: '1px solid var(--c4-border)',

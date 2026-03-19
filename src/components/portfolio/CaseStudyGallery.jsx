@@ -55,7 +55,7 @@ function Lightbox({ screenshots, activeIndex, onClose, onPrev, onNext }) {
     >
       <button
         onClick={onClose}
-        className="absolute right-5 top-5 z-10 flex h-10 w-10 items-center justify-center rounded-full transition-colors"
+        className="absolute right-5 top-5 z-10 flex h-11 w-11 items-center justify-center rounded-full transition-colors"
         style={{ backgroundColor: 'var(--c4-lightbox-control)' }}
         onMouseEnter={(event) => {
           event.currentTarget.style.backgroundColor = 'var(--c4-lightbox-control-hover)';
@@ -74,7 +74,7 @@ function Lightbox({ screenshots, activeIndex, onClose, onPrev, onNext }) {
               event.stopPropagation();
               onPrev();
             }}
-            className="absolute left-3 z-10 flex h-10 w-10 items-center justify-center rounded-full transition-colors md:left-8"
+            className="absolute left-3 z-10 flex h-11 w-11 items-center justify-center rounded-full transition-colors md:left-8"
             style={{ backgroundColor: 'var(--c4-lightbox-control)' }}
             onMouseEnter={(event) => {
               event.currentTarget.style.backgroundColor = 'var(--c4-lightbox-control-hover)';
@@ -90,7 +90,7 @@ function Lightbox({ screenshots, activeIndex, onClose, onPrev, onNext }) {
               event.stopPropagation();
               onNext();
             }}
-            className="absolute right-3 z-10 flex h-10 w-10 items-center justify-center rounded-full transition-colors md:right-8"
+            className="absolute right-3 z-10 flex h-11 w-11 items-center justify-center rounded-full transition-colors md:right-8"
             style={{ backgroundColor: 'var(--c4-lightbox-control)' }}
             onMouseEnter={(event) => {
               event.currentTarget.style.backgroundColor = 'var(--c4-lightbox-control-hover)';

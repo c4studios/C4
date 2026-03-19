@@ -83,7 +83,7 @@ export default function NavHeader() {
 
               <button
                 onClick={() => setMobileOpen(o => !o)}
-                className="md:hidden w-8 h-8 flex items-center justify-center"
+                className="md:hidden w-11 h-11 flex items-center justify-center"
                 style={{ color: 'var(--c4-text)' }}
                 aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={mobileOpen}
