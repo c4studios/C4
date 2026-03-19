@@ -72,14 +72,13 @@ export default function TestimonialsProof() {
                 className="text-[10px] font-medium uppercase tracking-[0.22em]"
                 style={{ color: 'var(--c4-proof-accent)' }}
               >
-                Recent engagements
+                Our commitment
               </p>
               <p
                 className="mt-3 text-[14px] leading-[1.75] md:text-[15px]"
                 style={{ color: 'var(--c4-proof-muted)' }}
               >
-                Both notes come from recent church and community-facing website builds,
-                with the wording left exactly as it was sent.
+                All testimonials received from clients are displayed in full. We believe in accountability within our practice and do not curate feedback to present a false image of our standards.
               </p>
             </div>
 

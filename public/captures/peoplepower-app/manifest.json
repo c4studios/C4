@@ -1,0 +1,189 @@
+{
+  "version": 2,
+  "sourceUrl": "https://peoplepower.app/",
+  "slug": "peoplepower-app",
+  "timestamp": "2026-03-19T14:15:31.914Z",
+  "overlays": [
+    {
+      "tag": "div",
+      "id": null,
+      "className": "fixed inset-0 z-[9999] bg-gradient-to-br from-slate-900 via-[#1a1d4d] to-slate-900 overflow-y-auto overflow-x-hidden tou",
+      "reason": "overlay-like",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 2200
+      },
+      "device": "desktop"
+    },
+    {
+      "tag": "div",
+      "id": null,
+      "className": "",
+      "reason": "overlay-like",
+      "rect": {
+        "x": 16,
+        "y": 16,
+        "width": 1408,
+        "height": 2168
+      },
+      "device": "desktop"
+    },
+    {
+      "tag": "div",
+      "id": null,
+      "className": "fixed inset-0 z-[9999] bg-gradient-to-br from-slate-900 via-[#1a1d4d] to-slate-900 overflow-y-auto overflow-x-hidden tou",
+      "reason": "overlay-like",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 430,
+        "height": 932
+      },
+      "device": "mobile"
+    },
+    {
+      "tag": "div",
+      "id": null,
+      "className": "",
+      "reason": "overlay-like",
+      "rect": {
+        "x": 16,
+        "y": 16,
+        "width": 398,
+        "height": 900
+      },
+      "device": "mobile"
+    }
+  ],
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 2200
+      },
+      "rawCandidateCount": 1,
+      "selectedCandidateCount": 1,
+      "selected": [
+        {
+          "id": "cand-desktop-3",
+          "selectorHint": "div",
+          "label": "hero",
+          "headingText": "PEOPLE",
+          "textPreview": "PEOPLE POWERUnite • Act • TransformUpdatesSign InPeople Power — Early AccessThis is a pre-release version of People Power. Some features are still stabilising and data may be periodically reset during deployment. Thanks ",
+          "textLength": 1776,
+          "imageCount": 23,
+          "buttonCount": 16,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 11,
+          "hasBgImage": false,
+          "area": 3168000,
+          "whitespaceRisk": 0.97,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 2200
+          },
+          "viewportCoverage": 1,
+          "score": 66,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        }
+      ],
+      "captures": [
+        {
+          "candidateId": "cand-desktop-3",
+          "label": "hero",
+          "headingText": "PEOPLE",
+          "score": 66,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "01-hero.png",
+          "filePath": "desktop/01-hero.png",
+          "clip": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 2200
+          },
+          "bytes": 38505,
+          "dimensions": {
+            "width": 1440,
+            "height": 2200
+          },
+          "usedFallback": false
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "rawCandidateCount": 1,
+      "selectedCandidateCount": 1,
+      "selected": [
+        {
+          "id": "cand-mobile-3",
+          "selectorHint": "div",
+          "label": "hero",
+          "headingText": "PEOPLE",
+          "textPreview": "PEOPLE POWERUnite • Act • TransformUpdatesSign InPeople Power — Early AccessThis is a pre-release version of People Power. Some features are still stabilising and data may be periodically reset during deployment. Thanks ",
+          "textLength": 1776,
+          "imageCount": 23,
+          "buttonCount": 16,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 11,
+          "hasBgImage": false,
+          "area": 770345,
+          "whitespaceRisk": 0.876,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 430,
+            "height": 1792
+          },
+          "viewportCoverage": 1.922,
+          "score": 68,
+          "warnings": []
+        }
+      ],
+      "captures": [
+        {
+          "candidateId": "cand-mobile-3",
+          "label": "hero",
+          "headingText": "PEOPLE",
+          "score": 68,
+          "warnings": [],
+          "fileName": "01-hero.png",
+          "filePath": "mobile/01-hero.png",
+          "clip": {
+            "x": 0,
+            "y": 0,
+            "width": 430,
+            "height": 1792
+          },
+          "bytes": 21331,
+          "dimensions": {
+            "width": 430,
+            "height": 1792
+          },
+          "usedFallback": false
+        }
+      ]
+    }
+  },
+  "warnings": []
+}

@@ -58,6 +58,7 @@ export const CASE_STUDIES = {
     ],
 
     delivered: [
+      'Logo design — anchor and compass-inspired mark in navy and gold, sized for web, social, and print',
       'Complete website — design, development, content structuring, and deployment',
       'Platform migration from Base44 scaffold to standalone Vite + Vercel architecture',
       'Homepage with hero, vision statement, and prayer meeting schedule',
@@ -179,6 +180,7 @@ export const CASE_STUDIES = {
     ],
 
     delivered: [
+      'Logo design — crimson and copper emblem with cross motif, optimised for web and social use',
       'Full website — design, development, and deployment from scratch',
       'Custom brand colour system (crimson, maroon, copper palette)',
       'Responsive layout for mobile, tablet, and desktop',
@@ -274,7 +276,7 @@ export const CASE_STUDIES = {
       { url: '/captures/jurassic-pt-vercel-app/desktop/02-section.png', caption: 'Why Jurassic PT — four value propositions in card layout' },
       { url: '/captures/jurassic-pt-vercel-app/desktop/03-team.png', caption: 'Testimonials — community stories grid with expandable cards' },
       { url: '/captures/jurassic-pt-vercel-app/desktop/04-section.png', caption: 'Classes — six coached class types with descriptions' },
-      { url: '/captures/jurassic-pt-vercel-app/desktop/05-section.png', caption: 'Memberships — tiered pricing comparison with booking CTA' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/06-memberships-hero.png', caption: 'Memberships — dedicated pricing page with tiered plans and policy detail' },
     ],
 
     desktopScreenshots: [
@@ -282,18 +284,20 @@ export const CASE_STUDIES = {
       { url: '/captures/jurassic-pt-vercel-app/desktop/02-section.png', caption: 'Why Jurassic PT — four value propositions in card layout' },
       { url: '/captures/jurassic-pt-vercel-app/desktop/03-team.png', caption: 'Testimonials — community stories grid with expandable cards' },
       { url: '/captures/jurassic-pt-vercel-app/desktop/04-section.png', caption: 'Classes — six coached class types with descriptions' },
-      { url: '/captures/jurassic-pt-vercel-app/desktop/05-section.png', caption: 'Memberships — tiered pricing comparison with booking CTA' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/06-memberships-hero.png', caption: 'Memberships — dedicated pricing page with tiered plans and policy detail' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/07-memberships-plans.png', caption: 'Memberships — plan comparison cards with booking CTAs' },
     ],
 
     mobileScreenshots: [
       { url: '/captures/jurassic-pt-vercel-app/mobile/01-hero.png', caption: 'Mobile — hero with headline and booking CTAs' },
-      { url: '/captures/jurassic-pt-vercel-app/mobile/02-section.png', caption: 'Mobile — value proposition cards stacked' },
-      { url: '/captures/jurassic-pt-vercel-app/mobile/03-section.png', caption: 'Mobile — membership pricing cards' },
-      { url: '/captures/jurassic-pt-vercel-app/mobile/04-section.png', caption: 'Mobile — ready to start CTA section' },
-      { url: '/captures/jurassic-pt-vercel-app/mobile/05-section.png', caption: 'Mobile — class descriptions' },
+      { url: '/captures/jurassic-pt-vercel-app/mobile/02-memberships.png', caption: 'Mobile — memberships page header and pricing' },
+      { url: '/captures/jurassic-pt-vercel-app/mobile/03-memberships-plans.png', caption: 'Mobile — membership plan comparison cards' },
+      { url: '/captures/jurassic-pt-vercel-app/mobile/04-classes.png', caption: 'Mobile — coached class descriptions' },
+      { url: '/captures/jurassic-pt-vercel-app/mobile/05-contact.png', caption: 'Mobile — contact page with enquiry form' },
     ],
 
     delivered: [
+      'Logo design — badge-style brand mark with dinosaur claw motif, gold trim, and dark background treatment',
       'Multi-route marketing site with dedicated pages for classes, timetable, memberships, personal training, remedial massage, and contact',
       'PT Mate booking integration for memberships, intro offers, casual classes, and selected remedial massage services',
       'Fallback enquiry routing for services without direct booking links',
@@ -360,6 +364,148 @@ export const CASE_STUDIES = {
       'Replace the image-based timetable with a fully data-driven schedule component',
       'Implement persistent rate limiting on form submissions',
       'Add privacy-respecting analytics to track page views and booking conversions',
+    ],
+  },
+
+  'people-power': {
+    slug: 'people-power',
+    name: 'People Power',
+    oneLiner: 'A C4 Studios Original — a full-stack social platform for creating, discovering, and coordinating community movements, built from the ground up with real-time messaging, moderation infrastructure, and governance tooling.',
+    client: 'C4 Studios (Internal)',
+    location: 'Perth, WA',
+    timeline: '',
+    budget: '',
+    role: 'Solo (concept, design, logo, full-stack development, deployment)',
+    liveUrl: 'https://peoplepower.app/',
+    year: '2026',
+    category: 'web_app',
+    tags: ['Web App', 'Social Platform', 'C4 Original'],
+    featured: true,
+    budgetOrder: 5,
+
+    cover: '/covers/people-power.png',
+    brandColor: '#1a1d4d',
+    thumbnail: '/captures/peoplepower-app/desktop/01-intro.png',
+
+    overview: 'People Power is a full-stack social platform conceived, designed, and engineered entirely in-house at C4 Studios. It is not a client project — it is an original product built to enable communities to create, discover, and coordinate real social movements. The platform goes far beyond a typical feed: users can launch movement pages with evidence and claims, collaborate through tasks and discussions, organise events, run petitions, and engage with real-time messaging secured by end-to-end encryption scaffolding. Behind the public surface sits a complete operational layer — admin moderation workflows with second-approval governance, community health analytics, incident logging, feature flag administration, and safety-first reporting flows for both harmful content and product bugs. The backend is a production Fastify server backed by Postgres, with WebSocket support, rate limiting, CORS enforcement, and a Cloudflare Worker migration path already underway. This is not a marketing site or a prototype — it is a working social product with authentication, real-time state, and the kind of moderation infrastructure that most platforms only add after they have a problem.',
+
+    screenshots: [
+      { url: '/captures/peoplepower-app/desktop/01-intro.png', caption: 'Intro — cinematic brand overlay with mission statement and lightning-bolt mark' },
+      { url: '/captures/peoplepower-app/desktop/02-feed.png', caption: 'Feed — movement discovery with sort modes, early-access banner, and action panel' },
+      { url: '/captures/peoplepower-app/desktop/03-feed-scroll.png', caption: 'Movement cards — tags, momentum indicators, and participation cues' },
+      { url: '/captures/peoplepower-app/desktop/04-search.png', caption: 'Search — movement and user discovery with city and country filtering' },
+      { url: '/captures/peoplepower-app/desktop/05-create.png', caption: 'Create Movement — multi-step form with media, claims, location, and live preview' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/peoplepower-app/desktop/01-intro.png', caption: 'Intro — cinematic brand overlay with mission statement and lightning-bolt mark' },
+      { url: '/captures/peoplepower-app/desktop/02-feed.png', caption: 'Feed — movement discovery with sort modes, early-access banner, and action panel' },
+      { url: '/captures/peoplepower-app/desktop/03-feed-scroll.png', caption: 'Movement cards — tags, momentum indicators, and participation cues' },
+      { url: '/captures/peoplepower-app/desktop/04-search.png', caption: 'Search — movement and user discovery with city and country filtering' },
+      { url: '/captures/peoplepower-app/desktop/05-create.png', caption: 'Create Movement — multi-step form with media, claims, location, and live preview' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/peoplepower-app/mobile/01-intro.png', caption: 'Mobile — intro overlay with bold typography and gradient lighting' },
+      { url: '/captures/peoplepower-app/mobile/02-feed.png', caption: 'Mobile — movement feed with bottom navigation and stacked cards' },
+      { url: '/captures/peoplepower-app/mobile/03-feed-scroll.png', caption: 'Mobile — feed scroll with movement cards and participation stats' },
+      { url: '/captures/peoplepower-app/mobile/04-search.png', caption: 'Mobile — search with location filtering' },
+      { url: '/captures/peoplepower-app/mobile/05-create.png', caption: 'Mobile — movement creation flow' },
+    ],
+
+    delivered: [
+      'Logo design — lightning-bolt emblem with gradient treatment, sized for web, social, and favicon use',
+      'Complete social platform — concept, UX, visual identity, front-end, back-end, and deployment',
+      'Movement feed with momentum, newest, impact, and local discovery sort modes',
+      'Full movement creation flow with categories, location, media upload, evidence fields, live preview, and anti-brigading checks',
+      'Rich movement detail pages combining comments, collaboration tools, evidence, impact updates, resources, events, petitions, and polls',
+      'Real-time messaging architecture with WebSocket support and end-to-end encryption key handling',
+      'Search with movement and user discovery, city and country filtering, and profile-based location defaults',
+      'Profile system with editable details, banner and avatar imagery, follower and following lists, trust markers, and movement history',
+      'Full authentication flow — sign-in, sign-up, email verification, resend verification, password reset, and token refresh',
+      'Reporting centre for abuse reports and technical bug reports with evidence upload and category-specific guidance',
+      'Admin moderation workflow with reports queue, incident log, second-approval for permanent actions, and notification handling',
+      'Community health dashboard with platform-level safety and moderation metrics over time',
+      'Feature flag and research mode administration for controlled rollouts',
+      'Safety and onboarding layers including intro gating, safety acceptance, age verification, and privacy-aware location handling',
+      'Fastify backend with CORS, rate limiting, multipart uploads, health endpoints, WebSocket upgrades, and Postgres persistence',
+      'Cloudflare Worker migration scaffold with Durable Objects entity CRUD',
+    ],
+
+    features: [
+      'Movement feed with four discovery modes — momentum, newest, impact, and local — surfacing movement cards with tags, participation stats, and map previews',
+      'Multi-step movement creation with media upload validation, profanity filtering, leadership-cap governance, platform acknowledgment gating, and rate-limiting hooks',
+      'Movement detail pages that aggregate comments, collaborators, tasks, discussions, polls, events, petitions, resources, and impact updates in a single navigable surface',
+      'Real-time messaging infrastructure with WebSocket transport, local fallback logic, and TweetNaCl-based end-to-end encryption key generation and shared-secret handling',
+      'Reporting and moderation system with abuse and bug report modes, evidence upload, admin queue, second-approval governance for permanent actions, and incident logging',
+      'Community health analytics dashboard with time-series moderation metrics and platform safety indicators',
+      'Privacy-aware location system with approximate city-level map previews, sanitised public profile data, and geocoding only when explicitly needed',
+      'Profile system with banner and avatar imagery, follower and following relationships, trust markers, and movement participation history',
+      'Feature flag administration for staged rollouts and experimental features',
+      'Cinematic intro overlay with animated gradient lighting, brand mark presentation, and mission-driven onboarding copy',
+      'Graceful degradation across auth and backend availability states — offline labels, degraded sync banners, and stub fallbacks',
+      'Lazy-loaded route-level code splitting with Vite manual chunk configuration for vendor groups',
+    ],
+
+    stack: [
+      'React 18 (Vite 6 SPA)',
+      'JavaScript (JSX)',
+      'React Router 7',
+      'Tailwind CSS + Radix UI + shadcn-style components',
+      'TanStack React Query',
+      'Framer Motion',
+      'React Hook Form + Zod',
+      'Leaflet + React Leaflet',
+      'Recharts',
+      'i18next',
+      'Lucide React',
+      'Fastify 5 (Node.js backend)',
+      'Postgres (REAL mode persistence)',
+      'Supabase Auth',
+      'WebSockets (real-time messaging)',
+      'TweetNaCl (E2E encryption)',
+      'Cloudflare Pages + Workers (migration scaffold)',
+      'Render (backend hosting)',
+    ],
+
+    integrations: [
+      'Supabase Auth — email/password authentication with verification, session restoration, token refresh, and route-level protection',
+      'Postgres — canonical data persistence in REAL mode with in-memory DEMO fallback for development',
+      'WebSockets — real-time messaging transport with upgrade handling on the Fastify server',
+      'TweetNaCl — end-to-end encryption keypair generation and shared-secret message encryption',
+      'Resend / SMTP — non-blocking transactional email for verification and notifications',
+      'Leaflet — privacy-aware map previews with approximate city-level coordinates',
+      'Recharts — time-series analytics and community health metric visualisation',
+      'Cloudflare Workers + Durable Objects — emerging migration layer for edge-deployed entity CRUD',
+    ],
+
+    performance: [
+      'Route-level lazy loading with React.lazy and Suspense for code-split page bundles',
+      'Vite manual chunk splitting separating React, Supabase, React Query, motion, forms, map, charting, and UI dependency groups',
+      'TanStack React Query for server-state caching, background refetching, and optimistic updates',
+      'Reduced-motion support implemented globally in CSS',
+      'Graceful degradation with offline and degraded-state feedback across all authenticated surfaces',
+      'Rate limiting on backend endpoints for submission and upload flows',
+      'CORS enforcement, request body limits, and health status endpoints on the API server',
+    ],
+
+    challenges: [
+      'Designing a movement coordination platform that handles activism-style organisation without becoming an unmoderated social feed — requiring substantial work around safety, reporting, appeal paths, and governance constraints',
+      'Building a broad feature surface anchored on a single movement entity — combining comments, collaborators, tasks, evidence, events, petitions, resources, and impact updates in one coherent detail experience',
+      'Implementing real-time messaging infrastructure with WebSocket transport and encryption key handling while keeping the platform functional when the backend is unavailable',
+      'Balancing user empowerment with anti-abuse guardrails — leadership caps, anti-brigading checks, content controls, age verification, and second-approval governance for permanent moderation actions',
+      'Managing authentication, profile persistence, and protected routing across frontend and backend concerns with email verification, password reset, and token-based API access',
+      'Handling privacy-sensitive location features in a socially coordinated app — sanitising public profile data and using approximate city-level map presentation',
+      'Supporting graceful degradation during an active backend migration across Node/Fastify, Render, and an emerging Cloudflare Worker layer',
+      'Maintaining a consistent design language across public, authenticated, and admin surfaces without switching to unrelated visual systems',
+    ],
+
+    improvements: [
+      'Complete the Cloudflare Worker migration for edge-deployed API endpoints',
+      'Ship the full messaging UI with conversation threads and real-time delivery indicators',
+      'Add server-side rendering or static generation for SEO on public movement pages',
+      'Implement persistent rate limiting via Upstash Redis or Cloudflare KV',
+      'Add privacy-respecting analytics to track platform engagement and movement growth',
     ],
   },
 };
