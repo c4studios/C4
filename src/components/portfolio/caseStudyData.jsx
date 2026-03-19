@@ -246,6 +246,122 @@ export const CASE_STUDIES = {
       'Add privacy-respecting analytics to track visitor engagement',
     ],
   },
+
+  'jurassic-pt': {
+    slug: 'jurassic-pt',
+    name: 'Jurassic PT',
+    oneLiner: 'A conversion-focused service website for a Cannington fitness studio — covering memberships, classes, timetable, personal training, remedial massage, and direct booking.',
+    client: 'Jurassic PT',
+    location: 'Cannington, WA',
+    timeline: '',
+    budget: '',
+    role: 'Solo (design, development, deployment)',
+    liveUrl: 'https://jurassic-pt.vercel.app/',
+    year: '2026',
+    category: 'web_design',
+    tags: ['Website', 'Fitness', 'Local Business'],
+    featured: true,
+    budgetOrder: 3,
+
+    cover: '/covers/jurassic-pt.png',
+    brandColor: '#1a1f14',
+    thumbnail: '/captures/jurassic-pt-vercel-app/desktop/01-hero.png',
+
+    overview: 'Jurassic PT is a service website for a small group personal training studio in Cannington, WA offering coached classes, personal training, and remedial massage. The site is structured around practical customer actions — comparing memberships, checking the weekly timetable, booking sessions through PT Mate, or sending service-specific enquiries. Each service line has its own dedicated route with pricing, policies, and contextual calls-to-action that route into either direct booking flows or prefilled contact enquiries depending on availability. The implementation pairs a dark lime-accent visual system with reusable booking components, responsive layouts, and a lightweight trust layer built from real client testimonials.',
+
+    screenshots: [
+      { url: '/captures/jurassic-pt-vercel-app/desktop/01-hero.png', caption: 'Hero — headline, credentials, and dual CTA above the fold' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/02-section.png', caption: 'Why Jurassic PT — four value propositions in card layout' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/03-team.png', caption: 'Testimonials — community stories grid with expandable cards' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/04-section.png', caption: 'Classes — six coached class types with descriptions' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/05-section.png', caption: 'Memberships — tiered pricing comparison with booking CTA' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/jurassic-pt-vercel-app/desktop/01-hero.png', caption: 'Hero — headline, credentials, and dual CTA above the fold' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/02-section.png', caption: 'Why Jurassic PT — four value propositions in card layout' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/03-team.png', caption: 'Testimonials — community stories grid with expandable cards' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/04-section.png', caption: 'Classes — six coached class types with descriptions' },
+      { url: '/captures/jurassic-pt-vercel-app/desktop/05-section.png', caption: 'Memberships — tiered pricing comparison with booking CTA' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/jurassic-pt-vercel-app/mobile/01-hero.png', caption: 'Mobile — hero with headline and booking CTAs' },
+      { url: '/captures/jurassic-pt-vercel-app/mobile/02-section.png', caption: 'Mobile — value proposition cards stacked' },
+      { url: '/captures/jurassic-pt-vercel-app/mobile/03-section.png', caption: 'Mobile — membership pricing cards' },
+      { url: '/captures/jurassic-pt-vercel-app/mobile/04-section.png', caption: 'Mobile — ready to start CTA section' },
+      { url: '/captures/jurassic-pt-vercel-app/mobile/05-section.png', caption: 'Mobile — class descriptions' },
+    ],
+
+    delivered: [
+      'Multi-route marketing site with dedicated pages for classes, timetable, memberships, personal training, remedial massage, and contact',
+      'PT Mate booking integration for memberships, intro offers, casual classes, and selected remedial massage services',
+      'Fallback enquiry routing for services without direct booking links',
+      'Contact form with client-side validation, loading states, and service-specific prefills via query parameters',
+      'Membership comparison page with tiered plans, casual option, 10-class pack, FAQ, and policy detail',
+      'Responsive timetable with both image-based schedule and structured weekly summary',
+      'Custom testimonial system with scrolling ticker, expandable grid cards, and modal detail view',
+      'Responsive navigation with desktop dropdown, mobile slide-in menu, and persistent membership CTA',
+      'Route-level page titles and meta descriptions within the SPA shell',
+      'Vercel deployment with SPA routing, CSP headers, HSTS, and cache configuration',
+    ],
+
+    features: [
+      'Seven-route SPA with service-specific pages, CTAs, and booking flows',
+      'PT Mate integration with centralised booking URL management and contextual fallback to contact enquiry',
+      'Contact form with FormSubmit delivery, validation, consent capture, and query-parameter prefills from service pages',
+      'Membership comparison with tiered pricing cards, highlighted plan, FAQ, and transparent cancellation policy',
+      'Dual timetable display — image schedule and structured weekly summary with responsive card layout on mobile',
+      'Testimonial ticker with continuous scroll, reduced-motion fallback, and expanded modal view',
+      'IntersectionObserver-driven reveal animations with prefers-reduced-motion handling',
+      'Centralised business configuration for booking URLs, contact details, and enquiry routing logic',
+      'Sticky frosted-glass navigation with scroll-aware state and mobile hamburger menu',
+      'Custom 404 page and scroll-to-top behaviour on route changes',
+    ],
+
+    stack: [
+      'React 18 (Vite SPA)',
+      'JavaScript (JSX)',
+      'React Router DOM',
+      'Tailwind CSS with custom design tokens',
+      'Lucide React',
+      'FormSubmit (contact form)',
+      'PT Mate (booking integration)',
+      'Vercel (hosting)',
+    ],
+
+    integrations: [
+      'PT Mate — direct purchase links for memberships, intro offers, casual passes, and massage sessions',
+      'FormSubmit — AJAX form submission for contact enquiries with success and error handling',
+      'Google Maps — external directions link to the studio location',
+      'Instagram and Facebook — social profile links for community engagement',
+    ],
+
+    performance: [
+      'Lightweight production bundle via Vite with no heavy animation dependencies',
+      'Lazy-loaded timetable image asset',
+      'Skip-to-content link, ARIA labels, expanded states, and focus-visible styles',
+      'Reduced-motion handling on all scroll-triggered animations',
+      'Route-specific title and description updates for search engines',
+      'Security headers including CSP, HSTS, and frame-ancestor restrictions',
+      'Robots and sitemap configuration for deployment',
+    ],
+
+    challenges: [
+      'Designing a clean booking architecture around mixed booking rules — some services route to PT Mate, others intentionally fall back to direct enquiry',
+      'Building a content-heavy service site without a CMS while keeping pricing, policies, links, and contact pathways consistent across multiple pages',
+      'Making the timetable useful on both desktop and mobile with a graceful switch from image schedule to structured card layout',
+      'Adding social proof and motion without making the site feel noisy — including a continuously scrolling testimonial ticker with reduced-motion handling',
+      'Creating clear route-by-route service discovery with page-specific CTAs and prefilled enquiry flows from each service page',
+    ],
+
+    improvements: [
+      'Add a headless CMS so the client can update schedules, pricing, and testimonials independently',
+      'Replace the image-based timetable with a fully data-driven schedule component',
+      'Implement persistent rate limiting on form submissions',
+      'Add privacy-respecting analytics to track page views and booking conversions',
+    ],
+  },
 };
 
 export function getCaseStudy(slug) {
