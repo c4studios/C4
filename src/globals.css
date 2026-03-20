@@ -10,6 +10,8 @@
   --c4-bg-alt: #F0EDE8;
   --c4-card-bg: #FFFFFF;
   --c4-tag-bg: #F4F2EF;
+  --c4-nav-idle: rgba(247, 245, 242, 0.64);
+  --c4-nav-idle-border: rgba(221, 219, 215, 0.45);
   --c4-nav-scrolled: rgba(247, 245, 242, 0.92);
 
   /* Text */
@@ -88,6 +90,8 @@
   --c4-border: #DDDBD7;
   --c4-border-light: #ECEAE6;
   --c4-card-bg: #FFFFFF;
+  --c4-nav-idle: rgba(247, 245, 242, 0.64);
+  --c4-nav-idle-border: rgba(221, 219, 215, 0.45);
   --c4-nav-scrolled: rgba(247, 245, 242, 0.92);
   --c4-footer-bg: #1A1A1A;
   --c4-tag-bg: #F4F2EF;
@@ -235,6 +239,8 @@ html { scroll-behavior: smooth; }
   --c4-bg-alt: #161A21;
   --c4-card-bg: #161A21;
   --c4-tag-bg: #1C2029;
+  --c4-nav-idle: rgba(15, 17, 21, 0.58);
+  --c4-nav-idle-border: rgba(236, 231, 222, 0.08);
   --c4-nav-scrolled: rgba(15, 17, 21, 0.92);
 
   /* Text — warm off-whites */
@@ -326,6 +332,8 @@ html { scroll-behavior: smooth; }
     --c4-bg-alt: #161A21;
     --c4-card-bg: #161A21;
     --c4-tag-bg: #1C2029;
+    --c4-nav-idle: rgba(15, 17, 21, 0.58);
+    --c4-nav-idle-border: rgba(236, 231, 222, 0.08);
     --c4-nav-scrolled: rgba(15, 17, 21, 0.92);
     --c4-text: #ECE7DE;
     --c4-text-muted: #A7ABB4;

@@ -38,9 +38,9 @@ export default function NavHeader() {
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         className="fixed top-0 left-0 right-0 z-50 transition-[background-color,box-shadow] duration-500"
         style={{
-          backgroundColor: scrolled ? 'var(--c4-nav-scrolled)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(12px)' : 'none',
-          borderBottom: scrolled ? '1px solid var(--c4-border-light)' : '1px solid transparent',
+          backgroundColor: scrolled ? 'var(--c4-nav-scrolled)' : 'var(--c4-nav-idle)',
+          backdropFilter: scrolled ? 'blur(12px) saturate(126%)' : 'blur(8px) saturate(118%)',
+          borderBottom: scrolled ? '1px solid var(--c4-border-light)' : '1px solid var(--c4-nav-idle-border)',
         }}
       >
         <div className="max-w-[1400px] mx-auto px-5 md:px-12">
@@ -59,9 +59,9 @@ export default function NavHeader() {
                   key={link.page}
                   to={createPageUrl(link.page)}
                   className="text-[11px] uppercase tracking-[0.13em] transition-colors duration-300 font-medium"
-                  style={{ color: 'var(--c4-text-subtle)' }}
+                  style={{ color: 'var(--c4-text-muted)' }}
                   onMouseEnter={e => e.currentTarget.style.color = 'var(--c4-link-hover)'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'var(--c4-text-subtle)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'var(--c4-text-muted)'}
                 >
                   {link.label}
                 </Link>
