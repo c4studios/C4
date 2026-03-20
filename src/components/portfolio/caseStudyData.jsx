@@ -258,7 +258,7 @@ export const CASE_STUDIES = {
     timeline: '',
     budget: '',
     role: 'Solo (design, development, deployment)',
-    liveUrl: 'https://jurassic-pt.vercel.app/',
+    liveUrl: 'https://www.jurassicpt.com/',
     year: '2026',
     category: 'web_design',
     tags: ['Website', 'Fitness', 'Local Business'],
