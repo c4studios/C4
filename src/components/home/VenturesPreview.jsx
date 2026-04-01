@@ -71,7 +71,7 @@ export default function VenturesPreview() {
             label="C4 Lens"
             color="var(--c4-text-subtle)"
             heading="Video with the same standard."
-            description="Videography for brands that care how they're seen. Launching soon."
+            description="Videography for brands that care how they're seen, shaped with the same design discipline as the rest of the studio."
             linkText="Learn More"
             linkPage="Lens"
             delay={0.12}

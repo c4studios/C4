@@ -1,8 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 export default function TestimonialCard({ testimonial, variant = 'light' }) {
   const proof = variant === 'proof';
   const dark = variant === 'dark';
+  const caseStudyPath = testimonial.caseStudySlug
+    ? createPageUrl(`CaseStudy?slug=${testimonial.caseStudySlug}`)
+    : null;
+  const websiteUrl = caseStudyPath ? null : testimonial.websiteUrl;
+  const CardTag = caseStudyPath ? Link : 'div';
 
   const cardBg = proof
     ? 'var(--c4-proof-surface)'
@@ -40,9 +47,38 @@ export default function TestimonialCard({ testimonial, variant = 'light' }) {
       ? 'var(--c4-accent)'
       : 'var(--c4-accent)';
 
+  const cardProps = caseStudyPath
+    ? {
+        to: caseStudyPath,
+        'aria-label': `View ${testimonial.role || testimonial.name} case study`,
+      }
+    : {};
+
+  const secondaryLine = websiteUrl ? (
+    <a
+      href={websiteUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-2 transition-opacity duration-200 hover:opacity-75 focus-visible:opacity-75 focus-visible:outline-none"
+      style={{ color: textSecondary }}
+      aria-label={`Visit ${testimonial.role || testimonial.name} website`}
+      onClick={(event) => event.stopPropagation()}
+    >
+      <span>{testimonial.role}</span>
+      <span
+        className="text-[10px] uppercase tracking-[0.14em]"
+        style={{ color: textTertiary }}
+      >
+        Take me there
+      </span>
+    </a>
+  ) : (
+    testimonial.role
+  );
+
   return (
-    <div
-      className="h-full select-none rounded-[3px] px-8 py-8 md:px-10 md:py-9"
+    <CardTag
+      className={`h-full select-none rounded-[3px] px-8 py-8 md:px-10 md:py-9 ${caseStudyPath ? 'group block cursor-pointer focus-visible:outline-none' : ''}`}
       style={{
         backgroundColor: cardBg,
         border: `1px solid ${cardBorder}`,
@@ -52,6 +88,7 @@ export default function TestimonialCard({ testimonial, variant = 'light' }) {
             ? '0 2px 8px rgba(0,0,0,0.2)'
             : '0 1px 3px rgba(0,0,0,0.03)',
       }}
+      {...cardProps}
     >
       <div
         className="mb-6 h-px w-10"
@@ -81,12 +118,12 @@ export default function TestimonialCard({ testimonial, variant = 'light' }) {
           className="mt-0.5 text-[12px]"
           style={{ color: textSecondary }}
         >
-          {testimonial.role}
+          {secondaryLine}
           {testimonial.location && (
             <span style={{ color: textTertiary }}> | {testimonial.location}</span>
           )}
         </p>
       </div>
-    </div>
+    </CardTag>
   );
 }

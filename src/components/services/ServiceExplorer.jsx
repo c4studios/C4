@@ -105,8 +105,7 @@ const SERVICES = [
     key: 'lens',
     title: 'Videography',
     portfolioFilter: null,
-    comingSoon: true,
-    summary: 'C4 Lens, coming soon.',
+    summary: 'C4 Lens for brands that want motion handled with precision, atmosphere, and commercial intent.',
     includes: [
       'Visual direction for launch moments',
       'Brand-led motion capture',
@@ -114,7 +113,7 @@ const SERVICES = [
     ],
     forWho: 'Brands that want motion handled with the same design discipline as the rest of the system.',
     outcome: 'A tighter visual presence across web, campaigns, and brand storytelling.',
-    approach: 'Built under the C4 Lens banner. Limited rollout, then broader availability.',
+    approach: 'Built under the C4 Lens banner with the same emphasis on restraint, clarity, and deployment-ready assets.',
   },
 ];
 
@@ -219,7 +218,7 @@ function DetailPanel({ service, onStartProject }) {
       <div className="mt-8 pt-6 border-t flex items-center gap-6" style={{ borderColor: 'var(--c4-border)' }}>
         {service.comingSoon ? (
           <p className="text-[11px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
-            C4 Lens rollout in progress
+            Availability updates pending
           </p>
         ) : (
           <>
@@ -309,7 +308,7 @@ function MobileServiceItem({ service, index, isOpen, onToggle, onStartProject })
               <div className="flex items-center gap-5 mt-2">
                 {service.comingSoon ? (
                   <p className="text-[11px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
-                    C4 Lens, coming soon
+                    Availability details pending
                   </p>
                 ) : (
                   <>

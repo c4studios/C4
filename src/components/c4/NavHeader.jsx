@@ -11,7 +11,7 @@ const navLinks = [
   { label: 'About', page: 'About' },
   { label: 'Services', page: 'Services' },
   { label: 'Portfolio', page: 'Portfolio' },
-  { label: 'Ventures', page: 'Ventures' },
+  { label: 'C4 Lens', page: 'Lens' },
 ];
 
 export default function NavHeader() {
