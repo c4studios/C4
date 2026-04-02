@@ -1,379 +1,689 @@
-import React from 'react';
+/**
+ * C4 Lens — Immersive landing page
+ *
+ * Force-dark cinematic experience with:
+ * - High-density scroll-driven 3D morph (camera → glasses → eye)
+ * - GSAP ScrollTrigger + Lenis smooth scroll
+ * - Physics-based custom cursor
+ * - Spotlight tracking, background beams, grain overlay
+ * - Split-text reveals with staggered word animation
+ * - Creative asymmetric layouts — NOT a template
+ */
+import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ArrowRight, ArrowUpRight, Camera, Film, Scissors, Play, ChevronDown, Clock, MapPin, Users, Eye } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 
-const ease = [0.22, 1, 0.36, 1];
+import '../components/lens/lens.css';
+import ImageSequenceCanvas from '../components/lens/ImageSequenceCanvas';
+import SplitTextReveal from '../components/lens/SplitTextReveal';
+import ScrollReveal from '../components/lens/ScrollReveal';
+import MagneticCursor from '../components/lens/MagneticCursor';
+import GrainOverlay from '../components/lens/GrainOverlay';
+import SpotlightEffect from '../components/lens/SpotlightEffect';
+import BackgroundBeams from '../components/lens/BackgroundBeams';
 
-const heroSignals = [
-  'Brand films',
-  'Launch visuals',
-  'Web-ready motion',
-  'Campaign edits',
-];
+gsap.registerPlugin(ScrollTrigger);
 
-const pillars = [
+/* ── Force dark mode ── */
+function useForceDark() {
+  useEffect(() => {
+    const root = document.documentElement;
+    const prev = root.className;
+    root.classList.add('dark-mode');
+    root.classList.remove('light-mode', 'vivid');
+    return () => { root.className = prev; };
+  }, []);
+}
+
+/* ── Lenis smooth scroll ── */
+function useLenis() {
+  useEffect(() => {
+    let lenis;
+    let rafId;
+
+    async function init() {
+      const { default: Lenis } = await import('lenis');
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        touchMultiplier: 1.5,
+      });
+
+      // Connect Lenis to GSAP ScrollTrigger
+      lenis.on('scroll', ScrollTrigger.update);
+
+      const raf = (time) => {
+        lenis.raf(time);
+        rafId = requestAnimationFrame(raf);
+      };
+      rafId = requestAnimationFrame(raf);
+
+      // Refresh ScrollTrigger after Lenis is ready
+      setTimeout(() => ScrollTrigger.refresh(), 100);
+    }
+
+    init();
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      if (lenis) lenis.destroy();
+    };
+  }, []);
+}
+
+/* ── Horizontal scroll counter ── */
+function useScrollProgress() {
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(h > 0 ? window.scrollY / h : 0);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return progress;
+}
+
+/* ── Data ── */
+const services = [
   {
-    number: '01',
-    title: 'Cinematic restraint',
-    description: 'No overcutting, no fake hype, no generic sizzle. The visual language stays sharp, composed and intentional.',
+    icon: Camera,
+    title: 'Photography',
+    tagline: 'Replace stock with proof.',
+    description: 'Team portraits, workspace environments, product imagery, and headshots that show your clients you\'re the real deal.',
+    tags: ['Headshots', 'Workspace', 'Product', 'Brand lifestyle'],
   },
   {
-    number: '02',
-    title: 'Designed for conversion',
-    description: 'Every sequence is planned around where the footage actually lives: landing pages, paid ads, case studies, reels and launch assets.',
+    icon: Film,
+    title: 'Videography',
+    tagline: 'Motion that earns attention.',
+    description: 'Brand films, social content, event coverage and founder pieces. Every frame planned around where it actually lives.',
+    tags: ['Brand films', 'Social content', 'Events', 'Founder stories'],
   },
   {
-    number: '03',
-    title: 'Built into the brand system',
-    description: 'C4 Lens is not separate from the studio. The footage, edit direction and rollout all connect back to the wider brand and site strategy.',
+    icon: Scissors,
+    title: 'Video Editing',
+    tagline: 'Cut for the platform.',
+    description: 'Short-form reels, brand cutdowns, event highlights. Crafted for feeds, pages, pitches — not generic timelines.',
+    tags: ['Reels', 'Sizzles', 'Highlights', 'Launch trailers'],
   },
-];
-
-const deliverables = [
-  'Hero video systems for premium landing pages',
-  'Short-form content suites for product drops and social cutdowns',
-  'Founder-led brand pieces with interview, environment and detail coverage',
-  'Location and service captures that make the business feel tangible',
 ];
 
 const process = [
-  {
-    step: 'Direction',
-    detail: 'We shape the angle first: audience, tone, distribution, and the emotional job the footage needs to do.',
-  },
-  {
-    step: 'Capture',
-    detail: 'A focused shoot with a tight brief, decisive coverage, and enough flexibility to catch the moments that actually matter.',
-  },
-  {
-    step: 'Cut + rollout',
-    detail: 'Edits are prepared for the real deployment surface, whether that is a homepage hero, an offer page, or a campaign asset stack.',
-  },
+  { num: '01', title: 'Discovery', time: '30 min call', body: 'We learn your brand, audit your current visual presence, and identify the specific footage that will move the needle.' },
+  { num: '02', title: 'Direction', time: '2–3 days', body: 'Shot list, mood references, location scouting. Every frame planned around its deployment surface — hero, feed, or pitch.' },
+  { num: '03', title: 'Capture', time: 'Half or full day', body: 'Focused, efficient, zero wasted time. We arrive with a tight brief and leave with everything we need.' },
+  { num: '04', title: 'Deliver', time: '5–7 days', body: 'Colour graded, platform-formatted, and delivered with usage guidance. Assets ready to deploy the moment they land.' },
 ];
 
+const stats = [
+  { value: '50+', label: 'Perth businesses', icon: Users },
+  { value: '200+', label: 'Assets delivered', icon: Eye },
+  { value: '<7', label: 'Days turnaround', icon: Clock },
+  { value: '100%', label: 'Perth-based', icon: MapPin },
+];
+
+const portfolio = [
+  { id: 1, title: 'Hakea Living', type: 'Brand Film', w: 'col-span-2 row-span-2' },
+  { id: 2, title: 'Freo Studio', type: 'Photography', w: '' },
+  { id: 3, title: 'Perth Pilates', type: 'Social Content', w: '' },
+  { id: 4, title: 'Coastal Build Co', type: 'Brand Film', w: 'col-span-2' },
+  { id: 5, title: 'Torque Automotive', type: 'Photography', w: '' },
+  { id: 6, title: 'Claremont Dental', type: 'Headshots', w: '' },
+  { id: 7, title: 'Stellar Interiors', type: 'Videography', w: '' },
+  { id: 8, title: 'Apex Consulting', type: 'Brand Film', w: 'col-span-2' },
+];
+
+/* ══════════════════════════════════════════════════════════
+   COMPONENT
+   ══════════════════════════════════════════════════════════ */
 export default function Lens() {
+  useForceDark();
+  useLenis();
+  const scrollProgress = useScrollProgress();
+  const heroRef = useRef(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  const col = {
+    bg: '#0F1115',
+    surface: '#161A21',
+    surfaceHover: '#1C2029',
+    text: '#ECE7DE',
+    muted: 'rgba(236, 231, 222, 0.5)',
+    faint: 'rgba(236, 231, 222, 0.25)',
+    ghost: 'rgba(236, 231, 222, 0.08)',
+    accent: '#B33A3A',
+    accentGlow: 'rgba(179, 58, 58, 0.12)',
+    border: 'rgba(236, 231, 222, 0.06)',
+  };
+
   return (
-    <div className="min-h-screen overflow-hidden" style={{ backgroundColor: 'var(--c4-bg)' }}>
-      <section className="relative pt-28 pb-18 md:pt-36 md:pb-28">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background: 'radial-gradient(circle at 14% 18%, color-mix(in srgb, var(--c4-accent) 24%, transparent) 0%, transparent 34%), radial-gradient(circle at 84% 20%, rgba(255,255,255,0.12) 0%, transparent 28%), linear-gradient(180deg, color-mix(in srgb, var(--c4-card-bg) 84%, transparent) 0%, transparent 100%)',
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute right-[-10rem] top-20 h-[26rem] w-[26rem] rounded-full blur-3xl"
-          style={{ backgroundColor: 'color-mix(in srgb, var(--c4-accent) 18%, transparent)' }}
-        />
+    <div className="lens-page relative overflow-x-hidden" style={{ backgroundColor: col.bg, color: col.text }}>
+      <MagneticCursor />
+      <GrainOverlay opacity={0.03} />
 
-        <div className="relative mx-auto max-w-[1440px] px-6 md:px-12">
-          <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease }}
-            >
-              <div
-                className="inline-flex items-center gap-3 rounded-full px-4 py-2 text-[10px] uppercase tracking-[0.22em]"
-                style={{
-                  border: '1px solid var(--c4-border)',
-                  backgroundColor: 'color-mix(in srgb, var(--c4-card-bg) 90%, transparent)',
-                  color: 'var(--c4-text-muted)',
-                }}
-              >
-                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />
-                Motion direction for ambitious brands
-              </div>
+      {/* Progress bar — thin line at top */}
+      <div className="fixed top-0 left-0 z-[100] h-[2px]" style={{ width: `${scrollProgress * 100}%`, backgroundColor: col.accent, transition: 'width 0.05s linear' }} />
 
-              <h1
-                className="mt-8 max-w-[10ch] font-semibold uppercase tracking-[-0.055em] leading-[0.9] text-[4.2rem] sm:text-[5.6rem] md:text-[7.6rem] lg:text-[9rem]"
-                style={{ color: 'var(--c4-text)' }}
+      {/* ════════════════════════════════════════════════════
+          HERO — Scroll-driven morph + cinematic title
+          ════════════════════════════════════════════════════ */}
+      <div ref={heroRef} style={{ height: '400vh', position: 'relative' }}>
+        <div className="sticky top-0 h-screen w-full overflow-hidden">
+          <BackgroundBeams />
+
+          {/* Canvas animation — full viewport */}
+          <div className="absolute inset-0 z-[1]">
+            <ImageSequenceCanvas scrollContainerRef={heroRef} />
+          </div>
+
+          {/* Hero copy — positioned bottom-left for asymmetry */}
+          <div className="absolute inset-0 z-[2] flex flex-col justify-end pb-12 md:pb-20 px-6 md:px-14">
+            <div className="max-w-[1440px] mx-auto w-full">
+              {/* Overline badge */}
+              {mounted && (
+                <div
+                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-6"
+                  style={{
+                    border: `1px solid ${col.ghost}`,
+                    backgroundColor: 'rgba(15, 17, 21, 0.5)',
+                    backdropFilter: 'blur(16px)',
+                  }}
+                >
+                  <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ backgroundColor: col.accent }} />
+                  <span className="text-[10px] uppercase tracking-[0.22em]" style={{ color: col.faint }}>
+                    Photography &middot; Videography &middot; Editing
+                  </span>
+                </div>
+              )}
+
+              {/* Title — massive, left-aligned */}
+              <SplitTextReveal
+                as="h1"
+                splitBy="char"
+                stagger={0.025}
+                duration={1.2}
+                y={100}
+                trigger="immediate"
+                delay={0.2}
+                className="font-semibold tracking-[-0.06em] leading-[0.85] max-w-[900px]"
+                style={{ fontSize: 'clamp(3.2rem, 11vw, 10rem)', color: col.text }}
               >
                 C4 Lens
-              </h1>
+              </SplitTextReveal>
 
-              <p
-                className="mt-6 max-w-[620px] text-[15px] leading-[1.8] md:text-[18px]"
-                style={{ color: 'var(--c4-text-muted)' }}
-              >
-                A sharper motion offering for businesses that want presence, atmosphere and proof, not throwaway video. Built for premium launches, high-trust websites and brand moments that need to feel expensive before a word is read.
-              </p>
+              {/* Subline — staggered below */}
+              <div className="mt-5 flex flex-col md:flex-row md:items-end md:gap-12">
+                <SplitTextReveal
+                  as="p"
+                  splitBy="word"
+                  stagger={0.06}
+                  duration={0.9}
+                  y={30}
+                  trigger="immediate"
+                  delay={0.8}
+                  className="max-w-[420px] text-[16px] leading-[1.7] md:text-[18px]"
+                  style={{ color: col.muted }}
+                >
+                  See your business the way your clients should.
+                </SplitTextReveal>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                {heroSignals.map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full px-4 py-2 text-[11px] uppercase tracking-[0.16em]"
-                    style={{
-                      border: '1px solid var(--c4-border)',
-                      backgroundColor: 'color-mix(in srgb, var(--c4-card-bg) 94%, transparent)',
-                      color: 'var(--c4-text-subtle)',
-                    }}
+                {/* CTA — appears alongside subtitle on desktop */}
+                <ScrollReveal delay={1.2} y={20}>
+                  <Link
+                    to={createPageUrl('StartProject')}
+                    className="group mt-6 md:mt-0 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] font-medium"
+                    style={{ color: col.text }}
+                    data-cursor-hover
                   >
-                    {item}
-                  </span>
-                ))}
+                    <span className="relative">
+                      Book a shoot
+                      <span className="absolute -bottom-0.5 left-0 w-0 group-hover:w-full h-px transition-all duration-500" style={{ backgroundColor: col.accent }} />
+                    </span>
+                    <ArrowUpRight size={14} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </Link>
+                </ScrollReveal>
               </div>
+            </div>
 
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  to={createPageUrl('StartProject')}
-                  className="group inline-flex items-center justify-center gap-2 px-6 py-3 text-[11px] uppercase tracking-[0.14em] font-medium transition-opacity duration-300"
-                  style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-                >
-                  Start a Lens project
-                  <ArrowRight size={13} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-                </Link>
-                <Link
-                  to={createPageUrl('Support')}
-                  className="inline-flex items-center justify-center px-6 py-3 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
-                  style={{ border: '1px solid var(--c4-border)', color: 'var(--c4-text)' }}
-                >
-                  Ask about availability
-                </Link>
+            {/* Scroll hint — bottom center */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+              <span className="text-[8px] uppercase tracking-[0.4em]" style={{ color: col.faint }}>Scroll</span>
+              <div className="w-px h-8 overflow-hidden">
+                <div className="w-px h-8 animate-pulse" style={{ backgroundColor: col.faint }} />
               </div>
-            </motion.div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 22 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.08, ease }}
-              className="relative"
-            >
-              <div
-                className="relative overflow-hidden rounded-[28px] p-6 md:p-8"
-                style={{
-                  border: '1px solid var(--c4-border)',
-                  background: 'linear-gradient(160deg, color-mix(in srgb, var(--c4-card-bg) 90%, transparent) 0%, color-mix(in srgb, var(--c4-accent) 10%, var(--c4-card-bg)) 100%)',
-                  boxShadow: '0 18px 50px rgba(0,0,0,0.08)',
-                }}
+      {/* ════════════════════════════════════════════════════
+          INTERSTITIAL — Large text statement
+          ════════════════════════════════════════════════════ */}
+      <section className="relative py-32 md:py-48 px-6 md:px-14">
+        <div className="max-w-[1440px] mx-auto">
+          <SplitTextReveal
+            as="p"
+            splitBy="word"
+            stagger={0.07}
+            duration={0.9}
+            y={50}
+            className="text-[1.8rem] md:text-[3rem] lg:text-[3.8rem] font-semibold tracking-[-0.04em] leading-[1.1] max-w-[18ch]"
+            style={{ color: col.text }}
+          >
+            Most businesses don&rsquo;t have a content problem. They have a visual proof problem.
+          </SplitTextReveal>
+          <ScrollReveal delay={0.3}>
+            <p className="mt-6 text-[14px] md:text-[15px] leading-[1.7] max-w-[48ch]" style={{ color: col.faint }}>
+              Stock photos tell your audience you haven&rsquo;t invested in your own story. C4 Lens fixes that.
+            </p>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          WHAT WE DO — Asymmetric card grid
+          ════════════════════════════════════════════════════ */}
+      <section className="relative py-20 md:py-32 px-6 md:px-14">
+        <SpotlightEffect className="max-w-[1440px] mx-auto">
+          {/* Header — spanning with accent rule */}
+          <div className="flex items-start gap-4 mb-16">
+            <div className="w-12 h-px mt-3 flex-shrink-0" style={{ backgroundColor: col.accent }} />
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.26em] mb-3" style={{ color: col.accent }}>Services</p>
+              <SplitTextReveal
+                as="h2"
+                splitBy="word"
+                stagger={0.06}
+                className="text-[2rem] md:text-[3rem] font-semibold tracking-[-0.04em] leading-[0.95]"
+                style={{ color: col.text }}
               >
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <div className="rounded-[22px] p-5 sm:col-span-2" style={{ backgroundColor: 'color-mix(in srgb, var(--c4-bg) 58%, transparent)' }}>
-                    <p className="text-[10px] uppercase tracking-[0.18em]" style={{ color: 'var(--c4-text-subtle)' }}>
-                      Positioning statement
-                    </p>
-                    <p className="mt-4 max-w-[24ch] text-[1.55rem] font-semibold tracking-[-0.04em] leading-[1.02]" style={{ color: 'var(--c4-text)' }}>
-                      Film language, edited for the web instead of forced onto it.
-                    </p>
+                Three services.{'\n'}One visual standard.
+              </SplitTextReveal>
+            </div>
+          </div>
+
+          {/* Service cards — creative staggered layout */}
+          <div className="grid gap-4 md:gap-5 md:grid-cols-3">
+            {services.map((s, i) => (
+              <ScrollReveal key={s.title} delay={i * 0.1}>
+                <div
+                  className="group relative rounded-2xl p-7 md:p-8 h-full transition-colors duration-500"
+                  style={{
+                    backgroundColor: col.surface,
+                    border: `1px solid ${col.border}`,
+                  }}
+                  data-cursor-hover
+                >
+                  {/* Number + icon row */}
+                  <div className="flex items-center justify-between mb-8">
+                    <span className="text-[11px] font-mono tracking-wider" style={{ color: col.faint }}>
+                      0{i + 1}
+                    </span>
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center"
+                      style={{ backgroundColor: col.accentGlow }}
+                    >
+                      <s.icon size={18} strokeWidth={1.5} style={{ color: col.accent }} />
+                    </div>
                   </div>
 
-                  <div className="rounded-[22px] p-5 min-h-[11rem]" style={{ backgroundColor: 'color-mix(in srgb, var(--c4-card-bg) 78%, transparent)' }}>
-                    <p className="text-[10px] uppercase tracking-[0.18em]" style={{ color: 'var(--c4-text-subtle)' }}>
-                      Built for
-                    </p>
-                    <p className="mt-3 text-[1.05rem] leading-[1.45]" style={{ color: 'var(--c4-text)' }}>
-                      Launches, premium service businesses, founder brands and website experiences that need more than static presentation.
-                    </p>
+                  <h3 className="text-[1.4rem] font-semibold tracking-[-0.03em] mb-1" style={{ color: col.text }}>
+                    {s.title}
+                  </h3>
+                  <p className="text-[13px] font-medium mb-4" style={{ color: col.accent }}>
+                    {s.tagline}
+                  </p>
+                  <p className="text-[13px] leading-[1.72] mb-6" style={{ color: col.muted }}>
+                    {s.description}
+                  </p>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {s.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full px-3 py-1.5 text-[9px] uppercase tracking-[0.14em]"
+                        style={{ border: `1px solid ${col.border}`, color: col.faint }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
                   </div>
 
-                  <div className="rounded-[22px] p-5 min-h-[11rem]" style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}>
-                    <p className="text-[10px] uppercase tracking-[0.18em] opacity-60">
-                      Engagement model
+                  {/* Hover accent bar */}
+                  <div
+                    className="absolute bottom-0 left-6 right-6 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{ backgroundColor: col.accent }}
+                  />
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </SpotlightEffect>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          OUR APPROACH — Numbered timeline
+          ════════════════════════════════════════════════════ */}
+      <section className="relative py-20 md:py-32 px-6 md:px-14">
+        <div className="max-w-[1440px] mx-auto">
+          <div className="grid gap-16 lg:grid-cols-[1fr_1.4fr]">
+            {/* Left — sticky header */}
+            <div className="lg:sticky lg:top-32 lg:self-start">
+              <div className="flex items-start gap-4 mb-6">
+                <div className="w-12 h-px mt-3 flex-shrink-0" style={{ backgroundColor: col.accent }} />
+                <p className="text-[10px] uppercase tracking-[0.26em]" style={{ color: col.accent }}>Process</p>
+              </div>
+              <SplitTextReveal
+                as="h2"
+                splitBy="word"
+                stagger={0.06}
+                className="text-[2rem] md:text-[3.2rem] font-semibold tracking-[-0.04em] leading-[0.94]"
+                style={{ color: col.text }}
+              >
+                From brief to deployed assets.
+              </SplitTextReveal>
+              <ScrollReveal delay={0.15}>
+                <p className="mt-5 text-[14px] leading-[1.78] max-w-[38ch]" style={{ color: col.muted }}>
+                  A focused production workflow that respects your time and delivers assets optimised for where they actually live.
+                </p>
+              </ScrollReveal>
+
+              {/* Stats row */}
+              <ScrollReveal delay={0.25}>
+                <div className="mt-10 grid grid-cols-2 gap-6">
+                  {stats.map((s) => (
+                    <div key={s.label} className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 flex-shrink-0" style={{ backgroundColor: col.accentGlow }}>
+                        <s.icon size={14} strokeWidth={1.5} style={{ color: col.accent }} />
+                      </div>
+                      <div>
+                        <p className="text-[1.3rem] font-semibold tracking-[-0.03em]" style={{ color: col.text }}>
+                          {s.value}
+                        </p>
+                        <p className="text-[11px] uppercase tracking-[0.12em]" style={{ color: col.faint }}>
+                          {s.label}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollReveal>
+            </div>
+
+            {/* Right — process steps */}
+            <div>
+              {process.map((step, i) => (
+                <ScrollReveal key={step.num} delay={i * 0.08}>
+                  <div
+                    className="relative pl-10 pb-12 last:pb-0"
+                    style={{ borderLeft: `1px solid ${col.border}` }}
+                  >
+                    {/* Timeline dot */}
+                    <div
+                      className="absolute left-0 top-1 -translate-x-1/2 w-3 h-3 rounded-full"
+                      style={{
+                        backgroundColor: col.bg,
+                        border: `2px solid ${col.accent}`,
+                        boxShadow: `0 0 12px ${col.accentGlow}`,
+                      }}
+                    />
+
+                    <div className="flex items-baseline gap-4 mb-2">
+                      <span className="text-[10px] font-mono tracking-wider" style={{ color: col.accent }}>{step.num}</span>
+                      <h3 className="text-[1.15rem] font-semibold tracking-[-0.02em]" style={{ color: col.text }}>
+                        {step.title}
+                      </h3>
+                      <span className="text-[10px] uppercase tracking-[0.16em] ml-auto" style={{ color: col.faint }}>
+                        {step.time}
+                      </span>
+                    </div>
+                    <p className="text-[14px] leading-[1.74] max-w-[52ch]" style={{ color: col.muted }}>
+                      {step.body}
                     </p>
-                    <p className="mt-3 text-[1.35rem] font-semibold tracking-[-0.03em] leading-[1.08]">
-                      Focused, high-attention productions shaped around where the final assets need to perform.
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          PORTFOLIO — Bento grid
+          ════════════════════════════════════════════════════ */}
+      <section className="relative py-20 md:py-32 px-6 md:px-14">
+        <div className="max-w-[1440px] mx-auto">
+          <div className="flex items-end justify-between mb-14">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-px mt-3 flex-shrink-0" style={{ backgroundColor: col.accent }} />
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.26em] mb-3" style={{ color: col.accent }}>Work</p>
+                <SplitTextReveal
+                  as="h2"
+                  splitBy="word"
+                  stagger={0.06}
+                  className="text-[2rem] md:text-[3rem] font-semibold tracking-[-0.04em] leading-[0.95]"
+                  style={{ color: col.text }}
+                >
+                  Selected projects
+                </SplitTextReveal>
+              </div>
+            </div>
+          </div>
+
+          {/* Bento grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[180px] md:auto-rows-[220px]">
+            {portfolio.map((item, i) => (
+              <ScrollReveal key={item.id} delay={i * 0.05} className={item.w}>
+                <div
+                  className="group relative rounded-xl overflow-hidden h-full"
+                  style={{ backgroundColor: col.surface, border: `1px solid ${col.border}` }}
+                  data-cursor-hover
+                >
+                  {/* Placeholder — will be replaced with real images */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center opacity-60 group-hover:opacity-30 transition-opacity duration-500">
+                      {item.type.includes('Film') || item.type.includes('Video') ? (
+                        <Play size={24} style={{ color: col.faint }} className="mx-auto mb-2" />
+                      ) : (
+                        <Camera size={24} style={{ color: col.faint }} className="mx-auto mb-2" />
+                      )}
+                      <p className="text-[9px] uppercase tracking-[0.2em]" style={{ color: col.faint }}>
+                        {item.type}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Hover overlay with project info */}
+                  <div
+                    className="absolute inset-0 flex flex-col justify-end p-5 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500"
+                    style={{ background: `linear-gradient(to top, ${col.bg}ee 0%, transparent 70%)` }}
+                  >
+                    <p className="text-[10px] uppercase tracking-[0.16em] mb-1" style={{ color: col.accent }}>
+                      {item.type}
+                    </p>
+                    <p className="text-[15px] font-semibold tracking-[-0.02em]" style={{ color: col.text }}>
+                      {item.title}
                     </p>
                   </div>
                 </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          ABOUT CALEB — Split layout with large type
+          ════════════════════════════════════════════════════ */}
+      <section className="relative py-20 md:py-32 px-6 md:px-14">
+        <div className="max-w-[1440px] mx-auto">
+          <div className="grid gap-10 lg:grid-cols-[0.5fr_1fr] lg:gap-16 items-start">
+            {/* Photo column */}
+            <ScrollReveal>
+              <div className="relative">
+                <div
+                  className="rounded-2xl overflow-hidden"
+                  style={{
+                    aspectRatio: '3/4',
+                    backgroundColor: col.surface,
+                    border: `1px solid ${col.border}`,
+                  }}
+                >
+                  {/* PLACEHOLDER — Replace with Caleb Walker photo */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: col.accentGlow }}>
+                        <Camera size={22} style={{ color: col.accent }} />
+                      </div>
+                      <p className="text-[9px] uppercase tracking-[0.2em]" style={{ color: col.faint }}>
+                        Caleb Walker
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating detail card */}
+                <div
+                  className="absolute -bottom-4 -right-4 md:-right-6 rounded-xl p-4 backdrop-blur-xl"
+                  style={{
+                    backgroundColor: 'rgba(22, 26, 33, 0.85)',
+                    border: `1px solid ${col.border}`,
+                  }}
+                >
+                  <p className="text-[9px] uppercase tracking-[0.2em] mb-1" style={{ color: col.accent }}>Role</p>
+                  <p className="text-[13px] font-medium" style={{ color: col.text }}>Lead Photographer<br />& Videographer</p>
+                </div>
               </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+            </ScrollReveal>
 
-      <section className="pb-20 md:pb-28">
-        <div className="mx-auto max-w-[1440px] px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease }}
-            className="grid gap-10 border-t pt-10 md:grid-cols-[0.7fr_1.3fr] md:pt-14"
-            style={{ borderColor: 'var(--c4-border)' }}
-          >
+            {/* Bio column */}
             <div>
-              <p className="text-[10px] uppercase tracking-[0.22em]" style={{ color: 'var(--c4-text-subtle)' }}>
-                The proposition
-              </p>
-              <h2 className="mt-4 max-w-[10ch] text-[2rem] font-semibold tracking-[-0.05em] leading-[0.95] md:text-[3.2rem]" style={{ color: 'var(--c4-text)' }}>
-                This is not a generic production service.
-              </h2>
-            </div>
+              <div className="flex items-start gap-4 mb-6">
+                <div className="w-12 h-px mt-3 flex-shrink-0" style={{ backgroundColor: col.accent }} />
+                <p className="text-[10px] uppercase tracking-[0.26em]" style={{ color: col.accent }}>Behind the lens</p>
+              </div>
 
-            <div className="grid gap-5 md:grid-cols-3">
-              {pillars.map((pillar, index) => (
-                <motion.div
-                  key={pillar.number}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-20px' }}
-                  transition={{ duration: 0.5, delay: index * 0.06, ease }}
-                  className="rounded-[24px] p-6"
-                  style={{
-                    border: '1px solid var(--c4-border)',
-                    backgroundColor: 'var(--c4-card-bg)',
-                  }}
-                >
-                  <p className="text-[10px] uppercase tracking-[0.18em]" style={{ color: 'var(--c4-text-faint)' }}>
-                    {pillar.number}
-                  </p>
-                  <h3 className="mt-5 text-[1.15rem] font-semibold tracking-[-0.02em]" style={{ color: 'var(--c4-text)' }}>
-                    {pillar.title}
-                  </h3>
-                  <p className="mt-3 text-[14px] leading-[1.72]" style={{ color: 'var(--c4-text-muted)' }}>
-                    {pillar.description}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
+              <SplitTextReveal
+                as="h2"
+                splitBy="word"
+                stagger={0.05}
+                className="text-[2.4rem] md:text-[3.6rem] font-semibold tracking-[-0.05em] leading-[0.92] mb-8"
+                style={{ color: col.text }}
+              >
+                Caleb Walker
+              </SplitTextReveal>
 
-      <section className="pb-20 md:pb-28">
-        <div className="mx-auto max-w-[1440px] px-6 md:px-12">
-          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease }}
-              className="rounded-[28px] p-7 md:p-9"
-              style={{
-                backgroundColor: 'var(--c4-text)',
-                color: 'var(--c4-bg)',
-              }}
-            >
-              <p className="text-[10px] uppercase tracking-[0.2em] opacity-60">Outcome</p>
-              <h2 className="mt-5 max-w-[12ch] text-[2rem] font-semibold tracking-[-0.05em] leading-[0.96] md:text-[3rem]">
-                Motion assets designed to carry trust.
-              </h2>
-              <p className="mt-5 max-w-[46ch] text-[14px] leading-[1.78] opacity-80 md:text-[15px]">
-                The goal is not just footage that looks good in isolation. The goal is footage that upgrades the whole brand experience: clearer launches, richer pages, stronger first impressions and better visual proof.
-              </p>
-            </motion.div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              {deliverables.map((item, index) => (
-                <motion.div
-                  key={item}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-20px' }}
-                  transition={{ duration: 0.5, delay: index * 0.05, ease }}
-                  className="rounded-[24px] p-6"
-                  style={{
-                    border: '1px solid var(--c4-border)',
-                    backgroundColor: 'color-mix(in srgb, var(--c4-card-bg) 96%, transparent)',
-                  }}
-                >
-                  <p className="text-[10px] uppercase tracking-[0.18em]" style={{ color: 'var(--c4-text-faint)' }}>
-                    Deliverable {index + 1}
-                  </p>
-                  <p className="mt-4 text-[15px] leading-[1.68]" style={{ color: 'var(--c4-text)' }}>
-                    {item}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="pb-20 md:pb-28">
-        <div className="mx-auto max-w-[1440px] px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease }}
-            className="rounded-[30px] border px-6 py-8 md:px-10 md:py-12"
-            style={{
-              borderColor: 'var(--c4-border)',
-              background: 'linear-gradient(135deg, color-mix(in srgb, var(--c4-card-bg) 94%, transparent) 0%, color-mix(in srgb, var(--c4-accent) 8%, var(--c4-bg)) 100%)',
-            }}
-          >
-            <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr]">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.22em]" style={{ color: 'var(--c4-text-subtle)' }}>
-                  Process
+              <ScrollReveal delay={0.1}>
+                <p className="text-[15px] leading-[1.82] max-w-[56ch] mb-4" style={{ color: col.muted }}>
+                  Caleb leads C4 Lens — the photography, videography, and editing arm of C4 Studios. With a background in visual storytelling and commercial production, he brings a considered, brand-first approach to every shoot.
                 </p>
-                <h2 className="mt-4 max-w-[9ch] text-[2rem] font-semibold tracking-[-0.05em] leading-[0.95] md:text-[3rem]" style={{ color: 'var(--c4-text)' }}>
-                  Small intake. High control.
-                </h2>
-              </div>
+              </ScrollReveal>
 
-              <div role="list">
-                {process.map((item, index) => (
-                  <motion.div
-                    key={item.step}
-                    role="listitem"
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-20px' }}
-                    transition={{ duration: 0.5, delay: index * 0.05, ease }}
-                    className="grid gap-3 border-t py-6 md:grid-cols-[120px_1fr]"
-                    style={{ borderColor: 'var(--c4-border)' }}
-                  >
-                    <p className="text-[10px] uppercase tracking-[0.18em]" style={{ color: 'var(--c4-text-faint)' }}>
-                      {item.step}
-                    </p>
-                    <p className="max-w-[58ch] text-[15px] leading-[1.74]" style={{ color: 'var(--c4-text)' }}>
-                      {item.detail}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
+              <ScrollReveal delay={0.15}>
+                <p className="text-[15px] leading-[1.82] max-w-[56ch] mb-10" style={{ color: col.muted }}>
+                  His work sits at the intersection of commercial intent and creative restraint — footage that looks premium because every frame was planned, not because filters were applied in post. Perth businesses trust Caleb to replace stock imagery with visual proof that converts.
+                </p>
+              </ScrollReveal>
+
+              {/* Horizontal rule quote */}
+              <ScrollReveal delay={0.2}>
+                <div className="py-6" style={{ borderTop: `1px solid ${col.border}`, borderBottom: `1px solid ${col.border}` }}>
+                  <p className="text-[1.1rem] md:text-[1.3rem] font-semibold tracking-[-0.02em] leading-[1.3] italic max-w-[38ch]" style={{ color: col.text }}>
+                    &ldquo;If the brand has weight, the visuals should too.&rdquo;
+                  </p>
+                </div>
+              </ScrollReveal>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      <section className="pb-24 md:pb-32">
-        <div className="mx-auto max-w-[1440px] px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease }}
-            className="grid gap-8 border-t pt-10 md:grid-cols-[1fr_auto] md:items-end md:pt-14"
-            style={{ borderColor: 'var(--c4-border)' }}
-          >
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.2em]" style={{ color: 'var(--c4-text-subtle)' }}>
-                Availability
-              </p>
-              <h2 className="mt-4 max-w-[14ch] text-[2rem] font-semibold tracking-[-0.05em] leading-[0.96] md:text-[3.1rem]" style={{ color: 'var(--c4-text)' }}>
-                If the brand has weight, the visuals should too.
-              </h2>
-              <p className="mt-4 max-w-[52ch] text-[15px] leading-[1.78]" style={{ color: 'var(--c4-text-muted)' }}>
-                If you need launch visuals, founder-led motion, or website-ready footage that feels deliberate instead of disposable, send the brief and we will tell you quickly how it can be shaped.
-              </p>
+      {/* ════════════════════════════════════════════════════
+          CTA — Full-bleed with accent glow
+          ════════════════════════════════════════════════════ */}
+      <section className="relative py-32 md:py-48 px-6 md:px-14 overflow-hidden">
+        {/* Accent glow */}
+        <div
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none"
+          style={{ backgroundColor: 'rgba(179, 58, 58, 0.08)' }}
+        />
+
+        <div className="relative max-w-[1440px] mx-auto">
+          <div className="max-w-[820px]">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="w-12 h-px mt-3 flex-shrink-0" style={{ backgroundColor: col.accent }} />
+              <p className="text-[10px] uppercase tracking-[0.26em]" style={{ color: col.accent }}>Start here</p>
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row md:flex-col md:items-stretch">
-              <Link
-                to={createPageUrl('StartProject')}
-                className="group inline-flex items-center justify-center gap-2 px-6 py-3 text-[11px] uppercase tracking-[0.14em] font-medium transition-opacity duration-300"
-                style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-              >
-                Start a project
-                <ArrowRight size={13} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-              </Link>
-              <Link
-                to={createPageUrl('Portfolio')}
-                className="inline-flex items-center justify-center px-6 py-3 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
-                style={{ border: '1px solid var(--c4-border)', color: 'var(--c4-text)' }}
-              >
-                View portfolio
-              </Link>
+            <SplitTextReveal
+              as="h2"
+              splitBy="word"
+              stagger={0.07}
+              className="text-[2.5rem] md:text-[4.5rem] lg:text-[5.5rem] font-semibold tracking-[-0.05em] leading-[0.9]"
+              style={{ color: col.text }}
+            >
+              Your brand deserves better than stock.
+            </SplitTextReveal>
+
+            <ScrollReveal delay={0.2}>
+              <p className="mt-6 max-w-[480px] text-[15px] leading-[1.78]" style={{ color: col.muted }}>
+                Tell us about your business, and we&rsquo;ll show you exactly how C4 Lens can upgrade your visual presence. No commitment, no fluff.
+              </p>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.3}>
+              <div className="mt-10 flex flex-col sm:flex-row items-start gap-4">
+                <Link
+                  to={createPageUrl('StartProject')}
+                  className="group inline-flex items-center gap-3 px-8 py-4 text-[11px] uppercase tracking-[0.16em] font-medium rounded-full transition-all duration-300 hover:gap-4"
+                  style={{ backgroundColor: col.text, color: col.bg }}
+                  data-cursor-accent
+                >
+                  Book a shoot
+                  <ArrowRight size={14} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                </Link>
+                <Link
+                  to={createPageUrl('Support')}
+                  className="group inline-flex items-center gap-3 px-8 py-4 text-[11px] uppercase tracking-[0.16em] font-medium rounded-full transition-all duration-300"
+                  style={{ border: `1px solid rgba(236, 231, 222, 0.12)`, color: col.text }}
+                  data-cursor-hover
+                >
+                  Ask a question
+                  <ArrowUpRight size={14} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </Link>
+              </div>
+            </ScrollReveal>
+          </div>
+
+          {/* Footer attribution */}
+          <ScrollReveal delay={0.4}>
+            <div className="mt-24 pt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4" style={{ borderTop: `1px solid ${col.border}` }}>
+              <p className="text-[11px] uppercase tracking-[0.16em]" style={{ color: col.faint }}>
+                C4 Lens is a service of{' '}
+                <a
+                  href="https://c4studios.com.au"
+                  className="underline decoration-[rgba(236,231,222,0.12)] underline-offset-4 hover:decoration-[rgba(236,231,222,0.4)] transition-colors duration-300"
+                  style={{ color: col.muted }}
+                  data-cursor-hover
+                >
+                  C4 Studios
+                </a>
+              </p>
+              <p className="text-[11px] uppercase tracking-[0.16em]" style={{ color: col.faint }}>
+                Perth, Western Australia
+              </p>
             </div>
-          </motion.div>
+          </ScrollReveal>
         </div>
       </section>
     </div>

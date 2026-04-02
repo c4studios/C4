@@ -1,0 +1,89 @@
+/*
+ * C4 Lens — Page-scoped styles
+ *
+ * Extends the global design tokens for the force-dark Lens experience.
+ * Uses GPU-composited properties only (transform, opacity).
+ */
+
+.lens-page {
+  /* Override scroll-behavior for Lenis control */
+  scroll-behavior: auto;
+
+  /* Smoother font rendering in dark mode */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Hide default cursor on desktop for custom cursor */
+@media (pointer: fine) {
+  .lens-page,
+  .lens-page a,
+  .lens-page button,
+  .lens-page [data-cursor-hover],
+  .lens-page [data-cursor-accent] {
+    cursor: none;
+  }
+}
+
+/* Restore cursor on touch devices */
+@media (pointer: coarse) {
+  .lens-page,
+  .lens-page a,
+  .lens-page button {
+    cursor: auto;
+  }
+}
+
+/* Touch targets — min 44x44 per Apple HIG / UI-UX Pro Max rules */
+.lens-page a,
+.lens-page button {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Focus rings — visible, accessible */
+.lens-page a:focus-visible,
+.lens-page button:focus-visible,
+.lens-page [tabindex]:focus-visible {
+  outline: 2px solid rgba(179, 58, 58, 0.6);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Selection color for dark bg */
+.lens-page ::selection {
+  background: rgba(179, 58, 58, 0.25);
+  color: #ECE7DE;
+}
+
+/* Smooth hover transitions on interactive cards */
+.lens-page [data-cursor-hover] {
+  transition: border-color 0.4s ease, background-color 0.4s ease;
+}
+
+.lens-page [data-cursor-hover]:hover {
+  border-color: rgba(236, 231, 222, 0.1) !important;
+}
+
+/* Reduced motion — disable all custom animations */
+@media (prefers-reduced-motion: reduce) {
+  .lens-page * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .lens-page canvas {
+    display: none;
+  }
+}
+
+/* Typography — optimised line heights per UI/UX Pro Max */
+.lens-page p {
+  line-height: 1.72;
+}
+
+.lens-page h1, .lens-page h2, .lens-page h3 {
+  text-wrap: balance;
+}
