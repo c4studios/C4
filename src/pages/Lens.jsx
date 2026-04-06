@@ -181,7 +181,7 @@ export default function Lens() {
 
           {/* Canvas animation — full viewport */}
           <div className="absolute inset-0 z-[1]">
-            <ImageSequenceCanvas scrollContainerRef={heroRef} />
+            <ImageSequenceCanvas scrollContainerRef={heroRef} frameCount={90} framePath="/lens-frames/frame-" frameExt=".jpg" />
           </div>
 
           {/* Hero copy — positioned bottom-left for asymmetry */}

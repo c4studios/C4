@@ -59,6 +59,15 @@ import Services from './pages/Services';
 import StartProject from './pages/StartProject';
 import Terms from './pages/Terms';
 import Ventures from './pages/Ventures';
+import ServicesPricing from './pages/ServicesPricing';
+import WebDesignPricing from './pages/WebDesignPricing';
+import BrandingPricing from './pages/BrandingPricing';
+import C4LensPricing from './pages/C4LensPricing';
+import SEOPricing from './pages/SEOPricing';
+import AutomationPricing from './pages/AutomationPricing';
+import SocialMediaPricing from './pages/SocialMediaPricing';
+import BundlesPricing from './pages/BundlesPricing';
+import SupportPlans from './pages/SupportPlans';
 import __Layout from './Layout.jsx';
 
 
@@ -75,6 +84,15 @@ export const PAGES = {
     "StartProject": StartProject,
     "Terms": Terms,
     "Ventures": Ventures,
+    "ServicesPricing": ServicesPricing,
+    "WebDesignPricing": WebDesignPricing,
+    "BrandingPricing": BrandingPricing,
+    "C4LensPricing": C4LensPricing,
+    "SEOPricing": SEOPricing,
+    "AutomationPricing": AutomationPricing,
+    "SocialMediaPricing": SocialMediaPricing,
+    "BundlesPricing": BundlesPricing,
+    "SupportPlans": SupportPlans,
 }
 
 export const pagesConfig = {

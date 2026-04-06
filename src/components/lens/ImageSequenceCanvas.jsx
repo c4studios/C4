@@ -515,7 +515,7 @@ function drawFrame(ctx, w, h, progress) {
 /* ══════════════════════════════════════════════════════════
    COMPONENT — Uses GSAP ScrollTrigger for Lenis-safe progress
    ══════════════════════════════════════════════════════════ */
-export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0, framePath = '/lens-frames/frame-' }) {
+export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0, framePath = '/lens-frames/frame-', frameExt = '.jpg' }) {
   const canvasRef = useRef(null);
   const progressRef = useRef(0);
   const rafRef = useRef(null);
@@ -532,7 +532,7 @@ export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0
     for (let i = 1; i <= frameCount; i++) {
       const img = new Image();
       const num = String(i).padStart(3, '0');
-      img.src = `${framePath}${num}.png`;
+      img.src = `${framePath}${num}${frameExt}`;
       img.onload = () => {
         loaded++;
         if (loaded === frameCount) {
@@ -546,7 +546,7 @@ export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0
       };
       images.push(img);
     }
-  }, [frameCount, framePath]);
+  }, [frameCount, framePath, frameExt]);
 
   const useImageSequence = frameCount > 0 && imagesLoaded;
 
