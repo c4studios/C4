@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l /c/Users/belac/Downloads/C4-main/C4-main/src/pages/*.jsx)",
+      "Bash(grep -E \"\\\\.\\(jsx|js\\)$\")",
+      "Bash(npx vite:*)"
+    ]
+  }
+}
