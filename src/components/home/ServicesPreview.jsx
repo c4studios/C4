@@ -8,40 +8,28 @@ const ease = [0.22, 1, 0.36, 1];
 
 const services = [
   {
-    number: '01',
-    key: 'websites',
-    title: 'Websites',
-    brief: 'Bespoke, strategy-led website design for brands that refuse to look like everyone else.',
+    number: 'C1',
+    key: 'web',
+    title: 'Web & Applications',
+    brief: 'Custom websites, web apps, SaaS platforms, and full-stack rebuilds — designed to convert, built to perform.',
   },
   {
-    number: '02',
-    key: 'apps',
-    title: 'Web Applications',
-    brief: 'Production-grade web apps — SaaS platforms, portals, internal tools — built for real users at scale.',
-  },
-  {
-    number: '03',
+    number: 'C2',
     key: 'brand',
-    title: 'Brand Platforms',
-    brief: 'Complete digital brand systems. Identity, web presence, and product experience — all cohesive.',
+    title: 'Brand & Growth',
+    brief: 'Branding, identity systems, SEO, social media, and growth strategy — everything your brand needs to rank and resonate.',
   },
   {
-    number: '04',
-    key: 'growth',
-    title: 'Growth & Optimisation',
-    brief: 'Conversion-focused design, SEO foundations, and performance tuning that drive measurable results.',
+    number: 'C3',
+    key: 'ai',
+    title: 'AI & Software',
+    brief: 'Workflow automation, AI agents, custom integrations, and lean software replacements that compound over time.',
   },
   {
-    number: '05',
-    key: 'automation',
-    title: 'Automation & AI',
-    brief: 'Smarter workflows, AI integrations, and process automation that eliminate friction.',
-  },
-  {
-    number: '06',
-    key: 'rebuild',
-    title: 'Software Rebuilds',
-    brief: 'Replacing overpriced SaaS with lean custom alternatives. Same capability, fraction of the cost.',
+    number: 'C4',
+    key: 'lens',
+    title: 'C4 Lens',
+    brief: 'Professional photography and videography for brands that want every visual handled with precision and intent.',
   },
 ];
 
@@ -58,7 +46,10 @@ export default function ServicesPreview() {
           transition={{ duration: 0.5, ease }}
           className="flex justify-between items-baseline mb-12 md:mb-16"
         >
-          <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>Services</h2>
+          <div>
+            <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>Services</h2>
+            <p className="mt-1 text-[12px] font-medium tracking-[-0.01em]" style={{ color: 'var(--c4-text-faint)' }}>Four pillars. One studio.</p>
+          </div>
           <Link
             to={createPageUrl('Services')}
             className="text-[11px] uppercase tracking-[0.2em] font-medium transition-colors duration-300"

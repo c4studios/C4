@@ -20,7 +20,7 @@ export const TESTIMONIALS = [
     quote: "A huge thank you for such an inspiring consultation. My website is now incredibly fast, modern and finally has the functionality I've been trying to achieve for years. The results are outstanding. Brilliant job.",
     name: 'Collin',
     role: 'GoCC',
-    websiteUrl: 'https://gocc.com.au/',
+    caseStudySlug: 'gocc',
     featured: true,
   },
   {

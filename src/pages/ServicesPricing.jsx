@@ -93,7 +93,7 @@ function BundlePreview() {
             </p>
           </div>
           <Link
-            to="/services/bundles"
+            to="/BundlesPricing"
             className="text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300 shrink-0"
             style={{ color: 'var(--c4-text-subtle)' }}
           >
@@ -162,7 +162,7 @@ function SupportPreview() {
             </p>
           </div>
           <Link
-            to="/services/support"
+            to="/SupportPlans"
             className="group inline-flex items-center gap-2 px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300 shrink-0"
             style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
           >

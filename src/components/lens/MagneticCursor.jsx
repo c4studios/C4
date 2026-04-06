@@ -24,17 +24,23 @@ export default function MagneticCursor() {
       return;
     }
 
-    // Hide default cursor on the page
-    document.body.style.cursor = 'none';
-    const links = document.querySelectorAll('a, button, [data-cursor-hover]');
-    links.forEach(el => { el.style.cursor = 'none'; });
+    // Hide default cursor only within the lens page
+    const lensPage = document.querySelector('.lens-page');
+    if (lensPage) {
+      lensPage.style.cursor = 'none';
+      const links = lensPage.querySelectorAll('a, button, [data-cursor-hover]');
+      links.forEach(el => { el.style.cursor = 'none'; });
+    }
 
     const observer = new MutationObserver(() => {
-      document.querySelectorAll('a, button, [data-cursor-hover]').forEach(el => {
-        el.style.cursor = 'none';
-      });
+      const lp = document.querySelector('.lens-page');
+      if (lp) {
+        lp.querySelectorAll('a, button, [data-cursor-hover]').forEach(el => {
+          el.style.cursor = 'none';
+        });
+      }
     });
-    observer.observe(document.body, { childList: true, subtree: true });
+    if (lensPage) observer.observe(lensPage, { childList: true, subtree: true });
 
     const onMove = (e) => {
       mouse.current = { x: e.clientX, y: e.clientY };
@@ -114,8 +120,14 @@ export default function MagneticCursor() {
       document.removeEventListener('mouseleave', onLeave);
       document.removeEventListener('mouseenter', onEnter);
       document.removeEventListener('mouseover', onOver);
-      document.body.style.cursor = '';
       observer.disconnect();
+      const lp = document.querySelector('.lens-page');
+      if (lp) {
+        lp.style.cursor = '';
+        lp.querySelectorAll('a, button, [data-cursor-hover]').forEach(el => {
+          el.style.cursor = '';
+        });
+      }
     };
   }, [visible, hoverState]);
 

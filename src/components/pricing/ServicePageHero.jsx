@@ -3,7 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PageHero from '../c4/PageHero';
 
-export default function ServicePageHero({ label, titleLines, description, backLabel = 'All Services', backTo = '/services/pricing' }) {
+export default function ServicePageHero({ label, titleLines, description, backLabel = 'All Services', backTo = '/ServicesPricing' }) {
   return (
     <PageHero
       label={label}

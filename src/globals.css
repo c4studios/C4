@@ -189,6 +189,11 @@ html { scroll-behavior: smooth; }
   padding-inline: 0.2rem;
 }
 
+/* Ensure nav cursor is never overridden by MagneticCursor inline styles */
+header a, header button {
+  cursor: pointer !important;
+}
+
 .c4-header-logo-lockup {
   justify-content: center;
   min-width: 106px;

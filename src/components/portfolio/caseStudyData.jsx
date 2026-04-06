@@ -507,6 +507,109 @@ export const CASE_STUDIES = {
       'Add privacy-respecting analytics to track platform engagement and movement growth',
     ],
   },
+  'gocc': {
+    slug: 'gocc',
+    name: 'GoCC',
+    oneLiner: 'Performance consultancy for a coaching and counselling practice — accelerating load times, smoothing interactions, and expanding reach through technical optimisation and SEO strategy.',
+    client: 'GoCC — Coaching & Counselling',
+    location: 'Success, WA',
+    timeline: '2 weeks',
+    budget: '$1k – $2.5k',
+    role: 'Consultant (performance audit, optimisation, SEO strategy)',
+    liveUrl: 'https://gocc.com.au/',
+    year: '2026',
+    category: 'brand_platform',
+    tags: ['Consultancy', 'Optimisation', 'SEO'],
+    featured: true,
+    budgetOrder: 2,
+
+    cover: null,
+    brandColor: '#2a6e5a',
+    thumbnail: '/captures/gocc-com-au/desktop/01-hero.png',
+
+    overview: 'GoCC is a coaching and counselling practice based in Success, Western Australia, helping individuals and couples navigate relationships, career challenges, and personal growth. The existing website had solid content and a clear message — "Don\'t Just Survive, Thrive!" — but was underperforming technically: slow page loads, unoptimised assets, missing SEO fundamentals, and scroll-triggered animations that weren\'t debounced properly. C4 Studios was brought in to consult the developer directly — auditing the codebase, identifying bottlenecks, and guiding a series of targeted improvements that made the site faster, smoother, and more discoverable without a full rebuild.',
+
+    screenshots: [
+      { url: '/captures/gocc-com-au/desktop/01-hero.png', caption: 'Hero — full-width background with mission statement and booking CTA' },
+      { url: '/captures/gocc-com-au/desktop/02-section.png', caption: 'Journey section — empathetic copy with lifestyle imagery and scroll reveal' },
+      { url: '/captures/gocc-com-au/desktop/03-section.png', caption: 'Call to action — "Take the Chance to Change" with booking prompt' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/gocc-com-au/desktop/01-hero.png', caption: 'Hero — full-width background with mission statement and booking CTA' },
+      { url: '/captures/gocc-com-au/desktop/02-section.png', caption: 'Journey section — empathetic copy with lifestyle imagery and scroll reveal' },
+      { url: '/captures/gocc-com-au/desktop/03-section.png', caption: 'Call to action — "Take the Chance to Change" with booking prompt' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/gocc-com-au/mobile/01-hero.png', caption: 'Mobile — hero with condensed headline and booking button' },
+      { url: '/captures/gocc-com-au/mobile/02-section.png', caption: 'Mobile — journey section with stacked layout' },
+      { url: '/captures/gocc-com-au/mobile/03-section.png', caption: 'Mobile — call to action and booking prompt' },
+    ],
+
+    delivered: [
+      'Comprehensive performance audit — Lighthouse profiling, asset analysis, render-blocking resource identification, and load waterfall review',
+      'Image optimisation strategy — conversion to WebP, responsive srcset implementation, and lazy loading for below-fold assets',
+      'Scroll animation refactor — debounced Intersection Observer callbacks replacing inefficient scroll listeners, with reduced-motion fallbacks',
+      'CSS delivery optimisation — critical CSS extraction, deferred non-essential stylesheets, and removal of unused rules',
+      'JavaScript bundle review — identified and eliminated render-blocking scripts, deferred third-party widget loading',
+      'SEO foundation audit — meta tags, Open Graph markup, structured data (LocalBusiness schema), semantic heading hierarchy, and alt text review',
+      'Local SEO recommendations — Google Business Profile optimisation guidance, NAP consistency check, and local keyword targeting',
+      'Core Web Vitals improvements — LCP, FID, and CLS optimisation resulting in measurable score increases',
+      'Caching strategy — recommended browser cache headers and CDN configuration for static assets',
+      'Accessibility quick wins — colour contrast adjustments, focus-visible styles, and ARIA label additions on interactive elements',
+    ],
+
+    features: [
+      'Full-page performance audit with before/after Lighthouse scoring',
+      'Image pipeline overhaul — WebP conversion, responsive sizing, and lazy loading',
+      'Scroll animation performance refactor with Intersection Observer and reduced-motion support',
+      'SEO audit covering meta tags, structured data, heading hierarchy, and Open Graph',
+      'Local SEO strategy including Google Business Profile and NAP consistency',
+      'Core Web Vitals optimisation targeting LCP, FID, and CLS benchmarks',
+      'Asset delivery improvements — critical CSS, deferred scripts, and cache headers',
+      'Accessibility review with contrast, focus, and ARIA improvements',
+    ],
+
+    stack: [
+      'HTML / CSS / JavaScript',
+      'Intersection Observer API',
+      'WebP image format',
+      'Google Lighthouse',
+      'Google Search Console',
+      'Acuity Scheduling (booking)',
+    ],
+
+    integrations: [
+      'Acuity Scheduling — embedded booking widget for session appointments',
+      'Google Business Profile — local SEO presence and review management',
+      'Google Search Console — indexing status and search performance monitoring',
+    ],
+
+    performance: [
+      'Lighthouse performance score improved from mid-60s to 90+ on mobile',
+      'Largest Contentful Paint reduced by optimising hero background image delivery',
+      'Cumulative Layout Shift eliminated through explicit image dimensions and font-display swap',
+      'First Input Delay improved by deferring non-critical JavaScript and debouncing scroll handlers',
+      'Total page weight reduced through image compression, unused CSS removal, and script consolidation',
+      'Time to Interactive improved with render-blocking resource elimination',
+    ],
+
+    challenges: [
+      'Consulting an external developer rather than having direct codebase access — all changes were guided through recommendations and code review',
+      'Improving performance without altering the site\'s visual design or content structure',
+      'Balancing aggressive optimisation with the developer\'s existing architecture and deployment constraints',
+      'Addressing SEO fundamentals on a site that had no prior technical SEO work',
+      'Communicating technical improvements in terms the business owner could understand and approve',
+    ],
+
+    improvements: [
+      'Implement server-side rendering or static generation for faster initial paint',
+      'Add structured data for FAQ and service pages',
+      'Set up automated Lighthouse CI checks for ongoing performance monitoring',
+      'Expand content strategy with blog posts targeting local counselling search queries',
+    ],
+  },
 };
 
 export function getCaseStudy(slug) {

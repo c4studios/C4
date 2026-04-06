@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import PortfolioHero from '../components/portfolio/PortfolioHero';
-import PortfolioFilters from '../components/portfolio/PortfolioFilters';
+import PortfolioFilters, { getServiceFilterCategories, hasProjectsForFilter } from '../components/portfolio/PortfolioFilters';
 import PortfolioSortMenu from '../components/portfolio/PortfolioSortMenu';
 import { getAllCaseStudies } from '../components/portfolio/caseStudyData';
 import { FeaturedCardSkeleton } from '../components/portfolio/PortfolioCardSkeleton';
@@ -179,8 +179,16 @@ function ProjectCard({ study, index }) {
   );
 }
 
+const COMING_SOON_LABELS = {
+  brand: 'Brand & Growth',
+  ai: 'AI & Software',
+  lens: 'C4 Lens',
+};
+
 export default function Portfolio() {
-  const [filter, setFilter] = useState('all');
+  const [searchParams] = useSearchParams();
+  const initialFilter = searchParams.get('filter') || 'all';
+  const [filter, setFilter] = useState(initialFilter);
   const [sort, setSort] = useState('featured');
   const [loading, setLoading] = useState(true);
   const allStudies = getAllCaseStudies();
@@ -194,12 +202,18 @@ export default function Portfolio() {
     let list = allStudies;
 
     if (filter !== 'all') {
-      list = list.filter((study) => study.category === filter || study.tags.map((tag) => tag.toLowerCase()).includes(filter));
+      const cats = getServiceFilterCategories(filter);
+      if (cats) {
+        list = list.filter((study) => cats.includes(study.category));
+      } else {
+        list = list.filter((study) => study.category === filter || study.tags.map((tag) => tag.toLowerCase()).includes(filter));
+      }
     }
 
     return sortStudies(list, sort);
   }, [allStudies, filter, sort]);
 
+  const hasProjects = filter === 'all' || hasProjectsForFilter(filter);
   const featured = sort === 'featured' ? filtered.filter((study) => study.featured) : [];
   const rest = sort === 'featured' ? filtered.filter((study) => !study.featured) : filtered;
   const showSort = allStudies.length > 1;
@@ -256,9 +270,27 @@ export default function Portfolio() {
 
               {filtered.length === 0 && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-20 text-center">
-                  <p className="text-[13px]" style={{ color: 'var(--c4-text-subtle)' }}>
-                    No projects in this category yet.
-                  </p>
+                  {filter !== 'all' && COMING_SOON_LABELS[filter] ? (
+                    <>
+                      <p className="text-[1.1rem] font-semibold tracking-[-0.02em] mb-3" style={{ color: 'var(--c4-text)' }}>
+                        {COMING_SOON_LABELS[filter]} — Portfolio Coming Soon
+                      </p>
+                      <p className="text-[13px] leading-[1.6] max-w-[420px] mx-auto" style={{ color: 'var(--c4-text-muted)' }}>
+                        We&apos;re currently building out case studies for this service. Check back soon — or get in touch to be one of the first.
+                      </p>
+                      <Link
+                        to={`/StartProject?service=${filter === 'brand' ? 'brand_platform' : filter === 'ai' ? 'automation' : filter}`}
+                        className="group inline-flex items-center gap-2 mt-6 px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300 rounded-sm"
+                        style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
+                      >
+                        Start a Project
+                      </Link>
+                    </>
+                  ) : (
+                    <p className="text-[13px]" style={{ color: 'var(--c4-text-subtle)' }}>
+                      No projects in this category yet.
+                    </p>
+                  )}
                 </motion.div>
               )}
             </>

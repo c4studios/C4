@@ -59,7 +59,7 @@ export default function NavHeader() {
                   key={link.page}
                   to={createPageUrl(link.page)}
                   className="text-[11px] uppercase tracking-[0.13em] transition-colors duration-300 font-medium"
-                  style={{ color: 'var(--c4-text-muted)' }}
+                  style={{ color: 'var(--c4-text-muted)', cursor: 'pointer' }}
                   onMouseEnter={e => e.currentTarget.style.color = 'var(--c4-link-hover)'}
                   onMouseLeave={e => e.currentTarget.style.color = 'var(--c4-text-muted)'}
                 >
@@ -76,7 +76,7 @@ export default function NavHeader() {
               <Link
                 to={createPageUrl('StartProject')}
                 className="hidden md:block text-[11px] uppercase tracking-[0.13em] px-5 py-[7px] font-medium transition-colors duration-300 rounded-full"
-                style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
+                style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)', cursor: 'pointer' }}
               >
                 Start a Project
               </Link>

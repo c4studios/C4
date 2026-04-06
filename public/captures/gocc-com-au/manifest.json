@@ -1,0 +1,352 @@
+{
+  "version": 2,
+  "sourceUrl": "https://gocc.com.au/",
+  "slug": "gocc-com-au",
+  "timestamp": "2026-04-06T13:13:09.544Z",
+  "overlays": [],
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 2200
+      },
+      "rawCandidateCount": 3,
+      "selectedCandidateCount": 3,
+      "selected": [
+        {
+          "id": "cand-desktop-0",
+          "selectorHint": "section",
+          "label": "hero",
+          "headingText": "Don't Just Survive,Thrive!",
+          "textPreview": "Coaching & Counselling Don't Just Survive,Thrive! Empowering you to realise your dreams in relationships, work, and life. Book a Session",
+          "textLength": 136,
+          "imageCount": 0,
+          "buttonCount": 1,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 1,
+          "hasBgImage": true,
+          "area": 726368,
+          "whitespaceRisk": 1,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 70,
+            "width": 1440,
+            "height": 504
+          },
+          "viewportCoverage": 0.229,
+          "score": 72,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-desktop-1",
+          "selectorHint": "section",
+          "label": "section",
+          "headingText": "Are you tired of being stuck?",
+          "textPreview": "Your Journey Starts Here Are you tired of being stuck? Have you been striving for so long and so hard that you are ready to leave your relationship, surrender that dream, or quit moving forward in your life? You don't ju",
+          "textLength": 722,
+          "imageCount": 1,
+          "buttonCount": 1,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 3,
+          "hasBgImage": false,
+          "area": 1050435,
+          "whitespaceRisk": 0.995,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 574,
+            "width": 1440,
+            "height": 729
+          },
+          "viewportCoverage": 0.332,
+          "score": 45,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-desktop-2",
+          "selectorHint": "section",
+          "label": "section",
+          "headingText": "Take the Chance to Change",
+          "textPreview": "Take the Next Step Take the Chance to Change You have a responsibility to yourself and those you love to be as happy and healthy as you can be. Take the chance to heal the wounds of the past. Together let's address the s",
+          "textLength": 721,
+          "imageCount": 1,
+          "buttonCount": 1,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 3,
+          "hasBgImage": false,
+          "area": 1008968,
+          "whitespaceRisk": 0.995,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 1304,
+            "width": 1440,
+            "height": 701
+          },
+          "viewportCoverage": 0.318,
+          "score": 45,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        }
+      ],
+      "captures": [
+        {
+          "candidateId": "cand-desktop-0",
+          "label": "hero",
+          "headingText": "Don't Just Survive,Thrive!",
+          "score": 72,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "01-hero.png",
+          "filePath": "desktop/01-hero.png",
+          "clip": {
+            "x": 0,
+            "y": 42,
+            "width": 1440,
+            "height": 560
+          },
+          "bytes": 357732,
+          "dimensions": {
+            "width": 1440,
+            "height": 560
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-desktop-1",
+          "label": "section",
+          "headingText": "Are you tired of being stuck?",
+          "score": 45,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "02-section.png",
+          "filePath": "desktop/02-section.png",
+          "clip": {
+            "x": 0,
+            "y": 546,
+            "width": 1440,
+            "height": 785
+          },
+          "bytes": 161884,
+          "dimensions": {
+            "width": 1440,
+            "height": 785
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-desktop-2",
+          "label": "section",
+          "headingText": "Take the Chance to Change",
+          "score": 45,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "03-section.png",
+          "filePath": "desktop/03-section.png",
+          "clip": {
+            "x": 0,
+            "y": 1276,
+            "width": 1440,
+            "height": 757
+          },
+          "bytes": 156022,
+          "dimensions": {
+            "width": 1440,
+            "height": 757
+          },
+          "usedFallback": false
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "rawCandidateCount": 3,
+      "selectedCandidateCount": 3,
+      "selected": [
+        {
+          "id": "cand-mobile-0",
+          "selectorHint": "section",
+          "label": "hero",
+          "headingText": "Don't Just Survive,Thrive!",
+          "textPreview": "Coaching & Counselling Don't Just Survive,Thrive! Empowering you to realise your dreams in relationships, work, and life. Book a Session",
+          "textLength": 136,
+          "imageCount": 0,
+          "buttonCount": 1,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 1,
+          "hasBgImage": true,
+          "area": 183173,
+          "whitespaceRisk": 0.999,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 70,
+            "width": 430,
+            "height": 426
+          },
+          "viewportCoverage": 0.457,
+          "score": 72,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-mobile-1",
+          "selectorHint": "section",
+          "label": "section",
+          "headingText": "Are you tired of being stuck?",
+          "textPreview": "Your Journey Starts Here Are you tired of being stuck? Have you been striving for so long and so hard that you are ready to leave your relationship, surrender that dream, or quit moving forward in your life? You don't ju",
+          "textLength": 722,
+          "imageCount": 1,
+          "buttonCount": 1,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 3,
+          "hasBgImage": false,
+          "area": 436336,
+          "whitespaceRisk": 0.988,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 496,
+            "width": 430,
+            "height": 1015
+          },
+          "viewportCoverage": 1.089,
+          "score": 45,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-mobile-2",
+          "selectorHint": "section",
+          "label": "section",
+          "headingText": "Take the Chance to Change",
+          "textPreview": "Take the Next Step Take the Chance to Change You have a responsibility to yourself and those you love to be as happy and healthy as you can be. Take the chance to heal the wounds of the past. Together let's address the s",
+          "textLength": 721,
+          "imageCount": 1,
+          "buttonCount": 1,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 3,
+          "hasBgImage": false,
+          "area": 448718,
+          "whitespaceRisk": 0.988,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 1511,
+            "width": 430,
+            "height": 1044
+          },
+          "viewportCoverage": 1.12,
+          "score": 45,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        }
+      ],
+      "captures": [
+        {
+          "candidateId": "cand-mobile-0",
+          "label": "hero",
+          "headingText": "Don't Just Survive,Thrive!",
+          "score": 72,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "01-hero.png",
+          "filePath": "mobile/01-hero.png",
+          "clip": {
+            "x": 0,
+            "y": 54,
+            "width": 430,
+            "height": 458
+          },
+          "bytes": 91563,
+          "dimensions": {
+            "width": 430,
+            "height": 458
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-mobile-1",
+          "label": "section",
+          "headingText": "Are you tired of being stuck?",
+          "score": 45,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "02-section.png",
+          "filePath": "mobile/02-section.png",
+          "clip": {
+            "x": 0,
+            "y": 480,
+            "width": 430,
+            "height": 1047
+          },
+          "bytes": 135364,
+          "dimensions": {
+            "width": 430,
+            "height": 1047
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-mobile-2",
+          "label": "section",
+          "headingText": "Take the Chance to Change",
+          "score": 45,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "03-section.png",
+          "filePath": "mobile/03-section.png",
+          "clip": {
+            "x": 0,
+            "y": 1495,
+            "width": 430,
+            "height": 1076
+          },
+          "bytes": 144786,
+          "dimensions": {
+            "width": 430,
+            "height": 1076
+          },
+          "usedFallback": false
+        }
+      ]
+    }
+  },
+  "warnings": []
+}

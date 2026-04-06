@@ -1,123 +1,91 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Tag } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import PricingModal from '@/components/pricing/PricingModal';
 
-const SERVICE_KEYS = ['websites', 'apps', 'brand', 'growth', 'automation', 'rebuild', 'lens'];
+const SERVICE_KEYS = ['web', 'brand', 'ai', 'lens'];
 
 const SERVICES = [
   {
-    key: 'websites',
-    title: 'Websites',
-    portfolioFilter: 'web_design',
-    summary: 'Custom websites designed to convert, built to perform, and impossible to ignore.',
+    key: 'web',
+    title: 'Web & Applications',
+    portfolioFilter: 'web',
+    summary: 'Custom websites, web apps, SaaS platforms, and full-stack rebuilds — designed to convert, built to perform, and impossible to ignore.',
     includes: [
-      'Custom design & front-end build',
+      'Custom websites & landing pages',
+      'SaaS MVPs, dashboards & portals',
       'Responsive, performance-first code',
-      'CMS & content architecture',
-      'SEO-ready structure',
-      'Redesigns & modernisation',
+      'CMS, database & API architecture',
+      'Auth, roles & third-party integrations',
+      'Software rebuilds & modernisation',
     ],
-    forWho: 'Businesses that need a flagship site — not a template.',
-    outcome: 'A fast, refined website that earns trust and drives action.',
-    approach: 'Strategy first, then precision design and clean engineering.',
-  },
-  {
-    key: 'apps',
-    title: 'Web Applications',
-    portfolioFilter: 'web_app',
-    summary: 'Production-grade web apps — SaaS, portals, dashboards — built for real users.',
-    includes: [
-      'SaaS MVPs & full products',
-      'Dashboards & internal tools',
-      'Auth, roles & permissions',
-      'Database architecture & APIs',
-      'Third-party integrations',
-    ],
-    forWho: 'Founders and teams building serious digital products.',
-    outcome: 'A maintainable, performant app with refined UX.',
-    approach: 'Architect for scale, ship incrementally, avoid feature bloat.',
+    forWho: 'Businesses that need a flagship digital presence — or founders building serious products.',
+    outcome: 'A fast, refined website or app that earns trust and drives action.',
+    approach: 'Strategy first, then precision design and clean engineering. Architect for scale, ship incrementally.',
   },
   {
     key: 'brand',
-    title: 'Brand Platforms',
-    portfolioFilter: 'brand_platform',
-    summary: 'Cohesive digital identity systems that make every touchpoint feel intentional.',
+    title: 'Brand & Growth',
+    portfolioFilter: 'brand',
+    summary: 'Branding, identity systems, SEO, social media, and growth strategy — everything your brand needs to look right, rank well, and stay visible.',
     includes: [
-      'Visual direction for web',
-      'Design systems & component libraries',
-      'Brand-consistent interfaces',
-      'Premium redesigns',
+      'Logo design & visual identity',
+      'Brand guidelines & design systems',
+      'SEO audits, content & on-page optimisation',
+      'Social media management & content creation',
+      'Conversion-focused strategy',
+      'Analytics, tracking & performance reporting',
     ],
-    forWho: 'Brands elevating quality and consistency across digital.',
-    outcome: 'A unified brand experience with a scalable design language.',
-    approach: 'Systems thinking — distinctiveness without disorder.',
+    forWho: 'Brands that want consistency across every touchpoint and measurable growth to prove it.',
+    outcome: 'A unified brand identity with real traction — higher rankings, better engagement, stronger presence.',
+    approach: 'Systems thinking meets evidence-based optimisation. Distinctiveness without disorder.',
   },
   {
-    key: 'growth',
-    title: 'Growth & Optimisation',
-    portfolioFilter: null,
-    summary: 'Evidence-based optimisation that turns traffic into measurable business results.',
-    includes: [
-      'Conversion-focused redesign',
-      'SEO foundations & structure',
-      'Performance & speed tuning',
-      'Analytics & tracking setup',
-      'A/B testing strategy',
-    ],
-    forWho: 'Teams that want measurable lift, not guesswork.',
-    outcome: 'Higher conversion, faster load times, and data to prove it.',
-    approach: 'Measure first, change with intent, iterate on evidence.',
-  },
-  {
-    key: 'automation',
-    title: 'Automation & AI',
-    portfolioFilter: null,
-    summary: 'Workflow automation and AI integrations that remove friction and free your team.',
+    key: 'ai',
+    title: 'AI & Software',
+    portfolioFilter: 'ai',
+    summary: 'Workflow automation, AI agents, custom integrations, and lean software replacements — purpose-built tools that compound over time.',
     includes: [
       'AI-assisted workflows & agents',
       'Process automation & integrations',
-      'Custom internal tools',
-      'Data pipelines & sync',
-      'LLM & API integrations',
+      'Custom internal tools & dashboards',
+      'Data pipelines, sync & API work',
+      'Existing tool audits & software rebuilds',
+      'LLM integrations & chatbot development',
     ],
-    forWho: 'Teams ready to replace manual work with compounding systems.',
-    outcome: 'Fewer steps, faster output, and tools that run without you.',
-    approach: 'Practical AI and tight integration — built to compound.',
-  },
-  {
-    key: 'rebuild',
-    title: 'Software Rebuilds',
-    portfolioFilter: 'rebuild',
-    summary: 'Lean custom replacements for the bloated software your team has outgrown.',
-    includes: [
-      'Existing tool audit',
-      'Rebuild strategy & scoping',
-      'Custom lightweight alternative',
-      'Migration & rollout',
-    ],
-    forWho: 'Teams overpaying for tools that no longer fit.',
-    outcome: 'Lower cost, better performance, and a stack you actually own.',
-    approach: 'Strip the noise, keep the essentials, build it clean.',
+    forWho: 'Teams ready to replace manual work with compounding systems — or overpaying for tools that no longer fit.',
+    outcome: 'Fewer steps, faster output, lower cost, and a stack you actually own.',
+    approach: 'Practical AI and tight integration — strip the noise, keep the essentials, build it clean.',
   },
   {
     key: 'lens',
-    title: 'Videography',
-    portfolioFilter: null,
-    summary: 'C4 Lens for brands that want motion handled with precision, atmosphere, and commercial intent.',
+    title: 'C4 Lens',
+    portfolioFilter: 'lens',
+    summary: 'Professional photography and videography for brands that want every visual handled with precision, atmosphere, and commercial intent.',
     includes: [
-      'Visual direction for launch moments',
-      'Brand-led motion capture',
-      'Editorial-grade story framing',
+      'Portrait & headshot sessions',
+      'Product & workspace photography',
+      'Short-form video & reels',
+      'Full production shoots (photo + video)',
+      'Colour grading & post-production',
+      'Brand-led visual direction',
     ],
-    forWho: 'Brands that want motion handled with the same design discipline as the rest of the system.',
-    outcome: 'A tighter visual presence across web, campaigns, and brand storytelling.',
-    approach: 'Built under the C4 Lens banner with the same emphasis on restraint, clarity, and deployment-ready assets.',
+    forWho: 'Brands that want visuals handled with the same design discipline as the rest of the system.',
+    outcome: 'A tighter visual presence across web, campaigns, social, and brand storytelling.',
+    approach: 'Built under the C4 Lens banner — restraint, clarity, and deployment-ready assets.',
   },
 ];
 
 const ease = [0.22, 1, 0.36, 1];
+
+const SERVICE_FORM_MAP = {
+  web: 'web_design',
+  brand: 'brand_platform',
+  ai: 'automation',
+  lens: 'lens',
+};
 
 function ServiceListItem({ index, title, isActive, isComingSoon, onClick }) {
   return (
@@ -164,7 +132,7 @@ function ServiceListItem({ index, title, isActive, isComingSoon, onClick }) {
   );
 }
 
-function DetailPanel({ service, onStartProject }) {
+function DetailPanel({ service, onStartProject, onViewPricing }) {
   return (
     <motion.div
       key={service.key}
@@ -222,13 +190,21 @@ function DetailPanel({ service, onStartProject }) {
           </p>
         ) : (
           <>
-            <button
-              onClick={onStartProject}
+            <Link
+              to={`/StartProject?service=${SERVICE_FORM_MAP[service.key] || 'other'}`}
               className="group inline-flex items-center gap-2 px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
               style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
             >
               Start a Project
               <ArrowRight size={13} strokeWidth={2} className="opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300" />
+            </Link>
+            <button
+              onClick={() => onViewPricing(service.key)}
+              className="group inline-flex items-center gap-2 px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium rounded-sm transition-colors duration-300"
+              style={{ backgroundColor: 'var(--c4-accent)', color: '#fff' }}
+            >
+              <Tag size={12} strokeWidth={2} className="opacity-80" />
+              Pricing & Packages
             </button>
             {service.portfolioFilter && (
               <Link
@@ -236,7 +212,7 @@ function DetailPanel({ service, onStartProject }) {
                 className="text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
                 style={{ color: 'var(--c4-text-subtle)' }}
               >
-                View Work
+                See Our Work
               </Link>
             )}
           </>
@@ -246,7 +222,7 @@ function DetailPanel({ service, onStartProject }) {
   );
 }
 
-function MobileServiceItem({ service, index, isOpen, onToggle, onStartProject }) {
+function MobileServiceItem({ service, index, isOpen, onToggle, onStartProject, onViewPricing }) {
   return (
     <div className="border-b" style={{ borderColor: 'var(--c4-border-light)' }}>
       <button
@@ -312,13 +288,21 @@ function MobileServiceItem({ service, index, isOpen, onToggle, onStartProject })
                   </p>
                 ) : (
                   <>
-                    <button
-                      onClick={onStartProject}
+                    <Link
+                      to={`/StartProject?service=${SERVICE_FORM_MAP[service.key] || 'other'}`}
                       className="group inline-flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
                       style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
                     >
                       Start a Project
                       <ArrowRight size={12} strokeWidth={2} className="opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300" />
+                    </Link>
+                    <button
+                      onClick={() => onViewPricing(service.key)}
+                      className="group inline-flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-[0.14em] font-medium rounded-sm transition-colors duration-300"
+                      style={{ backgroundColor: 'var(--c4-accent)', color: '#fff' }}
+                    >
+                      <Tag size={11} strokeWidth={2} className="opacity-80" />
+                      Pricing
                     </button>
                     {service.portfolioFilter && (
                       <Link
@@ -326,7 +310,7 @@ function MobileServiceItem({ service, index, isOpen, onToggle, onStartProject })
                         className="text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
                         style={{ color: 'var(--c4-text-subtle)' }}
                       >
-                        View Work
+                        See Our Work
                       </Link>
                     )}
                   </>
@@ -347,6 +331,7 @@ export default function ServiceExplorer({ onStartProject }) {
 
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [mobileOpen, setMobileOpen] = useState(serviceParam ? SERVICE_KEYS.indexOf(serviceParam) : null);
+  const [pricingModal, setPricingModal] = useState(null);
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -391,7 +376,7 @@ export default function ServiceExplorer({ onStartProject }) {
           <div className="col-span-8" role="tabpanel">
             <div className="sticky top-32">
               <AnimatePresence mode="wait">
-                <DetailPanel service={SERVICES[activeIndex]} onStartProject={onStartProject} />
+                <DetailPanel service={SERVICES[activeIndex]} onStartProject={onStartProject} onViewPricing={setPricingModal} />
               </AnimatePresence>
             </div>
           </div>
@@ -406,10 +391,17 @@ export default function ServiceExplorer({ onStartProject }) {
               isOpen={mobileOpen === i}
               onToggle={() => setMobileOpen(mobileOpen === i ? null : i)}
               onStartProject={onStartProject}
+              onViewPricing={setPricingModal}
             />
           ))}
         </div>
       </div>
+
+      <PricingModal
+        serviceKey={pricingModal}
+        open={pricingModal !== null}
+        onClose={() => setPricingModal(null)}
+      />
     </section>
   );
 }

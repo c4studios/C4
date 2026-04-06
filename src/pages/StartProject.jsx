@@ -1,7 +1,18 @@
 import React, { useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { submitProjectInquiry } from '@/api/submissions';
+import {
+  webDesignPackages,
+  webDesignAddOns,
+  brandingPackages,
+  c4LensPackages,
+  seoPackages,
+  automationPackages,
+  socialMediaPackages,
+  bundlePackages,
+  supportPlans,
+} from '@/data/pricing';
 import FileUpload from '../components/c4/FileUpload';
 import SubmissionSuccess from '@/components/c4/SubmissionSuccess';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
@@ -9,11 +20,99 @@ import SubmitButton from '@/components/c4/SubmitButton';
 
 const ease = [0.22, 1, 0.36, 1];
 
+/* ── Package lookup: maps service + package key → full package data ── */
+const PACKAGE_REGISTRY = {};
+function register(serviceKey, serviceName, packages) {
+  packages.forEach(pkg => {
+    PACKAGE_REGISTRY[`${serviceKey}:${pkg.key}`] = { ...pkg, serviceName, serviceKey };
+  });
+}
+register('web_design', 'Web & Applications', webDesignPackages);
+register('brand_platform', 'Branding & Identity', brandingPackages);
+register('seo', 'SEO & Search', seoPackages);
+register('social', 'Social Media & Content', socialMediaPackages);
+register('automation', 'AI & Software', automationPackages);
+register('lens', 'C4 Lens', c4LensPackages);
+register('bundle', 'Bundle Deal', bundlePackages);
+register('support', 'Support Plan', supportPlans);
+
+/* ── Build rich prefilled description from a package ── */
+function buildRichDescription(serviceKey, pkgKey, pricing) {
+  const entry = PACKAGE_REGISTRY[`${serviceKey}:${pkgKey}`];
+  if (!entry) return '';
+
+  const lines = [];
+  lines.push(`--- SELECTED PACKAGE ---`);
+  lines.push(`Service: ${entry.serviceName}`);
+  lines.push(`Package: ${entry.name} (${entry.priceLabel}${entry.priceSuffix ? ' — ' + entry.priceSuffix : ''})`);
+  if (pricing === 'subscription' && entry.monthlyLabel) {
+    lines.push(`Pricing model: Monthly subscription at ${entry.monthlyLabel}`);
+  }
+  lines.push('');
+  lines.push(entry.description);
+  lines.push('');
+
+  if (entry.features && entry.features.length) {
+    lines.push('What\'s included:');
+    entry.features.forEach(f => lines.push(`  • ${f}`));
+    lines.push('');
+  }
+
+  if (entry.includes && entry.includes.length) {
+    lines.push('Bundle includes:');
+    entry.includes.forEach(i => lines.push(`  • ${i.service}: ${i.detail}`));
+    lines.push('');
+  }
+
+  lines.push('--- YOUR DETAILS ---');
+  lines.push('Please describe your project below — what you need, your audience, key goals, any reference sites or inspiration:');
+  lines.push('');
+
+  return lines.join('\n');
+}
+
+/* ── Add-ons shown per service category ── */
+const SERVICE_ADDONS = {
+  web_design: webDesignAddOns.map(a => a.name),
+  brand_platform: [
+    'Business card design',
+    'Social media templates',
+    'Presentation template',
+    'Brand guidelines document',
+    'Signage/merch mockups',
+    'Email signature design',
+    'Additional page optimisation',
+    'Competitor analysis',
+    'Local SEO / GBP management',
+    'Backlink building',
+    'Content writing (per page)',
+    'Social content calendar',
+    'Community management',
+  ],
+  automation: [
+    'Additional workflow',
+    'Extra tool integration',
+    'Monitoring & alerts setup',
+    'Training session',
+    'Ongoing maintenance',
+    'Custom software rebuild',
+    'API integration',
+    'Data migration',
+  ],
+  lens: [
+    'Extra edited images (per 10)',
+    'Additional short-form video',
+    'Drone footage',
+    'Same-day delivery',
+    'Location scouting',
+  ],
+};
+
 const SERVICES = [
-  { key: 'web_design', label: 'Website Design' },
-  { key: 'web_app', label: 'Web Application' },
-  { key: 'brand_platform', label: 'Brand Platform' },
-  { key: 'rebuild', label: 'Software Rebuild' },
+  { key: 'web_design', label: 'Web & Apps' },
+  { key: 'brand_platform', label: 'Brand & Growth' },
+  { key: 'automation', label: 'AI & Software' },
+  { key: 'lens', label: 'C4 Lens' },
   { key: 'other', label: 'Something Else' },
 ];
 
@@ -60,17 +159,26 @@ function PillSelect({ options, value, onChange }) {
 export default function StartProject() {
   const [searchParams] = useSearchParams();
   const preService = searchParams.get('service') || '';
+  const prePackage = searchParams.get('package') || '';
+  const preBudget = searchParams.get('budget') || '';
+  const prePricing = searchParams.get('pricing') || '';
   const loadedAt = useRef(Date.now());
   const turnstileToken = useRef(null);
+
+  // Build rich prefilled description from the selected package
+  const preDescription = prePackage && preService
+    ? buildRichDescription(preService, prePackage, prePricing)
+    : '';
 
   const [form, setForm] = useState({
     name: '',
     email: '',
     company: '',
     service: preService,
-    budget: '',
+    budget: preBudget,
     timeline: '',
-    description: '',
+    description: preDescription,
+    addOns: [],
     attachments: [],
     _gotcha: '', // honeypot
   });
@@ -96,6 +204,7 @@ export default function StartProject() {
         description: [
           form.description,
           form.timeline && `Timeline: ${TIMELINES.find(t => t.key === form.timeline)?.label || form.timeline}`,
+          form.addOns.length > 0 && `Interested add-ons: ${form.addOns.join(', ')}`,
         ].filter(Boolean).join('\n\n'),
         timeline: TIMELINES.find(t => t.key === form.timeline)?.label || '',
         attachments: form.attachments.map(f => f.url),
@@ -235,8 +344,52 @@ export default function StartProject() {
             transition={{ duration: 0.55, delay: 0.36, ease }}
           >
             <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>What do you need? *</label>
-            <PillSelect options={SERVICES} value={form.service} onChange={v => update('service', v)} />
+            <PillSelect options={SERVICES} value={form.service} onChange={v => { update('service', v); update('addOns', []); }} />
           </motion.div>
+
+          {/* Add-ons (contextual) */}
+          <AnimatePresence>
+            {form.service && SERVICE_ADDONS[form.service] && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.35, ease }}
+                className="overflow-hidden"
+              >
+                <div className="pb-1">
+                  <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Interested in any add-ons?</label>
+                  <p className="text-[12px] mb-3 leading-[1.5]" style={{ color: 'var(--c4-text-faint)' }}>
+                    Optional — helps us understand your scope.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {SERVICE_ADDONS[form.service].map((addon) => {
+                      const selected = form.addOns.includes(addon);
+                      return (
+                        <button
+                          key={addon}
+                          type="button"
+                          onClick={() => {
+                            update('addOns', selected
+                              ? form.addOns.filter(a => a !== addon)
+                              : [...form.addOns, addon]
+                            );
+                          }}
+                          className="px-3 py-1.5 text-[11.5px] font-medium border rounded-sm transition-all duration-300"
+                          style={selected
+                            ? { backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)', borderColor: 'var(--c4-text)' }
+                            : { backgroundColor: 'var(--c4-card-bg)', color: 'var(--c4-text-muted)', borderColor: 'var(--c4-border)' }
+                          }
+                        >
+                          {addon}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Budget */}
           <motion.div
@@ -266,8 +419,13 @@ export default function StartProject() {
           >
             <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Project details *</label>
             <textarea
-              className={fieldClass + ' h-32 resize-none'}
-              style={{ backgroundColor: 'var(--c4-card-bg)', border: '1px solid var(--c4-border)', color: 'var(--c4-text)' }}
+              className={fieldClass + ' resize-none'}
+              style={{
+                backgroundColor: 'var(--c4-card-bg)',
+                border: '1px solid var(--c4-border)',
+                color: 'var(--c4-text)',
+                minHeight: preDescription ? '280px' : '128px',
+              }}
               required
               value={form.description}
               onChange={e => update('description', e.target.value)}

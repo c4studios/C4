@@ -2,38 +2,32 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { getAllCaseStudies } from './caseStudyData';
 
-// Build category list dynamically from actual case studies.
-// Only shows filters that have at least one project behind them.
-const CATEGORY_META = {
-  all:              'All',
-  web_design:       'Website',
-  web_app:          'Web App',
-  brand_platform:   'Brand Platform',
-  rebuild:          'Rebuild',
-};
+// The 4 C4 service categories — always shown
+const SERVICE_FILTERS = [
+  { key: 'all', label: 'All' },
+  { key: 'web', label: 'Web & Apps', categories: ['web_design', 'web_app'] },
+  { key: 'brand', label: 'Brand & Growth', categories: ['brand_platform'] },
+  { key: 'ai', label: 'AI & Software', categories: ['automation', 'rebuild'] },
+  { key: 'lens', label: 'C4 Lens', categories: ['lens'] },
+];
 
-function getActiveCategories() {
+export function getServiceFilterCategories(filterKey) {
+  const entry = SERVICE_FILTERS.find(f => f.key === filterKey);
+  return entry?.categories || null;
+}
+
+export function hasProjectsForFilter(filterKey) {
+  if (filterKey === 'all') return true;
+  const cats = getServiceFilterCategories(filterKey);
+  if (!cats) return false;
   const studies = getAllCaseStudies();
-  const usedCats = new Set(studies.map(s => s.category));
-  const cats = [{ key: 'all', label: 'All' }];
-
-  for (const [key, label] of Object.entries(CATEGORY_META)) {
-    if (key !== 'all' && usedCats.has(key)) {
-      cats.push({ key, label });
-    }
-  }
-  return cats;
+  return studies.some(s => cats.includes(s.category));
 }
 
 export default function PortfolioFilters({ active, onChange }) {
-  const categories = getActiveCategories();
-
-  // If only "All" + one category exist, filters add no value — hide them
-  if (categories.length <= 2) return null;
-
   return (
     <div className="flex items-center gap-1.5 overflow-x-auto pb-2 -mb-2 scrollbar-hide">
-      {categories.map((cat) => (
+      {SERVICE_FILTERS.map((cat) => (
         <button
           key={cat.key}
           onClick={() => onChange(cat.key)}

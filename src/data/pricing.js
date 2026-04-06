@@ -7,6 +7,23 @@
 /* ── Web Design Packages ── */
 export const webDesignPackages = [
   {
+    key: 'core',
+    name: 'Core',
+    price: 500,
+    priceLabel: '$500',
+    monthlyPrice: 49,
+    monthlyLabel: '$49/mo',
+    popular: false,
+    description: 'A clean one-page site for small businesses getting started online.',
+    features: [
+      'Single-page website',
+      'Mobile responsive',
+      'Contact form',
+      'Basic SEO meta tags',
+      '1 revision round',
+    ],
+  },
+  {
     key: 'starter',
     name: 'Starter',
     price: 1500,
@@ -130,6 +147,7 @@ export const webDesignPackages = [
 /* ── Subscription Info ── */
 export const subscriptionInfo = {
   monthsToOwnership: {
+    core: 20,
     starter: 30,
     essentials: 34,
     business: 35,
@@ -176,6 +194,20 @@ export const webDesignAddOns = [
 
 /* ── Branding Packages ── */
 export const brandingPackages = [
+  {
+    key: 'brand-core',
+    name: 'Core',
+    price: 250,
+    priceLabel: '$250',
+    popular: false,
+    description: 'A simple logo to get your brand started.',
+    features: [
+      '2 initial concepts',
+      '1 revision round',
+      'Final files: PNG + SVG',
+      'Primary brand colour',
+    ],
+  },
   {
     key: 'logo-only',
     name: 'Logo Only',
@@ -226,6 +258,20 @@ export const brandingPackages = [
 
 /* ── C4 Lens Packages ── */
 export const c4LensPackages = [
+  {
+    key: 'mini-session',
+    name: 'Core',
+    price: 200,
+    priceLabel: '$200',
+    popular: false,
+    description: 'A quick headshot or product shoot for essentials.',
+    features: [
+      '30-minute shoot',
+      '1 location',
+      '5 edited digital images',
+      'Online gallery delivery',
+    ],
+  },
   {
     key: 'portrait',
     name: 'Portrait Session',
@@ -291,6 +337,21 @@ export const c4LensPackages = [
 /* ── SEO Packages ── */
 export const seoPackages = [
   {
+    key: 'seo-core',
+    name: 'Core',
+    price: 400,
+    priceLabel: '$400',
+    priceSuffix: 'one-off',
+    popular: false,
+    description: 'Essential SEO checks and fixes to get found online.',
+    features: [
+      'Technical SEO health check',
+      'Meta titles & descriptions (up to 3 pages)',
+      'Google Search Console setup',
+      'Sitemap submission',
+    ],
+  },
+  {
     key: 'foundation',
     name: 'Foundation',
     price: 800,
@@ -346,6 +407,20 @@ export const seoPackages = [
 /* ── Automation & AI Packages ── */
 export const automationPackages = [
   {
+    key: 'automation-core',
+    name: 'Core',
+    price: 750,
+    priceLabel: '$750',
+    popular: false,
+    description: 'A single automation to streamline one key workflow.',
+    features: [
+      '1 automated workflow',
+      'Integration of up to 2 tools',
+      'Basic documentation',
+      '14-day support window',
+    ],
+  },
+  {
     key: 'workflow-starter',
     name: 'Workflow Starter',
     price: 1500,
@@ -394,6 +469,20 @@ export const automationPackages = [
 
 /* ── Social Media Packages ── */
 export const socialMediaPackages = [
+  {
+    key: 'social-core',
+    name: 'Core',
+    price: 350,
+    priceLabel: '$350/mo',
+    popular: false,
+    description: 'Basic social media presence to keep your brand visible.',
+    features: [
+      'Content calendar (8 posts/month)',
+      'Graphic design for all posts',
+      '1 platform managed',
+      'Monthly summary report',
+    ],
+  },
   {
     key: 'social-starter',
     name: 'Social Starter',
@@ -569,48 +658,48 @@ export const serviceCategories = [
     key: 'web-design',
     title: 'Web Design & Development',
     description: 'Custom websites and web applications built with modern technology.',
-    startingFrom: '$1,500',
-    route: '/services/web-design',
+    startingFrom: '$500',
+    route: '/WebDesignPricing',
     icon: 'globe',
   },
   {
     key: 'branding',
     title: 'Branding & Identity',
     description: 'Logos, brand systems, and visual identity that set you apart.',
-    startingFrom: '$500',
-    route: '/services/branding',
+    startingFrom: '$250',
+    route: '/BrandingPricing',
     icon: 'palette',
   },
   {
     key: 'c4-lens',
     title: 'C4 Lens',
     description: 'Professional photography and videography for your brand.',
-    startingFrom: '$350',
-    route: '/services/c4-lens',
+    startingFrom: '$200',
+    route: '/C4LensPricing',
     icon: 'camera',
   },
   {
     key: 'seo',
     title: 'SEO & Search',
     description: 'Technical SEO, content strategy, and search dominance.',
-    startingFrom: '$800',
-    route: '/services/seo',
+    startingFrom: '$400',
+    route: '/SEOPricing',
     icon: 'search',
   },
   {
     key: 'automation',
     title: 'Automation & AI',
     description: 'Workflow automation, AI agents, and custom integrations.',
-    startingFrom: '$1,500',
-    route: '/services/automation',
+    startingFrom: '$750',
+    route: '/AutomationPricing',
     icon: 'zap',
   },
   {
     key: 'social-media',
     title: 'Social Media & Content',
     description: 'Content creation, community management, and social strategy.',
-    startingFrom: '$600/mo',
-    route: '/services/social-media',
+    startingFrom: '$350/mo',
+    route: '/SocialMediaPricing',
     icon: 'share2',
   },
 ];
