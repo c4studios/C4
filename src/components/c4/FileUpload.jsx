@@ -1,6 +1,6 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Upload, X, FileText, Image, Loader2, AlertCircle } from 'lucide-react';
-import { uploadFile } from '@/api/submissions';
+import { fetchRuntimeCapabilities, uploadFile } from '@/api/submissions';
 
 const ACCEPT = '.pdf,.png,.jpg,.jpeg,.webp';
 const MAX_SIZE_MB = 10;
@@ -11,8 +11,42 @@ export default function FileUpload({ files = [], onChange, onUploadingChange, ma
   const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState([]);
   const [dragOver, setDragOver] = useState(false);
+  const [uploadsEnabled, setUploadsEnabled] = useState(true);
+  const [capabilityChecked, setCapabilityChecked] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCapabilities() {
+      try {
+        const { uploadsEnabled: enabled } = await fetchRuntimeCapabilities();
+        if (!cancelled) {
+          setUploadsEnabled(enabled);
+        }
+      } catch {
+        if (!cancelled) {
+          setUploadsEnabled(true);
+        }
+      } finally {
+        if (!cancelled) {
+          setCapabilityChecked(true);
+        }
+      }
+    }
+
+    loadCapabilities();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const processFiles = useCallback(async (fileList) => {
+    if (!uploadsEnabled) {
+      setErrors(['Attachments are currently unavailable for this deployment. Please include a share link in your message instead.']);
+      return;
+    }
+
     const remaining = maxFiles - files.length;
     if (remaining <= 0) return;
 
@@ -47,7 +81,7 @@ export default function FileUpload({ files = [], onChange, onUploadingChange, ma
     setUploading(false);
     onUploadingChange?.(false);
     if (inputRef.current) inputRef.current.value = '';
-  }, [files, maxFiles, onChange]);
+  }, [files, maxFiles, onChange, uploadsEnabled]);
 
   const remove = (index) => {
     setErrors([]);
@@ -69,6 +103,8 @@ export default function FileUpload({ files = [], onChange, onUploadingChange, ma
   };
 
   const atLimit = files.length >= maxFiles;
+  const uploadUnavailable = capabilityChecked && !uploadsEnabled;
+  const disabled = uploading || atLimit || uploadUnavailable;
 
   return (
     <div>
@@ -77,25 +113,35 @@ export default function FileUpload({ files = [], onChange, onUploadingChange, ma
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        onClick={() => !uploading && !atLimit && inputRef.current?.click()}
+        onClick={() => !disabled && inputRef.current?.click()}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
-          if ((e.key === 'Enter' || e.key === ' ') && !uploading && !atLimit) {
+          if ((e.key === 'Enter' || e.key === ' ') && !disabled) {
             e.preventDefault();
             inputRef.current?.click();
           }
         }}
         className={`w-full flex items-center justify-center gap-2 px-4 py-3.5 border border-dashed rounded-sm text-[12.5px] transition-colors duration-300 ${
-          uploading || atLimit ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
+          disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
         }`}
         style={{
-          borderColor: dragOver ? 'var(--c4-accent)' : 'var(--c4-border)',
+          borderColor: dragOver && !disabled ? 'var(--c4-accent)' : 'var(--c4-border)',
           color: 'var(--c4-text-subtle)',
           backgroundColor: 'var(--c4-card-bg)',
         }}
       >
-        {uploading ? (
+        {!capabilityChecked ? (
+          <>
+            <Loader2 size={14} className="animate-spin" />
+            Checking attachments…
+          </>
+        ) : uploadUnavailable ? (
+          <>
+            <AlertCircle size={14} />
+            Attachments unavailable on this deployment
+          </>
+        ) : uploading ? (
           <>
             <Loader2 size={14} className="animate-spin" />
             Uploading…
@@ -114,6 +160,7 @@ export default function FileUpload({ files = [], onChange, onUploadingChange, ma
         accept={ACCEPT}
         multiple
         className="hidden"
+        disabled={disabled}
         onChange={(e) => processFiles(e.target.files)}
       />
 
@@ -154,7 +201,9 @@ export default function FileUpload({ files = [], onChange, onUploadingChange, ma
       )}
 
       <p className="mt-1.5 text-[10px]" style={{ color: 'var(--c4-text-faint)' }}>
-        PDF, PNG, JPG, WEBP · Max {MAX_SIZE_MB}MB per file · {maxFiles} files max
+        {uploadUnavailable
+          ? 'Attachments are disabled because file storage is not configured for this deployment.'
+          : `PDF, PNG, JPG, WEBP · Max ${MAX_SIZE_MB}MB per file · ${maxFiles} files max`}
       </p>
     </div>
   );

@@ -102,3 +102,20 @@ export async function uploadFile(file) {
 
   return { file_url: json.file_url };
 }
+
+/**
+ * Read non-secret runtime capabilities exposed by Pages Functions.
+ * @returns {Promise<{ uploadsEnabled: boolean }>}
+ */
+export async function fetchRuntimeCapabilities() {
+  const res = await fetch(`${API_BASE}/api/config`);
+
+  if (!res.ok) {
+    throw new Error('Could not read runtime capabilities.');
+  }
+
+  const json = await res.json();
+  return {
+    uploadsEnabled: Boolean(json.uploadsEnabled),
+  };
+}

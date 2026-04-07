@@ -68,6 +68,16 @@ export async function onRequestOptions({ env }) {
   return new Response(null, { status: 204, headers: corsHeaders(env) });
 }
 
+export async function onRequestGet({ env }) {
+  return new Response(
+    JSON.stringify({ uploadsEnabled: Boolean(env.UPLOADS_BUCKET) }),
+    {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', ...corsHeaders(env) },
+    }
+  );
+}
+
 export async function onRequestPost(context) {
   const { env, request } = context;
   const cors = corsHeaders(env);
