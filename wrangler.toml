@@ -1,11 +1,12 @@
 # ─────────────────────────────────────────────────────────────
-# Wrangler configuration for local development
+# Wrangler configuration for local development and Pages bindings.
 #
 # This file is used by `wrangler pages dev` to emulate the
 # Cloudflare Pages + Functions environment locally.
 #
-# It is NOT used during production deployment — Cloudflare
-# reads the functions/ directory and build output automatically.
+# This Pages project is also configured to manage bindings via
+# `wrangler.toml`, so R2 bindings and non-secret vars declared here
+# apply to deployments as well.
 #
 # Docs: https://developers.cloudflare.com/pages/functions/
 # ─────────────────────────────────────────────────────────────
@@ -15,6 +16,9 @@ compatibility_date = "2024-12-01"
 
 # Pages-specific settings
 pages_build_output_dir = "dist"
+
+[vars]
+PUBLIC_BUCKET_URL = "https://pub-c3594a76834045cfa969981bd9da57db.r2.dev"
 
 # ─── Environment variables (local dev only) ─────────────────
 # Create a .dev.vars file for secrets (never committed to git):
@@ -26,7 +30,8 @@ pages_build_output_dir = "dist"
 #
 # See ENVIRONMENT.md for the full list.
 
-# ─── R2 bucket binding (uncomment when ready) ───────────────
-# [[r2_buckets]]
-# binding = "UPLOADS_BUCKET"
-# bucket_name = "c4-uploads"
+# ─── R2 bucket binding ──────────────────────────────────────
+[[r2_buckets]]
+binding = "UPLOADS_BUCKET"
+bucket_name = "c4-uploads"
+preview_bucket_name = "c4-uploads"
