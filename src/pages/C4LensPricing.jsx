@@ -32,7 +32,7 @@ export default function C4LensPricing() {
                 index={i}
               >
                 <Link
-                  to={CTA_ROUTE}
+                  to={`${CTA_ROUTE}?service=lens&package=${pkg.key}&budget=${pkg.price <= 500 ? 'under_1k' : pkg.price <= 5000 ? '1k_5k' : '5k_15k'}`}
                   className="group inline-flex items-center justify-center gap-2 w-full py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium rounded-sm transition-colors duration-300"
                   style={{
                     backgroundColor: pkg.popular ? 'var(--c4-bg)' : 'var(--c4-text)',
