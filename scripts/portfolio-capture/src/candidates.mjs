@@ -26,17 +26,22 @@ const SECTION_SELECTORS = [
  */
 const LABEL_PAIRS = [
   ['hero', ['hero', 'welcome', 'banner', 'jumbotron']],
-  ['services', ['services', 'service', 'what-we-do', 'offerings']],
-  ['testimonials', ['testimonial', 'review', 'client feedback', 'what people say']],
-  ['portfolio', ['portfolio', 'project', 'work', 'case stud']],
+  ['services', ['services', 'service', 'what-we-do', 'what we do', 'what we handle', 'offerings', 'our services']],
+  ['testimonials', ['testimonial', 'review', 'client feedback', 'what people say', 'what clients say', 'what our clients', 'client feedback', 'customer review']],
+  ['benefits', ['benefits', 'advantages', 'what you actually get', 'why switch', 'why people switch']],
+  ['features', ['features', 'capabilities', 'what we offer', 'what you get', 'why people', 'why choose', 'why us']],
+  ['calculator', ['calculator', 'estimator', 'estimate', 'free tool']],
+  ['process', ['process', 'how it works', 'how we work', 'how things work', 'what happens', 'our process', 'step', 'timeline']],
   ['gallery', ['gallery', 'showcase']],
-  ['contact', ['contact', 'enquiry', 'inquiry', 'get in touch']],
-  ['about', ['about', 'story', 'who we are', 'our mission']],
-  ['cta', ['get started', 'book now', 'start project', 'call to action']],
+  ['contact', ['contact', 'enquiry', 'inquiry', 'get in touch', 'reach out']],
+  ['about', ['about', 'story', 'who we are', 'our mission', 'meet the', 'who we are', 'the person behind']],
+  ['cta', ['get started', 'book now', 'start project', 'call to action', 'get your', 'let\'s get', 'ready to', 'not sure which', 'let us help']],
   ['faq', ['faq', 'questions', 'frequently asked']],
   ['pricing', ['pricing', 'plans', 'packages']],
   ['team', ['team', 'people', 'our team', 'staff']],
-  ['features', ['features', 'capabilities', 'what we offer']],
+  ['portfolio', ['portfolio', 'our work', 'case stud']],
+  ['stats', ['stats', 'numbers', 'by the numbers', 'at a glance', 'in numbers']],
+  ['checklist', ['checklist', 'bring these', 'what to bring', 'documents', 'before your']],
   ['footer', ['footer']],
 ];
 
@@ -58,7 +63,7 @@ export async function collectCandidates(page, config, kind) {
     }
 
     function inferLabel(node, headingText) {
-      const haystack = `${node.className || ''} ${node.id || ''} ${headingText || ''}`.toLowerCase();
+      const haystack = `${node.className || ''} ${node.id || ''} ${headingText || ''} ${(node.textContent || '').slice(0, 300)}`.toLowerCase();
       for (const [label, keys] of labelPairs) {
         if (keys.some(key => haystack.includes(key))) return label;
       }
@@ -124,8 +129,11 @@ export async function collectCandidates(page, config, kind) {
       if (item.hidden || item.excludeHit) return false;
       if (item.rect.width < 220 || item.rect.height < 100) return false;
       if (item.rect.y < 0) return false;
+      // Reject parent wrapper elements that span nearly the entire page
+      const pageHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+      if (item.rect.height > pageHeight * 0.85) return false;
       if (item.label === 'section' && item.textLength < 20 && item.imageCount < 1 && item.cardCount < 1) return false;
-      if (item.whitespaceRisk > 0.96 && item.imageCount === 0 && item.cardCount === 0 && !item.hasBgImage) return false;
+      if (item.whitespaceRisk > 0.98 && item.imageCount === 0 && item.cardCount === 0 && !item.hasBgImage) return false;
       return true;
     });
   }, {

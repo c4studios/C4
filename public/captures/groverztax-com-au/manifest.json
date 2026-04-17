@@ -1,0 +1,642 @@
+{
+  "version": 2,
+  "sourceUrl": "https://groverztax.com.au",
+  "slug": "groverztax-com-au",
+  "timestamp": "2026-04-17T07:35:55.317Z",
+  "overlays": [],
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 2200
+      },
+      "rawCandidateCount": 7,
+      "selectedCandidateCount": 6,
+      "selected": [
+        {
+          "id": "cand-desktop-0",
+          "selectorHint": "section",
+          "label": "hero",
+          "headingText": "Your tax return shouldn't be the thing keeping you up at night",
+          "textPreview": "Over 5000 returns lodgedYour tax return shouldn't be the thing keeping you up at nightWe're a small, focused practice in East Cannington that handles tax, accounting and BAS for everyday Perth workers, sole traders and s",
+          "textLength": 330,
+          "imageCount": 4,
+          "buttonCount": 2,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 2,
+          "hasBgImage": true,
+          "area": 920160,
+          "whitespaceRisk": 0.982,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 97,
+            "width": 1440,
+            "height": 639
+          },
+          "viewportCoverage": 0.29,
+          "score": 84,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-desktop-5",
+          "selectorHint": "section",
+          "label": "benefits",
+          "headingText": "What you actually get working with Groverz",
+          "textPreview": "Why people switch to usWhat you actually get working with GroverzWe're not the cheapest and we're not the biggest. But our clients stay because the work is accurate, the communication is clear, and they never have to cha",
+          "textLength": 992,
+          "imageCount": 12,
+          "buttonCount": 0,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 9,
+          "hasBgImage": false,
+          "area": 991080,
+          "whitespaceRisk": 0.95,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 2414,
+            "width": 1440,
+            "height": 688
+          },
+          "viewportCoverage": 0.313,
+          "score": 80,
+          "warnings": []
+        },
+        {
+          "id": "cand-desktop-7",
+          "selectorHint": "section",
+          "label": "testimonials",
+          "headingText": "What clients say",
+          "textPreview": "Client feedbackWhat clients sayReal feedback from Perth locals — individuals, tradies and small business owners we work with.“I'd been doing my own return on myTax for years and thought I was fine. Ankit found $2,800 in ",
+          "textLength": 729,
+          "imageCount": 15,
+          "buttonCount": 0,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 11,
+          "hasBgImage": false,
+          "area": 901440,
+          "whitespaceRisk": 0.932,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 3860,
+            "width": 1440,
+            "height": 626
+          },
+          "viewportCoverage": 0.285,
+          "score": 80,
+          "warnings": []
+        },
+        {
+          "id": "cand-desktop-6",
+          "selectorHint": "section",
+          "label": "calculator",
+          "headingText": "Tax Refund Estimator",
+          "textPreview": "Free toolTax Refund EstimatorGet a quick, non-binding estimate of your potential tax refund based on the 2025-26 Australian resident tax rates. Enter your details and see your result instantly.Gross Annual Income ($)Tax ",
+          "textLength": 609,
+          "imageCount": 3,
+          "buttonCount": 1,
+          "cardCount": 0,
+          "formCount": 4,
+          "paragraphCount": 5,
+          "hasBgImage": false,
+          "area": 1090800,
+          "whitespaceRisk": 0.985,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 3102,
+            "width": 1440,
+            "height": 758
+          },
+          "viewportCoverage": 0.344,
+          "score": 69,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-desktop-4",
+          "selectorHint": "section",
+          "label": "services",
+          "headingText": "Tax, accounting & finance — without the jargon",
+          "textPreview": "What we doTax, accounting & finance — without the jargonWhether it's a straightforward individual return or something more complex, the process is the same: clear scope, fixed fee, no surprises.Personal Tax ReturnsStop l",
+          "textLength": 1181,
+          "imageCount": 8,
+          "buttonCount": 2,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 9,
+          "hasBgImage": false,
+          "area": 1376640,
+          "whitespaceRisk": 0.975,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 1458,
+            "width": 1440,
+            "height": 956
+          },
+          "viewportCoverage": 0.435,
+          "score": 68,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        },
+        {
+          "id": "cand-desktop-8",
+          "selectorHint": "section",
+          "label": "cta",
+          "headingText": "Let's get your tax sorted",
+          "textPreview": "Let's get your tax sortedWhether it's a simple return or something more involved, start with a quick conversation. No charge, no obligation, no pushy sales pitch.Book a Free ConsultationCall Ankit DirectlySite by C4 Stud",
+          "textLength": 223,
+          "imageCount": 3,
+          "buttonCount": 5,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 1,
+          "hasBgImage": false,
+          "area": 649440,
+          "whitespaceRisk": 0.981,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 4486,
+            "width": 1440,
+            "height": 451
+          },
+          "viewportCoverage": 0.205,
+          "score": 51,
+          "warnings": [
+            "high-whitespace-risk"
+          ]
+        }
+      ],
+      "captures": [
+        {
+          "candidateId": "cand-desktop-0",
+          "label": "hero",
+          "headingText": "Your tax return shouldn't be the thing keeping you up at night",
+          "score": 84,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "01-hero.png",
+          "filePath": "desktop/01-hero.png",
+          "clip": {
+            "x": 0,
+            "y": 69,
+            "width": 1440,
+            "height": 695
+          },
+          "bytes": 337663,
+          "dimensions": {
+            "width": 1440,
+            "height": 695
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-desktop-5",
+          "label": "benefits",
+          "headingText": "What you actually get working with Groverz",
+          "score": 80,
+          "warnings": [],
+          "fileName": "02-benefits.png",
+          "filePath": "desktop/02-benefits.png",
+          "clip": {
+            "x": 0,
+            "y": 2386,
+            "width": 1440,
+            "height": 744
+          },
+          "bytes": 77419,
+          "dimensions": {
+            "width": 1440,
+            "height": 744
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-desktop-7",
+          "label": "testimonials",
+          "headingText": "What clients say",
+          "score": 80,
+          "warnings": [],
+          "fileName": "03-testimonials.png",
+          "filePath": "desktop/03-testimonials.png",
+          "clip": {
+            "x": 0,
+            "y": 3832,
+            "width": 1440,
+            "height": 682
+          },
+          "bytes": 41861,
+          "dimensions": {
+            "width": 1440,
+            "height": 682
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-desktop-6",
+          "label": "calculator",
+          "headingText": "Tax Refund Estimator",
+          "score": 69,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "04-calculator.png",
+          "filePath": "desktop/04-calculator.png",
+          "clip": {
+            "x": 0,
+            "y": 3074,
+            "width": 1440,
+            "height": 814
+          },
+          "bytes": 176658,
+          "dimensions": {
+            "width": 1440,
+            "height": 814
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-desktop-4",
+          "label": "services",
+          "headingText": "Tax, accounting & finance — without the jargon",
+          "score": 68,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "05-services.png",
+          "filePath": "desktop/05-services.png",
+          "clip": {
+            "x": 0,
+            "y": 1430,
+            "width": 1440,
+            "height": 1012
+          },
+          "bytes": 77992,
+          "dimensions": {
+            "width": 1440,
+            "height": 1012
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-desktop-8",
+          "label": "cta",
+          "headingText": "Let's get your tax sorted",
+          "score": 51,
+          "warnings": [
+            "high-whitespace-risk"
+          ],
+          "fileName": "06-cta.png",
+          "filePath": "desktop/06-cta.png",
+          "clip": {
+            "x": 0,
+            "y": 4458,
+            "width": 1440,
+            "height": 507
+          },
+          "bytes": 30210,
+          "dimensions": {
+            "width": 1440,
+            "height": 507
+          },
+          "usedFallback": false
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "rawCandidateCount": 9,
+      "selectedCandidateCount": 6,
+      "selected": [
+        {
+          "id": "cand-mobile-0",
+          "selectorHint": "section",
+          "label": "hero",
+          "headingText": "Your tax return shouldn't be the thing keeping you up at night",
+          "textPreview": "Over 5000 returns lodgedYour tax return shouldn't be the thing keeping you up at nightWe're a small, focused practice in East Cannington that handles tax, accounting and BAS for everyday Perth workers, sole traders and s",
+          "textLength": 330,
+          "imageCount": 4,
+          "buttonCount": 2,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 2,
+          "hasBgImage": true,
+          "area": 241660,
+          "whitespaceRisk": 0.931,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 81,
+            "width": 430,
+            "height": 562
+          },
+          "viewportCoverage": 0.603,
+          "score": 96,
+          "warnings": []
+        },
+        {
+          "id": "cand-mobile-6",
+          "selectorHint": "section",
+          "label": "calculator",
+          "headingText": "Tax Refund Estimator",
+          "textPreview": "Free toolTax Refund EstimatorGet a quick, non-binding estimate of your potential tax refund based on the 2025-26 Australian resident tax rates. Enter your details and see your result instantly.Gross Annual Income ($)Tax ",
+          "textLength": 609,
+          "imageCount": 3,
+          "buttonCount": 1,
+          "cardCount": 0,
+          "formCount": 4,
+          "paragraphCount": 5,
+          "hasBgImage": false,
+          "area": 407855,
+          "whitespaceRisk": 0.96,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 5117,
+            "width": 430,
+            "height": 949
+          },
+          "viewportCoverage": 1.018,
+          "score": 81,
+          "warnings": []
+        },
+        {
+          "id": "cand-mobile-5",
+          "selectorHint": "section",
+          "label": "benefits",
+          "headingText": "What you actually get working with Groverz",
+          "textPreview": "Why people switch to usWhat you actually get working with GroverzWe're not the cheapest and we're not the biggest. But our clients stay because the work is accurate, the communication is clear, and they never have to cha",
+          "textLength": 992,
+          "imageCount": 12,
+          "buttonCount": 0,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 9,
+          "hasBgImage": false,
+          "area": 620490,
+          "whitespaceRisk": 0.919,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 3674,
+            "width": 430,
+            "height": 1443
+          },
+          "viewportCoverage": 1.548,
+          "score": 70,
+          "warnings": []
+        },
+        {
+          "id": "cand-mobile-7",
+          "selectorHint": "section",
+          "label": "testimonials",
+          "headingText": "What clients say",
+          "textPreview": "Client feedbackWhat clients sayReal feedback from Perth locals — individuals, tradies and small business owners we work with.“I'd been doing my own return on myTax for years and thought I was fine. Ankit found $2,800 in ",
+          "textLength": 729,
+          "imageCount": 15,
+          "buttonCount": 0,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 11,
+          "hasBgImage": false,
+          "area": 503100,
+          "whitespaceRisk": 0.878,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 6066,
+            "width": 430,
+            "height": 1170
+          },
+          "viewportCoverage": 1.255,
+          "score": 70,
+          "warnings": []
+        },
+        {
+          "id": "cand-mobile-8",
+          "selectorHint": "section",
+          "label": "cta",
+          "headingText": "Let's get your tax sorted",
+          "textPreview": "Let's get your tax sortedWhether it's a simple return or something more involved, start with a quick conversation. No charge, no obligation, no pushy sales pitch.Book a Free ConsultationCall Ankit DirectlySite by C4 Stud",
+          "textLength": 223,
+          "imageCount": 3,
+          "buttonCount": 5,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 1,
+          "hasBgImage": false,
+          "area": 214248,
+          "whitespaceRisk": 0.942,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 7236,
+            "width": 430,
+            "height": 498
+          },
+          "viewportCoverage": 0.535,
+          "score": 63,
+          "warnings": []
+        },
+        {
+          "id": "cand-mobile-4",
+          "selectorHint": "section",
+          "label": "services",
+          "headingText": "Tax, accounting & finance — without the jargon",
+          "textPreview": "What we doTax, accounting & finance — without the jargonWhether it's a straightforward individual return or something more complex, the process is the same: clear scope, fixed fee, no surprises.Personal Tax ReturnsStop l",
+          "textLength": 1181,
+          "imageCount": 8,
+          "buttonCount": 2,
+          "cardCount": 0,
+          "formCount": 0,
+          "paragraphCount": 9,
+          "hasBgImage": false,
+          "area": 881393,
+          "whitespaceRisk": 0.961,
+          "includeHit": true,
+          "excludeHit": false,
+          "hidden": false,
+          "rect": {
+            "x": 0,
+            "y": 1625,
+            "width": 430,
+            "height": 2050
+          },
+          "viewportCoverage": 2.199,
+          "score": 62,
+          "warnings": [
+            "tall-section"
+          ]
+        }
+      ],
+      "captures": [
+        {
+          "candidateId": "cand-mobile-0",
+          "label": "hero",
+          "headingText": "Your tax return shouldn't be the thing keeping you up at night",
+          "score": 96,
+          "warnings": [],
+          "fileName": "01-hero.png",
+          "filePath": "mobile/01-hero.png",
+          "clip": {
+            "x": 0,
+            "y": 65,
+            "width": 430,
+            "height": 594
+          },
+          "bytes": 120523,
+          "dimensions": {
+            "width": 430,
+            "height": 594
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-mobile-6",
+          "label": "calculator",
+          "headingText": "Tax Refund Estimator",
+          "score": 81,
+          "warnings": [],
+          "fileName": "02-calculator.png",
+          "filePath": "mobile/02-calculator.png",
+          "clip": {
+            "x": 0,
+            "y": 5101,
+            "width": 430,
+            "height": 981
+          },
+          "bytes": 97104,
+          "dimensions": {
+            "width": 430,
+            "height": 981
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-mobile-5",
+          "label": "benefits",
+          "headingText": "What you actually get working with Groverz",
+          "score": 70,
+          "warnings": [],
+          "fileName": "03-benefits.png",
+          "filePath": "mobile/03-benefits.png",
+          "clip": {
+            "x": 0,
+            "y": 3658,
+            "width": 430,
+            "height": 1475
+          },
+          "bytes": 81162,
+          "dimensions": {
+            "width": 430,
+            "height": 1475
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-mobile-7",
+          "label": "testimonials",
+          "headingText": "What clients say",
+          "score": 70,
+          "warnings": [],
+          "fileName": "04-testimonials.png",
+          "filePath": "mobile/04-testimonials.png",
+          "clip": {
+            "x": 0,
+            "y": 6050,
+            "width": 430,
+            "height": 1202
+          },
+          "bytes": 48100,
+          "dimensions": {
+            "width": 430,
+            "height": 1202
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-mobile-8",
+          "label": "cta",
+          "headingText": "Let's get your tax sorted",
+          "score": 63,
+          "warnings": [],
+          "fileName": "05-cta.png",
+          "filePath": "mobile/05-cta.png",
+          "clip": {
+            "x": 0,
+            "y": 7220,
+            "width": 430,
+            "height": 530
+          },
+          "bytes": 25970,
+          "dimensions": {
+            "width": 430,
+            "height": 530
+          },
+          "usedFallback": false
+        },
+        {
+          "candidateId": "cand-mobile-4",
+          "label": "services",
+          "headingText": "Tax, accounting & finance — without the jargon",
+          "score": 62,
+          "warnings": [
+            "tall-section"
+          ],
+          "fileName": "06-services.png",
+          "filePath": "mobile/06-services.png",
+          "clip": {
+            "x": 0,
+            "y": 1609,
+            "width": 430,
+            "height": 1864
+          },
+          "bytes": 81390,
+          "dimensions": {
+            "width": 430,
+            "height": 1864
+          },
+          "usedFallback": false
+        }
+      ]
+    }
+  },
+  "warnings": []
+}

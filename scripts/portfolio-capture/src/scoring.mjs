@@ -16,12 +16,12 @@ function scoreCandidate(candidate, config, kind) {
   if (candidate.formCount > 0) score += 8;
   if (candidate.textLength > 80 && candidate.textLength < 1200) score += 12;
   if (candidate.viewportCoverage > 0.15 && candidate.viewportCoverage < 1.2) score += 10;
-  if (['testimonials', 'portfolio', 'services', 'features', 'pricing'].includes(candidate.label)) score += 10;
+  if (['testimonials', 'portfolio', 'services', 'features', 'pricing', 'calculator', 'process', 'benefits'].includes(candidate.label)) score += 10;
   if (candidate.includeHit) score += 14;
 
   // Negative signals
   if (candidate.label === 'footer') score -= 30;
-  if (candidate.whitespaceRisk > 0.95) { score -= 12; warnings.push('high-whitespace-risk'); }
+  if (candidate.whitespaceRisk > 0.97) { score -= 12; warnings.push('high-whitespace-risk'); }
   if (candidate.rect.height > (kind === 'mobile' ? 1800 : 2400)) { score -= 8; warnings.push('tall-section'); }
   if (candidate.rect.height < 200) { score -= 10; warnings.push('short-section'); }
   if (!candidate.headingText && candidate.textLength < 60 && candidate.imageCount < 2) {

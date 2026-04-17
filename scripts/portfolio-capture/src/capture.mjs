@@ -3,6 +3,32 @@ import { ensureDir, manifestRelativePath, safeLabel, validatePng } from './utils
 import { planCrop, detectStickyHeaderHeight } from './crops.mjs';
 
 /**
+ * Hide sticky/fixed headers before capturing non-hero sections.
+ * Returns a restore function to re-show them.
+ */
+async function hideStickyHeaders(page) {
+  return page.evaluate(() => {
+    const hidden = [];
+    document.querySelectorAll('header, nav, [role="banner"]').forEach(el => {
+      const style = window.getComputedStyle(el);
+      if (style.position === 'fixed' || style.position === 'sticky') {
+        hidden.push({ el, prev: el.style.cssText });
+        el.style.setProperty('visibility', 'hidden', 'important');
+      }
+    });
+    return hidden.length;
+  });
+}
+
+async function restoreStickyHeaders(page) {
+  return page.evaluate(() => {
+    document.querySelectorAll('header, nav, [role="banner"]').forEach(el => {
+      el.style.removeProperty('visibility');
+    });
+  });
+}
+
+/**
  * Capture a single screenshot for a candidate section.
  * Falls back to a full-viewport capture if the clip fails.
  */
@@ -27,7 +53,11 @@ async function captureOne(page, candidate, options, ordinal) {
   await page.evaluate(y => window.scrollTo(0, y), Math.max(0, crop.y - 20));
   await page.waitForTimeout(250);
 
-  const fileName = `${String(ordinal).padStart(2, '0')}-${safeLabel(candidate.label)}.png`;
+  // Use heading text for filename when label is generic 'section'
+  const labelForFile = candidate.label === 'section' && candidate.headingText
+    ? safeLabel(candidate.headingText.slice(0, 40), 'section')
+    : safeLabel(candidate.label);
+  const fileName = `${String(ordinal).padStart(2, '0')}-${labelForFile}.png`;
   const filePath = path.join(deviceDir, fileName);
   const clip = {
     x: Math.max(0, crop.x),
@@ -35,6 +65,10 @@ async function captureOne(page, candidate, options, ordinal) {
     width: Math.max(1, crop.width),
     height: Math.max(1, crop.height),
   };
+
+  // Hide sticky header for non-hero captures to prevent it appearing in every screenshot
+  const shouldHideHeader = candidate.label !== 'hero';
+  if (shouldHideHeader) await hideStickyHeaders(page);
 
   try {
     await page.screenshot({ path: filePath, clip, fullPage: true, type: 'png', animations: 'disabled' });
@@ -50,7 +84,10 @@ async function captureOne(page, candidate, options, ordinal) {
   } catch (error) {
     if (!options.config.fullPageFallback) throw error;
 
-    const fallbackName = `${String(ordinal).padStart(2, '0')}-${safeLabel(candidate.label)}-fallback.png`;
+    const fallbackLabelForFile = candidate.label === 'section' && candidate.headingText
+      ? safeLabel(candidate.headingText.slice(0, 40), 'section')
+      : safeLabel(candidate.label);
+    const fallbackName = `${String(ordinal).padStart(2, '0')}-${fallbackLabelForFile}-fallback.png`;
     const fallbackPath = path.join(deviceDir, fallbackName);
 
     await page.screenshot({ path: fallbackPath, fullPage: false, type: 'png', animations: 'disabled' });
@@ -64,6 +101,8 @@ async function captureOne(page, candidate, options, ordinal) {
       usedFallback: true,
       warning: `clip-failed: ${error.message}`,
     };
+  } finally {
+    if (shouldHideHeader) await restoreStickyHeaders(page);
   }
 }
 
