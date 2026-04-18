@@ -182,6 +182,7 @@ function useLogoColours(context) {
     const dormant = { ...COLOURS.dormant };
     const mono = { ...COLOURS.mono };
 
+    /* Dark / footer overrides */
     if (isDark || context === 'footer') {
       dormant.fourBody = '#606264';
       dormant.fourArm = '#707274';
@@ -192,7 +193,20 @@ function useLogoColours(context) {
       mono.text = '#e8e6e3';
     }
 
-    return { dormant, mono, colour: COLOURS.colour };
+    /*
+     * Backdrop bubble & drop-shadow intensity —
+     * Light mode gets a more pronounced bubble so the pale C is legible;
+     * dark mode keeps the existing subtle treatment.
+     */
+    const backdrop = (isDark || context === 'footer')
+      ? { fill: '#555', opacity: 0.15 }
+      : { fill: '#3a3a3c', opacity: 0.28 };
+
+    const cShadow = (isDark || context === 'footer')
+      ? { floodOpacity: 0.22 }
+      : { floodOpacity: 0.34 };
+
+    return { dormant, mono, colour: COLOURS.colour, backdrop, cShadow };
   }, [context, isDark]);
 }
 
@@ -273,7 +287,7 @@ export default function C4Logo({
   const h = typeof size === 'number' ? size : (SIZES[size] || SIZES.default);
   const full = variant === 'full';
   const showBackdrop = full;
-  const { dormant, mono, colour } = useLogoColours(context);
+  const { dormant, mono, colour, backdrop, cShadow } = useLogoColours(context);
   const uid = useId();
 
   const viewBox = full ? FULL_VIEWBOX : MARK_VIEWBOX;
@@ -660,7 +674,7 @@ export default function C4Logo({
       >
         <defs>
           <filter id={cPresenceId} x="-15%" y="-15%" width="130%" height="130%">
-            <feDropShadow dx="0" dy="1" stdDeviation="3.5" floodColor="#000000" floodOpacity="0.22"/>
+            <feDropShadow dx="0" dy="1" stdDeviation="3.5" floodColor="#000000" floodOpacity={cShadow.floodOpacity}/>
           </filter>
           <filter id={backdropBlurId} x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="14" />
@@ -693,8 +707,8 @@ export default function C4Logo({
                   ref={backdropRef}
                   cx="206" cy="389"
                   rx="165" ry="120"
-                  fill="#555"
-                  opacity="0.15"
+                  fill={backdrop.fill}
+                  opacity={backdrop.opacity}
                   filter={`url(#${backdropBlurId})`}
                 />
               ) : null}
