@@ -242,6 +242,7 @@ function formatServiceType(key) {
   const map = {
     web_design: 'Website Design',
     web_app: 'Web Application',
+    ecommerce: 'E-Commerce',
     brand_platform: 'Brand Platform',
     rebuild: 'Software Rebuild',
     other: 'Other',

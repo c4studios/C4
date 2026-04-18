@@ -5,7 +5,7 @@ import { getAllCaseStudies } from './caseStudyData';
 // The 4 C4 service categories — always shown
 const SERVICE_FILTERS = [
   { key: 'all', label: 'All' },
-  { key: 'web', label: 'Web & Apps', categories: ['web_design', 'web_app'] },
+  { key: 'web', label: 'Web & Apps', categories: ['web_design', 'web_app', 'ecommerce'] },
   { key: 'brand', label: 'Brand & Growth', categories: ['brand_platform'] },
   { key: 'ai', label: 'AI & Software', categories: ['automation', 'rebuild'] },
   { key: 'lens', label: 'C4 Lens', categories: ['lens'] },

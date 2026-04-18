@@ -1,0 +1,768 @@
+{
+  "version": 2,
+  "sourceUrl": "https://www.dsracingkarts.com.au",
+  "slug": "dsracingkarts-com-au",
+  "timestamp": "2026-04-18T11:55:27.921Z",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 30,
+      "captures": [
+        {
+          "id": "01-hero",
+          "label": "hero",
+          "caption": "Homepage hero — \"BUILT FOR SPEED. ENGINEERED TO WIN.\" with autoplay video and cycling background images",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 61147,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-hero.png",
+          "manualNote": null
+        },
+        {
+          "id": "02-trust-banner",
+          "label": "trust-banner",
+          "caption": "Trust banner — Race-Ready Parts, Expert Service, Australia-Wide shipping",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 880,
+            "w": 1440,
+            "h": 200
+          },
+          "bytes": 814,
+          "dimensions": {
+            "width": 1440,
+            "height": 20
+          },
+          "filePath": "desktop/02-trust-banner.png",
+          "manualNote": null
+        },
+        {
+          "id": "03-game-teaser",
+          "label": "game-teaser",
+          "caption": "DSR Grand Prix mini-game teaser with \"PRESS START\" CTA",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 1050,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 83675,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-game-teaser.png",
+          "manualNote": null
+        },
+        {
+          "id": "04-game-racing",
+          "label": "game-racing",
+          "caption": "DSR Grand Prix in action — two karts racing head-to-head on The Circuit",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 1050,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 83675,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-game-racing.png",
+          "manualNote": "Capture while game is actively running mid-race"
+        },
+        {
+          "id": "05-categories",
+          "label": "categories",
+          "caption": "Shop by Category grid with custom hand-drawn SVG icons",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 2100,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 222373,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-categories.png",
+          "manualNote": null
+        },
+        {
+          "id": "06-history",
+          "label": "history",
+          "caption": "History timeline — scroll-driven trunk growth with alternating cards and lightbox images",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 3100,
+            "w": 1440,
+            "h": 1000
+          },
+          "bytes": 480995,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-history.png",
+          "manualNote": null
+        },
+        {
+          "id": "07-speedometer",
+          "label": "speedometer",
+          "caption": "RPM tachometer stats counter — 500+ Parts, 40 Years, 1000+ Karts with redline bounce",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 4300,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 434666,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/07-speedometer.png",
+          "manualNote": null
+        },
+        {
+          "id": "08-race-animation",
+          "label": "race-animation",
+          "caption": "Scroll-pinned SVG race animation — two detailed top-down karts with exhaust glow",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 5400,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 424371,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/08-race-animation.png",
+          "manualNote": null
+        },
+        {
+          "id": "09-latest-products",
+          "label": "latest-products",
+          "caption": "Latest Products carousel with live pricing from Supabase",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 6700,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 565034,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/09-latest-products.png",
+          "manualNote": null
+        },
+        {
+          "id": "10-newsletter",
+          "label": "newsletter",
+          "caption": "\"Stay in the Fast Lane\" newsletter signup with chequered background",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 7700,
+            "w": 1440,
+            "h": 600
+          },
+          "bytes": 93936,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/10-newsletter.png",
+          "manualNote": null
+        },
+        {
+          "id": "11-shop",
+          "label": "shop",
+          "caption": "Shop page — 499+ products with category sidebar, sort, pagination, and search",
+          "page": "/shop",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 1100
+          },
+          "bytes": 150591,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/11-shop.png",
+          "manualNote": null
+        },
+        {
+          "id": "12-product",
+          "label": "product",
+          "caption": "Product detail page with image gallery, SKU, pricing, stock status, and add-to-cart",
+          "page": "/shop",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 1000
+          },
+          "bytes": 155895,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/12-product.png",
+          "manualNote": null
+        },
+        {
+          "id": "13-cart",
+          "label": "cart",
+          "caption": "Shopping cart with quantity controls, GST calculation, and checkout CTA",
+          "page": "/cart",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 43449,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/13-cart.png",
+          "manualNote": "Best with items in cart — may show empty state"
+        },
+        {
+          "id": "14-checkout",
+          "label": "checkout",
+          "caption": "Checkout — customer details, shipping address, Square Web Payments card form",
+          "page": "/checkout",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 1000
+          },
+          "bytes": 38267,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/14-checkout.png",
+          "manualNote": "Best with items in cart and form partially filled"
+        },
+        {
+          "id": "15-confirmation",
+          "label": "confirmation",
+          "caption": "Order confirmation — DSR-XXXXX number with 3-step \"What happens next\" guide",
+          "page": "/checkout/confirmation",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 68155,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/15-confirmation.png",
+          "manualNote": "Requires completed order — will likely redirect without orderId"
+        },
+        {
+          "id": "16-services",
+          "label": "services",
+          "caption": "Services page — 7 expandable service cards with included-items checklists",
+          "page": "/services",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 1100
+          },
+          "bytes": 544551,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/16-services.png",
+          "manualNote": null
+        },
+        {
+          "id": "17-workshop",
+          "label": "workshop",
+          "caption": "\"Built for Performance\" workshop showcase with cut-corner image",
+          "page": "/services",
+          "crop": {
+            "x": 0,
+            "y": 1100,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 301671,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/17-workshop.png",
+          "manualNote": null
+        },
+        {
+          "id": "18-racewear",
+          "label": "racewear",
+          "caption": "Custom racewear gallery — 12 product photos in responsive grid",
+          "page": "/services",
+          "crop": {
+            "x": 0,
+            "y": 2100,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 745933,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/18-racewear.png",
+          "manualNote": null
+        },
+        {
+          "id": "19-about-founder",
+          "label": "about-founder",
+          "caption": "Dion Scott founder profile with photo, blockquote bio, and career highlights",
+          "page": "/about",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 1000
+          },
+          "bytes": 154166,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/19-about-founder.png",
+          "manualNote": null
+        },
+        {
+          "id": "20-teams",
+          "label": "teams",
+          "caption": "Racing teams carousel — 9 team profiles with numbers, logos, and accent colours",
+          "page": "/about",
+          "crop": {
+            "x": 0,
+            "y": 1100,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 104963,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/20-teams.png",
+          "manualNote": null
+        },
+        {
+          "id": "21-results",
+          "label": "results",
+          "caption": "Results timeline — 2024 ERC Podiums, 2023 Endurance Victories, 2021 SEK Wins",
+          "page": "/about",
+          "crop": {
+            "x": 0,
+            "y": 2100,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 318379,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/21-results.png",
+          "manualNote": null
+        },
+        {
+          "id": "22-chassis",
+          "label": "chassis",
+          "caption": "\"Know Your Chassis\" — Sprint, Endurance, and DSR Predator technical breakdowns",
+          "page": "/about",
+          "crop": {
+            "x": 0,
+            "y": 3100,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 111044,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/22-chassis.png",
+          "manualNote": null
+        },
+        {
+          "id": "23-sponsors",
+          "label": "sponsors",
+          "caption": "Sponsor carousel — 19+ logos in infinite CSS scroll with gradient fade edges",
+          "page": "/sponsors",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 88768,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/23-sponsors.png",
+          "manualNote": null
+        },
+        {
+          "id": "24-contact",
+          "label": "contact",
+          "caption": "Contact page with DSR-branded form, location info, and appointment-only notice",
+          "page": "/contact",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 1000
+          },
+          "bytes": 92623,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/24-contact.png",
+          "manualNote": null
+        },
+        {
+          "id": "25-search",
+          "label": "search",
+          "caption": "Search autocomplete with Ctrl+K hotkey, rich results with images and categories",
+          "page": "/shop",
+          "crop": {
+            "x": 200,
+            "y": 0,
+            "w": 1040,
+            "h": 700
+          },
+          "bytes": 50097,
+          "dimensions": {
+            "width": 1040,
+            "height": 700
+          },
+          "filePath": "desktop/25-search.png",
+          "manualNote": null
+        },
+        {
+          "id": "26-scroll-video",
+          "label": "scroll-video",
+          "caption": "3D perspective video container with scroll-driven rotation and red radial glow",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 400,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 44699,
+          "dimensions": {
+            "width": 1440,
+            "height": 500
+          },
+          "filePath": "desktop/26-scroll-video.png",
+          "manualNote": null
+        },
+        {
+          "id": "27-admin-dashboard",
+          "label": "admin-dashboard",
+          "caption": "Admin dashboard — product/order/customer counts, recent orders, low stock alerts",
+          "page": "/admin",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 1000
+          },
+          "bytes": 51310,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/27-admin-dashboard.png",
+          "manualNote": "Requires admin auth — will capture login redirect or whatever is visible"
+        },
+        {
+          "id": "28-admin-products",
+          "label": "admin-products",
+          "caption": "Admin product management — search, status filter, stock colour coding, pagination",
+          "page": "/admin/products",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 1000
+          },
+          "bytes": 51310,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/28-admin-products.png",
+          "manualNote": "Requires admin auth"
+        },
+        {
+          "id": "29-admin-editor",
+          "label": "admin-editor",
+          "caption": "Admin product editor — images, variations, inventory, categories, SEO fields",
+          "page": "/admin/products",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 1000
+          },
+          "bytes": 51310,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/29-admin-editor.png",
+          "manualNote": "Requires admin auth + specific product open"
+        },
+        {
+          "id": "30-404",
+          "label": "404",
+          "caption": "Custom 404 page — giant \"404\" with racing-themed CTAs",
+          "page": "/this-page-does-not-exist",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 46617,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/30-404.png",
+          "manualNote": null
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 9,
+      "captures": [
+        {
+          "id": "01-hero",
+          "label": "hero",
+          "caption": "Mobile homepage hero",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 430,
+            "h": 932
+          },
+          "bytes": 99694,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-hero.png",
+          "manualNote": null
+        },
+        {
+          "id": "02-game",
+          "label": "game",
+          "caption": "Mobile game with touch controls",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 900,
+            "w": 430,
+            "h": 932
+          },
+          "bytes": 594,
+          "dimensions": {
+            "width": 860,
+            "height": 64
+          },
+          "filePath": "mobile/02-game.png",
+          "manualNote": null
+        },
+        {
+          "id": "03-shop",
+          "label": "shop",
+          "caption": "Mobile shop with product grid",
+          "page": "/shop",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 430,
+            "h": 1200
+          },
+          "bytes": 194007,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-shop.png",
+          "manualNote": null
+        },
+        {
+          "id": "04-product",
+          "label": "product",
+          "caption": "Mobile product detail",
+          "page": "/shop",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 430,
+            "h": 1000
+          },
+          "bytes": 202413,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-product.png",
+          "manualNote": null
+        },
+        {
+          "id": "05-cart",
+          "label": "cart",
+          "caption": "Mobile cart",
+          "page": "/cart",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 430,
+            "h": 932
+          },
+          "bytes": 67992,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/05-cart.png",
+          "manualNote": null
+        },
+        {
+          "id": "06-checkout",
+          "label": "checkout",
+          "caption": "Mobile checkout",
+          "page": "/checkout",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 430,
+            "h": 932
+          },
+          "bytes": 59944,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-checkout.png",
+          "manualNote": null
+        },
+        {
+          "id": "07-nav",
+          "label": "nav",
+          "caption": "Mobile navigation with cart badge",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 430,
+            "h": 932
+          },
+          "bytes": 86599,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/07-nav.png",
+          "manualNote": null
+        },
+        {
+          "id": "08-services",
+          "label": "services",
+          "caption": "Mobile services page",
+          "page": "/services",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 430,
+            "h": 1200
+          },
+          "bytes": 581440,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/08-services.png",
+          "manualNote": null
+        },
+        {
+          "id": "09-contact",
+          "label": "contact",
+          "caption": "Mobile contact form",
+          "page": "/contact",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 430,
+            "h": 1200
+          },
+          "bytes": 140396,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/09-contact.png",
+          "manualNote": null
+        }
+      ]
+    }
+  }
+}

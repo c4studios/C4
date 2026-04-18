@@ -14,6 +14,7 @@
     "capture": "node scripts/portfolio-capture/capture.mjs",
     "capture:hakea": "node scripts/portfolio-capture/capture.mjs --urls https://transformhakea.com --out public/captures --max-per-device 5",
     "capture:freo": "node scripts/portfolio-capture/capture.mjs --urls https://transformfreo.com --out public/captures --max-per-device 5",
+    "capture:dsr": "node scripts/portfolio-capture/capture-dsr-curated.mjs",
     "capture:all": "node scripts/portfolio-capture/capture.mjs --urls https://transformhakea.com https://transformfreo.com --out public/captures --max-per-device 5"
   },
   "dependencies": {

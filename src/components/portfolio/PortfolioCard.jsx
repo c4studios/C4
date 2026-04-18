@@ -7,6 +7,7 @@ const ease = [0.22, 1, 0.36, 1];
 const categoryLabels = {
   web_design: 'Website Design',
   web_app: 'Web Application',
+  ecommerce: 'E-Commerce',
   brand_platform: 'Brand Platform',
   rebuild: 'Rebuild',
 };
