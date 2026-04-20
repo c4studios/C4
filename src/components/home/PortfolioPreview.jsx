@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { getAllCaseStudies } from '../portfolio/caseStudyData';
-import PortfolioMedia from '../portfolio/PortfolioMedia';
+import StudyCover from '../portfolio/StudyCover';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -63,27 +63,13 @@ export default function PortfolioPreview() {
               style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
             >
               <div className="grid grid-cols-1 md:grid-cols-2">
-                <div
+                <StudyCover
+                  study={featured}
+                  variant="preview"
                   className="aspect-[16/10] overflow-hidden md:aspect-auto flex items-center justify-center"
-                  style={featured.backdropStyle || { backgroundColor: featured.brandColor || 'var(--c4-bg)' }}
+                  imageClassName="transition-transform duration-700 group-hover:scale-[1.04]"
                 >
-                  {featured.cover ? (
-                    <img
-                      src={featured.cover}
-                      alt={`${featured.name} logo`}
-                      className="max-h-[55%] max-w-[55%] object-contain transition-transform duration-700 group-hover:scale-[1.04]"
-                    />
-                  ) : (
-                    <PortfolioMedia
-                      src={featured.thumbnail}
-                      alt={featured.name}
-                      title={featured.name}
-                      message="Visuals pending upload"
-                      meta={[...featured.tags.slice(0, 2), ...(featured.year ? [featured.year] : [])]}
-                      imageClassName="transition-transform duration-700 group-hover:scale-[1.02]"
-                    />
-                  )}
-                </div>
+                </StudyCover>
 
                 <div className="flex flex-col justify-between p-7 md:p-10">
                   <div>

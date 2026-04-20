@@ -29,6 +29,17 @@ export const CASE_STUDIES = {
 
     cover: '/covers/transform-fremantle.png',
     brandColor: '#1e3a5f',
+    coverMode: 'contain',
+    coverSizes: {
+      preview: 'max-h-[34%] max-w-[34%]',
+      featured: 'max-h-[38%] max-w-[38%]',
+      grid: 'max-h-[32%] max-w-[32%]',
+      hero: 'max-h-[34%] max-w-[34%]',
+    },
+    backdropStyle: {
+      backgroundColor: '#1e3a5f',
+      backgroundImage: 'radial-gradient(circle at 50% 28%, rgba(255, 222, 154, 0.1), rgba(255, 222, 154, 0) 18%)',
+    },
     thumbnail: '/captures/transformfreo-com/desktop/01-hero.png',
 
     overview: 'Transform Fremantle is an interdenominational Christian movement uniting churches across the City of Fremantle in coordinated prayer. They needed a digital home that could communicate vision, coordinate five weekly prayer meetings across different venues, host downloadable resources, and invite the community to connect — all while reflecting the warmth and gravity of the mission. The result is a clean, purposeful platform that treats the content with the seriousness it deserves while remaining approachable and easy to navigate.',
@@ -265,8 +276,23 @@ export const CASE_STUDIES = {
     featured: true,
     budgetOrder: 3,
 
-    cover: '/covers/jurassic-pt.png',
+    cover: '/covers/JurassicPTLogo.png',
     brandColor: '#1a1f14',
+    coverMode: 'contain',
+    coverSizes: {
+      preview: 'max-h-[52%] max-w-[52%]',
+      featured: 'max-h-[56%] max-w-[56%]',
+      grid: 'max-h-[54%] max-w-[54%]',
+      hero: 'max-h-[44%] max-w-[44%]',
+    },
+    backdropStyle: {
+      backgroundColor: '#090a08',
+      backgroundImage: [
+        'radial-gradient(circle at 50% 42%, rgba(216, 183, 89, 0.18), rgba(216, 183, 89, 0) 28%)',
+        'linear-gradient(180deg, rgba(24, 28, 18, 0.94), rgba(8, 9, 6, 1))',
+        'repeating-linear-gradient(90deg, rgba(204, 170, 72, 0.16) 0 1px, transparent 1px 184px)',
+      ].join(', '),
+    },
     thumbnail: '/captures/jurassic-pt-vercel-app/desktop/01-hero.png',
 
     overview: 'Jurassic PT is a service website for a small group personal training studio in Cannington, WA offering coached classes, personal training, and remedial massage. The site is structured around practical customer actions — comparing memberships, checking the weekly timetable, booking sessions through PT Mate, or sending service-specific enquiries. Each service line has its own dedicated route with pricing, policies, and contextual calls-to-action that route into either direct booking flows or prefilled contact enquiries depending on availability. The implementation pairs a dark lime-accent visual system with reusable booking components, responsive layouts, and a lightweight trust layer built from real client testimonials.',
@@ -771,6 +797,12 @@ export const CASE_STUDIES = {
 
     cover: '/covers/ds-racing-karts.png',
     brandColor: '#0a0a0a',
+    coverSizes: {
+      preview: 'max-h-[44%] max-w-[82%]',
+      featured: 'max-h-[48%] max-w-[84%]',
+      grid: 'max-h-[44%] max-w-[82%]',
+      hero: 'max-h-[42%] max-w-[76%]',
+    },
     backdropStyle: {
       backgroundImage: [
         'linear-gradient(45deg, #000 25%, transparent 25%)',
@@ -778,8 +810,8 @@ export const CASE_STUDIES = {
         'linear-gradient(45deg, transparent 75%, #000 75%)',
         'linear-gradient(-45deg, transparent 75%, #000 75%)',
       ].join(', '),
-      backgroundSize: '24px 24px',
-      backgroundPosition: '0 0, 0 12px, 12px -12px, -12px 0px',
+      backgroundSize: '40px 40px',
+      backgroundPosition: '0 0, 0 20px, 20px -20px, -20px 0px',
       backgroundColor: '#fff',
     },
     thumbnail: '/captures/dsracingkarts-com-au/desktop/01-hero.png',

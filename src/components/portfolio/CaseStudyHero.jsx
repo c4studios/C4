@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ExternalLink, ArrowRight, ArrowLeft } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import StudyCover from './StudyCover';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -98,19 +99,16 @@ export default function CaseStudyHero({ study }) {
 
         {/* Cover banner */}
         {study.cover && (
-          <motion.div
+          <StudyCover
+            study={study}
+            variant="hero"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.28, ease }}
             className="mt-10 aspect-[21/9] overflow-hidden rounded-[3px] flex items-center justify-center"
-            style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
+            imageClassName="drop-shadow-[0_18px_40px_rgba(0,0,0,0.22)]"
           >
-            <img
-              src={study.cover}
-              alt={`${study.name} logo`}
-              className="max-h-[50%] max-w-[50%] object-contain"
-            />
-          </motion.div>
+          </StudyCover>
         )}
 
         {/* Metadata strip — only confirmed facts */}

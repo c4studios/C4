@@ -8,7 +8,7 @@ import PortfolioFilters, { getServiceFilterCategories, hasProjectsForFilter } fr
 import PortfolioSortMenu from '../components/portfolio/PortfolioSortMenu';
 import { getAllCaseStudies } from '../components/portfolio/caseStudyData';
 import { FeaturedCardSkeleton } from '../components/portfolio/PortfolioCardSkeleton';
-import PortfolioMedia from '../components/portfolio/PortfolioMedia';
+import StudyCover from '../components/portfolio/StudyCover';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -44,34 +44,16 @@ function FeaturedCard({ study, index }) {
     >
       <Link to={createPageUrl(`CaseStudy?slug=${study.slug}`)} className="group block">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-3 md:gap-4">
-          {/* Cover — logo wallpaper */}
-          <div
+          <StudyCover
+            study={study}
+            variant="featured"
             className="relative aspect-[16/9] overflow-hidden rounded-[2px] flex items-center justify-center"
-            style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
+            imageClassName="transition-transform duration-700 group-hover:scale-[1.05]"
           >
-            {study.cover ? (
-              <img
-                src={study.cover}
-                alt={`${study.name} logo`}
-                className={study.backdropStyle
-                  ? "max-h-[60%] max-w-[60%] object-contain transition-transform duration-700 group-hover:scale-[1.05]"
-                  : "w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
-                }
-              />
-            ) : (
-              <PortfolioMedia
-                src={study.thumbnail}
-                alt={study.name}
-                title={study.name}
-                message="Visuals pending upload"
-                meta={[...study.tags.slice(0, 2), ...(study.year ? [study.year] : [])]}
-                imageClassName="transition-transform duration-700 group-hover:scale-[1.03]"
-              />
-            )}
             <div className="absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-full opacity-0 scale-75 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 md:bottom-5 md:right-5" style={{ backgroundColor: 'var(--c4-text)' }}>
               <ArrowUpRight size={15} strokeWidth={2} style={{ color: 'var(--c4-bg)' }} />
             </div>
-          </div>
+          </StudyCover>
 
           {/* Screenshot previews sidebar — desktop only */}
           {previews.length > 0 && (
@@ -137,34 +119,17 @@ function ProjectCard({ study, index }) {
       transition={{ duration: 0.5, delay: index * 0.06, ease }}
     >
       <Link to={createPageUrl(`CaseStudy?slug=${study.slug}`)} className="group block">
-        <div
+        <StudyCover
+          study={study}
+          variant="grid"
           className="relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center"
-          style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
+          compact
+          imageClassName="transition-transform duration-700 group-hover:scale-[1.05]"
         >
-          {study.cover ? (
-            <img
-              src={study.cover}
-              alt={`${study.name} logo`}
-              className={study.backdropStyle
-                ? "max-h-[55%] max-w-[55%] object-contain transition-transform duration-700 group-hover:scale-[1.05]"
-                : "w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
-              }
-            />
-          ) : (
-            <PortfolioMedia
-              src={study.thumbnail}
-              alt={study.name}
-              title={study.name}
-              message="Visuals pending upload"
-              meta={[...study.tags.slice(0, 1), ...(study.year ? [study.year] : [])]}
-              compact
-              imageClassName="transition-transform duration-700 group-hover:scale-[1.03]"
-            />
-          )}
           <div className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full opacity-0 scale-75 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100" style={{ backgroundColor: 'var(--c4-text)' }}>
             <ArrowUpRight size={13} strokeWidth={2} style={{ color: 'var(--c4-bg)' }} />
           </div>
-        </div>
+        </StudyCover>
         <div className="mt-4">
           <div className="mb-1.5 flex items-center gap-2">
             {study.tags.slice(0, 2).map((tag) => (
