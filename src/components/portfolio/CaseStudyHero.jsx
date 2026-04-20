@@ -103,7 +103,7 @@ export default function CaseStudyHero({ study }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.28, ease }}
             className="mt-10 aspect-[21/9] overflow-hidden rounded-[3px] flex items-center justify-center"
-            style={{ backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
+            style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
           >
             <img
               src={study.cover}

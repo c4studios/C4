@@ -1,0 +1,1180 @@
+/**
+ * C4 Lens — Immersive landing page  (v3 — faithful port + enhancements)
+ *
+ * Ported VERBATIM from working C4-Lens-Landing.html, with these specific changes:
+ *   1. Single-phase aperture: open → close only (no reopen). Blades hidden at edges
+ *      on load, progressively close to center as user scrolls = camera capturing.
+ *   2. Eye/iris: very faint at load, brightens + pupil DILATES as blades close
+ *      ("the eye likes what it sees").
+ *   3. Caleb Walker section restored with actual photo + metadata overlay.
+ *   4. Premium HUD: viewfinder brackets, histogram, EV scale, grid overlay, shutter flash.
+ *   5. Premium buttons: hover lift, gradient sheen, arrow animation.
+ *   6. Package CTA buttons linking to /StartProject?service=lens&package={key}
+ *
+ * ALL SVG geometry, blade paths, pivot radii, gradients, and focus-tick logic
+ * are kept IDENTICAL to the working original.
+ */
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+
+import '../components/lens/lens.css';
+
+/* ── Force dark mode ── */
+function useForceDark() {
+  useEffect(() => {
+    const root = document.documentElement;
+    const prev = root.className;
+    root.classList.add('dark-mode');
+    root.classList.remove('light-mode', 'vivid');
+    return () => { root.className = prev; };
+  }, []);
+}
+
+/* ── Data ── */
+const QUOTES = [
+  { lead: 'THE LENS —', body: 'that swallows the sun to feed the fire of the mind.' },
+  { lead: 'THE LENS —', body: 'refusing to be filled by anything less than the whole of existence.' },
+  { lead: 'THE LENS —', body: 'forged in the dark to prove the light has somewhere to go.' },
+  { lead: 'THE LENS —', body: "the soul's only hunter." },
+  { lead: 'THE LENS —', body: 'where chaos and dust become the gold of a thought.' },
+];
+
+const WORDS = [
+  { text: 'character', col: '#d6ff3a' },
+  { text: 'essence',   col: '#ff3fa3' },
+  { text: 'nature',    col: '#3ff8ff' },
+  { text: 'truth',     col: '#ff8a1c' },
+  { text: 'soul',      col: '#f7ff00' },
+  { text: 'voice',     col: '#b388ff' },
+  { text: 'story',     col: '#3ff8ff' },
+];
+
+/* ══════════════════════════════════════════════════════════
+   COMPONENT
+   ══════════════════════════════════════════════════════════ */
+export default function Lens() {
+  useForceDark();
+
+  useEffect(() => {
+    /* ═══════════ FONTS ═══════════ */
+    const fontElements = [];
+    const pc1 = document.createElement('link');
+    pc1.rel = 'preconnect'; pc1.href = 'https://fonts.googleapis.com';
+    document.head.appendChild(pc1); fontElements.push(pc1);
+    const pc2 = document.createElement('link');
+    pc2.rel = 'preconnect'; pc2.href = 'https://fonts.gstatic.com'; pc2.crossOrigin = 'anonymous';
+    document.head.appendChild(pc2); fontElements.push(pc2);
+    const fontLink = document.createElement('link');
+    fontLink.rel = 'stylesheet';
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;700&display=swap';
+    document.head.appendChild(fontLink); fontElements.push(fontLink);
+
+    /* ═══════════ BODY ═══════════ */
+    const prevBodyBg = document.body.style.background;
+    document.body.style.background = '#000';
+
+    /* ═══════════ UTILS ═══════════ */
+    const NS = 'http://www.w3.org/2000/svg';
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function eio(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
+    function eoc(t) { return 1 - Math.pow(1-t, 3); }
+
+    const TWEAKS = { cursor: true, ticks: false, motion: 65 };
+
+    /* ═══════════ QUOTES ═══════════ */
+    let qIdx = 0;
+    const quoteInterval = setInterval(() => {
+      const all = document.querySelectorAll('.q-item');
+      if (!all.length) return;
+      all[qIdx].classList.remove('on');
+      qIdx = (qIdx + 1) % all.length;
+      all[qIdx].classList.add('on');
+    }, 6200);
+
+    /* ═══════════ APERTURE BLADES ═══════════
+     *
+     * IDENTICAL geometry to working original:
+     *   PIVOT_R = 355, N_BLADES = 9
+     *   Blade path: asymmetric scimitar (inner edge faces aperture center)
+     *   Open:  offset = +24° (blades tucked, hidden behind barrel rim)
+     *   Close: offset = -90° (tips meet at center)
+     *
+     * CHANGED behavior (user's request):
+     *   Single phase only — open → close. No reopen.
+     *   As blades close, iris brightens + pupil dilates.
+     */
+    const N_BLADES = 9, PIVOT_R = 355;
+    const bladeData = [];
+
+    /* EXACT blade path from working original */
+    const BLADE_PATH =
+      'M 0 0 ' +
+      'C  60 -20, 110 -90, 120 -200 ' +
+      'C 120 -280, 80 -340, 30 -360 ' +
+      'Q 0 -368, -20 -362 ' +
+      'C -90 -330, -130 -240, -115 -140 ' +
+      'C -95 -70, -50 -20, 0 0 ' +
+      'Z';
+
+    const bladesContainer = document.getElementById('apertureBlades');
+    if (bladesContainer) {
+      for (let i = 0; i < N_BLADES; i++) {
+        const baseDeg = (i / N_BLADES) * 360;
+        const baseRad = baseDeg * Math.PI / 180;
+        const px = 500 + Math.cos(baseRad) * PIVOT_R;
+        const py = 500 + Math.sin(baseRad) * PIVOT_R;
+        const g = document.createElementNS(NS, 'g');
+        /* Depth shadow */
+        const shadow = document.createElementNS(NS, 'path');
+        shadow.setAttribute('d', BLADE_PATH);
+        shadow.setAttribute('fill', 'rgba(0,0,0,.55)');
+        shadow.setAttribute('transform', 'translate(3 3)');
+        /* Main blade */
+        const path = document.createElementNS(NS, 'path');
+        path.setAttribute('d', BLADE_PATH);
+        path.setAttribute('fill', 'url(#gBlade)');
+        path.setAttribute('stroke', '#18181c');
+        path.setAttribute('stroke-width', '.9');
+        /* Edge sheen */
+        const sheen = document.createElementNS(NS, 'path');
+        sheen.setAttribute('d', 'M -20 -360 C -90 -330, -130 -240, -115 -140 C -95 -70, -50 -20, 0 0');
+        sheen.setAttribute('fill', 'none');
+        sheen.setAttribute('stroke', 'rgba(255,255,255,.07)');
+        sheen.setAttribute('stroke-width', '1.2');
+        sheen.setAttribute('stroke-linecap', 'round');
+        g.appendChild(shadow);
+        g.appendChild(path);
+        g.appendChild(sheen);
+        bladesContainer.appendChild(g);
+        bladeData.push({ el: g, baseDeg, px, py });
+      }
+    }
+
+    function setBlades(offset) {
+      bladeData.forEach(({ el, baseDeg, px, py }) => {
+        el.setAttribute('transform', `translate(${px} ${py}) rotate(${baseDeg + offset})`);
+      });
+    }
+    /* Start fully open — blades hidden behind barrel (same as original) */
+    setBlades(24);
+
+    /* ═══════════ FOCUS TICKS (EXACT from original) ═══════════ */
+    const ticksContainer = document.getElementById('focusTicks');
+    if (ticksContainer) {
+      for (let i = 0; i < 180; i++) {
+        const a = (i / 180) * Math.PI * 2 - Math.PI / 2;
+        const maj = i % 15 === 0, mid = i % 5 === 0;
+        const Ro = 478, Ri = 452;
+        const r1 = maj ? Ri - 9 : (mid ? Ri - 3 : Ri);
+        const x1 = 500 + Math.cos(a) * r1, y1 = 500 + Math.sin(a) * r1;
+        const x2 = 500 + Math.cos(a) * Ro, y2 = 500 + Math.sin(a) * Ro;
+        const ln = document.createElementNS(NS, 'line');
+        ln.setAttribute('x1', x1); ln.setAttribute('y1', y1);
+        ln.setAttribute('x2', x2); ln.setAttribute('y2', y2);
+        ln.setAttribute('stroke', maj ? '#9a9a98' : (mid ? '#5a5a58' : '#2a2a2c'));
+        ln.setAttribute('stroke-width', maj ? 1.8 : (mid ? 1.1 : 0.7));
+        ticksContainer.appendChild(ln);
+      }
+    }
+
+    /* ═══════════ HERO SCROLL ENGINE ═══════════ */
+    const heroScroll = document.getElementById('heroScroll');
+    const lensWrap = document.getElementById('lensWrap');
+    const lensLayer = document.getElementById('lensLayer');
+    const lensEye = document.getElementById('lensEye');
+    const eyePupil = document.getElementById('eyePupil');
+    const focusRing = document.getElementById('focusRing');
+    const quoteBlock = document.getElementById('quoteBlock');
+    const heroBottom = document.getElementById('heroBottom');
+    const scrollInd = document.getElementById('scrollInd');
+    const tickFlash = document.getElementById('tickFlash');
+    const shutterFlash = document.getElementById('shutterFlash');
+    const gridOverlay = document.getElementById('gridOverlay');
+    const hudF = document.getElementById('hudF');
+    const hudShutter = document.getElementById('hudShutter');
+    const hudIso = document.getElementById('hudIso');
+    const hudFocal = document.getElementById('hudFocal');
+    const hudFocus = document.getElementById('hudFocus');
+    const hudFrame = document.getElementById('hudFrame');
+    const hudWb = document.getElementById('hudWb');
+    const hudTc = document.getElementById('hudTc');
+    const hudExp = document.getElementById('hudExp');
+    const hudMeter = document.getElementById('hudMeter');
+
+    /* Iris starts faint — glimmers through open aperture */
+    if (lensEye) lensEye.style.opacity = '0.18';
+
+    let audioCtx = null;
+    function playTick() {
+      if (!TWEAKS.ticks) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = 'square'; o.frequency.value = 1700 + Math.random() * 350;
+        g.gain.value = 0.04; o.connect(g); g.connect(audioCtx.destination);
+        g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.03);
+        o.start(); o.stop(audioCtx.currentTime + 0.035);
+      } catch (e) { /* ignore */ }
+    }
+    function playShutter() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const b = audioCtx.createBufferSource();
+        const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.08, audioCtx.sampleRate);
+        const ch = buf.getChannelData(0);
+        for (let i = 0; i < ch.length; i++) {
+          const env = Math.exp(-i / (audioCtx.sampleRate * 0.015));
+          ch[i] = (Math.random() * 2 - 1) * env * 0.3;
+        }
+        b.buffer = buf;
+        const gn = audioCtx.createGain(); gn.gain.value = 0.15;
+        b.connect(gn); gn.connect(audioCtx.destination); b.start();
+      } catch (e) { /* ignore */ }
+    }
+
+    let rawT = 0, smoothT = 0;
+    const onHeroScroll = () => {
+      if (!heroScroll) return;
+      const rect = heroScroll.getBoundingClientRect();
+      const total = heroScroll.offsetHeight - window.innerHeight;
+      rawT = total > 0 ? clamp(-rect.top, 0, total) / total : 0;
+    };
+    window.addEventListener('scroll', onHeroScroll, { passive: true });
+
+    let lastTickStep = -1, lastMs = performance.now();
+    let shutterFired = false;
+    let heroRafId;
+
+    /* Histogram & EV references */
+    const histBars = document.querySelectorAll('.hud-histogram-bar');
+    const evTicks = document.querySelectorAll('.hud-ev-tick');
+
+    function heroFrame(now) {
+      const dt = Math.min(0.1, (now - lastMs) / 1000);
+      lastMs = now;
+      /* Smoothing at 0.09 — same as working original */
+      smoothT = lerp(smoothT, rawT, 0.09);
+      const t = smoothT;
+      const mScale = TWEAKS.motion / 65;
+
+      /* ── SINGLE PHASE: open → closed ──
+       *
+       * progress 0→1 mapped over full scroll range.
+       * Blade offset: +24° (open, hidden) → -90° (closed, tips at center)
+       * This is the original's Phase A only — no reopen.
+       */
+      const progress = eio(clamp(t, 0, 1));
+
+      /* Focus ring: deliberate rotation (same speed as original) */
+      const idleDrift = now * 0.00045;
+      const rot = progress * 52 * mScale + idleDrift * (1 - progress * 0.94);
+      if (focusRing) focusRing.setAttribute('transform', `rotate(${rot} 500 500)`);
+
+      /* Tick sounds */
+      if (rawT > 0.01 && rawT < 0.85) {
+        const step = Math.floor(rot / 8);
+        if (step !== lastTickStep) {
+          lastTickStep = step;
+          playTick();
+          if (tickFlash) {
+            tickFlash.style.transition = 'none';
+            tickFlash.style.opacity = '.5';
+            requestAnimationFrame(() => {
+              tickFlash.style.transition = 'opacity .2s';
+              tickFlash.style.opacity = '0';
+            });
+          }
+        }
+      }
+
+      /* Blades: +24° → -90° (open → closed) — EXACT same range as original */
+      const bladeOffset = lerp(24, -90, progress);
+      setBlades(bladeOffset);
+
+      /* Lens dolly — very subtle zoom as it "focuses" */
+      const breath = Math.sin(now / 2600) * 0.003;
+      const lensScale = 1 + progress * 0.08;
+      if (lensWrap) lensWrap.style.transform = `scale(${lensScale + breath})`;
+
+      /* Glass layer: slight fade as blades close */
+      if (lensLayer) {
+        lensLayer.style.opacity = clamp(1 - progress * 0.4, 0.6, 1);
+        lensLayer.style.filter = `blur(${progress * 0.5}px)`;
+      }
+
+      /* Eye/iris: starts very faint (0.18), brightens as blades close.
+       * As blades shut, the iris becomes MORE visible = "the eye likes what it sees."
+       * Pupil DILATES (gets larger) as the "camera captures."
+       */
+      const eyeOpacity = lerp(0.18, 0.95, eoc(clamp(progress * 1.15, 0, 1)));
+      if (lensEye) lensEye.style.opacity = eyeOpacity;
+
+      /* Pupil dilates: r=56 → r=42 (gets wider, darker center expands)
+       * Original starts at r=56. We grow it on close. */
+      if (eyePupil) {
+        const pupilR = lerp(56, 72, eoc(clamp(progress * 1.1, 0, 1)));
+        eyePupil.setAttribute('r', pupilR);
+      }
+
+      /* Rule-of-thirds grid: fades in past 25% */
+      if (gridOverlay) gridOverlay.classList.toggle('on', t > 0.25);
+
+      /* UI fades */
+      const uiFade = clamp(1 - progress * 2, 0, 1);
+      if (quoteBlock) {
+        quoteBlock.style.opacity = uiFade;
+        quoteBlock.style.transform = `translateY(${lerp(0, -12, 1 - uiFade)}px)`;
+      }
+      if (heroBottom) {
+        heroBottom.style.opacity = clamp(1 - progress * 2.4, 0, 1);
+        heroBottom.style.pointerEvents = progress > 0.1 ? 'none' : 'auto';
+      }
+      if (scrollInd) scrollInd.style.opacity = clamp(0.65 - rawT * 3, 0, 0.65);
+
+      /* HUD camera readouts */
+      if (hudF) hudF.textContent = (1.4 + progress * 14.6).toFixed(1).replace(/\.0$/, '');
+      if (hudShutter) hudShutter.textContent = Math.round(250 - progress * 160);
+      if (hudIso) hudIso.textContent = Math.round(400 + progress * 800);
+      if (hudWb) hudWb.textContent = `${Math.round(5600 - progress * 400)}K`;
+      if (hudFocal) hudFocal.textContent = ['35mm', '50mm', '85mm', '105mm', '135mm'][Math.min(4, Math.floor(progress * 5))];
+      if (hudFocus) hudFocus.textContent = t > 0.96 ? 'LOCKED · ●' : `MANUAL · ${(0.5 + progress * 4.5).toFixed(1)}M`;
+      if (hudFrame) hudFrame.textContent = `${String(Math.round(1 + rawT * 419)).padStart(3, '0')} / 420`;
+      if (hudTc) {
+        const tcS = Math.floor(now / 1000);
+        hudTc.textContent = `${String(Math.floor(tcS / 3600) % 24).padStart(2, '0')}:${String(Math.floor(tcS / 60) % 60).padStart(2, '0')}:${String(tcS % 60).padStart(2, '0')}:${String(Math.floor((now / 41.6) % 24)).padStart(2, '0')}`;
+      }
+
+      /* Extra HUD: EV meter */
+      if (hudExp) hudExp.textContent = progress < 0.5 ? '+' + (2 - progress * 4).toFixed(1) : (progress > 0.5 ? (-(progress - 0.5) * 4).toFixed(1) : '0.0');
+      if (hudMeter) {
+        const fill = hudMeter.querySelector('.hud-meter-bar-fill');
+        if (fill) fill.style.width = `${clamp(progress * 110, 0, 100)}%`;
+      }
+
+      /* Histogram */
+      histBars.forEach((bar, i) => {
+        const h = 4 + Math.sin(now * 0.002 + i * 0.7 + progress * 3) * 12 + progress * 8;
+        bar.style.height = `${clamp(h, 2, 28)}px`;
+      });
+
+      /* EV scale */
+      evTicks.forEach((tick, i) => {
+        const center = Math.floor(progress * (evTicks.length - 1));
+        tick.classList.toggle('active', Math.abs(i - center) <= 1);
+      });
+
+      /* Shutter-click flash near full close (~94%) */
+      if (progress > 0.94 && !shutterFired) {
+        shutterFired = true;
+        playShutter();
+        if (shutterFlash) {
+          shutterFlash.style.transition = 'none';
+          shutterFlash.style.opacity = '0.65';
+          requestAnimationFrame(() => {
+            shutterFlash.style.transition = 'opacity .4s ease-out';
+            shutterFlash.style.opacity = '0';
+          });
+        }
+      }
+      if (progress < 0.88) shutterFired = false;
+
+      heroRafId = requestAnimationFrame(heroFrame);
+    }
+    heroRafId = requestAnimationFrame(heroFrame);
+
+    /* ═══════════ PAINT WORDS (canvas) ═══════════ */
+    const paintCanvas = document.getElementById('paintCanvas');
+    const pctx = paintCanvas ? paintCanvas.getContext('2d', { alpha: true }) : null;
+    let DPR = Math.min(window.devicePixelRatio || 1, 2);
+    let drops = [], drips = [], running = false;
+
+    function resizePaintCanvas() {
+      if (!paintCanvas) return;
+      const sec = paintCanvas.closest('.capture');
+      if (!sec) return;
+      paintCanvas.width = sec.offsetWidth * DPR;
+      paintCanvas.height = sec.offsetHeight * DPR;
+      paintCanvas.style.width = sec.offsetWidth + 'px';
+      paintCanvas.style.height = sec.offsetHeight + 'px';
+      pctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+    resizePaintCanvas();
+
+    function stampBrush(x, y, size, color, alpha) {
+      if (!pctx) return;
+      alpha = alpha === undefined ? 1 : alpha;
+      for (let i = 0; i < 5; i++) {
+        const s = size * (1 - i * 0.14);
+        const ox = x + (Math.random() - 0.5) * size * 0.28;
+        const oy = y + (Math.random() - 0.5) * size * 0.14;
+        pctx.beginPath();
+        for (let k = 0; k <= 9; k++) {
+          const a = (k / 9) * Math.PI * 2;
+          const rj = s * (0.78 + Math.random() * 0.24);
+          const px2 = ox + Math.cos(a) * rj, py2 = oy + Math.sin(a) * rj * 0.88;
+          if (k === 0) pctx.moveTo(px2, py2); else pctx.lineTo(px2, py2);
+        }
+        pctx.closePath();
+        pctx.fillStyle = color;
+        pctx.globalAlpha = alpha * (i === 0 ? 0.9 : (0.45 - i * 0.08));
+        pctx.fill();
+      }
+      pctx.globalAlpha = 1;
+    }
+
+    function splatterBlob(x, y, size, color) {
+      stampBrush(x, y, size, color, 0.9);
+      if (size > 4 && Math.random() < 0.38) {
+        drips.push({ x, y, size, color, dripLen: 0, dripMax: size * (3 + Math.random() * 8), dripW: size * (0.18 + Math.random() * 0.35), speed: 0.35 + Math.random() * 1.2 });
+      }
+    }
+
+    function spawnDrops(x, y, color, intensity) {
+      intensity = intensity === undefined ? 1 : intensity;
+      const count = Math.floor((3 + Math.random() * 8) * intensity);
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.random() - 0.5) * Math.PI * 1.7 - Math.PI * 0.15;
+        const speed = (2 + Math.random() * 13) * intensity;
+        drops.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - Math.random() * 2, grav: 0.28 + Math.random() * 0.12, fric: 0.965, size: 1.2 + Math.random() * 5, life: 0.9 + Math.random() * 0.25, decay: 0.014 + Math.random() * 0.018, color });
+      }
+    }
+
+    function stepDrops() {
+      if (!pctx) return;
+      for (let i = drops.length - 1; i >= 0; i--) {
+        const d = drops[i];
+        d.vy += d.grav; d.vx *= d.fric; d.vy *= d.fric;
+        d.x += d.vx; d.y += d.vy; d.life -= d.decay;
+        const spd = Math.hypot(d.vx, d.vy);
+        if (spd > 1.5) {
+          pctx.fillStyle = d.color; pctx.globalAlpha = Math.max(0, d.life) * 0.55;
+          pctx.beginPath(); pctx.ellipse(d.x, d.y, d.size * 0.9, d.size * 0.4 + spd * 0.08, Math.atan2(d.vy, d.vx), 0, Math.PI * 2);
+          pctx.fill(); pctx.globalAlpha = 1;
+        }
+        if (d.life < 0.4 || (Math.abs(d.vx) < 1.2 && Math.abs(d.vy) < 1.5)) {
+          splatterBlob(d.x, d.y, d.size * 1.1, d.color); drops.splice(i, 1);
+        }
+      }
+    }
+
+    function stepDrips() {
+      if (!pctx) return;
+      drips.forEach(dp => {
+        if (dp.dripLen < dp.dripMax) {
+          dp.dripLen += dp.speed;
+          const grad = pctx.createLinearGradient(dp.x, dp.y, dp.x, dp.y + dp.dripLen);
+          grad.addColorStop(0, dp.color); grad.addColorStop(1, dp.color + '00');
+          pctx.fillStyle = grad; pctx.beginPath();
+          pctx.moveTo(dp.x - dp.dripW, dp.y);
+          pctx.quadraticCurveTo(dp.x - dp.dripW * 0.5, dp.y + dp.dripLen * 0.4, dp.x - dp.dripW * 0.2, dp.y + dp.dripLen);
+          pctx.quadraticCurveTo(dp.x, dp.y + dp.dripLen + dp.dripW * 0.9, dp.x + dp.dripW * 0.2, dp.y + dp.dripLen);
+          pctx.quadraticCurveTo(dp.x + dp.dripW * 0.5, dp.y + dp.dripLen * 0.4, dp.x + dp.dripW, dp.y);
+          pctx.closePath(); pctx.fill();
+        }
+      });
+      drips = drips.filter(dp => dp.dripLen < dp.dripMax);
+    }
+
+    function fadeCanvas(amount) {
+      if (!pctx || !paintCanvas) return;
+      pctx.globalCompositeOperation = 'destination-out';
+      pctx.fillStyle = `rgba(0,0,0,${amount})`;
+      pctx.fillRect(0, 0, paintCanvas.width / DPR, paintCanvas.height / DPR);
+      pctx.globalCompositeOperation = 'source-over';
+    }
+
+    let paintRafId;
+    function paintLoop() {
+      if (!running) { paintRafId = null; return; }
+      fadeCanvas(0.006);
+      stepDrops();
+      stepDrips();
+      paintRafId = requestAnimationFrame(paintLoop);
+    }
+
+    let wIdx = 0;
+    function paintWord(wordEl, color) {
+      wordEl.style.clipPath = 'inset(0 100% 0 -5%)';
+      wordEl.classList.add('on');
+      const duration = 1400, start = performance.now();
+      const sec = paintCanvas ? paintCanvas.closest('.capture') : null;
+      if (!sec) return;
+      const secRect = sec.getBoundingClientRect();
+      function stroke(now) {
+        const p = Math.min(1, (now - start) / duration);
+        const eased = eoc(p);
+        wordEl.style.clipPath = `inset(0 ${(1 - eased) * 105}% 0 -5%)`;
+        const wRect = wordEl.getBoundingClientRect();
+        const x0 = wRect.left - secRect.left, y0 = wRect.top - secRect.top;
+        const brushX = x0 + wRect.width * eased;
+        const brushY = y0 + wRect.height * 0.58 + Math.sin(eased * 8) * 7;
+        if (p < 1) {
+          stampBrush(brushX, brushY, 18 + Math.random() * 10, color, 0.85);
+          stampBrush(brushX - 6 - Math.random() * 6, brushY + (Math.random() - 0.5) * 9, 14 + Math.random() * 7, color, 0.7);
+          if (Math.random() < 0.8) spawnDrops(brushX, brushY, color, 0.7 + eased * 0.6);
+          if (Math.random() < 0.14) splatterBlob(brushX + (Math.random() - 0.5) * 28, brushY + (Math.random() - 0.3) * 20, 4 + Math.random() * 6, color);
+        } else { spawnDrops(brushX, brushY, color, 2.2); }
+        if (p < 1) requestAnimationFrame(stroke);
+      }
+      requestAnimationFrame(stroke);
+    }
+
+    function showNextWord() {
+      const all = document.querySelectorAll('#wordStage .c-word');
+      if (!all.length) return;
+      all[wIdx].classList.remove('on');
+      all[wIdx].style.transition = 'opacity .5s ease';
+      all[wIdx].style.opacity = '0';
+      wIdx = (wIdx + 1) % all.length;
+      const next = all[wIdx];
+      next.style.transition = 'none'; next.style.opacity = '0';
+      next.style.clipPath = 'inset(0 100% 0 -5%)';
+      fadeCanvas(0.18);
+      setTimeout(() => paintWord(next, WORDS[wIdx].col), 430);
+    }
+
+    let captureStarted = false, wordInterval;
+    const capIO = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && !captureStarted) {
+        captureStarted = true; resizePaintCanvas(); running = true; paintLoop();
+        const first = document.querySelectorAll('#wordStage .c-word')[0];
+        if (first) setTimeout(() => paintWord(first, WORDS[0].col), 180);
+        wordInterval = setInterval(showNextWord, 4400);
+      }
+    }, { threshold: 0.22 });
+    const captureEl = document.getElementById('capture');
+    if (captureEl) capIO.observe(captureEl);
+
+    /* ═══════════ PORTFOLIO SCROLL ═══════════ */
+    const pfOuter = document.getElementById('portfolioOuter');
+    const pfTrack = document.getElementById('pfTrack');
+    const pfBar = document.getElementById('pfBar');
+    function sizePortfolio() {
+      if (!pfTrack || !pfOuter) return;
+      const travel = Math.max(0, pfTrack.scrollWidth - window.innerWidth);
+      pfOuter.style.setProperty('--pf-travel', travel + 'px');
+    }
+    function onPfScroll() {
+      if (!pfOuter || !pfTrack || !pfBar) return;
+      const rect = pfOuter.getBoundingClientRect();
+      const total = pfOuter.offsetHeight - window.innerHeight;
+      const scrolled = clamp(-rect.top, 0, total);
+      const t2 = total > 0 ? scrolled / total : 0;
+      pfTrack.style.transform = `translateX(${-t2 * Math.max(0, pfTrack.scrollWidth - window.innerWidth)}px)`;
+      pfBar.style.width = `${t2 * 100}%`;
+    }
+    window.addEventListener('scroll', onPfScroll, { passive: true });
+    const onResize = () => { sizePortfolio(); onPfScroll(); resizePaintCanvas(); };
+    window.addEventListener('resize', onResize);
+    requestAnimationFrame(() => { sizePortfolio(); onPfScroll(); });
+
+    /* ═══════════ CURSOR ═══════════ */
+    const reticle = document.getElementById('reticle');
+    let rx = window.innerWidth / 2, ry = window.innerHeight / 2, tx = rx, ty = ry;
+    const onMouseMove = (e) => { tx = e.clientX; ty = e.clientY; };
+    document.addEventListener('mousemove', onMouseMove);
+    let cursorRafId;
+    function animR() {
+      rx = lerp(rx, tx, 0.22); ry = lerp(ry, ty, 0.22);
+      if (reticle) reticle.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+      cursorRafId = requestAnimationFrame(animR);
+    }
+    cursorRafId = requestAnimationFrame(animR);
+
+    /* ═══════════ TWEAKS ═══════════ */
+    function applyTweaks() {
+      document.body.classList.toggle('cursor-on', TWEAKS.cursor);
+      if (reticle) reticle.style.display = TWEAKS.cursor ? 'block' : 'none';
+      const tc = document.getElementById('togCursor'), tt = document.getElementById('togTicks'), mr = document.getElementById('motionRange');
+      if (tc) tc.classList.toggle('on', TWEAKS.cursor);
+      if (tt) tt.classList.toggle('on', TWEAKS.ticks);
+      if (mr) mr.value = TWEAKS.motion;
+    }
+    applyTweaks();
+    const togCursor = document.getElementById('togCursor');
+    const togTicks = document.getElementById('togTicks');
+    const motionRange = document.getElementById('motionRange');
+    const onTogC = () => { TWEAKS.cursor = !TWEAKS.cursor; applyTweaks(); };
+    const onTogT = () => { TWEAKS.ticks = !TWEAKS.ticks; applyTweaks(); };
+    const onMotion = (e) => { TWEAKS.motion = +e.target.value; };
+    if (togCursor) togCursor.addEventListener('click', onTogC);
+    if (togTicks) togTicks.addEventListener('click', onTogT);
+    if (motionRange) motionRange.addEventListener('input', onMotion);
+    const onAudioInit = () => { if (!audioCtx) try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} };
+    document.addEventListener('click', onAudioInit, { once: true });
+
+    /* ═══════════ CLEANUP ═══════════ */
+    return () => {
+      cancelAnimationFrame(heroRafId);
+      if (paintRafId) cancelAnimationFrame(paintRafId);
+      cancelAnimationFrame(cursorRafId);
+      running = false;
+      clearInterval(quoteInterval);
+      if (wordInterval) clearInterval(wordInterval);
+      window.removeEventListener('scroll', onHeroScroll);
+      window.removeEventListener('scroll', onPfScroll);
+      window.removeEventListener('resize', onResize);
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('click', onAudioInit);
+      if (togCursor) togCursor.removeEventListener('click', onTogC);
+      if (togTicks) togTicks.removeEventListener('click', onTogT);
+      if (motionRange) motionRange.removeEventListener('input', onMotion);
+      capIO.disconnect();
+      document.body.style.background = prevBodyBg;
+      document.body.classList.remove('cursor-on');
+      fontElements.forEach(el => { if (el.parentNode) el.parentNode.removeChild(el); });
+      if (audioCtx) try { audioCtx.close(); } catch (e) {}
+    };
+  }, []);
+
+  /* ═══════════════════════════════════════════════════════
+     JSX — EXACT structure from original HTML + enhancements
+     ═══════════════════════════════════════════════════════ */
+  return (
+    <div className="lens-page">
+      {/* Reticle cursor */}
+      <svg className="reticle" id="reticle" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="14" stroke="#fff" strokeWidth=".75" opacity=".5" />
+        <circle cx="20" cy="20" r="1" fill="#fff" />
+        <line x1="20" y1="0" x2="20" y2="7" stroke="#fff" strokeWidth=".75" />
+        <line x1="20" y1="33" x2="20" y2="40" stroke="#fff" strokeWidth=".75" />
+        <line x1="0" y1="20" x2="7" y2="20" stroke="#fff" strokeWidth=".75" />
+        <line x1="33" y1="20" x2="40" y2="20" stroke="#fff" strokeWidth=".75" />
+        <path d="M2 6L2 2L6 2" stroke="#fff" strokeWidth=".75" />
+        <path d="M38 6L38 2L34 2" stroke="#fff" strokeWidth=".75" />
+        <path d="M2 34L2 38L6 38" stroke="#fff" strokeWidth=".75" />
+        <path d="M38 34L38 38L34 38" stroke="#fff" strokeWidth=".75" />
+      </svg>
+
+      {/* Nav */}
+      <nav>
+        <div className="brand"><span className="logo-dot"></span>C4 LENS</div>
+        <div className="nav-links">
+          <a href="#capture">Our Work</a>
+          <a href="#services">Services</a>
+          <a href="#packages">Packages</a>
+          <a href="#caleb">About</a>
+          <a href="#contact" className="book">Book <span className="btn-arrow">→</span></a>
+        </div>
+      </nav>
+
+      {/* ════════ HERO ════════ */}
+      <div className="hero-scroll" id="heroScroll">
+        <div className="hero-sticky">
+          <div className="studio-light"></div>
+
+          {/* Viewfinder corner brackets */}
+          <div className="vf-bracket tl">
+            <svg width="28" height="28" viewBox="0 0 28 28" stroke="rgba(245,245,240,.18)" strokeWidth="1" fill="none"><path d="M1 10V1h9" /></svg>
+          </div>
+          <div className="vf-bracket tr">
+            <svg width="28" height="28" viewBox="0 0 28 28" stroke="rgba(245,245,240,.18)" strokeWidth="1" fill="none"><path d="M27 10V1h-9" /></svg>
+          </div>
+          <div className="vf-bracket bl">
+            <svg width="28" height="28" viewBox="0 0 28 28" stroke="rgba(245,245,240,.18)" strokeWidth="1" fill="none"><path d="M1 18v9h9" /></svg>
+          </div>
+          <div className="vf-bracket br">
+            <svg width="28" height="28" viewBox="0 0 28 28" stroke="rgba(245,245,240,.18)" strokeWidth="1" fill="none"><path d="M27 18v9h-9" /></svg>
+          </div>
+
+          {/* Rule-of-thirds grid */}
+          <div className="hud-grid-overlay" id="gridOverlay"></div>
+
+          {/* HUD */}
+          <div className="hud">
+            <div className="hud-c tl">
+              <span className="rec-wrap">
+                <span className="rec-dot"></span>
+                <span className="v">REC · <span id="hudTc">00:00:00:00</span></span>
+              </span>
+              <span className="k" style={{ marginTop: '5px' }}>C4 LENS / CALEB WALKER / PERTH W.A.</span>
+            </div>
+            <div className="hud-c tr">
+              <span className="v">f/<span id="hudF">1.4</span> · 1/<span id="hudShutter">250</span> · ISO <span id="hudIso">400</span></span>
+              <span className="k" style={{ marginTop: '5px' }}><span id="hudFocal">35mm</span> · RAW · <span id="hudWb">5600K</span></span>
+            </div>
+            <div className="hud-c bl">
+              <span className="k">FOCUS</span>
+              <span className="v" id="hudFocus">MANUAL · ∞</span>
+            </div>
+            <div className="hud-c br">
+              <span className="k">FRAME</span>
+              <span className="v" id="hudFrame">001 / 420</span>
+            </div>
+
+            {/* EV meter — top center */}
+            <div className="hud-meter" id="hudMeter" style={{ position: 'absolute', top: '90px', left: '50%', transform: 'translateX(-50%)', textAlign: 'center' }}>
+              <span>EV <span id="hudExp">+2.0</span></span>
+              <div className="hud-meter-bar"><div className="hud-meter-bar-fill" style={{ width: '0%' }}></div></div>
+            </div>
+
+            {/* Histogram — bottom center */}
+            <div className="hud-histogram">
+              {Array.from({ length: 16 }).map((_, i) => (
+                <div key={i} className="hud-histogram-bar" style={{ height: '4px' }}></div>
+              ))}
+            </div>
+
+            {/* EV scale — right edge */}
+            <div className="hud-ev-scale" style={{ position: 'absolute', top: '50%', right: '20px', transform: 'translateY(-50%)' }}>
+              {Array.from({ length: 9 }).map((_, i) => (
+                <div key={i} className={`hud-ev-tick${i === 4 ? ' active' : ''}`}></div>
+              ))}
+            </div>
+          </div>
+
+          <div className="hero-stage">
+            <div className="lens-wrap" id="lensWrap">
+              <div className="barrel-anchor"></div>
+
+              {/* EYE — EXACT SVG from original (correct iris gradient, pupil r=56, catchlight) */}
+              <div className="lens-eye" id="lensEye">
+                <svg className="eye-svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+                  <defs>
+                    <radialGradient id="irisBody" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stopColor="#0a0604"/>
+                      <stop offset="17%" stopColor="#0a0604"/>
+                      <stop offset="22%" stopColor="#2a1808"/>
+                      <stop offset="48%" stopColor="#8c5e2a"/>
+                      <stop offset="70%" stopColor="#a07038"/>
+                      <stop offset="88%" stopColor="#3a240f"/>
+                      <stop offset="100%" stopColor="#0a0604"/>
+                    </radialGradient>
+                    <filter id="irisGrain" x="-5%" y="-5%" width="110%" height="110%">
+                      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/>
+                      <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .18 0"/>
+                      <feComposite in2="SourceGraphic" operator="in"/>
+                    </filter>
+                  </defs>
+                  <circle cx="200" cy="200" r="200" fill="url(#irisBody)"/>
+                  <circle cx="200" cy="200" r="200" filter="url(#irisGrain)"/>
+                  <circle id="eyePupil" cx="200" cy="200" r="56" fill="#000"/>
+                  <ellipse cx="168" cy="170" rx="8" ry="5" fill="rgba(255,255,250,.55)" transform="rotate(-20 168 170)"/>
+                </svg>
+              </div>
+
+              {/* LENS — EXACT SVG from original (barrel, f-stop numbers, glass rings, blades container) */}
+              <div className="lens-layer" id="lensLayer">
+                <svg className="lens-svg" viewBox="0 0 1000 1000">
+                  <defs>
+                    <radialGradient id="gBarrel" cx="50%" cy="50%" r="50%">
+                      <stop offset="58%" stopColor="#0a0a0c"/>
+                      <stop offset="74%" stopColor="#1c1c1f"/>
+                      <stop offset="82%" stopColor="#3a3a3c"/>
+                      <stop offset="87%" stopColor="#626266"/>
+                      <stop offset="91%" stopColor="#2c2c2f"/>
+                      <stop offset="96%" stopColor="#0c0c0e"/>
+                      <stop offset="100%" stopColor="#020202"/>
+                    </radialGradient>
+                    <radialGradient id="gRim" cx="48%" cy="36%" r="55%">
+                      <stop offset="85%" stopColor="rgba(255,255,255,0)"/>
+                      <stop offset="91%" stopColor="rgba(255,255,255,.24)"/>
+                      <stop offset="96%" stopColor="rgba(255,255,255,.06)"/>
+                      <stop offset="100%" stopColor="rgba(255,255,255,0)"/>
+                    </radialGradient>
+                    <radialGradient id="gAR" cx="33%" cy="28%" r="32%">
+                      <stop offset="0%" stopColor="rgba(100,165,220,.48)"/>
+                      <stop offset="28%" stopColor="rgba(70,195,155,.22)"/>
+                      <stop offset="62%" stopColor="rgba(55,95,210,.07)"/>
+                      <stop offset="100%" stopColor="rgba(55,95,210,0)"/>
+                    </radialGradient>
+                    <radialGradient id="gARw" cx="73%" cy="76%" r="28%">
+                      <stop offset="0%" stopColor="rgba(232,166,88,.22)"/>
+                      <stop offset="55%" stopColor="rgba(200,70,70,.06)"/>
+                      <stop offset="100%" stopColor="rgba(200,70,70,0)"/>
+                    </radialGradient>
+                    <radialGradient id="gSpec" cx="35%" cy="28%" r="9%">
+                      <stop offset="0%" stopColor="rgba(255,255,255,.65)"/>
+                      <stop offset="45%" stopColor="rgba(255,255,255,.1)"/>
+                      <stop offset="100%" stopColor="rgba(255,255,255,0)"/>
+                    </radialGradient>
+                    <radialGradient id="gWell" cx="50%" cy="50%" r="50%">
+                      <stop offset="52%" stopColor="rgba(0,0,0,0)"/>
+                      <stop offset="72%" stopColor="rgba(0,0,0,.35)"/>
+                      <stop offset="100%" stopColor="rgba(0,0,0,.88)"/>
+                    </radialGradient>
+                    <pattern id="pKnurl" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse">
+                      <rect width="5" height="5" fill="#0d0d0f"/>
+                      <line x1="0" y1="0" x2="5" y2="5" stroke="#252528" strokeWidth=".8"/>
+                      <line x1="5" y1="0" x2="0" y2="5" stroke="#0a0a0c" strokeWidth=".3"/>
+                    </pattern>
+                    <linearGradient id="gRed" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#4a1212"/>
+                      <stop offset="48%" stopColor="#b53038"/>
+                      <stop offset="100%" stopColor="#3a1010"/>
+                    </linearGradient>
+                    <linearGradient id="gBlade" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#1a1a1d"/>
+                      <stop offset="45%" stopColor="#0c0c0e"/>
+                      <stop offset="100%" stopColor="#040405"/>
+                    </linearGradient>
+                    <linearGradient id="gBladeEdge" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="rgba(255,255,255,.14)"/>
+                      <stop offset="40%" stopColor="rgba(255,255,255,0)"/>
+                      <stop offset="100%" stopColor="rgba(0,0,0,.35)"/>
+                    </linearGradient>
+                  </defs>
+
+                  <circle cx="500" cy="500" r="498" fill="#020202"/>
+                  <circle cx="500" cy="500" r="490" fill="url(#gBarrel)"/>
+                  <circle cx="500" cy="500" r="490" fill="url(#gRim)" style={{ mixBlendMode: 'screen' }}/>
+                  <circle cx="500" cy="500" r="466" fill="none" stroke="url(#pKnurl)" strokeWidth="32"/>
+                  <path d="M228 332A296 296 0 0 1 772 332" fill="none" stroke="rgba(255,255,255,.055)" strokeWidth="32"/>
+
+                  {/* Focus ring (rotates on scroll) */}
+                  <g id="focusRing">
+                    <g id="focusTicks"></g>
+                    <g fontFamily="Geist Mono,monospace" fontSize="12" fill="#8a8a88" letterSpacing="2" fontWeight="500">
+                      <text x="500" y="62" textAnchor="middle">∞</text>
+                      <text x="782" y="76" textAnchor="middle">30</text>
+                      <text x="930" y="300" textAnchor="middle">10</text>
+                      <text x="930" y="712" textAnchor="middle">5</text>
+                      <text x="782" y="936" textAnchor="middle">3</text>
+                      <text x="500" y="950" textAnchor="middle">1.5</text>
+                      <text x="218" y="936" textAnchor="middle">1</text>
+                      <text x="70" y="712" textAnchor="middle">0.7</text>
+                      <text x="70" y="300" textAnchor="middle">0.5</text>
+                      <text x="218" y="76" textAnchor="middle">0.4</text>
+                    </g>
+                    <line x1="500" y1="28" x2="500" y2="48" stroke="#e8a658" strokeWidth="3" opacity=".96"/>
+                  </g>
+
+                  <circle cx="500" cy="500" r="418" fill="none" stroke="url(#gRed)" strokeWidth="2.5" opacity=".9"/>
+                  <circle cx="500" cy="500" r="404" fill="none" stroke="#030305" strokeWidth="8"/>
+
+                  {/* F-stop numbers around the barrel — EXACT from original */}
+                  <g fontFamily="Geist Mono,monospace" fontSize="10" fill="#5a5a58" letterSpacing="1.3">
+                    <text x="500" y="98" textAnchor="middle">1.4</text>
+                    <text x="668" y="118" textAnchor="middle">2</text>
+                    <text x="818" y="212" textAnchor="middle">2.8</text>
+                    <text x="882" y="386" textAnchor="middle">4</text>
+                    <text x="882" y="618" textAnchor="middle">5.6</text>
+                    <text x="818" y="798" textAnchor="middle">8</text>
+                    <text x="668" y="888" textAnchor="middle">11</text>
+                    <text x="500" y="907" textAnchor="middle">16</text>
+                    <text x="330" y="888" textAnchor="middle">22</text>
+                  </g>
+
+                  {/* Glass rings behind blades */}
+                  <circle cx="500" cy="500" r="385" fill="none" stroke="rgba(180,205,230,.05)" strokeWidth="1"/>
+                  <circle cx="500" cy="500" r="335" fill="none" stroke="rgba(180,200,230,.08)" strokeWidth="1"/>
+
+                  {/* Aperture blades — built by JS */}
+                  <g id="apertureBlades"></g>
+
+                  {/* Glass sheen OVER blades */}
+                  <circle cx="500" cy="500" r="385" fill="url(#gAR)" style={{ mixBlendMode: 'screen' }} pointerEvents="none"/>
+                  <circle cx="500" cy="500" r="385" fill="url(#gARw)" style={{ mixBlendMode: 'screen' }} pointerEvents="none"/>
+                  <circle cx="500" cy="500" r="385" fill="url(#gWell)" style={{ mixBlendMode: 'multiply' }} pointerEvents="none"/>
+
+                  {/* Highlights — EXACT from original */}
+                  <ellipse cx="396" cy="352" rx="108" ry="38" fill="url(#gSpec)" transform="rotate(-28 396 352)" pointerEvents="none"/>
+                  <ellipse cx="358" cy="322" rx="45" ry="14" fill="rgba(255,255,255,.34)" transform="rotate(-30 358 322)" pointerEvents="none"/>
+                  <ellipse cx="622" cy="660" rx="30" ry="9" fill="rgba(232,166,88,.14)" transform="rotate(20 622 660)" pointerEvents="none"/>
+                  <g fill="rgba(255,255,255,.06)" pointerEvents="none">
+                    <circle cx="432" cy="538" r="1.3"/>
+                    <circle cx="572" cy="446" r="1"/>
+                    <circle cx="542" cy="618" r=".9"/>
+                  </g>
+                  <g style={{ mixBlendMode: 'screen' }} opacity=".22" pointerEvents="none">
+                    <circle cx="612" cy="402" r="10" fill="rgba(107,164,214,.45)"/>
+                    <circle cx="662" cy="360" r="6" fill="rgba(232,166,88,.55)"/>
+                    <circle cx="724" cy="316" r="4" fill="rgba(200,200,255,.55)"/>
+                  </g>
+                </svg>
+              </div>
+
+              <div className="tick-flash" id="tickFlash"></div>
+            </div>
+          </div>
+
+          {/* Shutter flash overlay */}
+          <div className="shutter-flash" id="shutterFlash"></div>
+
+          <div className="vignette"></div>
+          <div className="grain"></div>
+
+          <div className="hero-quote" id="quoteBlock">
+            <div className="q-eyebrow"><span className="bar"></span>C4 LENS · CALEB WALKER · PERTH<span className="bar"></span></div>
+            <div className="q-stack" id="quoteStack">
+              {QUOTES.map((q, i) => (
+                <div key={i} className={`q-item${i === 0 ? ' on' : ''}`}>
+                  <span className="q-lead">{q.lead}</span>{q.body}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="hero-bottom" id="heroBottom">
+            <div className="tagline-sub">Photography · Videography · Post-Production</div>
+            <div className="h-cta">
+              <a href="#packages" className="btn primary"><span className="d"></span>View packages</a>
+              <a href="#contact" className="btn">Book a call <span className="btn-arrow">→</span></a>
+            </div>
+            <div className="scroll-ind" id="scrollInd"><span className="arr">↓</span>SCROLL TO FOCUS</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ════════ WHAT WE CAPTURE ════════ */}
+      <section className="capture" id="capture">
+        <canvas id="paintCanvas"></canvas>
+        <div className="cap-inner">
+          <div className="cap-header">
+            <div>
+              <div className="sec-num"><span className="bar"></span>§ 01 — WHAT WE CAPTURE</div>
+              <div className="cap-kicker">We don&rsquo;t photograph<br /><em>businesses.</em></div>
+            </div>
+            <div className="cap-body">
+              Caleb Walker doesn&rsquo;t capture what you look like.<br /><br />
+              He captures what you are <strong>before you know the camera is there</strong> — the energy that existed before the pitch deck, and will outlast the brand refresh.<br /><br />
+              That&rsquo;s what makes clients feel like they already know you.
+            </div>
+          </div>
+
+          <div className="cap-stmt">
+            <div className="cap-stmt-fixed">
+              <span className="cap-stmt-label">We exist to capture the</span>
+              <div className="word-stage" id="wordStage">
+                {WORDS.map((w, i) => (
+                  <span key={i} className="c-word" style={{
+                    color: w.col,
+                    filter: `drop-shadow(0 0 14px ${w.col}88) drop-shadow(0 0 3px ${w.col}ff)`,
+                  }}>{w.text}</span>
+                ))}
+              </div>
+              <span className="cap-stmt-label">of your brand.</span>
+            </div>
+          </div>
+
+          <div className="stats-row">
+            <div className="stat"><div className="num">50<em>+</em></div><div className="lbl">Australian Businesses</div></div>
+            <div className="stat"><div className="num">200<em>+</em></div><div className="lbl">Assets Delivered</div></div>
+            <div className="stat"><div className="num">&lt;7</div><div className="lbl">Days Turnaround</div></div>
+            <div className="stat"><div className="num">100<em>%</em></div><div className="lbl">Australian-Based</div></div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════ SERVICES ════════ */}
+      <section className="slab dark" id="services">
+        <div className="sec-num"><span className="bar"></span>§ 02 — HOW WE WORK</div>
+        <h2>FOUR WAYS<br />TO BE <em>unforgettable.</em></h2>
+        <div className="svc-grid">
+          <div className="svc-card">
+            <div className="svc-tag">Photography</div>
+            <h3>REPLACE STOCK<br />WITH PROOF.</h3>
+            <div className="svc-tagline">&ldquo;Real beats perfect.&rdquo;</div>
+            <div className="desc">Team portraits that carry weight. Workspace environments that tell your story. Product imagery that converts. Headshots that feel like you — not a LinkedIn template.</div>
+            <div className="svc-foot">f/1.4 · STILLS · RAW + EDITED</div>
+          </div>
+          <div className="svc-card">
+            <div className="svc-tag">Videography</div>
+            <h3>MOTION THAT<br />EARNS ATTENTION.</h3>
+            <div className="svc-tagline">&ldquo;Every second must earn its place.&rdquo;</div>
+            <div className="desc">Brand films that stop the scroll. Social content that converts. Event coverage that endures. Founder pieces that humanise the person behind the business.</div>
+            <div className="svc-foot">4K · 24P · CINEMATIC</div>
+          </div>
+          <div className="svc-card">
+            <div className="svc-tag">Drone &amp; Aerial</div>
+            <h3>THE PERSPECTIVE<br />THEY&rsquo;VE NEVER SEEN.</h3>
+            <div className="svc-tagline">&ldquo;Scale that no phone can fake.&rdquo;</div>
+            <div className="desc">Licensed drone work capturing locations, events, and construction that demand context. A perspective most brands never think to show — until they see it.</div>
+            <div className="svc-foot">LICENSED · 4K · AERIAL</div>
+          </div>
+          <div className="svc-card">
+            <div className="svc-tag">Post-Production</div>
+            <h3>CUT FOR THE<br />PLATFORM.</h3>
+            <div className="svc-tagline">&ldquo;Footage is a rough draft.&rdquo;</div>
+            <div className="desc">Short-form reels. Brand cutdowns. Event highlights. Colour grading, sound design, motion graphics. Bring your raw footage — we&rsquo;ll bring it to life.</div>
+            <div className="svc-foot">EDIT · GRADE · DELIVER</div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════ PACKAGES ════════ */}
+      <section className="slab mid" id="packages">
+        <div className="sec-num"><span className="bar"></span>§ 03 — PACKAGES &amp; PRICING</div>
+        <h2>CLEAR SCOPE.<br /><em>No surprises.</em></h2>
+        <div className="pkg-grid">
+          <div className="pkg-card">
+            <div className="pkg-id">PKG — 01</div>
+            <h3>CORE</h3>
+            <div className="pkg-price"><span className="cur">$</span>200</div>
+            <div className="pkg-div"></div>
+            <ul className="pkg-ul">
+              <li><strong>30-min</strong> shoot</li>
+              <li>1 location</li>
+              <li><strong>5</strong> edited digital images</li>
+              <li>Online gallery delivery</li>
+            </ul>
+            <div className="pkg-cta">
+              <Link to={createPageUrl('StartProject') + '?service=lens&package=mini-session'} className="btn">Select <span className="btn-arrow">→</span></Link>
+            </div>
+          </div>
+          <div className="pkg-card">
+            <div className="pkg-id">PKG — 02</div>
+            <h3>PORTRAIT SESSION</h3>
+            <div className="pkg-price"><span className="cur">$</span>350</div>
+            <div className="pkg-div"></div>
+            <ul className="pkg-ul">
+              <li><strong>1-hour</strong> shoot</li>
+              <li>1 location</li>
+              <li><strong>15</strong> edited digital images</li>
+              <li>Online gallery delivery</li>
+            </ul>
+            <div className="pkg-cta">
+              <Link to={createPageUrl('StartProject') + '?service=lens&package=portrait'} className="btn">Select <span className="btn-arrow">→</span></Link>
+            </div>
+          </div>
+          <div className="pkg-card pop">
+            <div className="pop-badge">★ Most Popular</div>
+            <div className="pkg-id">PKG — 03</div>
+            <h3>BUSINESS BRANDING</h3>
+            <div className="pkg-price"><span className="cur">$</span>650</div>
+            <div className="pkg-div"></div>
+            <ul className="pkg-ul">
+              <li><strong>2-hour</strong> shoot</li>
+              <li>Up to <strong>2 locations</strong></li>
+              <li><strong>30</strong> edited digital images</li>
+              <li>Headshots + workspace/lifestyle</li>
+              <li>Online gallery delivery</li>
+            </ul>
+            <div className="pkg-cta">
+              <Link to={createPageUrl('StartProject') + '?service=lens&package=business-branding'} className="btn primary">Select <span className="btn-arrow">→</span></Link>
+            </div>
+          </div>
+          <div className="pkg-card">
+            <div className="pkg-id">PKG — 04</div>
+            <h3>CONTENT CREATION</h3>
+            <div className="pkg-price"><span className="cur">$</span>1,200</div>
+            <div className="pkg-div"></div>
+            <ul className="pkg-ul">
+              <li><strong>Half-day</strong> shoot (4 hrs)</li>
+              <li>Photo + video</li>
+              <li><strong>40</strong> edited photos</li>
+              <li><strong>2</strong> short-form videos (30–60s)</li>
+              <li>Gallery + video delivery</li>
+            </ul>
+            <div className="pkg-cta">
+              <Link to={createPageUrl('StartProject') + '?service=lens&package=content-creation'} className="btn">Select <span className="btn-arrow">→</span></Link>
+            </div>
+          </div>
+          <div className="pkg-card">
+            <div className="pkg-id">PKG — 05</div>
+            <h3>FULL PRODUCTION</h3>
+            <div className="pkg-price"><span className="cur">$</span>2,500<span style={{ fontSize: '.38em', color: 'var(--ink-3)', fontFamily: "'Geist Mono', monospace" }}>+</span></div>
+            <div className="pkg-div"></div>
+            <ul className="pkg-ul">
+              <li><strong>Full-day</strong> shoot (8 hrs)</li>
+              <li>Photo + video</li>
+              <li><strong>60+</strong> edited photos</li>
+              <li><strong>4</strong> short-form + 1 long-form (3 min)</li>
+              <li>Grade, sound, motion graphics</li>
+              <li>Gallery + video delivery</li>
+            </ul>
+            <div className="pkg-cta">
+              <Link to={createPageUrl('StartProject') + '?service=lens&package=full-production'} className="btn">Select <span className="btn-arrow">→</span></Link>
+            </div>
+          </div>
+        </div>
+        <div className="pkg-note">
+          <strong>All prices exclude GST.</strong> Starting prices based on defined scope — if scope changes, we communicate immediately and pause until revised pricing is agreed. No surprises.<br />
+          Professional services (legal, financial, medical) may incur a 15–20% surcharge — discussed during your discovery call.
+        </div>
+      </section>
+
+      {/* ════════ CALEB — WITH PHOTO ════════ */}
+      <section className="slab dark caleb" id="caleb">
+        <div className="caleb-inner">
+          <div className="caleb-left">
+            <div className="caleb-photo-wrap">
+              <img
+                src="/Caleb%20Walker%20-%20C4%20Lens%20Profile.jpeg"
+                alt="Caleb Walker — Lead Photographer & Videographer at C4 Lens"
+                loading="lazy"
+              />
+              <div className="caleb-photo-meta">
+                <span className="role">Lead Photographer &amp; Videographer</span>
+                <span className="loc">Perth, W.A.</span>
+              </div>
+            </div>
+          </div>
+          <div className="caleb-right">
+            <div className="sec-num"><span className="bar"></span>§ 04 — THE PHOTOGRAPHER</div>
+            <h2>CALEB<br /><em>Walker.</em></h2>
+            <blockquote className="caleb-quote">&ldquo;If the brand has weight,<br />the visuals should too.&rdquo;</blockquote>
+            <p>Caleb leads C4 Lens — the photography, videography, and editing arm of C4 Studios. From commercial brand shoots and corporate headshots to events and social content, he brings a <strong>considered, story-first approach</strong> to every frame.</p>
+            <p>His drone work captures perspectives most businesses never think to show. His editing transforms raw footage into polished brand films, reels, and launch content that <strong>actually converts</strong>.</p>
+            <p>Australian businesses trust Caleb to replace stock imagery with visual proof — the kind of content that makes clients feel like they already know you before the first conversation.</p>
+            <p style={{ marginTop: '28px', paddingTop: '24px', borderTop: '1px solid var(--line)', fontFamily: "'Geist Mono', monospace", fontSize: '10px', letterSpacing: '.22em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
+              Based in Perth, W.A. · Available nationally
+            </p>
+            <div style={{ marginTop: '24px' }}>
+              <a href="#contact" className="btn primary"><span className="d"></span>Work with Caleb <span className="btn-arrow">→</span></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════ PORTFOLIO ════════ */}
+      <div className="portfolio-outer" id="portfolioOuter">
+        <div className="portfolio-sticky">
+          <div className="pf-top-row">
+            <span className="t">§ 05 — SELECTED WORK</span>
+            <span>PERTH, W.A. · 2024–2026</span>
+          </div>
+          <div className="pf-hint">← SCROLL TO PAN →</div>
+          <div className="pf-track" id="pfTrack">
+            <div className="pf-card tall"><div className="pf-ph"></div><div className="pf-corner">01 · PORTRAIT</div><div className="pf-corner r">f/1.4</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">BUSINESS PORTRAIT</div><div className="cat">CORPORATE</div></div></div>
+            <div className="pf-card wide"><div className="pf-ph"></div><div className="pf-corner">02 · CAMPAIGN</div><div className="pf-corner r">35MM</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">BRAND CAMPAIGN</div><div className="cat">COMMERCIAL</div></div></div>
+            <div className="pf-card sq"><div className="pf-ph"></div><div className="pf-corner">03 · WORKSPACE</div><div className="pf-corner r">24MM</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">OFFICE ENVIRONMENT</div><div className="cat">BRANDING</div></div></div>
+            <div className="pf-card tall"><div className="pf-ph"></div><div className="pf-corner">04 · EVENT</div><div className="pf-corner r">70-200</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">LIVE EVENT</div><div className="cat">COVERAGE</div></div></div>
+            <div className="pf-card wide"><div className="pf-ph"></div><div className="pf-corner">05 · FILM</div><div className="pf-corner r">4K · 24P</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">BRAND FILM</div><div className="cat">VIDEOGRAPHY</div></div></div>
+            <div className="pf-card sq"><div className="pf-ph"></div><div className="pf-corner">06 · DRONE</div><div className="pf-corner r">AERIAL</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">AERIAL PERSPECTIVE</div><div className="cat">DRONE</div></div></div>
+            <div className="pf-card tall"><div className="pf-ph"></div><div className="pf-corner">07 · PRODUCT</div><div className="pf-corner r">90MM</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">PRODUCT IMAGERY</div><div className="cat">E-COMMERCE</div></div></div>
+          </div>
+          <div className="pf-bar-wrap"><div className="pf-bar" id="pfBar"></div></div>
+        </div>
+      </div>
+
+      {/* ════════ CTA ════════ */}
+      <section className="cta-section" id="contact">
+        <div style={{ fontFamily: "'Geist Mono', monospace", fontSize: '10px', letterSpacing: '.3em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: '24px' }}>
+          § 06 — LET&rsquo;S MAKE SOMETHING
+        </div>
+        <h2>READY TO BE<br /><em>seen</em>?</h2>
+        <div className="sub">We take on a limited number of clients each quarter. Tell Caleb about your project — he&rsquo;ll reply within 48 hours.</div>
+        <div className="cta-btns">
+          <Link to={createPageUrl('StartProject') + '?service=lens'} className="btn primary">
+            <span className="d"></span>Get in touch <span className="btn-arrow">→</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer>
+        <div>
+          <div className="foot-logo">C4 LENS</div>
+          <div style={{ marginTop: '6px', color: 'var(--ink-3)' }}>
+            <a href="https://c4studios.com.au" style={{ color: 'inherit', textDecoration: 'none' }}>C4 Studios</a> · Perth W.A. · © {new Date().getFullYear()}
+          </div>
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <div>ABN AVAILABLE ON REQUEST</div>
+          <div style={{ marginTop: '6px', color: 'var(--ink-3)' }}>TRACKING · FOCUS · FRAME</div>
+        </div>
+      </footer>
+
+      {/* Tweaks */}
+      <div className="tweaks" id="tweaks">
+        <h4>TWEAKS — C4 LENS</h4>
+        <label>Cursor reticle <span className="tog" id="togCursor"></span></label>
+        <label>Tick sounds <span className="tog" id="togTicks"></span></label>
+        <label>Motion <input type="range" id="motionRange" min="0" max="100" step="5" /></label>
+      </div>
+    </div>
+  );
+}

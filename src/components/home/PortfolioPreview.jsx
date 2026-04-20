@@ -65,7 +65,7 @@ export default function PortfolioPreview() {
               <div className="grid grid-cols-1 md:grid-cols-2">
                 <div
                   className="aspect-[16/10] overflow-hidden md:aspect-auto flex items-center justify-center"
-                  style={{ backgroundColor: featured.brandColor || 'var(--c4-bg)' }}
+                  style={featured.backdropStyle || { backgroundColor: featured.brandColor || 'var(--c4-bg)' }}
                 >
                   {featured.cover ? (
                     <img

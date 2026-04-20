@@ -47,13 +47,16 @@ function FeaturedCard({ study, index }) {
           {/* Cover — logo wallpaper */}
           <div
             className="relative aspect-[16/9] overflow-hidden rounded-[2px] flex items-center justify-center"
-            style={{ backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
+            style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
           >
             {study.cover ? (
               <img
                 src={study.cover}
                 alt={`${study.name} logo`}
-                className="max-h-[60%] max-w-[60%] object-contain transition-transform duration-700 group-hover:scale-[1.05]"
+                className={study.backdropStyle
+                  ? "max-h-[60%] max-w-[60%] object-contain transition-transform duration-700 group-hover:scale-[1.05]"
+                  : "w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                }
               />
             ) : (
               <PortfolioMedia
@@ -136,13 +139,16 @@ function ProjectCard({ study, index }) {
       <Link to={createPageUrl(`CaseStudy?slug=${study.slug}`)} className="group block">
         <div
           className="relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center"
-          style={{ backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
+          style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
         >
           {study.cover ? (
             <img
               src={study.cover}
               alt={`${study.name} logo`}
-              className="max-h-[55%] max-w-[55%] object-contain transition-transform duration-700 group-hover:scale-[1.05]"
+              className={study.backdropStyle
+                ? "max-h-[55%] max-w-[55%] object-contain transition-transform duration-700 group-hover:scale-[1.05]"
+                : "w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+              }
             />
           ) : (
             <PortfolioMedia
