@@ -175,17 +175,18 @@ export default function HeroSection() {
                 <Link
                   to={createPageUrl('StartProject')}
                   className="group inline-flex items-center gap-2 px-6 py-3 text-[11px] font-medium uppercase tracking-[0.14em] transition-colors duration-300"
-                  style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
+                  style={{ backgroundColor: 'var(--c4-accent)', color: '#fff' }}
                 >
                   Start a project
                   <ArrowRight size={13} strokeWidth={2} className="opacity-50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100" />
                 </Link>
                 <Link
                   to={createPageUrl('Portfolio')}
-                  className="text-[11px] font-medium uppercase tracking-[0.14em] transition-colors duration-300"
-                  style={{ color: 'var(--c4-text-subtle)' }}
+                  className="group inline-flex items-center gap-2 px-6 py-3 text-[11px] font-medium uppercase tracking-[0.14em] transition-colors duration-300"
+                  style={{ backgroundColor: '#000', color: '#fff' }}
                 >
                   View recent work
+                  <ArrowRight size={13} strokeWidth={2} className="opacity-50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100" />
                 </Link>
               </motion.div>
             </div>

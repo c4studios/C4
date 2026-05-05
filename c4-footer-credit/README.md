@@ -1,6 +1,6 @@
 # C4 Footer Credit — Portable Component
 
-Animated C4 Studios footer-credit badge extracted from [c4studios.com](https://c4studios.com).
+Animated C4 Studios footer-credit badge extracted from [c4studios.com.au](https://c4studios.com.au).
 
 ## Files
 
@@ -50,12 +50,12 @@ import C4FooterCredit from './components/c4-footer-credit/C4FooterCredit';
 ```jsx
 <footer>
   <C4FooterCredit
-    href="https://c4studios.com"
+    href="https://c4studios.com.au"
     label="Designed with C4 Studios"
     size={48}
     showText={true}
     openInNewTab={true}
-    colorScheme="dark"
+    colorScheme="auto"
     className="my-footer-badge"
   />
 </footer>
@@ -86,13 +86,13 @@ import C4FooterCredit from './components/c4-footer-credit/C4FooterCredit';
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `href` | `string` | `'https://c4studios.com'` | Link destination |
+| `href` | `string` | `'https://c4studios.com.au'` | Link destination |
 | `label` | `string` | `'Designed by C4 Studios'` | Credit text shown below logo + used as `aria-label` |
 | `size` | `number \| string` | `36` | Logo height in px, or named size: `'small'` (28), `'default'` (36), `'large'` (48), `'xl'` (72) |
 | `className` | `string` | `''` | Additional CSS class(es) on the root `<a>` element |
 | `openInNewTab` | `boolean` | `true` | Opens link in new tab with `rel="noopener noreferrer"` |
 | `showText` | `boolean` | `true` | Show credit text below the logo |
-| `colorScheme` | `string` | `'dark'` | `'dark'` \| `'light'` \| `'auto'` — controls logo colour palette |
+| `colorScheme` | `string` | `'auto'` | `'dark'` \| `'light'` \| `'auto'` — controls logo colour palette. Auto mode samples the rendered parent/background colour so the "Studios" text turns light on dark/black backgrounds. |
 
 ## Animation Behaviour
 
@@ -126,7 +126,7 @@ When `prefers-reduced-motion: reduce` is active, the logo renders in its static 
 
 | Area | Original (C4Logo.jsx) | Portable (C4FooterCredit.jsx) | Reason |
 |------|----------------------|-------------------------------|--------|
-| Theme | Uses site-wide `ThemeContext` via `useTheme()` | Internal `colorScheme` prop with `matchMedia` fallback | Removes dependency on host site's theme system |
+| Theme | Uses site-wide `ThemeContext` via `useTheme()` | Internal `colorScheme` prop with rendered-background detection | Removes dependency on host site's theme system |
 | Variant | Supports `'mark'` and `'full'` variants | Always renders `'full'` variant | Mark variant is static and not useful for a footer credit |
 | Context | Accepts `'header'` or `'footer'` context | Always uses footer colour palette | Component is purpose-built for footer use |
 | Wrapper | Renders `<span>`, parent provides `<Link>` | Renders `<a>` with configurable `href` | Self-contained link — no router dependency |

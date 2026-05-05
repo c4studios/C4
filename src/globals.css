@@ -414,3 +414,39 @@ header a, header button {
     animation: none;
   }
 }
+
+/* ── Brick wall animated backdrop (Sharp Bricklaying) ── */
+.brick-wall-animated {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.30)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(215, 180, 145, 0.55) 0px, rgba(215, 180, 145, 0.55) 2px,
+      transparent 2px, transparent 64px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 32px,
+      rgba(215, 180, 145, 0.55) 32px, rgba(215, 180, 145, 0.55) 34px,
+      transparent 34px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(200, 162, 125, 0.55) 0px, rgba(200, 162, 125, 0.55) 2px,
+      transparent 2px, transparent 24px
+    );
+  background-size: 100% 100%, 64px 48px, 64px 48px, 64px 48px;
+  background-position: 0 0, 0 0, 0 24px, 0 0;
+  animation: brick-pan 14s linear infinite;
+}
+
+@keyframes brick-pan {
+  from { background-position: 0 0, 0 0, 0 24px, 0 0; }
+  to   { background-position: 0 0, 0 -48px, 0 -24px, 0 -48px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brick-wall-animated {
+    animation: none;
+  }
+}

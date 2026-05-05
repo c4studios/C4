@@ -30,7 +30,7 @@ export default function StudyCover({
 }) {
   return (
     <motion.div
-      className={`relative flex items-center justify-center overflow-hidden ${className}`.trim()}
+      className={`relative flex items-center justify-center overflow-hidden ${study.backdropClassName || ''} ${className}`.trim()}
       style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
       {...props}
     >

@@ -59,6 +59,7 @@ const WORDS = [
 export default function Lens() {
   useForceDark();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [siteMenuOpen, setSiteMenuOpen] = useState(false);
 
   useEffect(() => {
     /* â•â•â•â•â•â•â•â•â•â•â• FONTS â•â•â•â•â•â•â•â•â•â•â• */
@@ -1035,6 +1036,22 @@ export default function Lens() {
 
       {/* Nav */}
       <nav>
+        <div className="nav-left-wrap">
+          <button
+            className="site-nav-btn"
+            onClick={() => setSiteMenuOpen(o => !o)}
+            aria-label="C4 Studios navigation"
+            aria-expanded={siteMenuOpen}
+          >
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.1">
+              <rect x=".5" y=".5" width="5.5" height="5.5" rx=".4"/>
+              <rect x="9" y=".5" width="5.5" height="5.5" rx=".4"/>
+              <rect x=".5" y="9" width="5.5" height="5.5" rx=".4"/>
+              <rect x="9" y="9" width="5.5" height="5.5" rx=".4"/>
+            </svg>
+            <span>C4 STUDIOS</span>
+          </button>
+        </div>
         <div className="brand"><span className="logo-dot"></span>C4 LENS</div>
         <div className="nav-links">
           <a href="#capture">Our Work</a>
@@ -1060,12 +1077,28 @@ export default function Lens() {
       {/* Mobile menu overlay */}
       {mobileMenuOpen && (
         <div className="lens-mobile-menu">
+          <Link to={createPageUrl('Home')} className="lens-mobile-back" onClick={() => setMobileMenuOpen(false)}>← C4 Studios</Link>
+          <div className="lens-mobile-sep" />
           <a href="#capture" onClick={() => setMobileMenuOpen(false)}>Our Work</a>
           <a href="#services" onClick={() => setMobileMenuOpen(false)}>Services</a>
           <a href="#packages" onClick={() => setMobileMenuOpen(false)}>Packages</a>
           <a href="#caleb" onClick={() => setMobileMenuOpen(false)}>About</a>
           <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="book">Book a Call</a>
         </div>
+      )}
+
+      {/* Site nav dropdown */}
+      {siteMenuOpen && (
+        <>
+          <div className="site-nav-overlay" onClick={() => setSiteMenuOpen(false)} />
+          <div className="site-nav-drop">
+            <Link to={createPageUrl('Home')} onClick={() => setSiteMenuOpen(false)}>Home</Link>
+            <Link to={createPageUrl('Portfolio')} onClick={() => setSiteMenuOpen(false)}>Portfolio</Link>
+            <Link to={createPageUrl('Services')} onClick={() => setSiteMenuOpen(false)}>Services</Link>
+            <Link to={createPageUrl('About')} onClick={() => setSiteMenuOpen(false)}>About</Link>
+            <Link to={createPageUrl('StartProject')} className="site-nav-cta" onClick={() => setSiteMenuOpen(false)}>Start a Project →</Link>
+          </div>
+        </>
       )}
 
       {/* â•â•â•â•â•â•â•â• HERO â•â•â•â•â•â•â•â• */}
@@ -1097,7 +1130,6 @@ export default function Lens() {
                 <span className="rec-dot"></span>
                 <span className="v">REC · <span id="hudTc">00:00:00:00</span></span>
               </span>
-              <span className="k" style={{ marginTop: '5px' }}>C4 LENS / CALEB WALKER / PERTH W.A.</span>
             </div>
             <div className="hud-c tr">
               <span className="v">f/<span id="hudF">1.4</span> · 1/<span id="hudShutter">250</span> · ISO <span id="hudIso">400</span></span>
@@ -1434,7 +1466,7 @@ export default function Lens() {
           </div>
 
           <div className="hero-quote" id="quoteBlock">
-            <div className="q-eyebrow"><span className="bar"></span>C4 LENS · CALEB WALKER · PERTH<span className="bar"></span></div>
+            <div className="q-eyebrow"><span className="bar"></span>PHOTOGRAPHY · VIDEOGRAPHY · GRAPHIC DESIGN · EDITING<span className="bar"></span></div>
             <div className="q-stack" id="quoteStack">
               {QUOTES.map((q, i) => (
                 <div key={i} className={`q-item${i === 0 ? ' on' : ''}`}>
@@ -1655,7 +1687,7 @@ export default function Lens() {
           <div className="pf-track" id="pfTrack">
             <div className="pf-card wide"><video src="/DSR%20header.mp4" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">01 · DSR</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">DS RACING KARTS</div><div className="cat">SITE HEADERS / LOGO ANIMATION</div></div></div>
             <div className="pf-card wide"><video src="/hvn.mp4" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">02 · HVN</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">HVN</div><div className="cat">FULL SHOW / DRONE WORK</div></div></div>
-            <div className="pf-card tall"><div className="pf-ph"></div><div className="pf-corner">03</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">TO BE ANNOUNCED</div><div className="cat">—</div></div></div>
+            <div className="pf-card wide"><video src="/sharp-bricklaying-drone.mp4" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">03 · SHARP</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">SHARP BRICKLAYING</div><div className="cat">AERIAL / ON-SITE PHOTOGRAPHY</div></div></div>
             <div className="pf-card sq"><div className="pf-ph"></div><div className="pf-corner">04</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">TO BE ANNOUNCED</div><div className="cat">—</div></div></div>
             <div className="pf-card wide"><div className="pf-ph"></div><div className="pf-corner">05</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">TO BE ANNOUNCED</div><div className="cat">—</div></div></div>
             <div className="pf-card tall"><div className="pf-ph"></div><div className="pf-corner">06</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">TO BE ANNOUNCED</div><div className="cat">—</div></div></div>
