@@ -416,37 +416,100 @@ header a, header button {
 }
 
 /* ── Brick wall animated backdrop (Sharp Bricklaying) ── */
+/*
+ * SVG tile: 128×48px, running bond (offset rows), 4 brick shades.
+ * Layout: brick=60×20px, mortar=4px → module=64×24px, 2 columns × 2 rows.
+ * Row 1 joints at x=60,124. Row 2 joints at x=28,92,124 (offset by 32px).
+ * Scaled to 192×72px in CSS → bricks render ~90px wide × 30px tall, 6px mortar.
+ */
 .brick-wall-animated {
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.30)),
-    repeating-linear-gradient(
-      90deg,
-      rgba(215, 180, 145, 0.55) 0px, rgba(215, 180, 145, 0.55) 2px,
-      transparent 2px, transparent 64px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent 0px, transparent 32px,
-      rgba(215, 180, 145, 0.55) 32px, rgba(215, 180, 145, 0.55) 34px,
-      transparent 34px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      rgba(200, 162, 125, 0.55) 0px, rgba(200, 162, 125, 0.55) 2px,
-      transparent 2px, transparent 24px
-    );
-  background-size: 100% 100%, 64px 48px, 64px 48px, 64px 48px;
-  background-position: 0 0, 0 0, 0 24px, 0 0;
-  animation: brick-pan 14s linear infinite;
+    radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.48) 100%),
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='128' height='48'><rect width='128' height='48' fill='%238A7260'/><rect x='0' y='0' width='60' height='20' fill='%23C04E30'/><rect x='64' y='0' width='60' height='20' fill='%23AE3E22'/><rect x='0' y='24' width='28' height='20' fill='%23CD5C3A'/><rect x='32' y='24' width='60' height='20' fill='%23B8482C'/><rect x='96' y='24' width='28' height='20' fill='%23CD5C3A'/><rect x='0' y='0' width='60' height='1' fill='%23fff' fill-opacity='.10'/><rect x='0' y='19' width='60' height='1' fill='%23000' fill-opacity='.24'/><rect x='59' y='0' width='1' height='20' fill='%23000' fill-opacity='.18'/><rect x='64' y='0' width='60' height='1' fill='%23fff' fill-opacity='.10'/><rect x='64' y='19' width='60' height='1' fill='%23000' fill-opacity='.24'/><rect x='123' y='0' width='1' height='20' fill='%23000' fill-opacity='.18'/><rect x='0' y='24' width='28' height='1' fill='%23fff' fill-opacity='.10'/><rect x='0' y='43' width='28' height='1' fill='%23000' fill-opacity='.22'/><rect x='27' y='24' width='1' height='20' fill='%23000' fill-opacity='.18'/><rect x='32' y='24' width='60' height='1' fill='%23fff' fill-opacity='.10'/><rect x='32' y='43' width='60' height='1' fill='%23000' fill-opacity='.22'/><rect x='91' y='24' width='1' height='20' fill='%23000' fill-opacity='.18'/><rect x='96' y='24' width='28' height='1' fill='%23fff' fill-opacity='.10'/><rect x='96' y='43' width='28' height='1' fill='%23000' fill-opacity='.22'/><rect x='123' y='24' width='1' height='20' fill='%23000' fill-opacity='.18'/><line x1='0' y1='7' x2='60' y2='7' stroke='%23000' stroke-opacity='.04'/><line x1='0' y1='13' x2='60' y2='13' stroke='%23000' stroke-opacity='.04'/><line x1='64' y1='7' x2='124' y2='7' stroke='%23000' stroke-opacity='.04'/><line x1='64' y1='13' x2='124' y2='13' stroke='%23000' stroke-opacity='.04'/><line x1='32' y1='31' x2='92' y2='31' stroke='%23000' stroke-opacity='.04'/><line x1='32' y1='37' x2='92' y2='37' stroke='%23000' stroke-opacity='.04'/></svg>");
+  background-size: 100% 100%, 192px 72px;
+  background-repeat: no-repeat, repeat;
+  will-change: background-position;
+  animation: brick-scroll 28s linear infinite;
 }
 
-@keyframes brick-pan {
-  from { background-position: 0 0, 0 0, 0 24px, 0 0; }
-  to   { background-position: 0 0, 0 -48px, 0 -24px, 0 -48px; }
+@keyframes brick-scroll {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 0 0, 0 -72px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .brick-wall-animated {
     animation: none;
   }
+}
+
+/* ── DSR Racing Karts — waving chequered race flag backdrop ── */
+/*
+ * The flag is rendered on a ::before pseudo-element (z-index: -1) so the
+ * logo sits above it without any transform bleed. Three background layers:
+ *   1. Radial vignette (darkens edges, keeps logo readable)
+ *   2. Repeating diagonal light/shadow bands (fabric fold shading, scrolls linearly)
+ *   3. SVG chequered tile — black #0a0a0a + warm-white #ede8df, 30×30px
+ *
+ * Two separate @keyframes let transform use ease-in-out (organic waving)
+ * while the shading bands scroll at a constant linear speed.
+ * transform-origin: left center = flag is "attached" at left edge (pole side).
+ */
+.dsr-flag-animated {
+  position: relative;
+  isolation: isolate;
+}
+
+.dsr-flag-animated::before {
+  content: '';
+  position: absolute;
+  inset: -22%;
+  z-index: -1;
+  background-color: #ede8df;
+  background-image:
+    radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.0) 10%, rgba(0,0,0,0.64) 100%),
+    repeating-linear-gradient(
+      22deg,
+      transparent           0px,
+      transparent           36px,
+      rgba(255,255,255,.11) 42px,
+      rgba(0,0,0,.13)       48px,
+      transparent           54px,
+      transparent           100px
+    ),
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><rect width='15' height='15' fill='%230a0a0a'/><rect x='15' y='0' width='15' height='15' fill='%23ede8df'/><rect x='0' y='15' width='15' height='15' fill='%23ede8df'/><rect x='15' y='15' width='15' height='15' fill='%230a0a0a'/></svg>");
+  background-size: 100% 100%, 500px 500px, 30px 30px;
+  background-repeat: no-repeat, repeat, repeat;
+  transform-origin: left center;
+  will-change: transform, background-position;
+  animation:
+    dsr-flag-skew   4.8s ease-in-out infinite,
+    dsr-flag-scroll 3.5s linear     infinite;
+}
+
+/* Ensure the logo cover sits above the animated ::before */
+.dsr-flag-animated > img {
+  position: relative;
+  z-index: 1;
+}
+
+/* Wave: ease-in-out skew simulates flag billowing from the pole outward */
+@keyframes dsr-flag-skew {
+  0%   { transform: skewX(0deg)     scaleX(1.000); }
+  16%  { transform: skewX(2.8deg)   scaleX(0.991); }
+  33%  { transform: skewX(-1.6deg)  scaleX(1.007); }
+  51%  { transform: skewX(3.6deg)   scaleX(0.984); }
+  67%  { transform: skewX(-2.0deg)  scaleX(1.004); }
+  84%  { transform: skewX(1.4deg)   scaleX(0.996); }
+  100% { transform: skewX(0deg)     scaleX(1.000); }
+}
+
+/* Bands + checker scroll continuously — seamless because to = exactly one tile period */
+@keyframes dsr-flag-scroll {
+  from { background-position: 0 0,   0px 0px, 0px 0px; }
+  to   { background-position: 0 0, 500px 0px, 30px 0px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dsr-flag-animated::before { animation: none; }
 }

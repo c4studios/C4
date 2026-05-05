@@ -35,18 +35,15 @@ export const CASE_STUDIES = {
       grid: 'max-h-[44%] max-w-[82%]',
       hero: 'max-h-[42%] max-w-[76%]',
     },
-    backdropStyle: {
-      backgroundImage: [
-        'linear-gradient(45deg, #000 25%, transparent 25%)',
-        'linear-gradient(-45deg, #000 25%, transparent 25%)',
-        'linear-gradient(45deg, transparent 75%, #000 75%)',
-        'linear-gradient(-45deg, transparent 75%, #000 75%)',
-      ].join(', '),
-      backgroundSize: '40px 40px',
-      backgroundPosition: '0 0, 0 20px, 20px -20px, -20px 0px',
-      backgroundColor: '#fff',
-    },
+    backdropStyle: {},
+    backdropClassName: 'dsr-flag-animated',
     thumbnail: '/captures/dsracingkarts-com-au/desktop/01-hero.png',
+
+    featuredScreenshots: [
+      { url: '/captures/dsracingkarts-com-au/desktop/04-game-racing.png', caption: 'DSR Grand Prix in action — two karts racing head-to-head on The Circuit' },
+      { url: '/captures/dsracingkarts-com-au/desktop/12-product.png', caption: 'Product detail page with image gallery, SKU, pricing, stock status, and add-to-cart' },
+      { url: '/captures/dsracingkarts-com-au/desktop/09-latest-products.png', caption: 'Latest Products carousel with live pricing from Supabase' },
+    ],
 
     overview: 'DS Racing Karts is a full-stack e-commerce platform built for a family-owned go kart parts and servicing business in Sydney. The site handles a catalog of 499+ products synced in real time from Square POS via HMAC-verified webhooks, a custom checkout and cart flow, and a Canvas 2D racing mini-game. Post-launch, the platform expanded significantly: a 15-section secure admin panel lets the owners manage every facet of the business — from team profiles and race results to site announcements, newsletter subscribers, racewear galleries, and a community buy/sell chassis board — all live without developer involvement. A three-tier Square sync pipeline (real-time webhooks, daily Vercel Cron, and admin-triggered chunked reconciliation) keeps the catalog, inventory, and pricing perpetually in sync with the POS. An AI-assisted product categorisation system with a full audit trail and atomic revert support was built to handle initial and ongoing categorisation of the full catalog at scale across 17 Supabase migrations.',
 

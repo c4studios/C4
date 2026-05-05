@@ -33,7 +33,7 @@ function sortStudies(studies, sortKey) {
 }
 
 function FeaturedCard({ study, index }) {
-  const previews = (study.screenshots || []).slice(0, 3);
+  const previews = study.featuredScreenshots || (study.screenshots || []).slice(0, 3);
 
   return (
     <motion.div
