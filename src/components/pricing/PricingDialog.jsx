@@ -9,13 +9,14 @@ import {
 } from '@/components/ui/dialog';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import {
-  webDesignPackages,
+  webPackageSections,
   webDesignAddOns,
+  webPricingGuides,
+  webScopeNotes,
   brandingPackages,
   c4LensPackages,
   seoPackages,
   automationPackages,
-  socialMediaPackages,
   subscriptionInfo,
   ASTERISK_CLAUSE,
   GST_NOTE,
@@ -28,18 +29,22 @@ const ease = [0.22, 1, 0.36, 1];
 /* ── Mapping service keys → pricing data ── */
 const SERVICE_PRICING_MAP = {
   websites: {
-    title: 'Web Design & Development',
-    subtitle: 'Custom-coded, high-performance websites.',
-    packages: webDesignPackages,
+    title: 'Websites & Ecommerce',
+    subtitle: 'Landing pages start at $500, brochure sites at $800, ecommerce stores at $3,500, and web app starters at $4,500.',
+    sections: webPackageSections,
     addOns: webDesignAddOns,
+    guides: webPricingGuides,
+    scopeNotes: webScopeNotes,
     hasToggle: true,
     hasSurcharge: true,
   },
   apps: {
     title: 'Web Applications',
-    subtitle: 'Production-grade web apps — SaaS, portals, dashboards.',
-    packages: webDesignPackages,
+    subtitle: 'Web app starters begin at $4,500, with larger portals, dashboards, integrations, and platforms scaling from there.',
+    sections: webPackageSections.filter((section) => section.heading === 'Apps & Larger Builds'),
     addOns: webDesignAddOns,
+    guides: webPricingGuides,
+    scopeNotes: webScopeNotes.filter((note) => ['Apps are MVP-first', 'Usually not included', 'Project terms'].includes(note.title)),
     hasToggle: true,
     hasSurcharge: true,
   },
@@ -234,6 +239,39 @@ function MiniSubscriptionExplainer() {
   );
 }
 
+/* ── Scope notes ── */
+function MiniScopeNotes({ notes }) {
+  if (!notes?.length) return null;
+
+  return (
+    <div className="mb-6">
+      <h4 className="text-[12px] font-semibold tracking-[-0.01em] mb-3" style={{ color: 'var(--c4-text)' }}>
+        Scope guardrails
+      </h4>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {notes.map((note) => (
+          <div
+            key={note.title}
+            className="rounded-sm border p-4"
+            style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
+          >
+            <div className="text-[10px] uppercase tracking-[0.16em] font-medium mb-2" style={{ color: 'var(--c4-text-subtle)' }}>
+              {note.title}
+            </div>
+            <ul className="space-y-1.5">
+              {note.points.map((point) => (
+                <li key={point} className="text-[11.5px] leading-[1.55]" style={{ color: 'var(--c4-text-muted)' }}>
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ── Add-ons section ── */
 function MiniAddOnGrid({ addOns }) {
   const [showAll, setShowAll] = useState(false);
@@ -345,6 +383,14 @@ function CustomQuotePanel() {
   );
 }
 
+/* ── Helper: grid columns for a package count ── */
+function gridColsFor(count) {
+  if (count <= 1) return 'grid-cols-1 lg:grid-cols-1';
+  if (count <= 3) return 'grid-cols-1 md:grid-cols-3';
+  if (count === 4) return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
+  return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3';
+}
+
 /* ── Main Dialog Component ── */
 export default function PricingDialog({ serviceKey, open, onOpenChange }) {
   const [track, setTrack] = useState('outright');
@@ -353,13 +399,7 @@ export default function PricingDialog({ serviceKey, open, onOpenChange }) {
   if (!config) return null;
 
   const isSubscription = track === 'subscription';
-  const gridCols = config.packages
-    ? config.packages.length <= 3
-      ? 'grid-cols-1 md:grid-cols-3'
-      : config.packages.length === 4
-        ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
-        : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-    : '';
+  const sections = config.sections || (config.packages ? [{ heading: null, description: null, packages: config.packages }] : []);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -422,13 +462,38 @@ export default function PricingDialog({ serviceKey, open, onOpenChange }) {
 
             {/* Content */}
             <div className="px-6 md:px-8 pb-6 md:pb-8">
+              {/* Pricing guide */}
+              {config.guides && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                  {config.guides.map((guide) => (
+                    <div
+                      key={guide.key}
+                      className="rounded-sm border p-4"
+                      style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
+                    >
+                      <div className="text-[9px] uppercase tracking-[0.18em] font-medium mb-1" style={{ color: 'var(--c4-text-subtle)' }}>
+                        {guide.label}
+                      </div>
+                      <div className="text-[13px] font-semibold tracking-[-0.01em] mb-2" style={{ color: 'var(--c4-text)' }}>
+                        {guide.range}
+                      </div>
+                      <p className="text-[11.5px] leading-[1.55]" style={{ color: 'var(--c4-text-muted)' }}>
+                        {guide.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {config.scopeNotes && <MiniScopeNotes notes={config.scopeNotes} />}
+
               {/* Toggle for web design / apps */}
               {config.hasToggle && (
                 <Toggle active={track} onToggle={setTrack} />
               )}
 
               {/* Package cards or custom quote */}
-              {config.packages ? (
+              {sections.length > 0 ? (
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={isSubscription ? 'sub' : 'out'}
@@ -437,16 +502,39 @@ export default function PricingDialog({ serviceKey, open, onOpenChange }) {
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.25, ease }}
                   >
-                    <div className={`grid ${gridCols} gap-4`}>
-                      {config.packages.map((pkg) => (
-                        <MiniPricingCard
-                          key={pkg.key}
-                          pkg={pkg}
-                          isSubscription={config.hasToggle && isSubscription}
-                          popular={pkg.popular}
-                        />
-                      ))}
-                    </div>
+                    {sections.map((section, index) => (
+                      <div
+                        key={section.heading || index}
+                        className={index > 0 ? 'mt-8 pt-7 border-t' : ''}
+                        style={index > 0 ? { borderColor: 'var(--c4-border-light)' } : {}}
+                      >
+                        {section.heading && (
+                          <div className="mb-4">
+                            <h3
+                              className="text-[1rem] font-semibold tracking-[-0.02em]"
+                              style={{ color: 'var(--c4-text)' }}
+                            >
+                              {section.heading}
+                            </h3>
+                            {section.description && (
+                              <p className="mt-1 text-[12px] leading-[1.55]" style={{ color: 'var(--c4-text-muted)' }}>
+                                {section.description}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                        <div className={`grid ${gridColsFor(section.packages.length)} gap-4`}>
+                          {section.packages.map((pkg) => (
+                            <MiniPricingCard
+                              key={pkg.key}
+                              pkg={pkg}
+                              isSubscription={config.hasToggle && isSubscription}
+                              popular={pkg.popular}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
 
                     {config.hasToggle && isSubscription && <MiniSubscriptionExplainer />}
                   </motion.div>

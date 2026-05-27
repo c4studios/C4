@@ -9,8 +9,10 @@ import {
 } from '@/components/ui/dialog';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import {
-  webDesignPackages,
+  webPackageSections,
   webDesignAddOns,
+  webPricingGuides,
+  webScopeNotes,
   brandingPackages,
   c4LensPackages,
   seoPackages,
@@ -28,11 +30,11 @@ const ease = [0.22, 1, 0.36, 1];
 /* ── Mapping service keys → pricing data ── */
 const SERVICE_PRICING_MAP = {
   web: {
-    title: 'Web & Applications',
-    subtitle: 'Custom websites, web apps, SaaS, portals, dashboards, and software rebuilds.',
-    sections: [
-      { heading: null, packages: webDesignPackages },
-    ],
+    title: 'Websites, Ecommerce & Development',
+    subtitle: 'Landing pages start at $500, brochure sites at $800, ecommerce stores at $3,500, and web app starters at $4,500.',
+    sections: webPackageSections,
+    guides: webPricingGuides,
+    scopeNotes: webScopeNotes,
     addOns: webDesignAddOns,
     hasToggle: true,
     hasSurcharge: true,
@@ -105,6 +107,39 @@ function buildStartUrl(serviceKey, pkg, isSubscription) {
     }
   }
   return `${CTA_ROUTE}?${params.toString()}`;
+}
+
+/* ── Scope notes ── */
+function MiniScopeNotes({ notes }) {
+  if (!notes?.length) return null;
+
+  return (
+    <div className="mb-6">
+      <h4 className="text-[12px] font-semibold tracking-[-0.01em] mb-3" style={{ color: 'var(--c4-text)' }}>
+        Scope guardrails
+      </h4>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {notes.map((note) => (
+          <div
+            key={note.title}
+            className="rounded-sm border p-4"
+            style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
+          >
+            <div className="text-[10px] uppercase tracking-[0.16em] font-medium mb-2" style={{ color: 'var(--c4-text-subtle)' }}>
+              {note.title}
+            </div>
+            <ul className="space-y-1.5">
+              {note.points.map((point) => (
+                <li key={point} className="text-[11.5px] leading-[1.55]" style={{ color: 'var(--c4-text-muted)' }}>
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 /* ── Mini pricing card for inside the dialog ── */
@@ -419,6 +454,31 @@ export default function PricingModal({ serviceKey, open, onClose }) {
 
             {/* Content */}
             <div className="px-6 md:px-8 pb-6 md:pb-8">
+              {/* Pricing guide */}
+              {config.guides && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                  {config.guides.map((guide) => (
+                    <div
+                      key={guide.key}
+                      className="rounded-sm border p-4"
+                      style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
+                    >
+                      <div className="text-[9px] uppercase tracking-[0.18em] font-medium mb-1" style={{ color: 'var(--c4-text-subtle)' }}>
+                        {guide.label}
+                      </div>
+                      <div className="text-[13px] font-semibold tracking-[-0.01em] mb-2" style={{ color: 'var(--c4-text)' }}>
+                        {guide.range}
+                      </div>
+                      <p className="text-[11.5px] leading-[1.55]" style={{ color: 'var(--c4-text-muted)' }}>
+                        {guide.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {config.scopeNotes && <MiniScopeNotes notes={config.scopeNotes} />}
+
               {/* Toggle for web (outright vs subscription) */}
               {config.hasToggle && (
                 <Toggle active={track} onToggle={setTrack} />
@@ -470,7 +530,7 @@ export default function PricingModal({ serviceKey, open, onClose }) {
                   style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
                 >
                   <p className="text-[13px] leading-[1.6] mb-4 max-w-[480px] mx-auto" style={{ color: 'var(--c4-text-muted)' }}>
-                    Have something more complex in mind? Rebuilds, bespoke software, and custom-scoped projects are quoted individually.
+                    Need something larger than these tiers? Bigger catalogues, custom portals, integrations, rebuilds, and complex platforms sit around the $7.5k-$10k+ tiers or are scoped individually.
                   </p>
                   <Link
                     to={buildStartUrl(serviceKey, null, false)}
