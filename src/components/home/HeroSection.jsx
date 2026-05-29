@@ -1,120 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import React, { useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import TypedHeading from '../c4/TypedHeading';
 import CraftHeatmap from './CraftHeatmap';
-
-const QUOTR_SLUG = 'fixm4qeq';
+import QuotrWindow from './QuotrWindow';
 
 const ease = [0.22, 1, 0.36, 1];
 
-const guidanceItems = [
-  { text: 'View selected work', to: '/Portfolio' },
-  { text: 'What we build', to: '/Services' },
-  { text: 'About the studio', to: '/About' },
-  { text: 'Start a project brief', to: '/StartProject' },
-  { text: 'The ventures program', to: '/Ventures' },
-];
-
-function GuidanceRail() {
-  const navigate = useNavigate();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const reducedMotion = useReducedMotion();
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    if (reducedMotion || paused) return undefined;
-
-    const intervalId = window.setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % guidanceItems.length);
-    }, 4200);
-
-    return () => window.clearInterval(intervalId);
-  }, [reducedMotion, paused]);
-
-  const current = guidanceItems[activeIndex];
-
-  return (
-    <div
-      className="max-w-[340px] p-5 rounded-lg c4-support-rail"
-      role="navigation"
-      aria-label="Guided exploration"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <div className="flex items-center gap-2.5">
-        <span className="w-4 h-px" style={{ backgroundColor: 'var(--c4-accent)' }} />
-        <span
-          className="text-[10px] font-medium uppercase tracking-[0.2em]"
-          style={{ color: 'var(--c4-text-faint)' }}
-        >
-          Explore
-        </span>
-      </div>
-
-      <div className="mt-3 min-h-[96px] flex items-center">
-        <AnimatePresence mode="wait">
-          <motion.button
-            key={current.text}
-            onClick={() => navigate(current.to)}
-            className="group text-left cursor-pointer"
-            initial={{ opacity: 0, y: reducedMotion ? 0 : 6, filter: 'blur(2px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, y: reducedMotion ? 0 : -4, filter: 'blur(1px)' }}
-            transition={{ duration: reducedMotion ? 0.2 : 0.42, ease }}
-          >
-            <p
-              className="text-[18px] font-medium tracking-[-0.02em] leading-[1.25] md:text-[20px] group-hover:opacity-80 transition-opacity duration-200"
-              style={{ color: 'var(--c4-text)' }}
-            >
-              {current.text}
-            </p>
-            <span className="mt-2.5 inline-flex opacity-[0.2] group-hover:opacity-50 transition-opacity duration-300" style={{ color: 'var(--c4-text-subtle)' }}>
-              <ArrowRight size={11} strokeWidth={1.5} />
-            </span>
-          </motion.button>
-        </AnimatePresence>
-      </div>
-
-      {/* Progress dots */}
-      <div className="mt-3 flex gap-1.5">
-        {guidanceItems.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setActiveIndex(i)}
-            aria-label={`Go to suggestion ${i + 1}`}
-            className="h-[3.5px] rounded-full transition-all duration-500"
-            style={{
-              width: i === activeIndex ? 16 : 6,
-              backgroundColor: i === activeIndex ? 'var(--c4-text-subtle)' : 'var(--c4-border)',
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default function HeroSection() {
   const ref = useRef(null);
-  const iframeRef = useRef(null);
+  const boundsRef = useRef(null);
+  const textRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const opacity = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
   const ruleWidth = useTransform(scrollYProgress, [0, 0.3], ['100%', '40%']);
-
-  useEffect(() => {
-    const handler = (e) => {
-      if (e.origin !== 'https://quotr.us') return;
-      if (e.data?.type === 'quotr-resize' && iframeRef.current) {
-        iframeRef.current.style.height = e.data.height + 'px';
-      }
-    };
-    window.addEventListener('message', handler);
-    return () => window.removeEventListener('message', handler);
-  }, []);
 
   return (
     <section ref={ref} className="relative flex h-[100svh] flex-col overflow-hidden" style={{ isolation: 'isolate' }}>
@@ -126,9 +28,9 @@ export default function HeroSection() {
         style={{ y, opacity }}
         className="relative z-10 flex flex-1 items-center py-24 md:py-28"
       >
-        <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12">
+        <div ref={boundsRef} className="relative mx-auto w-full max-w-[1400px] px-6 md:px-12">
           <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(280px,340px)] lg:items-center lg:gap-12">
-            <div className="max-w-[860px]">
+            <div ref={textRef} className="max-w-[860px]">
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -205,60 +107,7 @@ export default function HeroSection() {
               </motion.div>
             </div>
 
-            <motion.aside
-              initial={{ opacity: 0, x: 16, y: 8 }}
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.72, ease }}
-              className="w-full lg:pl-4"
-            >
-              <div className="lg:sticky lg:top-[20vh]">
-                {/* Quotr calculator card */}
-                <div
-                  className="rounded-2xl"
-                  style={{
-                    backgroundColor: 'var(--c4-card-bg)',
-                    border: '1px solid var(--c4-border)',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.04), 0 12px 32px -6px rgba(0,0,0,0.10), 0 0 0 1px rgba(255,255,255,0.55) inset',
-                  }}
-                >
-                  {/* Chrome bar */}
-                  <div
-                    className="flex items-center justify-between px-4 py-2.5 border-b"
-                    style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-bg)', borderRadius: '16px 16px 0 0' }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />
-                      <span className="text-[10px] uppercase tracking-[0.18em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
-                        Instant Estimate
-                      </span>
-                    </div>
-                    <Link
-                      to={createPageUrl('quote')}
-                      className="group inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.13em] font-medium transition-colors duration-200"
-                      style={{ color: 'var(--c4-text-faint)' }}
-                      onMouseEnter={e => e.currentTarget.style.color = 'var(--c4-text)'}
-                      onMouseLeave={e => e.currentTarget.style.color = 'var(--c4-text-faint)'}
-                    >
-                      Full page
-                      <ArrowRight size={9} strokeWidth={2} className="group-hover:translate-x-0.5 transition-transform duration-200" />
-                    </Link>
-                  </div>
-
-                  {/* Live Quotr iframe */}
-                  <iframe
-                    ref={iframeRef}
-                    src={`https://quotr.us/q/${QUOTR_SLUG}`}
-                    title="Lock in your price now"
-                    width="100%"
-                    style={{ display: 'block', border: 'none', height: '640px', borderRadius: '0 0 16px 16px' }}
-                  />
-                </div>
-
-                <p className="mt-3 text-center text-[10.5px]" style={{ color: 'var(--c4-text-faint)' }}>
-                  No calls · No commitment · ~2 min
-                </p>
-              </div>
-            </motion.aside>
+            <QuotrWindow boundsRef={boundsRef} textRef={textRef} />
           </div>
         </div>
       </motion.div>
