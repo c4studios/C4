@@ -127,7 +127,7 @@ export default function HeroSection() {
         className="relative z-10 flex flex-1 items-center py-24 md:py-28"
       >
         <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12">
-          <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(280px,340px)] lg:items-end lg:gap-12">
+          <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(280px,340px)] lg:items-center lg:gap-12">
             <div className="max-w-[860px]">
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
