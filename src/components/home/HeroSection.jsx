@@ -6,6 +6,8 @@ import { createPageUrl } from '@/utils';
 import TypedHeading from '../c4/TypedHeading';
 import CraftHeatmap from './CraftHeatmap';
 
+const QUOTR_SLUG = 'fixm4qeq';
+
 const ease = [0.22, 1, 0.36, 1];
 
 const guidanceItems = [
@@ -97,10 +99,22 @@ function GuidanceRail() {
 
 export default function HeroSection() {
   const ref = useRef(null);
+  const iframeRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const opacity = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
   const ruleWidth = useTransform(scrollYProgress, [0, 0.3], ['100%', '40%']);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.origin !== 'https://quotr.us') return;
+      if (e.data?.type === 'quotr-resize' && iframeRef.current) {
+        iframeRef.current.style.height = e.data.height + 'px';
+      }
+    };
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
+  }, []);
 
   return (
     <section ref={ref} className="relative flex h-[100svh] flex-col overflow-hidden" style={{ isolation: 'isolate' }}>
@@ -192,13 +206,58 @@ export default function HeroSection() {
             </div>
 
             <motion.aside
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.72, delay: 0.9, ease }}
-              className="w-full lg:pl-6"
+              initial={{ opacity: 0, x: 16, y: 8 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.72, ease }}
+              className="w-full lg:pl-4"
             >
-              <div className="lg:sticky lg:top-[28vh]">
-                <GuidanceRail />
+              <div className="lg:sticky lg:top-[20vh]">
+                {/* Quotr calculator card */}
+                <div
+                  className="rounded-2xl overflow-hidden"
+                  style={{
+                    backgroundColor: 'var(--c4-card-bg)',
+                    border: '1px solid var(--c4-border)',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.04), 0 12px 32px -6px rgba(0,0,0,0.10), 0 0 0 1px rgba(255,255,255,0.55) inset',
+                  }}
+                >
+                  {/* Chrome bar */}
+                  <div
+                    className="flex items-center justify-between px-4 py-2.5 border-b"
+                    style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-bg)' }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />
+                      <span className="text-[10px] uppercase tracking-[0.18em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
+                        Instant Estimate
+                      </span>
+                    </div>
+                    <Link
+                      to={createPageUrl('quote')}
+                      className="group inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.13em] font-medium transition-colors duration-200"
+                      style={{ color: 'var(--c4-text-faint)' }}
+                      onMouseEnter={e => e.currentTarget.style.color = 'var(--c4-text)'}
+                      onMouseLeave={e => e.currentTarget.style.color = 'var(--c4-text-faint)'}
+                    >
+                      Full page
+                      <ArrowRight size={9} strokeWidth={2} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+                    </Link>
+                  </div>
+
+                  {/* Live Quotr iframe */}
+                  <iframe
+                    ref={iframeRef}
+                    src={`https://quotr.us/q/${QUOTR_SLUG}`}
+                    title="Get an instant quote"
+                    width="100%"
+                    style={{ display: 'block', border: 'none', height: '480px' }}
+                    scrolling="no"
+                  />
+                </div>
+
+                <p className="mt-3 text-center text-[10.5px]" style={{ color: 'var(--c4-text-faint)' }}>
+                  No calls · No commitment · ~2 min
+                </p>
               </div>
             </motion.aside>
           </div>

@@ -68,6 +68,7 @@ import AutomationPricing from './pages/AutomationPricing';
 import SocialMediaPricing from './pages/SocialMediaPricing';
 import BundlesPricing from './pages/BundlesPricing';
 import SupportPlans from './pages/SupportPlans';
+import Quote from './pages/Quote';
 import __Layout from './Layout.jsx';
 
 
@@ -93,6 +94,7 @@ export const PAGES = {
     "SocialMediaPricing": SocialMediaPricing,
     "BundlesPricing": BundlesPricing,
     "SupportPlans": SupportPlans,
+    "quote": Quote,
 }
 
 export const pagesConfig = {
