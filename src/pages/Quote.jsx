@@ -11,8 +11,8 @@ export default function Quote() {
     const prevTitle = document.title;
     const descTag = document.querySelector('meta[name="description"]');
     const prevDesc = descTag?.getAttribute('content');
-    document.title = 'Get a Quote | C4 Studios';
-    descTag?.setAttribute('content', 'Get an instant web design quote from C4 Studios. Tell us about your project and get a ballpark estimate in under two minutes.');
+    document.title = 'Lock In Your Price | C4 Studios';
+    descTag?.setAttribute('content', 'Lock in your price with C4 Studios. Tell us about your project and get a ballpark estimate in under two minutes.');
     return () => {
       document.title = prevTitle;
       if (descTag && prevDesc) descTag.setAttribute('content', prevDesc);
@@ -41,7 +41,7 @@ export default function Quote() {
             </span>
           </div>
           <h1 className="text-[clamp(2rem,5vw,3.4rem)] font-semibold tracking-[-0.035em] leading-[1.1]" style={{ color: 'var(--c4-text)' }}>
-            Get an instant quote
+            Lock in your price now
           </h1>
           <p className="mt-5 text-[15px] leading-[1.65] max-w-[560px]" style={{ color: 'var(--c4-text-muted)' }}>
             Tell us about your project and we'll give you a ballpark figure in under two minutes. No calls, no commitment.

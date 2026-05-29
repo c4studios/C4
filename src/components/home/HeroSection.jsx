@@ -214,7 +214,7 @@ export default function HeroSection() {
               <div className="lg:sticky lg:top-[20vh]">
                 {/* Quotr calculator card */}
                 <div
-                  className="rounded-2xl overflow-hidden"
+                  className="rounded-2xl"
                   style={{
                     backgroundColor: 'var(--c4-card-bg)',
                     border: '1px solid var(--c4-border)',
@@ -224,7 +224,7 @@ export default function HeroSection() {
                   {/* Chrome bar */}
                   <div
                     className="flex items-center justify-between px-4 py-2.5 border-b"
-                    style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-bg)' }}
+                    style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-bg)', borderRadius: '16px 16px 0 0' }}
                   >
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />
@@ -248,10 +248,9 @@ export default function HeroSection() {
                   <iframe
                     ref={iframeRef}
                     src={`https://quotr.us/q/${QUOTR_SLUG}`}
-                    title="Get an instant quote"
+                    title="Lock in your price now"
                     width="100%"
-                    style={{ display: 'block', border: 'none', height: '480px' }}
-                    scrolling="no"
+                    style={{ display: 'block', border: 'none', height: '640px', borderRadius: '0 0 16px 16px' }}
                   />
                 </div>
 
