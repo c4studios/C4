@@ -1,11 +1,25 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from '../components/c4/ThemeContext';
+import { buildQuotrSrc, postQuotrTheme } from '../components/home/quotrTheme';
 
 const ease = [0.22, 1, 0.36, 1];
 const QUOTR_SLUG = 'fixm4qeq';
 
 export default function Quote() {
   const iframeRef = useRef(null);
+  const { isDark } = useTheme();
+
+  // Theme baked into the src once (no flash); live toggles via postMessage.
+  const [src] = useState(() => buildQuotrSrc(QUOTR_SLUG, isDark));
+
+  const pushTheme = useCallback(() => {
+    postQuotrTheme(iframeRef.current, isDark);
+  }, [isDark]);
+
+  useEffect(() => {
+    pushTheme();
+  }, [pushTheme]);
 
   useEffect(() => {
     const prevTitle = document.title;
@@ -62,7 +76,8 @@ export default function Quote() {
               ref={iframeRef}
               id="quotr-widget"
               title="C4 Studios quote calculator"
-              src={`https://quotr.us/q/${QUOTR_SLUG}`}
+              src={src}
+              onLoad={pushTheme}
               width="100%"
               style={{ border: 'none', borderRadius: '12px', minHeight: '650px', display: 'block' }}
               scrolling="no"
