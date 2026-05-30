@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { animate, motion, useMotionValue } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import { useTheme } from '../c4/ThemeContext';
 import useHeatmapCanvas from './useHeatmapCanvas';
+import { buildQuotrSrc, postQuotrTheme } from './quotrTheme';
 
 const QUOTR_SLUG = 'fixm4qeq';
 const CHROME_H = 44; // chrome bar height (px)
@@ -21,7 +23,7 @@ const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
 /* The shared card chrome + iframe, used by both the mobile static
    card and the desktop floating window. */
-function CardShell({ iframeRef, iframeHeight, interacting, dragHandleProps }) {
+function CardShell({ iframeRef, iframeHeight, interacting, dragHandleProps, src, onIframeLoad }) {
   const heatmapRef = useRef(null);
   useHeatmapCanvas(heatmapRef, {
     accentColor: '#5B7FA6',
@@ -93,7 +95,8 @@ function CardShell({ iframeRef, iframeHeight, interacting, dragHandleProps }) {
       {/* Live Quotr iframe — fills remaining space */}
       <iframe
         ref={iframeRef}
-        src={`https://quotr.us/q/${QUOTR_SLUG}`}
+        src={src}
+        onLoad={onIframeLoad}
         title="Lock in your price now"
         width="100%"
         style={{
@@ -126,6 +129,7 @@ const HANDLE_STYLE = {
 export default function QuotrWindow({ boundsRef, textRef }) {
   const iframeRef = useRef(null);
   const windowRef = useRef(null);
+  const { isDark } = useTheme();
 
   const [isDesktop, setIsDesktop] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
@@ -133,6 +137,19 @@ export default function QuotrWindow({ boundsRef, textRef }) {
   const [size, setSize] = useState({ w: INITIAL_W, h: INITIAL_H });
   const [interacting, setInteracting] = useState(false);
   const [ready, setReady] = useState(false);
+
+  // Stable src (theme baked in once to avoid a flash) — live theme
+  // changes are pushed via postMessage so the iframe never reloads.
+  const [src] = useState(() => buildQuotrSrc(QUOTR_SLUG, isDark));
+
+  const pushTheme = useCallback(() => {
+    postQuotrTheme(iframeRef.current, isDark);
+  }, [isDark]);
+
+  // Forward the site theme whenever the visitor toggles light/dark.
+  useEffect(() => {
+    pushTheme();
+  }, [pushTheme]);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -351,6 +368,8 @@ export default function QuotrWindow({ boundsRef, textRef }) {
             iframeHeight={640}
             interacting={false}
             dragHandleProps={null}
+            src={src}
+            onIframeLoad={pushTheme}
           />
         </div>
         <p
@@ -391,6 +410,8 @@ export default function QuotrWindow({ boundsRef, textRef }) {
           iframeHeight={iframeHeight}
           interacting={interacting}
           dragHandleProps={{ onPointerDown: onDragPointerDown }}
+          src={src}
+          onIframeLoad={pushTheme}
         />
 
         {/* Resize handles */}
