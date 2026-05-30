@@ -42,6 +42,11 @@ export default function useHeatmapCanvas(canvasRef, options = {}) {
     maxAccentAlpha = 0.55,
     idle = true,
     mobileDisabled = true,
+    // When true, every cell renders a faint accent-tinted base tile so the
+    // grid is always visible (a persistent "heatmap field"), brightening on
+    // activation. When false, cells are transparent until activated.
+    baseFill = false,
+    baseAlpha = 0.14,
   } = options;
 
   useEffect(() => {
@@ -86,14 +91,17 @@ export default function useHeatmapCanvas(canvasRef, options = {}) {
       const activatedAt = new Array(rows)
         .fill(0)
         .map(() => new Float64Array(cols));
+      // Per-cell base multiplier gives the resting grid subtle texture.
+      const baseMul = new Array(rows).fill(0).map(() => new Float32Array(cols));
 
       for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
           taus[y][x] = 0.6 + rng() * 0.6; // 0.6–1.2s decay
+          baseMul[y][x] = 0.35 + rng() * 0.65; // 0.35–1.0
         }
       }
 
-      grid = { cols, rows, intensities, taus, activatedAt };
+      grid = { cols, rows, intensities, taus, activatedAt, baseMul };
     }
 
     function activateCell(tx, ty, boost) {
@@ -137,7 +145,7 @@ export default function useHeatmapCanvas(canvasRef, options = {}) {
       const dt = Math.min(0.05, (ts - state.last) / 1000);
       state.last = ts;
 
-      const { cols, rows, intensities, taus, activatedAt } = grid;
+      const { cols, rows, intensities, taus, activatedAt, baseMul } = grid;
 
       // Gentle idle breathing pulse so it never looks fully dead.
       if (idle) {
@@ -154,11 +162,18 @@ export default function useHeatmapCanvas(canvasRef, options = {}) {
         }
       }
 
+      // Slow global shimmer so the resting base field gently breathes.
+      const shimmer = baseFill
+        ? 0.82 + 0.18 * Math.sin(state.idleT * 0.7)
+        : 1;
+
       const now = performance.now();
       ctx.save();
       ctx.scale(state.dpr, state.dpr);
       ctx.clearRect(0, 0, state.width, state.height);
       ctx.globalAlpha = opacity;
+
+      const accPrefix = `rgba(${acc.r}, ${acc.g}, ${acc.b}, `;
 
       for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
@@ -168,10 +183,15 @@ export default function useHeatmapCanvas(canvasRef, options = {}) {
             elapsed >= fadeMs
               ? 0
               : intensities[y][x] * Math.max(0, 1 - elapsed / fadeMs);
-          if (v <= 0.002) continue;
-          ctx.fillStyle = `rgba(${acc.r}, ${acc.g}, ${acc.b}, ${(
-            v * maxAccentAlpha
-          ).toFixed(3)})`;
+
+          let a = v * maxAccentAlpha;
+          if (baseFill) {
+            a += baseAlpha * baseMul[y][x] * shimmer;
+          }
+          if (a <= 0.004) continue;
+          if (a > 1) a = 1;
+
+          ctx.fillStyle = accPrefix + a.toFixed(3) + ')';
           ctx.fillRect(
             Math.floor(x * cellSize),
             Math.floor(y * cellSize),
@@ -218,5 +238,5 @@ export default function useHeatmapCanvas(canvasRef, options = {}) {
       observer.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canvasRef, accentColor, cellSize, opacity, maxAccentAlpha, idle, mobileDisabled]);
+  }, [canvasRef, accentColor, cellSize, opacity, maxAccentAlpha, idle, mobileDisabled, baseFill, baseAlpha]);
 }

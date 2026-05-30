@@ -10,6 +10,12 @@ import { buildQuotrSrc, postQuotrTheme } from './quotrTheme';
 const QUOTR_SLUG = 'fixm4qeq';
 const CHROME_H = 44; // chrome bar height (px)
 
+// Cool azure to contrast the warm/pink hero heatmap behind it.
+const HEATMAP_BLUE = '#5680C2';
+// Feather the halo so the blue heatmap glows around the card and fades out.
+const HALO_MASK =
+  'radial-gradient(closest-side, rgba(0,0,0,0.95) 58%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0) 100%)';
+
 const INITIAL_W = 340;
 const INITIAL_H = 680;
 const MIN_W = 280;
@@ -25,22 +31,52 @@ const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
    card and the desktop floating window. */
 function CardShell({ iframeRef, iframeHeight, interacting, dragHandleProps, src, onIframeLoad }) {
   const heatmapRef = useRef(null);
+  const haloRef = useRef(null);
+  // Mini heatmap in the chrome bar.
   useHeatmapCanvas(heatmapRef, {
-    accentColor: '#5B7FA6',
+    accentColor: HEATMAP_BLUE,
     cellSize: 8,
-    opacity: 0.4,
+    opacity: 0.45,
+  });
+  // Larger ambient heatmap that glows around the whole card. baseFill keeps
+  // the blue grid persistently visible (feathered by the halo mask).
+  useHeatmapCanvas(haloRef, {
+    accentColor: HEATMAP_BLUE,
+    cellSize: 15,
+    opacity: 0.78,
+    baseFill: true,
+    baseAlpha: 0.19,
   });
 
   return (
-    <div
-      className="flex h-full flex-col rounded-2xl"
-      style={{
-        backgroundColor: 'var(--c4-card-bg)',
-        border: '1px solid var(--c4-border)',
-        boxShadow:
-          '0 2px 4px rgba(0,0,0,0.04), 0 12px 32px -6px rgba(0,0,0,0.10), 0 0 0 1px rgba(255,255,255,0.55) inset',
-      }}
-    >
+    <div className="relative h-full">
+      {/* Blue heatmap halo — sits behind the card and bleeds past its
+          edges, feathered, so the calculator reads as a blue-accented
+          zone against the warm hero heatmap. */}
+      <div
+        className="pointer-events-none absolute"
+        aria-hidden="true"
+        style={{
+          inset: -38,
+          zIndex: 0,
+          overflow: 'hidden',
+          borderRadius: 34,
+          WebkitMaskImage: HALO_MASK,
+          maskImage: HALO_MASK,
+        }}
+      >
+        <canvas ref={haloRef} className="absolute inset-0" style={{ display: 'block' }} />
+      </div>
+
+      <div
+        className="relative z-10 flex h-full flex-col rounded-2xl"
+        style={{
+          backgroundColor: 'var(--c4-card-bg)',
+          border: '1px solid var(--c4-border)',
+          boxShadow:
+            '0 2px 4px rgba(0,0,0,0.04), 0 12px 32px -6px rgba(0,0,0,0.10), 0 0 0 1px rgba(255,255,255,0.55) inset, 0 0 0 1px rgba(86,128,194,0.10)',
+        }}
+      >
       {/* Chrome bar — drag handle + mini heatmap */}
       <div
         {...dragHandleProps}
@@ -109,6 +145,7 @@ function CardShell({ iframeRef, iframeHeight, interacting, dragHandleProps, src,
           pointerEvents: interacting ? 'none' : 'auto',
         }}
       />
+      </div>
     </div>
   );
 }
