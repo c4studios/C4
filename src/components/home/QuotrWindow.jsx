@@ -248,16 +248,56 @@ export default function QuotrWindow({ boundsRef, textRef }) {
       setReady(false);
       return undefined;
     }
-    place();
+
+    // Place as soon as the bounds box has a real size. A one-shot measurement
+    // on mount can race with layout/font/intro timing and read 0 width, which
+    // would leave the window stuck invisible (ready never flips). A
+    // ResizeObserver re-runs placement whenever bounds gains/changes size, and
+    // a rAF retry covers the very first frame.
+    let placed = false;
+    const tryPlace = () => {
+      if (getBounds().w > 0) {
+        place();
+        placed = true;
+      }
+    };
+
+    tryPlace();
+    const raf = requestAnimationFrame(tryPlace);
+
+    const ro =
+      boundsRef?.current && 'ResizeObserver' in window
+        ? new ResizeObserver(() => {
+            if (!placed) {
+              tryPlace();
+            } else {
+              // Re-clamp into the (possibly) new bounds.
+              const bounds = getBounds();
+              const boundary = getBoundary();
+              x.set(clamp(x.get(), boundary, Math.max(boundary, bounds.w - size.w)));
+              y.set(clamp(y.get(), 0, Math.max(0, bounds.h - size.h)));
+            }
+          })
+        : null;
+    if (ro && boundsRef.current) ro.observe(boundsRef.current);
+
     const onResize = () => {
+      if (!placed) {
+        tryPlace();
+        return;
+      }
       const bounds = getBounds();
       const boundary = getBoundary();
-      // Re-clamp into the (possibly) new bounds.
       x.set(clamp(x.get(), boundary, Math.max(boundary, bounds.w - size.w)));
       y.set(clamp(y.get(), 0, Math.max(0, bounds.h - size.h)));
     };
     window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      if (ro) ro.disconnect();
+      window.removeEventListener('resize', onResize);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDesktop]);
 
@@ -428,9 +468,6 @@ export default function QuotrWindow({ boundsRef, textRef }) {
 
       <motion.div
         ref={windowRef}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: ready ? 1 : 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
         className="absolute left-0 top-0 z-20"
         style={{
           x,
@@ -440,6 +477,9 @@ export default function QuotrWindow({ boundsRef, textRef }) {
           height: size.h,
           transformOrigin: 'left center',
           willChange: 'transform',
+          // Visible once placed. No CSS transition here: a fade kept getting
+          // restarted by re-renders and left the window stuck at opacity 0.
+          opacity: ready ? 1 : 0,
         }}
       >
         <CardShell
