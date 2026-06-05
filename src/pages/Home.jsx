@@ -7,6 +7,7 @@ import PortfolioPreview from '../components/home/PortfolioPreview';
 import VisionSection from '../components/home/VisionSection';
 import TestimonialsProof from '../components/home/TestimonialsProof';
 import VenturesPreview from '../components/home/VenturesPreview';
+import SoftwarePreview from '../components/home/SoftwarePreview';
 import FinalCTA from '../components/home/FinalCTA';
 
 export default function Home() {
@@ -40,6 +41,7 @@ export default function Home() {
           <VisionSection />
           <TestimonialsProof />
           <VenturesPreview />
+          <SoftwarePreview />
           <FinalCTA />
         </div>
       )}

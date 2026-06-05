@@ -69,6 +69,7 @@ import SocialMediaPricing from './pages/SocialMediaPricing';
 import BundlesPricing from './pages/BundlesPricing';
 import SupportPlans from './pages/SupportPlans';
 import Quote from './pages/Quote';
+import Software from './pages/Software';
 import __Layout from './Layout.jsx';
 
 
@@ -95,6 +96,7 @@ export const PAGES = {
     "BundlesPricing": BundlesPricing,
     "SupportPlans": SupportPlans,
     "quote": Quote,
+    "Software": Software,
 }
 
 export const pagesConfig = {
