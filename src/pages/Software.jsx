@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, Check } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, Copy } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import WaitlistModal from '../components/WaitlistModal';
 
 const ease = [0.22, 1, 0.36, 1];
+
+const QUOTR_PLANS = [
+  { src: '/Software/quotr-starter.jpeg', label: 'Starter', bg: '#fff' },
+  { src: '/Software/quotr-pro.jpeg',     label: 'Pro',     bg: '#fff' },
+  { src: '/Software/quotr-agency.jpeg',  label: 'Agency',  bg: '#fff' },
+];
 
 const PRODUCTS = [
   {
@@ -17,10 +24,8 @@ const PRODUCTS = [
       'Stripe billing built in',
       'Email notification on every lead',
     ],
-    pricing: 'From $29/mo — use code C4HALF for 50% off your first 3 months at quotr.us',
-    ctaLabel: 'Start free at quotr.us',
-    ctaHref: 'https://quotr.us',
-    ctaExternal: true,
+    pricing: 'From $29/mo — 50% off your first 3 months with code C4HALF',
+    ctaType: 'quotr',
   },
   {
     slug: 'returndesk',
@@ -33,9 +38,8 @@ const PRODUCTS = [
       'Reply templates for every category',
     ],
     pricing: '$49/mo early bird (normally $99/mo at launch)',
+    ctaType: 'modal',
     ctaLabel: 'Request beta access',
-    ctaHref: 'mailto:caleb@c4studios.com.au?subject=ReturnDesk beta access',
-    ctaExternal: false,
   },
   {
     slug: 'reviewloop',
@@ -48,9 +52,8 @@ const PRODUCTS = [
       'Google Business Profile integration',
     ],
     pricing: 'First month free for waitlist members',
+    ctaType: 'modal',
     ctaLabel: 'Join the waitlist',
-    ctaHref: 'mailto:caleb@c4studios.com.au?subject=ReviewLoop waitlist',
-    ctaExternal: false,
   },
   {
     slug: 'complia',
@@ -63,9 +66,8 @@ const PRODUCTS = [
       'Reminder system built in',
     ],
     pricing: 'First month free for waitlist members',
+    ctaType: 'modal',
     ctaLabel: 'Join the waitlist',
-    ctaHref: 'mailto:caleb@c4studios.com.au?subject=Complia waitlist',
-    ctaExternal: false,
   },
   {
     slug: 'firmflow',
@@ -78,9 +80,8 @@ const PRODUCTS = [
       'Built-in disclaimer and risk controls',
     ],
     pricing: 'First month free for waitlist members',
+    ctaType: 'modal',
     ctaLabel: 'Join the waitlist',
-    ctaHref: 'mailto:caleb@c4studios.com.au?subject=FirmFlow waitlist',
-    ctaExternal: false,
   },
   {
     slug: 'c4-command',
@@ -93,9 +94,9 @@ const PRODUCTS = [
       'Projects, invoices, and client notes',
     ],
     pricing: 'Available to C4 Studios clients and partners',
-    ctaLabel: 'Get in touch',
+    ctaType: 'mailto',
     ctaHref: 'mailto:caleb@c4studios.com.au?subject=C4 Command',
-    ctaExternal: false,
+    ctaLabel: 'Get in touch',
   },
 ];
 
@@ -105,7 +106,68 @@ function statusColor(status) {
   return 'var(--c4-text-muted)';
 }
 
+function QuotrPricingBlock() {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText('C4HALF').then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <div>
+      {/* Promo code pill */}
+      <div className="mb-3 flex items-center gap-3">
+        <button
+          onClick={handleCopy}
+          className="group flex items-center gap-2 rounded-[3px] px-3 py-2 transition-colors duration-200"
+          style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-bg)' }}
+        >
+          <span className="font-mono text-[14px] font-semibold tracking-[0.06em]" style={{ color: 'var(--c4-text)' }}>
+            C4HALF
+          </span>
+          <span
+            className="flex items-center gap-1 text-[10px] uppercase tracking-[0.1em] font-medium transition-colors duration-200"
+            style={{ color: copied ? 'var(--c4-brand-success, #22c55e)' : 'var(--c4-text-faint)' }}
+          >
+            {copied ? (
+              <><Check size={11} strokeWidth={2.5} /> Copied</>
+            ) : (
+              <><Copy size={11} strokeWidth={2} /> Copy</>
+            )}
+          </span>
+        </button>
+      </div>
+      <p className="mb-5 text-[12.5px] leading-[1.6]" style={{ color: 'var(--c4-text-muted)' }}>
+        50% off your first 3 months — enter at checkout
+      </p>
+      <a
+        href="https://quotr.us"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 rounded-[3px] px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-opacity duration-300 hover:opacity-80"
+        style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
+      >
+        Go to quotr.us
+        <ArrowUpRight size={13} strokeWidth={2} />
+      </a>
+    </div>
+  );
+}
+
 export default function Software() {
+  const [modalProduct, setModalProduct] = useState(null);
+
+  // Scroll to anchor on mount (hash navigation from portfolio)
+  useEffect(() => {
+    if (window.location.hash) {
+      const el = document.querySelector(window.location.hash);
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+  }, []);
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--c4-bg)' }}>
       {/* HERO */}
@@ -142,16 +204,17 @@ export default function Software() {
       {/* PRODUCTS */}
       <section className="pb-20 md:pb-28">
         <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-          {PRODUCTS.map((product, index) => {
+          {PRODUCTS.map((product) => {
             const color = statusColor(product.status);
             return (
               <motion.div
                 key={product.slug}
+                id={product.slug}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.5, delay: 0.05, ease }}
-                className="border-t py-12 md:py-16"
+                className="border-t py-12 md:py-16 scroll-mt-24"
                 style={{ borderColor: 'var(--c4-border-light)' }}
               >
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_300px] lg:gap-16">
@@ -159,10 +222,7 @@ export default function Software() {
                   <div>
                     <div className="mb-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ border: `1px solid ${color}` }}>
                       <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
-                      <span
-                        className="text-[9.5px] uppercase tracking-[0.14em] font-medium"
-                        style={{ color }}
-                      >
+                      <span className="text-[9.5px] uppercase tracking-[0.14em] font-medium" style={{ color }}>
                         {product.status}
                       </span>
                     </div>
@@ -172,10 +232,7 @@ export default function Software() {
                     >
                       {product.name}
                     </h2>
-                    <p
-                      className="mt-2 text-[14px] leading-[1.65]"
-                      style={{ color: 'var(--c4-text-muted)' }}
-                    >
+                    <p className="mt-2 text-[14px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>
                       {product.oneLiner}
                     </p>
                     <ul className="mt-5 space-y-2.5">
@@ -185,16 +242,54 @@ export default function Software() {
                           className="flex items-start gap-2.5 text-[13px] leading-[1.5]"
                           style={{ color: 'var(--c4-text-subtle)' }}
                         >
-                          <Check
-                            size={13}
-                            strokeWidth={2.5}
-                            className="mt-[2px] shrink-0"
-                            style={{ color: 'var(--c4-accent)' }}
-                          />
+                          <Check size={13} strokeWidth={2.5} className="mt-[2px] shrink-0" style={{ color: 'var(--c4-accent)' }} />
                           {feat}
                         </li>
                       ))}
                     </ul>
+
+                    {/* Quotr plan showcase */}
+                    {product.slug === 'quotr' && (
+                      <div className="mt-8">
+                        <span className="mb-3 block text-[10px] uppercase tracking-[0.18em] font-medium" style={{ color: 'var(--c4-text-faint)' }}>
+                          Available plans
+                        </span>
+                        <div className="grid grid-cols-3 gap-3">
+                          {QUOTR_PLANS.map((plan) => (
+                            <a
+                              key={plan.label}
+                              href="https://quotr.us"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group overflow-hidden rounded-[3px] transition-opacity duration-300 hover:opacity-80"
+                              style={{ border: '1px solid var(--c4-border)' }}
+                            >
+                              <div className="flex aspect-[4/3] items-center justify-center bg-white p-3">
+                                <img
+                                  src={plan.src}
+                                  alt={`Quotr ${plan.label}`}
+                                  className="h-full w-full object-contain"
+                                />
+                              </div>
+                              <div
+                                className="flex items-center justify-between px-3 py-2"
+                                style={{ backgroundColor: 'var(--c4-bg-alt)' }}
+                              >
+                                <span className="text-[10px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
+                                  {plan.label}
+                                </span>
+                                <ArrowUpRight
+                                  size={10}
+                                  strokeWidth={2}
+                                  style={{ color: 'var(--c4-text-faint)' }}
+                                  className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                                />
+                              </div>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Right — pricing + CTA */}
@@ -202,27 +297,27 @@ export default function Software() {
                     className="rounded-[3px] p-6 md:p-7 self-start"
                     style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
                   >
-                    <p
-                      className="text-[12.5px] leading-[1.65] mb-5"
-                      style={{ color: 'var(--c4-text-muted)' }}
-                    >
+                    <p className="mb-5 text-[12.5px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>
                       {product.pricing}
                     </p>
-                    {product.ctaExternal ? (
-                      <a
-                        href={product.ctaHref}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium rounded-[3px] transition-opacity duration-300 hover:opacity-80"
+
+                    {product.ctaType === 'quotr' && <QuotrPricingBlock />}
+
+                    {product.ctaType === 'modal' && (
+                      <button
+                        onClick={() => setModalProduct(product.name)}
+                        className="inline-flex items-center gap-2 rounded-[3px] px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-opacity duration-300 hover:opacity-80"
                         style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
                       >
                         {product.ctaLabel}
-                        <ArrowUpRight size={13} strokeWidth={2} />
-                      </a>
-                    ) : (
+                        <ArrowRight size={13} strokeWidth={2} />
+                      </button>
+                    )}
+
+                    {product.ctaType === 'mailto' && (
                       <a
                         href={product.ctaHref}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium rounded-[3px] transition-opacity duration-300 hover:opacity-80"
+                        className="inline-flex items-center gap-2 rounded-[3px] px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-opacity duration-300 hover:opacity-80"
                         style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
                       >
                         {product.ctaLabel}
@@ -250,10 +345,7 @@ export default function Software() {
             transition={{ duration: 0.5, ease }}
             className="max-w-[640px]"
           >
-            <p
-              className="text-[14px] leading-[1.7] md:text-[15px]"
-              style={{ color: 'var(--c4-text-muted)' }}
-            >
+            <p className="text-[14px] leading-[1.7] md:text-[15px]" style={{ color: 'var(--c4-text-muted)' }}>
               All C4 software is built on the same stack used for client work — Next.js, Supabase, TypeScript.
               No vendor lock-in. No inflated SaaS markups.
             </p>
@@ -270,6 +362,12 @@ export default function Software() {
           </motion.div>
         </div>
       </section>
+
+      <WaitlistModal
+        isOpen={!!modalProduct}
+        onClose={() => setModalProduct(null)}
+        productName={modalProduct || ''}
+      />
     </div>
   );
 }
