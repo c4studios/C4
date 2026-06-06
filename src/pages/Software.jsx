@@ -5,10 +5,16 @@ import { ArrowRight, ArrowUpRight, Check, Copy } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import WaitlistModal from '../components/WaitlistModal';
 
-// TODO: Replace with real Stripe Payment Link URL
-// Create at: dashboard.stripe.com/payment-links
-// Set pricing to AUD $49/month recurring
-const RETURNDESK_PAYMENT_LINK = null; // paste URL here
+// Stripe Payment Links (live) — created 2026-06-06
+// To add a new tier: dashboard.stripe.com/payment-links
+const RETURNDESK_PAYMENT_LINK  = 'https://buy.stripe.com/eVqbJ1epy8Vm2st4Uo3ZK00'; // $49/mo AUD beta
+const RETURNDESK_PRO_LINK      = 'https://buy.stripe.com/00wcN50yIc7y0klbiM3ZK01'; // $99/mo AUD pro
+const REVIEWLOOP_STARTER_LINK  = null; // 'https://buy.stripe.com/7sY8wP95e6Negjj86A3ZK02' — enable at launch
+const REVIEWLOOP_PRO_LINK      = null; // 'https://buy.stripe.com/8x2aEXdlu5Ja1opbiM3ZK03' — enable at launch
+const COMPLIA_PRO_LINK         = null; // 'https://buy.stripe.com/5kQ00jgxG3B2d7772w3ZK04' — enable at launch
+const COMPLIA_BUSINESS_LINK    = null; // 'https://buy.stripe.com/eVqfZh5T2b3u6IJ4Uo3ZK05' — enable at launch
+const FIRMFLOW_PRO_LINK        = null; // 'https://buy.stripe.com/14A7sL6X65Ja3wx1Ic3ZK06' — enable at launch
+const FIRMFLOW_AGENCY_LINK     = null; // 'https://buy.stripe.com/bJe28r95efjK5EF9aE3ZK07' — enable at launch
 
 const ease = [0.22, 1, 0.36, 1];
 
