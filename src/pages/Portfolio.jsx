@@ -8,7 +8,9 @@ import PortfolioFilters, { getServiceFilterCategories, hasProjectsForFilter } fr
 import PortfolioSortMenu from '../components/portfolio/PortfolioSortMenu';
 import { getAllCaseStudies } from '../components/portfolio/caseStudyData';
 import { FeaturedCardSkeleton } from '../components/portfolio/PortfolioCardSkeleton';
-import StudyCover from '../components/portfolio/StudyCover';
+import PortfolioMedia from '../components/portfolio/PortfolioMedia';
+import useDocumentHead from '@/hooks/useDocumentHead';
+import { breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -33,7 +35,7 @@ function sortStudies(studies, sortKey) {
 }
 
 function FeaturedCard({ study, index }) {
-  const previews = study.featuredScreenshots || (study.screenshots || []).slice(0, 3);
+  const previews = (study.screenshots || []).slice(0, 3);
 
   return (
     <motion.div
@@ -44,16 +46,34 @@ function FeaturedCard({ study, index }) {
     >
       <Link to={createPageUrl(`CaseStudy?slug=${study.slug}`)} className="group block">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-3 md:gap-4">
-          <StudyCover
-            study={study}
-            variant="featured"
+          {/* Cover — logo wallpaper */}
+          <div
             className="relative aspect-[16/9] overflow-hidden rounded-[2px] flex items-center justify-center"
-            imageClassName="transition-transform duration-700 group-hover:scale-[1.05]"
+            style={{ backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
           >
+            {study.cover ? (
+              <img
+                src={study.cover}
+                alt={`${study.name} logo`}
+                className={study.backdropStyle
+                  ? "max-h-[60%] max-w-[60%] object-contain transition-transform duration-700 group-hover:scale-[1.05]"
+                  : "w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                }
+              />
+            ) : (
+              <PortfolioMedia
+                src={study.thumbnail}
+                alt={study.name}
+                title={study.name}
+                message="Visuals pending upload"
+                meta={[...study.tags.slice(0, 2), ...(study.year ? [study.year] : [])]}
+                imageClassName="transition-transform duration-700 group-hover:scale-[1.03]"
+              />
+            )}
             <div className="absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-full opacity-0 scale-75 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 md:bottom-5 md:right-5" style={{ backgroundColor: 'var(--c4-text)' }}>
               <ArrowUpRight size={15} strokeWidth={2} style={{ color: 'var(--c4-bg)' }} />
             </div>
-          </StudyCover>
+          </div>
 
           {/* Screenshot previews sidebar — desktop only */}
           {previews.length > 0 && (
@@ -119,17 +139,34 @@ function ProjectCard({ study, index }) {
       transition={{ duration: 0.5, delay: index * 0.06, ease }}
     >
       <Link to={createPageUrl(`CaseStudy?slug=${study.slug}`)} className="group block">
-        <StudyCover
-          study={study}
-          variant="grid"
+        <div
           className="relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center"
-          compact
-          imageClassName="transition-transform duration-700 group-hover:scale-[1.05]"
+          style={{ backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
         >
+          {study.cover ? (
+            <img
+              src={study.cover}
+              alt={`${study.name} logo`}
+              className={study.backdropStyle
+                ? "max-h-[55%] max-w-[55%] object-contain transition-transform duration-700 group-hover:scale-[1.05]"
+                : "w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+              }
+            />
+          ) : (
+            <PortfolioMedia
+              src={study.thumbnail}
+              alt={study.name}
+              title={study.name}
+              message="Visuals pending upload"
+              meta={[...study.tags.slice(0, 1), ...(study.year ? [study.year] : [])]}
+              compact
+              imageClassName="transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+          )}
           <div className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full opacity-0 scale-75 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100" style={{ backgroundColor: 'var(--c4-text)' }}>
             <ArrowUpRight size={13} strokeWidth={2} style={{ color: 'var(--c4-bg)' }} />
           </div>
-        </StudyCover>
+        </div>
         <div className="mt-4">
           <div className="mb-1.5 flex items-center gap-2">
             {study.tags.slice(0, 2).map((tag) => (
@@ -150,6 +187,74 @@ function ProjectCard({ study, index }) {
   );
 }
 
+function softwareStatusColor(status) {
+  if (status === 'Live') return 'var(--c4-brand-success, #22c55e)';
+  if (status === 'Beta') return 'var(--c4-accent)';
+  return 'var(--c4-text-faint)';
+}
+
+function SoftwareCard({ study, index }) {
+  const color = softwareStatusColor(study.status);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.5, delay: index * 0.06, ease }}
+    >
+      <Link to="/software" className="group block">
+        <div
+          className="relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center"
+          style={{ backgroundColor: 'var(--c4-bg-alt)' }}
+        >
+          <span
+            className="text-[4.5rem] font-black tracking-[-0.06em] select-none leading-none"
+            style={{ color: 'var(--c4-border)' }}
+          >
+            {study.name[0]}
+          </span>
+          <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ border: `1px solid ${color}` }}>
+            <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
+            <span className="text-[9px] uppercase tracking-[0.12em] font-medium" style={{ color }}>{study.status}</span>
+          </div>
+          {study.liveUrl && (
+            <a
+              href={study.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="absolute top-3 right-3 flex items-center gap-1 text-[9px] uppercase tracking-[0.1em] font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ color: 'var(--c4-text-faint)' }}
+            >
+              Live site <ArrowUpRight size={10} strokeWidth={2} />
+            </a>
+          )}
+        </div>
+        <div className="mt-4">
+          <div className="mb-1.5 flex items-center gap-2">
+            {study.tags.slice(0, 2).map((tag) => (
+              <span key={tag} className="text-[9.5px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-text-faint)' }}>
+                {tag}
+              </span>
+            ))}
+          </div>
+          <h3 className="text-[15px] font-semibold tracking-[-0.01em] transition-colors duration-300" style={{ color: 'var(--c4-text)' }}>
+            {study.name}
+          </h3>
+          <p className="mt-1 line-clamp-2 text-[12.5px] leading-[1.5]" style={{ color: 'var(--c4-text-subtle)' }}>
+            {study.oneLiner}
+          </p>
+          <div className="mt-3 flex items-center gap-4">
+            <span className="text-[10.5px] font-medium opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ color: 'var(--c4-accent)' }}>
+              View & Purchase {'->'}
+            </span>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
+
 const COMING_SOON_LABELS = {
   brand: 'Brand & Growth',
   ai: 'AI & Software',
@@ -163,6 +268,29 @@ export default function Portfolio() {
   const [sort, setSort] = useState('featured');
   const [loading, setLoading] = useState(true);
   const allStudies = getAllCaseStudies();
+
+  const portfolioJsonLd = useMemo(() => [
+    breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Portfolio', path: '/Portfolio' },
+    ]),
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: 'C4 Studios Portfolio — Selected Work',
+      description:
+        'Selected case studies from C4 Studios — Perth-based web design, AI and software, brand and photography projects.',
+      url: 'https://c4studios.com.au/Portfolio',
+    },
+  ], []);
+
+  useDocumentHead({
+    title: 'Portfolio — Selected Web, AI & Brand Case Studies',
+    description:
+      'Selected case studies from C4 Studios. Custom websites, AI automations, brand systems and photography projects, with scope, stack and outcomes for each.',
+    path: '/Portfolio',
+    jsonLd: portfolioJsonLd,
+  });
 
   useEffect(() => {
     const timeoutId = setTimeout(() => setLoading(false), 600);
@@ -233,7 +361,9 @@ export default function Portfolio() {
                   )}
                   <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 md:gap-y-16">
                     {rest.map((study, index) => (
-                      <ProjectCard key={study.slug} study={study} index={index} />
+                      study.category === 'saas'
+                        ? <SoftwareCard key={study.slug} study={study} index={index} />
+                        : <ProjectCard key={study.slug} study={study} index={index} />
                     ))}
                   </div>
                 </>
@@ -250,7 +380,7 @@ export default function Portfolio() {
                         We&apos;re currently building out case studies for this service. Check back soon — or get in touch to be one of the first.
                       </p>
                       <Link
-                        to={`/StartProject?service=${filter === 'brand' ? 'brand_platform' : filter === 'ai' ? 'automation' : filter}`}
+                        to={`/start?service=${filter === 'brand' ? 'brand_platform' : filter === 'ai' ? 'automation' : filter}`}
                         className="group inline-flex items-center gap-2 mt-6 px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300 rounded-sm"
                         style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
                       >

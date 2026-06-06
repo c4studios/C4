@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { getAllCaseStudies } from '../portfolio/caseStudyData';
-import StudyCover from '../portfolio/StudyCover';
+import PortfolioMedia from '../portfolio/PortfolioMedia';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -63,13 +63,27 @@ export default function PortfolioPreview() {
               style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
             >
               <div className="grid grid-cols-1 md:grid-cols-2">
-                <StudyCover
-                  study={featured}
-                  variant="preview"
+                <div
                   className="aspect-[16/10] overflow-hidden md:aspect-auto flex items-center justify-center"
-                  imageClassName="transition-transform duration-700 group-hover:scale-[1.04]"
+                  style={{ backgroundColor: featured.brandColor || 'var(--c4-bg)' }}
                 >
-                </StudyCover>
+                  {featured.cover ? (
+                    <img
+                      src={featured.cover}
+                      alt={`${featured.name} logo`}
+                      className="max-h-[55%] max-w-[55%] object-contain transition-transform duration-700 group-hover:scale-[1.04]"
+                    />
+                  ) : (
+                    <PortfolioMedia
+                      src={featured.thumbnail}
+                      alt={featured.name}
+                      title={featured.name}
+                      message="Visuals pending upload"
+                      meta={[...featured.tags.slice(0, 2), ...(featured.year ? [featured.year] : [])]}
+                      imageClassName="transition-transform duration-700 group-hover:scale-[1.02]"
+                    />
+                  )}
+                </div>
 
                 <div className="flex flex-col justify-between p-7 md:p-10">
                   <div>
@@ -120,7 +134,20 @@ export default function PortfolioPreview() {
           </motion.div>
         )}
 
-        <div className="mt-8 md:hidden">
+        <div className="mt-6 flex items-center gap-6">
+          <Link
+            to={`${createPageUrl('Portfolio')}?filter=ai`}
+            className="group inline-flex items-center gap-1.5 text-[10.5px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
+            style={{ color: 'var(--c4-text-subtle)' }}
+            onMouseEnter={(event) => { event.currentTarget.style.color = 'var(--c4-link-hover)'; }}
+            onMouseLeave={(event) => { event.currentTarget.style.color = 'var(--c4-text-subtle)'; }}
+          >
+            View AI &amp; Software
+            <ArrowRight size={12} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+
+        <div className="mt-6 md:hidden">
           <Link
             to={createPageUrl('Portfolio')}
             className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.13em] font-medium"
