@@ -206,12 +206,21 @@ function SoftwareCard({ study, index }) {
           className="relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center"
           style={{ backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
         >
-          {study.cover ? (
-            <img
-              src={study.cover}
-              alt={study.name}
-              className="max-h-[55%] max-w-[60%] object-contain transition-transform duration-700 group-hover:scale-[1.04]"
-            />
+          {study.logoUrl || study.cover ? (
+            <>
+              <img
+                src={study.logoUrl || study.cover}
+                alt={study.name}
+                className={`max-h-[55%] max-w-[60%] object-contain transition-all duration-500${study.logoUrlMinimal ? ' group-hover:opacity-0' : ' group-hover:scale-[1.04] transition-transform duration-700'}`}
+              />
+              {study.logoUrlMinimal && (
+                <img
+                  src={study.logoUrlMinimal}
+                  alt={study.name}
+                  className="absolute inset-0 m-auto max-h-[55%] max-w-[60%] object-contain opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                />
+              )}
+            </>
           ) : (
             <span
               className="text-[4.5rem] font-black tracking-[-0.06em] select-none leading-none"

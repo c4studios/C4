@@ -99,7 +99,7 @@ export default function HeroSection() {
                 <Link
                   to={createPageUrl('Portfolio')}
                   className="group inline-flex items-center gap-2 px-6 py-3 text-[11px] font-medium uppercase tracking-[0.14em] transition-colors duration-300"
-                  style={{ backgroundColor: '#000', color: '#fff' }}
+                  style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
                 >
                   View recent work
                   <ArrowRight size={13} strokeWidth={2} className="opacity-50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100" />

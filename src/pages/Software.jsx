@@ -5,12 +5,17 @@ import { ArrowRight, ArrowUpRight, Check, Copy } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import WaitlistModal from '../components/WaitlistModal';
 
+// TODO: Replace with real Stripe Payment Link URL
+// Create at: dashboard.stripe.com/payment-links
+// Set pricing to AUD $49/month recurring
+const RETURNDESK_PAYMENT_LINK = null; // paste URL here
+
 const ease = [0.22, 1, 0.36, 1];
 
 const QUOTR_PLANS = [
-  { src: '/Software/quotr-starter.jpeg', label: 'Starter', bg: '#fff' },
-  { src: '/Software/quotr-pro.jpeg',     label: 'Pro',     bg: '#fff' },
-  { src: '/Software/quotr-agency.jpeg',  label: 'Agency',  bg: '#fff' },
+  { src: '/Software/quotr-starter.jpeg', label: 'Starter' },
+  { src: '/Software/quotr-pro.jpeg',     label: 'Pro' },
+  { src: '/Software/quotr-agency.jpeg',  label: 'Agency' },
 ];
 
 const PRODUCTS = [
@@ -26,6 +31,7 @@ const PRODUCTS = [
     ],
     pricing: 'From $29/mo — 50% off your first 3 months with code C4HALF',
     ctaType: 'quotr',
+    logoUrl: '/Software/quotr-icon.jpeg',
   },
   {
     slug: 'returndesk',
@@ -37,9 +43,11 @@ const PRODUCTS = [
       'Explainable priority scoring',
       'Reply templates for every category',
     ],
-    pricing: '$49/mo early bird (normally $99/mo at launch)',
-    ctaType: 'modal',
-    ctaLabel: 'Request beta access',
+    pricing: 'Beta access — $49/mo AUD',
+    ctaType: 'stripe',
+    ctaLabel: 'Get access — $49/mo',
+    logoUrl: '/Software/ReturnDesk.png',
+    logoUrlMinimal: '/Software/returndesk-minimal.png',
   },
   {
     slug: 'reviewloop',
@@ -54,6 +62,8 @@ const PRODUCTS = [
     pricing: 'First month free for waitlist members',
     ctaType: 'modal',
     ctaLabel: 'Join the waitlist',
+    logoUrl: '/Software/ReviewLoop.png',
+    logoUrlMinimal: '/Software/reviewloop-minimal.png',
   },
   {
     slug: 'complia',
@@ -68,6 +78,7 @@ const PRODUCTS = [
     pricing: 'First month free for waitlist members',
     ctaType: 'modal',
     ctaLabel: 'Join the waitlist',
+    logoUrl: '/Software/Complia.png',
   },
   {
     slug: 'firmflow',
@@ -82,6 +93,7 @@ const PRODUCTS = [
     pricing: 'First month free for waitlist members',
     ctaType: 'modal',
     ctaLabel: 'Join the waitlist',
+    logoUrl: '/Software/FirmFlow.png',
   },
   {
     slug: 'c4-command',
@@ -97,6 +109,7 @@ const PRODUCTS = [
     ctaType: 'mailto',
     ctaHref: 'mailto:caleb@c4studios.com.au?subject=C4 Command',
     ctaLabel: 'Get in touch',
+    logoUrl: '/Software/C4Command.png',
   },
 ];
 
@@ -104,6 +117,26 @@ function statusColor(status) {
   if (status === 'Live') return 'var(--c4-brand-success, #22c55e)';
   if (status === 'Beta') return 'var(--c4-accent)';
   return 'var(--c4-text-muted)';
+}
+
+function ProductLogo({ logoUrl, logoUrlMinimal, name }) {
+  if (!logoUrl) return null;
+  return (
+    <div className="group relative mb-5 inline-block h-10">
+      <img
+        src={logoUrl}
+        alt={name}
+        className={`h-10 w-auto object-contain transition-opacity duration-500${logoUrlMinimal ? ' group-hover:opacity-0' : ''}`}
+      />
+      {logoUrlMinimal && (
+        <img
+          src={logoUrlMinimal}
+          alt={name}
+          className="absolute left-0 top-0 h-10 w-auto object-contain opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        />
+      )}
+    </div>
+  );
 }
 
 function QuotrPricingBlock() {
@@ -118,7 +151,6 @@ function QuotrPricingBlock() {
 
   return (
     <div>
-      {/* Promo code pill */}
       <div className="mb-3 flex items-center gap-3">
         <button
           onClick={handleCopy}
@@ -157,10 +189,43 @@ function QuotrPricingBlock() {
   );
 }
 
+function ReturnDeskPricingBlock({ onOpenModal }) {
+  const handleClick = () => {
+    if (RETURNDESK_PAYMENT_LINK) {
+      window.open(RETURNDESK_PAYMENT_LINK, '_blank', 'noopener noreferrer');
+    } else {
+      onOpenModal('ReturnDesk Beta');
+    }
+  };
+
+  return (
+    <div>
+      <div className="mb-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ border: '1px solid var(--c4-accent)' }}>
+        <span className="text-[9.5px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-accent)' }}>
+          Early bird pricing
+        </span>
+      </div>
+      <p className="mb-1 text-[13.5px] font-semibold" style={{ color: 'var(--c4-text)' }}>
+        Beta access — $49/mo AUD
+      </p>
+      <p className="mb-5 text-[12px] leading-[1.5]" style={{ color: 'var(--c4-text-muted)' }}>
+        Normally $99/mo at full launch
+      </p>
+      <button
+        onClick={handleClick}
+        className="inline-flex items-center gap-2 rounded-[3px] px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-opacity duration-300 hover:opacity-80"
+        style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
+      >
+        Get access — $49/mo
+        <ArrowRight size={13} strokeWidth={2} />
+      </button>
+    </div>
+  );
+}
+
 export default function Software() {
   const [modalProduct, setModalProduct] = useState(null);
 
-  // Scroll to anchor on mount (hash navigation from portfolio)
   useEffect(() => {
     if (window.location.hash) {
       const el = document.querySelector(window.location.hash);
@@ -220,6 +285,8 @@ export default function Software() {
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_300px] lg:gap-16">
                   {/* Left — identity + features */}
                   <div>
+                    <ProductLogo logoUrl={product.logoUrl} logoUrlMinimal={product.logoUrlMinimal} name={product.name} />
+
                     <div className="mb-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ border: `1px solid ${color}` }}>
                       <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
                       <span className="text-[9.5px] uppercase tracking-[0.14em] font-medium" style={{ color }}>
@@ -297,11 +364,17 @@ export default function Software() {
                     className="rounded-[3px] p-6 md:p-7 self-start"
                     style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
                   >
-                    <p className="mb-5 text-[12.5px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>
-                      {product.pricing}
-                    </p>
+                    {product.ctaType !== 'stripe' && (
+                      <p className="mb-5 text-[12.5px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>
+                        {product.pricing}
+                      </p>
+                    )}
 
                     {product.ctaType === 'quotr' && <QuotrPricingBlock />}
+
+                    {product.ctaType === 'stripe' && (
+                      <ReturnDeskPricingBlock onOpenModal={setModalProduct} />
+                    )}
 
                     {product.ctaType === 'modal' && (
                       <button
