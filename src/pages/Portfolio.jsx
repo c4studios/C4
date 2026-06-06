@@ -9,8 +9,6 @@ import PortfolioSortMenu from '../components/portfolio/PortfolioSortMenu';
 import { getAllCaseStudies } from '../components/portfolio/caseStudyData';
 import { FeaturedCardSkeleton } from '../components/portfolio/PortfolioCardSkeleton';
 import PortfolioMedia from '../components/portfolio/PortfolioMedia';
-import useDocumentHead from '@/hooks/useDocumentHead';
-import { breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -268,29 +266,6 @@ export default function Portfolio() {
   const [sort, setSort] = useState('featured');
   const [loading, setLoading] = useState(true);
   const allStudies = getAllCaseStudies();
-
-  const portfolioJsonLd = useMemo(() => [
-    breadcrumbSchema([
-      { name: 'Home', path: '/' },
-      { name: 'Portfolio', path: '/Portfolio' },
-    ]),
-    {
-      '@context': 'https://schema.org',
-      '@type': 'CollectionPage',
-      name: 'C4 Studios Portfolio — Selected Work',
-      description:
-        'Selected case studies from C4 Studios — Perth-based web design, AI and software, brand and photography projects.',
-      url: 'https://c4studios.com.au/Portfolio',
-    },
-  ], []);
-
-  useDocumentHead({
-    title: 'Portfolio — Selected Web, AI & Brand Case Studies',
-    description:
-      'Selected case studies from C4 Studios. Custom websites, AI automations, brand systems and photography projects, with scope, stack and outcomes for each.',
-    path: '/Portfolio',
-    jsonLd: portfolioJsonLd,
-  });
 
   useEffect(() => {
     const timeoutId = setTimeout(() => setLoading(false), 600);

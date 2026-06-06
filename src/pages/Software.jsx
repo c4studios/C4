@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, Check } from 'lucide-react';
 import { createPageUrl } from '@/utils';
-import useDocumentHead from '@/hooks/useDocumentHead';
-import { breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -108,17 +106,6 @@ function statusColor(status) {
 }
 
 export default function Software() {
-  useDocumentHead({
-    title: 'C4 Software — Tools for Service Businesses',
-    description:
-      'Every product in the C4 suite started as something we needed ourselves or built for a client. Studio pricing for C4 Studios visitors — early access at below-market rates.',
-    path: '/software',
-    jsonLd: breadcrumbSchema([
-      { name: 'Home', path: '/' },
-      { name: 'Software', path: '/software' },
-    ]),
-  });
-
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--c4-bg)' }}>
       {/* HERO */}
