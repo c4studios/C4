@@ -1,6 +1,5 @@
-// IMPORTANT: Set RESEND_API_KEY in Cloudflare Pages dashboard:
-// Settings → Environment variables → Add variable → RESEND_API_KEY = re_xxxxxxxxxxxx
-// This applies to both Production and Preview environments.
+// CLOUDFLARE ENV VAR REQUIRED: RESEND_API_KEY
+// Set in Cloudflare Pages → Settings → Environment Variables (both Production and Preview)
 
 export async function onRequestPost(context) {
   const { name, email, product } = await context.request.json();
