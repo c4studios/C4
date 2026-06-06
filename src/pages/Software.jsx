@@ -1,236 +1,454 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, Check, Copy } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, ArrowUpRight, Check, Copy, CheckCircle } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import WaitlistModal from '../components/WaitlistModal';
+import StripeCheckoutModal from '../components/StripeCheckoutModal';
 
-// Stripe Payment Links (live) — created 2026-06-06
-// To add a new tier: dashboard.stripe.com/payment-links
-const RETURNDESK_PAYMENT_LINK  = 'https://buy.stripe.com/eVqbJ1epy8Vm2st4Uo3ZK00'; // $49/mo AUD beta
-const RETURNDESK_PRO_LINK      = 'https://buy.stripe.com/00wcN50yIc7y0klbiM3ZK01'; // $99/mo AUD pro
-const REVIEWLOOP_STARTER_LINK  = null; // 'https://buy.stripe.com/7sY8wP95e6Negjj86A3ZK02' — enable at launch
-const REVIEWLOOP_PRO_LINK      = null; // 'https://buy.stripe.com/8x2aEXdlu5Ja1opbiM3ZK03' — enable at launch
-const COMPLIA_PRO_LINK         = null; // 'https://buy.stripe.com/5kQ00jgxG3B2d7772w3ZK04' — enable at launch
-const COMPLIA_BUSINESS_LINK    = null; // 'https://buy.stripe.com/eVqfZh5T2b3u6IJ4Uo3ZK05' — enable at launch
-const FIRMFLOW_PRO_LINK        = null; // 'https://buy.stripe.com/14A7sL6X65Ja3wx1Ic3ZK06' — enable at launch
-const FIRMFLOW_AGENCY_LINK     = null; // 'https://buy.stripe.com/bJe28r95efjK5EF9aE3ZK07' — enable at launch
-
-const ease = [0.22, 1, 0.36, 1];
-
-const QUOTR_PLANS = [
-  { src: '/Software/quotr-starter.jpeg', label: 'Starter' },
-  { src: '/Software/quotr-pro.jpeg',     label: 'Pro' },
-  { src: '/Software/quotr-agency.jpeg',  label: 'Agency' },
-];
-
+// ─── Stripe price IDs (live) ────────────────────────────────────────────────
+// Payment links are the fallback when VITE_STRIPE_PUBLISHABLE_KEY is not set.
+// Embedded checkout is preferred — add the env var to enable it.
 const PRODUCTS = [
   {
     slug: 'quotr',
     name: 'Quotr',
     status: 'Live',
+    logoUrl: '/Software/quotr-icon.jpeg',
     oneLiner: 'Instant quote calculators for service businesses.',
     features: [
       'Embed on any website in 5 minutes',
       'Stripe billing built in',
       'Email notification on every lead',
     ],
-    pricing: 'From $29/mo — 50% off your first 3 months with code C4HALF',
-    ctaType: 'quotr',
-    logoUrl: '/Software/quotr-icon.jpeg',
+    promoCode: 'C4HALF',
+    promoNote: '50% off your first 3 months — enter at checkout on quotr.us',
+    tiers: [
+      {
+        label: 'Starter',
+        price: 29,
+        image: '/Software/quotr-starter.jpeg',
+        href: 'https://quotr.us',
+        ctaLabel: 'Get started',
+      },
+      {
+        label: 'Pro',
+        price: 59,
+        image: '/Software/quotr-pro.jpeg',
+        href: 'https://quotr.us',
+        ctaLabel: 'Get started',
+      },
+      {
+        label: 'Agency',
+        price: 99,
+        image: '/Software/quotr-agency.jpeg',
+        href: 'https://quotr.us',
+        ctaLabel: 'Get started',
+      },
+    ],
   },
   {
     slug: 'returndesk',
     name: 'ReturnDesk',
     status: 'Beta',
+    logoUrl: '/Software/ReturnDesk.png',
+    logoUrlMinimal: '/Software/returndesk-minimal.png',
     oneLiner: 'Priority inbox for service businesses.',
     features: [
       'Manual-first, works on day one',
       'Explainable priority scoring',
       'Reply templates for every category',
     ],
-    pricing: 'Beta access — $49/mo AUD',
-    ctaType: 'stripe',
-    ctaLabel: 'Get access — $49/mo',
-    logoUrl: '/Software/ReturnDesk.png',
-    logoUrlMinimal: '/Software/returndesk-minimal.png',
+    tiers: [
+      {
+        label: 'Beta',
+        badge: 'Early bird',
+        price: 49,
+        highlight: true,
+        note: 'Locks in at $49/mo forever',
+        cta: 'checkout',
+        priceId: 'price_1TfK5PFVT5eOxOTaXVgf3y4x',
+        paymentLink: 'https://buy.stripe.com/eVqbJ1epy8Vm2st4Uo3ZK00',
+        ctaLabel: 'Get access',
+        tierFeatures: [
+          'Priority scoring engine',
+          'Reply template library',
+          'Locked at $49/mo forever',
+        ],
+      },
+      {
+        label: 'Pro',
+        price: 99,
+        note: 'Price at full launch',
+        cta: 'checkout',
+        priceId: 'price_1TfK5PFVT5eOxOTa63xOCmt2',
+        paymentLink: 'https://buy.stripe.com/00wcN50yIc7y0klbiM3ZK01',
+        ctaLabel: 'Get access',
+        tierFeatures: [
+          'Priority scoring engine',
+          'Reply template library',
+          'Priority support',
+        ],
+      },
+    ],
   },
   {
     slug: 'reviewloop',
     name: 'ReviewLoop',
     status: 'Coming Soon',
+    logoUrl: '/Software/ReviewLoop.png',
+    logoUrlMinimal: '/Software/reviewloop-minimal.png',
     oneLiner: 'Turn happy jobs into Google reviews.',
     features: [
       'Templated review request emails',
       'Automated follow-up sequences',
       'Google Business Profile integration',
     ],
-    pricing: 'First month free for waitlist members',
-    ctaType: 'modal',
-    ctaLabel: 'Join the waitlist',
-    logoUrl: '/Software/ReviewLoop.png',
-    logoUrlMinimal: '/Software/reviewloop-minimal.png',
+    tiers: [
+      {
+        label: 'Starter',
+        price: 29,
+        cta: 'waitlist',
+        ctaLabel: 'Join waitlist',
+        tierFeatures: [
+          'Up to 100 contacts/month',
+          'Review request templates',
+          'Email notifications',
+        ],
+      },
+      {
+        label: 'Pro',
+        price: 79,
+        cta: 'waitlist',
+        ctaLabel: 'Join waitlist',
+        tierFeatures: [
+          'Unlimited contacts',
+          'Automated follow-up sequences',
+          'Google Business integration',
+        ],
+      },
+    ],
   },
   {
     slug: 'complia',
     name: 'Complia',
     status: 'Coming Soon',
+    logoUrl: '/Software/Complia.png',
     oneLiner: 'Australian compliance calendar and assistant.',
     features: [
       'BAS, super, and ASIC annual review tracking',
       'Preparation checklists per obligation',
       'Reminder system built in',
     ],
-    pricing: 'First month free for waitlist members',
-    ctaType: 'modal',
-    ctaLabel: 'Join the waitlist',
-    logoUrl: '/Software/Complia.png',
+    tiers: [
+      {
+        label: 'Pro',
+        price: 49,
+        cta: 'waitlist',
+        ctaLabel: 'Join waitlist',
+        tierFeatures: [
+          'BAS and super tracking',
+          'Preparation checklists',
+          'Email reminders',
+        ],
+      },
+      {
+        label: 'Business',
+        price: 99,
+        cta: 'waitlist',
+        ctaLabel: 'Join waitlist',
+        tierFeatures: [
+          'Everything in Pro',
+          'Multi-entity support',
+          'Accountant portal access',
+        ],
+      },
+    ],
   },
   {
     slug: 'firmflow',
     name: 'FirmFlow',
     status: 'Coming Soon',
+    logoUrl: '/Software/FirmFlow.png',
     oneLiner: 'AI content engine for professional services.',
     features: [
       'LinkedIn posts, newsletters, client emails',
       'Source-first content generation',
       'Built-in disclaimer and risk controls',
     ],
-    pricing: 'First month free for waitlist members',
-    ctaType: 'modal',
-    ctaLabel: 'Join the waitlist',
-    logoUrl: '/Software/FirmFlow.png',
+    tiers: [
+      {
+        label: 'Pro',
+        price: 79,
+        cta: 'waitlist',
+        ctaLabel: 'Join waitlist',
+        tierFeatures: [
+          '10 pieces of content/month',
+          'LinkedIn + email formats',
+          'Disclaimer templates',
+        ],
+      },
+      {
+        label: 'Agency',
+        price: 199,
+        cta: 'waitlist',
+        ctaLabel: 'Join waitlist',
+        tierFeatures: [
+          'Unlimited content',
+          'All output formats',
+          'Multi-client management',
+        ],
+      },
+    ],
   },
   {
     slug: 'c4-command',
     name: 'C4 Command',
     status: 'Studio',
+    logoUrl: '/Software/C4Command.png',
     oneLiner: 'Operational hub for the C4 Studio.',
     features: [
       'Lead pipeline and outreach monitoring',
       'Automation health dashboard',
       'Projects, invoices, and client notes',
     ],
-    pricing: 'Available to C4 Studios clients and partners',
-    ctaType: 'mailto',
-    ctaHref: 'mailto:caleb@c4studios.com.au?subject=C4 Command',
-    ctaLabel: 'Get in touch',
-    logoUrl: '/Software/C4Command.png',
+    tiers: [
+      {
+        label: 'Studio',
+        price: null,
+        note: 'Available to C4 Studios clients and partners',
+        cta: 'mailto',
+        href: 'mailto:caleb@c4studios.com.au?subject=C4 Command',
+        ctaLabel: 'Get in touch',
+        tierFeatures: [
+          'Full C4 Command access',
+          'Onboarding and setup',
+          'Ongoing studio support',
+        ],
+      },
+    ],
   },
 ];
+
+const ease = [0.22, 1, 0.36, 1];
 
 function statusColor(status) {
   if (status === 'Live') return 'var(--c4-brand-success, #22c55e)';
   if (status === 'Beta') return 'var(--c4-accent)';
-  return 'var(--c4-text-muted)';
+  return 'var(--c4-text-faint)';
 }
 
 function ProductLogo({ logoUrl, logoUrlMinimal, name }) {
   if (!logoUrl) return null;
   return (
-    <div className="group relative mb-5 inline-block h-10">
+    <div className="group relative inline-flex shrink-0 h-9">
       <img
         src={logoUrl}
         alt={name}
-        className={`h-10 w-auto object-contain transition-opacity duration-500${logoUrlMinimal ? ' group-hover:opacity-0' : ''}`}
+        className={`h-9 w-auto object-contain transition-opacity duration-500${logoUrlMinimal ? ' group-hover:opacity-0' : ''}`}
       />
       {logoUrlMinimal && (
         <img
           src={logoUrlMinimal}
           alt={name}
-          className="absolute left-0 top-0 h-10 w-auto object-contain opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          className="absolute left-0 top-0 h-9 w-auto object-contain opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         />
       )}
     </div>
   );
 }
 
-function QuotrPricingBlock() {
+function PromoStrip({ code, note }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText('C4HALF').then(() => {
+    navigator.clipboard.writeText(code).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   };
 
   return (
-    <div>
-      <div className="mb-3 flex items-center gap-3">
-        <button
-          onClick={handleCopy}
-          className="group flex items-center gap-2 rounded-[3px] px-3 py-2 transition-colors duration-200"
-          style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-bg)' }}
-        >
-          <span className="font-mono text-[14px] font-semibold tracking-[0.06em]" style={{ color: 'var(--c4-text)' }}>
-            C4HALF
-          </span>
-          <span
-            className="flex items-center gap-1 text-[10px] uppercase tracking-[0.1em] font-medium transition-colors duration-200"
-            style={{ color: copied ? 'var(--c4-brand-success, #22c55e)' : 'var(--c4-text-faint)' }}
-          >
-            {copied ? (
-              <><Check size={11} strokeWidth={2.5} /> Copied</>
-            ) : (
-              <><Copy size={11} strokeWidth={2} /> Copy</>
-            )}
-          </span>
-        </button>
-      </div>
-      <p className="mb-5 text-[12.5px] leading-[1.6]" style={{ color: 'var(--c4-text-muted)' }}>
-        50% off your first 3 months — enter at checkout
-      </p>
-      <a
-        href="https://quotr.us"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 rounded-[3px] px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-opacity duration-300 hover:opacity-80"
-        style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
+    <div
+      className="mt-6 flex flex-col gap-3 rounded-[3px] px-5 py-4 sm:flex-row sm:items-center sm:gap-5"
+      style={{ border: '1px solid var(--c4-border-light)', backgroundColor: 'var(--c4-bg-alt)' }}
+    >
+      <button
+        onClick={handleCopy}
+        className="flex items-center gap-2.5 rounded-[3px] self-start px-3 py-2 transition-colors duration-200"
+        style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-bg)' }}
       >
-        Go to quotr.us
-        <ArrowUpRight size={13} strokeWidth={2} />
-      </a>
+        <span className="font-mono text-[13px] font-bold tracking-[0.08em]" style={{ color: 'var(--c4-text)' }}>
+          {code}
+        </span>
+        <span
+          className="flex items-center gap-1 text-[9.5px] uppercase tracking-[0.1em] font-medium transition-colors duration-200"
+          style={{ color: copied ? 'var(--c4-brand-success, #22c55e)' : 'var(--c4-text-faint)' }}
+        >
+          {copied ? <><Check size={10} strokeWidth={2.5} /> Copied</> : <><Copy size={10} strokeWidth={2} /> Copy</>}
+        </span>
+      </button>
+      <p className="text-[12.5px] leading-[1.55]" style={{ color: 'var(--c4-text-muted)' }}>
+        {note}
+      </p>
     </div>
   );
 }
 
-function ReturnDeskPricingBlock({ onOpenModal }) {
-  const handleClick = () => {
-    if (RETURNDESK_PAYMENT_LINK) {
-      window.open(RETURNDESK_PAYMENT_LINK, '_blank', 'noopener noreferrer');
-    } else {
-      onOpenModal('ReturnDesk Beta');
+function TierCard({ tier, product, onCheckout, onWaitlist }) {
+  const hasEmbedded = !!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+  const isCheckout = tier.cta === 'checkout';
+  const borderColor = tier.highlight ? 'var(--c4-accent)' : 'var(--c4-border)';
+
+  const handleCta = () => {
+    if (isCheckout) {
+      if (hasEmbedded && tier.priceId) {
+        onCheckout(tier.priceId, `${product.name} — ${tier.label}`);
+      } else if (tier.paymentLink) {
+        window.open(tier.paymentLink, '_blank', 'noopener noreferrer');
+      } else {
+        onWaitlist(product.name);
+      }
+    } else if (tier.cta === 'waitlist') {
+      onWaitlist(product.name);
     }
   };
 
   return (
-    <div>
-      <div className="mb-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ border: '1px solid var(--c4-accent)' }}>
-        <span className="text-[9.5px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-accent)' }}>
-          Early bird pricing
-        </span>
+    <div
+      className="flex flex-col rounded-[3px] overflow-hidden"
+      style={{ border: `1px solid ${borderColor}`, backgroundColor: 'var(--c4-card-bg)' }}
+    >
+      {/* Plan image — Quotr only */}
+      {tier.image && (
+        <div className="aspect-[4/3] w-full overflow-hidden bg-white">
+          <img src={tier.image} alt={`${product.name} ${tier.label}`} className="h-full w-full object-contain p-4" />
+        </div>
+      )}
+
+      {/* Tier body */}
+      <div className="flex flex-1 flex-col p-6">
+        {/* Label + badge */}
+        <div className="mb-4 flex items-center gap-2.5">
+          <span className="text-[10px] uppercase tracking-[0.18em] font-semibold" style={{ color: 'var(--c4-text-subtle)' }}>
+            {tier.label}
+          </span>
+          {tier.badge && (
+            <span
+              className="rounded-full px-2 py-[2px] text-[8.5px] uppercase tracking-[0.12em] font-semibold"
+              style={{ backgroundColor: 'var(--c4-accent)', color: 'var(--c4-bg)' }}
+            >
+              {tier.badge}
+            </span>
+          )}
+        </div>
+
+        {/* Price */}
+        {tier.price !== null && tier.price !== undefined ? (
+          <div className="mb-1 flex items-baseline gap-1.5">
+            <span className="text-[2.4rem] font-bold tracking-[-0.04em] leading-none" style={{ color: 'var(--c4-text)' }}>
+              ${tier.price}
+            </span>
+            <span className="text-[12px]" style={{ color: 'var(--c4-text-muted)' }}>/mo · AUD</span>
+          </div>
+        ) : (
+          <div className="mb-1">
+            <span className="text-[1.1rem] font-semibold tracking-[-0.02em]" style={{ color: 'var(--c4-text)' }}>
+              Contact for pricing
+            </span>
+          </div>
+        )}
+
+        {tier.note && (
+          <p className="mb-4 text-[11.5px]" style={{ color: 'var(--c4-text-faint)' }}>
+            {tier.note}
+          </p>
+        )}
+
+        {/* Tier feature list */}
+        {tier.tierFeatures && tier.tierFeatures.length > 0 && (
+          <ul className="mt-4 mb-5 space-y-2.5 border-t pt-4" style={{ borderColor: 'var(--c4-border-light)' }}>
+            {tier.tierFeatures.map((f) => (
+              <li key={f} className="flex items-start gap-2 text-[12.5px] leading-[1.45]" style={{ color: 'var(--c4-text-subtle)' }}>
+                <Check size={12} strokeWidth={2.5} className="mt-[2px] shrink-0" style={{ color: 'var(--c4-accent)' }} />
+                {f}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* CTA */}
+        <div className="mt-auto pt-2">
+          {tier.href && tier.cta !== 'checkout' ? (
+            <a
+              href={tier.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-center gap-2 rounded-[3px] py-3 text-[10.5px] uppercase tracking-[0.14em] font-semibold transition-opacity duration-200 hover:opacity-75"
+              style={{
+                backgroundColor: tier.highlight ? 'var(--c4-accent)' : 'var(--c4-text)',
+                color: 'var(--c4-bg)',
+              }}
+            >
+              {tier.ctaLabel}
+              <ArrowUpRight size={12} strokeWidth={2.5} />
+            </a>
+          ) : tier.cta === 'mailto' ? (
+            <a
+              href={tier.href}
+              className="flex w-full items-center justify-center gap-2 rounded-[3px] py-3 text-[10.5px] uppercase tracking-[0.14em] font-semibold transition-opacity duration-200 hover:opacity-75"
+              style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
+            >
+              {tier.ctaLabel}
+              <ArrowRight size={12} strokeWidth={2.5} />
+            </a>
+          ) : (
+            <button
+              onClick={handleCta}
+              className="flex w-full items-center justify-center gap-2 rounded-[3px] py-3 text-[10.5px] uppercase tracking-[0.14em] font-semibold transition-opacity duration-200 hover:opacity-75"
+              style={{
+                backgroundColor: tier.highlight ? 'var(--c4-accent)' : 'var(--c4-text)',
+                color: 'var(--c4-bg)',
+              }}
+            >
+              {tier.ctaLabel}
+              <ArrowRight size={12} strokeWidth={2.5} />
+            </button>
+          )}
+        </div>
       </div>
-      <p className="mb-1 text-[13.5px] font-semibold" style={{ color: 'var(--c4-text)' }}>
-        Beta access — $49/mo AUD
-      </p>
-      <p className="mb-5 text-[12px] leading-[1.5]" style={{ color: 'var(--c4-text-muted)' }}>
-        Normally $99/mo at full launch
-      </p>
-      <button
-        onClick={handleClick}
-        className="inline-flex items-center gap-2 rounded-[3px] px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-opacity duration-300 hover:opacity-80"
-        style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-      >
-        Get access — $49/mo
-        <ArrowRight size={13} strokeWidth={2} />
-      </button>
     </div>
   );
 }
 
+function CheckoutSuccess() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease }}
+      className="mx-auto mb-10 flex max-w-[640px] items-start gap-3 rounded-[3px] px-5 py-4"
+      style={{ border: '1px solid var(--c4-brand-success, #22c55e)', backgroundColor: 'var(--c4-bg-alt)' }}
+    >
+      <CheckCircle size={16} strokeWidth={2} className="mt-[1px] shrink-0" style={{ color: 'var(--c4-brand-success, #22c55e)' }} />
+      <div>
+        <p className="text-[13px] font-semibold" style={{ color: 'var(--c4-text)' }}>
+          You&apos;re in — welcome aboard.
+        </p>
+        <p className="mt-0.5 text-[12px]" style={{ color: 'var(--c4-text-muted)' }}>
+          Check your email for access details. Caleb will be in touch shortly.
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Software() {
+  const [searchParams] = useSearchParams();
+  const checkoutComplete = searchParams.get('checkout') === 'complete';
+
   const [modalProduct, setModalProduct] = useState(null);
+  const [checkout, setCheckout] = useState({ open: false, priceId: null, title: null });
 
   useEffect(() => {
     if (window.location.hash) {
@@ -239,20 +457,20 @@ export default function Software() {
     }
   }, []);
 
+  const openCheckout = (priceId, title) => setCheckout({ open: true, priceId, title });
+  const closeCheckout = () => setCheckout((s) => ({ ...s, open: false }));
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--c4-bg)' }}>
       {/* HERO */}
-      <section className="pt-28 pb-16 md:pt-36 md:pb-20">
+      <section className="pt-28 pb-14 md:pt-36 md:pb-18">
         <div className="mx-auto max-w-[1400px] px-6 md:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease }}
           >
-            <span
-              className="text-[10px] uppercase tracking-[0.25em] font-medium"
-              style={{ color: 'var(--c4-text-subtle)' }}
-            >
+            <span className="text-[10px] uppercase tracking-[0.25em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
               C4 Software
             </span>
             <h1
@@ -275,8 +493,16 @@ export default function Software() {
       {/* PRODUCTS */}
       <section className="pb-20 md:pb-28">
         <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-          {PRODUCTS.map((product) => {
+          {checkoutComplete && <CheckoutSuccess />}
+
+          {PRODUCTS.map((product, pi) => {
             const color = statusColor(product.status);
+            const tierCount = product.tiers.length;
+            const tierGridCols =
+              tierCount === 1 ? 'grid-cols-1' :
+              tierCount === 2 ? 'grid-cols-1 md:grid-cols-2' :
+              'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3';
+
             return (
               <motion.div
                 key={product.slug}
@@ -284,127 +510,65 @@ export default function Software() {
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.5, delay: 0.05, ease }}
-                className="border-t py-12 md:py-16 scroll-mt-24"
+                transition={{ duration: 0.5, delay: 0.04, ease }}
+                className="border-t py-14 scroll-mt-24 md:py-18"
                 style={{ borderColor: 'var(--c4-border-light)' }}
               >
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_300px] lg:gap-16">
-                  {/* Left — identity + features */}
-                  <div>
-                    <ProductLogo logoUrl={product.logoUrl} logoUrlMinimal={product.logoUrlMinimal} name={product.name} />
-
-                    <div className="mb-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ border: `1px solid ${color}` }}>
-                      <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
-                      <span className="text-[9.5px] uppercase tracking-[0.14em] font-medium" style={{ color }}>
-                        {product.status}
-                      </span>
+                {/* Product header */}
+                <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6 md:gap-8">
+                  <ProductLogo logoUrl={product.logoUrl} logoUrlMinimal={product.logoUrlMinimal} name={product.name} />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-3 mb-1.5">
+                      <h2 className="text-[1.5rem] font-semibold tracking-[-0.03em] leading-[1.1] md:text-[1.8rem]" style={{ color: 'var(--c4-text)' }}>
+                        {product.name}
+                      </h2>
+                      <div
+                        className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-[3px]"
+                        style={{ border: `1px solid ${color}` }}
+                      >
+                        <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
+                        <span className="text-[9px] uppercase tracking-[0.14em] font-semibold" style={{ color }}>
+                          {product.status}
+                        </span>
+                      </div>
                     </div>
-                    <h2
-                      className="text-[1.6rem] font-semibold tracking-[-0.03em] leading-[1.1] md:text-[2rem]"
-                      style={{ color: 'var(--c4-text)' }}
-                    >
-                      {product.name}
-                    </h2>
-                    <p className="mt-2 text-[14px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>
+                    <p className="text-[14px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>
                       {product.oneLiner}
                     </p>
-                    <ul className="mt-5 space-y-2.5">
-                      {product.features.map((feat) => (
-                        <li
-                          key={feat}
-                          className="flex items-start gap-2.5 text-[13px] leading-[1.5]"
-                          style={{ color: 'var(--c4-text-subtle)' }}
-                        >
-                          <Check size={13} strokeWidth={2.5} className="mt-[2px] shrink-0" style={{ color: 'var(--c4-accent)' }} />
-                          {feat}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Quotr plan showcase */}
-                    {product.slug === 'quotr' && (
-                      <div className="mt-8">
-                        <span className="mb-3 block text-[10px] uppercase tracking-[0.18em] font-medium" style={{ color: 'var(--c4-text-faint)' }}>
-                          Available plans
-                        </span>
-                        <div className="grid grid-cols-3 gap-3">
-                          {QUOTR_PLANS.map((plan) => (
-                            <a
-                              key={plan.label}
-                              href="https://quotr.us"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="group overflow-hidden rounded-[3px] transition-opacity duration-300 hover:opacity-80"
-                              style={{ border: '1px solid var(--c4-border)' }}
-                            >
-                              <div className="flex aspect-[4/3] items-center justify-center bg-white p-3">
-                                <img
-                                  src={plan.src}
-                                  alt={`Quotr ${plan.label}`}
-                                  className="h-full w-full object-contain"
-                                />
-                              </div>
-                              <div
-                                className="flex items-center justify-between px-3 py-2"
-                                style={{ backgroundColor: 'var(--c4-bg-alt)' }}
-                              >
-                                <span className="text-[10px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
-                                  {plan.label}
-                                </span>
-                                <ArrowUpRight
-                                  size={10}
-                                  strokeWidth={2}
-                                  style={{ color: 'var(--c4-text-faint)' }}
-                                  className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                                />
-                              </div>
-                            </a>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Right — pricing + CTA */}
-                  <div
-                    className="rounded-[3px] p-6 md:p-7 self-start"
-                    style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
-                  >
-                    {product.ctaType !== 'stripe' && (
-                      <p className="mb-5 text-[12.5px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>
-                        {product.pricing}
-                      </p>
-                    )}
-
-                    {product.ctaType === 'quotr' && <QuotrPricingBlock />}
-
-                    {product.ctaType === 'stripe' && (
-                      <ReturnDeskPricingBlock onOpenModal={setModalProduct} />
-                    )}
-
-                    {product.ctaType === 'modal' && (
-                      <button
-                        onClick={() => setModalProduct(product.name)}
-                        className="inline-flex items-center gap-2 rounded-[3px] px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-opacity duration-300 hover:opacity-80"
-                        style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-                      >
-                        {product.ctaLabel}
-                        <ArrowRight size={13} strokeWidth={2} />
-                      </button>
-                    )}
-
-                    {product.ctaType === 'mailto' && (
-                      <a
-                        href={product.ctaHref}
-                        className="inline-flex items-center gap-2 rounded-[3px] px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-opacity duration-300 hover:opacity-80"
-                        style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-                      >
-                        {product.ctaLabel}
-                        <ArrowRight size={13} strokeWidth={2} />
-                      </a>
-                    )}
                   </div>
                 </div>
+
+                {/* Feature list */}
+                <ul className="mb-9 flex flex-wrap items-center gap-x-6 gap-y-2">
+                  {product.features.map((feat) => (
+                    <li
+                      key={feat}
+                      className="flex items-center gap-2 text-[12.5px]"
+                      style={{ color: 'var(--c4-text-subtle)' }}
+                    >
+                      <Check size={11} strokeWidth={2.5} style={{ color: 'var(--c4-accent)' }} />
+                      {feat}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Tier grid */}
+                <div className={`grid gap-4 ${tierGridCols} ${tierCount === 1 ? 'max-w-[360px]' : ''}`}>
+                  {product.tiers.map((tier) => (
+                    <TierCard
+                      key={tier.label}
+                      tier={tier}
+                      product={product}
+                      onCheckout={openCheckout}
+                      onWaitlist={setModalProduct}
+                    />
+                  ))}
+                </div>
+
+                {/* Promo strip — Quotr */}
+                {product.promoCode && (
+                  <PromoStrip code={product.promoCode} note={product.promoNote} />
+                )}
               </motion.div>
             );
           })}
@@ -446,6 +610,13 @@ export default function Software() {
         isOpen={!!modalProduct}
         onClose={() => setModalProduct(null)}
         productName={modalProduct || ''}
+      />
+
+      <StripeCheckoutModal
+        isOpen={checkout.open}
+        onClose={closeCheckout}
+        priceId={checkout.priceId}
+        title={checkout.title}
       />
     </div>
   );
