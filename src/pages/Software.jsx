@@ -230,6 +230,28 @@ const PRODUCTS = [
   },
 ];
 
+// Lifetime one-time payment links (live).
+const LIFETIME_LINKS = {
+  quotr: "https://buy.stripe.com/4gM5kDbdm1sU2stcmQ3ZK0f",
+  returndesk: "https://buy.stripe.com/dRmbJ16X68Vmfff4Uo3ZK0h",
+  reviewloop: "https://buy.stripe.com/00w28r6X60oQaYZeuY3ZK0i",
+  complia: "https://buy.stripe.com/cNibJ1a9i7Ri1op72w3ZK0j",
+  firmflow: "https://buy.stripe.com/00w4gz1CMdbC4ABgD63ZK0k",
+};
+
+// Lifetime one-time prices (AUD) shown on the card.
+const LIFETIME_PRICES = {
+  quotr: 1899,
+  returndesk: 1199,
+  reviewloop: 699,
+  complia: 1199,
+  firmflow: 1899,
+};
+
+// Annual = 10× the monthly rate (two months free) — display only; these
+// products don't have dedicated annual Stripe SKUs yet.
+const ANNUAL_MONTHS = 10;
+
 const ease = [0.22, 1, 0.36, 1];
 
 function statusColor(status) {
@@ -295,14 +317,19 @@ function PromoStrip({ code, note }) {
   );
 }
 
-function TierCard({ tier, product, onCheckout, onWaitlist }) {
+function TierCard({ tier, product, period = 'monthly', onCheckout, onWaitlist }) {
   const hasEmbedded = !!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
   const isCheckout = tier.cta === 'checkout';
+  const isAnnual = period === 'annual';
   const borderColor = tier.highlight ? 'var(--c4-accent)' : 'var(--c4-border)';
 
   const handleCta = () => {
     if (isCheckout) {
-      if (hasEmbedded && tier.priceId) {
+      // No dedicated annual SKU — never charge monthly while showing an annual
+      // price. Route annual interest to the waitlist instead.
+      if (isAnnual) {
+        onWaitlist(product.name);
+      } else if (hasEmbedded && tier.priceId) {
         onCheckout(tier.priceId, `${product.name} — ${tier.label}`);
       } else if (tier.paymentLink) {
         window.open(tier.paymentLink, '_blank', 'noopener noreferrer');
@@ -347,9 +374,11 @@ function TierCard({ tier, product, onCheckout, onWaitlist }) {
         {tier.price !== null && tier.price !== undefined ? (
           <div className="mb-1 flex items-baseline gap-1.5">
             <span className="text-[2.4rem] font-bold tracking-[-0.04em] leading-none" style={{ color: 'var(--c4-text)' }}>
-              ${tier.price}
+              ${isAnnual ? tier.price * ANNUAL_MONTHS : tier.price}
             </span>
-            <span className="text-[12px]" style={{ color: 'var(--c4-text-muted)' }}>/mo · AUD</span>
+            <span className="text-[12px]" style={{ color: 'var(--c4-text-muted)' }}>
+              {isAnnual ? '/yr · AUD' : '/mo · AUD'}
+            </span>
           </div>
         ) : (
           <div className="mb-1">
@@ -418,6 +447,170 @@ function TierCard({ tier, product, onCheckout, onWaitlist }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function BillingToggle({ period, setPeriod, hasLifetime }) {
+  const opts = hasLifetime ? ['monthly', 'annual', 'lifetime'] : ['monthly', 'annual'];
+  return (
+    <div
+      className="mb-7 inline-flex rounded-full p-0.5"
+      style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-bg-alt)' }}
+    >
+      {opts.map((o) => (
+        <button
+          key={o}
+          type="button"
+          onClick={() => setPeriod(o)}
+          className="rounded-full px-3.5 py-1.5 text-[10px] uppercase tracking-[0.12em] font-semibold capitalize transition-colors duration-200"
+          style={period === o
+            ? { backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }
+            : { color: 'var(--c4-text-muted)' }}
+        >
+          {o}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function LifetimeCard({ product }) {
+  const price = LIFETIME_PRICES[product.slug];
+  const link = LIFETIME_LINKS[product.slug];
+  return (
+    <div
+      className="flex flex-col rounded-[3px] overflow-hidden"
+      style={{ border: '1px solid var(--c4-accent)', backgroundColor: 'var(--c4-card-bg)' }}
+    >
+      <div className="flex flex-1 flex-col p-6">
+        <div className="mb-4 flex items-center gap-2.5">
+          <span className="text-[10px] uppercase tracking-[0.18em] font-semibold" style={{ color: 'var(--c4-text-subtle)' }}>
+            Lifetime
+          </span>
+          <span
+            className="rounded-full px-2 py-[2px] text-[8.5px] uppercase tracking-[0.12em] font-semibold"
+            style={{ backgroundColor: 'var(--c4-accent)', color: 'var(--c4-bg)' }}
+          >
+            Best value
+          </span>
+        </div>
+        <div className="mb-1 flex items-baseline gap-1.5">
+          <span className="text-[2.4rem] font-bold tracking-[-0.04em] leading-none" style={{ color: 'var(--c4-text)' }}>
+            ${price.toLocaleString()}
+          </span>
+          <span className="text-[12px]" style={{ color: 'var(--c4-text-muted)' }}>one-time · AUD</span>
+        </div>
+        <p className="mb-4 text-[11.5px]" style={{ color: 'var(--c4-text-faint)' }}>
+          One-time payment. Yours forever.
+        </p>
+        {product.features?.length > 0 && (
+          <ul className="mt-4 mb-5 space-y-2.5 border-t pt-4" style={{ borderColor: 'var(--c4-border-light)' }}>
+            {product.features.map((f) => (
+              <li key={f} className="flex items-start gap-2 text-[12.5px] leading-[1.45]" style={{ color: 'var(--c4-text-subtle)' }}>
+                <Check size={12} strokeWidth={2.5} className="mt-[2px] shrink-0" style={{ color: 'var(--c4-accent)' }} />
+                {f}
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="mt-auto pt-2">
+          <a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center gap-2 rounded-[3px] py-3 text-[10.5px] uppercase tracking-[0.14em] font-semibold transition-opacity duration-200 hover:opacity-75"
+            style={{ backgroundColor: 'var(--c4-accent)', color: 'var(--c4-bg)' }}
+          >
+            Get lifetime access
+            <ArrowUpRight size={12} strokeWidth={2.5} />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProductBlock({ product, onCheckout, onWaitlist }) {
+  const [period, setPeriod] = useState('monthly');
+  const color = statusColor(product.status);
+  const hasLifetime = !!LIFETIME_LINKS[product.slug];
+  const tierCount = product.tiers.length;
+  const tierGridCols =
+    tierCount === 1 ? 'grid-cols-1' :
+    tierCount === 2 ? 'grid-cols-1 md:grid-cols-2' :
+    'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3';
+  const showLifetime = hasLifetime && period === 'lifetime';
+
+  return (
+    <motion.div
+      id={product.slug}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.5, delay: 0.04, ease }}
+      className="border-t py-14 scroll-mt-24 md:py-18"
+      style={{ borderColor: 'var(--c4-border-light)' }}
+    >
+      {/* Product header */}
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6 md:gap-8">
+        <ProductLogo logoUrl={product.logoUrl} logoUrlMinimal={product.logoUrlMinimal} name={product.name} />
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-wrap items-center gap-3 mb-1.5">
+            <h2 className="text-[1.5rem] font-semibold tracking-[-0.03em] leading-[1.1] md:text-[1.8rem]" style={{ color: 'var(--c4-text)' }}>
+              {product.name}
+            </h2>
+            <div
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-[3px]"
+              style={{ border: `1px solid ${color}` }}
+            >
+              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
+              <span className="text-[9px] uppercase tracking-[0.14em] font-semibold" style={{ color }}>
+                {product.status}
+              </span>
+            </div>
+          </div>
+          <p className="text-[14px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>
+            {product.oneLiner}
+          </p>
+        </div>
+      </div>
+
+      {/* Feature list */}
+      <ul className="mb-9 flex flex-wrap items-center gap-x-6 gap-y-2">
+        {product.features.map((feat) => (
+          <li key={feat} className="flex items-center gap-2 text-[12.5px]" style={{ color: 'var(--c4-text-subtle)' }}>
+            <Check size={11} strokeWidth={2.5} style={{ color: 'var(--c4-accent)' }} />
+            {feat}
+          </li>
+        ))}
+      </ul>
+
+      {/* Billing period selector — only when a lifetime option exists */}
+      {hasLifetime && <BillingToggle period={period} setPeriod={setPeriod} hasLifetime={hasLifetime} />}
+
+      {/* Tiers, or the single lifetime card */}
+      {showLifetime ? (
+        <div className="max-w-[360px]">
+          <LifetimeCard product={product} />
+        </div>
+      ) : (
+        <div className={`grid gap-4 ${tierGridCols} ${tierCount === 1 ? 'max-w-[360px]' : ''}`}>
+          {product.tiers.map((tier) => (
+            <TierCard
+              key={tier.label}
+              tier={tier}
+              product={product}
+              period={period}
+              onCheckout={onCheckout}
+              onWaitlist={onWaitlist}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Promo strip — Quotr */}
+      {product.promoCode && <PromoStrip code={product.promoCode} note={product.promoNote} />}
+    </motion.div>
   );
 }
 
@@ -495,83 +688,14 @@ export default function Software() {
         <div className="mx-auto max-w-[1400px] px-6 md:px-12">
           {checkoutComplete && <CheckoutSuccess />}
 
-          {PRODUCTS.map((product, pi) => {
-            const color = statusColor(product.status);
-            const tierCount = product.tiers.length;
-            const tierGridCols =
-              tierCount === 1 ? 'grid-cols-1' :
-              tierCount === 2 ? 'grid-cols-1 md:grid-cols-2' :
-              'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3';
-
-            return (
-              <motion.div
-                key={product.slug}
-                id={product.slug}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.5, delay: 0.04, ease }}
-                className="border-t py-14 scroll-mt-24 md:py-18"
-                style={{ borderColor: 'var(--c4-border-light)' }}
-              >
-                {/* Product header */}
-                <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6 md:gap-8">
-                  <ProductLogo logoUrl={product.logoUrl} logoUrlMinimal={product.logoUrlMinimal} name={product.name} />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-3 mb-1.5">
-                      <h2 className="text-[1.5rem] font-semibold tracking-[-0.03em] leading-[1.1] md:text-[1.8rem]" style={{ color: 'var(--c4-text)' }}>
-                        {product.name}
-                      </h2>
-                      <div
-                        className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-[3px]"
-                        style={{ border: `1px solid ${color}` }}
-                      >
-                        <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
-                        <span className="text-[9px] uppercase tracking-[0.14em] font-semibold" style={{ color }}>
-                          {product.status}
-                        </span>
-                      </div>
-                    </div>
-                    <p className="text-[14px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>
-                      {product.oneLiner}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Feature list */}
-                <ul className="mb-9 flex flex-wrap items-center gap-x-6 gap-y-2">
-                  {product.features.map((feat) => (
-                    <li
-                      key={feat}
-                      className="flex items-center gap-2 text-[12.5px]"
-                      style={{ color: 'var(--c4-text-subtle)' }}
-                    >
-                      <Check size={11} strokeWidth={2.5} style={{ color: 'var(--c4-accent)' }} />
-                      {feat}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Tier grid */}
-                <div className={`grid gap-4 ${tierGridCols} ${tierCount === 1 ? 'max-w-[360px]' : ''}`}>
-                  {product.tiers.map((tier) => (
-                    <TierCard
-                      key={tier.label}
-                      tier={tier}
-                      product={product}
-                      onCheckout={openCheckout}
-                      onWaitlist={setModalProduct}
-                    />
-                  ))}
-                </div>
-
-                {/* Promo strip — Quotr */}
-                {product.promoCode && (
-                  <PromoStrip code={product.promoCode} note={product.promoNote} />
-                )}
-              </motion.div>
-            );
-          })}
+          {PRODUCTS.map((product) => (
+            <ProductBlock
+              key={product.slug}
+              product={product}
+              onCheckout={openCheckout}
+              onWaitlist={setModalProduct}
+            />
+          ))}
         </div>
       </section>
 
