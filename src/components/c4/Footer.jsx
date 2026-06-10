@@ -16,6 +16,7 @@ const groups = [
   {
     title: 'Initiatives',
     links: [
+      { label: 'Software', page: 'Software' },
       { label: 'Ventures', page: 'Ventures' },
       { label: 'Rebuild', page: 'Rebuild' },
       { label: 'C4 Lens', page: 'Lens' },

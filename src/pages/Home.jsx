@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import IntroSequence from '../components/c4/IntroSequence';
 import HeroSection from '../components/home/HeroSection';
 import ServicesPreview from '../components/home/ServicesPreview';
+import SoftwarePreview from '../components/home/SoftwarePreview';
 import PortfolioPreview from '../components/home/PortfolioPreview';
 import VisionSection from '../components/home/VisionSection';
 import TestimonialsProof from '../components/home/TestimonialsProof';
@@ -36,6 +37,7 @@ export default function Home() {
         <div style={{ backgroundColor: 'var(--c4-bg)' }}>
           <HeroSection />
           <ServicesPreview />
+          <SoftwarePreview />
           <PortfolioPreview />
           <VisionSection />
           <TestimonialsProof />
