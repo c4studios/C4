@@ -69,11 +69,9 @@ const PRODUCTS = [
         badge: 'Early bird',
         price: 49,
         highlight: true,
-        note: 'Locks in at $49/mo forever',
-        cta: 'checkout',
-        priceId: 'price_1TfK5PFVT5eOxOTaXVgf3y4x',
-        paymentLink: 'https://buy.stripe.com/eVqbJ1epy8Vm2st4Uo3ZK00',
-        ctaLabel: 'Get access',
+        note: 'Locks in at $49/mo forever — start free, upgrade in the app',
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
         tierFeatures: [
           'Priority scoring engine',
           'Reply template library',
@@ -84,10 +82,8 @@ const PRODUCTS = [
         label: 'Pro',
         price: 99,
         note: 'Price at full launch',
-        cta: 'checkout',
-        priceId: 'price_1TfK5PFVT5eOxOTa63xOCmt2',
-        paymentLink: 'https://buy.stripe.com/00wcN50yIc7y0klbiM3ZK01',
-        ctaLabel: 'Get access',
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
         tierFeatures: [
           'Priority scoring engine',
           'Reply template library',
@@ -478,9 +474,12 @@ function BillingToggle({ period, setPeriod, hasLifetime }) {
   );
 }
 
+const SUITE_SLUGS = ['returndesk', 'reviewloop', 'complia', 'firmflow'];
+
 function LifetimeCard({ product }) {
   const price = LIFETIME_PRICES[product.slug];
-  const link = LIFETIME_LINKS[product.slug];
+  const isSuiteProduct = SUITE_SLUGS.includes(product.slug);
+  const link = isSuiteProduct ? SUITE_APP_URL : LIFETIME_LINKS[product.slug];
   return (
     <div
       className="flex flex-col rounded-[3px] overflow-hidden"
@@ -505,7 +504,8 @@ function LifetimeCard({ product }) {
           <span className="text-[12px]" style={{ color: 'var(--c4-text-muted)' }}>one-time · AUD</span>
         </div>
         <p className="mb-4 text-[11.5px]" style={{ color: 'var(--c4-text-faint)' }}>
-          One-time payment. Yours forever.
+          One-time payment. Yours forever. Purchased inside the app so access
+          is linked to your account.
         </p>
         {product.features?.length > 0 && (
           <ul className="mt-4 mb-5 space-y-2.5 border-t pt-4" style={{ borderColor: 'var(--c4-border-light)' }}>
