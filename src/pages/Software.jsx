@@ -461,6 +461,7 @@ function BillingToggle({ period, setPeriod, hasLifetime }) {
         <button
           key={o}
           type="button"
+          aria-pressed={period === o}
           onClick={() => setPeriod(o)}
           className="rounded-full px-3.5 py-1.5 text-[10px] uppercase tracking-[0.12em] font-semibold capitalize transition-colors duration-200"
           style={period === o
@@ -695,6 +696,26 @@ export default function Software() {
               Already a customer? Open the app
               <ArrowUpRight size={13} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
             </a>
+
+            <nav aria-label="Jump to product" className="mt-8 flex flex-wrap gap-2">
+              {PRODUCTS.map((p) => (
+                <a
+                  key={p.slug}
+                  href={`#${p.slug}`}
+                  className="flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[10px] uppercase tracking-[0.12em] font-semibold transition-colors duration-200"
+                  style={{ borderColor: 'var(--c4-border)', color: 'var(--c4-text-subtle)' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--c4-accent)'; e.currentTarget.style.color = 'var(--c4-text)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--c4-border)'; e.currentTarget.style.color = 'var(--c4-text-subtle)'; }}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="size-[6px] rounded-full"
+                    style={{ backgroundColor: statusColor(p.status) }}
+                  />
+                  {p.name}
+                </a>
+              ))}
+            </nav>
           </motion.div>
         </div>
       </section>

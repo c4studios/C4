@@ -11,6 +11,7 @@ const navLinks = [
   { label: 'About', page: 'About' },
   { label: 'Services', page: 'Services' },
   { label: 'Portfolio', page: 'Portfolio' },
+  { label: 'Software', page: 'Software' },
   { label: 'C4 Lens', page: 'Lens' },
   { label: 'C4Sight', page: 'Foresight' },
   { label: 'Get a Quote', page: 'quote' },

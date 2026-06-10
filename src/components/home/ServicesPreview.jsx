@@ -22,6 +22,7 @@ const services = [
   {
     number: 'C3',
     slug: 'software',
+    page: 'Software',
     title: 'Software Products',
     brief: 'Off-the-shelf SaaS tools for Australian service businesses — from quote calculators to compliance calendars.',
   },
@@ -89,7 +90,7 @@ export default function ServicesPreview() {
               transition={{ duration: 0.55, delay: i * 0.05, ease }}
             >
               <Link
-                to={`${servicesBase}#${s.slug}`}
+                to={s.page ? createPageUrl(s.page) : `${servicesBase}#${s.slug}`}
                 className="group relative block border-t"
                 style={{ borderColor: 'var(--c4-border)' }}
                 onMouseEnter={() => setActiveIndex(i)}
