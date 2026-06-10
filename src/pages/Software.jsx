@@ -6,6 +6,10 @@ import { createPageUrl } from '@/utils';
 import WaitlistModal from '../components/WaitlistModal';
 import StripeCheckoutModal from '../components/StripeCheckoutModal';
 
+// The C4 suite app — ReviewLoop, Complia, FirmFlow (and ReturnDesk accounts)
+// live here. Paid plans are managed in-app so purchases grant access directly.
+const SUITE_APP_URL = 'https://c4-saas-suite.vercel.app';
+
 // ─── Stripe price IDs (live) ────────────────────────────────────────────────
 // Payment links are the fallback when VITE_STRIPE_PUBLISHABLE_KEY is not set.
 // Embedded checkout is preferred — add the env var to enable it.
@@ -95,36 +99,36 @@ const PRODUCTS = [
   {
     slug: 'reviewloop',
     name: 'ReviewLoop',
-    status: 'Coming Soon',
+    status: 'Live',
     logoUrl: '/Software/ReviewLoop.png',
     logoUrlMinimal: '/Software/reviewloop-minimal.png',
     oneLiner: 'Turn happy jobs into Google reviews.',
     features: [
       'Templated review request emails',
-      'Automated follow-up sequences',
-      'Google Business Profile integration',
+      'Click-tracked review links',
+      'Follow-up reminders built in',
     ],
     tiers: [
       {
         label: 'Starter',
         price: 29,
-        cta: 'waitlist',
-        ctaLabel: 'Join waitlist',
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
         tierFeatures: [
-          'Up to 100 contacts/month',
+          '500 review requests/month',
           'Review request templates',
-          'Email notifications',
+          'Click tracking on review links',
         ],
       },
       {
         label: 'Pro',
         price: 79,
-        cta: 'waitlist',
-        ctaLabel: 'Join waitlist',
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
         tierFeatures: [
-          'Unlimited contacts',
-          'Automated follow-up sequences',
-          'Google Business integration',
+          'Unlimited review requests',
+          'Unlimited templates',
+          'Follow-up queue + tracking',
         ],
       },
     ],
@@ -132,35 +136,35 @@ const PRODUCTS = [
   {
     slug: 'complia',
     name: 'Complia',
-    status: 'Coming Soon',
+    status: 'Live',
     logoUrl: '/Software/Complia.png',
     oneLiner: 'Australian compliance calendar and assistant.',
     features: [
       'BAS, super, and ASIC annual review tracking',
       'Preparation checklists per obligation',
-      'Reminder system built in',
+      'Email reminder delivery built in',
     ],
     tiers: [
       {
         label: 'Pro',
         price: 49,
-        cta: 'waitlist',
-        ctaLabel: 'Join waitlist',
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
         tierFeatures: [
           'BAS and super tracking',
           'Preparation checklists',
-          'Email reminders',
+          'Email reminders before due dates',
         ],
       },
       {
         label: 'Business',
         price: 99,
-        cta: 'waitlist',
-        ctaLabel: 'Join waitlist',
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
         tierFeatures: [
           'Everything in Pro',
-          'Multi-entity support',
-          'Accountant portal access',
+          'Unlimited business profiles',
+          'Priority support',
         ],
       },
     ],
@@ -168,35 +172,35 @@ const PRODUCTS = [
   {
     slug: 'firmflow',
     name: 'FirmFlow',
-    status: 'Coming Soon',
+    status: 'Live',
     logoUrl: '/Software/FirmFlow.png',
     oneLiner: 'AI content engine for professional services.',
     features: [
       'LinkedIn posts, newsletters, client emails',
-      'Source-first content generation',
+      'Source-first AI generation (no invented facts)',
       'Built-in disclaimer and risk controls',
     ],
     tiers: [
       {
         label: 'Pro',
         price: 79,
-        cta: 'waitlist',
-        ctaLabel: 'Join waitlist',
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
         tierFeatures: [
-          '10 pieces of content/month',
-          'LinkedIn + email formats',
-          'Disclaimer templates',
+          'Unlimited content packs',
+          'All five output formats',
+          'Per-industry AI prompts',
         ],
       },
       {
         label: 'Agency',
         price: 199,
-        cta: 'waitlist',
-        ctaLabel: 'Join waitlist',
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
         tierFeatures: [
-          'Unlimited content',
-          'All output formats',
-          'Multi-client management',
+          'Everything in Pro',
+          'Built for multi-client firms',
+          'Priority support',
         ],
       },
     ],
@@ -679,6 +683,18 @@ export default function Software() {
               Every product in the C4 suite started as something we needed ourselves or built for a client.
               C4 Studios visitors get studio pricing — early access at below-market rates.
             </p>
+            <a
+              href={SUITE_APP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 mt-5 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
+              style={{ color: 'var(--c4-text-subtle)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--c4-text)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--c4-text-subtle)'; }}
+            >
+              Already a customer? Open the app
+              <ArrowUpRight size={13} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+            </a>
           </motion.div>
         </div>
       </section>
