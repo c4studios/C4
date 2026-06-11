@@ -238,6 +238,42 @@ const PRODUCTS = [
     ],
   },
   {
+    slug: 'safedraft',
+    name: 'SafeDraft',
+    status: 'Live',
+    logoUrl: '/Software/SafeDraft.svg',
+    oneLiner: 'AI-drafted Safe Work Method Statements.',
+    features: [
+      'Hazards + controls via the hierarchy of controls',
+      'Unknowns marked [CONFIRM ON SITE] — never invented',
+      'Print-ready with worker sign-off table',
+    ],
+    tiers: [
+      {
+        label: 'Starter',
+        price: 49,
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
+        tierFeatures: [
+          '10 SWMS drafts/month',
+          'AI hazards + controls',
+          'Print-ready sign-off sheets',
+        ],
+      },
+      {
+        label: 'Pro',
+        price: 99,
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
+        tierFeatures: [
+          'Unlimited SWMS drafts',
+          'AI hazards + controls',
+          'Priority support',
+        ],
+      },
+    ],
+  },
+  {
     slug: 'firmflow',
     name: 'FirmFlow',
     status: 'Live',
@@ -307,6 +343,7 @@ const LIFETIME_LINKS = {
   quotr: "https://buy.stripe.com/4gM5kDbdm1sU2stcmQ3ZK0f",
   rebook: SUITE_APP_URL,
   crewcheck: SUITE_APP_URL,
+  safedraft: SUITE_APP_URL,
   returndesk: "https://buy.stripe.com/dRmbJ16X68Vmfff4Uo3ZK0h",
   reviewloop: "https://buy.stripe.com/00w28r6X60oQaYZeuY3ZK0i",
   complia: "https://buy.stripe.com/cNibJ1a9i7Ri1op72w3ZK0j",
@@ -318,6 +355,7 @@ const LIFETIME_PRICES = {
   quotr: 1899,
   rebook: 699,
   crewcheck: 1199,
+  safedraft: 1199,
   returndesk: 1199,
   reviewloop: 699,
   complia: 1199,
@@ -551,7 +589,7 @@ function BillingToggle({ period, setPeriod, hasLifetime }) {
   );
 }
 
-const SUITE_SLUGS = ['returndesk', 'reviewloop', 'complia', 'firmflow', 'rebook', 'crewcheck'];
+const SUITE_SLUGS = ['returndesk', 'reviewloop', 'complia', 'firmflow', 'rebook', 'crewcheck', 'safedraft'];
 
 function LifetimeCard({ product }) {
   const price = LIFETIME_PRICES[product.slug];
