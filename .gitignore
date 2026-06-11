@@ -40,5 +40,8 @@ reports/
 # Nested legacy clone of the GitHub repo — not part of this tree
 /C4-main/
 
+# Local app-incubator workspace (Sweep, Handover plans) — separate from the site
+/apps/
+
 # Throwaway local scripts
 /scripts/__*.mjs
