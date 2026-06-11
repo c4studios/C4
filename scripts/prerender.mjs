@@ -60,6 +60,10 @@ const PRODUCT_SLUGS = [
   'returndesk',
   'reviewloop',
   'complia',
+  'rebook',
+  'crewcheck',
+  'safedraft',
+  'nudge',
   'firmflow',
   'c4-command',
 ];
@@ -148,7 +152,22 @@ async function main() {
   const { server, port } = await createStaticServer(DIST);
   const baseUrl = `http://127.0.0.1:${port}`;
 
-  const browser = await chromium.launch({ headless: true });
+  // CI environments (e.g. Cloudflare Pages builds) don't ship Playwright
+  // browser binaries. The SPA still works without prerendered HTML, so
+  // degrade to sitemap-only instead of failing the whole build.
+  let browser;
+  try {
+    browser = await chromium.launch({ headless: true });
+  } catch (err) {
+    console.warn('⚠️  No Playwright browser available — skipping HTML prerender + OG image.');
+    console.warn(`    (${String(err).split('\n')[0]})`);
+    console.log('  ⏳ sitemap.xml');
+    await writeSitemap(path.join(DIST, 'sitemap.xml'));
+    console.log('  ✅ sitemap.xml');
+    server.close();
+    console.log('\n🎉 Sitemap generated; prerender skipped (no browser).');
+    return;
+  }
   const context = await browser.newContext({
     userAgent: 'C4-Prerenderer/1.0',
     viewport: { width: 1280, height: 800 },

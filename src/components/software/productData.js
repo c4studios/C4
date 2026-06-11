@@ -226,6 +226,74 @@ export const PRODUCTS = [
     ctaExternal: true,
   },
   {
+    slug: 'safedraft',
+    name: 'SafeDraft',
+    status: 'Live',
+    logo: '/Software/SafeDraft.svg',
+    logoBg: '#ffffff',
+    oneLiner: 'AI-drafted Safe Work Method Statements.',
+    summary:
+      'SafeDraft turns a plain-English job description into a print-ready Safe Work Method Statement — hazards and controls mapped through the hierarchy of controls, with anything uncertain flagged for confirmation on site rather than invented.',
+    features: [
+      'Hazards + controls via the hierarchy of controls',
+      'Unknowns marked [CONFIRM ON SITE] — never invented',
+      'Print-ready with worker sign-off table',
+      'Built for Australian site requirements',
+    ],
+    highlights: [
+      { stat: 'Minutes', label: 'from job description to SWMS' },
+      { stat: '[CONFIRM]', label: 'flags instead of guesses' },
+      { stat: 'Print-ready', label: 'with sign-off table' },
+    ],
+    problem:
+      'A SWMS is mandatory before high-risk work starts, but writing one properly takes hours — so they get copy-pasted from old jobs and stop reflecting the actual site.',
+    solution:
+      'SafeDraft drafts the document from your actual job description, applies the hierarchy of controls, and marks anything it can’t verify for on-site confirmation — a real starting point, not a template.',
+    tiers: [
+      { label: 'Starter', price: 49 },
+      { label: 'Pro', price: 99 },
+    ],
+    lifetime: { price: 1199, href: SUITE_APP_URL },
+    pricing: 'Starter $49/mo · Pro $99/mo. Start free — paid plans unlock inside the app.',
+    ctaLabel: 'Start free in the app',
+    ctaHref: SUITE_APP_URL,
+    ctaExternal: true,
+  },
+  {
+    slug: 'nudge',
+    name: 'Nudge',
+    status: 'Live',
+    logo: '/Software/Nudge.svg',
+    logoBg: '#ffffff',
+    oneLiner: 'Polite, escalating invoice reminders.',
+    summary:
+      'Nudge chases outstanding invoices so you don’t have to — friendly at 3 days, firm at 10, final at 21 — and stops the moment you mark an invoice paid.',
+    features: [
+      'Friendly at 3 days, firm at 10, final at 21',
+      'Stops the moment you mark it paid',
+      'Payment details in every email',
+      'Automatic chasing, zero awkwardness',
+    ],
+    highlights: [
+      { stat: '3/10/21', label: 'day escalation sequence' },
+      { stat: 'Auto-stop', label: 'when marked paid' },
+      { stat: 'Faster', label: 'payment without the chase' },
+    ],
+    problem:
+      'Late invoices are awkward to chase, so most small businesses just… don’t. The cash sits in someone else’s account while the follow-up email stays unwritten.',
+    solution:
+      'Nudge sends the reminders on a polite-but-firm schedule with payment details in every email, and backs off instantly when the invoice is settled.',
+    tiers: [
+      { label: 'Starter', price: 29 },
+      { label: 'Pro', price: 59 },
+    ],
+    lifetime: { price: 699, href: SUITE_APP_URL },
+    pricing: 'Starter $29/mo · Pro $59/mo. Start free — paid plans unlock inside the app.',
+    ctaLabel: 'Start free in the app',
+    ctaHref: SUITE_APP_URL,
+    ctaExternal: true,
+  },
+  {
     slug: 'firmflow',
     name: 'FirmFlow',
     status: 'Live',
