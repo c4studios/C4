@@ -32,6 +32,7 @@ export default function TypedHeading({
   pauseTime = DEFAULT_PAUSE_TIME,
   startDelay = DEFAULT_START_DELAY,
   stopAtLastLine = false,
+  onLineChange,
 }) {
   const safeLines = useMemo(() => lines.filter(Boolean), [lines]);
   const firstLine = safeLines[0] || '';
@@ -51,6 +52,10 @@ export default function TypedHeading({
     setDisplayed(animateTyping ? '' : firstLine);
     setPhase(animateTyping ? 'typing' : 'idle');
   }, [animateTyping, firstLine]);
+
+  useEffect(() => {
+    if (typeof onLineChange === 'function') onLineChange(lineIndex);
+  }, [lineIndex, onLineChange]);
 
   useLayoutEffect(() => {
     const root = measureRef.current;

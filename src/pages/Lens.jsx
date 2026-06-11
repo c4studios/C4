@@ -1,4 +1,4 @@
-﻿/**
+/**
  * C4 Lens — v4: Proper polygon-based aperture system
  *
  * CORE FIX: Replaced individual blade-path rotation (which overflowed the barrel)
@@ -234,6 +234,7 @@ export default function Lens() {
     const tickFlash = document.getElementById('tickFlash');
     const shutterFlash = document.getElementById('shutterFlash');
     const gridOverlay = document.getElementById('gridOverlay');
+    const lensFlare = document.getElementById('lensFlare');
     const hudF = document.getElementById('hudF');
     const hudShutter = document.getElementById('hudShutter');
     const hudIso = document.getElementById('hudIso');
@@ -285,6 +286,16 @@ export default function Lens() {
     };
     window.addEventListener('scroll', onHeroScroll, { passive: true });
 
+    /* Mouse parallax — subtle lens tilt, fine pointers only */
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+    let plxX = 0, plxY = 0, plxTX = 0, plxTY = 0;
+    const onLensParallax = (e) => {
+      plxTX = e.clientX / window.innerWidth - 0.5;
+      plxTY = e.clientY / window.innerHeight - 0.5;
+    };
+    if (finePointer && !prefersReduced) document.addEventListener('mousemove', onLensParallax, { passive: true });
+
     let lastTickStep = -1, lastMs = performance.now();
     let shutterFired = false;
     let heroRafId;
@@ -335,10 +346,21 @@ export default function Lens() {
       /* ── APERTURE: update polygon-based blade system ── */
       updateAperture(bladeProgress);
 
-      /* Lens dolly — very subtle zoom as it "focuses" */
+      /* Lens dolly — very subtle zoom as it "focuses" + mouse-parallax tilt */
       const breath = Math.sin(now / 3000) * 0.002;
       const lensScale = 1 + bladeProgress * 0.04;
-      if (lensWrap) lensWrap.style.transform = `scale(${(lensScale + breath).toFixed(5)}) translateZ(0)`;
+      plxX = lerp(plxX, plxTX, 0.05);
+      plxY = lerp(plxY, plxTY, 0.05);
+      const tiltX = (-plxY * 3.4 * mScale).toFixed(3);
+      const tiltY = (plxX * 3.8 * mScale).toFixed(3);
+      if (lensWrap) lensWrap.style.transform = `scale(${(lensScale + breath).toFixed(5)}) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(0)`;
+
+      /* Anamorphic flare — bright while the aperture is open, dies as it closes */
+      if (lensFlare) {
+        const flareO = Math.max(0, (1 - bladeProgress) * 0.16 + Math.sin(now / 2400) * 0.02);
+        lensFlare.style.opacity = flareO.toFixed(3);
+        lensFlare.style.transform = `translate(calc(-50% + ${(plxX * -30).toFixed(1)}px), -50%)`;
+      }
 
       /* Glass layer: NO opacity change — blades must stay fully opaque */
 
@@ -375,7 +397,7 @@ export default function Lens() {
       if (hudIso) hudIso.textContent = Math.round(400 + bladeProgress * 800);
       if (hudWb) hudWb.textContent = `${Math.round(5600 - bladeProgress * 400)}K`;
       if (hudFocal) hudFocal.textContent = ['35mm', '50mm', '85mm', '105mm', '135mm'][Math.min(4, Math.floor(bladeProgress * 5))];
-      if (hudFocus) hudFocus.textContent = t > 0.94 ? 'LOCKED · â—' : `MANUAL · ${(0.5 + bladeProgress * 4.5).toFixed(1)}M`;
+      if (hudFocus) hudFocus.textContent = t > 0.94 ? 'LOCKED · ●' : `MANUAL · ${(0.5 + bladeProgress * 4.5).toFixed(1)}M`;
       if (hudFrame) hudFrame.textContent = `${String(Math.round(1 + rawT * 419)).padStart(3, '0')} / 420`;
       if (hudTc) {
         const tcS = Math.floor(now / 1000);
@@ -938,6 +960,7 @@ export default function Lens() {
     const pfOuter = document.getElementById('portfolioOuter');
     const pfTrack = document.getElementById('pfTrack');
     const pfBar = document.getElementById('pfBar');
+    const pfCount = document.getElementById('pfCount');
     function sizePortfolio() {
       if (!pfTrack || !pfOuter) return;
       const travel = Math.max(0, pfTrack.scrollWidth - window.innerWidth);
@@ -951,11 +974,59 @@ export default function Lens() {
       const t2 = total > 0 ? scrolled / total : 0;
       pfTrack.style.transform = `translateX(${-t2 * Math.max(0, pfTrack.scrollWidth - window.innerWidth)}px)`;
       pfBar.style.width = `${t2 * 100}%`;
+      if (pfCount) {
+        const nCards = pfTrack.children.length;
+        const cur = 1 + Math.round(t2 * (nCards - 1));
+        pfCount.textContent = `FRAME ${String(cur).padStart(2, '0')} / ${String(nCards).padStart(2, '0')}`;
+      }
     }
     window.addEventListener('scroll', onPfScroll, { passive: true });
     const onResize = () => { sizePortfolio(); onPfScroll(); };
     window.addEventListener('resize', onResize);
     requestAnimationFrame(() => { sizePortfolio(); onPfScroll(); });
+
+    /* â•â•â•â•â•â•â•â•â•â•â• SCROLL REVEALS + STAT COUNT-UP â•â•â•â•â•â•â•â•â•â•â• */
+    const revealEls = document.querySelectorAll('.lens-page .lr');
+    let revealIO = null;
+    if (prefersReduced) {
+      revealEls.forEach(el => el.classList.add('in'));
+    } else {
+      revealIO = new IntersectionObserver((entries) => {
+        entries.forEach(en => {
+          if (en.isIntersecting) {
+            en.target.classList.add('in');
+            revealIO.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -7% 0px' });
+      revealEls.forEach(el => revealIO.observe(el));
+    }
+
+    function animateCount(el) {
+      const to = parseFloat(el.dataset.to || '0');
+      const prefix = el.dataset.prefix || '';
+      const t0 = performance.now();
+      const dur = 1500;
+      const tick = (now) => {
+        const p = clamp((now - t0) / dur, 0, 1);
+        el.textContent = prefix + Math.round(eoc(p) * to);
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+    let statIO = null;
+    const statsRowEl = document.querySelector('.lens-page .stats-row');
+    if (statsRowEl && !prefersReduced) {
+      statIO = new IntersectionObserver((entries) => {
+        entries.forEach(en => {
+          if (en.isIntersecting) {
+            en.target.querySelectorAll('.cnt').forEach(animateCount);
+            statIO.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0.35 });
+      statIO.observe(statsRowEl);
+    }
 
     /* â•â•â•â•â•â•â•â•â•â•â• CURSOR â•â•â•â•â•â•â•â•â•â•â• */
     const reticle = document.getElementById('reticle');
@@ -1002,6 +1073,9 @@ export default function Lens() {
       window.removeEventListener('scroll', onPfScroll);
       window.removeEventListener('resize', onResize);
       document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mousemove', onLensParallax);
+      if (revealIO) revealIO.disconnect();
+      if (statIO) statIO.disconnect();
       document.removeEventListener('click', onAudioInit);
       if (togCursor) togCursor.removeEventListener('click', onTogC);
       if (togTicks) togTicks.removeEventListener('click', onTogT);
@@ -1449,6 +1523,9 @@ export default function Lens() {
 
               <div className="tick-flash" id="tickFlash"></div>
             </div>
+
+            {/* Anamorphic glass flare — driven by scroll engine */}
+            <div className="lens-flare" id="lensFlare" aria-hidden="true"></div>
           </div>
 
           {/* Shutter flash overlay */}
@@ -1490,12 +1567,12 @@ export default function Lens() {
       {/* â•â•â•â•â•â•â•â• WHAT WE CAPTURE — full-viewport paint canvas â•â•â•â•â•â•â•â• */}
       <section className="capture" id="capture">
         <div className="cap-inner">
-          <div className="cap-header">
+          <div className="cap-header lr">
             <div className="sec-num"><span className="bar"></span>§ 01 — WHAT WE CAPTURE</div>
             <div className="cap-kicker">We don&rsquo;t photograph<br /><em>businesses.</em></div>
           </div>
 
-          <div className="cap-stmt">
+          <div className="cap-stmt lr" style={{ '--lr-delay': '120ms' }}>
             <div className="cap-stmt-fixed">
               <span className="cap-stmt-label">We exist to capture the</span>
               <div className="word-stage" id="wordStage">
@@ -1506,42 +1583,42 @@ export default function Lens() {
             </div>
           </div>
 
-          <div className="stats-row">
-            <div className="stat"><div className="num">50<em>+</em></div><div className="lbl">Australian Businesses</div></div>
-            <div className="stat"><div className="num">200<em>+</em></div><div className="lbl">Assets Delivered</div></div>
-            <div className="stat"><div className="num">&lt;7</div><div className="lbl">Days Turnaround</div></div>
-            <div className="stat"><div className="num">100<em>%</em></div><div className="lbl">Australian-Based</div></div>
+          <div className="stats-row lr" style={{ '--lr-delay': '160ms' }}>
+            <div className="stat"><div className="num"><span className="cnt" data-to="50">50</span><em>+</em></div><div className="lbl">Australian Businesses</div></div>
+            <div className="stat"><div className="num"><span className="cnt" data-to="200">200</span><em>+</em></div><div className="lbl">Assets Delivered</div></div>
+            <div className="stat"><div className="num"><span className="cnt" data-to="7" data-prefix="<">&lt;7</span></div><div className="lbl">Days Turnaround</div></div>
+            <div className="stat"><div className="num"><span className="cnt" data-to="100">100</span><em>%</em></div><div className="lbl">Australian-Based</div></div>
           </div>
         </div>
       </section>
 
       {/* â•â•â•â•â•â•â•â• SERVICES â•â•â•â•â•â•â•â• */}
       <section className="slab dark" id="services">
-        <div className="sec-num"><span className="bar"></span>§ 02 — HOW WE WORK</div>
-        <h2>FOUR WAYS<br />TO BE <em>unforgettable.</em></h2>
+        <div className="sec-num lr"><span className="bar"></span>§ 02 — HOW WE WORK</div>
+        <h2 className="lr" style={{ '--lr-delay': '80ms' }}>FOUR WAYS<br />TO BE <em>unforgettable.</em></h2>
         <div className="svc-grid">
-          <div className="svc-card">
+          <div className="svc-card lr lr-fade">
             <div className="svc-tag">Photography</div>
             <h3>REPLACE STOCK<br />WITH PROOF.</h3>
             <div className="svc-tagline">&ldquo;Real beats perfect.&rdquo;</div>
             <div className="desc">Team portraits that carry weight. Workspace environments that tell your story. Product imagery that converts. Headshots that feel like you — not a LinkedIn template.</div>
             <div className="svc-foot">f/1.4 · STILLS · RAW + EDITED</div>
           </div>
-          <div className="svc-card">
+          <div className="svc-card lr lr-fade" style={{ '--lr-delay': '90ms' }}>
             <div className="svc-tag">Videography</div>
             <h3>MOTION THAT<br />EARNS ATTENTION.</h3>
             <div className="svc-tagline">&ldquo;Every second must earn its place.&rdquo;</div>
             <div className="desc">Brand films that stop the scroll. Social content that converts. Event coverage that endures. Founder pieces that humanise the person behind the business.</div>
             <div className="svc-foot">4K · 24P · CINEMATIC</div>
           </div>
-          <div className="svc-card">
+          <div className="svc-card lr lr-fade" style={{ '--lr-delay': '180ms' }}>
             <div className="svc-tag">Drone &amp; Aerial</div>
             <h3>THE PERSPECTIVE<br />THEY&rsquo;VE NEVER SEEN.</h3>
             <div className="svc-tagline">&ldquo;Scale that no phone can fake.&rdquo;</div>
             <div className="desc">Licensed drone work capturing locations, events, and construction that demand context. A perspective most brands never think to show — until they see it.</div>
             <div className="svc-foot">LICENSED · 4K · AERIAL</div>
           </div>
-          <div className="svc-card">
+          <div className="svc-card lr lr-fade" style={{ '--lr-delay': '270ms' }}>
             <div className="svc-tag">Post-Production</div>
             <h3>CUT FOR THE<br />PLATFORM.</h3>
             <div className="svc-tagline">&ldquo;Footage is a rough draft.&rdquo;</div>
@@ -1553,10 +1630,10 @@ export default function Lens() {
 
       {/* â•â•â•â•â•â•â•â• PACKAGES â•â•â•â•â•â•â•â• */}
       <section className="slab mid" id="packages">
-        <div className="sec-num"><span className="bar"></span>§ 03 — PACKAGES &amp; PRICING</div>
-        <h2>CLEAR SCOPE.<br /><em>No surprises.</em></h2>
+        <div className="sec-num lr"><span className="bar"></span>§ 03 — PACKAGES &amp; PRICING</div>
+        <h2 className="lr" style={{ '--lr-delay': '80ms' }}>CLEAR SCOPE.<br /><em>No surprises.</em></h2>
         <div className="pkg-grid">
-          <div className="pkg-card">
+          <div className="pkg-card lr lr-fade">
             <div className="pkg-id">PKG — 01</div>
             <h3>CORE</h3>
             <div className="pkg-price"><span className="cur">$</span>200</div>
@@ -1571,7 +1648,7 @@ export default function Lens() {
               <Link to={createPageUrl('StartProject') + '?service=lens&package=mini-session'} className="btn">Select <span className="btn-arrow">→</span></Link>
             </div>
           </div>
-          <div className="pkg-card">
+          <div className="pkg-card lr lr-fade" style={{ '--lr-delay': '80ms' }}>
             <div className="pkg-id">PKG — 02</div>
             <h3>PORTRAIT SESSION</h3>
             <div className="pkg-price"><span className="cur">$</span>350</div>
@@ -1586,7 +1663,7 @@ export default function Lens() {
               <Link to={createPageUrl('StartProject') + '?service=lens&package=portrait'} className="btn">Select <span className="btn-arrow">→</span></Link>
             </div>
           </div>
-          <div className="pkg-card pop">
+          <div className="pkg-card pop lr lr-fade" style={{ '--lr-delay': '160ms' }}>
             <div className="pop-badge">★ Most Popular</div>
             <div className="pkg-id">PKG — 03</div>
             <h3>BUSINESS BRANDING</h3>
@@ -1603,7 +1680,7 @@ export default function Lens() {
               <Link to={createPageUrl('StartProject') + '?service=lens&package=business-branding'} className="btn primary">Select <span className="btn-arrow">→</span></Link>
             </div>
           </div>
-          <div className="pkg-card">
+          <div className="pkg-card lr lr-fade" style={{ '--lr-delay': '240ms' }}>
             <div className="pkg-id">PKG — 04</div>
             <h3>CONTENT CREATION</h3>
             <div className="pkg-price"><span className="cur">$</span>1,200</div>
@@ -1619,7 +1696,7 @@ export default function Lens() {
               <Link to={createPageUrl('StartProject') + '?service=lens&package=content-creation'} className="btn">Select <span className="btn-arrow">→</span></Link>
             </div>
           </div>
-          <div className="pkg-card">
+          <div className="pkg-card lr lr-fade" style={{ '--lr-delay': '320ms' }}>
             <div className="pkg-id">PKG — 05</div>
             <h3>FULL PRODUCTION</h3>
             <div className="pkg-price"><span className="cur">$</span>2,500<span style={{ fontSize: '.38em', color: 'var(--ink-3)', fontFamily: "'Geist Mono', monospace" }}>+</span></div>
@@ -1637,7 +1714,7 @@ export default function Lens() {
             </div>
           </div>
         </div>
-        <div className="pkg-note">
+        <div className="pkg-note lr">
           <strong>All prices exclude GST.</strong> Starting prices based on defined scope — if scope changes, we communicate immediately and pause until revised pricing is agreed. No surprises.<br />
           Professional services (legal, financial, medical) may incur a 15–20% surcharge — discussed during your discovery call.
         </div>
@@ -1646,7 +1723,7 @@ export default function Lens() {
       {/* â•â•â•â•â•â•â•â• CALEB — WITH PHOTO â•â•â•â•â•â•â•â• */}
       <section className="slab dark caleb" id="caleb">
         <div className="caleb-inner">
-          <div className="caleb-left">
+          <div className="caleb-left lr lr-wipe">
             <div className="caleb-photo-wrap">
               <img
                 src="/Caleb%20Walker%20-%20C4%20Lens%20Profile.jpeg"
@@ -1660,16 +1737,16 @@ export default function Lens() {
             </div>
           </div>
           <div className="caleb-right">
-            <div className="sec-num"><span className="bar"></span>§ 04 — THE PHOTOGRAPHER</div>
-            <h2>CALEB<br /><em>Walker.</em></h2>
-            <blockquote className="caleb-quote">&ldquo;If the brand has weight,<br />the visuals should too.&rdquo;</blockquote>
-            <p>Caleb leads C4 Lens — the photography, videography, and editing arm of C4 Studios. From commercial brand shoots and corporate headshots to events and social content, he brings a <strong>considered, story-first approach</strong> to every frame.</p>
-            <p>His drone work captures perspectives most businesses never think to show. His editing transforms raw footage into polished brand films, reels, and launch content that <strong>actually converts</strong>.</p>
-            <p>Australian businesses trust Caleb to replace stock imagery with visual proof — the kind of content that makes clients feel like they already know you before the first conversation.</p>
-            <p style={{ marginTop: '28px', paddingTop: '24px', borderTop: '1px solid var(--line)', fontFamily: "'Geist Mono', monospace", fontSize: '10px', letterSpacing: '.22em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
+            <div className="sec-num lr"><span className="bar"></span>§ 04 — THE PHOTOGRAPHER</div>
+            <h2 className="lr" style={{ '--lr-delay': '70ms' }}>CALEB<br /><em>Walker.</em></h2>
+            <blockquote className="caleb-quote lr" style={{ '--lr-delay': '140ms' }}>&ldquo;If the brand has weight,<br />the visuals should too.&rdquo;</blockquote>
+            <p className="lr" style={{ '--lr-delay': '200ms' }}>Caleb leads C4 Lens — the photography, videography, and editing arm of C4 Studios. From commercial brand shoots and corporate headshots to events and social content, he brings a <strong>considered, story-first approach</strong> to every frame.</p>
+            <p className="lr" style={{ '--lr-delay': '250ms' }}>His drone work captures perspectives most businesses never think to show. His editing transforms raw footage into polished brand films, reels, and launch content that <strong>actually converts</strong>.</p>
+            <p className="lr" style={{ '--lr-delay': '300ms' }}>Australian businesses trust Caleb to replace stock imagery with visual proof — the kind of content that makes clients feel like they already know you before the first conversation.</p>
+            <p className="lr" style={{ '--lr-delay': '350ms', marginTop: '28px', paddingTop: '24px', borderTop: '1px solid var(--line)', fontFamily: "'Geist Mono', monospace", fontSize: '10px', letterSpacing: '.22em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
               Based in Perth, W.A. · Available nationally
             </p>
-            <div style={{ marginTop: '24px' }}>
+            <div className="lr" style={{ '--lr-delay': '400ms', marginTop: '24px' }}>
               <a href="#contact" className="btn primary"><span className="d"></span>Work with Caleb <span className="btn-arrow">→</span></a>
             </div>
           </div>
@@ -1684,6 +1761,7 @@ export default function Lens() {
             <span>PERTH, W.A. · 2024–2026</span>
           </div>
           <div className="pf-hint">↑ SCROLL TO PAN →</div>
+          <div className="pf-count" id="pfCount">FRAME 01 / 07</div>
           <div className="pf-track" id="pfTrack">
             <div className="pf-card wide"><video src="/DSR%20header.mp4" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">01 · DSR</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">DS RACING KARTS</div><div className="cat">SITE HEADERS / LOGO ANIMATION</div></div></div>
             <div className="pf-card wide"><video src="/hvn.mp4" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">02 · HVN</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">HVN</div><div className="cat">FULL SHOW / DRONE WORK</div></div></div>
@@ -1698,12 +1776,28 @@ export default function Lens() {
       </div>
 
       <section className="cta-section" id="contact">
-        <div style={{ fontFamily: "'Geist Mono', monospace", fontSize: '10px', letterSpacing: '.3em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: '24px' }}>
-          § 06 — LET&rsquo;S MAKE SOMETHING
-        </div>
-        <h2>READY TO BE<br /><em>seen</em>?</h2>
-        <div className="sub">We take on a limited number of clients each quarter. Tell Caleb about your project — he&rsquo;ll reply within 48 hours.</div>
-        <div className="cta-btns">
+        {/* Rotating iris watermark */}
+        <svg className="cta-iris" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+          <circle cx="100" cy="100" r="97" stroke="rgba(245,245,240,.55)" strokeWidth=".4" />
+          <circle cx="100" cy="100" r="84" stroke="rgba(245,245,240,.35)" strokeWidth=".35" />
+          <circle cx="100" cy="100" r="30" stroke="rgba(232,166,88,.6)" strokeWidth=".45" />
+          {Array.from({ length: 9 }).map((_, i) => {
+            const a0 = (i * 40) * Math.PI / 180;
+            const a1 = (i * 40 + 128) * Math.PI / 180;
+            return (
+              <line
+                key={i}
+                x1={(100 + Math.cos(a0) * 84).toFixed(1)} y1={(100 + Math.sin(a0) * 84).toFixed(1)}
+                x2={(100 + Math.cos(a1) * 84).toFixed(1)} y2={(100 + Math.sin(a1) * 84).toFixed(1)}
+                stroke="rgba(232,166,88,.5)" strokeWidth=".4"
+              />
+            );
+          })}
+        </svg>
+        <div className="sec-num lr"><span className="bar"></span>§ 06 — LET&rsquo;S MAKE SOMETHING</div>
+        <h2 className="lr" style={{ '--lr-delay': '80ms' }}>READY TO BE<br /><em>seen</em>?</h2>
+        <div className="sub lr" style={{ '--lr-delay': '150ms' }}>We take on a limited number of clients each quarter. Tell Caleb about your project — he&rsquo;ll reply within 48 hours.</div>
+        <div className="cta-btns lr" style={{ '--lr-delay': '220ms' }}>
           <Link to={createPageUrl('StartProject') + '?service=lens'} className="btn primary">
             <span className="d"></span>Get in touch <span className="btn-arrow">→</span>
           </Link>

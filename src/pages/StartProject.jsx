@@ -17,6 +17,8 @@ import FileUpload from '../components/c4/FileUpload';
 import SubmissionSuccess from '@/components/c4/SubmissionSuccess';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
 import SubmitButton from '@/components/c4/SubmitButton';
+import useDocumentHead from '@/hooks/useDocumentHead';
+import { breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -164,6 +166,17 @@ export default function StartProject() {
   const prePricing = searchParams.get('pricing') || '';
   const loadedAt = useRef(Date.now());
   const turnstileToken = useRef(null);
+
+  useDocumentHead({
+    title: 'Start a Project — Brief C4 Studios',
+    description:
+      'Tell us about your project — website, AI automation, brand, or photography. Send a brief and the studio replies directly.',
+    path: '/start',
+    jsonLd: breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Start a project', path: '/start' },
+    ]),
+  });
 
   // Build rich prefilled description from the selected package
   const preDescription = prePackage && preService

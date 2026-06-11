@@ -23,6 +23,10 @@ const DARK_PALETTES = [
 ];
 
 const isDarkMode = () => document.documentElement.classList.contains('dark-mode');
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const pickFrom = (rng, arr) => arr[Math.floor(rng() * arr.length) % arr.length];
 
 const hexToRgb = (hex) => {
@@ -218,14 +222,16 @@ function CanvasHeatmap() {
     const dt = Math.min(0.05, (ts - stateRef.current.last) / 1000); // clamp for stability
     stateRef.current.last = ts;
 
+    const reduced = prefersReducedMotion();
+
     // Ambient drift for mobile
-    if (isMobile) {
+    if (!reduced && isMobile) {
       stateRef.current.driftT += dt;
       const t = stateRef.current.driftT;
       const ax = (grid.cols / 2) + Math.sin(t * 0.6) * (grid.cols * 0.25) + Math.sin(t * 0.23) * (grid.cols * 0.1);
       const ay = (grid.rows / 2) + Math.cos(t * 0.45) * (grid.rows * 0.22) + Math.cos(t * 0.17) * (grid.rows * 0.08);
       activateAt(ax * grid.cell, ay * grid.cell);
-    } else {
+    } else if (!reduced) {
       // Desktop idle breathing — subtle pulse when cursor is idle
       stateRef.current.idleT += dt;
       const idle = stateRef.current.idleT;
@@ -303,7 +309,9 @@ function CanvasHeatmap() {
     ctx.globalAlpha = 1;
 
     ctx.restore();
-    rafRef.current = requestAnimationFrame(loop);
+    // When the visitor prefers reduced motion, render a single static
+    // frame and stop the animation loop entirely.
+    if (!reduced) rafRef.current = requestAnimationFrame(loop);
   }
 
   useEffect(() => {
@@ -318,7 +326,7 @@ function CanvasHeatmap() {
 
     // Pointer interactions (desktop)
     const onPointerMove = (e) => {
-      if (stateRef.current.isMobile) return;
+      if (stateRef.current.isMobile || prefersReducedMotion()) return;
       if (e.pointerType === 'mouse' || e.pointerType === 'pen') {
         stateRef.current.idleT = 0; // reset idle breathing on interaction
         activateAt(e.clientX, e.clientY);
@@ -566,8 +574,10 @@ function FirefoxHeatmap() {
         );
         stateRef.current.last = ts;
 
+        const reducedFx = prefersReducedMotion();
+
         // Mobile ambient drift
-        if (stateRef.current.isMobile) {
+        if (!reducedFx && stateRef.current.isMobile) {
           stateRef.current.driftT += dt;
           const t = stateRef.current.driftT;
           const ax =
@@ -575,7 +585,7 @@ function FirefoxHeatmap() {
           const ay =
             rows / 2 + Math.cos(t * 0.45) * (rows * 0.22) + Math.cos(t * 0.17) * (rows * 0.08);
           activateLocal(ax * cell, ay * cell);
-        } else {
+        } else if (!reducedFx) {
           // Desktop idle breathing
           stateRef.current.idleT += dt;
           const idle = stateRef.current.idleT;
@@ -661,7 +671,7 @@ function FirefoxHeatmap() {
 
     // Pointer listeners
     const onPointerMove = (e) => {
-      if (stateRef.current.isMobile) return;
+      if (stateRef.current.isMobile || prefersReducedMotion()) return;
       if (e.pointerType === 'mouse' || e.pointerType === 'pen') {
         stateRef.current.idleT = 0;
         gridState?.activateAt(e.clientX, e.clientY);

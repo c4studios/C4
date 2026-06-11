@@ -9,6 +9,19 @@
  */
 import React, { useRef, useEffect, useState } from 'react';
 
+/**
+ * Detect a "fine pointer with hover" device — desktop with a real mouse.
+ * Anything else (phone, tablet, touchscreen laptop without a mouse plugged in)
+ * doesn't get the custom cursor; it serves no purpose and gets in the way.
+ */
+function isDesktopPointer() {
+  if (typeof window === 'undefined' || !window.matchMedia) return true;
+  return (
+    window.matchMedia('(hover: hover)').matches &&
+    window.matchMedia('(pointer: fine)').matches
+  );
+}
+
 export default function MagneticCursor() {
   const dotRef = useRef(null);
   const ringRef = useRef(null);
@@ -16,13 +29,27 @@ export default function MagneticCursor() {
   const ring = useRef({ x: -100, y: -100, vx: 0, vy: 0 });
   const [visible, setVisible] = useState(false);
   const [hoverState, setHoverState] = useState('default'); // 'default' | 'link' | 'accent'
-  const isTouch = useRef(false);
+  const [enabled, setEnabled] = useState(() =>
+    typeof window === 'undefined' ? false : isDesktopPointer()
+  );
+
+  // Keep enabled state honest if the device changes capabilities
+  // (e.g. user plugs in a mouse, rotates an iPad, etc.).
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
+    const hoverMq = window.matchMedia('(hover: hover)');
+    const pointerMq = window.matchMedia('(pointer: fine)');
+    const refresh = () => setEnabled(isDesktopPointer());
+    hoverMq.addEventListener?.('change', refresh) ?? hoverMq.addListener?.(refresh);
+    pointerMq.addEventListener?.('change', refresh) ?? pointerMq.addListener?.(refresh);
+    return () => {
+      hoverMq.removeEventListener?.('change', refresh) ?? hoverMq.removeListener?.(refresh);
+      pointerMq.removeEventListener?.('change', refresh) ?? pointerMq.removeListener?.(refresh);
+    };
+  }, []);
 
   useEffect(() => {
-    if ('ontouchstart' in window && !window.matchMedia('(pointer: fine)').matches) {
-      isTouch.current = true;
-      return;
-    }
+    if (!enabled) return undefined;
 
     // Hide default cursor only within the lens page
     const lensPage = document.querySelector('.lens-page');
@@ -129,9 +156,9 @@ export default function MagneticCursor() {
         });
       }
     };
-  }, [visible, hoverState]);
+  }, [enabled, visible, hoverState]);
 
-  if (isTouch.current) return null;
+  if (!enabled) return null;
 
   return (
     <>

@@ -10,16 +10,10 @@
                  mount so the iframe doesn't reload mid-form)
      - live:     postMessage({ type: 'quotr-theme', mode, accent })
                  to the iframe whenever the site theme toggles
-
-   The brand accent is read from the live --c4-accent CSS variable so
-   it always matches the resolved theme.
    ────────────────────────────────────────────────────────── */
 
 const QUOTR_ORIGIN = 'https://quotr.us';
 
-// Brand accent tokens, mirrored from ThemeContext (--c4-accent). Used
-// directly rather than read via getComputedStyle so the value is correct
-// even on the very first render, before the theme tokens are applied.
 const ACCENT_LIGHT = '#C23030';
 const ACCENT_DARK = '#B33A3A';
 

@@ -5,6 +5,8 @@ import { submitSupportRequest } from '@/api/submissions';
 import SubmissionSuccess from '@/components/c4/SubmissionSuccess';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
 import SubmitButton from '@/components/c4/SubmitButton';
+import useDocumentHead from '@/hooks/useDocumentHead';
+import { breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -196,6 +198,17 @@ function FaqItem({ question, answer }) {
 export default function Support() {
   const loadedAt = useRef(Date.now());
   const turnstileToken = useRef(null);
+
+  useDocumentHead({
+    title: 'Support — Contact C4 Studios',
+    description:
+      'Get in touch with C4 Studios for support, website help, project follow-ups or general questions. We respond directly, usually within a business day.',
+    path: '/Support',
+    jsonLd: breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Support', path: '/Support' },
+    ]),
+  });
 
   /* ── form state ── */
   const [form, setForm] = useState({

@@ -9,52 +9,36 @@ const ease = [0.22, 1, 0.36, 1];
 const services = [
   {
     number: 'C1',
-    slug: 'web',
-    title: 'Web Design & Development',
-    brief: 'Custom websites, web apps, and full-stack builds — designed to convert, built to perform.',
+    key: 'web',
+    page: 'ServiceWeb',
+    title: 'Web & Applications',
+    brief: 'Custom websites, web apps, SaaS platforms, and full-stack rebuilds — designed to convert, built to perform.',
   },
   {
     number: 'C2',
-    slug: 'automation',
-    title: 'AI Automation',
-    brief: 'Lead pipelines, document automation, and workflow orchestration that runs while you sleep.',
+    key: 'brand',
+    page: 'ServiceBrand',
+    title: 'Brand & Growth',
+    brief: 'Branding, identity systems, SEO, social media, and growth strategy — everything your brand needs to rank and resonate.',
   },
   {
     number: 'C3',
-    slug: 'software',
-    page: 'Software',
-    title: 'Software Products',
-    brief: 'Off-the-shelf SaaS tools for Australian service businesses — from quote calculators to compliance calendars.',
+    key: 'ai',
+    page: 'ServiceAI',
+    title: 'AI & Software',
+    brief: 'Workflow automation, AI agents, custom integrations, and lean software replacements that compound over time.',
   },
   {
     number: 'C4',
-    slug: 'branding',
-    title: 'Branding',
-    brief: 'Logo design, brand systems, and visual identity built to work across web, print, and social.',
-  },
-  {
-    number: 'C5',
-    slug: 'seo',
-    title: 'SEO',
-    brief: 'Technical SEO, local search, and content strategy for Perth and Australian businesses.',
-  },
-  {
-    number: 'C6',
-    slug: 'lens',
-    title: 'C4 Lens',
-    brief: 'Commercial photography and videography for brands that want every visual handled with precision.',
-  },
-  {
-    number: 'C7',
-    slug: 'c4sight',
-    title: 'C4Sight — AI Training',
-    brief: 'Workplace AI literacy workshops — practical, hands-on, and built for your team\'s actual tools.',
+    key: 'lens',
+    page: 'Lens',
+    title: 'Photography',
+    brief: 'Professional photography and videography for brands that want every visual handled with precision and intent.',
   },
 ];
 
 export default function ServicesPreview() {
   const [activeIndex, setActiveIndex] = useState(null);
-  const servicesBase = createPageUrl('Services');
 
   return (
     <section className="py-20 md:py-28">
@@ -62,16 +46,16 @@ export default function ServicesPreview() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
+          viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.5, ease }}
           className="flex justify-between items-baseline mb-12 md:mb-16"
         >
           <div>
             <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>Services</h2>
-            <p className="mt-1 text-[12px] font-medium tracking-[-0.01em]" style={{ color: 'var(--c4-text-faint)' }}>Seven disciplines. One studio.</p>
+            <p className="mt-1 text-[12px] font-medium tracking-[-0.01em]" style={{ color: 'var(--c4-text-faint)' }}>Four pillars. One studio.</p>
           </div>
           <Link
-            to={servicesBase}
+            to={createPageUrl('Services')}
             className="text-[11px] uppercase tracking-[0.2em] font-medium transition-colors duration-300"
             style={{ color: 'var(--c4-text-subtle)' }}
           >
@@ -86,17 +70,17 @@ export default function ServicesPreview() {
               role="listitem"
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-30px' }}
-              transition={{ duration: 0.55, delay: i * 0.05, ease }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 0.55, delay: i * 0.06, ease }}
             >
               <Link
-                to={s.page ? createPageUrl(s.page) : `${servicesBase}#${s.slug}`}
+                to={createPageUrl(s.page)}
                 className="group relative block border-t"
                 style={{ borderColor: 'var(--c4-border)' }}
                 onMouseEnter={() => setActiveIndex(i)}
                 onMouseLeave={() => setActiveIndex(null)}
               >
-                {/* Hover background */}
+                {/* Hover background — subtle depth */}
                 <motion.div
                   className="absolute -inset-x-3 md:-inset-x-6 inset-y-0 rounded-sm pointer-events-none"
                   style={{ backgroundColor: 'var(--c4-bg-alt)' }}
@@ -119,7 +103,9 @@ export default function ServicesPreview() {
                   <motion.h3
                     className="col-span-10 md:col-span-3 text-[1.05rem] md:text-[1.15rem] font-semibold tracking-[-0.01em]"
                     style={{ color: 'var(--c4-text)' }}
-                    animate={{ x: activeIndex === i ? 3 : 0 }}
+                    animate={{
+                      x: activeIndex === i ? 3 : 0,
+                    }}
                     transition={{ duration: 0.3, ease }}
                   >
                     {s.title}
@@ -129,6 +115,7 @@ export default function ServicesPreview() {
                   <motion.p
                     className="col-span-10 col-start-3 md:col-span-6 md:col-start-5 mt-1.5 md:mt-0 text-[13.5px] leading-[1.6]"
                     style={{ color: 'var(--c4-text-muted)' }}
+                    transition={{ duration: 0.25 }}
                   >
                     {s.brief}
                   </motion.p>

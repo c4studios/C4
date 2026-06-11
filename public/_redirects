@@ -3,4 +3,6 @@
 #
 # Docs: https://developers.cloudflare.com/pages/configuration/redirects/
 
+/StartProject  /start  301
+
 /*  /index.html  200

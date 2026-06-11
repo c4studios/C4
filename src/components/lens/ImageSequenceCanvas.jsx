@@ -26,13 +26,14 @@ const smoothstep = (lo, hi, t) => {
    DRAWING FUNCTIONS — Photorealistic procedural renders
    ══════════════════════════════════════════════════════════ */
 
-function drawCameraLens(ctx, cx, cy, r, alpha) {
+function drawCameraLens(ctx, cx, cy, r, alpha, lite = false) {
   if (alpha <= 0) return;
   ctx.globalAlpha = alpha;
 
   // ── Outer barrel (machined aluminium) ──
   const barrelW = r * 0.08;
-  for (let i = 0; i < 3; i++) {
+  const ringSteps = lite ? 2 : 3;
+  for (let i = 0; i < ringSteps; i++) {
     const ringR = r - i * barrelW * 0.4;
     const grad = ctx.createLinearGradient(cx - ringR, cy - ringR, cx + ringR, cy + ringR);
     grad.addColorStop(0, '#4a4d56');
@@ -48,10 +49,11 @@ function drawCameraLens(ctx, cx, cy, r, alpha) {
     ctx.stroke();
   }
 
-  // Focus ring knurling
+  // Focus ring knurling — fewer ticks on mobile
   const knurlR = r * 0.96;
-  for (let i = 0; i < 80; i++) {
-    const a = (i / 80) * Math.PI * 2;
+  const knurlCount = lite ? 40 : 80;
+  for (let i = 0; i < knurlCount; i++) {
+    const a = (i / knurlCount) * Math.PI * 2;
     ctx.beginPath();
     ctx.moveTo(cx + Math.cos(a) * (knurlR - 3), cy + Math.sin(a) * (knurlR - 3));
     ctx.lineTo(cx + Math.cos(a) * (knurlR + 3), cy + Math.sin(a) * (knurlR + 3));
@@ -264,7 +266,7 @@ function drawGlasses(ctx, cx, cy, r, alpha) {
   ctx.globalAlpha = 1;
 }
 
-function drawEye(ctx, cx, cy, r, alpha) {
+function drawEye(ctx, cx, cy, r, alpha, lite = false) {
   if (alpha <= 0) return;
   ctx.globalAlpha = alpha;
 
@@ -305,8 +307,9 @@ function drawEye(ctx, cx, cy, r, alpha) {
   ctx.fillStyle = scGrad;
   ctx.fillRect(cx - eyeW, cy - eyeH * 1.5, eyeW * 2, eyeH * 3);
 
-  // Faint blood vessels (deterministic)
-  for (let i = 0; i < 8; i++) {
+  // Faint blood vessels (deterministic) — skipped on mobile
+  const vesselCount = lite ? 0 : 8;
+  for (let i = 0; i < vesselCount; i++) {
     const angle = (i / 8) * Math.PI * 2;
     const startDist = eyeW * 0.7;
     const sx = cx + Math.cos(angle) * startDist;
@@ -338,9 +341,10 @@ function drawEye(ctx, cx, cy, r, alpha) {
   ctx.fillStyle = irisGrad;
   ctx.fill();
 
-  // Iris fibres
-  for (let i = 0; i < 80; i++) {
-    const a = (i / 80) * Math.PI * 2;
+  // Iris fibres — fewer on mobile
+  const fibreCount = lite ? 36 : 80;
+  for (let i = 0; i < fibreCount; i++) {
+    const a = (i / fibreCount) * Math.PI * 2;
     const innerDist = irisR * 0.25;
     const outerDist = irisR * (0.82 + Math.sin(i * 4.3) * 0.08);
     const wobble = Math.sin(i * 3.1) * irisR * 0.02;
@@ -412,9 +416,10 @@ function drawEye(ctx, cx, cy, r, alpha) {
   ctx.lineWidth = 1.8;
   ctx.stroke();
 
-  // ── Eyelashes (upper) ──
-  for (let i = 0; i < 24; i++) {
-    const t = i / 23;
+  // ── Eyelashes (upper) ── fewer on mobile
+  const lashCount = lite ? 14 : 24;
+  for (let i = 0; i < lashCount; i++) {
+    const t = i / (lashCount - 1);
     const lx = lerp(cx - eyeW * 0.88, cx + eyeW * 0.88, t);
     const ly = cy - eyeH * 1.38 * Math.sin(t * Math.PI);
     const angle = -Math.PI / 2 + (t - 0.5) * 0.7;
@@ -450,7 +455,7 @@ function roundedRect(ctx, x, y, w, h, r) {
 /* ══════════════════════════════════════════════════════════
    MASTER DRAW — Composites all three objects with crossfade
    ══════════════════════════════════════════════════════════ */
-function drawFrame(ctx, w, h, progress) {
+function drawFrame(ctx, w, h, progress, lite = false) {
   const cx = w / 2;
   const cy = h / 2;
   const baseR = Math.min(w, h) * 0.32; // Larger — fills more of the viewport
@@ -481,13 +486,13 @@ function drawFrame(ctx, w, h, progress) {
   const eyeScale = lerp(0.85, 1, smoothstep(0.55, 0.72, progress));
 
   if (lensAlpha > 0.01) {
-    drawCameraLens(ctx, cx, cy, baseR * lensScale, lensAlpha);
+    drawCameraLens(ctx, cx, cy, baseR * lensScale, lensAlpha, lite);
   }
   if (glassAlpha > 0.01) {
     drawGlasses(ctx, cx, cy, baseR * glassScale, glassAlpha);
   }
   if (eyeAlpha > 0.01) {
-    drawEye(ctx, cx, cy, baseR * eyeScale, eyeAlpha);
+    drawEye(ctx, cx, cy, baseR * eyeScale, eyeAlpha, lite);
   }
 
   // ── Phase label ──
@@ -515,12 +520,13 @@ function drawFrame(ctx, w, h, progress) {
 /* ══════════════════════════════════════════════════════════
    COMPONENT — Uses GSAP ScrollTrigger for Lenis-safe progress
    ══════════════════════════════════════════════════════════ */
-export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0, framePath = '/lens-frames/frame-', frameExt = '.jpg' }) {
+export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0, framePath = '/lens-frames/frame-' }) {
   const canvasRef = useRef(null);
   const progressRef = useRef(0);
   const rafRef = useRef(null);
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const framesRef = useRef([]);
+  const liteRef = useRef(false);
 
   // ── Preload image sequence if framePath provided ──
   useEffect(() => {
@@ -532,7 +538,7 @@ export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0
     for (let i = 1; i <= frameCount; i++) {
       const img = new Image();
       const num = String(i).padStart(3, '0');
-      img.src = `${framePath}${num}${frameExt}`;
+      img.src = `${framePath}${num}.png`;
       img.onload = () => {
         loaded++;
         if (loaded === frameCount) {
@@ -546,7 +552,7 @@ export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0
       };
       images.push(img);
     }
-  }, [frameCount, framePath, frameExt]);
+  }, [frameCount, framePath]);
 
   const useImageSequence = frameCount > 0 && imagesLoaded;
 
@@ -555,7 +561,9 @@ export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Cap DPR more aggressively on mobile to avoid jitter
+    const dprCap = liteRef.current ? 1.5 : 2;
+    const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
     const rect = canvas.getBoundingClientRect();
     const w = Math.round(rect.width * dpr);
     const h = Math.round(rect.height * dpr);
@@ -585,7 +593,7 @@ export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0
       }
     } else {
       // Procedural mode — draw the morph animation
-      drawFrame(ctx, rect.width, rect.height, progressRef.current);
+      drawFrame(ctx, rect.width, rect.height, progressRef.current, liteRef.current);
     }
 
     ctx.restore();
@@ -596,7 +604,21 @@ export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0
     const canvas = canvasRef.current;
     if (!container || !canvas) return;
 
+    // Detect mobile / low-power: simplify the procedural draw and cap DPR
+    const liteMq = window.matchMedia('(max-width: 768px), (hover: none) and (pointer: coarse)');
+    const updateLite = () => {
+      const wasLite = liteRef.current;
+      liteRef.current = liteMq.matches;
+      if (wasLite !== liteRef.current) draw();
+    };
+    updateLite();
+    if (liteMq.addEventListener) liteMq.addEventListener('change', updateLite);
+    else liteMq.addListener(updateLite);
+
     draw(); // initial frame at progress 0
+
+    // Slightly looser threshold on mobile = fewer redraws while scrubbing
+    const updateThreshold = () => (liteRef.current ? 0.0025 : 0.0005);
 
     // Use GSAP ScrollTrigger — syncs with Lenis automatically
     const st = ScrollTrigger.create({
@@ -606,7 +628,7 @@ export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0
       scrub: 0,
       onUpdate: (self) => {
         const p = clamp(self.progress, 0, 1);
-        if (Math.abs(p - progressRef.current) > 0.0005) {
+        if (Math.abs(p - progressRef.current) > updateThreshold()) {
           progressRef.current = p;
           if (rafRef.current) cancelAnimationFrame(rafRef.current);
           rafRef.current = requestAnimationFrame(draw);
@@ -621,7 +643,7 @@ export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0
       const scrollable = rect.height - window.innerHeight;
       const p = scrollable > 0 ? clamp(scrolled / scrollable, 0, 1) : 0;
 
-      if (Math.abs(p - progressRef.current) > 0.001) {
+      if (Math.abs(p - progressRef.current) > updateThreshold() * 2) {
         progressRef.current = p;
         if (rafRef.current) cancelAnimationFrame(rafRef.current);
         rafRef.current = requestAnimationFrame(draw);
@@ -640,6 +662,8 @@ export default function ImageSequenceCanvas({ scrollContainerRef, frameCount = 0
       st.kill();
       window.removeEventListener('scroll', updateFromScroll);
       resizeObs.disconnect();
+      if (liteMq.removeEventListener) liteMq.removeEventListener('change', updateLite);
+      else liteMq.removeListener(updateLite);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, [draw, scrollContainerRef]);

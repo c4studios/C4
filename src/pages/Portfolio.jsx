@@ -9,6 +9,8 @@ import PortfolioSortMenu from '../components/portfolio/PortfolioSortMenu';
 import { getAllCaseStudies } from '../components/portfolio/caseStudyData';
 import { FeaturedCardSkeleton } from '../components/portfolio/PortfolioCardSkeleton';
 import PortfolioMedia from '../components/portfolio/PortfolioMedia';
+import useDocumentHead from '@/hooks/useDocumentHead';
+import { breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -193,7 +195,6 @@ function softwareStatusColor(status) {
 
 function SoftwareCard({ study, index }) {
   const color = softwareStatusColor(study.status);
-  const dest = study.purchaseUrl || '/software';
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -201,33 +202,17 @@ function SoftwareCard({ study, index }) {
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.5, delay: index * 0.06, ease }}
     >
-      <Link to={dest} className="group block">
+      <Link to="/software" className="group block">
         <div
-          className="relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center bg-white p-8"
+          className="relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center"
+          style={{ backgroundColor: 'var(--c4-bg-alt)' }}
         >
-          {study.logoUrl || study.cover ? (
-            <>
-              <img
-                src={study.logoUrl || study.cover}
-                alt={study.name}
-                className={`max-h-full max-w-full object-contain transition-all duration-500${study.logoUrlMinimal ? ' group-hover:opacity-0' : ' group-hover:scale-[1.04] transition-transform duration-700'}`}
-              />
-              {study.logoUrlMinimal && (
-                <img
-                  src={study.logoUrlMinimal}
-                  alt={study.name}
-                  className="absolute inset-0 m-auto max-h-[70%] max-w-[70%] object-contain opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                />
-              )}
-            </>
-          ) : (
-            <span
-              className="text-[4.5rem] font-black tracking-[-0.06em] select-none leading-none"
-              style={{ color: 'var(--c4-border)' }}
-            >
-              {study.name[0]}
-            </span>
-          )}
+          <span
+            className="text-[4.5rem] font-black tracking-[-0.06em] select-none leading-none"
+            style={{ color: 'var(--c4-border)' }}
+          >
+            {study.name[0]}
+          </span>
           <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ border: `1px solid ${color}` }}>
             <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
             <span className="text-[9px] uppercase tracking-[0.12em] font-medium" style={{ color }}>{study.status}</span>
@@ -283,6 +268,29 @@ export default function Portfolio() {
   const [sort, setSort] = useState('featured');
   const [loading, setLoading] = useState(true);
   const allStudies = getAllCaseStudies();
+
+  const portfolioJsonLd = useMemo(() => [
+    breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Portfolio', path: '/Portfolio' },
+    ]),
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: 'C4 Studios Portfolio — Selected Work',
+      description:
+        'Selected case studies from C4 Studios — Perth-based web design, AI and software, brand and photography projects.',
+      url: 'https://c4studios.com.au/Portfolio',
+    },
+  ], []);
+
+  useDocumentHead({
+    title: 'Portfolio — Selected Web, AI & Brand Case Studies',
+    description:
+      'Selected case studies from C4 Studios. Custom websites, AI automations, brand systems and photography projects, with scope, stack and outcomes for each.',
+    path: '/Portfolio',
+    jsonLd: portfolioJsonLd,
+  });
 
   useEffect(() => {
     const timeoutId = setTimeout(() => setLoading(false), 600);

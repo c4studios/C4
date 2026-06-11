@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>C4 Lens — We outlive the moment.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Dancing+Script:wght@600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050505;--ink:#f5f5f0;--ink-2:#9a9a95;--ink-3:#4a4a48;
+  --amber:#e8a658;--ice:#6b7bd6;
+  --line:rgba(245,245,240,.08);--line-2:rgba(245,245,240,.16);
+  --flu-lime:#d6ff3a;--flu-pink:#ff3fa3;--flu-cyan:#3ff8ff;--flu-orange:#ff8a1c;--flu-yellow:#f7ff00;--flu-violet:#b388ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#000;color:var(--ink);font-family:'Geist',system-ui,sans-serif;font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:clip;}
+body.cursor-on,body.cursor-on *{cursor:none!important;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:22px 40px;mix-blend-mode:difference;color:#fff;}
+.brand{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.14em;display:flex;align-items:center;gap:10px;}
+.logo-dot{width:9px;height:9px;border-radius:50%;background:var(--ink);}
+.nav-links{display:flex;gap:26px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-family:'Geist Mono',monospace;}
+.nav-links a{color:inherit;text-decoration:none;opacity:.82;}
+.nav-links a:hover{opacity:1;}
+.nav-links .book{color:var(--amber)!important;opacity:1;}
+
+/* ============ HERO ============ */
+/* hero-scroll = sticky 100vh + 70vh of scroll-driven animation. Animation completes exactly when the sticky unpins, so the lens hands off directly into the next section with zero dead space. */
+.hero-scroll{position:relative;height:170vh;}
+.hero-sticky{position:sticky;top:0;height:100vh;overflow:hidden;background:#000;}
+.hero-stage{position:absolute;inset:0;display:grid;place-items:center;}
+.studio-light{position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(ellipse 55% 45% at 28% 36%,rgba(107,123,214,.07),transparent 60%),
+             radial-gradient(ellipse 50% 45% at 76% 68%,rgba(232,166,88,.06),transparent 60%);}
+.vignette{position:absolute;inset:0;pointer-events:none;z-index:5;
+  background:radial-gradient(ellipse at center,transparent 32%,rgba(0,0,0,.9) 100%);}
+.grain{position:absolute;inset:0;pointer-events:none;opacity:.065;z-index:7;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.95'/></svg>");}
+
+/* LENS */
+.lens-wrap{position:relative;width:min(74vh,74vw);aspect-ratio:1;will-change:transform;}
+.barrel-anchor{position:absolute;inset:0;border-radius:50%;background:#000;
+  box-shadow:0 80px 160px -30px rgba(0,0,0,.96),0 40px 80px -10px rgba(0,0,0,.9);}
+.lens-layer{position:absolute;inset:0;border-radius:50%;will-change:opacity,filter;}
+.lens-svg{width:100%;height:100%;display:block;}
+
+/* EYE layer — sits behind the blades. Opacity is scroll-driven. */
+.lens-eye{position:absolute;inset:14%;border-radius:50%;overflow:hidden;background:#020203;z-index:2;}
+.eye-svg{width:100%;height:100%;display:block;}
+
+/* HUD */
+.hud{position:absolute;inset:0;pointer-events:none;z-index:10;}
+.hud-c{position:absolute;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,245,240,.44);}
+.hud-c.tl{top:90px;left:40px;max-width:280px;}
+.hud-c.tr{top:90px;right:40px;text-align:right;white-space:nowrap;}
+.hud-c.bl{bottom:42px;left:40px;}
+.hud-c.br{bottom:42px;right:40px;text-align:right;}
+.hud-c span{display:block;white-space:nowrap;}
+.hud-c .v{color:var(--ink);opacity:.9;}
+.hud-c .k{color:var(--ink-3);margin-bottom:2px;}
+.rec-wrap{display:inline-flex!important;align-items:center;gap:8px;}
+.rec-dot{width:7px;height:7px;border-radius:50%;background:#e53939;box-shadow:0 0 10px rgba(229,57,57,.55);animation:blink 1.4s ease-in-out infinite;}
+@keyframes blink{0%,70%{opacity:1}85%,100%{opacity:.2}}
+
+/* QUOTE BLOCK */
+.hero-quote{position:absolute;left:0;right:0;top:12vh;display:grid;place-items:center;text-align:center;z-index:11;pointer-events:none;padding:0 8vw;}
+.q-eyebrow{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.36em;text-transform:uppercase;color:var(--ink-3);margin-bottom:22px;display:flex;gap:14px;align-items:center;justify-content:center;}
+.q-eyebrow .bar{width:28px;height:1px;background:var(--ink-3);}
+.q-stack{position:relative;min-height:6em;width:100%;max-width:24ch;}
+.q-item{position:absolute;left:0;right:0;top:0;
+  font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;
+  font-size:clamp(24px,2.9vw,40px);line-height:1.22;color:var(--ink);
+  opacity:0;transition:opacity 1.4s ease,transform 1.4s ease;transform:translateY(10px);text-wrap:balance;}
+.q-item.on{opacity:1;transform:translateY(0);}
+.q-lead{font-family:'Geist Mono',monospace;font-style:normal;font-size:.34em;letter-spacing:.3em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:14px;}
+
+/* HERO BOTTOM */
+.hero-bottom{position:absolute;left:0;right:0;bottom:30px;display:flex;flex-direction:column;align-items:center;gap:18px;z-index:12;}
+.tagline-sub{font-family:'Geist Mono',monospace;font-size:clamp(9px,.85vw,11px);letter-spacing:.38em;text-transform:uppercase;color:var(--ink-2);}
+.h-cta{display:flex;gap:14px;}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink);background:transparent;border:1px solid var(--line-2);text-decoration:none;transition:background .3s,border-color .3s,color .3s;cursor:pointer;}
+.btn:hover{background:var(--ink);color:#000;border-color:var(--ink);}
+.btn.primary{background:var(--ink);color:#000;border-color:var(--ink);}
+.btn.primary:hover{background:var(--amber);border-color:var(--amber);color:#000;}
+.btn .d{width:5px;height:5px;border-radius:50%;background:currentColor;}
+.scroll-ind{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.35em;color:var(--ink-3);text-transform:uppercase;}
+.scroll-ind .arr{display:inline-block;margin-right:8px;animation:nudge 2.2s ease-in-out infinite;}
+@keyframes nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.tick-flash{position:absolute;top:50%;left:50%;width:8px;height:8px;border-radius:50%;background:var(--amber);transform:translate(-50%,-50%);opacity:0;pointer-events:none;z-index:20;filter:blur(5px);}
+
+/* RETICLE */
+.reticle{position:fixed;top:0;left:0;width:40px;height:40px;pointer-events:none;transform:translate(-50%,-50%);z-index:999;mix-blend-mode:difference;}
+
+/* ============ CAPTURE ============ */
+.capture{position:relative;padding:120px 40px 140px;background:#000;border-top:1px solid var(--line);overflow:hidden;}
+#paintCanvas{position:absolute;inset:0;pointer-events:none;z-index:2;}
+.cap-inner{position:relative;z-index:3;max-width:1400px;margin:0 auto;}
+.cap-header{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-bottom:80px;align-items:end;}
+.sec-num{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-3);margin-bottom:24px;display:flex;gap:14px;align-items:center;}
+.sec-num .bar{width:28px;height:1px;background:var(--ink-3);}
+.cap-kicker{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,5vw,78px);line-height:.92;}
+.cap-kicker em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--amber);font-weight:400;}
+.cap-body{font-size:17px;line-height:1.65;color:var(--ink-2);}
+.cap-body strong{color:var(--ink);}
+
+/* PAINT STATEMENT — "we exist to capture the [WORD] of your brand" */
+.cap-stmt{margin:60px 0 80px;position:relative;z-index:4;}
+.cap-stmt-fixed{font-family:'Geist',sans-serif;font-size:clamp(22px,2.2vw,32px);line-height:1.35;color:var(--ink-2);font-weight:300;max-width:1000px;}
+.cap-stmt-label{color:var(--ink);font-weight:400;}
+.word-stage{position:relative;height:clamp(100px,13vw,180px);margin:14px 0;overflow:visible;}
+.c-word{
+  position:absolute;left:0;bottom:0;
+  font-family:'Caveat',cursive;font-weight:700;
+  font-size:clamp(86px,13vw,180px);line-height:.9;white-space:nowrap;
+  pointer-events:none;opacity:0;transform-origin:left bottom;
+  clip-path:inset(0 100% 0 -5%);
+  text-shadow:0 0 1px currentColor;
+  letter-spacing:-.01em;
+}
+.c-word.on{opacity:1;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;border-top:1px solid var(--line);padding-top:60px;margin-top:70px;}
+.stat .num{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,5.5vw,82px);line-height:.9;color:var(--ink);}
+.stat .num em{color:var(--amber);font-style:normal;}
+.stat .lbl{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--ink-3);margin-top:10px;}
+
+/* ============ SECTIONS ============ */
+section.slab{padding:140px 40px;border-top:1px solid var(--line);}
+.slab.dark{background:#000;}
+.slab.mid{background:var(--bg);}
+.slab h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(54px,7.5vw,124px);line-height:.9;margin-bottom:70px;}
+.slab h2 em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--amber);font-weight:400;}
+
+/* SERVICES */
+.svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);}
+.svc-card{background:var(--bg);padding:40px 32px 32px;display:flex;flex-direction:column;gap:14px;transition:background .4s;}
+.svc-card:hover{background:#0d0d0d;}
+.svc-tag{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--amber);}
+.svc-card h3{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:.01em;line-height:.92;}
+.svc-card .svc-tagline{font-family:'Instrument Serif',serif;font-style:italic;font-size:17px;color:var(--ink-2);}
+.svc-card .desc{font-size:13.5px;color:var(--ink-2);line-height:1.6;flex:1;}
+.svc-foot{border-top:1px solid var(--line);padding-top:16px;font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);}
+
+/* PACKAGES */
+.pkg-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);}
+.pkg-card{background:#000;padding:34px 24px 26px;display:flex;flex-direction:column;position:relative;transition:background .4s;}
+.pkg-card:hover{background:#0a0a0a;}
+.pkg-card.pop{background:#0b0904;border-top:2px solid var(--amber);}
+.pkg-card.pop:hover{background:#131008;}
+.pop-badge{position:absolute;top:14px;right:14px;font-family:'Geist Mono',monospace;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#000;background:var(--amber);padding:4px 8px;}
+.pkg-id{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--ink-3);margin-bottom:16px;}
+.pkg-card h3{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.01em;line-height:1;margin-bottom:8px;}
+.pkg-price{font-family:'Bebas Neue',sans-serif;font-size:50px;line-height:.9;color:var(--ink);}
+.pkg-price .cur{font-size:.52em;vertical-align:.22em;color:var(--ink-2);}
+.pkg-div{height:1px;background:var(--line);margin:18px 0;}
+.pkg-ul{list-style:none;display:flex;flex-direction:column;gap:9px;flex:1;}
+.pkg-ul li{font-size:12.5px;color:var(--ink-2);line-height:1.4;padding-left:14px;position:relative;}
+.pkg-ul li::before{content:'·';position:absolute;left:0;color:var(--ink-3);}
+.pkg-ul li strong{color:var(--ink);font-weight:500;}
+.pkg-note{margin-top:44px;padding:24px 28px;border:1px solid var(--line);font-size:13px;color:var(--ink-3);line-height:1.65;}
+.pkg-note strong{color:var(--ink-2);}
+
+/* CALEB */
+.caleb-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1.5fr;gap:100px;align-items:center;}
+.caleb h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,6.5vw,100px);line-height:.9;margin-bottom:22px;}
+.caleb h2 em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--amber);font-weight:400;}
+.caleb-quote{font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(19px,2vw,28px);line-height:1.38;color:var(--ink);border-left:2px solid var(--amber);padding-left:22px;margin-bottom:28px;}
+.caleb-right p{font-size:16px;line-height:1.7;color:var(--ink-2);margin-bottom:16px;}
+.caleb-right p strong{color:var(--ink);font-weight:500;}
+
+/* PORTFOLIO (horizontal scroll, pinned) */
+/* Height = viewport + horizontal-travel distance. JS sets a CSS var so the math matches the track width exactly — no late triggers. */
+.portfolio-outer{position:relative;background:#000;height:calc(100vh + var(--pf-travel,100vh));}
+.portfolio-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;}
+.pf-track{display:flex;gap:24px;padding:0 10vw;will-change:transform;}
+.pf-card{flex:0 0 auto;position:relative;background:#111;overflow:hidden;height:68vh;align-self:center;}
+.pf-card.tall{width:22vw;aspect-ratio:3/4;}
+.pf-card.wide{width:40vw;aspect-ratio:16/9;}
+.pf-card.sq{width:30vw;aspect-ratio:1;}
+.pf-ph{position:absolute;inset:0;background-image:repeating-linear-gradient(135deg,transparent 0 18px,rgba(245,245,240,.018) 18px 19px);}
+.pf-mask{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.9) 100%);opacity:0;transition:opacity .4s;}
+.pf-card:hover .pf-mask{opacity:1;}
+.pf-cap{position:absolute;left:22px;right:22px;bottom:20px;display:flex;justify-content:space-between;align-items:end;transform:translateY(8px);opacity:0;transition:all .4s;}
+.pf-card:hover .pf-cap{transform:translateY(0);opacity:1;}
+.pf-cap .name{font-family:'Bebas Neue',sans-serif;font-size:28px;}
+.pf-cap .cat{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.22em;color:var(--ink-2);text-transform:uppercase;}
+.pf-corner{position:absolute;font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--ink-3);text-transform:uppercase;top:14px;left:16px;}
+.pf-corner.r{left:auto;right:16px;}
+.pf-bar-wrap{position:absolute;bottom:7vh;left:10vw;right:10vw;height:1px;background:var(--line);z-index:5;}
+.pf-bar{height:100%;background:var(--amber);width:0%;transition:width .05s linear;}
+.pf-top-row{position:absolute;top:7vh;left:10vw;right:10vw;display:flex;justify-content:space-between;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--ink-2);z-index:5;}
+.pf-top-row .t{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.14em;color:var(--ink);}
+.pf-hint{position:absolute;bottom:calc(7vh + 14px);right:10vw;font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--ink-3);text-transform:uppercase;z-index:5;}
+
+/* CTA */
+.cta-section{padding:140px 40px 110px;text-align:center;background:var(--bg);border-top:1px solid var(--line);}
+.cta-section h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,10vw,160px);line-height:.9;margin-bottom:28px;}
+.cta-section h2 em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--amber);font-weight:400;font-size:1em;line-height:inherit;}
+.cta-section .sub{max-width:520px;margin:0 auto 40px;color:var(--ink-2);font-size:16px;line-height:1.6;}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:50px;}
+
+footer{padding:40px;display:flex;justify-content:space-between;align-items:center;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);border-top:1px solid var(--line);}
+.foot-logo{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.14em;color:var(--ink-2);}
+
+/* TWEAKS */
+.tweaks{position:fixed;bottom:22px;right:22px;width:248px;background:rgba(10,10,10,.96);border:1px solid var(--line-2);backdrop-filter:blur(12px);padding:16px;z-index:200;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--ink);display:none;}
+.tweaks.open{display:block;}
+.tweaks h4{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.15em;margin-bottom:14px;}
+.tweaks label{display:flex;justify-content:space-between;align-items:center;margin:10px 0;text-transform:uppercase;font-size:10px;letter-spacing:.2em;color:var(--ink-2);}
+.tweaks input[type=range]{width:118px;accent-color:var(--amber);}
+.tog{width:30px;height:16px;border-radius:10px;background:var(--ink-3);position:relative;cursor:pointer;}
+.tog::after{content:"";position:absolute;width:12px;height:12px;background:var(--ink);border-radius:50%;top:2px;left:2px;transition:left .2s;}
+.tog.on{background:var(--amber);}
+.tog.on::after{left:16px;background:#000;}
+
+@media(max-width:1024px){.svc-grid{grid-template-columns:repeat(2,1fr);}
+.pkg-grid{grid-template-columns:repeat(2,1fr);}
+.caleb-inner,.cap-header{grid-template-columns:1fr;}}
+@media(max-width:640px){.svc-grid{grid-template-columns:1fr;}
+.stats-row{grid-template-columns:repeat(2,1fr);}
+.pf-card.tall,.pf-card.wide,.pf-card.sq{width:80vw;}}
+</style>
+</head>
+<body>
+
+<svg class="reticle" id="reticle" viewBox="0 0 40 40" fill="none">
+  <circle cx="20" cy="20" r="14" stroke="#fff" stroke-width=".75" opacity=".5"/>
+  <circle cx="20" cy="20" r="1" fill="#fff"/>
+  <line x1="20" y1="0" x2="20" y2="7" stroke="#fff" stroke-width=".75"/>
+  <line x1="20" y1="33" x2="20" y2="40" stroke="#fff" stroke-width=".75"/>
+  <line x1="0" y1="20" x2="7" y2="20" stroke="#fff" stroke-width=".75"/>
+  <line x1="33" y1="20" x2="40" y2="20" stroke="#fff" stroke-width=".75"/>
+  <path d="M2 6L2 2L6 2" stroke="#fff" stroke-width=".75"/>
+  <path d="M38 6L38 2L34 2" stroke="#fff" stroke-width=".75"/>
+  <path d="M2 34L2 38L6 38" stroke="#fff" stroke-width=".75"/>
+  <path d="M38 34L38 38L34 38" stroke="#fff" stroke-width=".75"/>
+</svg>
+
+<nav>
+  <div class="brand"><span class="logo-dot"></span>C4 LENS</div>
+  <div class="nav-links">
+    <a href="#capture">Our Work</a>
+    <a href="#services">Services</a>
+    <a href="#packages">Packages</a>
+    <a href="#caleb">About</a>
+    <a href="#contact" class="book">Book →</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<div class="hero-scroll" id="heroScroll">
+  <div class="hero-sticky">
+    <div class="studio-light"></div>
+    <div class="hud">
+      <div class="hud-c tl">
+        <span class="rec-wrap"><span class="rec-dot"></span><span class="v">REC · <span id="hudTc">00:00:00:00</span></span></span>
+        <span class="k" style="margin-top:5px;">C4 LENS / CALEB WALKER / PERTH W.A.</span>
+      </div>
+      <div class="hud-c tr">
+        <span class="v">f/<span id="hudF">1.4</span> · 1/<span id="hudShutter">250</span> · ISO <span id="hudIso">400</span></span>
+        <span class="k" style="margin-top:5px;"><span id="hudFocal">35mm</span> · RAW · <span id="hudWb">5600K</span></span>
+      </div>
+      <div class="hud-c bl"><span class="k">FOCUS</span><span class="v" id="hudFocus">MANUAL · ∞</span></div>
+      <div class="hud-c br"><span class="k">FRAME</span><span class="v" id="hudFrame">001 / 420</span></div>
+    </div>
+
+    <div class="hero-stage">
+      <div class="lens-wrap" id="lensWrap">
+        <div class="barrel-anchor"></div>
+
+        <!-- EYE (subtle undertone behind blades — iris gradient + pupil + catchlight, nothing more) -->
+        <div class="lens-eye" id="lensEye">
+          <svg class="eye-svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <radialGradient id="irisBody" cx="50%" cy="50%" r="50%">
+                <stop offset="0%"  stop-color="#0a0604"/>
+                <stop offset="17%" stop-color="#0a0604"/>
+                <stop offset="22%" stop-color="#2a1808"/>
+                <stop offset="48%" stop-color="#8c5e2a"/>
+                <stop offset="70%" stop-color="#a07038"/>
+                <stop offset="88%" stop-color="#3a240f"/>
+                <stop offset="100%" stop-color="#0a0604"/>
+              </radialGradient>
+              <filter id="irisGrain" x="-5%" y="-5%" width="110%" height="110%">
+                <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/>
+                <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .18 0"/>
+                <feComposite in2="SourceGraphic" operator="in"/>
+              </filter>
+            </defs>
+            <circle cx="200" cy="200" r="200" fill="url(#irisBody)"/>
+            <circle cx="200" cy="200" r="200" filter="url(#irisGrain)"/>
+            <!-- Pupil -->
+            <circle id="eyePupil" cx="200" cy="200" r="56" fill="#000"/>
+            <!-- Single catchlight -->
+            <ellipse cx="168" cy="170" rx="8" ry="5" fill="rgba(255,255,250,.55)" transform="rotate(-20 168 170)"/>
+          </svg>
+        </div>
+
+        <!-- LENS (barrel, rings, blades) -->
+        <div class="lens-layer" id="lensLayer">
+          <svg class="lens-svg" viewBox="0 0 1000 1000">
+            <defs>
+              <radialGradient id="gBarrel" cx="50%" cy="50%" r="50%">
+                <stop offset="58%" stop-color="#0a0a0c"/>
+                <stop offset="74%" stop-color="#1c1c1f"/>
+                <stop offset="82%" stop-color="#3a3a3c"/>
+                <stop offset="87%" stop-color="#626266"/>
+                <stop offset="91%" stop-color="#2c2c2f"/>
+                <stop offset="96%" stop-color="#0c0c0e"/>
+                <stop offset="100%" stop-color="#020202"/>
+              </radialGradient>
+              <radialGradient id="gRim" cx="48%" cy="36%" r="55%">
+                <stop offset="85%" stop-color="rgba(255,255,255,0)"/>
+                <stop offset="91%" stop-color="rgba(255,255,255,.24)"/>
+                <stop offset="96%" stop-color="rgba(255,255,255,.06)"/>
+                <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+              </radialGradient>
+              <radialGradient id="gAR" cx="33%" cy="28%" r="32%">
+                <stop offset="0%" stop-color="rgba(100,165,220,.48)"/>
+                <stop offset="28%" stop-color="rgba(70,195,155,.22)"/>
+                <stop offset="62%" stop-color="rgba(55,95,210,.07)"/>
+                <stop offset="100%" stop-color="rgba(55,95,210,0)"/>
+              </radialGradient>
+              <radialGradient id="gARw" cx="73%" cy="76%" r="28%">
+                <stop offset="0%" stop-color="rgba(232,166,88,.22)"/>
+                <stop offset="55%" stop-color="rgba(200,70,70,.06)"/>
+                <stop offset="100%" stop-color="rgba(200,70,70,0)"/>
+              </radialGradient>
+              <radialGradient id="gSpec" cx="35%" cy="28%" r="9%">
+                <stop offset="0%" stop-color="rgba(255,255,255,.65)"/>
+                <stop offset="45%" stop-color="rgba(255,255,255,.1)"/>
+                <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+              </radialGradient>
+              <radialGradient id="gWell" cx="50%" cy="50%" r="50%">
+                <stop offset="52%" stop-color="rgba(0,0,0,0)"/>
+                <stop offset="72%" stop-color="rgba(0,0,0,.35)"/>
+                <stop offset="100%" stop-color="rgba(0,0,0,.88)"/>
+              </radialGradient>
+              <pattern id="pKnurl" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse">
+                <rect width="5" height="5" fill="#0d0d0f"/>
+                <line x1="0" y1="0" x2="5" y2="5" stroke="#252528" stroke-width=".8"/>
+                <line x1="5" y1="0" x2="0" y2="5" stroke="#0a0a0c" stroke-width=".3"/>
+              </pattern>
+              <linearGradient id="gRed" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#4a1212"/>
+                <stop offset="48%" stop-color="#b53038"/>
+                <stop offset="100%" stop-color="#3a1010"/>
+              </linearGradient>
+              <!-- BLADE GRADIENT — subtle depth so overlapping blades read individually -->
+              <linearGradient id="gBlade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"  stop-color="#1a1a1d"/>
+                <stop offset="45%" stop-color="#0c0c0e"/>
+                <stop offset="100%" stop-color="#040405"/>
+              </linearGradient>
+              <linearGradient id="gBladeEdge" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%"  stop-color="rgba(255,255,255,.14)"/>
+                <stop offset="40%" stop-color="rgba(255,255,255,0)"/>
+                <stop offset="100%" stop-color="rgba(0,0,0,.35)"/>
+              </linearGradient>
+            </defs>
+
+            <circle cx="500" cy="500" r="498" fill="#020202"/>
+            <circle cx="500" cy="500" r="490" fill="url(#gBarrel)"/>
+            <circle cx="500" cy="500" r="490" fill="url(#gRim)" style="mix-blend-mode:screen"/>
+            <circle cx="500" cy="500" r="466" fill="none" stroke="url(#pKnurl)" stroke-width="32"/>
+            <path d="M228 332A296 296 0 0 1 772 332" fill="none" stroke="rgba(255,255,255,.055)" stroke-width="32"/>
+
+            <!-- Focus ring (rotates on scroll) -->
+            <g id="focusRing">
+              <g id="focusTicks"></g>
+              <g font-family="Geist Mono,monospace" font-size="12" fill="#8a8a88" letter-spacing="2" font-weight="500">
+                <text x="500" y="62" text-anchor="middle">∞</text>
+                <text x="782" y="76" text-anchor="middle">30</text>
+                <text x="930" y="300" text-anchor="middle">10</text>
+                <text x="930" y="712" text-anchor="middle">5</text>
+                <text x="782" y="936" text-anchor="middle">3</text>
+                <text x="500" y="950" text-anchor="middle">1.5</text>
+                <text x="218" y="936" text-anchor="middle">1</text>
+                <text x="70" y="712" text-anchor="middle">0.7</text>
+                <text x="70" y="300" text-anchor="middle">0.5</text>
+                <text x="218" y="76" text-anchor="middle">0.4</text>
+              </g>
+              <line x1="500" y1="28" x2="500" y2="48" stroke="#e8a658" stroke-width="3" opacity=".96"/>
+            </g>
+
+            <circle cx="500" cy="500" r="418" fill="none" stroke="url(#gRed)" stroke-width="2.5" opacity=".9"/>
+            <circle cx="500" cy="500" r="404" fill="none" stroke="#030305" stroke-width="8"/>
+            <g font-family="Geist Mono,monospace" font-size="10" fill="#5a5a58" letter-spacing="1.3">
+              <text x="500" y="98" text-anchor="middle">1.4</text>
+              <text x="668" y="118" text-anchor="middle">2</text>
+              <text x="818" y="212" text-anchor="middle">2.8</text>
+              <text x="882" y="386" text-anchor="middle">4</text>
+              <text x="882" y="618" text-anchor="middle">5.6</text>
+              <text x="818" y="798" text-anchor="middle">8</text>
+              <text x="668" y="888" text-anchor="middle">11</text>
+              <text x="500" y="907" text-anchor="middle">16</text>
+              <text x="330" y="888" text-anchor="middle">22</text>
+            </g>
+
+            <!-- Cavity subtle glass ring hints (behind blades) -->
+            <circle cx="500" cy="500" r="385" fill="none" stroke="rgba(180,205,230,.05)" stroke-width="1"/>
+            <circle cx="500" cy="500" r="335" fill="none" stroke="rgba(180,200,230,.08)" stroke-width="1"/>
+
+            <!-- APERTURE BLADES — built by JS, attached to ring, rotate around pivot -->
+            <g id="apertureBlades"></g>
+
+            <!-- Glass sheen OVER the blades — pure optics layer -->
+            <circle cx="500" cy="500" r="385" fill="url(#gAR)" style="mix-blend-mode:screen" pointer-events="none"/>
+            <circle cx="500" cy="500" r="385" fill="url(#gARw)" style="mix-blend-mode:screen" pointer-events="none"/>
+            <circle cx="500" cy="500" r="385" fill="url(#gWell)" style="mix-blend-mode:multiply" pointer-events="none"/>
+
+            <!-- Highlights -->
+            <ellipse cx="396" cy="352" rx="108" ry="38" fill="url(#gSpec)" transform="rotate(-28 396 352)" pointer-events="none"/>
+            <ellipse cx="358" cy="322" rx="45" ry="14" fill="rgba(255,255,255,.34)" transform="rotate(-30 358 322)" pointer-events="none"/>
+            <ellipse cx="622" cy="660" rx="30" ry="9" fill="rgba(232,166,88,.14)" transform="rotate(20 622 660)" pointer-events="none"/>
+            <g fill="rgba(255,255,255,.06)" pointer-events="none">
+              <circle cx="432" cy="538" r="1.3"/>
+              <circle cx="572" cy="446" r="1"/>
+              <circle cx="542" cy="618" r=".9"/>
+            </g>
+            <g style="mix-blend-mode:screen" opacity=".22" pointer-events="none">
+              <circle cx="612" cy="402" r="10" fill="rgba(107,164,214,.45)"/>
+              <circle cx="662" cy="360" r="6" fill="rgba(232,166,88,.55)"/>
+              <circle cx="724" cy="316" r="4" fill="rgba(200,200,255,.55)"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="tick-flash" id="tickFlash"></div>
+      </div>
+    </div>
+
+    <div class="vignette"></div>
+    <div class="grain"></div>
+
+    <div class="hero-quote" id="quoteBlock">
+      <div class="q-eyebrow"><span class="bar"></span>C4 LENS · CALEB WALKER · PERTH<span class="bar"></span></div>
+      <div class="q-stack" id="quoteStack"></div>
+    </div>
+
+    <div class="hero-bottom" id="heroBottom">
+      <div class="tagline-sub">Photography · Videography · Post-Production</div>
+      <div class="h-cta">
+        <a href="#packages" class="btn primary"><span class="d"></span>View packages</a>
+        <a href="#contact" class="btn">Book a call</a>
+      </div>
+      <div class="scroll-ind" id="scrollInd"><span class="arr">↓</span>SCROLL TO FOCUS</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ WHAT WE CAPTURE ============ -->
+<section class="capture" id="capture">
+  <canvas id="paintCanvas"></canvas>
+  <div class="cap-inner">
+    <div class="cap-header">
+      <div>
+        <div class="sec-num"><span class="bar"></span>§ 01 — WHAT WE CAPTURE</div>
+        <div class="cap-kicker">We don't photograph<br><em>businesses.</em></div>
+      </div>
+      <div class="cap-body">
+        Caleb Walker doesn't capture what you look like.<br><br>
+        He captures what you are <strong>before you know the camera is there</strong> — the energy that existed before the pitch deck, and will outlast the brand refresh.<br><br>
+        That's what makes clients feel like they already know you.
+      </div>
+    </div>
+
+    <div class="cap-stmt">
+      <div class="cap-stmt-fixed">
+        <span class="cap-stmt-label">We exist to capture the</span>
+        <div class="word-stage" id="wordStage"><!-- words injected by JS --></div>
+        <span class="cap-stmt-label">of your brand.</span>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="num">50<em>+</em></div><div class="lbl">Australian Businesses</div></div>
+      <div class="stat"><div class="num">200<em>+</em></div><div class="lbl">Assets Delivered</div></div>
+      <div class="stat"><div class="num">&lt;7</div><div class="lbl">Days Turnaround</div></div>
+      <div class="stat"><div class="num">100<em>%</em></div><div class="lbl">Australian-Based</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section class="slab dark" id="services">
+  <div class="sec-num"><span class="bar"></span>§ 02 — HOW WE WORK</div>
+  <h2>FOUR WAYS<br>TO BE <em>unforgettable.</em></h2>
+  <div class="svc-grid">
+    <div class="svc-card">
+      <div class="svc-tag">Photography</div>
+      <h3>REPLACE STOCK<br>WITH PROOF.</h3>
+      <div class="svc-tagline">"Real beats perfect."</div>
+      <div class="desc">Team portraits that carry weight. Workspace environments that tell your story. Product imagery that converts. Headshots that feel like you — not a LinkedIn template.</div>
+      <div class="svc-foot">f/1.4 · STILLS · RAW + EDITED</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-tag">Videography</div>
+      <h3>MOTION THAT<br>EARNS ATTENTION.</h3>
+      <div class="svc-tagline">"Every second must earn its place."</div>
+      <div class="desc">Brand films that stop the scroll. Social content that converts. Event coverage that endures. Founder pieces that humanise the person behind the business.</div>
+      <div class="svc-foot">4K · 24P · CINEMATIC</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-tag">Drone &amp; Aerial</div>
+      <h3>THE PERSPECTIVE<br>THEY'VE NEVER SEEN.</h3>
+      <div class="svc-tagline">"Scale that no phone can fake."</div>
+      <div class="desc">Licensed drone work capturing locations, events, and construction that demand context. A perspective most brands never think to show — until they see it.</div>
+      <div class="svc-foot">LICENSED · 4K · AERIAL</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-tag">Post-Production</div>
+      <h3>CUT FOR THE<br>PLATFORM.</h3>
+      <div class="svc-tagline">"Footage is a rough draft."</div>
+      <div class="desc">Short-form reels. Brand cutdowns. Event highlights. Colour grading, sound design, motion graphics. Bring your raw footage — we'll bring it to life.</div>
+      <div class="svc-foot">EDIT · GRADE · DELIVER</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PACKAGES ============ -->
+<section class="slab mid" id="packages">
+  <div class="sec-num"><span class="bar"></span>§ 03 — PACKAGES &amp; PRICING</div>
+  <h2>CLEAR SCOPE.<br><em>No surprises.</em></h2>
+  <div class="pkg-grid">
+    <div class="pkg-card">
+      <div class="pkg-id">PKG — 01</div>
+      <h3>CORE</h3>
+      <div class="pkg-price"><span class="cur">$</span>200</div>
+      <div class="pkg-div"></div>
+      <ul class="pkg-ul">
+        <li><strong>30-min</strong> shoot</li>
+        <li>1 location</li>
+        <li><strong>5</strong> edited digital images</li>
+        <li>Online gallery delivery</li>
+      </ul>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-id">PKG — 02</div>
+      <h3>PORTRAIT SESSION</h3>
+      <div class="pkg-price"><span class="cur">$</span>350</div>
+      <div class="pkg-div"></div>
+      <ul class="pkg-ul">
+        <li><strong>1-hour</strong> shoot</li>
+        <li>1 location</li>
+        <li><strong>15</strong> edited digital images</li>
+        <li>Online gallery delivery</li>
+      </ul>
+    </div>
+    <div class="pkg-card pop">
+      <div class="pop-badge">★ Most Popular</div>
+      <div class="pkg-id">PKG — 03</div>
+      <h3>BUSINESS BRANDING</h3>
+      <div class="pkg-price"><span class="cur">$</span>650</div>
+      <div class="pkg-div"></div>
+      <ul class="pkg-ul">
+        <li><strong>2-hour</strong> shoot</li>
+        <li>Up to <strong>2 locations</strong></li>
+        <li><strong>30</strong> edited digital images</li>
+        <li>Headshots + workspace/lifestyle</li>
+        <li>Online gallery delivery</li>
+      </ul>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-id">PKG — 04</div>
+      <h3>CONTENT CREATION</h3>
+      <div class="pkg-price"><span class="cur">$</span>1,200</div>
+      <div class="pkg-div"></div>
+      <ul class="pkg-ul">
+        <li><strong>Half-day</strong> shoot (4 hrs)</li>
+        <li>Photo + video</li>
+        <li><strong>40</strong> edited photos</li>
+        <li><strong>2</strong> short-form videos (30–60s)</li>
+        <li>Gallery + video delivery</li>
+      </ul>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-id">PKG — 05</div>
+      <h3>FULL PRODUCTION</h3>
+      <div class="pkg-price"><span class="cur">$</span>2,500<span style="font-size:.38em;color:var(--ink-3);font-family:'Geist Mono',monospace;">+</span></div>
+      <div class="pkg-div"></div>
+      <ul class="pkg-ul">
+        <li><strong>Full-day</strong> shoot (8 hrs)</li>
+        <li>Photo + video</li>
+        <li><strong>60+</strong> edited photos</li>
+        <li><strong>4</strong> short-form + 1 long-form (3 min)</li>
+        <li>Grade, sound, motion graphics</li>
+        <li>Gallery + video delivery</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pkg-note">
+    <strong>All prices exclude GST.</strong> Starting prices based on defined scope — if scope changes, we communicate immediately and pause until revised pricing is agreed. No surprises.<br>
+    Professional services (legal, financial, medical) may incur a 15–20% surcharge — discussed during your discovery call.
+  </div>
+</section>
+
+<!-- ============ CALEB ============ -->
+<section class="slab dark caleb" id="caleb">
+  <div class="caleb-inner">
+    <div class="caleb-left">
+      <div class="sec-num"><span class="bar"></span>§ 04 — THE PHOTOGRAPHER</div>
+      <h2>CALEB<br><em>Walker.</em></h2>
+      <blockquote class="caleb-quote">"If the brand has weight,<br>the visuals should too."</blockquote>
+      <a href="#contact" class="btn primary"><span class="d"></span>Work with Caleb</a>
+    </div>
+    <div class="caleb-right">
+      <p>Caleb leads C4 Lens — the photography, videography, and editing arm of C4 Studios. From commercial brand shoots and corporate headshots to events and social content, he brings a <strong>considered, story-first approach</strong> to every frame.</p>
+      <p>His drone work captures perspectives most businesses never think to show. His editing transforms raw footage into polished brand films, reels, and launch content that <strong>actually converts</strong>.</p>
+      <p>Australian businesses trust Caleb to replace stock imagery with visual proof — the kind of content that makes clients feel like they already know you before the first conversation.</p>
+      <p style="margin-top:28px;padding-top:24px;border-top:1px solid var(--line);font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);">Based in Perth, W.A. · Available nationally</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PORTFOLIO ============ -->
+<div class="portfolio-outer" id="portfolioOuter">
+  <div class="portfolio-sticky">
+    <div class="pf-top-row">
+      <span class="t">§ 05 — SELECTED WORK</span>
+      <span>PERTH, W.A. · 2024–2026</span>
+    </div>
+    <div class="pf-hint">← SCROLL TO PAN →</div>
+    <div class="pf-track" id="pfTrack">
+      <div class="pf-card tall"><div class="pf-ph"></div><div class="pf-corner">01 · PORTRAIT</div><div class="pf-corner r">f/1.4</div><div class="pf-mask"></div><div class="pf-cap"><div class="name">BUSINESS PORTRAIT</div><div class="cat">CORPORATE</div></div></div>
+      <div class="pf-card wide"><div class="pf-ph"></div><div class="pf-corner">02 · CAMPAIGN</div><div class="pf-corner r">35MM</div><div class="pf-mask"></div><div class="pf-cap"><div class="name">BRAND CAMPAIGN</div><div class="cat">COMMERCIAL</div></div></div>
+      <div class="pf-card sq"><div class="pf-ph"></div><div class="pf-corner">03 · WORKSPACE</div><div class="pf-corner r">24MM</div><div class="pf-mask"></div><div class="pf-cap"><div class="name">OFFICE ENVIRONMENT</div><div class="cat">BRANDING</div></div></div>
+      <div class="pf-card tall"><div class="pf-ph"></div><div class="pf-corner">04 · EVENT</div><div class="pf-corner r">70-200</div><div class="pf-mask"></div><div class="pf-cap"><div class="name">LIVE EVENT</div><div class="cat">COVERAGE</div></div></div>
+      <div class="pf-card wide"><div class="pf-ph"></div><div class="pf-corner">05 · FILM</div><div class="pf-corner r">4K · 24P</div><div class="pf-mask"></div><div class="pf-cap"><div class="name">BRAND FILM</div><div class="cat">VIDEOGRAPHY</div></div></div>
+      <div class="pf-card sq"><div class="pf-ph"></div><div class="pf-corner">06 · DRONE</div><div class="pf-corner r">AERIAL</div><div class="pf-mask"></div><div class="pf-cap"><div class="name">AERIAL PERSPECTIVE</div><div class="cat">DRONE</div></div></div>
+      <div class="pf-card tall"><div class="pf-ph"></div><div class="pf-corner">07 · PRODUCT</div><div class="pf-corner r">90MM</div><div class="pf-mask"></div><div class="pf-cap"><div class="name">PRODUCT IMAGERY</div><div class="cat">E-COMMERCE</div></div></div>
+    </div>
+    <div class="pf-bar-wrap"><div class="pf-bar" id="pfBar"></div></div>
+  </div>
+</div>
+
+<!-- ============ CTA ============ -->
+<section class="cta-section" id="contact">
+  <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-3);margin-bottom:24px;">§ 06 — LET'S MAKE SOMETHING</div>
+  <h2>READY TO BE<br><em>seen</em>?</h2>
+  <div class="sub">We take on a limited number of clients each quarter. Tell Caleb about your project — he'll reply within 48 hours.</div>
+  <div class="cta-btns">
+    <a href="/contact" class="btn primary"><span class="d"></span>Get in touch</a>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="foot-logo">C4 LENS</div>
+    <div style="margin-top:6px;color:var(--ink-3);">C4 Studios · Perth W.A. · © 2026</div>
+  </div>
+  <div style="text-align:right;">
+    <div>ABN AVAILABLE ON REQUEST</div>
+    <div style="margin-top:6px;color:var(--ink-3);">TRACKING · FOCUS · FRAME</div>
+  </div>
+</footer>
+
+<div class="tweaks" id="tweaks">
+  <h4>TWEAKS — C4 LENS</h4>
+  <label>Cursor reticle <span class="tog" id="togCursor"></span></label>
+  <label>Tick sounds <span class="tog" id="togTicks"></span></label>
+  <label>Motion <input type="range" id="motionRange" min="0" max="100" step="5"/></label>
+</div>
+
+<script>
+/* ===================== TWEAKS ===================== */
+const TWEAK_DEFAULTS=/*EDITMODE-BEGIN*/{"cursor":true,"ticks":false,"motion":65}/*EDITMODE-END*/;
+let TWEAKS={...TWEAK_DEFAULTS};
+
+const NS='http://www.w3.org/2000/svg';
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function eio(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
+function eoc(t){return 1-Math.pow(1-t,3);}
+
+/* ===================== QUOTES ===================== */
+const QUOTES=[
+  {lead:"THE LENS —",body:"that swallows the sun to feed the fire of the mind."},
+  {lead:"THE LENS —",body:"refusing to be filled by anything less than the whole of existence."},
+  {lead:"THE LENS —",body:"forged in the dark to prove the light has somewhere to go."},
+  {lead:"THE LENS —",body:"the soul's only hunter."},
+  {lead:"THE LENS —",body:"where chaos and dust become the gold of a thought."}
+];
+let qIdx=0;
+(function(){
+  const s=document.getElementById('quoteStack');
+  QUOTES.forEach((q,i)=>{
+    const el=document.createElement('div');
+    el.className='q-item'+(i===0?' on':'');
+    el.innerHTML=`<span class="q-lead">${q.lead}</span>${q.body}`;
+    s.appendChild(el);
+  });
+})();
+setInterval(()=>{
+  const all=document.querySelectorAll('.q-item');
+  all[qIdx].classList.remove('on');
+  qIdx=(qIdx+1)%all.length;
+  all[qIdx].classList.add('on');
+},6200);
+
+/* =======================================================================
+   APERTURE BLADES — physical model
+   =======================================================================
+   Geometry rules (so the blades behave like a real iris diaphragm):
+     • Pivot point sits on a ring at radius PIVOT_R from lens center.
+     • In LOCAL space (pivot at origin), blade body extends in the -Y direction.
+     • SVG transform: translate(px py) rotate(totalAngle)
+     • For blade TIP to land at the lens center, totalAngle = baseAngle - 90°,
+       i.e. offset = -90° ⇒ closed (tips meet at center).
+     • offset = 0° ⇒ blade lies tangent to pivot ring (tip swings along ring).
+     • offset > 0° ⇒ blade tip swings OUTSIDE the aperture (hiding in the barrel).
+
+   Open/close range used here:
+     open  offset = +24°  (blades mostly tucked out — iris is visible behind)
+     close offset = -90°  (blades meet at center — iris fully occluded)
+   Blades are one-edge-curved (scimitar) so they overlap naturally when closing,
+   wrapping around each other like real iris blades do.
+   ======================================================================= */
+const N_BLADES=9, PIVOT_R=355;
+const bladeData=[];
+(function buildBlades(){
+  const container=document.getElementById('apertureBlades');
+  /* Blade path, local coords (pivot at 0,0, body in -Y):
+     Asymmetric scimitar. Inner edge (x<0 side) is the one that faces the
+     aperture center — its curve is what sculpts the aperture polygon.
+     Outer edge (x>0 side) rides near the pivot ring. */
+  const BLADE_PATH=
+    'M 0 0 '+
+    'C  60 -20, 110 -90, 120 -200 '+       // outer edge: rides along the ring
+    'C 120 -280, 80 -340, 30 -360 '+       // toward the tip
+    'Q 0 -368, -20 -362 '+                 // tip
+    'C -90 -330, -130 -240, -115 -140 '+   // inner edge: sweeps inward (aperture-facing)
+    'C -95 -70, -50 -20, 0 0 '+            // back to pivot
+    'Z';
+
+  for(let i=0;i<N_BLADES;i++){
+    const baseDeg=(i/N_BLADES)*360;
+    const baseRad=baseDeg*Math.PI/180;
+    const px=500+Math.cos(baseRad)*PIVOT_R;
+    const py=500+Math.sin(baseRad)*PIVOT_R;
+    const g=document.createElementNS(NS,'g');
+    /* Depth shadow underneath */
+    const shadow=document.createElementNS(NS,'path');
+    shadow.setAttribute('d',BLADE_PATH);
+    shadow.setAttribute('fill','rgba(0,0,0,.55)');
+    shadow.setAttribute('transform','translate(3 3)');
+    /* Main blade */
+    const path=document.createElementNS(NS,'path');
+    path.setAttribute('d',BLADE_PATH);
+    path.setAttribute('fill','url(#gBlade)');
+    path.setAttribute('stroke','#18181c');
+    path.setAttribute('stroke-width','.9');
+    /* Edge sheen — catches virtual rim light */
+    const sheen=document.createElementNS(NS,'path');
+    sheen.setAttribute('d','M -20 -360 C -90 -330, -130 -240, -115 -140 C -95 -70, -50 -20, 0 0');
+    sheen.setAttribute('fill','none');
+    sheen.setAttribute('stroke','rgba(255,255,255,.07)');
+    sheen.setAttribute('stroke-width','1.2');
+    sheen.setAttribute('stroke-linecap','round');
+    g.appendChild(shadow);
+    g.appendChild(path);
+    g.appendChild(sheen);
+    container.appendChild(g);
+    bladeData.push({el:g,baseDeg,px,py});
+  }
+})();
+function setBlades(offset){
+  bladeData.forEach(({el,baseDeg,px,py})=>{
+    el.setAttribute('transform',`translate(${px} ${py}) rotate(${baseDeg+offset})`);
+  });
+}
+/* Load open (iris faintly visible through open aperture) */
+setBlades(24);
+
+/* ===================== FOCUS TICKS ===================== */
+(function(){
+  const g=document.getElementById('focusTicks');
+  for(let i=0;i<180;i++){
+    const a=(i/180)*Math.PI*2-Math.PI/2;
+    const maj=i%15===0,mid=i%5===0;
+    const Ro=478,Ri=452;
+    const r1=maj?Ri-9:(mid?Ri-3:Ri);
+    const x1=500+Math.cos(a)*r1,y1=500+Math.sin(a)*r1;
+    const x2=500+Math.cos(a)*Ro,y2=500+Math.sin(a)*Ro;
+    const ln=document.createElementNS(NS,'line');
+    ln.setAttribute('x1',x1);ln.setAttribute('y1',y1);
+    ln.setAttribute('x2',x2);ln.setAttribute('y2',y2);
+    ln.setAttribute('stroke',maj?'#9a9a98':(mid?'#5a5a58':'#2a2a2c'));
+    ln.setAttribute('stroke-width',maj?1.8:(mid?1.1:0.7));
+    g.appendChild(ln);
+  }
+})();
+
+/* ===================== HERO SCROLL ENGINE ===================== */
+const heroScroll=document.getElementById('heroScroll');
+const lensWrap=document.getElementById('lensWrap');
+const lensLayer=document.getElementById('lensLayer');
+const lensEye=document.getElementById('lensEye');
+const eyePupil=document.getElementById('eyePupil');
+const focusRing=document.getElementById('focusRing');
+const quoteBlock=document.getElementById('quoteBlock');
+const heroBottom=document.getElementById('heroBottom');
+const scrollInd=document.getElementById('scrollInd');
+const tickFlash=document.getElementById('tickFlash');
+const hudF=document.getElementById('hudF'),hudShutter=document.getElementById('hudShutter');
+const hudIso=document.getElementById('hudIso'),hudFocal=document.getElementById('hudFocal');
+const hudFocus=document.getElementById('hudFocus'),hudFrame=document.getElementById('hudFrame');
+const hudWb=document.getElementById('hudWb'),hudTc=document.getElementById('hudTc');
+
+/* Iris is FAINT at load — looks like the eye glimmers through the open aperture.
+   As you scroll down, aperture closes, iris opacity rises with it (since
+   the aperture stays centered on the eye, the reveal is synchronized). */
+lensEye.style.opacity='0.22';
+
+let audioCtx=null;
+function playTick(){
+  if(!TWEAKS.ticks)return;
+  try{
+    if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    o.type='square';o.frequency.value=1700+Math.random()*350;
+    g.gain.value=.04;o.connect(g);g.connect(audioCtx.destination);
+    g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.03);
+    o.start();o.stop(audioCtx.currentTime+.035);
+  }catch(e){}
+}
+
+let rawT=0,smoothT=0;
+window.addEventListener('scroll',()=>{
+  const rect=heroScroll.getBoundingClientRect();
+  const total=heroScroll.offsetHeight-window.innerHeight;
+  rawT=total>0?clamp(-rect.top,0,total)/total:0;
+},{passive:true});
+
+let lastTickStep=-1,lastMs=performance.now();
+
+function heroFrame(now){
+  const dt=Math.min(.1,(now-lastMs)/1000);lastMs=now;
+  smoothT=lerp(smoothT,rawT,.09);
+  const t=smoothT;
+  const mScale=TWEAKS.motion/65;
+
+  /* Two synchronized phases of the capture act:
+     A (0 → 0.55): Aperture closes. Focus ring turns, blades sweep toward center,
+                   iris dims from faint glimmer to nothing (blades cover it).
+     B (0.55 → 1):  Aperture re-opens as the "exposure" completes. Blades sweep
+                   back outward, iris is fully revealed — the soul inside the
+                   instrument. */
+  const pA_r=clamp(t/.55,0,1);
+  const pB_r=clamp((t-.55)/.45,0,1);
+  const pA=eio(pA_r);
+  const pB=eio(pB_r);
+
+  /* Focus ring rotation — deliberate, not flippant */
+  const idleDrift=now*.00045;
+  const rot=pA*52*mScale+idleDrift*(1-pA*.94);
+  focusRing.setAttribute('transform',`rotate(${rot} 500 500)`);
+
+  /* Tick sounds on phase A */
+  if(rawT>.01&&rawT<.54){
+    const step=Math.floor(rot/8);
+    if(step!==lastTickStep){
+      lastTickStep=step;playTick();
+      tickFlash.style.transition='none';tickFlash.style.opacity='.5';
+      requestAnimationFrame(()=>{tickFlash.style.transition='opacity .2s';tickFlash.style.opacity='0';});
+    }
+  }
+
+  /* Blades:
+       Phase A: offset  +24° → -90°  (open → closed, tips meet at center)
+       Phase B: offset  -90° → +30°  (reopen fully to reveal iris) */
+  let bladeOffset;
+  if(pB_r>0){ bladeOffset=lerp(-90,30,pB); }
+  else      { bladeOffset=lerp(24,-90,pA); }
+  setBlades(bladeOffset);
+
+  /* Lens dolly — very subtle */
+  const lensScale=1+pB*.11;
+  const breath=Math.sin(now/2600)*.003;
+  lensWrap.style.transform=`scale(${lensScale+breath})`;
+
+  /* Glass layer fades in phase B so the iris isn't fighting reflections */
+  lensLayer.style.opacity=clamp(1-pB*.55,.45,1);
+  lensLayer.style.filter=`blur(${pB*.8}px)`;
+
+  /* Iris visibility:
+       t=0: 0.22 (faintly seen between blades — eye glimmer)
+       Phase A: fades to 0 as blades cover it
+       Phase B: rises to 1 as blades reopen */
+  let eyeOpacity;
+  if(pB_r>0){ eyeOpacity=clamp(pB*1.25,0,1); }
+  else      { eyeOpacity=lerp(.22,0,pA); }
+  lensEye.style.opacity=eyeOpacity;
+
+  /* Pupil dilates as iris is revealed (adjusting to the light) */
+  if(eyePupil){
+    const pupilR=lerp(54,46,clamp(pB,0,1));
+    eyePupil.setAttribute('r',pupilR);
+  }
+
+  /* UI fades */
+  const fade=clamp(1-pB*1.9,0,1);
+  quoteBlock.style.opacity=fade;
+  quoteBlock.style.transform=`translateY(${lerp(0,-12,1-fade)}px)`;
+  heroBottom.style.opacity=clamp(1-pB*2.4,0,1);
+  heroBottom.style.pointerEvents=pB>.1?'none':'auto';
+  scrollInd.style.opacity=clamp(.65-rawT*3,0,.65);
+
+  /* HUD readings tied to exposure state */
+  hudF.textContent=(1.4+(1-pA)*0+pA*14).toFixed(1).replace(/\.0$/,'');
+  hudShutter.textContent=Math.round(250-pA*160);
+  hudIso.textContent=Math.round(400+pA*800);
+  hudWb.textContent=`${Math.round(5600-pA*400)}K`;
+  hudFocal.textContent=['35mm','50mm','85mm','105mm','135mm'][Math.min(4,Math.floor(pA*5))];
+  hudFocus.textContent=t>.96?'LOCKED · ●':`MANUAL · ${(0.5+pA*4.5).toFixed(1)}M`;
+  hudFrame.textContent=`${String(Math.round(1+rawT*419)).padStart(3,'0')} / 420`;
+  const tcS=Math.floor(now/1000);
+  hudTc.textContent=`${String(Math.floor(tcS/3600)%24).padStart(2,'0')}:${String(Math.floor(tcS/60)%60).padStart(2,'0')}:${String(tcS%60).padStart(2,'0')}:${String(Math.floor((now/41.6)%24)).padStart(2,'0')}`;
+
+  requestAnimationFrame(heroFrame);
+}
+requestAnimationFrame(heroFrame);
+
+/* =======================================================================
+   PAINT WORDS — real brush strokes, persistent splatter, paint drips
+   =======================================================================
+   Rather than flashing particles, we maintain a persistent canvas:
+     • Brush: a soft, irregular stamp swept left-to-right along the word.
+              Each stamp deposits paint that stays on the canvas.
+     • Splatter: each frame during a stroke, emit paint droplets with real
+                 physics — gravity, friction — that trail paint as they fly.
+     • Drips:   static paint marks gain a downward "drip" over time (simulated
+                by drawing a vertical tapered line beneath random splatters).
+     • Fade:    between words, very slow destination-out fade so splatter
+                gracefully retreats instead of snapping off.
+   ======================================================================= */
+const WORDS=[
+  {text:'character', col:'#d6ff3a'},
+  {text:'essence',   col:'#ff3fa3'},
+  {text:'nature',    col:'#3ff8ff'},
+  {text:'truth',     col:'#ff8a1c'},
+  {text:'soul',      col:'#f7ff00'},
+  {text:'voice',     col:'#b388ff'},
+  {text:'story',     col:'#3ff8ff'},
+];
+let wIdx=0, paintAnimId=null;
+const wordStage=document.getElementById('wordStage');
+const paintCanvas=document.getElementById('paintCanvas');
+const pctx=paintCanvas.getContext('2d',{alpha:true});
+
+/* Build word elements */
+WORDS.forEach(w=>{
+  const el=document.createElement('span');
+  el.className='c-word';
+  el.textContent=w.text;
+  el.style.color=w.col;
+  /* glow effect for fluro feel */
+  el.style.filter=`drop-shadow(0 0 14px ${w.col}88) drop-shadow(0 0 3px ${w.col}ff)`;
+  wordStage.appendChild(el);
+});
+
+/* Canvas sizing (respect DPR for crispness) */
+let DPR=Math.min(window.devicePixelRatio||1,2);
+function resizePaintCanvas(){
+  const sec=paintCanvas.closest('.capture');
+  paintCanvas.width=sec.offsetWidth*DPR;
+  paintCanvas.height=sec.offsetHeight*DPR;
+  paintCanvas.style.width=sec.offsetWidth+'px';
+  paintCanvas.style.height=sec.offsetHeight+'px';
+  pctx.setTransform(DPR,0,0,DPR,0,0);
+}
+resizePaintCanvas();
+window.addEventListener('resize',resizePaintCanvas);
+
+/* ===== Particle + splatter state ===== */
+let drops=[];          // in-flight paint drops
+let drips=[];          // splatter marks that will grow a "drip tail" over time
+let running=false;
+let lastStroke=0;
+
+/* Draw an irregular brush stamp — not a perfect circle */
+function stampBrush(x,y,size,color,alpha=1){
+  const rings=5;
+  for(let i=0;i<rings;i++){
+    const s=size*(1-i*0.14);
+    const ox=x+(Math.random()-.5)*size*.28;
+    const oy=y+(Math.random()-.5)*size*.14;
+    pctx.beginPath();
+    /* Use a lumpy path so the stamp has irregular silhouette */
+    const steps=9;
+    for(let k=0;k<=steps;k++){
+      const a=(k/steps)*Math.PI*2;
+      const rj=s*(.78+Math.random()*.24);
+      const px=ox+Math.cos(a)*rj, py=oy+Math.sin(a)*rj*.88;
+      if(k===0)pctx.moveTo(px,py); else pctx.lineTo(px,py);
+    }
+    pctx.closePath();
+    pctx.fillStyle=color;
+    pctx.globalAlpha=alpha*(i===0?.9:(.45-i*.08));
+    pctx.fill();
+  }
+  pctx.globalAlpha=1;
+}
+
+/* Stamp a small irregular splat as a persistent splatter — candidate for dripping */
+function splatterBlob(x,y,size,color){
+  stampBrush(x,y,size,color,.9);
+  /* Register for possible drip tail (bigger blobs drip more) */
+  if(size>4&&Math.random()<.38){
+    drips.push({
+      x,y,size,
+      color,
+      dripLen:0,
+      dripMax:size*(3+Math.random()*8),
+      dripW:size*(.18+Math.random()*.35),
+      speed:.35+Math.random()*1.2
+    });
+  }
+}
+
+/* Emit paint drops with physics */
+function spawnDrops(x,y,color,intensity=1){
+  const count=Math.floor((3+Math.random()*8)*intensity);
+  for(let i=0;i<count;i++){
+    const angle=(Math.random()-.5)*Math.PI*1.7-Math.PI*.15;
+    const speed=(2+Math.random()*13)*intensity;
+    drops.push({
+      x,y,
+      vx:Math.cos(angle)*speed,
+      vy:Math.sin(angle)*speed-Math.random()*2,
+      grav:.28+Math.random()*.12,
+      fric:.965,
+      size:1.2+Math.random()*5,
+      life:.9+Math.random()*.25,
+      decay:.014+Math.random()*.018,
+      color
+    });
+  }
+}
+
+/* Update drops: they fly, trail paint, land as splatters */
+function stepDrops(){
+  for(let i=drops.length-1;i>=0;i--){
+    const d=drops[i];
+    d.vy+=d.grav; d.vx*=d.fric; d.vy*=d.fric;
+    d.x+=d.vx; d.y+=d.vy; d.life-=d.decay;
+
+    /* Paint trail while moving */
+    const spd=Math.hypot(d.vx,d.vy);
+    if(spd>1.5){
+      pctx.fillStyle=d.color;
+      pctx.globalAlpha=Math.max(0,d.life)*.55;
+      pctx.beginPath();
+      pctx.ellipse(d.x,d.y,d.size*.9,d.size*.4+spd*.08,Math.atan2(d.vy,d.vx),0,Math.PI*2);
+      pctx.fill();
+      pctx.globalAlpha=1;
+    }
+    /* Land as permanent splatter when slowing or life expiring */
+    if(d.life<.4||(Math.abs(d.vx)<1.2&&Math.abs(d.vy)<1.5)){
+      splatterBlob(d.x,d.y,d.size*1.1,d.color);
+      drops.splice(i,1);
+    }
+  }
+}
+
+/* Update drip tails — vertical gravity-fed drips extending from splatters */
+function stepDrips(){
+  drips.forEach(dp=>{
+    if(dp.dripLen<dp.dripMax){
+      dp.dripLen+=dp.speed;
+      /* Draw the drip as a tapered trail */
+      const grad=pctx.createLinearGradient(dp.x,dp.y,dp.x,dp.y+dp.dripLen);
+      grad.addColorStop(0,dp.color);
+      grad.addColorStop(1,dp.color+'00');
+      pctx.fillStyle=grad;
+      pctx.beginPath();
+      pctx.moveTo(dp.x-dp.dripW,dp.y);
+      pctx.quadraticCurveTo(dp.x-dp.dripW*.5,dp.y+dp.dripLen*.4,dp.x-dp.dripW*.2,dp.y+dp.dripLen);
+      pctx.quadraticCurveTo(dp.x,dp.y+dp.dripLen+dp.dripW*.9,dp.x+dp.dripW*.2,dp.y+dp.dripLen);
+      pctx.quadraticCurveTo(dp.x+dp.dripW*.5,dp.y+dp.dripLen*.4,dp.x+dp.dripW,dp.y);
+      pctx.closePath();
+      pctx.fill();
+    }
+  });
+  /* Cull fully-drawn drips (they're already on canvas) */
+  drips=drips.filter(dp=>dp.dripLen<dp.dripMax);
+}
+
+/* Global very-slow fade of accumulated paint so new strokes don't crowd prev */
+function fadeCanvas(amount){
+  pctx.globalCompositeOperation='destination-out';
+  pctx.fillStyle=`rgba(0,0,0,${amount})`;
+  pctx.fillRect(0,0,paintCanvas.width/DPR,paintCanvas.height/DPR);
+  pctx.globalCompositeOperation='source-over';
+}
+
+/* MASTER render loop for the capture section */
+function paintLoop(){
+  if(!running){ paintAnimId=null; return; }
+  fadeCanvas(.006);     // ambient aging
+  stepDrops();
+  stepDrips();
+  paintAnimId=requestAnimationFrame(paintLoop);
+}
+
+/* Paint a single word: brush sweeps across, depositing a band of color
+   + emitting drops that fly, leave trails, and land as splatters. */
+function paintWord(wordEl,color){
+  wordEl.style.clipPath='inset(0 100% 0 -5%)';
+  wordEl.classList.add('on');
+  const duration=1400;
+  const start=performance.now();
+  const sec=paintCanvas.closest('.capture');
+  const secRect=sec.getBoundingClientRect();
+
+  function stroke(now){
+    const p=Math.min(1,(now-start)/duration);
+    const eased=eoc(p);
+    /* Reveal the word left→right */
+    wordEl.style.clipPath=`inset(0 ${(1-eased)*105}% 0 -5%)`;
+
+    const wRect=wordEl.getBoundingClientRect();
+    const x0=wRect.left-secRect.left;
+    const y0=wRect.top-secRect.top;
+    const brushX=x0 + wRect.width*eased;
+    /* brush oscillates slightly up/down as if hand-painted */
+    const brushY=y0 + wRect.height*.58 + Math.sin(eased*8)*7;
+
+    /* Stamp thick paint at the brush tip */
+    if(p<1){
+      const size=18+Math.random()*10;
+      stampBrush(brushX,brushY,size,color,.85);
+      /* Extra trailing stamps for fatter brush feel */
+      stampBrush(brushX-6-Math.random()*6,brushY+(Math.random()-.5)*9,size*.75,color,.7);
+      /* Emit splatter drops from brush tip */
+      if(Math.random()<.8){
+        spawnDrops(brushX,brushY,color,.7+eased*.6);
+      }
+      /* Register for random drip chance around brush area */
+      if(Math.random()<.14){
+        splatterBlob(brushX+(Math.random()-.5)*28,brushY+(Math.random()-.3)*20,4+Math.random()*6,color);
+      }
+    } else {
+      /* End of stroke: final flourish of splatter */
+      spawnDrops(brushX,brushY,color,2.2);
+    }
+
+    if(p<1){
+      requestAnimationFrame(stroke);
+    }
+  }
+  requestAnimationFrame(stroke);
+}
+
+/* Orchestrator: rotate through words */
+function showNextWord(){
+  const all=document.querySelectorAll('#wordStage .c-word');
+  const cur=all[wIdx];
+  cur.classList.remove('on');
+  cur.style.transition='opacity .5s ease';
+  cur.style.opacity='0';
+
+  wIdx=(wIdx+1)%all.length;
+  const next=all[wIdx];
+  next.style.transition='none';
+  next.style.opacity='0';
+  next.style.clipPath='inset(0 100% 0 -5%)';
+  /* Gentle fade of older paint so the new word has room */
+  fadeCanvas(.18);
+  setTimeout(()=>paintWord(next,WORDS[wIdx].col),430);
+}
+
+/* Trigger on enter viewport */
+let captureStarted=false;
+const capIO=new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting && !captureStarted){
+    captureStarted=true;
+    resizePaintCanvas();
+    running=true;
+    paintLoop();
+    const first=document.querySelectorAll('#wordStage .c-word')[0];
+    setTimeout(()=>paintWord(first,WORDS[0].col),180);
+    setInterval(showNextWord,4400);
+  }
+},{threshold:0.22});
+capIO.observe(document.getElementById('capture'));
+
+/* ===================== PORTFOLIO HORIZONTAL ===================== */
+/* The outer container height is set via CSS var so the scroll-travel MATCHES
+   the horizontal distance we need to move — no over/under-scrolling. */
+const pfOuter=document.getElementById('portfolioOuter');
+const pfTrack=document.getElementById('pfTrack');
+const pfBar=document.getElementById('pfBar');
+
+function sizePortfolio(){
+  /* Let the track lay out first, then read its width */
+  const trackWidth=pfTrack.scrollWidth;
+  const travel=Math.max(0,trackWidth-window.innerWidth);
+  pfOuter.style.setProperty('--pf-travel',travel+'px');
+}
+function onPfScroll(){
+  const rect=pfOuter.getBoundingClientRect();
+  const total=pfOuter.offsetHeight-window.innerHeight;
+  const scrolled=clamp(-rect.top,0,total);
+  const t=total>0?scrolled/total:0;
+  const maxX=Math.max(0,pfTrack.scrollWidth-window.innerWidth);
+  pfTrack.style.transform=`translateX(${-t*maxX}px)`;
+  pfBar.style.width=`${t*100}%`;
+}
+window.addEventListener('scroll',onPfScroll,{passive:true});
+window.addEventListener('resize',()=>{sizePortfolio();onPfScroll();});
+/* Initial: wait a tick so layout settles before measuring */
+requestAnimationFrame(()=>{sizePortfolio();onPfScroll();});
+
+/* ===================== CURSOR ===================== */
+const reticle=document.getElementById('reticle');
+let rx=innerWidth/2,ry=innerHeight/2,tx=rx,ty=ry;
+document.addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY;});
+(function animR(){
+  rx=lerp(rx,tx,.22);ry=lerp(ry,ty,.22);
+  reticle.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+  requestAnimationFrame(animR);
+})();
+
+/* ===================== TWEAKS UI ===================== */
+const tweaksPanel=document.getElementById('tweaks');
+const togCursor=document.getElementById('togCursor');
+const togTicks=document.getElementById('togTicks');
+const motionRange=document.getElementById('motionRange');
+function applyTweaks(){
+  document.body.classList.toggle('cursor-on',TWEAKS.cursor);
+  reticle.style.display=TWEAKS.cursor?'block':'none';
+  togCursor.classList.toggle('on',TWEAKS.cursor);
+  togTicks.classList.toggle('on',TWEAKS.ticks);
+  motionRange.value=TWEAKS.motion;
+}
+function persist(){try{window.parent.postMessage({type:'__edit_mode_set_keys',edits:TWEAKS},'*');}catch(e){}}
+togCursor.addEventListener('click',()=>{TWEAKS.cursor=!TWEAKS.cursor;applyTweaks();persist();});
+togTicks.addEventListener('click',()=>{TWEAKS.ticks=!TWEAKS.ticks;applyTweaks();persist();});
+motionRange.addEventListener('input',e=>{TWEAKS.motion=+e.target.value;persist();});
+applyTweaks();
+window.addEventListener('message',e=>{
+  const d=e.data||{};
+  if(d.type==='__activate_edit_mode')tweaksPanel.classList.add('open');
+  else if(d.type==='__deactivate_edit_mode')tweaksPanel.classList.remove('open');
+});
+window.parent.postMessage({type:'__edit_mode_available'},'*');
+document.addEventListener('click',()=>{
+  if(TWEAKS.ticks&&!audioCtx)try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}
+},{once:true});
+</script>
+</body>
+</html>

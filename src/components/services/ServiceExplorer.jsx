@@ -191,7 +191,7 @@ function DetailPanel({ service, onStartProject, onViewPricing }) {
         ) : (
           <>
             <Link
-              to={`/StartProject?service=${SERVICE_FORM_MAP[service.key] || 'other'}`}
+              to={`/start?service=${SERVICE_FORM_MAP[service.key] || 'other'}`}
               className="group inline-flex items-center gap-2 px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
               style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
             >
@@ -289,7 +289,7 @@ function MobileServiceItem({ service, index, isOpen, onToggle, onStartProject, o
                 ) : (
                   <>
                     <Link
-                      to={`/StartProject?service=${SERVICE_FORM_MAP[service.key] || 'other'}`}
+                      to={`/start?service=${SERVICE_FORM_MAP[service.key] || 'other'}`}
                       className="group inline-flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
                       style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
                     >

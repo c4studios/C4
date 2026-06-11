@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { createPageUrl } from '@/utils';
+import useDocumentHead from '@/hooks/useDocumentHead';
+import { breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -192,6 +194,17 @@ function SectionBlock({ section, index }) {
 }
 
 export default function Terms() {
+  useDocumentHead({
+    title: 'Ventures Programme — Terms & Conditions',
+    description:
+      'Terms governing the C4 Studios Ventures programme, including how idea submissions are reviewed and what happens if a build is undertaken.',
+    path: '/Terms',
+    jsonLd: breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Terms', path: '/Terms' },
+    ]),
+  });
+
   return (
     <div className="min-h-screen pt-28 md:pt-36 pb-24" style={{ backgroundColor: 'var(--c4-bg)' }}>
       <div className="max-w-[720px] mx-auto px-6 md:px-12">

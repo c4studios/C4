@@ -827,4 +827,4 @@ export const GST_NOTE = 'All prices in AUD, excluding GST where applicable.';
 export const INDUSTRY_SURCHARGE_NOTE = 'Professional services industries (legal, financial, medical) may incur a 15\u201320% surcharge due to compliance and regulatory requirements. This will be discussed during your discovery call.';
 
 export const CTA_TEXT = 'Book a Free Discovery Call';
-export const CTA_ROUTE = '/StartProject';
+export const CTA_ROUTE = '/start';

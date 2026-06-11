@@ -48,8 +48,8 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import About from './pages/About';
-import Foresight from './pages/Foresight';
 import Software from './pages/Software';
+import SoftwareProduct from './pages/SoftwareProduct';
 import CaseStudy from './pages/CaseStudy';
 import Contact from './pages/Contact';
 import Support from './pages/Support';
@@ -58,6 +58,9 @@ import Lens from './pages/Lens';
 import Portfolio from './pages/Portfolio';
 import Rebuild from './pages/Rebuild';
 import Services from './pages/Services';
+import ServiceWeb from './pages/ServiceWeb';
+import ServiceBrand from './pages/ServiceBrand';
+import ServiceAI from './pages/ServiceAI';
 import StartProject from './pages/StartProject';
 import Terms from './pages/Terms';
 import Ventures from './pages/Ventures';
@@ -67,7 +70,6 @@ import __Layout from './Layout.jsx';
 export const PAGES = {
     "About": About,
     "CaseStudy": CaseStudy,
-    "Foresight": Foresight,
     "Contact": Contact,
     "Support": Support,
     "Home": Home,
@@ -75,10 +77,14 @@ export const PAGES = {
     "Portfolio": Portfolio,
     "Rebuild": Rebuild,
     "Services": Services,
+    "ServiceWeb": ServiceWeb,
+    "ServiceBrand": ServiceBrand,
+    "ServiceAI": ServiceAI,
     "StartProject": StartProject,
     "Terms": Terms,
     "Ventures": Ventures,
     "Software": Software,
+    "SoftwareProduct": SoftwareProduct,
 }
 
 export const pagesConfig = {

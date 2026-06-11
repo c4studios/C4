@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getCaseStudy } from '../components/portfolio/caseStudyData';
 import CaseStudyHero from '../components/portfolio/CaseStudyHero';
@@ -6,11 +6,43 @@ import CaseStudySection from '../components/portfolio/CaseStudySection';
 import CaseStudyBullets from '../components/portfolio/CaseStudyBullets';
 import CaseStudyGallery from '../components/portfolio/CaseStudyGallery';
 import CaseStudyCTA from '../components/portfolio/CaseStudyCTA';
+import useDocumentHead from '@/hooks/useDocumentHead';
+import { breadcrumbSchema, caseStudyArticleSchema } from '@/lib/schema';
 
 export default function CaseStudy() {
   const [searchParams] = useSearchParams();
   const slug = searchParams.get('slug');
   const study = getCaseStudy(slug);
+
+  const studyJsonLd = useMemo(() => {
+    if (!study) return null;
+    return [
+      breadcrumbSchema([
+        { name: 'Home', path: '/' },
+        { name: 'Portfolio', path: '/Portfolio' },
+        { name: study.name, path: `/CaseStudy?slug=${study.slug}` },
+      ]),
+      caseStudyArticleSchema(study),
+    ];
+  }, [study]);
+
+  useDocumentHead(
+    study
+      ? {
+          title: `${study.name} — ${study.tags?.[0] || 'Case Study'} Case Study`,
+          description: study.oneLiner,
+          path: `/CaseStudy?slug=${study.slug}`,
+          image: study.cover,
+          type: 'article',
+          jsonLd: studyJsonLd,
+        }
+      : {
+          title: 'Case Study Not Found',
+          description: 'The requested case study could not be found.',
+          path: '/CaseStudy',
+          noIndex: true,
+        }
+  );
 
   if (!study) {
     return (
