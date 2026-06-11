@@ -35,6 +35,13 @@ const services = [
     title: 'Photography',
     brief: 'Professional photography and videography for brands that want every visual handled with precision and intent.',
   },
+  {
+    number: 'C5',
+    key: 'sight',
+    page: 'Foresight',
+    title: 'C4Sight',
+    brief: 'Workplace AI training and workshops — practical sessions that leave your team genuinely capable with AI.',
+  },
 ];
 
 export default function ServicesPreview() {
@@ -52,7 +59,7 @@ export default function ServicesPreview() {
         >
           <div>
             <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>Services</h2>
-            <p className="mt-1 text-[12px] font-medium tracking-[-0.01em]" style={{ color: 'var(--c4-text-faint)' }}>Four pillars. One studio.</p>
+            <p className="mt-1 text-[12px] font-medium tracking-[-0.01em]" style={{ color: 'var(--c4-text-faint)' }}>Five pillars. One studio.</p>
           </div>
           <Link
             to={createPageUrl('Services')}

@@ -55,6 +55,7 @@ import Contact from './pages/Contact';
 import Support from './pages/Support';
 import Home from './pages/Home';
 import Lens from './pages/Lens';
+import Foresight from './pages/Foresight';
 import Portfolio from './pages/Portfolio';
 import Rebuild from './pages/Rebuild';
 import Services from './pages/Services';
@@ -74,6 +75,7 @@ export const PAGES = {
     "Support": Support,
     "Home": Home,
     "Lens": Lens,
+    "Foresight": Foresight,
     "Portfolio": Portfolio,
     "Rebuild": Rebuild,
     "Services": Services,

@@ -33,6 +33,7 @@ const STATIC_ROUTES = [
   { path: '/ServiceBrand', priority: 0.85, changefreq: 'monthly' },
   { path: '/ServiceAI', priority: 0.85, changefreq: 'monthly' },
   { path: '/Lens', priority: 0.9, changefreq: 'monthly' },
+  { path: '/Foresight', priority: 0.85, changefreq: 'monthly' },
   { path: '/Portfolio', priority: 0.85, changefreq: 'weekly' },
   { path: '/software', priority: 0.7, changefreq: 'monthly' },
   { path: '/Rebuild', priority: 0.6, changefreq: 'monthly' },
