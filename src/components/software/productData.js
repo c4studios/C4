@@ -101,8 +101,8 @@ export const PRODUCTS = [
     features: [
       'Templated review request emails',
       'Click-tracked review links',
+      'AI replies to reviews (Pro)',
       'Automated follow-up reminders',
-      'Tracks which jobs converted to reviews',
     ],
     highlights: [
       { stat: 'Auto', label: 'requests after every job' },
@@ -271,7 +271,7 @@ export const PRODUCTS = [
     features: [
       'Friendly at 3 days, firm at 10, final at 21',
       'Stops the moment you mark it paid',
-      'Payment details in every email',
+      'Rate-rise calculator + letter included',
       'Automatic chasing, zero awkwardness',
     ],
     highlights: [
