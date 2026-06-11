@@ -11,6 +11,7 @@ const products = [
   { slug: 'returndesk', name: 'ReturnDesk', status: 'Beta', brief: 'Priority inbox — know who to call back first.', from: 'From $49/mo' },
   { slug: 'reviewloop', name: 'ReviewLoop', status: 'Live', brief: 'Turn happy jobs into Google reviews.', from: 'From $29/mo' },
   { slug: 'rebook', name: 'Rebook', status: 'Live', brief: 'Automated service reminders that bring customers back.', from: 'From $29/mo' },
+  { slug: 'crewcheck', name: 'CrewCheck', status: 'Live', brief: 'Licence and insurance expiry tracking for your crew.', from: 'From $49/mo' },
   { slug: 'complia', name: 'Complia', status: 'Live', brief: 'Australian compliance calendar and assistant.', from: 'From $49/mo' },
   { slug: 'firmflow', name: 'FirmFlow', status: 'Live', brief: 'AI content engine for professional services.', from: 'From $79/mo' },
 ];
@@ -35,7 +36,7 @@ export default function SoftwarePreview() {
           <div>
             <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>Software</h2>
             <p className="mt-1 text-[12px] font-medium tracking-[-0.01em]" style={{ color: 'var(--c4-text-faint)' }}>
-              Six products. Studio pricing. Free plans included.
+              Seven products. Studio pricing. Free plans included.
             </p>
           </div>
           <Link
@@ -47,7 +48,7 @@ export default function SoftwarePreview() {
           </Link>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6" role="list">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" role="list">
           {products.map((p, i) => (
             <motion.div
               key={p.slug}
