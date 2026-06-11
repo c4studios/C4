@@ -166,6 +166,42 @@ const PRODUCTS = [
     ],
   },
   {
+    slug: 'rebook',
+    name: 'Rebook',
+    status: 'Live',
+    logoUrl: '/Software/Rebook.svg',
+    oneLiner: 'Automated service reminders that bring customers back.',
+    features: [
+      'Knows when every customer falls due',
+      'Tracked booking links in every email',
+      'Manual or fully automatic sending',
+    ],
+    tiers: [
+      {
+        label: 'Starter',
+        price: 29,
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
+        tierFeatures: [
+          '100 reminders/month',
+          'Tracked booking links',
+          'Automatic sending',
+        ],
+      },
+      {
+        label: 'Pro',
+        price: 79,
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
+        tierFeatures: [
+          'Unlimited reminders',
+          'Tracked booking links',
+          'Priority support',
+        ],
+      },
+    ],
+  },
+  {
     slug: 'firmflow',
     name: 'FirmFlow',
     status: 'Live',
@@ -233,6 +269,7 @@ const PRODUCTS = [
 // Lifetime one-time payment links (live).
 const LIFETIME_LINKS = {
   quotr: "https://buy.stripe.com/4gM5kDbdm1sU2stcmQ3ZK0f",
+  rebook: SUITE_APP_URL,
   returndesk: "https://buy.stripe.com/dRmbJ16X68Vmfff4Uo3ZK0h",
   reviewloop: "https://buy.stripe.com/00w28r6X60oQaYZeuY3ZK0i",
   complia: "https://buy.stripe.com/cNibJ1a9i7Ri1op72w3ZK0j",
@@ -242,6 +279,7 @@ const LIFETIME_LINKS = {
 // Lifetime one-time prices (AUD) shown on the card.
 const LIFETIME_PRICES = {
   quotr: 1899,
+  rebook: 699,
   returndesk: 1199,
   reviewloop: 699,
   complia: 1199,
@@ -475,7 +513,7 @@ function BillingToggle({ period, setPeriod, hasLifetime }) {
   );
 }
 
-const SUITE_SLUGS = ['returndesk', 'reviewloop', 'complia', 'firmflow'];
+const SUITE_SLUGS = ['returndesk', 'reviewloop', 'complia', 'firmflow', 'rebook'];
 
 function LifetimeCard({ product }) {
   const price = LIFETIME_PRICES[product.slug];
