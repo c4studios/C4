@@ -13,6 +13,7 @@ const products = [
   { slug: 'rebook', name: 'Rebook', status: 'Live', brief: 'Automated service reminders that bring customers back.', from: 'From $29/mo' },
   { slug: 'crewcheck', name: 'CrewCheck', status: 'Live', brief: 'Licence and insurance expiry tracking for your crew.', from: 'From $49/mo' },
   { slug: 'safedraft', name: 'SafeDraft', status: 'Live', brief: 'AI-drafted Safe Work Method Statements.', from: 'From $49/mo' },
+  { slug: 'nudge', name: 'Nudge', status: 'Live', brief: 'Polite, escalating invoice reminders.', from: 'From $29/mo' },
   { slug: 'complia', name: 'Complia', status: 'Live', brief: 'Australian compliance calendar and assistant.', from: 'From $49/mo' },
   { slug: 'firmflow', name: 'FirmFlow', status: 'Live', brief: 'AI content engine for professional services.', from: 'From $79/mo' },
 ];
@@ -37,7 +38,7 @@ export default function SoftwarePreview() {
           <div>
             <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>Software</h2>
             <p className="mt-1 text-[12px] font-medium tracking-[-0.01em]" style={{ color: 'var(--c4-text-faint)' }}>
-              Eight products. Studio pricing. Free plans included.
+              Nine products. Studio pricing. Free plans included.
             </p>
           </div>
           <Link
