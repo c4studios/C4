@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Nudge">
+  <rect width="256" height="256" rx="40" fill="#0e0f12"/>
+  <g fill="none" stroke="#f5f6f7" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="64" y="56" width="128" height="152" rx="12"/>
+    <path d="M 88 92 h 80 M 88 120 h 80 M 88 148 h 48"/>
+  </g>
+  <circle cx="186" cy="186" r="38" fill="#0e0f12"/>
+  <g fill="none" stroke="#22c55e" stroke-width="13" stroke-linecap="round">
+    <path d="M 186 166 v 24 l 16 10"/>
+    <circle cx="186" cy="186" r="30"/>
+  </g>
+</svg>

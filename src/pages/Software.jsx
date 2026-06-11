@@ -274,6 +274,42 @@ const PRODUCTS = [
     ],
   },
   {
+    slug: 'nudge',
+    name: 'Nudge',
+    status: 'Live',
+    logoUrl: '/Software/Nudge.svg',
+    oneLiner: 'Polite, escalating invoice reminders.',
+    features: [
+      'Friendly at 3 days, firm at 10, final at 21',
+      'Stops the moment you mark it paid',
+      'Payment details in every email',
+    ],
+    tiers: [
+      {
+        label: 'Starter',
+        price: 29,
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
+        tierFeatures: [
+          '25 outstanding invoices',
+          'Three-stage sequence',
+          'Automatic chasing',
+        ],
+      },
+      {
+        label: 'Pro',
+        price: 59,
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
+        tierFeatures: [
+          'Unlimited invoices',
+          'Three-stage sequence',
+          'Priority support',
+        ],
+      },
+    ],
+  },
+  {
     slug: 'firmflow',
     name: 'FirmFlow',
     status: 'Live',
@@ -344,6 +380,7 @@ const LIFETIME_LINKS = {
   rebook: SUITE_APP_URL,
   crewcheck: SUITE_APP_URL,
   safedraft: SUITE_APP_URL,
+  nudge: SUITE_APP_URL,
   returndesk: "https://buy.stripe.com/dRmbJ16X68Vmfff4Uo3ZK0h",
   reviewloop: "https://buy.stripe.com/00w28r6X60oQaYZeuY3ZK0i",
   complia: "https://buy.stripe.com/cNibJ1a9i7Ri1op72w3ZK0j",
@@ -356,6 +393,7 @@ const LIFETIME_PRICES = {
   rebook: 699,
   crewcheck: 1199,
   safedraft: 1199,
+  nudge: 699,
   returndesk: 1199,
   reviewloop: 699,
   complia: 1199,
@@ -589,7 +627,7 @@ function BillingToggle({ period, setPeriod, hasLifetime }) {
   );
 }
 
-const SUITE_SLUGS = ['returndesk', 'reviewloop', 'complia', 'firmflow', 'rebook', 'crewcheck', 'safedraft'];
+const SUITE_SLUGS = ['returndesk', 'reviewloop', 'complia', 'firmflow', 'rebook', 'crewcheck', 'safedraft', 'nudge'];
 
 function LifetimeCard({ product }) {
   const price = LIFETIME_PRICES[product.slug];
