@@ -102,7 +102,7 @@ const PRODUCTS = [
     features: [
       'Templated review request emails',
       'Click-tracked review links',
-      'Follow-up reminders built in',
+      'AI replies to reviews (Pro)',
     ],
     tiers: [
       {
@@ -123,7 +123,7 @@ const PRODUCTS = [
         ctaLabel: 'Start free',
         tierFeatures: [
           'Unlimited review requests',
-          'Unlimited templates',
+          'AI review reply writer',
           'Follow-up queue + tracking',
         ],
       },
