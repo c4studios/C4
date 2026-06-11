@@ -1,7 +1,6 @@
 const PAGE_URLS = {
     StartProject: '/start',
     Software: '/software',
-    Foresight: '/foresight',
 };
 
 export function createPageUrl(pageName) {

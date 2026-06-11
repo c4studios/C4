@@ -1,16 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import IntroSequence from '../components/c4/IntroSequence';
 import HeroSection from '../components/home/HeroSection';
-import ServicesPreview from '../components/home/ServicesPreview';
-import SoftwarePreview from '../components/home/SoftwarePreview';
+import SocialProof from '../components/home/SocialProof';
+import ProductTrio from '../components/home/ProductTrio';
+import C4Originals from '../components/home/C4Originals';
 import PortfolioPreview from '../components/home/PortfolioPreview';
-import VisionSection from '../components/home/VisionSection';
 import TestimonialsProof from '../components/home/TestimonialsProof';
-import VenturesPreview from '../components/home/VenturesPreview';
 import FinalCTA from '../components/home/FinalCTA';
+import useDocumentHead from '@/hooks/useDocumentHead';
+import { organizationSchema, localBusinessSchema, websiteSchema } from '@/lib/schema';
 
 export default function Home() {
+  const jsonLd = useMemo(() => [
+    organizationSchema(),
+    localBusinessSchema(),
+    websiteSchema(),
+  ], []);
+
+  useDocumentHead({
+    title: 'C4 Studios — Web Design, AI Automations & Photography in Perth',
+    description:
+      'Perth design and development studio building custom websites, AI automations, and professional photography for ambitious founders and brands.',
+    path: '/',
+    jsonLd,
+  });
   const [showIntro, setShowIntro] = useState(false);
   const [introComplete, setIntroComplete] = useState(true);
 
@@ -36,12 +50,11 @@ export default function Home() {
       {introComplete && (
         <div style={{ backgroundColor: 'var(--c4-bg)' }}>
           <HeroSection />
-          <ServicesPreview />
-          <SoftwarePreview />
+          <SocialProof />
+          <ProductTrio />
+          <C4Originals />
           <PortfolioPreview />
-          <VisionSection />
           <TestimonialsProof />
-          <VenturesPreview />
           <FinalCTA />
         </div>
       )}

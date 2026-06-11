@@ -1,0 +1,11 @@
+# ─────────────────────────────────────────────────────────────
+# robots.txt for C4 Studios
+# ─────────────────────────────────────────────────────────────
+
+# Allow all crawlers (including AI crawlers like ClaudeBot, GPTBot, etc.)
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://c4studios.com.au/sitemap.xml

@@ -1,4 +1,10 @@
-# env
+# Dependencies / build output
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Env / secrets
 .env
 .env.*
 .dev.vars
@@ -12,11 +18,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -29,12 +30,15 @@ dist-ssr
 *.sw?
 
 # Cloudflare
-.wranglernode_modules/
-dist/
 .wrangler/
-.env
-.env.*
-*.log
-reports/runtime-audit/
+
+# Local-only artifacts (agent verification runs, browser profiles)
+reports/
 **/edge-profile/
 **/edge-profile-*/
+
+# Nested legacy clone of the GitHub repo — not part of this tree
+/C4-main/
+
+# Throwaway local scripts
+/scripts/__*.mjs

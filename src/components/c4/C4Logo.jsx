@@ -420,13 +420,23 @@ export default function C4Logo({
       onReverseComplete: () => { stageRef.current = 1; },
     });
 
-    colourTl.to(cBaseRef.current, { opacity: 0, duration: 0.25, ease: 'power2.out' }, 0);
-    colourTl.to(bodyBaseRef.current, { opacity: 0, duration: 0.25, ease: 'power2.out' }, 0);
-    colourTl.to(armBaseRef.current, { opacity: 0, duration: 0.25, ease: 'power2.out' }, 0);
+    /* ── Mono "ghost scaffold" ─────────────────────────────────────
+       Instead of letting the mono 4 vanish before the colour build
+       has materialised, hold it at low opacity throughout construction
+       so the eye keeps its anchor on the silhouette. Each ghost layer
+       then cross-dissolves out exactly as its colour seal completes. */
+    const GHOST_OPACITY = 0.32;
+
+    colourTl.to(cBaseRef.current, { opacity: GHOST_OPACITY, duration: 0.30, ease: 'power2.out' }, 0);
+    colourTl.to(bodyBaseRef.current, { opacity: GHOST_OPACITY, duration: 0.30, ease: 'power2.out' }, 0);
+    colourTl.to(armBaseRef.current, { opacity: GHOST_OPACITY, duration: 0.30, ease: 'power2.out' }, 0);
 
     colourTl.set(cClipRectRef.current, { attr: { cx: cCenter.x, cy: cCenter.y, r: 0 } }, 0);
     colourTl.to(cColourRef.current, { opacity: 1, duration: 0.01 }, 0);
     colourTl.to(cClipRectRef.current, { attr: { r: cFullRadius }, duration: 0.65, ease: 'power2.out' }, 0.02);
+
+    // C ghost retires once the colour clip-bloom is mostly through
+    colourTl.to(cBaseRef.current, { opacity: 0, duration: 0.30, ease: 'power2.inOut' }, 0.50);
 
     /* -- 4 structural build -- */
 
@@ -439,15 +449,22 @@ export default function C4Logo({
     colourTl.to(stemUpperRef.current, { scaleY: 1, duration: FOUR_BUILD.stemUpper.duration, ease: 'none' }, FOUR_BUILD.stemUpper.at);
     colourTl.to(diagonalGrowthRef.current, { scaleY: 1, duration: FOUR_BUILD.diagonal.duration, ease: 'none' }, FOUR_BUILD.diagonal.at);
 
-    colourTl.to(bodySealRef.current, { opacity: 1, duration: 0.06, ease: 'none' }, FOUR_BUILD.bodySealAt);
-    colourTl.to(stemUpperRef.current, { opacity: 0, duration: 0.06, ease: 'none' }, FOUR_BUILD.bodySealAt);
-    colourTl.to(diagonalGrowthRef.current, { opacity: 0, duration: 0.06, ease: 'none' }, FOUR_BUILD.bodySealAt);
+    /* Body cross-dissolve: colour seal in, mono ghost out, construction
+       strokes out — all on the same 0.20s window so it reads as one motion. */
+    const BODY_DISSOLVE = 0.20;
+    const ARM_DISSOLVE = 0.20;
+
+    colourTl.to(bodySealRef.current, { opacity: 1, duration: BODY_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.bodySealAt - 0.04);
+    colourTl.to(bodyBaseRef.current, { opacity: 0, duration: BODY_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.bodySealAt - 0.04);
+    colourTl.to(stemUpperRef.current, { opacity: 0, duration: BODY_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.bodySealAt - 0.04);
+    colourTl.to(diagonalGrowthRef.current, { opacity: 0, duration: BODY_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.bodySealAt - 0.04);
 
     colourTl.to(crossArmRef.current, { scaleX: 1, duration: FOUR_BUILD.crossArm.duration, ease: 'power2.in' }, FOUR_BUILD.crossArm.at);
 
-    colourTl.to(armSealRef.current, { opacity: 1, duration: 0.06, ease: 'none' }, FOUR_BUILD.armSealAt);
-    colourTl.to(stemLowerRef.current, { opacity: 0, duration: 0.06, ease: 'none' }, FOUR_BUILD.armSealAt);
-    colourTl.to(crossArmRef.current, { opacity: 0, duration: 0.06, ease: 'none' }, FOUR_BUILD.armSealAt);
+    colourTl.to(armSealRef.current, { opacity: 1, duration: ARM_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.armSealAt - 0.04);
+    colourTl.to(armBaseRef.current, { opacity: 0, duration: ARM_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.armSealAt - 0.04);
+    colourTl.to(stemLowerRef.current, { opacity: 0, duration: ARM_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.armSealAt - 0.04);
+    colourTl.to(crossArmRef.current, { opacity: 0, duration: ARM_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.armSealAt - 0.04);
 
     /* -- Per-letter spring domino chain -- */
 

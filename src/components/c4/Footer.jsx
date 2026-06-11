@@ -9,17 +9,24 @@ const groups = [
     title: 'Studio',
     links: [
       { label: 'About', page: 'About' },
-      { label: 'Services', page: 'Services' },
       { label: 'Portfolio', page: 'Portfolio' },
+      { label: 'C4 Originals', page: 'Software' },
+    ]
+  },
+  {
+    title: 'Services',
+    links: [
+      { label: 'Web & Applications', page: 'ServiceWeb' },
+      { label: 'Brand & Growth', page: 'ServiceBrand' },
+      { label: 'AI & Software', page: 'ServiceAI' },
+      { label: 'C4 Lens', page: 'Lens' },
     ]
   },
   {
     title: 'Initiatives',
     links: [
-      { label: 'Software', page: 'Software' },
       { label: 'Ventures', page: 'Ventures' },
       { label: 'Rebuild', page: 'Rebuild' },
-      { label: 'C4 Lens', page: 'Lens' },
     ]
   },
   {
@@ -36,7 +43,7 @@ export default function Footer() {
   return (
     <footer className="transition-colors duration-200" style={{ backgroundColor: 'var(--c4-footer-bg)' }}>
       <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-        <div className="py-14 md:py-18 grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-6">
+        <div className="py-14 md:py-18 grid grid-cols-2 md:grid-cols-5 gap-10 md:gap-6">
           <div className="col-span-2 md:col-span-1 flex flex-col items-start">
             <C4Logo size={56} variant="full" context="footer" />
             <p className="mt-4 text-[12.5px] leading-[1.6] max-w-[220px]" style={{ color: 'var(--c4-footer-text-dim)' }}>

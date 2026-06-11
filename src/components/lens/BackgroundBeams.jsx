@@ -2,20 +2,35 @@
  * BackgroundBeams — Animated SVG light beams
  * Creates cinematic light streaks that drift slowly behind content.
  */
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 
 export default function BackgroundBeams({ className = '' }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)');
+    const onChange = () => setIsMobile(mq.matches);
+    onChange();
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    else mq.addListener(onChange);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener('change', onChange);
+      else mq.removeListener(onChange);
+    };
+  }, []);
+
   const beams = useMemo(() => {
-    return Array.from({ length: 8 }, (_, i) => ({
+    const count = isMobile ? 4 : 8;
+    return Array.from({ length: count }, (_, i) => ({
       id: i,
-      x1: 10 + i * 12,
-      x2: 20 + i * 10 + (i % 2 ? 15 : -5),
+      x1: 10 + i * (isMobile ? 22 : 12),
+      x2: 20 + i * (isMobile ? 18 : 10) + (i % 2 ? 15 : -5),
       delay: i * 0.8,
       duration: 6 + i * 0.5,
       opacity: 0.03 + (i % 3) * 0.015,
       width: 0.5 + (i % 2) * 0.3,
     }));
-  }, []);
+  }, [isMobile]);
 
   return (
     <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
