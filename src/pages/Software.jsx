@@ -282,7 +282,7 @@ const PRODUCTS = [
     features: [
       'Friendly at 3 days, firm at 10, final at 21',
       'Stops the moment you mark it paid',
-      'Payment details in every email',
+      'Rate-rise calculator + letter included',
     ],
     tiers: [
       {
