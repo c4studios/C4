@@ -202,6 +202,42 @@ const PRODUCTS = [
     ],
   },
   {
+    slug: 'crewcheck',
+    name: 'CrewCheck',
+    status: 'Live',
+    logoUrl: '/Software/CrewCheck.svg',
+    oneLiner: 'Licence and insurance expiry tracking for your crew.',
+    features: [
+      'Every credential and its days remaining',
+      'Alerts at 30, 14, and 3 days before expiry',
+      'Renewal nudges straight to the subbie',
+    ],
+    tiers: [
+      {
+        label: 'Starter',
+        price: 49,
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
+        tierFeatures: [
+          '25 crew members',
+          '30/14/3 day expiry alerts',
+          'Crew renewal nudge emails',
+        ],
+      },
+      {
+        label: 'Pro',
+        price: 99,
+        href: SUITE_APP_URL,
+        ctaLabel: 'Start free',
+        tierFeatures: [
+          'Unlimited crew',
+          '30/14/3 day expiry alerts',
+          'Priority support',
+        ],
+      },
+    ],
+  },
+  {
     slug: 'firmflow',
     name: 'FirmFlow',
     status: 'Live',
@@ -270,6 +306,7 @@ const PRODUCTS = [
 const LIFETIME_LINKS = {
   quotr: "https://buy.stripe.com/4gM5kDbdm1sU2stcmQ3ZK0f",
   rebook: SUITE_APP_URL,
+  crewcheck: SUITE_APP_URL,
   returndesk: "https://buy.stripe.com/dRmbJ16X68Vmfff4Uo3ZK0h",
   reviewloop: "https://buy.stripe.com/00w28r6X60oQaYZeuY3ZK0i",
   complia: "https://buy.stripe.com/cNibJ1a9i7Ri1op72w3ZK0j",
@@ -280,6 +317,7 @@ const LIFETIME_LINKS = {
 const LIFETIME_PRICES = {
   quotr: 1899,
   rebook: 699,
+  crewcheck: 1199,
   returndesk: 1199,
   reviewloop: 699,
   complia: 1199,
@@ -513,7 +551,7 @@ function BillingToggle({ period, setPeriod, hasLifetime }) {
   );
 }
 
-const SUITE_SLUGS = ['returndesk', 'reviewloop', 'complia', 'firmflow', 'rebook'];
+const SUITE_SLUGS = ['returndesk', 'reviewloop', 'complia', 'firmflow', 'rebook', 'crewcheck'];
 
 function LifetimeCard({ product }) {
   const price = LIFETIME_PRICES[product.slug];
