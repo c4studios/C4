@@ -158,6 +158,74 @@ export const PRODUCTS = [
     ctaExternal: true,
   },
   {
+    slug: 'rebook',
+    name: 'Rebook',
+    status: 'Live',
+    logo: '/Software/Rebook.svg',
+    logoBg: '#ffffff',
+    oneLiner: 'Automated service reminders that bring customers back.',
+    summary:
+      'Rebook watches when every customer last booked and reaches out when they fall due — with a tracked booking link in every email — so repeat work comes back without you chasing it.',
+    features: [
+      'Knows when every customer falls due',
+      'Tracked booking links in every email',
+      'Manual or fully automatic sending',
+      'Built for recurring service businesses',
+    ],
+    highlights: [
+      { stat: 'Auto', label: 'reminders when customers fall due' },
+      { stat: '1-click', label: 'tracked booking links' },
+      { stat: 'Repeat', label: 'revenue on autopilot' },
+    ],
+    problem:
+      'Most service businesses rely on customers remembering to rebook. They don’t — and the follow-up messages never get sent once the week gets busy.',
+    solution:
+      'Rebook tracks every customer’s service cycle and sends the reminder at the right moment, with a tracked booking link so you can see exactly which messages turn into jobs.',
+    tiers: [
+      { label: 'Starter', price: 29 },
+      { label: 'Pro', price: 79 },
+    ],
+    lifetime: { price: 699, href: SUITE_APP_URL },
+    pricing: 'Starter $29/mo · Pro $79/mo. Start free — paid plans unlock inside the app.',
+    ctaLabel: 'Start free in the app',
+    ctaHref: SUITE_APP_URL,
+    ctaExternal: true,
+  },
+  {
+    slug: 'crewcheck',
+    name: 'CrewCheck',
+    status: 'Live',
+    logo: '/Software/CrewCheck.svg',
+    logoBg: '#ffffff',
+    oneLiner: 'Licence and insurance expiry tracking for your crew.',
+    summary:
+      'CrewCheck keeps every licence, ticket and insurance certificate for your crew in one register — with automatic alerts before anything expires, and renewal nudges sent straight to the subbie.',
+    features: [
+      'Every credential and its days remaining',
+      'Alerts at 30, 14, and 3 days before expiry',
+      'Renewal nudges straight to the subbie',
+      'One register for the whole crew',
+    ],
+    highlights: [
+      { stat: '30/14/3', label: 'day alerts before expiry' },
+      { stat: '0', label: 'expired tickets on site' },
+      { stat: '1 register', label: 'for the whole crew' },
+    ],
+    problem:
+      'An expired ticket or lapsed insurance discovered on site is a compliance breach, a liability, and a job delay — and spreadsheets never warn you in time.',
+    solution:
+      'CrewCheck tracks every credential’s expiry, alerts you at 30, 14 and 3 days out, and nudges the crew member directly so renewals happen before they bite.',
+    tiers: [
+      { label: 'Starter', price: 49 },
+      { label: 'Pro', price: 99 },
+    ],
+    lifetime: { price: 1199, href: SUITE_APP_URL },
+    pricing: 'Starter $49/mo · Pro $99/mo. Start free — paid plans unlock inside the app.',
+    ctaLabel: 'Start free in the app',
+    ctaHref: SUITE_APP_URL,
+    ctaExternal: true,
+  },
+  {
     slug: 'firmflow',
     name: 'FirmFlow',
     status: 'Live',
