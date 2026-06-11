@@ -33,6 +33,12 @@ const serviceDropdown = [
     page: 'Lens',
     brief: 'Professional photography & videography',
   },
+  {
+    label: 'C4Sight',
+    code: 'C5',
+    page: 'Foresight',
+    brief: 'Workplace AI training & workshops',
+  },
 ];
 
 const navLinks = [

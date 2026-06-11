@@ -15,6 +15,7 @@ import {
   webScopeNotes,
   brandingPackages,
   c4LensPackages,
+  c4SightPackages,
   seoPackages,
   automationPackages,
   socialMediaPackages,
@@ -75,6 +76,17 @@ const SERVICE_PRICING_MAP = {
     hasSurcharge: false,
     hasRebuildCTA: false,
   },
+  sight: {
+    title: 'C4Sight',
+    subtitle: 'Workplace AI training and workshops — delivered on-site in Perth, remote on request.',
+    sections: [
+      { heading: null, packages: c4SightPackages },
+    ],
+    addOns: null,
+    hasToggle: false,
+    hasSurcharge: false,
+    hasRebuildCTA: false,
+  },
 };
 
 /* ── Service key → StartProject form service mapping ── */
@@ -83,6 +95,7 @@ const SERVICE_FORM_MAP = {
   brand: 'brand_platform',
   ai: 'automation',
   lens: 'lens',
+  sight: 'other',
 };
 
 /* ── Build prefilled StartProject URL ── */

@@ -5,7 +5,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import PricingModal from '@/components/pricing/PricingModal';
 
-const SERVICE_KEYS = ['web', 'brand', 'ai', 'lens'];
+const SERVICE_KEYS = ['web', 'brand', 'ai', 'lens', 'sight'];
 
 const SERVICES = [
   {
@@ -76,6 +76,22 @@ const SERVICES = [
     outcome: 'A tighter visual presence across web, campaigns, social, and brand storytelling.',
     approach: 'Built under the C4 Lens banner — restraint, clarity, and deployment-ready assets.',
   },
+  {
+    key: 'sight',
+    title: 'C4Sight',
+    summary: 'Workplace AI training and workshops — practical sessions that teach your team to use AI in their actual roles, with their actual tools.',
+    includes: [
+      'AI literacy workshops (half or full day)',
+      'Hands-on tools training (ChatGPT, Claude & more)',
+      'Automation readiness mapping',
+      'Executive AI briefings for leadership',
+      'Prioritised action plans to keep',
+      'On-site in Perth, remote on request',
+    ],
+    forWho: 'Teams asking "should we be using AI?" — professional services, trades, healthcare, government, and anyone in between.',
+    outcome: 'A team that actually uses AI day-to-day, and a clear map of what to automate next.',
+    approach: 'No slides full of buzzwords. Real exercises on your real workflows, leaving real capability behind.',
+  },
 ];
 
 const ease = [0.22, 1, 0.36, 1];
@@ -85,6 +101,7 @@ const SERVICE_FORM_MAP = {
   brand: 'brand_platform',
   ai: 'automation',
   lens: 'lens',
+  sight: 'other',
 };
 
 function ServiceListItem({ index, title, isActive, isComingSoon, onClick }) {

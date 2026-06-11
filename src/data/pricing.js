@@ -828,3 +828,49 @@ export const INDUSTRY_SURCHARGE_NOTE = 'Professional services industries (legal,
 
 export const CTA_TEXT = 'Book a Free Discovery Call';
 export const CTA_ROUTE = '/start';
+
+/* ── C4Sight — workplace AI training & workshops ── */
+export const c4SightPackages = [
+  {
+    key: 'sight-half-day',
+    name: 'Half-Day Workshop',
+    price: 800,
+    priceLabel: 'From $800',
+    popular: false,
+    description: 'A focused 3–4 hour on-site session for one team.',
+    features: [
+      '3–4 hours on-site',
+      'AI literacy + hands-on tools training',
+      'Practical exercises with your workflows',
+      'Team Q&A throughout',
+    ],
+  },
+  {
+    key: 'sight-full-day',
+    name: 'Full-Day Workshop',
+    price: 1400,
+    priceLabel: 'From $1,400',
+    popular: true,
+    description: 'The complete program — literacy, tools training, and an automation readiness map.',
+    features: [
+      '6–7 hours on-site',
+      'Everything in the half-day workshop',
+      'Automation readiness mapping',
+      'Prioritised action plan to keep',
+    ],
+  },
+  {
+    key: 'sight-custom',
+    name: 'Custom Package',
+    price: 0,
+    priceLabel: 'Contact for quote',
+    popular: false,
+    description: 'Executive briefings, multi-session programs, and ongoing support.',
+    features: [
+      'Executive AI briefing (90 min)',
+      'Multi-session team programs',
+      'Ongoing advisory support',
+      'Tailored to your industry',
+    ],
+  },
+];
