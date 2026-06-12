@@ -123,23 +123,26 @@ const PILLARS = [
 /* ── Industries (9) ────────────────────────────────────────────────── */
 const INDUSTRIES = [
   {
-    slug: 'websites-for-gyms', type: 'industry', status: 'draft', phase: 3,
+    slug: 'websites-for-gyms', type: 'industry', status: 'live', phase: 3,
     name: 'Websites for Gyms & Fitness Studios',
-    title: null, description: null,
+    title: 'Websites for Gyms & Fitness Studios Perth | C4 Studios',
+    description: 'Gym websites that fill classes: phone-first timetables, open membership pricing and booking wired in. Built in Perth, with real fitness builds behind it.',
     priority: 0.8, changefreq: 'monthly',
     links: { pillars: ['web-design-perth', 'photo-video-perth'], comparisons: ['how-much-does-a-website-cost-perth'] },
   },
   {
-    slug: 'websites-for-churches', type: 'industry', status: 'draft', phase: 3,
+    slug: 'websites-for-churches', type: 'industry', status: 'live', phase: 3,
     name: 'Websites for Churches & Ministries',
-    title: null, description: null,
+    title: 'Church Websites & Media Systems Perth | C4 Studios',
+    description: 'Websites for churches and ministries by an occasional pastor: service times visitors find fast, sustainable sermon libraries, giving that works.',
     priority: 0.8, changefreq: 'monthly',
     links: { pillars: ['web-design-perth', 'photo-video-perth'], comparisons: ['how-much-does-a-website-cost-perth'] },
   },
   {
-    slug: 'websites-for-law-firms', type: 'industry', status: 'draft', phase: 3,
+    slug: 'websites-for-law-firms', type: 'industry', status: 'live', phase: 3,
     name: 'Websites for Law Firms',
-    title: null, description: null,
+    title: 'Websites for Law Firms Perth | C4 Studios',
+    description: 'Law firm websites built by a UWA JD student: practice-area pages that answer real questions, intake that filters, and automation for routine work.',
     priority: 0.8, changefreq: 'monthly',
     links: { pillars: ['web-design-perth', 'ai-automation-perth'], comparisons: ['how-much-does-a-website-cost-perth'] },
   },
