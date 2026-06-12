@@ -14,7 +14,7 @@ export const ORG_INFO = {
   legalName: 'C4 Studios',
   url: SITE_URL,
   logo: `${SITE_URL}/c4-logo.png`,
-  founder: 'Caleb Walker',
+  founder: 'Caleb Scott',
   foundingDate: '2022',
   email: 'caleb@c4studios.com.au',
   region: 'Perth, Western Australia',
