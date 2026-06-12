@@ -257,24 +257,125 @@ const COMPARISONS = [
 ];
 
 /* ── Suburb pages (36 = 3 services × 12 suburbs), generated ────────── */
+// Per-page overrides for the generated entries. Phases 5/6 flip a suburb
+// page live by adding { status: 'live', title, description } under its slug
+// — everything else (link graph, schema fields) stays generated.
+const SUBURB_PAGE_META = {
+  /* ── Phase 5 — batch 1 (top 6 suburbs × 3 services) ── */
+  'web-design-perth-cbd': {
+    status: 'live',
+    title: 'Web Design Perth CBD — City-Grade Websites | C4 Studios',
+    description: 'Websites for Perth CBD firms and retailers that survive comparison with national competitors. Credibility-first design from $1,500, surcharge published.',
+  },
+  'seo-perth-cbd': {
+    status: 'live',
+    title: 'SEO Perth CBD — Winnable City Terms | C4 Studios',
+    description: 'SEO for Perth CBD businesses: which competitive city terms are winnable, which are not worth the money, and where specificity beats agency budgets.',
+  },
+  'ai-automation-perth-cbd': {
+    status: 'live',
+    title: 'AI & Automation Perth CBD for Firms | C4 Studios',
+    description: 'Automation for CBD firms: intake, document assembly and chasing that recover billable hours. Workflows from $750, confidentiality by design.',
+  },
+  'web-design-fremantle': {
+    status: 'live',
+    title: 'Web Design Fremantle — Local Websites | C4 Studios',
+    description: 'Websites with Fremantle character intact — for makers, venues and creatives who would rather not look corporate. From $800; we have built for this town.',
+  },
+  'seo-fremantle': {
+    status: 'live',
+    title: 'SEO Fremantle — Visitors & Locals | C4 Studios',
+    description: 'Fremantle SEO that works both markets: weekend visitors and local services. Honest packages from $400, no tourism premium.',
+  },
+  'ai-automation-fremantle': {
+    status: 'live',
+    title: 'AI & Automation Fremantle | C4 Studios',
+    description: 'Automation for Freo independents: bookings, orders and invoice chasing handled quietly while the personal touch stays personal. Workflows from $750.',
+  },
+  'web-design-joondalup': {
+    status: 'live',
+    title: 'Web Design Joondalup & the North | C4 Studios',
+    description: 'Websites built for Joondalup corridor reality — catchment structure, booking-first design and AHPRA-aware practice sites. From $1,500.',
+  },
+  'seo-joondalup': {
+    status: 'live',
+    title: 'SEO Joondalup — Northern Corridor | C4 Studios',
+    description: 'SEO for Joondalup and the northern corridor: map-pack wins, service-area coverage and honest advice on which suburbs are winnable.',
+  },
+  'ai-automation-joondalup': {
+    status: 'live',
+    title: 'AI & Automation Joondalup | C4 Studios',
+    description: 'Automation for the Joondalup appointment economy — reminders that kill no-shows, recalls that refill calendars. Workflows from $750.',
+  },
+  'web-design-osborne-park': {
+    status: 'live',
+    title: 'Web Design Osborne Park — Showrooms | C4 Studios',
+    description: 'Websites for Osborne Park showrooms, wholesalers and trades: range online, quote flows and B2B credibility. From $1,500; catalogues from $3,500.',
+  },
+  'seo-osborne-park': {
+    status: 'live',
+    title: 'SEO Osborne Park — Category Pages | C4 Studios',
+    description: 'SEO for the Osborne Park strip: category pages that fill carparks, B2B search capture and metro service-area coverage from a depot address.',
+  },
+  'ai-automation-osborne-park': {
+    status: 'live',
+    title: 'AI & Automation Osborne Park | C4 Studios',
+    description: 'Automation for the working strip: quotes that follow themselves up, invoices that chase, account reorders on autopilot. From $750.',
+  },
+  'web-design-subiaco': {
+    status: 'live',
+    title: 'Web Design Subiaco — Practices & Retail | C4 Studios',
+    description: 'Restrained, credible websites for Subiaco specialists and Rokeby Road boutiques. Premium by discipline, from $1,500 — medical surcharge published.',
+  },
+  'seo-subiaco': {
+    status: 'live',
+    title: 'SEO Subiaco — Patients & Referrers | C4 Studios',
+    description: 'SEO for the Subiaco double audience — patients and referrers — done inside AHPRA rules, plus Rokeby Road retail visibility. From $400.',
+  },
+  'ai-automation-subiaco': {
+    status: 'live',
+    title: 'AI & Automation Subiaco | C4 Studios',
+    description: 'Discreet automation for specialist suites: referral intake, recalls and report chasing inside the systems you already trust. From $750.',
+  },
+  'web-design-victoria-park': {
+    status: 'live',
+    title: 'Web Design Victoria Park — Venues | C4 Studios',
+    description: 'Websites for the Albany Highway venues and the motor mile: menu-first, mobile-fast, multilingual where it counts. Venue sites from $800.',
+  },
+  'seo-victoria-park': {
+    status: 'live',
+    title: 'SEO Victoria Park — Albany Hwy Strip | C4 Studios',
+    description: 'SEO for the Vic Park strip: cuisine-specific searches, review velocity and the map-pack tiebreakers when competitors are metres apart.',
+  },
+  'ai-automation-victoria-park': {
+    status: 'live',
+    title: 'AI & Automation Victoria Park | C4 Studios',
+    description: 'Automation for the Vic Park speed economy — instant enquiry replies, booking reminders and dealer lead routing. Workflows from $750.',
+  },
+};
+
 const SUBURB_PAGES = SUBURB_SERVICES.flatMap((service) =>
-  SUBURBS.map((suburb) => ({
-    slug: `${service.prefix}-${suburb.key}`,
-    type: 'suburb', status: 'draft', phase: suburb.batchPhase,
-    name: `${service.label} ${suburb.shortName}`,
-    shortName: suburb.shortName,
-    service: service.prefix,
-    serviceLabel: service.label,
-    serviceType: service.serviceType,
-    pillar: service.pillar,
-    title: null, description: null,
-    priority: 0.65, changefreq: 'monthly',
-    links: {
-      // sideways links go to the SAME service in neighbouring suburbs
-      neighbours: suburb.neighbours.map((n) => `${service.prefix}-${n}`),
-      industries: suburb.industries,
-    },
-  }))
+  SUBURBS.map((suburb) => {
+    const slug = `${service.prefix}-${suburb.key}`;
+    return {
+      slug,
+      type: 'suburb', status: 'draft', phase: suburb.batchPhase,
+      name: `${service.label} ${suburb.shortName}`,
+      shortName: suburb.shortName,
+      service: service.prefix,
+      serviceLabel: service.label,
+      serviceType: service.serviceType,
+      pillar: service.pillar,
+      title: null, description: null,
+      priority: 0.65, changefreq: 'monthly',
+      links: {
+        // sideways links go to the SAME service in neighbouring suburbs
+        neighbours: suburb.neighbours.map((n) => `${service.prefix}-${n}`),
+        industries: suburb.industries,
+      },
+      ...(SUBURB_PAGE_META[slug] || {}),
+    };
+  })
 );
 
 /* ── Combined registry ─────────────────────────────────────────────── */
