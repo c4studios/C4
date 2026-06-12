@@ -352,6 +352,98 @@ const SUBURB_PAGE_META = {
     title: 'AI & Automation Victoria Park | C4 Studios',
     description: 'Automation for the Vic Park speed economy — instant enquiry replies, booking reminders and dealer lead routing. Workflows from $750.',
   },
+
+  /* ── Phase 6 — batch 2 (remaining 6 suburbs × 3 services) ── */
+  'web-design-claremont': {
+    status: 'live',
+    title: 'Web Design Claremont — Rebuilt Properly | C4 Studios',
+    description: 'Websites for Claremont and western-suburbs businesses whose reputations outgrew their sites. Rebuilds that keep your domain equity, from $1,500.',
+  },
+  'seo-claremont': {
+    status: 'live',
+    title: 'SEO Claremont — Old Domains, New Wins | C4 Studios',
+    description: 'Established Claremont businesses sit on aged-domain authority they have never used. We clear the technical dust and let it rank. From $400.',
+  },
+  'ai-automation-claremont': {
+    status: 'live',
+    title: 'AI & Automation Claremont | C4 Studios',
+    description: 'Clienteling, automated: client-book follow-ups, appointment lifecycles and post-purchase care for relationship businesses. From $750.',
+  },
+  'web-design-scarborough': {
+    status: 'live',
+    title: 'Web Design Scarborough — Beach Economy | C4 Studios',
+    description: 'Visual-first websites for foreshore venues and the fitness cluster — imagery-led, mobile-fast, built around the beach year. From $800.',
+  },
+  'seo-scarborough': {
+    status: 'live',
+    title: 'SEO Scarborough — The Season Curve | C4 Studios',
+    description: 'Seasonal SEO done on a calendar: build winter, win summer. Surge pages, locals-base terms and the January fitness machine. From $400.',
+  },
+  'ai-automation-scarborough': {
+    status: 'live',
+    title: 'AI & Automation Scarborough | C4 Studios',
+    description: 'Membership-lifecycle automation for the fitness cluster: intro follow-through, waitlists, pause-and-return flows, payment recovery. From $750.',
+  },
+  'web-design-canning-vale': {
+    status: 'live',
+    title: 'Web Design Canning Vale — B2B & Industrial | C4 Studios',
+    description: 'Capability-statement websites for the estate: tender-ready credibility, compliance up front, trade account pathways. From $1,500.',
+  },
+  'seo-canning-vale': {
+    status: 'live',
+    title: 'SEO Canning Vale — Supplier Searches | C4 Studios',
+    description: 'B2B SEO for the industrial estate: capability terms procurement actually types, supplier-diligence pages and problem-search capture. From $400.',
+  },
+  'ai-automation-canning-vale': {
+    status: 'live',
+    title: 'AI & Automation Canning Vale | C4 Studios',
+    description: 'Dispatch-chain automation for warehouses and distributors: order updates that send themselves, PO chasing, reorder prompts. From $750.',
+  },
+  'web-design-midland': {
+    status: 'live',
+    title: 'Web Design Midland — The Eastern Gateway | C4 Studios',
+    description: 'Websites for the gateway: trip-insurance answers for hills and valley customers, booked-ahead workshops, trades toolkit. From $1,500.',
+  },
+  'seo-midland': {
+    status: 'live',
+    title: 'SEO Midland — Metro Plus Regional | C4 Studios',
+    description: 'Midland gets searched from two directions. We build for both: local map-pack work plus the hills-and-valley catchment competitors ignore. From $400.',
+  },
+  'ai-automation-midland': {
+    status: 'live',
+    title: 'AI & Automation Midland | C4 Studios',
+    description: 'Distance-tolerant service for the gateway: photo-first quoting, ready-for-pickup notices and stock answers that save second trips. From $750.',
+  },
+  'web-design-rockingham': {
+    status: 'live',
+    title: 'Web Design Rockingham — New Residents | C4 Studios',
+    description: 'In a growth corridor the website is the referral: newcomer-first answers, corridor coverage and booking that closes. From $1,500.',
+  },
+  'seo-rockingham': {
+    status: 'live',
+    title: 'SEO Rockingham — Win the Waves | C4 Studios',
+    description: 'Posting seasons and estate settlements deliver households choosing every provider at once. Be ranked and review-rich when they land. From $400.',
+  },
+  'ai-automation-rockingham': {
+    status: 'live',
+    title: 'AI & Automation Rockingham | C4 Studios',
+    description: 'Growth without headcount: instant enquiry handling, onboarding rails and booking lifecycles for corridor businesses scaling fast. From $750.',
+  },
+  'web-design-mandurah': {
+    status: 'live',
+    title: 'Web Design Mandurah — Peel Capital | C4 Studios',
+    description: 'Websites that let Mandurah businesses beat the drive-to-Perth alternative: local legibility, honest readability, Peel-wide structure. From $1,500.',
+  },
+  'seo-mandurah': {
+    status: 'live',
+    title: 'SEO Mandurah — Own the Peel | C4 Studios',
+    description: 'Google treats the Peel as its own market — thinner competition, same prize. Regional SEO fundamentals that win front pages. From $400.',
+  },
+  'ai-automation-mandurah': {
+    status: 'live',
+    title: 'AI & Automation Mandurah | C4 Studios',
+    description: 'Automation behind the phone manner: after-the-call admin, trade waitlists and seasonal surge handling for Peel businesses. From $750.',
+  },
 };
 
 const SUBURB_PAGES = SUBURB_SERVICES.flatMap((service) =>
