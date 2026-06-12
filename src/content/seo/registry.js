@@ -47,9 +47,10 @@ const SUBURB_SERVICES = [
 /* ── Pillars (6) ───────────────────────────────────────────────────── */
 const PILLARS = [
   {
-    slug: 'web-design-perth', type: 'pillar', status: 'draft', phase: 2,
+    slug: 'web-design-perth', type: 'pillar', status: 'live', phase: 2,
     name: 'Web Design Perth', serviceType: 'Web design',
-    title: null, description: null,
+    title: 'Web Design Perth — Custom Websites | C4 Studios',
+    description: 'Custom-coded websites for Perth businesses from a founder-led studio. Business sites from $1,500 with fixed quotes, real timelines and no templates.',
     priority: 0.9, changefreq: 'monthly',
     links: {
       pillars: ['web-development-perth', 'seo-perth', 'branding-perth'],
@@ -58,9 +59,10 @@ const PILLARS = [
     },
   },
   {
-    slug: 'web-development-perth', type: 'pillar', status: 'draft', phase: 2,
+    slug: 'web-development-perth', type: 'pillar', status: 'live', phase: 2,
     name: 'Web Development Perth', serviceType: 'Web development',
-    title: null, description: null,
+    title: 'Web Development Perth — Apps & Ecommerce | C4 Studios',
+    description: 'Perth web development for online stores, web apps, portals and integrations. React and Next.js builds from a studio that ships its own software.',
     priority: 0.9, changefreq: 'monthly',
     links: {
       pillars: ['web-design-perth', 'ai-automation-perth'],
@@ -69,9 +71,10 @@ const PILLARS = [
     },
   },
   {
-    slug: 'seo-perth', type: 'pillar', status: 'draft', phase: 2,
+    slug: 'seo-perth', type: 'pillar', status: 'live', phase: 2,
     name: 'SEO Perth', serviceType: 'Search engine optimisation',
-    title: null, description: null,
+    title: 'SEO Perth — Search Optimisation Done Honestly | C4 Studios',
+    description: 'SEO for Perth businesses without the lock-in: one-off fixes from $400 or monthly growth plans from $500. Plain-English reporting, no smoke and mirrors.',
     priority: 0.9, changefreq: 'monthly',
     links: {
       pillars: ['web-design-perth'],
@@ -80,9 +83,10 @@ const PILLARS = [
     },
   },
   {
-    slug: 'ai-automation-perth', type: 'pillar', status: 'draft', phase: 2,
+    slug: 'ai-automation-perth', type: 'pillar', status: 'live', phase: 2,
     name: 'AI & Automation Perth', serviceType: 'AI and workflow automation',
-    title: null, description: null,
+    title: 'AI & Automation Perth for Business | C4 Studios',
+    description: 'Practical AI and workflow automation for Perth businesses — single workflows from $750 to custom AI agents, built by a studio that runs its own.',
     priority: 0.9, changefreq: 'monthly',
     links: {
       pillars: ['web-development-perth', 'seo-perth'],
@@ -91,9 +95,10 @@ const PILLARS = [
     },
   },
   {
-    slug: 'branding-perth', type: 'pillar', status: 'draft', phase: 2,
+    slug: 'branding-perth', type: 'pillar', status: 'live', phase: 2,
     name: 'Branding Perth', serviceType: 'Brand identity design',
-    title: null, description: null,
+    title: 'Branding Perth — Logos to Full Identity | C4 Studios',
+    description: 'Brand design in Perth priced honestly: logos from $250, brand essentials at $1,200, full identity systems from $2,500. Fixed scope, files you own.',
     priority: 0.9, changefreq: 'monthly',
     links: {
       pillars: ['web-design-perth', 'photo-video-perth'],
@@ -102,9 +107,10 @@ const PILLARS = [
     },
   },
   {
-    slug: 'photo-video-perth', type: 'pillar', status: 'draft', phase: 2,
+    slug: 'photo-video-perth', type: 'pillar', status: 'live', phase: 2,
     name: 'Photo & Video Perth', serviceType: 'Commercial photography and videography',
-    title: null, description: null,
+    title: 'Photo & Video Perth — C4 Lens | C4 Studios',
+    description: 'Commercial photography and videography in Perth: headshots, brand shoots, drone and short-form content with exact deliverables, from $200.',
     priority: 0.9, changefreq: 'monthly',
     links: {
       pillars: ['branding-perth', 'web-design-perth'],
@@ -184,9 +190,10 @@ const INDUSTRIES = [
 /* ── Comparisons (7) ───────────────────────────────────────────────── */
 const COMPARISONS = [
   {
-    slug: 'how-much-does-a-website-cost-perth', type: 'comparison', status: 'draft', phase: 2,
+    slug: 'how-much-does-a-website-cost-perth', type: 'comparison', status: 'live', phase: 2,
     name: 'How Much Does a Website Cost in Perth?',
-    title: null, description: null,
+    title: 'How Much Does a Website Cost in Perth? (2026) | C4 Studios',
+    description: 'Perth website costs in 2026: landing pages from $500, business sites $1,500–$2,500, ecommerce from $3,500. What moves the price and what to avoid.',
     priority: 0.85, changefreq: 'monthly',
     links: { pillars: ['web-design-perth'] },
   },
