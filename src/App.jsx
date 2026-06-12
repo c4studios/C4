@@ -4,6 +4,8 @@ import { queryClientInstance } from '@/lib/query-client'
 import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
+import SeoPage from './pages/SeoPage';
+import { liveSeoPages } from './content/seo/registry';
 import { createPageUrl } from './utils';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -45,6 +47,19 @@ function App() {
               />
             );
           })}
+          {/* Programmatic SEO pages — explicit route per LIVE registry entry,
+              so unknown slugs still fall through to the 404 catch-all. */}
+          {liveSeoPages().map((entry) => (
+            <Route
+              key={entry.slug}
+              path={`/${entry.slug}`}
+              element={
+                <LayoutWrapper currentPageName={entry.slug}>
+                  <SeoPage slug={entry.slug} />
+                </LayoutWrapper>
+              }
+            />
+          ))}
           <Route path="/StartProject" element={<LegacyStartProjectRedirect />} />
           <Route path="*" element={
             <LayoutWrapper currentPageName="NotFound">

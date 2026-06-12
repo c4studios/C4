@@ -1,0 +1,66 @@
+# Build the site WITH prerendered HTML and deploy it to Cloudflare Pages.
+#
+# Why this exists: the Cloudflare Pages git-connected build image has no
+# Playwright browsers, so its builds silently degrade to the empty SPA shell
+# (crawlers see no content). This workflow runs the full build — Playwright
+# prerender included — and pushes dist/ to the same Pages project (c4) via
+# wrangler, so production serves real HTML to crawlers.
+#
+# Setup (one-time): add two repository secrets under
+#   Settings → Secrets and variables → Actions
+#   - CLOUDFLARE_API_TOKEN   (dash.cloudflare.com → My Profile → API Tokens,
+#                             "Edit Cloudflare Workers/Pages" template works)
+#   - CLOUDFLARE_ACCOUNT_ID  (Cloudflare dashboard → Workers & Pages → right rail)
+# Until the secrets exist, the workflow still builds (catching breakage) and
+# skips the deploy step with a notice instead of failing.
+
+name: Deploy prerendered site
+
+on:
+  push:
+    branches: [main, redesign-preview]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Build (vite + prerender + sitemap)
+        run: npm run build
+
+      - name: Check Cloudflare credentials
+        id: cf
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Cloudflare secrets not configured — build verified, deploy skipped. Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in Settings → Secrets and variables → Actions to enable deploys."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy to Cloudflare Pages (project c4)
+        if: steps.cf.outputs.ready == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler pages deploy dist --project-name=c4 --branch=${{ github.ref_name }}

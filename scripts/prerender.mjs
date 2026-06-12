@@ -16,9 +16,11 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { liveSeoPages, validateSeoEntry } from '../src/content/seo/registry.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(__dirname, '..', 'dist');
+const SEO_CONTENT_DIR = path.resolve(__dirname, '..', 'src', 'content', 'seo', 'pages');
 
 const SITE_ORIGIN = 'https://c4studios.com.au';
 
@@ -54,6 +56,30 @@ const CASE_STUDY_SLUGS = [
   'gocc',
   'ds-racing-karts',
 ];
+
+// Programmatic SEO pages — sourced from the same registry App.jsx routes
+// from, so prerender + sitemap coverage can never drift from the app.
+// A live entry with broken metadata or a missing content module fails the
+// build loudly rather than shipping a half-finished page.
+function seoRoutes() {
+  const problems = [];
+  for (const entry of liveSeoPages()) {
+    const issues = validateSeoEntry(entry);
+    if (!existsSync(path.join(SEO_CONTENT_DIR, `${entry.slug}.js`))) {
+      issues.push('missing content module');
+    }
+    if (issues.length) problems.push(`  /${entry.slug}: ${issues.join(', ')}`);
+  }
+  if (problems.length) {
+    throw new Error(`Live SEO registry entries failed validation:\n${problems.join('\n')}`);
+  }
+  return liveSeoPages().map((entry) => ({
+    path: `/${entry.slug}`,
+    priority: entry.priority,
+    changefreq: entry.changefreq,
+  }));
+}
+const SEO_ROUTES = seoRoutes();
 
 // C4 Originals product pages (query-param based: /SoftwareProduct?slug=xxx)
 const PRODUCT_SLUGS = [
@@ -193,6 +219,16 @@ async function main() {
     console.log(`  ✅ ${routePath}`);
   }
 
+  // Prerender programmatic SEO pages
+  for (const { path: routePath } of SEO_ROUTES) {
+    const outFile = path.join(DIST, routePath, 'index.html');
+
+    console.log(`  ⏳ ${routePath}`);
+    await prerenderRoute(page, baseUrl, routePath, outFile);
+    count++;
+    console.log(`  ✅ ${routePath}`);
+  }
+
   // Prerender case study pages
   for (const slug of CASE_STUDY_SLUGS) {
     const route = `/CaseStudy?slug=${slug}`;
@@ -236,7 +272,7 @@ async function writeSitemap(outputPath) {
   const today = new Date().toISOString().slice(0, 10);
   const urls = [];
 
-  for (const r of STATIC_ROUTES) {
+  for (const r of [...STATIC_ROUTES, ...SEO_ROUTES]) {
     if (r.includeInSitemap === false) continue;
     urls.push({
       loc: `${SITE_ORIGIN}${r.path === '/' ? '/' : r.path}`,

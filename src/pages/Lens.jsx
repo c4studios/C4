@@ -1727,7 +1727,7 @@ export default function Lens() {
             <div className="caleb-photo-wrap">
               <img
                 src="/Caleb%20Walker%20-%20C4%20Lens%20Profile.jpeg"
-                alt="Caleb Walker — Lead Photographer & Videographer at C4 Lens"
+                alt="Caleb Scott — Lead Photographer & Videographer at C4 Lens"
                 loading="lazy"
               />
               <div className="caleb-photo-meta">
@@ -1738,7 +1738,7 @@ export default function Lens() {
           </div>
           <div className="caleb-right">
             <div className="sec-num lr"><span className="bar"></span>§ 04 — THE PHOTOGRAPHER</div>
-            <h2 className="lr" style={{ '--lr-delay': '70ms' }}>CALEB<br /><em>Walker.</em></h2>
+            <h2 className="lr" style={{ '--lr-delay': '70ms' }}>CALEB<br /><em>Scott.</em></h2>
             <blockquote className="caleb-quote lr" style={{ '--lr-delay': '140ms' }}>&ldquo;If the brand has weight,<br />the visuals should too.&rdquo;</blockquote>
             <p className="lr" style={{ '--lr-delay': '200ms' }}>Caleb leads C4 Lens — the photography, videography, and editing arm of C4 Studios. From commercial brand shoots and corporate headshots to events and social content, he brings a <strong>considered, story-first approach</strong> to every frame.</p>
             <p className="lr" style={{ '--lr-delay': '250ms' }}>His drone work captures perspectives most businesses never think to show. His editing transforms raw footage into polished brand films, reels, and launch content that <strong>actually converts</strong>.</p>

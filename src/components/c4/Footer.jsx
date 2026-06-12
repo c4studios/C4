@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import { liveSeoPages } from '@/content/seo/registry';
 import C4Logo from './C4Logo';
 
 const groups = [
@@ -41,10 +42,20 @@ const groups = [
 ];
 
 export default function Footer() {
+  // "Perth & WA" group: live SEO pillars + the cost guide. Suburb pages
+  // interlink contextually on-page instead — three dozen footer links
+  // would read as link spam. Hidden entirely until pages go live.
+  const seoLinks = liveSeoPages()
+    .filter((p) => p.type === 'pillar' || p.slug === 'how-much-does-a-website-cost-perth')
+    .map((p) => ({ label: p.name, to: `/${p.slug}` }));
+  const footerGroups = seoLinks.length
+    ? [...groups, { title: 'Perth & WA', links: seoLinks }]
+    : groups;
+
   return (
     <footer className="transition-colors duration-200" style={{ backgroundColor: 'var(--c4-footer-bg)' }}>
       <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-        <div className="py-14 md:py-18 grid grid-cols-2 md:grid-cols-5 gap-10 md:gap-6">
+        <div className={`py-14 md:py-18 grid grid-cols-2 gap-10 md:gap-6 ${seoLinks.length ? 'md:grid-cols-6' : 'md:grid-cols-5'}`}>
           <div className="col-span-2 md:col-span-1 flex flex-col items-start">
             <C4Logo size={56} variant="full" context="footer" />
             <p className="mt-4 text-[12.5px] leading-[1.6] max-w-[220px]" style={{ color: 'var(--c4-footer-text-dim)' }}>
@@ -52,13 +63,21 @@ export default function Footer() {
             </p>
           </div>
 
-          {groups.map(g => (
+          {footerGroups.map(g => (
             <div key={g.title}>
               <h4 className="text-[10.5px] uppercase tracking-[0.2em] font-medium mb-4" style={{ color: 'var(--c4-footer-text-muted)' }}>{g.title}</h4>
               <ul className="space-y-2">
                 {g.links.map(l => (
                   <li key={l.label}>
-                    {l.href ? (
+                    {l.to ? (
+                      <Link
+                        to={l.to}
+                        className="text-[12.5px] transition-colors duration-300 hover:brightness-150"
+                        style={{ color: 'var(--c4-footer-text)' }}
+                      >
+                        {l.label}
+                      </Link>
+                    ) : l.href ? (
                       <a
                         href={l.href}
                         target="_blank"
