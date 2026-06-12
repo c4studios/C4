@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import SectionLabel from '@/components/c4/SectionLabel';
 
-const ease = [0.22, 1, 0.36, 1];
-
-// Same accordion idiom as the Support page FAQ — kept visually identical
-// so SEO pages read as part of the same site.
+// Visually the same accordion idiom as the Support page FAQ, with one
+// SEO-critical difference: answers stay mounted in the DOM (collapsed via
+// the 0fr/1fr grid trick) so crawlers and the prerenderer see the full
+// text — the Support version conditionally mounts and ships empty answers.
 function FaqItem({ question, answer }) {
   const [open, setOpen] = useState(false);
 
@@ -15,6 +14,7 @@ function FaqItem({ question, answer }) {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
         className="w-full flex items-center justify-between py-4 text-left gap-4 group"
       >
         <span
@@ -30,20 +30,16 @@ function FaqItem({ question, answer }) {
           style={{ color: 'var(--c4-text-subtle)', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
         />
       </button>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease }}
-          >
-            <p className="pb-5 text-[13.5px] leading-[1.7] max-w-[560px]" style={{ color: 'var(--c4-text-muted)' }}>
-              {answer}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div
+        className="grid transition-[grid-template-rows,opacity] duration-300 ease-out"
+        style={{ gridTemplateRows: open ? '1fr' : '0fr', opacity: open ? 1 : 0 }}
+      >
+        <div className="overflow-hidden">
+          <p className="pb-5 text-[13.5px] leading-[1.7] max-w-[560px]" style={{ color: 'var(--c4-text-muted)' }}>
+            {answer}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
