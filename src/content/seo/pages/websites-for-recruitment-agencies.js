@@ -39,8 +39,8 @@ export default {
       label: 'Beyond the site',
       heading: 'What about the outbound side?',
       body: [
-        'A website converts the demand that finds you; recruitment mostly runs on demand you go and find. That’s why we built C4 Lead Engine — our outbound and lead-generation service that pairs the site with automated prospecting, follow-up sequences and reply handling, so business development happens on schedule rather than when the desk is quiet. Agencies are the textbook case: high deal value, clear targets, and a sales motion that rewards consistency over genius.',
-        'It runs as a separate engagement from the website, but they’re built to feed each other — outbound earns the click, the site closes the credibility check.',
+        'A website converts the demand that finds you; recruitment mostly runs on demand you go and find. That’s why we built C4 Lead Engine — a done-for-you outbound system that researches and qualifies fresh prospects overnight and drafts a personalised email to each one, straight into your own inbox by 9am. You read them with your coffee and hit send; nothing leaves your outbox without you. Agencies are the textbook case: high deal value, clear targets, and a sales motion that rewards consistency over genius.',
+        'It runs as a separate engagement from the website, but they’re built to feed each other — outbound earns the click, the site closes the credibility check. There’s a full rundown on the Lead Engine page.',
       ],
     },
     {
@@ -75,7 +75,7 @@ export default {
     },
     {
       q: 'What’s C4 Lead Engine, in one paragraph?',
-      a: 'Our outbound lead-generation service: targeted prospecting lists, automated multi-step outreach, and reply handling that books the conversations into your calendar. The website convinces; Lead Engine fills the top of the funnel that referrals and job ads don’t reach.',
+      a: 'A done-for-you outbound system: it researches and qualifies prospects overnight, then drafts a personalised email to each — in your voice, into your own Outlook or Gmail — by 9am, for you to approve and send. Nothing sends without you. The website convinces; Lead Engine fills the top of the funnel that referrals and job ads don’t reach. From $1,950 setup, $250 a month.',
     },
     {
       q: 'Candidates complain they never hear back — can the site help?',

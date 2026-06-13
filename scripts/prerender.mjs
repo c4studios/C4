@@ -41,6 +41,7 @@ const STATIC_ROUTES = [
   { path: '/Rebuild', priority: 0.6, changefreq: 'monthly' },
   { path: '/Ventures', priority: 0.5, changefreq: 'monthly' },
   { path: '/start', priority: 0.7, changefreq: 'monthly' },
+  { path: '/lead-engine', priority: 0.7, changefreq: 'monthly' },
   { path: '/Support', priority: 0.4, changefreq: 'yearly' },
   { path: '/Terms', priority: 0.2, changefreq: 'yearly' },
   // Contact 301-redirects to Support, exclude from sitemap
