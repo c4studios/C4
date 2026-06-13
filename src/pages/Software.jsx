@@ -5,7 +5,7 @@ import { ArrowRight, ArrowUpRight, Check } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema } from '@/lib/schema';
-import { PRODUCTS, statusColor as productStatusColor } from '../components/software/productData';
+import { PRODUCTS, statusColor as productStatusColor, SUITE_APP_URL } from '../components/software/productData';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -59,6 +59,44 @@ export default function Software() {
       {/* PRODUCTS */}
       <section className="pb-20 md:pb-28">
         <div className="mx-auto max-w-[1400px] px-6 md:px-12">
+          {/* C4 Suite — bundle banner */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.5, ease }}
+            className="mb-8 flex flex-col gap-4 rounded-[3px] border p-6 md:flex-row md:items-center md:justify-between"
+            style={{ borderColor: 'var(--c4-accent)', backgroundColor: 'var(--c4-card-bg)' }}
+          >
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.18em] font-semibold" style={{ color: 'var(--c4-accent)' }}>
+                C4 Suite
+              </p>
+              <h2 className="mt-1 text-[1.25rem] font-semibold tracking-[-0.02em]" style={{ color: 'var(--c4-text)' }}>
+                Everything. One subscription.
+              </h2>
+              <p className="mt-1 max-w-[560px] text-[13px] leading-[1.6]" style={{ color: 'var(--c4-text-muted)' }}>
+                All eight C4 modules at Pro level — ReturnDesk, ReviewLoop, Rebook, CrewCheck,
+                SafeDraft, Nudge, Complia, and FirmFlow — for under half the price of buying them separately.
+              </p>
+            </div>
+            <div className="flex items-center gap-5">
+              <p className="text-[2rem] font-bold tracking-[-0.04em] leading-none" style={{ color: 'var(--c4-text)' }}>
+                $149<span className="text-[12px] font-normal" style={{ color: 'var(--c4-text-muted)' }}>/mo · AUD</span>
+              </p>
+              <a
+                href={SUITE_APP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 rounded-[3px] px-5 py-3 text-[10.5px] uppercase tracking-[0.14em] font-semibold transition-opacity duration-200 hover:opacity-75"
+                style={{ backgroundColor: 'var(--c4-accent)', color: 'var(--c4-bg)' }}
+              >
+                Start free
+                <ArrowUpRight size={12} strokeWidth={2.5} />
+              </a>
+            </div>
+          </motion.div>
+
           {PRODUCTS.map((product, index) => {
             const color = statusColor(product.status);
             return (
