@@ -22,6 +22,7 @@ const groups = [
       { label: 'AI & Software', page: 'ServiceAI' },
       { label: 'C4 Lens', page: 'Lens' },
       { label: 'C4Sight', page: 'Foresight' },
+      { label: 'Lead Engine', to: '/lead-engine' },
     ]
   },
   {
