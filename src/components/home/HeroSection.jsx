@@ -201,7 +201,7 @@ function QuotrPanel() {
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />
                 <span className="text-[10px] font-medium uppercase tracking-[0.18em]" style={{ color: 'var(--c4-text-subtle)' }}>
-                  Instant Estimate
+                  Project Estimate
                 </span>
               </div>
               <div className="flex items-center gap-3">
@@ -370,7 +370,7 @@ function MobileQuotrModal({ open, onClose }) {
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />
               <span className="text-[11px] font-medium uppercase tracking-[0.18em]" style={{ color: 'var(--c4-text-subtle)' }}>
-                Instant Estimate
+                Project Estimate
               </span>
             </div>
             <button
