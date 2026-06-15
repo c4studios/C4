@@ -80,10 +80,10 @@ export const PRODUCTS = [
     solution:
       'ReturnDesk scores every message on intent and value, shows you why, and gives you a one-click templated reply — so the best leads get answered first, every time.',
     tiers: [
-      { label: 'Early bird', price: 49, note: 'locked in forever' },
-      { label: 'Pro at launch', price: 99 },
+      { label: 'Early bird', price: 29, note: 'locked in forever' },
+      { label: 'Pro at launch', price: 59 },
     ],
-    lifetime: { price: 1199, href: LIFETIME_LINKS.returndesk },
+    lifetime: { price: 690, href: SUITE_APP_URL },
     pricing: '$49/mo early bird — locks in forever. Start free, upgrade in the app.',
     ctaLabel: 'Start free in the app',
     ctaHref: SUITE_APP_URL,
@@ -114,10 +114,10 @@ export const PRODUCTS = [
     solution:
       'ReviewLoop sends the right request at the right moment, follows up politely, and routes happy customers straight to your Google profile.',
     tiers: [
-      { label: 'Starter', price: 29 },
-      { label: 'Pro', price: 79 },
+      { label: 'Starter', price: 19 },
+      { label: 'Pro', price: 45 },
     ],
-    lifetime: { price: 699, href: SUITE_APP_URL },
+    lifetime: { price: 450, href: SUITE_APP_URL },
     pricing: 'Starter $29/mo · Pro $79/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
     ctaHref: SUITE_APP_URL,
@@ -148,10 +148,10 @@ export const PRODUCTS = [
     solution:
       'Complia maps your obligations to the Australian calendar, reminds you before each one, and walks you through exactly what to prepare.',
     tiers: [
-      { label: 'Pro', price: 49 },
-      { label: 'Business', price: 99 },
+      { label: 'Starter', price: 29 },
+      { label: 'Pro', price: 59 },
     ],
-    lifetime: { price: 1199, href: SUITE_APP_URL },
+    lifetime: { price: 690, href: SUITE_APP_URL },
     pricing: 'Pro $49/mo · Business $99/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
     ctaHref: SUITE_APP_URL,
@@ -182,10 +182,10 @@ export const PRODUCTS = [
     solution:
       'Rebook tracks every customer’s service cycle and sends the reminder at the right moment, with a tracked booking link so you can see exactly which messages turn into jobs.',
     tiers: [
-      { label: 'Starter', price: 29 },
-      { label: 'Pro', price: 79 },
+      { label: 'Starter', price: 19 },
+      { label: 'Pro', price: 45 },
     ],
-    lifetime: { price: 699, href: SUITE_APP_URL },
+    lifetime: { price: 450, href: SUITE_APP_URL },
     pricing: 'Starter $29/mo · Pro $79/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
     ctaHref: SUITE_APP_URL,
@@ -216,10 +216,10 @@ export const PRODUCTS = [
     solution:
       'CrewCheck tracks every credential’s expiry, alerts you at 30, 14 and 3 days out, and nudges the crew member directly so renewals happen before they bite.',
     tiers: [
-      { label: 'Starter', price: 49 },
-      { label: 'Pro', price: 99 },
+      { label: 'Starter', price: 29 },
+      { label: 'Pro', price: 59 },
     ],
-    lifetime: { price: 1199, href: SUITE_APP_URL },
+    lifetime: { price: 690, href: SUITE_APP_URL },
     pricing: 'Starter $49/mo · Pro $99/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
     ctaHref: SUITE_APP_URL,
@@ -250,10 +250,10 @@ export const PRODUCTS = [
     solution:
       'SafeDraft drafts the document from your actual job description, applies the hierarchy of controls, and marks anything it can’t verify for on-site confirmation — a real starting point, not a template.',
     tiers: [
-      { label: 'Starter', price: 49 },
-      { label: 'Pro', price: 99 },
+      { label: 'Starter', price: 29 },
+      { label: 'Pro', price: 59 },
     ],
-    lifetime: { price: 1199, href: SUITE_APP_URL },
+    lifetime: { price: 690, href: SUITE_APP_URL },
     pricing: 'Starter $49/mo · Pro $99/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
     ctaHref: SUITE_APP_URL,
@@ -284,10 +284,10 @@ export const PRODUCTS = [
     solution:
       'Nudge sends the reminders on a polite-but-firm schedule with payment details in every email, and backs off instantly when the invoice is settled.',
     tiers: [
-      { label: 'Starter', price: 29 },
-      { label: 'Pro', price: 59 },
+      { label: 'Starter', price: 19 },
+      { label: 'Pro', price: 39 },
     ],
-    lifetime: { price: 699, href: SUITE_APP_URL },
+    lifetime: { price: 450, href: SUITE_APP_URL },
     pricing: 'Starter $29/mo · Pro $59/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
     ctaHref: SUITE_APP_URL,
@@ -318,10 +318,10 @@ export const PRODUCTS = [
     solution:
       'FirmFlow grounds every piece in your own approved material, keeps your voice, and bakes in the disclaimers your industry requires.',
     tiers: [
-      { label: 'Pro', price: 79 },
-      { label: 'Agency', price: 199 },
+      { label: 'Starter', price: 39 },
+      { label: 'Pro', price: 89 },
     ],
-    lifetime: { price: 1899, href: SUITE_APP_URL },
+    lifetime: { price: 890, href: SUITE_APP_URL },
     pricing: 'Pro $79/mo · Agency $199/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
     ctaHref: SUITE_APP_URL,
