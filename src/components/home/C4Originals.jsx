@@ -3,89 +3,11 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+// Single source of truth — same data the /software page and detail pages use,
+// so the homepage grid can never drift out of date (statuses, CTAs, new products).
+import { PRODUCTS, statusColor } from '../software/productData';
 
 const ease = [0.22, 1, 0.36, 1];
-
-const PRODUCTS = [
-  {
-    slug: 'quotr',
-    name: 'Quotr',
-    logo: '/Software/quotr-icon.jpeg',
-    logoBg: '#000000',
-    status: 'Live',
-    statusColor: '#22c55e',
-    tagline: 'Instant quote calculators for service businesses.',
-    detail: 'Embed on any website in minutes. Stripe billing built in.',
-    ctaLabel: 'quotr.us',
-    ctaHref: 'https://quotr.us',
-    external: true,
-  },
-  {
-    slug: 'returndesk',
-    name: 'ReturnDesk',
-    logo: '/Software/returndesk-minimal.png',
-    logoBg: '#ffffff',
-    status: 'Beta',
-    statusColor: 'var(--c4-accent)',
-    tagline: 'Priority inbox for service businesses.',
-    detail: 'Manual-first, explainable priority scoring, reply templates.',
-    ctaLabel: 'Request access',
-    ctaHref: 'mailto:caleb@c4studios.com.au?subject=ReturnDesk beta access',
-    external: false,
-  },
-  {
-    slug: 'reviewloop',
-    name: 'ReviewLoop',
-    logo: '/Software/reviewloop-minimal.png',
-    logoBg: '#ffffff',
-    status: 'Coming Soon',
-    statusColor: 'var(--c4-text-muted)',
-    tagline: 'Turn happy jobs into Google reviews.',
-    detail: 'Automated review requests with Google Business Profile integration.',
-    ctaLabel: 'Join waitlist',
-    ctaHref: 'mailto:caleb@c4studios.com.au?subject=ReviewLoop waitlist',
-    external: false,
-  },
-  {
-    slug: 'complia',
-    name: 'Complia',
-    logo: '/Software/Complia.png',
-    logoBg: '#ffffff',
-    status: 'Coming Soon',
-    statusColor: 'var(--c4-text-muted)',
-    tagline: 'Australian compliance calendar and assistant.',
-    detail: 'BAS, super, ASIC — preparation checklists and reminder system.',
-    ctaLabel: 'Join waitlist',
-    ctaHref: 'mailto:caleb@c4studios.com.au?subject=Complia waitlist',
-    external: false,
-  },
-  {
-    slug: 'firmflow',
-    name: 'FirmFlow',
-    logo: '/Software/FirmFlow.png',
-    logoBg: '#ffffff',
-    status: 'Coming Soon',
-    statusColor: 'var(--c4-text-muted)',
-    tagline: 'AI content engine for professional services.',
-    detail: 'LinkedIn posts, newsletters and client emails — source-first generation.',
-    ctaLabel: 'Join waitlist',
-    ctaHref: 'mailto:caleb@c4studios.com.au?subject=FirmFlow waitlist',
-    external: false,
-  },
-  {
-    slug: 'c4-command',
-    name: 'C4 Command',
-    logo: '/Software/C4Command.png',
-    logoBg: '#ffffff',
-    status: 'Studio',
-    statusColor: 'var(--c4-text-subtle)',
-    tagline: 'Operational hub for the C4 Studio.',
-    detail: 'Lead pipeline, automation health, projects and client notes.',
-    ctaLabel: 'Get in touch',
-    ctaHref: 'mailto:caleb@c4studios.com.au?subject=C4 Command',
-    external: false,
-  },
-];
 
 function ProductCard({ product, index }) {
   const [hovered, setHovered] = useState(false);
@@ -130,11 +52,11 @@ function ProductCard({ product, index }) {
         <div className="inline-flex items-center gap-1.5">
           <span
             className="h-1.5 w-1.5 rounded-full flex-shrink-0"
-            style={{ backgroundColor: product.statusColor }}
+            style={{ backgroundColor: statusColor(product.status) }}
           />
           <span
             className="text-[9.5px] uppercase tracking-[0.16em] font-medium"
-            style={{ color: product.statusColor }}
+            style={{ color: statusColor(product.status) }}
           >
             {product.status}
           </span>
@@ -165,19 +87,19 @@ function ProductCard({ product, index }) {
         className="text-[13px] leading-[1.6] mb-2"
         style={{ color: 'var(--c4-text-muted)' }}
       >
-        {product.tagline}
+        {product.oneLiner}
       </p>
 
-      {/* Detail */}
+      {/* Detail — first feature from the shared product data */}
       <p
         className="text-[12px] leading-[1.55] mb-6 flex-1"
         style={{ color: 'var(--c4-text-faint)' }}
       >
-        {product.detail}
+        {product.features?.[0]}
       </p>
 
       {/* CTA */}
-      {product.external ? (
+      {product.ctaExternal ? (
         <a
           href={product.ctaHref}
           target="_blank"
