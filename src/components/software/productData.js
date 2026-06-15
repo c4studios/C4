@@ -44,6 +44,17 @@ export const PRODUCTS = [
       'Most service businesses lose leads to slow quoting. A customer wants a number now; if they have to wait a day for a callback, they have already messaged three competitors.',
     solution:
       'Quotr turns your pricing logic into an interactive calculator. Customers self-qualify and see a range instantly, and you wake up to warm leads who already understand what they are paying for.',
+    howItWorks: [
+      { step: '01', title: 'Build your calculator', body: 'Add your services and pricing rules in a visual builder. No code — just describe what you charge for and how.' },
+      { step: '02', title: 'Embed it on your site', body: 'Paste one line of code, or share a link. Visitors answer a few questions and see a transparent price range instantly.' },
+      { step: '03', title: 'Get qualified leads', body: 'Every estimate lands in your inbox with the customer’s details and answers, so you follow up warm — not cold.' },
+    ],
+    faqs: [
+      { q: 'Do I need a developer to set it up?', a: 'No. You build the calculator with a visual editor and embed it with a single snippet. Most businesses are live in under five minutes.' },
+      { q: 'What if my pricing is complicated?', a: 'Quotr supports tiered rules, conditional questions and formula-based pricing, so you can model almost any service. Customers only ever see a clean range.' },
+      { q: 'Can I try it before paying?', a: 'Yes. Start free at quotr.us; paid plans add billing, more calculators and branding.' },
+      { q: 'Will it match my brand?', a: 'Fully. Colours, fonts and wording are all themeable, so the calculator looks like part of your own site.' },
+    ],
     tiers: [
       { label: 'Starter', price: 29 },
       { label: 'Pro', price: 59 },
@@ -79,6 +90,16 @@ export const PRODUCTS = [
       'High-volume inboxes bury the jobs that actually pay. The urgent quote request sits three pages below newsletters and spam.',
     solution:
       'ReturnDesk scores every message on intent and value, shows you why, and gives you a one-click templated reply — so the best leads get answered first, every time.',
+    howItWorks: [
+      { step: '01', title: 'Bring your enquiries in', body: 'Pull your incoming messages into one inbox. It works manually from day one — no risky automation required.' },
+      { step: '02', title: 'See what matters first', body: 'Every message gets a priority score with a plain-English reason, so the jobs worth money rise to the top.' },
+      { step: '03', title: 'Reply in one click', body: 'Pick a templated reply for the category and send. The best leads get answered first, every time.' },
+    ],
+    faqs: [
+      { q: 'Does it reply to customers automatically?', a: 'Only if you want it to. ReturnDesk is manual-first — it scores and suggests, and you stay in control until you trust it.' },
+      { q: 'Why is a message ranked highly?', a: 'Every score comes with a reason in plain English, so you’re never guessing why something is at the top.' },
+      { q: 'Is it free to start?', a: 'Yes. Start free in the app and upgrade when you’re ready — early-bird pricing locks in forever.' },
+    ],
     tiers: [
       { label: 'Early bird', price: 29, note: 'locked in forever' },
       { label: 'Pro at launch', price: 59 },
@@ -113,6 +134,16 @@ export const PRODUCTS = [
       'Reviews are the single biggest local-SEO and trust signal — and the easiest thing to forget to ask for when you are busy doing the work.',
     solution:
       'ReviewLoop sends the right request at the right moment, follows up politely, and routes happy customers straight to your Google profile.',
+    howItWorks: [
+      { step: '01', title: 'Add a customer after each job', body: 'Drop in the customer and the job you just finished, or let it pull from your records.' },
+      { step: '02', title: 'We send the request', body: 'ReviewLoop emails a templated, click-tracked review link at the right moment, then follows up politely if there’s no response.' },
+      { step: '03', title: 'Watch reviews roll in', body: 'Happy customers go straight to your Google profile. On Pro, AI even drafts your replies.' },
+    ],
+    faqs: [
+      { q: 'Will it annoy my customers?', a: 'No. Requests are timed and polite, with a single gentle follow-up, and you control the wording and the schedule.' },
+      { q: 'Does it post fake reviews?', a: 'Never. ReviewLoop only invites real customers to leave a genuine review on your own Google profile.' },
+      { q: 'What does Pro add?', a: 'Automated follow-up reminders and AI-drafted replies to the reviews you receive.' },
+    ],
     tiers: [
       { label: 'Starter', price: 19 },
       { label: 'Pro', price: 45 },
@@ -147,6 +178,16 @@ export const PRODUCTS = [
       'Compliance deadlines are non-negotiable and easy to miss. A late BAS or ASIC review means penalties that dwarf the cost of staying organised.',
     solution:
       'Complia maps your obligations to the Australian calendar, reminds you before each one, and walks you through exactly what to prepare.',
+    howItWorks: [
+      { step: '01', title: 'Tell us your obligations', body: 'Pick the lodgements that apply to you — BAS, super, ASIC review and more — mapped to the real Australian calendar.' },
+      { step: '02', title: 'Get reminded in time', body: 'Complia emails you before each due date, with enough lead time to actually prepare.' },
+      { step: '03', title: 'Work the checklist', body: 'Each obligation comes with a preparation checklist, so you know exactly what to gather and lodge.' },
+    ],
+    faqs: [
+      { q: 'Is this tax or legal advice?', a: 'No. Complia is an organisational tool that tracks dates and preparation steps — it doesn’t replace your accountant.' },
+      { q: 'Is it specific to Australia?', a: 'Yes. Complia is built around the Australian ATO and ASIC calendar and obligations.' },
+      { q: 'Can I add my own deadlines?', a: 'Yes. Alongside the standard obligations you can add custom ones with their own checklist and reminders.' },
+    ],
     tiers: [
       { label: 'Starter', price: 29 },
       { label: 'Pro', price: 59 },
@@ -181,6 +222,16 @@ export const PRODUCTS = [
       'Most service businesses rely on customers remembering to rebook. They don’t — and the follow-up messages never get sent once the week gets busy.',
     solution:
       'Rebook tracks every customer’s service cycle and sends the reminder at the right moment, with a tracked booking link so you can see exactly which messages turn into jobs.',
+    howItWorks: [
+      { step: '01', title: 'Add your customers', body: 'Record when each customer last booked and how often they’re due — for example every 6 or 12 months.' },
+      { step: '02', title: 'Rebook watches the clock', body: 'When a customer falls due, Rebook drafts a reminder with a tracked booking link, ready to send.' },
+      { step: '03', title: 'Repeat work comes back', body: 'Send manually or fully automatically, and see exactly which reminders turned into bookings.' },
+    ],
+    faqs: [
+      { q: 'What kind of business is this for?', a: 'Any service that should repeat on a cycle: cleaning, servicing, inspections, dental, detailing and more.' },
+      { q: 'Do I have to send each reminder myself?', a: 'Your choice. Run it manually for full control, or switch on automatic sending once you trust the timing.' },
+      { q: 'How do I know it\'s working?', a: 'Every booking link is tracked, so you can see which reminders led to actual rebookings.' },
+    ],
     tiers: [
       { label: 'Starter', price: 19 },
       { label: 'Pro', price: 45 },
@@ -215,6 +266,16 @@ export const PRODUCTS = [
       'An expired ticket or lapsed insurance discovered on site is a compliance breach, a liability, and a job delay — and spreadsheets never warn you in time.',
     solution:
       'CrewCheck tracks every credential’s expiry, alerts you at 30, 14 and 3 days out, and nudges the crew member directly so renewals happen before they bite.',
+    howItWorks: [
+      { step: '01', title: 'Build your crew register', body: 'Add each worker and their licences, tickets and insurance certificates, with expiry dates.' },
+      { step: '02', title: 'Get warned early', body: 'CrewCheck alerts you 30, 14 and 3 days before anything expires — no more surprises on site.' },
+      { step: '03', title: 'Nudge the renewal', body: 'Send a renewal reminder straight to the crew member, so it’s handled before it becomes a problem.' },
+    ],
+    faqs: [
+      { q: 'What can I track?', a: 'Any credential with an expiry — trade licences, white cards, high-risk tickets, insurances and more — all in one register.' },
+      { q: 'Who gets the alerts?', a: 'You do, at 30, 14 and 3 days out. You can also nudge the individual crew member directly to renew.' },
+      { q: 'Is it just for construction?', a: 'No. Any business with licensed or insured staff benefits — though it’s especially handy on site.' },
+    ],
     tiers: [
       { label: 'Starter', price: 29 },
       { label: 'Pro', price: 59 },
@@ -249,6 +310,16 @@ export const PRODUCTS = [
       'A SWMS is mandatory before high-risk work starts, but writing one properly takes hours — so they get copy-pasted from old jobs and stop reflecting the actual site.',
     solution:
       'SafeDraft drafts the document from your actual job description, applies the hierarchy of controls, and marks anything it can’t verify for on-site confirmation — a real starting point, not a template.',
+    howItWorks: [
+      { step: '01', title: 'Describe the job', body: 'Write the task in plain English: the trade, the work, and the site.' },
+      { step: '02', title: 'SafeDraft writes the SWMS', body: 'It maps hazards and controls through the hierarchy of controls and flags anything uncertain as [CONFIRM ON SITE] instead of inventing it.' },
+      { step: '03', title: 'Review, sign, print', body: 'Check the flagged items, then print a ready-to-use document with a worker sign-off table.' },
+    ],
+    faqs: [
+      { q: 'Is the SWMS ready to use as-is?', a: 'It’s a real, structured starting point — not a blank template. You review the [CONFIRM ON SITE] flags and adjust for your actual site before use.' },
+      { q: 'Does it make up hazards or controls?', a: 'No. Where it can’t verify something, it marks it [CONFIRM ON SITE] rather than guessing.' },
+      { q: 'Is it built for Australia?', a: 'Yes. It follows the hierarchy of controls and Australian site-documentation expectations.' },
+    ],
     tiers: [
       { label: 'Starter', price: 29 },
       { label: 'Pro', price: 59 },
@@ -283,6 +354,16 @@ export const PRODUCTS = [
       'Late invoices are awkward to chase, so most small businesses just… don’t. The cash sits in someone else’s account while the follow-up email stays unwritten.',
     solution:
       'Nudge sends the reminders on a polite-but-firm schedule with payment details in every email, and backs off instantly when the invoice is settled.',
+    howItWorks: [
+      { step: '01', title: 'Add an unpaid invoice', body: 'Enter the invoice, the amount and the customer, or mark which ones are outstanding.' },
+      { step: '02', title: 'Nudge chases for you', body: 'It sends a friendly reminder at 3 days, firmer at 10, and a final notice at 21 — with your payment details every time.' },
+      { step: '03', title: 'It stops when you\'re paid', body: 'Mark the invoice paid and the reminders stop instantly. No awkward chasing on your part.' },
+    ],
+    faqs: [
+      { q: 'Will it embarrass me with customers?', a: 'No. The tone is polite first and only escalates gradually, and you can edit the wording at every stage.' },
+      { q: 'What happens when an invoice is paid?', a: 'The moment you mark it paid, Nudge stops all further reminders for that invoice automatically.' },
+      { q: 'What\'s the rate-rise feature?', a: 'A built-in calculator and letter generator (RateRise) that helps you raise your prices and tell customers professionally.' },
+    ],
     tiers: [
       { label: 'Starter', price: 19 },
       { label: 'Pro', price: 39 },
@@ -317,6 +398,16 @@ export const PRODUCTS = [
       'Professional-services firms know content drives trust, but partners do not have time to write it — and generic AI tools produce risky, off-brand fluff.',
     solution:
       'FirmFlow grounds every piece in your own approved material, keeps your voice, and bakes in the disclaimers your industry requires.',
+    howItWorks: [
+      { step: '01', title: 'Add your source material', body: 'Paste an article, update or note you want to talk about. FirmFlow only works from material you give it.' },
+      { step: '02', title: 'Generate on-brand content', body: 'Get LinkedIn posts, newsletters and client emails in your firm’s voice — grounded in your source, not invented.' },
+      { step: '03', title: 'Review and publish', body: 'Required disclaimers are built in. Check it, tweak it, and ship it.' },
+    ],
+    faqs: [
+      { q: 'Will it make up facts or figures?', a: 'No. FirmFlow is source-first — it writes from the material you provide rather than hallucinating claims.' },
+      { q: 'Is it safe for regulated industries?', a: 'It bakes in the disclaimers your industry requires and keeps to your approved source material, so output stays on-brand and lower-risk.' },
+      { q: 'Who is it for?', a: 'Accountants, lawyers, consultants and other professional-services firms that need a steady stream of trustworthy content.' },
+    ],
     tiers: [
       { label: 'Starter', price: 39 },
       { label: 'Pro', price: 89 },
@@ -351,6 +442,15 @@ export const PRODUCTS = [
       'Running a studio across a dozen disconnected tools means context lives everywhere and nowhere. Nothing talks to anything.',
     solution:
       'C4 Command unifies the pipeline, the projects and the automations into one operational picture — the same kind of system we build for clients.',
+    howItWorks: [
+      { step: '01', title: 'One operational picture', body: 'C4 Command pulls the lead pipeline, projects, invoices and client notes into a single hub.' },
+      { step: '02', title: 'Automations stay healthy', body: 'Live health checks watch the studio’s automations, so nothing fails silently.' },
+      { step: '03', title: 'We run on it daily', body: 'It’s built on the same stack we ship to clients — proof that we use what we build.' },
+    ],
+    faqs: [
+      { q: 'Can I buy C4 Command?', a: 'It is an internal studio system, available to C4 Studios clients and partners rather than sold as a standalone product.' },
+      { q: 'Why show it at all?', a: 'Because it is how we run the studio: the clearest proof that the tools we build hold up in daily use.' },
+    ],
     pricing: 'Available to C4 Studios clients and partners.',
     ctaLabel: 'Get in touch',
     ctaHref: 'mailto:caleb@c4studios.com.au?subject=C4 Command',
