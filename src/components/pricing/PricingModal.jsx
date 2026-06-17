@@ -78,7 +78,7 @@ const SERVICE_PRICING_MAP = {
   },
   sight: {
     title: 'C4Sight',
-    subtitle: 'Workplace AI training and workshops — delivered on-site in Perth, remote on request.',
+    subtitle: 'Workplace AI training and workshops, on-site in Perth or remote on request. Prices are indicative starting points; you get a fixed quote after a short scoping call.',
     sections: [
       { heading: null, packages: c4SightPackages },
     ],

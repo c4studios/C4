@@ -837,12 +837,12 @@ export const c4SightPackages = [
     price: 800,
     priceLabel: 'From $800',
     popular: false,
-    description: 'A focused 3–4 hour on-site session for one team.',
+    description: 'A focused half day, about 3.5 hours, for one team with a single sector focus.',
     features: [
-      '3–4 hours on-site',
-      'AI literacy + hands-on tools training',
-      'Practical exercises with your workflows',
-      'Team Q&A throughout',
+      'About 3.5 hours on-site',
+      'Foundations, hands-on work, and prompting that produces useful output',
+      'The data-safety and responsible-use module, every session',
+      'A sector-relevant prompt pack each attendee keeps',
     ],
   },
   {
@@ -851,12 +851,12 @@ export const c4SightPackages = [
     price: 1400,
     priceLabel: 'From $1,400',
     popular: true,
-    description: 'The complete program — literacy, tools training, and an automation readiness map.',
+    description: 'The half-day morning plus a role-specific afternoon of deep work on your team\'s real tasks.',
     features: [
-      '6–7 hours on-site',
+      'Full day on-site, about 6 hours',
       'Everything in the half-day workshop',
-      'Automation readiness mapping',
-      'Prioritised action plan to keep',
+      'Afternoon building repeatable workflows on your real recurring tasks',
+      'Workflows documented in each attendee\'s own words, plus a short automation-readiness map',
     ],
   },
   {
@@ -867,10 +867,13 @@ export const c4SightPackages = [
     popular: false,
     description: 'Executive briefings, multi-session programs, and ongoing support.',
     features: [
-      'Executive AI briefing (90 min)',
+      'Executive AI briefing, about 90 minutes',
       'Multi-session team programs',
       'Ongoing advisory support',
-      'Tailored to your industry',
+      'Tailored to your sector',
     ],
   },
 ];
+
+// Indicative-pricing note for C4Sight surfaces (page + pricing modal).
+export const C4SIGHT_PRICING_NOTE = 'Prices are indicative starting points. You get a fixed quote after a short scoping call, based on group size, location and format. All prices in AUD, excluding GST.';
