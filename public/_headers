@@ -12,3 +12,7 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
   X-XSS-Protection: 1; mode=block
   Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+# Serve the sitemap stylesheet as XML so browsers apply it under nosniff
+/sitemap.xsl
+  Content-Type: text/xsl; charset=utf-8
