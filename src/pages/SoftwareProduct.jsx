@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, ArrowLeft, Check } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ArrowLeft, Check, Plus } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { getProduct, PRODUCTS, statusColor } from '../components/software/productData';
 import useDocumentHead from '@/hooks/useDocumentHead';
-import { breadcrumbSchema } from '@/lib/schema';
+import { breadcrumbSchema, faqSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -16,11 +16,12 @@ export default function SoftwareProduct() {
 
   const jsonLd = useMemo(() => {
     if (!product) return null;
-    return breadcrumbSchema([
+    const crumbs = breadcrumbSchema([
       { name: 'Home', path: '/' },
       { name: 'C4 Originals', path: '/software' },
       { name: product.name, path: `/SoftwareProduct?slug=${product.slug}` },
     ]);
+    return product.faqs?.length ? [crumbs, faqSchema(product.faqs)] : crumbs;
   }, [product]);
 
   useDocumentHead(
@@ -136,6 +137,32 @@ export default function SoftwareProduct() {
         </div>
       </section>
 
+      {/* HOW IT WORKS */}
+      {product.howItWorks?.length ? (
+        <section className="pb-16 md:pb-24">
+          <div className="mx-auto max-w-[1100px] px-6 md:px-12">
+            <p className="text-[10px] uppercase tracking-[0.22em] font-medium mb-8" style={{ color: 'var(--c4-text-subtle)' }}>How it works</p>
+            <div className="grid gap-px rounded-[3px] overflow-hidden sm:grid-cols-3" style={{ backgroundColor: 'var(--c4-border)' }}>
+              {product.howItWorks.map((step, i) => (
+                <motion.div
+                  key={step.step}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.45, delay: i * 0.08, ease }}
+                  className="p-7 md:p-8"
+                  style={{ backgroundColor: 'var(--c4-bg)' }}
+                >
+                  <span className="text-[11px] font-semibold tabular-nums tracking-[0.12em]" style={{ color: 'var(--c4-accent)' }}>{step.step}</span>
+                  <p className="mt-3 text-[15px] font-semibold tracking-[-0.01em]" style={{ color: 'var(--c4-text)' }}>{step.title}</p>
+                  <p className="mt-2 text-[13px] leading-[1.7]" style={{ color: 'var(--c4-text-muted)' }}>{step.body}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {/* FEATURES + CTA */}
       <section className="pb-16 md:pb-24">
         <div className="mx-auto max-w-[1100px] px-6 md:px-12">
@@ -217,6 +244,33 @@ export default function SoftwareProduct() {
           </div>
         </div>
       </section>
+
+      {/* FAQ */}
+      {product.faqs?.length ? (
+        <section className="pb-16 md:pb-24">
+          <div className="mx-auto max-w-[760px] px-6 md:px-12">
+            <p className="text-[10px] uppercase tracking-[0.22em] font-medium mb-8" style={{ color: 'var(--c4-text-subtle)' }}>Common questions</p>
+            <div className="rounded-[3px] overflow-hidden" style={{ border: '1px solid var(--c4-border)' }}>
+              {product.faqs.map((f, i) => (
+                <details
+                  key={f.q}
+                  className="group"
+                  style={i === 0 ? undefined : { borderTop: '1px solid var(--c4-border)' }}
+                >
+                  <summary
+                    className="flex cursor-pointer items-center justify-between gap-4 px-6 py-5 text-[14.5px] font-medium list-none [&::-webkit-details-marker]:hidden"
+                    style={{ color: 'var(--c4-text)' }}
+                  >
+                    {f.q}
+                    <Plus size={15} strokeWidth={2} className="shrink-0 transition-transform duration-300 group-open:rotate-45" style={{ color: 'var(--c4-text-subtle)' }} />
+                  </summary>
+                  <p className="px-6 pb-5 text-[13.5px] leading-[1.75] max-w-[62ch]" style={{ color: 'var(--c4-text-muted)' }}>{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* OTHER PRODUCTS */}
       <section className="py-14 md:py-20 border-t" style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-bg-alt)' }}>
