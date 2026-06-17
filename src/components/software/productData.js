@@ -12,7 +12,7 @@ export const SUITE_APP_URL = 'https://c4-saas-suite.vercel.app';
 
 /* Lifetime one-time payment links (live Stripe). */
 export const LIFETIME_LINKS = {
-  quotr: 'https://buy.stripe.com/4gM5kDbdm1sU2stcmQ3ZK0f',
+  quotr: 'https://buy.stripe.com/00wbJ1ftC0oQ2st9aE3ZK0l',
   returndesk: 'https://buy.stripe.com/dRmbJ16X68Vmfff4Uo3ZK0h',
   reviewloop: 'https://buy.stripe.com/00w28r6X60oQaYZeuY3ZK0i',
   complia: 'https://buy.stripe.com/cNibJ1a9i7Ri1op72w3ZK0j',
@@ -60,7 +60,7 @@ export const PRODUCTS = [
       { label: 'Pro', price: 59 },
       { label: 'Agency', price: 99 },
     ],
-    lifetime: { price: 1899, href: LIFETIME_LINKS.quotr },
+    lifetime: { price: 690, href: LIFETIME_LINKS.quotr },
     pricing: 'From $29/mo — use code C4HALF for 50% off your first 3 months.',
     ctaLabel: 'Start free at quotr.us',
     ctaHref: 'https://quotr.us',
