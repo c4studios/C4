@@ -419,6 +419,123 @@ export const PRODUCTS = [
     ctaExternal: true,
   },
   {
+    slug: 'sweep',
+    name: 'Sweep',
+    status: 'Preview',
+    logo: '/Software/Sweep.svg',
+    logoBg: '#ffffff',
+    oneLiner: 'Tidy your desktop and downloads in five minutes.',
+    summary:
+      'Sweep treats a cluttered folder as decision debt, not a storage problem. It groups the mess into a handful of decisions you triage with one key each — and everything you archive goes to a recoverable Holding Pen, so you move fast without fear.',
+    features: [
+      'Groups clutter into a handful of decisions',
+      'Keyboard-first triage — keep, archive, undo',
+      'Holding Pen — nothing is ever deleted',
+      'Finds duplicates, stale downloads, dead installers',
+    ],
+    highlights: [
+      { stat: '5 min', label: 'from landfill to tidy' },
+      { stat: 'Undo', label: 'nothing is ever lost' },
+      { stat: '1 key', label: 'per decision' },
+    ],
+    problem:
+      'A cluttered desktop is not a storage problem, it is decision debt — every file is a decision someone postponed, and tidying means making hundreds of them one at a time. So nobody starts.',
+    solution:
+      'Sweep does the grouping for you and turns the pile into a short deck of obvious decisions. You triage with one key each; anything you archive lands in a recoverable Holding Pen, so a wrong call is never permanent.',
+    howItWorks: [
+      { step: '01', title: 'Scan a zone', body: 'Point Sweep at your Desktop or Downloads. Scanning is read-only — it never touches a file without your say-so.' },
+      { step: '02', title: 'Triage the deck', body: 'Sweep deals the mess as group cards, biggest wins first. Keep, archive or open each with a single keystroke.' },
+      { step: '03', title: 'Reclaim the space', body: 'Archived items move to the Holding Pen — recoverable with one tap, even after a restart. Nothing is ever deleted.' },
+    ],
+    faqs: [
+      { q: 'Could it delete something I need?', a: 'No. Sweep never deletes — it moves items to a recoverable Holding Pen, and undo works even after the app restarts.' },
+      { q: 'Does it touch my files without asking?', a: 'Scanning is read-only. Sweep only ever moves a file you have approved.' },
+      { q: 'What does it run on?', a: 'Windows first, built on the same web stack as the rest of C4 so a Mac version can follow.' },
+    ],
+    pricing: 'In active development — preview access for C4 Studios clients.',
+    ctaLabel: 'Get in touch',
+    ctaHref: 'mailto:caleb@c4studios.com.au?subject=Sweep',
+    ctaExternal: false,
+  },
+  {
+    slug: 'handover',
+    name: 'Handover',
+    status: 'Preview',
+    logo: '/Software/Handover.svg',
+    logoBg: '#ffffff',
+    oneLiner: 'Client-ready handoff packs for finished projects.',
+    summary:
+      'Point Handover at a finished project and get a client-ready handoff pack in minutes — a plain-English owner’s manual, developer notes, a credentials ledger of every account, and a verified, clean source archive.',
+    features: [
+      'Plain-English owner’s manual (and PDF)',
+      'Credentials ledger — every account, who holds it',
+      'Refuses to package if it finds live secrets',
+      'Verified, clean source archive',
+    ],
+    highlights: [
+      { stat: 'Minutes', label: 'not a lost day' },
+      { stat: '0 secrets', label: 'shipped to clients' },
+      { stat: 'Every account', label: 'mapped and handed over' },
+    ],
+    problem:
+      'The handoff is the most-skipped deliverable in agency work. Clients end up owning nothing and understanding nothing, and developers get haunted by every past project as unpaid support forever.',
+    solution:
+      'Handover scans the project for the hard facts, asks the handful of questions only a human knows, and generates a branded pack that makes the client genuinely independent — domain, hosting, code and accounts all accounted for.',
+    howItWorks: [
+      { step: '01', title: 'Scan the project', body: 'Handover reads the stack, services, deploy setup and env vars — and blocks if it finds a live secret committed in the code.' },
+      { step: '02', title: 'Answer a few questions', body: 'About ten questions only a human knows: who the client is, who holds the domain and hosting, the support arrangement.' },
+      { step: '03', title: 'Generate the pack', body: 'Owner’s manual, developer notes, handover checklist, credentials ledger and a clean source archive — branded and ready to send.' },
+    ],
+    faqs: [
+      { q: 'Will my client actually understand it?', a: 'Yes. The owner’s manual assumes zero technical knowledge — every term is explained, with a quick-reference card to keep.' },
+      { q: 'What if there is an API key in the code?', a: 'Handover refuses to build the pack until it is removed, so a live secret never ships to a client.' },
+      { q: 'Does it work on any project?', a: 'Any git repository. It is stack-aware, so the notes and manual fit what the project actually is.' },
+    ],
+    pricing: 'In active development — used on live C4 client handovers.',
+    ctaLabel: 'Get in touch',
+    ctaHref: 'mailto:caleb@c4studios.com.au?subject=Handover',
+    ctaExternal: false,
+  },
+  {
+    slug: 'pulse',
+    name: 'Pulse',
+    status: 'Preview',
+    logo: '/Software/Pulse.svg',
+    logoBg: '#ffffff',
+    oneLiner: 'Client updates that write themselves.',
+    summary:
+      'Pulse turns a project’s git activity into a plain-English weekly client update you review and send. It reads what actually happened, translates it out of developer-speak, and drafts the email — it never sends anything itself.',
+    features: [
+      'Turns commits into client-friendly language',
+      'Groups work as New, Fixed and Improved',
+      'Plain text or a branded HTML email',
+      'Optional AI polish over the real facts',
+    ],
+    highlights: [
+      { stat: 'Weekly', label: 'update in one command' },
+      { stat: 'Plain English', label: 'no developer jargon' },
+      { stat: 'You send', label: 'never auto-sent' },
+    ],
+    problem:
+      'Freelancers and studios hate writing status updates, so they don’t — and client silence breeds “are you still working on this?” friction, scope anxiety and slow payment.',
+    solution:
+      'Pulse reads the week’s git history, strips the jargon, and drafts a warm, plain-English update grouped into what is new, what was fixed and what improved. You skim it, tweak it, and hit send.',
+    howItWorks: [
+      { step: '01', title: 'It reads the week’s work', body: 'Pulse looks at the project’s git activity over the period — no extra tracking, no timesheets.' },
+      { step: '02', title: 'It translates to client language', body: 'Developer commits become plain-English bullets, with the hashes, file names and jargon stripped out.' },
+      { step: '03', title: 'You review and send', body: 'Read the draft, adjust anything, and send. Pulse never emails a client on its own.' },
+    ],
+    faqs: [
+      { q: 'Does it send emails on its own?', a: 'No. Pulse only ever drafts the update — you always review and send it yourself.' },
+      { q: 'Will my client see commit jargon?', a: 'No. It strips commit hashes, file names and internal codenames, and rewrites the rest in plain English.' },
+      { q: 'How does the optional AI polish work?', a: 'It rewrites the wording into a warmer client voice — but it is instructed never to invent changes, dates or numbers it was not given.' },
+    ],
+    pricing: 'In active development — preview access for C4 Studios clients.',
+    ctaLabel: 'Get in touch',
+    ctaHref: 'mailto:caleb@c4studios.com.au?subject=Pulse',
+    ctaExternal: false,
+  },
+  {
     slug: 'c4-command',
     name: 'C4 Command',
     status: 'Studio',
@@ -467,6 +584,7 @@ export function getProduct(slug) {
 export function statusColor(status) {
   if (status === 'Live') return '#22c55e';
   if (status === 'Beta') return 'var(--c4-accent)';
+  if (status === 'Preview') return '#d99a4e';
   if (status === 'Studio') return 'var(--c4-text-subtle)';
   return 'var(--c4-text-muted)';
 }
