@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, ArrowLeft, Check, Plus } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { getProduct, PRODUCTS, statusColor } from '../components/software/productData';
+import SweepDemo from '../components/software/demos/SweepDemo';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema, faqSchema } from '@/lib/schema';
 
@@ -159,6 +160,23 @@ export default function SoftwareProduct() {
                 </motion.div>
               ))}
             </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* INTERACTIVE DEMO */}
+      {product.slug === 'sweep' ? (
+        <section className="pb-16 md:pb-24">
+          <div className="mx-auto max-w-[1100px] px-6 md:px-12">
+            <div className="flex items-baseline justify-between mb-6">
+              <p className="text-[10px] uppercase tracking-[0.22em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>Try it</p>
+              <p className="text-[11px]" style={{ color: 'var(--c4-text-subtle)' }}>runs in your browser · sample files · nothing leaves this page</p>
+            </div>
+            <p className="text-[14px] leading-[1.7] max-w-[60ch] mb-6" style={{ color: 'var(--c4-text-muted)' }}>
+              This is the real grouping engine, running live on a sample messy Downloads folder. Triage a few cards
+              the way you would in the app — keep what matters, archive the rest, and watch the space add up.
+            </p>
+            <SweepDemo />
           </div>
         </section>
       ) : null}
