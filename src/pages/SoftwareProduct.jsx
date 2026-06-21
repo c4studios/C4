@@ -93,6 +93,18 @@ export default function SoftwareProduct() {
               <p className="mt-3 text-[15px] md:text-[17px] leading-[1.6] max-w-[46ch]" style={{ color: 'var(--c4-text-muted)' }}>
                 {product.oneLiner}
               </p>
+              {product.siteUrl && (
+                <a
+                  href={product.siteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group mt-6 inline-flex items-center gap-2 rounded-[3px] px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-opacity duration-300 hover:opacity-85"
+                  style={{ backgroundColor: 'var(--c4-accent)', color: '#fff' }}
+                >
+                  Visit the {product.name} site
+                  <ArrowUpRight size={13} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+              )}
             </motion.div>
           </div>
         </div>

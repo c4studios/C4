@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { liveSeoPages } from '@/content/seo/registry';
+import { PRODUCTS } from '../software/productData';
 import C4Logo from './C4Logo';
 
 const groups = [
@@ -49,14 +50,24 @@ export default function Footer() {
   const seoLinks = liveSeoPages()
     .filter((p) => p.type === 'pillar' || p.slug === 'how-much-does-a-website-cost-perth')
     .map((p) => ({ label: p.name, to: `/${p.slug}` }));
-  const footerGroups = seoLinks.length
-    ? [...groups, { title: 'Perth & WA', links: seoLinks }]
+
+  // Dedicated product sites (each on its own domain/subdomain), sourced from productData.
+  const productLinks = PRODUCTS.filter((p) => p.siteUrl).map((p) => ({ label: p.name, href: p.siteUrl }));
+  const withProducts = productLinks.length
+    ? [...groups, { title: 'Product sites', links: productLinks }]
     : groups;
+  const footerGroups = seoLinks.length
+    ? [...withProducts, { title: 'Perth & WA', links: seoLinks }]
+    : withProducts;
+
+  // Columns = logo + each group. Literal classes so Tailwind JIT picks them up.
+  const colCount = 1 + footerGroups.length;
+  const gridCols = colCount >= 7 ? 'md:grid-cols-7' : colCount === 6 ? 'md:grid-cols-6' : 'md:grid-cols-5';
 
   return (
     <footer className="transition-colors duration-200" style={{ backgroundColor: 'var(--c4-footer-bg)' }}>
       <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-        <div className={`py-14 md:py-18 grid grid-cols-2 gap-10 md:gap-6 ${seoLinks.length ? 'md:grid-cols-6' : 'md:grid-cols-5'}`}>
+        <div className={`py-14 md:py-18 grid grid-cols-2 gap-10 md:gap-6 ${gridCols}`}>
           <div className="col-span-2 md:col-span-1 flex flex-col items-start">
             <C4Logo size={56} variant="full" context="footer" />
             <p className="mt-4 text-[12.5px] leading-[1.6] max-w-[220px]" style={{ color: 'var(--c4-footer-text-dim)' }}>
