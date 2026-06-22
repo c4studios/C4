@@ -22,6 +22,7 @@ export const LIFETIME_LINKS = {
 export const PRODUCTS = [
   {
     slug: 'quotr',
+    siteUrl: 'https://quotr.us',
     name: 'Quotr',
     status: 'Live',
     logo: '/Software/quotr-icon.jpeg',
@@ -68,6 +69,7 @@ export const PRODUCTS = [
   },
   {
     slug: 'returndesk',
+    siteUrl: 'https://returndesk.c4studios.com.au',
     name: 'ReturnDesk',
     status: 'Beta',
     logo: '/Software/returndesk-minimal.png',
@@ -112,6 +114,7 @@ export const PRODUCTS = [
   },
   {
     slug: 'reviewloop',
+    siteUrl: 'https://reviewloop.c4studios.com.au',
     name: 'ReviewLoop',
     status: 'Live',
     logo: '/Software/reviewloop-minimal.png',
@@ -156,6 +159,7 @@ export const PRODUCTS = [
   },
   {
     slug: 'complia',
+    siteUrl: 'https://complia.c4studios.com.au',
     name: 'Complia',
     status: 'Live',
     logo: '/Software/Complia.png',
@@ -376,6 +380,7 @@ export const PRODUCTS = [
   },
   {
     slug: 'firmflow',
+    siteUrl: 'https://firmflow.c4studios.com.au',
     name: 'FirmFlow',
     status: 'Live',
     logo: '/Software/FirmFlow.png',
