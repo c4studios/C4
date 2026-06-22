@@ -160,6 +160,18 @@ export default function Software() {
                       Full details
                       <ArrowRight size={12} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
                     </Link>
+                    {product.siteUrl && (
+                      <a
+                        href={product.siteUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2 mt-6 ml-6 text-[11px] uppercase tracking-[0.14em] font-medium transition-opacity duration-300 hover:opacity-80"
+                        style={{ color: 'var(--c4-accent)' }}
+                      >
+                        Visit site
+                        <ArrowUpRight size={12} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </a>
+                    )}
                   </div>
 
                   {/* Right — pricing + CTA */}
