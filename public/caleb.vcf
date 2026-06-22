@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Scott;Caleb;;;
+FN:Caleb Scott
+ORG:C4 Studios
+TITLE:Founder / Web Developer
+EMAIL;TYPE=INTERNET,WORK:caleb@c4studios.com.au
+URL:https://c4studios.com.au
+ADR;TYPE=WORK:;;;Perth;WA;;Australia
+END:VCARD

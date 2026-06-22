@@ -17,6 +17,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { liveSeoPages, validateSeoEntry } from '../src/content/seo/registry.js';
+import { PRODUCT_SLUGS } from '../src/components/software/productData.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(__dirname, '..', 'dist');
@@ -53,14 +54,20 @@ const STATIC_ROUTES = [
 ];
 
 // Case-study pages (query-param based: /CaseStudy?slug=xxx)
+// Derived from the top-level entry keys in caseStudyData.jsx so this list can
+// NEVER drift when entries are added or removed. Every entry in CASE_STUDIES
+// is a real case study with a CaseStudy page (saas products like Quotr /
+// ReturnDesk now render full case studies too).
+const CASE_STUDY_SRC = await readFile(
+  path.resolve(__dirname, '..', 'src', 'components', 'portfolio', 'caseStudyData.jsx'),
+  'utf8',
+);
 const CASE_STUDY_SLUGS = [
-  'transform-fremantle',
-  'transform-hakea',
-  'jurassic-pt',
-  'people-power',
-  'gocc',
-  'ds-racing-karts',
-];
+  ...CASE_STUDY_SRC.matchAll(/^ {2}'([\w-]+)':\s*\{/gm),
+].map((match) => match[1]);
+if (CASE_STUDY_SLUGS.length === 0) {
+  throw new Error('prerender: failed to derive CASE_STUDY_SLUGS from caseStudyData.jsx');
+}
 
 // Programmatic SEO pages — sourced from the same registry App.jsx routes
 // from, so prerender + sitemap coverage can never drift from the app.
@@ -87,18 +94,8 @@ function seoRoutes() {
 const SEO_ROUTES = seoRoutes();
 
 // C4 Originals product pages (query-param based: /SoftwareProduct?slug=xxx)
-const PRODUCT_SLUGS = [
-  'quotr',
-  'returndesk',
-  'reviewloop',
-  'complia',
-  'rebook',
-  'crewcheck',
-  'safedraft',
-  'nudge',
-  'firmflow',
-  'c4-command',
-];
+// PRODUCT_SLUGS is imported from productData.js (the single source of truth
+// the /software page renders from) so prerender + sitemap never drift.
 
 // ── Tiny static file server ─────────────────────────────────────────
 function createStaticServer(dir) {

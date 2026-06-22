@@ -94,6 +94,29 @@ export async function submitSupportRequest(data) {
 }
 
 /**
+ * Record a single QR/NFC card scan (the /welcome landing).
+ *
+ * Fire-and-forget: tracking must never block or break the page, so this
+ * swallows every error. The `ref` attribution stays server-side — it is sent
+ * here but deliberately never propagated into the vCard or booking links.
+ *
+ * @param {Object} data - { ref, user_agent }
+ * @returns {Promise<void>}
+ */
+export async function recordScan(data) {
+  try {
+    await fetch(`${API_BASE}/api/scan`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+      keepalive: true,
+    });
+  } catch {
+    /* tracking is best-effort — never surface to the user */
+  }
+}
+
+/**
  * Upload a file attachment to Cloudflare R2.
  * @param {File} file
  * @returns {Promise<{ file_url: string }>}

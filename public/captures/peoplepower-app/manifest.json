@@ -1,0 +1,92 @@
+{
+  "version": 3,
+  "sourceUrl": "https://peoplepower.app",
+  "slug": "peoplepower-app",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 3,
+      "captures": [
+        {
+          "id": "02-feed",
+          "caption": "Movement feed — discovery surface with sort tabs and sign-in to participate",
+          "route": "/",
+          "bytes": 660335,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-feed.png"
+        },
+        {
+          "id": "03-feed-scroll",
+          "caption": "Feed — momentum / newest / impact / local sort tabs with live movement cards",
+          "route": "/",
+          "bytes": 645697,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-feed-scroll.png"
+        },
+        {
+          "id": "04-login",
+          "caption": "Secure sign-in — email + password auth gating creation, messaging and reporting",
+          "route": "/login",
+          "bytes": 238779,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-login.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 3,
+      "captures": [
+        {
+          "id": "02-feed",
+          "caption": "Movement feed — discovery surface with sort tabs and sign-in to participate",
+          "route": "/",
+          "bytes": 838670,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-feed.png"
+        },
+        {
+          "id": "03-feed-scroll",
+          "caption": "Feed — momentum / newest / impact / local sort tabs with live movement cards",
+          "route": "/",
+          "bytes": 868886,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-feed-scroll.png"
+        },
+        {
+          "id": "04-login",
+          "caption": "Secure sign-in — email + password auth gating creation, messaging and reporting",
+          "route": "/login",
+          "bytes": 277190,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-login.png"
+        }
+      ]
+    }
+  }
+}

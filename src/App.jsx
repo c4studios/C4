@@ -3,11 +3,17 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
 import PageNotFound from './lib/PageNotFound';
 import SeoPage from './pages/SeoPage';
 import LeadEngine from './pages/LeadEngine';
 import { liveSeoPages } from './content/seo/registry';
 import { createPageUrl } from './utils';
+
+// Networking-card landing — explicit, chrome-free route (no NavHeader/Footer)
+// so the post-scan experience stays focused and fast. Lazy so it stays out of
+// the main bundle.
+const Welcome = lazy(() => import('./pages/Welcome'));
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -28,6 +34,15 @@ function App() {
     <QueryClientProvider client={queryClientInstance}>
       <Router>
         <Routes>
+          {/* Networking-card landing — no Layout chrome, lazy-loaded */}
+          <Route
+            path="/welcome"
+            element={
+              <Suspense fallback={null}>
+                <Welcome />
+              </Suspense>
+            }
+          />
           <Route path="/" element={
             <LayoutWrapper currentPageName={mainPageKey}>
               <MainPage />

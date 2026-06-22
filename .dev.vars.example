@@ -6,3 +6,8 @@ RESEND_API_KEY=re_your_key_here
 CONTACT_EMAIL=hello@c4studios.com
 FROM_EMAIL=C4 Studios <noreply@c4studios.com>
 ALLOWED_ORIGIN=http://localhost:8788
+
+# Optional — /api/scan card-scan tracking (/welcome). If omitted, scans are
+# logged to the Function console instead of stored. See ENVIRONMENT.md.
+# SUPABASE_URL=https://your-project.supabase.co
+# SUPABASE_SERVICE_ROLE_KEY=your_service_role_key

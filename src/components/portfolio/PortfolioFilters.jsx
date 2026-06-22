@@ -11,6 +11,9 @@ const SERVICE_FILTERS = [
   { key: 'lens', label: 'C4 Lens', categories: ['lens'] },
 ];
 
+// Status cross-cut — shown only when at least one concept entry exists.
+const CONCEPT_FILTER = { key: 'concept', label: 'Concepts', concept: true };
+
 export function getServiceFilterCategories(filterKey) {
   const entry = SERVICE_FILTERS.find(f => f.key === filterKey);
   return entry?.categories || null;
@@ -18,16 +21,20 @@ export function getServiceFilterCategories(filterKey) {
 
 export function hasProjectsForFilter(filterKey) {
   if (filterKey === 'all') return true;
+  const studies = getAllCaseStudies();
+  if (filterKey === 'concept') return studies.some(s => s.concept);
   const cats = getServiceFilterCategories(filterKey);
   if (!cats) return false;
-  const studies = getAllCaseStudies();
   return studies.some(s => cats.includes(s.category));
 }
 
 export default function PortfolioFilters({ active, onChange }) {
+  const hasConcepts = getAllCaseStudies().some(s => s.concept);
+  const filters = hasConcepts ? [...SERVICE_FILTERS, CONCEPT_FILTER] : SERVICE_FILTERS;
+
   return (
     <div className="flex items-center gap-1.5 overflow-x-auto pb-2 -mb-2 scrollbar-hide">
-      {SERVICE_FILTERS.map((cat) => (
+      {filters.map((cat) => (
         <button
           key={cat.key}
           onClick={() => onChange(cat.key)}

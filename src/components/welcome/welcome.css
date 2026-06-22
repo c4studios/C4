@@ -1,0 +1,53 @@
+/* ─────────────────────────────────────────────────────────────
+   /welcome — networking-card landing (phone-first).
+   Scoped under .c4-welcome so it never leaks into the rest of the
+   site. Colours are literal (greige card palette) rather than theme
+   tokens: this page mirrors the physical card a prospect is holding,
+   so it stays greige regardless of the visitor's dark/light setting.
+   ───────────────────────────────────────────────────────────── */
+
+.c4-welcome {
+  --w-bg: #e8e4db;
+  --w-ink: #414243;
+  --w-ink-soft: #6c6d6d;
+  --w-red: #a30000;
+  --w-green: #22632f;
+  --w-line: rgba(65, 66, 67, 0.16);
+  background-color: var(--w-bg);
+  color: var(--w-ink);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* Faint paper grain so the greige reads like stock, not flat #hex. */
+.c4-welcome::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+  background-image: radial-gradient(rgba(65, 66, 67, 0.05) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+
+.c4-welcome > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Scroll cue — a slow, breathing chevron at the fold. */
+.c4-scroll-cue {
+  animation: c4-cue-bob 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@keyframes c4-cue-bob {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(6px); opacity: 0.9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c4-scroll-cue { animation: none; }
+}
