@@ -629,8 +629,8 @@ export const CASE_STUDIES = {
 
     cover: '/covers/ds-racing-karts.png',
     brandColor: '#0a0a0a',
-    backdropStyle: { backgroundColor: '#fff' },
-    backdropClassName: 'checkered-flag-animated',
+    backdropStyle: { backgroundColor: '#0a0a0a' },
+    backdropClassName: 'dsr-flag-animated',
     thumbnail: '/captures/dsracingkarts-com-au/desktop/01-hero.png',
 
     overview: `DS Racing Karts is a comprehensive e-commerce platform built for one of Sydney's most experienced kart specialists — Dion Scott, a racer and engineer with nearly 40 years in the sport. The client needed a complete digital storefront to sell go kart parts, showcase services, and represent the brand online. C4 Studios delivered a full-stack e-commerce solution featuring 499+ products migrated from Square's catalogue via a custom 4-stage data pipeline (CSV import → category deduplication → image migration via Square Catalog API → AI-powered description generation with Claude Haiku). The platform includes a custom-built 'DSR Grand Prix' slot-car racing mini-game (2,291 lines of hand-written Canvas 2D code), GSAP ScrollTrigger-powered 3D scroll animations throughout, a full admin dashboard with CRUD product management, Sentry error tracking across three runtimes, and comprehensive security hardening including HSTS, CSP, rate limiting, and HMAC-SHA256 webhook verification. This is the largest and most technically ambitious project in the C4 Studios portfolio.`,

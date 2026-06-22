@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import PortfolioHero from '../components/portfolio/PortfolioHero';
-import PortfolioFilters, { getServiceFilterCategories, hasProjectsForFilter } from '../components/portfolio/PortfolioFilters';
 import PortfolioSortMenu from '../components/portfolio/PortfolioSortMenu';
 import { getAllCaseStudies } from '../components/portfolio/caseStudyData';
 import { FeaturedCardSkeleton } from '../components/portfolio/PortfolioCardSkeleton';
@@ -272,15 +271,120 @@ function SoftwareCard({ study, index }) {
   );
 }
 
-const COMING_SOON_LABELS = {
-  brand: 'Brand & Growth',
-  ai: 'AI & Software',
-  lens: 'C4 Lens',
+// Three top-level buckets used by the category chooser and the section layout.
+const BROWSE = [
+  { key: 'all', label: 'All Work' },
+  { key: 'web', label: 'Web & Apps' },
+  { key: 'software', label: 'Software' },
+  { key: 'concept', label: 'Concepts' },
+];
+
+const SECTION_META = {
+  web: {
+    label: 'Web & Apps',
+    blurb: 'Custom websites, web apps and e-commerce — designed and built for clients.',
+    accent: false,
+  },
+  software: {
+    label: 'Software',
+    blurb: 'C4 Originals — live SaaS products we design, build, and sell.',
+    accent: false,
+  },
+  concept: {
+    label: 'Concepts',
+    blurb: 'Self-initiated showcase builds — not client commissions. Each is a fully deployed concept, available to license or commission.',
+    accent: true,
+  },
 };
+
+function matchCategory(study, key) {
+  if (key === 'concept') return Boolean(study.concept);
+  if (key === 'software') return study.category === 'saas' && !study.concept;
+  if (key === 'web') return !study.concept && study.category !== 'saas';
+  return true;
+}
+
+function CategoryChooser({ active, onChange, counts }) {
+  return (
+    <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4">
+      {BROWSE.map((cat) => {
+        const isActive = active === cat.key;
+        return (
+          <button
+            key={cat.key}
+            onClick={() => onChange(cat.key)}
+            className="group flex flex-col items-start gap-1.5 rounded-[3px] border px-4 py-3.5 text-left transition-colors duration-300 md:px-5 md:py-4"
+            style={{
+              borderColor: isActive ? 'var(--c4-text)' : 'var(--c4-border-light)',
+              backgroundColor: isActive ? 'var(--c4-text)' : 'transparent',
+            }}
+          >
+            <span
+              className="text-[13.5px] font-semibold tracking-[-0.01em] md:text-[15px]"
+              style={{ color: isActive ? 'var(--c4-bg)' : 'var(--c4-text)' }}
+            >
+              {cat.label}
+            </span>
+            <span
+              className="text-[10px] uppercase tracking-[0.13em] font-medium"
+              style={{ color: isActive ? 'var(--c4-bg-alt)' : 'var(--c4-text-subtle)' }}
+            >
+              {counts[cat.key]} {counts[cat.key] === 1 ? 'project' : 'projects'}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function CategoryGroup({ groupKey, studies, showHeader }) {
+  if (!studies.length) return null;
+  const meta = SECTION_META[groupKey];
+  const feat = studies.filter((study) => study.featured);
+  const rest = studies.filter((study) => !study.featured);
+  return (
+    <div>
+      {showHeader && meta && (
+        <div className="mb-8 md:mb-10">
+          <span
+            className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-semibold"
+            style={{ color: meta.accent ? 'var(--c4-accent)' : 'var(--c4-text)' }}
+          >
+            {meta.accent && <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />}
+            {meta.label}
+          </span>
+          <p className="mt-2.5 max-w-[600px] text-[13px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>
+            {meta.blurb}
+          </p>
+        </div>
+      )}
+      {feat.length > 0 && (
+        <div className="mb-12 space-y-12 md:mb-16 md:space-y-16">
+          {feat.map((study, index) => (
+            <FeaturedCard key={study.slug} study={study} index={index} />
+          ))}
+        </div>
+      )}
+      {rest.length > 0 && (
+        <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 md:gap-y-16">
+          {rest.map((study, index) => (
+            study.category === 'saas' && !(study.screenshots?.length)
+              ? <SoftwareCard key={study.slug} study={study} index={index} />
+              : <ProjectCard key={study.slug} study={study} index={index} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Portfolio() {
   const [searchParams] = useSearchParams();
-  const initialFilter = searchParams.get('filter') || 'all';
+  const rawFilter = searchParams.get('filter') || 'all';
+  const initialFilter = rawFilter === 'ai'
+    ? 'software'
+    : (['all', 'web', 'software', 'concept'].includes(rawFilter) ? rawFilter : 'all');
   const [filter, setFilter] = useState(initialFilter);
   const [sort, setSort] = useState('featured');
   const [loading, setLoading] = useState(true);
@@ -314,30 +418,19 @@ export default function Portfolio() {
     return () => clearTimeout(timeoutId);
   }, []);
 
-  const filtered = useMemo(() => {
-    let list = allStudies;
-
-    if (filter === 'concept') {
-      list = list.filter((study) => study.concept);
-    } else if (filter !== 'all') {
-      const cats = getServiceFilterCategories(filter);
-      if (cats) {
-        list = list.filter((study) => cats.includes(study.category));
-      } else {
-        list = list.filter((study) => study.category === filter || study.tags.map((tag) => tag.toLowerCase()).includes(filter));
-      }
-    }
-
-    return sortStudies(list, sort);
-  }, [allStudies, filter, sort]);
-
-  const hasProjects = filter === 'all' || hasProjectsForFilter(filter);
-  const featured = sort === 'featured' ? filtered.filter((study) => study.featured) : [];
-  const rest = sort === 'featured' ? filtered.filter((study) => !study.featured) : filtered;
-  // Concepts are self-initiated showcase builds — surfaced in their own section
-  // so they are never mistaken for client-commissioned work.
-  const concepts = rest.filter((study) => study.concept);
-  const restNonConcept = rest.filter((study) => !study.concept);
+  const sorted = useMemo(() => sortStudies(allStudies, sort), [allStudies, sort]);
+  const counts = useMemo(() => ({
+    all: allStudies.length,
+    web: allStudies.filter((study) => matchCategory(study, 'web')).length,
+    software: allStudies.filter((study) => matchCategory(study, 'software')).length,
+    concept: allStudies.filter((study) => matchCategory(study, 'concept')).length,
+  }), [allStudies]);
+  // 'all' lays out three distinct sections; a specific filter shows just that bucket.
+  const groups = filter === 'all' ? ['web', 'software', 'concept'] : [filter];
+  const visibleCount = groups.reduce(
+    (total, groupKey) => total + sorted.filter((study) => matchCategory(study, groupKey)).length,
+    0,
+  );
   const showSort = allStudies.length > 1;
 
   return (
@@ -346,100 +439,41 @@ export default function Portfolio() {
 
       <section className="pb-20 md:pb-28">
         <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-          {(showSort || allStudies.length > 1) && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.15, ease }}
-              className="mb-10 flex items-center justify-between gap-4 border-b pb-5 md:mb-14"
-              style={{ borderColor: 'var(--c4-border-light)' }}
-            >
-              <PortfolioFilters active={filter} onChange={setFilter} />
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15, ease }}
+            className="mb-12 border-b pb-8 md:mb-16 md:pb-10"
+            style={{ borderColor: 'var(--c4-border-light)' }}
+          >
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <span className="text-[10px] uppercase tracking-[0.22em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
+                Browse by category
+              </span>
               {showSort && <PortfolioSortMenu value={sort} onChange={setSort} />}
-            </motion.div>
-          )}
+            </div>
+            <CategoryChooser active={filter} onChange={setFilter} counts={counts} />
+          </motion.div>
 
           {loading ? (
             <div className="space-y-14 md:space-y-20">
               <FeaturedCardSkeleton />
             </div>
+          ) : visibleCount === 0 ? (
+            <p className="py-20 text-center text-[13px]" style={{ color: 'var(--c4-text-subtle)' }}>
+              No projects in this category yet.
+            </p>
           ) : (
-            <>
-              {featured.length > 0 && (
-                <div className="mb-14 space-y-14 md:mb-20 md:space-y-20">
-                  {featured.map((study, index) => (
-                    <FeaturedCard key={study.slug} study={study} index={index} />
-                  ))}
-                </div>
-              )}
-
-              {restNonConcept.length > 0 && (
-                <>
-                  {featured.length > 0 && (
-                    <div className="mb-10 border-t pt-10 md:mb-14 md:pt-14" style={{ borderColor: 'var(--c4-border-light)' }}>
-                      <span className="text-[10px] uppercase tracking-[0.22em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
-                        More projects
-                      </span>
-                    </div>
-                  )}
-                  <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 md:gap-y-16">
-                    {restNonConcept.map((study, index) => (
-                      // saas products with no screenshots fall back to the letterform
-                      // teaser card; a saas product with real screenshots (e.g. Quotr,
-                      // ReturnDesk) renders as a full case-study card.
-                      study.category === 'saas' && !(study.screenshots?.length)
-                        ? <SoftwareCard key={study.slug} study={study} index={index} />
-                        : <ProjectCard key={study.slug} study={study} index={index} />
-                    ))}
-                  </div>
-                </>
-              )}
-
-              {concepts.length > 0 && (
-                <>
-                  <div className="mb-8 border-t pt-10 md:mb-10 md:pt-14" style={{ borderColor: 'var(--c4-border-light)' }}>
-                    <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] font-medium" style={{ color: 'var(--c4-accent)' }}>
-                      <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />
-                      Concept Work
-                    </span>
-                    <p className="mt-3 max-w-[600px] text-[13px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>
-                      Self-initiated showcase builds — not client commissions. Each is a fully deployed concept that demonstrates what C4 ships before a brief exists, available to license or commission.
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 md:gap-y-16">
-                    {concepts.map((study, index) => (
-                      <ProjectCard key={study.slug} study={study} index={index} />
-                    ))}
-                  </div>
-                </>
-              )}
-
-              {filtered.length === 0 && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-20 text-center">
-                  {filter !== 'all' && COMING_SOON_LABELS[filter] ? (
-                    <>
-                      <p className="text-[1.1rem] font-semibold tracking-[-0.02em] mb-3" style={{ color: 'var(--c4-text)' }}>
-                        {COMING_SOON_LABELS[filter]} — Portfolio Coming Soon
-                      </p>
-                      <p className="text-[13px] leading-[1.6] max-w-[420px] mx-auto" style={{ color: 'var(--c4-text-muted)' }}>
-                        We&apos;re currently building out case studies for this service. Check back soon — or get in touch to be one of the first.
-                      </p>
-                      <Link
-                        to={`/start?service=${filter === 'brand' ? 'brand_platform' : filter === 'ai' ? 'automation' : filter}`}
-                        className="group inline-flex items-center gap-2 mt-6 px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300 rounded-sm"
-                        style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-                      >
-                        Start a Project
-                      </Link>
-                    </>
-                  ) : (
-                    <p className="text-[13px]" style={{ color: 'var(--c4-text-subtle)' }}>
-                      No projects in this category yet.
-                    </p>
-                  )}
-                </motion.div>
-              )}
-            </>
+            <div className="space-y-16 md:space-y-24">
+              {groups.map((groupKey) => (
+                <CategoryGroup
+                  key={groupKey}
+                  groupKey={groupKey}
+                  studies={sorted.filter((study) => matchCategory(study, groupKey))}
+                  showHeader={filter === 'all'}
+                />
+              ))}
+            </div>
           )}
         </div>
       </section>
