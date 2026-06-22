@@ -272,31 +272,6 @@ html { scroll-behavior: smooth; }
   .dsr-flag-animated::before { animation: none; }
 }
 
-/* ── HVN — logo mark on black with a teal glow on the letters ── */
-.hvn-glow-card {
-  background-color: #000 !important;
-}
-.hvn-glow-card > img {
-  filter:
-    drop-shadow(0 0 14px rgba(60, 188, 180, 0.60))
-    drop-shadow(0 0 38px rgba(60, 188, 180, 0.32));
-  animation: hvn-glow-pulse 3.6s ease-in-out infinite;
-}
-@keyframes hvn-glow-pulse {
-  0%, 100% {
-    filter:
-      drop-shadow(0 0 12px rgba(60, 188, 180, 0.50))
-      drop-shadow(0 0 30px rgba(60, 188, 180, 0.26));
-  }
-  50% {
-    filter:
-      drop-shadow(0 0 18px rgba(60, 188, 180, 0.72))
-      drop-shadow(0 0 48px rgba(60, 188, 180, 0.40));
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hvn-glow-card > img { animation: none; }
-}
 
 /* Guidance rail surface — theme-aware glass */
 .c4-support-rail {
