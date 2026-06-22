@@ -1107,8 +1107,8 @@ export const CASE_STUDIES = {
     featured: true,
     budgetOrder: 8,
 
-    cover: null,
-    brandColor: '#3CBCB4',
+    cover: '/covers/hvn-gym.png',
+    brandColor: '#000000',
     thumbnail: '/captures/thehvncrossfit-com/desktop/01-hero.png',
 
     overview: 'The HVN is a community-first CrossFit gym in Port Kennedy, Western Australia, founded by Kristy and Bryan Barr. C4 Studios designed and built their website from the ground up as a fast, SEO-optimised Next.js application that channels the brand\'s "where the everyday meets the elite" ethos. The build pairs a cinematic video hero, a colour-coded class timetable, coach profiles, and clear membership pricing with real integrations — a Fitbox live-booking embed, a Resend-powered contact backend, and rich local-business structured data. Its signature flourish is the bespoke "Chin Up Championship": a scroll- and touch-driven physics mini-game with a persistent personal-best, turning the homepage into something members actually share. Hardened with a strict Content-Security-Policy, security headers, and accessibility throughout, and deployed on Vercel, it gives a local gym a digital presence that punches well above its weight.',
