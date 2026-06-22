@@ -5,6 +5,8 @@ import { ArrowRight, ArrowUpRight, ArrowLeft, Check, Plus } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { getProduct, PRODUCTS, statusColor } from '../components/software/productData';
 import SweepDemo from '../components/software/demos/SweepDemo';
+import PulseDemo from '../components/software/demos/PulseDemo';
+import HandoverDemo from '../components/software/demos/HandoverDemo';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema, faqSchema } from '@/lib/schema';
 
@@ -177,6 +179,40 @@ export default function SoftwareProduct() {
               the way you would in the app — keep what matters, archive the rest, and watch the space add up.
             </p>
             <SweepDemo />
+          </div>
+        </section>
+      ) : null}
+
+      {/* INTERACTIVE DEMO — Pulse */}
+      {product.slug === 'pulse' ? (
+        <section className="pb-16 md:pb-24">
+          <div className="mx-auto max-w-[1100px] px-6 md:px-12">
+            <div className="flex items-baseline justify-between mb-6">
+              <p className="text-[10px] uppercase tracking-[0.22em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>Try it</p>
+              <p className="text-[11px]" style={{ color: 'var(--c4-text-subtle)' }}>runs in your browser · edit the commits live</p>
+            </div>
+            <p className="text-[14px] leading-[1.7] max-w-[60ch] mb-6" style={{ color: 'var(--c4-text-muted)' }}>
+              On the left is a week of developer commits — the raw, jargon-filled history. On the right is what Pulse
+              turns it into for your client. Edit the commits and watch the update rewrite itself.
+            </p>
+            <PulseDemo />
+          </div>
+        </section>
+      ) : null}
+
+      {/* INTERACTIVE DEMO — Handover */}
+      {product.slug === 'handover' ? (
+        <section className="pb-16 md:pb-24">
+          <div className="mx-auto max-w-[1100px] px-6 md:px-12">
+            <div className="flex items-baseline justify-between mb-6">
+              <p className="text-[10px] uppercase tracking-[0.22em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>See it</p>
+              <p className="text-[11px]" style={{ color: 'var(--c4-text-subtle)' }}>sample project · toggle the secret to see the gate</p>
+            </div>
+            <p className="text-[14px] leading-[1.7] max-w-[60ch] mb-6" style={{ color: 'var(--c4-text-muted)' }}>
+              Here’s what Handover makes from a finished project — the pack on the right, the accounts it hands over,
+              and the safety gate that refuses to ship a live secret to a client. Flip the toggle to watch it block.
+            </p>
+            <HandoverDemo />
           </div>
         </section>
       ) : null}

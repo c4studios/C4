@@ -35,7 +35,10 @@ function sortStudies(studies, sortKey) {
 }
 
 function FeaturedCard({ study, index }) {
-  const previews = (study.screenshots || []).slice(0, 3);
+  // When there's no dedicated cover, the thumbnail (screenshots[0]) becomes the
+  // hero — so start previews at the next shot to avoid showing it twice.
+  const previewStart = study.cover ? 0 : 1;
+  const previews = (study.screenshots || []).slice(previewStart, previewStart + 3);
 
   return (
     <motion.div
@@ -48,8 +51,8 @@ function FeaturedCard({ study, index }) {
         <div className="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-3 md:gap-4">
           {/* Cover — logo wallpaper */}
           <div
-            className="relative aspect-[16/9] overflow-hidden rounded-[2px] flex items-center justify-center"
-            style={{ backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
+            className={`relative aspect-[16/9] overflow-hidden rounded-[2px] flex items-center justify-center ${study.backdropClassName || ''}`}
+            style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
           >
             {study.cover ? (
               <img
@@ -69,6 +72,12 @@ function FeaturedCard({ study, index }) {
                 meta={[...study.tags.slice(0, 2), ...(study.year ? [study.year] : [])]}
                 imageClassName="transition-transform duration-700 group-hover:scale-[1.03]"
               />
+            )}
+            {study.concept && (
+              <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ backgroundColor: 'var(--c4-bg)', border: '1px solid var(--c4-border)' }}>
+                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />
+                <span className="text-[9px] uppercase tracking-[0.12em] font-medium" style={{ color: 'var(--c4-accent)' }}>Concept</span>
+              </div>
             )}
             <div className="absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-full opacity-0 scale-75 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 md:bottom-5 md:right-5" style={{ backgroundColor: 'var(--c4-text)' }}>
               <ArrowUpRight size={15} strokeWidth={2} style={{ color: 'var(--c4-bg)' }} />
@@ -140,8 +149,8 @@ function ProjectCard({ study, index }) {
     >
       <Link to={createPageUrl(`CaseStudy?slug=${study.slug}`)} className="group block">
         <div
-          className="relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center"
-          style={{ backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
+          className={`relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center ${study.backdropClassName || ''}`}
+          style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
         >
           {study.cover ? (
             <img
@@ -162,6 +171,12 @@ function ProjectCard({ study, index }) {
               compact
               imageClassName="transition-transform duration-700 group-hover:scale-[1.03]"
             />
+          )}
+          {study.concept && (
+            <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ backgroundColor: 'var(--c4-bg)', border: '1px solid var(--c4-border)' }}>
+              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />
+              <span className="text-[9px] uppercase tracking-[0.12em] font-medium" style={{ color: 'var(--c4-accent)' }}>Concept</span>
+            </div>
           )}
           <div className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full opacity-0 scale-75 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100" style={{ backgroundColor: 'var(--c4-text)' }}>
             <ArrowUpRight size={13} strokeWidth={2} style={{ color: 'var(--c4-bg)' }} />
@@ -202,7 +217,7 @@ function SoftwareCard({ study, index }) {
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.5, delay: index * 0.06, ease }}
     >
-      <Link to="/software" className="group block">
+      <div className="group relative block">
         <div
           className="relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center"
           style={{ backgroundColor: 'var(--c4-bg-alt)' }}
@@ -213,7 +228,7 @@ function SoftwareCard({ study, index }) {
           >
             {study.name[0]}
           </span>
-          <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ border: `1px solid ${color}` }}>
+          <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ border: `1px solid ${color}` }}>
             <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
             <span className="text-[9px] uppercase tracking-[0.12em] font-medium" style={{ color }}>{study.status}</span>
           </div>
@@ -222,8 +237,7 @@ function SoftwareCard({ study, index }) {
               href={study.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="absolute top-3 right-3 flex items-center gap-1 text-[9px] uppercase tracking-[0.1em] font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              className="absolute top-3 right-3 z-20 flex items-center gap-1 text-[9px] uppercase tracking-[0.1em] font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               style={{ color: 'var(--c4-text-faint)' }}
             >
               Live site <ArrowUpRight size={10} strokeWidth={2} />
@@ -250,7 +264,10 @@ function SoftwareCard({ study, index }) {
             </span>
           </div>
         </div>
-      </Link>
+        {/* Card-wide click target — kept as a sibling overlay so the live-site
+            link is not nested inside another anchor (invalid DOM nesting). */}
+        <Link to="/software" aria-label={`View ${study.name}`} className="absolute inset-0 z-10" />
+      </div>
     </motion.div>
   );
 }
@@ -300,7 +317,9 @@ export default function Portfolio() {
   const filtered = useMemo(() => {
     let list = allStudies;
 
-    if (filter !== 'all') {
+    if (filter === 'concept') {
+      list = list.filter((study) => study.concept);
+    } else if (filter !== 'all') {
       const cats = getServiceFilterCategories(filter);
       if (cats) {
         list = list.filter((study) => cats.includes(study.category));
@@ -315,6 +334,10 @@ export default function Portfolio() {
   const hasProjects = filter === 'all' || hasProjectsForFilter(filter);
   const featured = sort === 'featured' ? filtered.filter((study) => study.featured) : [];
   const rest = sort === 'featured' ? filtered.filter((study) => !study.featured) : filtered;
+  // Concepts are self-initiated showcase builds — surfaced in their own section
+  // so they are never mistaken for client-commissioned work.
+  const concepts = rest.filter((study) => study.concept);
+  const restNonConcept = rest.filter((study) => !study.concept);
   const showSort = allStudies.length > 1;
 
   return (
@@ -350,7 +373,7 @@ export default function Portfolio() {
                 </div>
               )}
 
-              {rest.length > 0 && (
+              {restNonConcept.length > 0 && (
                 <>
                   {featured.length > 0 && (
                     <div className="mb-10 border-t pt-10 md:mb-14 md:pt-14" style={{ borderColor: 'var(--c4-border-light)' }}>
@@ -360,10 +383,32 @@ export default function Portfolio() {
                     </div>
                   )}
                   <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 md:gap-y-16">
-                    {rest.map((study, index) => (
-                      study.category === 'saas'
+                    {restNonConcept.map((study, index) => (
+                      // saas products with no screenshots fall back to the letterform
+                      // teaser card; a saas product with real screenshots (e.g. Quotr,
+                      // ReturnDesk) renders as a full case-study card.
+                      study.category === 'saas' && !(study.screenshots?.length)
                         ? <SoftwareCard key={study.slug} study={study} index={index} />
                         : <ProjectCard key={study.slug} study={study} index={index} />
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {concepts.length > 0 && (
+                <>
+                  <div className="mb-8 border-t pt-10 md:mb-10 md:pt-14" style={{ borderColor: 'var(--c4-border-light)' }}>
+                    <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] font-medium" style={{ color: 'var(--c4-accent)' }}>
+                      <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />
+                      Concept Work
+                    </span>
+                    <p className="mt-3 max-w-[600px] text-[13px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>
+                      Self-initiated showcase builds — not client commissions. Each is a fully deployed concept that demonstrates what C4 ships before a brief exists, available to license or commission.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 md:gap-y-16">
+                    {concepts.map((study, index) => (
+                      <ProjectCard key={study.slug} study={study} index={index} />
                     ))}
                   </div>
                 </>

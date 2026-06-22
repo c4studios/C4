@@ -1,0 +1,158 @@
+{
+  "version": 3,
+  "sourceUrl": "https://transformfreo.com",
+  "slug": "transformfreo-com",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 6,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "Hero — harbour backdrop with mission statement and navigation",
+          "route": "/",
+          "bytes": 652916,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-hero.png"
+        },
+        {
+          "id": "02-schedule",
+          "caption": "Prayer Meetings — weekly schedule across Fremantle churches",
+          "route": "/",
+          "bytes": 206584,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-schedule.png"
+        },
+        {
+          "id": "03-vision",
+          "caption": "Vision & Aim — numbered pillars of the movement",
+          "route": "/VisionAndAim",
+          "bytes": 199703,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-vision.png"
+        },
+        {
+          "id": "04-connect",
+          "caption": "Connect — contact form and ways to reach the movement",
+          "route": "/Connect",
+          "bytes": 243743,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-connect.png"
+        },
+        {
+          "id": "05-resources",
+          "caption": "Resources — downloadable PDF library with branded cards",
+          "route": "/Resources",
+          "bytes": 823917,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-resources.png"
+        },
+        {
+          "id": "06-statement",
+          "caption": "Statement of Faith — formatted creed and shared beliefs",
+          "route": "/StatementOfFaith",
+          "bytes": 324763,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-statement.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 6,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "Hero — harbour backdrop with mission statement and navigation",
+          "route": "/",
+          "bytes": 520847,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-hero.png"
+        },
+        {
+          "id": "02-schedule",
+          "caption": "Prayer Meetings — weekly schedule across Fremantle churches",
+          "route": "/",
+          "bytes": 259584,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-schedule.png"
+        },
+        {
+          "id": "03-vision",
+          "caption": "Vision & Aim — numbered pillars of the movement",
+          "route": "/VisionAndAim",
+          "bytes": 227996,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-vision.png"
+        },
+        {
+          "id": "04-connect",
+          "caption": "Connect — contact form and ways to reach the movement",
+          "route": "/Connect",
+          "bytes": 203285,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-connect.png"
+        },
+        {
+          "id": "05-resources",
+          "caption": "Resources — downloadable PDF library with branded cards",
+          "route": "/Resources",
+          "bytes": 1005105,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/05-resources.png"
+        },
+        {
+          "id": "06-statement",
+          "caption": "Statement of Faith — formatted creed and shared beliefs",
+          "route": "/StatementOfFaith",
+          "bytes": 593259,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-statement.png"
+        }
+      ]
+    }
+  }
+}

@@ -33,6 +33,12 @@ export default function CaseStudyHero({ study }) {
           transition={{ duration: 0.45, delay: 0.05, ease }}
           className="flex flex-wrap items-center gap-2 mb-4"
         >
+          {study.concept && (
+            <span className="px-2.5 py-[3px] text-[9.5px] uppercase tracking-[0.16em] font-medium rounded-[2px] inline-flex items-center gap-1.5" style={{ color: 'var(--c4-accent)', borderWidth: 1, borderStyle: 'solid', borderColor: 'var(--c4-accent)' }}>
+              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />
+              Concept
+            </span>
+          )}
           {study.tags.map((tag) => (
             <span key={tag} className="px-2.5 py-[3px] text-[9.5px] uppercase tracking-[0.16em] font-medium rounded-[2px]" style={{ color: 'var(--c4-text-muted)', backgroundColor: 'var(--c4-tag-bg)' }}>
               {tag}
@@ -82,7 +88,7 @@ export default function CaseStudyHero({ study }) {
               className="inline-flex items-center gap-2 px-5 py-[9px] text-[11px] uppercase tracking-[0.13em] font-medium transition-colors duration-300 rounded-[2px]"
               style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
             >
-              Visit Live Site
+              {study.concept ? 'View Live Concept' : 'Visit Live Site'}
               <ExternalLink size={12} strokeWidth={2} />
             </a>
           )}
@@ -102,8 +108,8 @@ export default function CaseStudyHero({ study }) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.28, ease }}
-            className="mt-10 aspect-[21/9] overflow-hidden rounded-[3px] flex items-center justify-center"
-            style={{ backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
+            className={`mt-10 aspect-[21/9] overflow-hidden rounded-[3px] flex items-center justify-center ${study.backdropClassName || ''}`}
+            style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
           >
             <img
               src={study.cover}

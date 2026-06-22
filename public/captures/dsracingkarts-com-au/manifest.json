@@ -10,7 +10,7 @@
         "width": 1440,
         "height": 900
       },
-      "captureCount": 30,
+      "captureCount": 26,
       "captures": [
         {
           "id": "01-hero",
@@ -32,25 +32,6 @@
           "manualNote": null
         },
         {
-          "id": "02-trust-banner",
-          "label": "trust-banner",
-          "caption": "Trust banner — Race-Ready Parts, Expert Service, Australia-Wide shipping",
-          "page": "/",
-          "crop": {
-            "x": 0,
-            "y": 880,
-            "w": 1440,
-            "h": 200
-          },
-          "bytes": 814,
-          "dimensions": {
-            "width": 1440,
-            "height": 20
-          },
-          "filePath": "desktop/02-trust-banner.png",
-          "manualNote": null
-        },
-        {
           "id": "03-game-teaser",
           "label": "game-teaser",
           "caption": "DSR Grand Prix mini-game teaser with \"PRESS START\" CTA",
@@ -68,25 +49,6 @@
           },
           "filePath": "desktop/03-game-teaser.png",
           "manualNote": null
-        },
-        {
-          "id": "04-game-racing",
-          "label": "game-racing",
-          "caption": "DSR Grand Prix in action — two karts racing head-to-head on The Circuit",
-          "page": "/",
-          "crop": {
-            "x": 0,
-            "y": 1050,
-            "w": 1440,
-            "h": 900
-          },
-          "bytes": 83675,
-          "dimensions": {
-            "width": 1440,
-            "height": 900
-          },
-          "filePath": "desktop/04-game-racing.png",
-          "manualNote": "Capture while game is actively running mid-race"
         },
         {
           "id": "05-categories",
@@ -526,44 +488,6 @@
           "manualNote": "Requires admin auth — will capture login redirect or whatever is visible"
         },
         {
-          "id": "28-admin-products",
-          "label": "admin-products",
-          "caption": "Admin product management — search, status filter, stock colour coding, pagination",
-          "page": "/admin/products",
-          "crop": {
-            "x": 0,
-            "y": 0,
-            "w": 1440,
-            "h": 1000
-          },
-          "bytes": 51310,
-          "dimensions": {
-            "width": 1440,
-            "height": 900
-          },
-          "filePath": "desktop/28-admin-products.png",
-          "manualNote": "Requires admin auth"
-        },
-        {
-          "id": "29-admin-editor",
-          "label": "admin-editor",
-          "caption": "Admin product editor — images, variations, inventory, categories, SEO fields",
-          "page": "/admin/products",
-          "crop": {
-            "x": 0,
-            "y": 0,
-            "w": 1440,
-            "h": 1000
-          },
-          "bytes": 51310,
-          "dimensions": {
-            "width": 1440,
-            "height": 900
-          },
-          "filePath": "desktop/29-admin-editor.png",
-          "manualNote": "Requires admin auth + specific product open"
-        },
-        {
           "id": "30-404",
           "label": "404",
           "caption": "Custom 404 page — giant \"404\" with racing-themed CTAs",
@@ -589,7 +513,7 @@
         "width": 430,
         "height": 932
       },
-      "captureCount": 9,
+      "captureCount": 8,
       "captures": [
         {
           "id": "01-hero",
@@ -608,25 +532,6 @@
             "height": 1864
           },
           "filePath": "mobile/01-hero.png",
-          "manualNote": null
-        },
-        {
-          "id": "02-game",
-          "label": "game",
-          "caption": "Mobile game with touch controls",
-          "page": "/",
-          "crop": {
-            "x": 0,
-            "y": 900,
-            "w": 430,
-            "h": 932
-          },
-          "bytes": 594,
-          "dimensions": {
-            "width": 860,
-            "height": 64
-          },
-          "filePath": "mobile/02-game.png",
           "manualNote": null
         },
         {

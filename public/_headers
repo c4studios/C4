@@ -16,3 +16,12 @@
 # Serve the sitemap stylesheet as XML so browsers apply it under nosniff
 /sitemap.xsl
   Content-Type: text/xsl; charset=utf-8
+
+# vCard download (networking card → /welcome → "Save my contact")
+/caleb.vcf
+  Content-Type: text/vcard; charset=utf-8
+  Content-Disposition: attachment; filename="Caleb Scott - C4 Studios.vcf"
+
+# Avenue A scrub frames — immutable, long-cache (filenames are versioned by run)
+/welcome/frames/*
+  Cache-Control: public, max-age=31536000, immutable

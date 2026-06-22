@@ -27,6 +27,36 @@ These must be set in Cloudflare Pages **Settings → Environment variables** bef
 
 ---
 
+## Card-scan tracking (`/welcome`)
+
+The `/api/scan` endpoint records one event when a networking card is scanned or
+tapped and the `/welcome` landing loads. These variables are **optional** — if
+omitted, scans are logged to the Function console (visible via `wrangler tail`
+or the Cloudflare dashboard) instead of being stored.
+
+| Variable | Description |
+|----------|-------------|
+| `SUPABASE_URL` | Supabase project URL, e.g. `https://xxxx.supabase.co`. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service-role key (server-side only — never exposed to the client). |
+
+Create the table once in the Supabase SQL editor:
+
+```sql
+create table if not exists public.scans (
+  id bigint generated always as identity primary key,
+  ref text,
+  user_agent text,
+  country text,
+  ts timestamptz not null default now()
+);
+-- service-role inserts bypass RLS; no anon policy needed.
+```
+
+> The scan `ref` (e.g. `?ref=meetup-june`) is attribution only — it is recorded
+> server-side and deliberately never propagated into the vCard or booking links.
+
+---
+
 ## R2 file upload variables
 
 Only needed if file uploads are enabled. The Contact and Venture forms work without these — only the "Attach files" feature requires R2.
