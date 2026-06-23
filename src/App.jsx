@@ -14,6 +14,7 @@ import { createPageUrl } from './utils';
 // so the post-scan experience stays focused and fast. Lazy so it stays out of
 // the main bundle.
 const Welcome = lazy(() => import('./pages/Welcome'));
+const HeroLab = lazy(() => import('./pages/HeroLab'));
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -40,6 +41,14 @@ function App() {
             element={
               <Suspense fallback={null}>
                 <Welcome />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/hero-lab"
+            element={
+              <Suspense fallback={null}>
+                <HeroLab />
               </Suspense>
             }
           />
