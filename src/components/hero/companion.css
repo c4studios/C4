@@ -1,0 +1,60 @@
+/* ─────────────────────────────────────────────────────────────
+   C4 Companion hero — reaction-bubble + layout styling.
+   Scoped under .c4-companion. Dark surface; this is the "Digital
+   Experiential" hero, deliberately the one confident dark moment.
+   ───────────────────────────────────────────────────────────── */
+
+.c4-companion {
+  position: relative;
+  width: 100%;
+  min-height: 520px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0b0c0f;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.c4-companion__stage {
+  position: relative;
+  flex: 1 1 280px;
+  min-width: 260px;
+  height: 360px;
+  touch-action: none;
+}
+
+.c4-companion__copy {
+  flex: 1 1 300px;
+  min-width: 270px;
+  padding: 28px 34px 28px 8px;
+  z-index: 2;
+}
+
+.c4-bubble {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
+}
+.c4-bubble svg {
+  display: block;
+  animation: c4b-pop 0.36s cubic-bezier(0.22, 1, 0.36, 1) both,
+             c4b-bob 3.2s ease-in-out 0.36s infinite;
+}
+.c4b-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: c4b-draw 0.5s ease 0.16s forwards; }
+.c4b-dot { transform-box: fill-box; transform-origin: center; transform: scale(0); animation: c4b-dot 0.3s cubic-bezier(0.22,1,0.36,1) 0.42s forwards; }
+.c4b-ring { transform-box: fill-box; transform-origin: center; animation: c4b-ring 0.65s ease forwards; }
+
+@keyframes c4b-pop { 0%{transform:translateY(10px) scale(.55)} 62%{transform:translateY(-3px) scale(1.08)} 100%{transform:translateY(0) scale(1)} }
+@keyframes c4b-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+@keyframes c4b-draw { to { stroke-dashoffset: 0; } }
+@keyframes c4b-dot { to { transform: scale(1); } }
+@keyframes c4b-ring { 0%{transform:scale(.5);opacity:.55} 100%{transform:scale(1.75);opacity:0} }
+
+@media (prefers-reduced-motion: reduce) {
+  .c4-bubble svg, .c4b-draw, .c4b-dot, .c4b-ring { animation: none; stroke-dashoffset: 0; transform: none; }
+}
