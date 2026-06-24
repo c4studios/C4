@@ -15,6 +15,7 @@ import { createPageUrl } from './utils';
 // the main bundle.
 const Welcome = lazy(() => import('./pages/Welcome'));
 const HeroLab = lazy(() => import('./pages/HeroLab'));
+const HelixLab = lazy(() => import('./pages/HelixLab'));
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -49,6 +50,14 @@ function App() {
             element={
               <Suspense fallback={null}>
                 <HeroLab />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/helix-lab"
+            element={
+              <Suspense fallback={null}>
+                <HelixLab />
               </Suspense>
             }
           />

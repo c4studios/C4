@@ -1,0 +1,66 @@
+/* ─────────────────────────────────────────────────────────────
+   /welcome — dark helix takeover. Full-bleed: helix stage + content.
+   Desktop = two columns (content left, helix right); mobile = stacked
+   (helix top, content below). Dark surface; first paint is the text +
+   a faint brand glow placeholder while the 3D chunk streams in.
+   ───────────────────────────────────────────────────────────── */
+
+.cwd {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: #07080a;
+  color: #f4f2ef;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  overflow: hidden;
+}
+
+.cwd__stage {
+  position: relative;
+  flex: 1 1 340px;
+  min-width: 300px;
+  height: 100svh;
+  touch-action: none;
+  order: 2;
+}
+
+.cwd__copy {
+  flex: 1 1 380px;
+  min-width: 300px;
+  padding: 40px clamp(28px, 5vw, 64px);
+  z-index: 2;
+  order: 1;
+}
+
+/* faint red/green glow placeholder behind the stage (first paint + fallback) */
+.cwd__ph {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 52% 42%, rgba(163, 0, 0, 0.16), transparent 46%),
+    radial-gradient(circle at 48% 58%, rgba(34, 99, 47, 0.13), transparent 48%);
+}
+
+.cwd__kick { font-size: 12px; letter-spacing: 0.26em; color: rgba(243, 242, 239, 0.5); }
+.cwd__h1 { margin: 14px 0 8px; font-size: clamp(1.9rem, 4.6vw, 2.6rem); line-height: 1.06; font-weight: 500; letter-spacing: -0.035em; color: #f4f2ef; }
+.cwd__sub { margin: 0 0 24px; font-size: 15px; line-height: 1.55; color: rgba(243, 242, 239, 0.74); min-height: 46px; max-width: 30rem; }
+.cwd__acts { display: flex; flex-direction: column; gap: 10px; max-width: 360px; }
+.cwd__cta { display: flex; align-items: center; gap: 12px; text-align: left; padding: 13px 18px; border-radius: 12px; cursor: pointer; text-decoration: none; font-size: 15px; font-weight: 500; transition: transform 0.25s cubic-bezier(0.22,1,0.36,1); }
+.cwd__cta:active { transform: scale(0.985); }
+.cwd__strip { margin-top: 26px; font-size: 12px; line-height: 1.8; color: rgba(243, 242, 239, 0.45); }
+.cwd__strip a { color: inherit; text-decoration: none; }
+.cwd__strip a:hover { color: rgba(243, 242, 239, 0.8); }
+
+@media (max-width: 880px) {
+  .cwd { flex-direction: column; flex-wrap: nowrap; }
+  .cwd__stage { order: 1; flex: none; width: 100%; height: 50svh; }
+  .cwd__copy { order: 2; width: 100%; padding: 22px 24px 40px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cwd__cta { transition: none; }
+}

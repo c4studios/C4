@@ -1775,6 +1775,119 @@ export const CASE_STUDIES = {
     ],
   },
 
+  'tidy-gardens-australia': {
+    slug: 'tidy-gardens-australia',
+    name: 'Tidy Gardens Australia',
+    oneLiner: 'A motion-led marketing site for a Perth garden & reticulation business — with a living scroll motif that grows as you read.',
+    client: 'Tidy Gardens Australia',
+    location: 'Perth, WA',
+    timeline: '',
+    budget: '',
+    role: 'Solo (design, development, domain recovery & migration, deployment)',
+    liveUrl: 'https://tidygardens.com.au',
+    year: '2026',
+    category: 'web_design',
+    tags: ['Website', 'Landscaping', 'Scroll Animation', 'Next.js', 'Local Business', 'SEO'],
+    featured: true,
+    budgetOrder: 3,
+
+    cover: null,
+    brandColor: '#1e3a2a',
+    thumbnail: '/captures/tidygardens-com-au/desktop/01-hero.png',
+
+    overview: 'A complete marketing site for Tidy Gardens Australia, a Perth garden, lawn and reticulation business. Its signature is a route-aware "scroll spine" down the left gutter — a vine that grows and sprouts leaves on the home page, a poly-pipe that fills with water and triggers pop-up sprinklers on the reticulation page, and a lawn mower that mows tall grass into a clean striped lawn on the lawn-care page — all scroll-linked and pinned to real page geometry. Around it sit four service pages, a gallery with a drag-to-compare before/after slider, a quote form that emails leads straight to the owner, full SEO and accessibility, and a slim scaled-down version of the motif on mobile. Delivered end-to-end — real photography, branded email, automatic SSL, and a live domain migrated off a defunct provider.',
+
+    screenshots: [
+      { url: '/captures/tidygardens-com-au/desktop/01-hero.png', caption: 'Hero — "Reticulation, lawns & gardens, worked by one local team", with the climbing-vine scroll motif down the left gutter' },
+      { url: '/captures/tidygardens-com-au/desktop/02-home-vine.png', caption: 'Home — "Four services, one trusted team" as the vine grows on scroll' },
+      { url: '/captures/tidygardens-com-au/desktop/03-home-services.png', caption: 'Home — "Trained across Perth & the South West" service overview' },
+      { url: '/captures/tidygardens-com-au/desktop/04-reticulation.png', caption: 'Reticulation — repairs, installations and controller replacement' },
+      { url: '/captures/tidygardens-com-au/desktop/05-reticulation-pipe.png', caption: 'Reticulation — scheduling and before/after pump & sprinkler work' },
+      { url: '/captures/tidygardens-com-au/desktop/06-lawn-care.png', caption: 'Lawn Care — the scroll-driven lawnmower motif cutting tall grass into a clean striped lawn' },
+      { url: '/captures/tidygardens-com-au/desktop/07-garden-maintenance.png', caption: 'Garden Maintenance — ongoing care plans' },
+      { url: '/captures/tidygardens-com-au/desktop/08-gallery.png', caption: 'Gallery — real client photography with drag-to-compare before/after sliders' },
+      { url: '/captures/tidygardens-com-au/desktop/09-why-choose-us.png', caption: 'Why Choose Us — "six reasons to call us first"' },
+      { url: '/captures/tidygardens-com-au/desktop/10-contact.png', caption: 'Contact — "Tell us about your garden" quote-request form' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/tidygardens-com-au/desktop/01-hero.png', caption: 'Hero with the climbing-vine scroll motif' },
+      { url: '/captures/tidygardens-com-au/desktop/02-home-vine.png', caption: '"Four services, one trusted team"' },
+      { url: '/captures/tidygardens-com-au/desktop/04-reticulation.png', caption: 'Reticulation — repairs & installations' },
+      { url: '/captures/tidygardens-com-au/desktop/05-reticulation-pipe.png', caption: 'Reticulation — scheduling & before/after' },
+      { url: '/captures/tidygardens-com-au/desktop/06-lawn-care.png', caption: 'Lawn Care — the scroll-driven lawnmower motif' },
+      { url: '/captures/tidygardens-com-au/desktop/08-gallery.png', caption: 'Gallery — before/after photography' },
+      { url: '/captures/tidygardens-com-au/desktop/09-why-choose-us.png', caption: '"Six reasons to call us first"' },
+      { url: '/captures/tidygardens-com-au/desktop/10-contact.png', caption: 'Quote-request form' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/tidygardens-com-au/mobile/01-hero.png', caption: 'Mobile — hero with the scaled-down scroll motif' },
+      { url: '/captures/tidygardens-com-au/mobile/02-reticulation.png', caption: 'Mobile — reticulation services' },
+      { url: '/captures/tidygardens-com-au/mobile/03-lawn-care.png', caption: 'Mobile — lawn care' },
+      { url: '/captures/tidygardens-com-au/mobile/04-gallery.png', caption: 'Mobile — gallery before/after' },
+      { url: '/captures/tidygardens-com-au/mobile/05-contact.png', caption: 'Mobile — request-a-quote form' },
+    ],
+
+    delivered: [
+      'Full marketing website — design and build (multi-page)',
+      'Custom scroll-linked SVG animation system (signature brand motifs)',
+      'Lead-capture quote form with server-side validation and email delivery',
+      'Real photography pipeline — client phone photos optimised and art-directed',
+      'Before/after interactive image comparisons across services',
+      'SEO foundation — metadata, sitemap, robots, Open Graph images',
+      'Privacy policy and cookieless analytics',
+      'Domain recovery from a defunct provider + DNS migration to Vercel (email preserved)',
+      "Production deployment with SSL on the client's own domain",
+    ],
+
+    features: [
+      'Scroll-linked motifs (climbing vine, reticulation sprinkler, lawnmower) that animate in lockstep with scroll position',
+      'Scale-aware, responsive animation engine that adapts the motifs across breakpoints',
+      'Accessible before/after slider (pointer, touch and keyboard) used on lawn, reticulation and pump galleries',
+      "Quote-request form with inline validation, spam honeypot, and transactional email to the client's inbox (reply-to set to the enquirer)",
+      'Dedicated service pages (reticulation, lawn care, garden maintenance, cleanups & machinery), plus gallery, testimonials and why-choose-us',
+      'Full prefers-reduced-motion support — animations degrade gracefully',
+      'Optimised, art-directed real client photography (AVIF/WebP)',
+    ],
+
+    stack: [
+      'Next.js 14 (App Router)',
+      'React 18',
+      'TypeScript',
+      'Tailwind CSS 3 (custom design tokens)',
+      'GSAP 3 + ScrollTrigger (@gsap/react)',
+      'Lenis (smooth scroll)',
+      'next/image + next/font (Inter + Fraunces)',
+    ],
+
+    integrations: [
+      'Resend — transactional lead email delivery',
+      'Vercel — hosting, CI/CD, DNS and domain',
+      'Vercel Analytics (cookieless)',
+      'Google Workspace email (preserved through the DNS migration)',
+    ],
+
+    performance: [
+      'Statically prerendered routes (16 pages)',
+      '~87–107 kB First Load JS per route',
+      'AVIF/WebP imagery, pipeline-optimised from source photos',
+      'Cookieless analytics — no consent banner needed',
+      'Smooth 60fps scroll animation via transform/clip-path (non-scaling-stroke), respecting reduced-motion',
+    ],
+
+    challenges: [
+      "Domain recovery: the previous 'host' turned out to be a defunct rent-a-website reseller that only managed DNS and never owned the domain. We traced ownership to the client's own GoDaddy account, recovered control, and migrated DNS to Vercel nameservers — all without interrupting the client's Google Workspace email.",
+      'Making the brand motifs read as genuinely scroll-driven — the lawnmower had to look like it was actively cutting grass (static page-anchored grass revealed via clip-path) rather than dragging an asset down the page.',
+      'Keeping the scroll animations correct across breakpoints with a scale-aware engine, and stable across client-side route changes.',
+    ],
+
+    improvements: [
+      'Copy, pricing and testimonials are currently client-templated and pending final sign-off from the client.',
+      'Optional CMS layer if the client wants to self-manage gallery/testimonials over time.',
+    ],
+  },
+
   'quotr': {
     slug: 'quotr',
     name: 'Quotr',
