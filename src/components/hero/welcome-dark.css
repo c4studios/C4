@@ -1,66 +1,151 @@
 /* ─────────────────────────────────────────────────────────────
-   /welcome — dark helix takeover. Full-bleed: helix stage + content.
-   Desktop = two columns (content left, helix right); mobile = stacked
-   (helix top, content below). Dark surface; first paint is the text +
-   a faint brand glow placeholder while the 3D chunk streams in.
+   /welcome — dark helix takeover (immersive scroll journey).
+   The copy lives INSIDE a procedural red/green particle double-helix:
+   strands pass behind AND in front of the text, the helix spins, the
+   camera glides down it as you scroll. First paint is the copy + a faint
+   brand glow while the 3D chunk streams in. All scoped under .cwd.
    ───────────────────────────────────────────────────────────── */
 
 .cwd {
   position: relative;
   min-height: 100vh;
-  min-height: 100svh;
   background: #07080a;
   color: #f4f2ef;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  overflow: hidden;
 }
 
-.cwd__stage {
-  position: relative;
-  flex: 1 1 340px;
-  min-width: 300px;
-  height: 100svh;
-  touch-action: none;
-  order: 2;
-}
-
-.cwd__copy {
-  flex: 1 1 380px;
-  min-width: 300px;
-  padding: 40px clamp(28px, 5vw, 64px);
-  z-index: 2;
-  order: 1;
-}
-
-/* faint red/green glow placeholder behind the stage (first paint + fallback) */
-.cwd__ph {
-  position: absolute;
-  inset: 0;
+/* fixed full-bleed layers */
+.cwd .hx-bg,
+.cwd .hx-fg,
+.cwd .scrim,
+.cwd .ph { position: fixed; inset: 0; width: 100%; height: 100%; }
+.cwd .hx-bg { z-index: 0; pointer-events: none; }
+.cwd .hx-fg { z-index: 4; pointer-events: none; }
+.cwd .ph {
+  z-index: 0;
   background:
-    radial-gradient(circle at 52% 42%, rgba(163, 0, 0, 0.16), transparent 46%),
-    radial-gradient(circle at 48% 58%, rgba(34, 99, 47, 0.13), transparent 48%);
+    radial-gradient(circle at 62% 36%, rgba(201, 18, 18, 0.22), transparent 52%),
+    radial-gradient(circle at 46% 64%, rgba(34, 120, 60, 0.18), transparent 56%);
+}
+.cwd .scrim {
+  z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse 78% 75% at 28% 46%, rgba(7, 8, 10, 0.9), rgba(7, 8, 10, 0.5) 40%, transparent 76%);
+}
+.cwd .grain {
+  position: fixed; inset: 0; z-index: 6; pointer-events: none; opacity: 0.045;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.6) 0.5px, transparent 0.5px);
+  background-size: 3px 3px;
 }
 
-.cwd__kick { font-size: 12px; letter-spacing: 0.26em; color: rgba(243, 242, 239, 0.5); }
-.cwd__h1 { margin: 14px 0 8px; font-size: clamp(1.9rem, 4.6vw, 2.6rem); line-height: 1.06; font-weight: 500; letter-spacing: -0.035em; color: #f4f2ef; }
-.cwd__sub { margin: 0 0 24px; font-size: 15px; line-height: 1.55; color: rgba(243, 242, 239, 0.74); min-height: 46px; max-width: 30rem; }
-.cwd__acts { display: flex; flex-direction: column; gap: 10px; max-width: 360px; }
-.cwd__cta { display: flex; align-items: center; gap: 12px; text-align: left; padding: 13px 18px; border-radius: 12px; cursor: pointer; text-decoration: none; font-size: 15px; font-weight: 500; transition: transform 0.25s cubic-bezier(0.22,1,0.36,1); }
-.cwd__cta:active { transform: scale(0.985); }
-.cwd__strip { margin-top: 26px; font-size: 12px; line-height: 1.8; color: rgba(243, 242, 239, 0.45); }
-.cwd__strip a { color: inherit; text-decoration: none; }
-.cwd__strip a:hover { color: rgba(243, 242, 239, 0.8); }
+.cwd main { position: relative; z-index: 2; }
 
-@media (max-width: 880px) {
-  .cwd { flex-direction: column; flex-wrap: nowrap; }
-  .cwd__stage { order: 1; flex: none; width: 100%; height: 50svh; }
-  .cwd__copy { order: 2; width: 100%; padding: 22px 24px 40px; }
+.cwd .sec {
+  min-height: 100vh; min-height: 100svh;
+  display: flex; align-items: center;
+  padding: 0 clamp(26px, 7vw, 110px);
+}
+.cwd .inner {
+  position: relative; max-width: 540px; opacity: 0; transform: translateY(20px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cwd .inner::before {
+  content: ''; position: absolute; z-index: -1; inset: -22px -30px -26px -30px; border-radius: 26px;
+  background: radial-gradient(125% 105% at 24% 48%, rgba(7, 8, 10, 0.66), rgba(7, 8, 10, 0.34) 52%, transparent 80%);
+  -webkit-backdrop-filter: blur(3px) saturate(118%); backdrop-filter: blur(3px) saturate(118%);
+  pointer-events: none;
+}
+.cwd .sec.on .inner { opacity: 1; transform: none; }
+
+.cwd h1, .cwd h2, .cwd .sub, .cwd .body, .cwd .kick, .cwd .row b, .cwd .row span, .cwd .stat b, .cwd .tag, .cwd .strip {
+  text-shadow: 0 1px 16px rgba(7, 8, 10, 0.9), 0 0 5px rgba(7, 8, 10, 0.7);
+}
+.cwd .car { color: rgba(243, 242, 239, 0.55); font-weight: 300; animation: cwd-blink 1.05s steps(1) infinite; }
+@keyframes cwd-blink { 50% { opacity: 0; } }
+
+.cwd .kick { font-size: 11.5px; letter-spacing: 0.26em; color: rgba(243, 242, 239, 0.5); text-transform: uppercase; }
+.cwd h1 { margin: 14px 0 12px; font-size: clamp(2rem, 5.6vw, 3.1rem); line-height: 1.04; font-weight: 500; letter-spacing: -0.038em; color: #f4f2ef; }
+.cwd h2 { margin: 13px 0 14px; font-size: clamp(1.65rem, 4.6vw, 2.4rem); line-height: 1.1; font-weight: 500; letter-spacing: -0.032em; color: #f4f2ef; }
+.cwd .sub { margin: 0 0 22px; font-size: 15.5px; line-height: 1.6; color: rgba(243, 242, 239, 0.74); max-width: 30rem; min-height: 44px; }
+.cwd .body { font-size: 15.5px; line-height: 1.66; color: rgba(243, 242, 239, 0.72); max-width: 30rem; }
+
+.cwd .acts { display: flex; flex-direction: column; gap: 10px; max-width: 340px; margin-top: 6px; }
+.cwd .cta {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: flex; align-items: center; justify-content: flex-start;
+  padding: 13px 18px; border-radius: 13px; cursor: pointer; text-decoration: none;
+  font-size: 15px; font-weight: 500; border: none; color: #f4f2ef;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
+}
+.cwd .cta::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 44%);
+  opacity: 0.55; mix-blend-mode: screen;
+}
+.cwd .cta:hover { transform: translateY(-1px); }
+.cwd .cta:active { transform: scale(0.985); }
+.cwd .p1 { background: linear-gradient(140deg, #ffffff, #e9e6df); color: #15161a; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 10px 26px rgba(0, 0, 0, 0.4); }
+.cwd .p2 {
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+  border: 0.5px solid rgba(255, 255, 255, 0.28);
+  -webkit-backdrop-filter: blur(11px) saturate(165%);
+  backdrop-filter: blur(8px) saturate(160%) url(#lg);
+  box-shadow: inset 1px 1px 1px -0.5px rgba(255, 255, 255, 0.6), inset -1px -1px 1px -0.5px rgba(255, 255, 255, 0.5), inset 0 0 7px 5px rgba(255, 255, 255, 0.08), 0 10px 26px rgba(0, 0, 0, 0.34);
+}
+.cwd .p3 { background: transparent; color: rgba(243, 242, 239, 0.66); font-size: 14px; padding-left: 2px; }
+.cwd .p3::before { display: none; }
+
+.cwd .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.cwd .tag { font-size: 12.5px; padding: 7px 14px; border-radius: 999px; border: 0.5px solid rgba(255, 255, 255, 0.16); color: rgba(243, 242, 239, 0.8); }
+.cwd .rows { margin-top: 8px; display: flex; flex-direction: column; }
+.cwd .row { padding: 18px 0; border-top: 0.5px solid rgba(255, 255, 255, 0.1); }
+.cwd .row:last-child { border-bottom: 0.5px solid rgba(255, 255, 255, 0.1); }
+.cwd .row b { font-weight: 500; font-size: 16px; }
+.cwd .row span { display: block; margin-top: 5px; font-size: 13.5px; line-height: 1.55; color: rgba(243, 242, 239, 0.6); }
+.cwd .stats { display: flex; flex-wrap: wrap; gap: 26px 36px; margin: 6px 0 18px; }
+.cwd .stat b { display: block; font-size: clamp(1.6rem, 4.4vw, 2.2rem); font-weight: 500; letter-spacing: -0.02em; }
+.cwd .stat span { font-size: 12px; color: rgba(243, 242, 239, 0.5); letter-spacing: 0.04em; }
+.cwd .strip { margin-top: 24px; font-size: 12px; line-height: 1.9; color: rgba(243, 242, 239, 0.42); }
+.cwd .strip a { color: inherit; text-decoration: none; }
+.cwd .strip a:hover { color: rgba(243, 242, 239, 0.82); }
+.cwd .folio { display: inline-block; margin-top: 18px; font-size: 14px; color: rgba(243, 242, 239, 0.62); text-decoration: none; }
+
+.cwd .cue {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 3;
+  font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(243, 242, 239, 0.4);
+  display: flex; flex-direction: column; align-items: center; gap: 5px; transition: opacity 0.4s;
+}
+.cwd .cue.hide { opacity: 0; }
+.cwd .cue svg { animation: cwd-bob 2.2s ease-in-out infinite; }
+@keyframes cwd-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+
+.cwd .hint {
+  position: fixed; left: 50%; bottom: 64px; transform: translateX(-50%); z-index: 3;
+  font-size: 12px; color: rgba(243, 242, 239, 0.45); opacity: 0; transition: opacity 0.6s; pointer-events: none;
+}
+.cwd .hint.show { opacity: 1; }
+
+.cwd .bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 7; display: flex; gap: 10px;
+  padding: 12px clamp(16px, 5vw, 28px);
+  background: linear-gradient(to top, rgba(12, 13, 16, 0.66), rgba(12, 13, 16, 0.3));
+  border-top: 0.5px solid rgba(255, 255, 255, 0.14);
+  transform: translateY(120%); transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  -webkit-backdrop-filter: blur(18px) saturate(165%);
+  backdrop-filter: blur(13px) saturate(160%) url(#lg);
+}
+.cwd .bar.on { transform: none; }
+.cwd .bar .cta { flex: 1; justify-content: center; padding: 12px; }
+
+@media (max-width: 760px) {
+  .cwd .sec { align-items: flex-end; padding-bottom: 11vh; }
+  .cwd .scrim { background: linear-gradient(to top, rgba(7, 8, 10, 0.9) 30%, rgba(7, 8, 10, 0.3) 62%, transparent 86%); }
+  .cwd .inner { max-width: none; }
+  .cwd .bar .p3 { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cwd__cta { transition: none; }
+  .cwd .inner { transition: none; opacity: 1; transform: none; }
+  .cwd .cta { transition: none; }
+  .cwd .cue svg { animation: none; }
 }

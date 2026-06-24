@@ -14,7 +14,7 @@
  */
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Phone, Calculator, X, ArrowLeft } from 'lucide-react';
+import { Phone, MessageSquare, Calendar, Calculator, X, ArrowLeft } from 'lucide-react';
 import { submitProjectInquiry } from '@/api/submissions';
 import { buildQuotrSrc, postQuotrTheme } from '@/components/home/quotrTheme';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
@@ -23,6 +23,7 @@ import SubmissionSuccess from '@/components/c4/SubmissionSuccess';
 
 const ease = [0.22, 1, 0.36, 1];
 const QUOTR_SLUG = 'fixm4qeq';
+const CALEB_TEL = '+61479000404'; // direct line — the instant path for a tapped/scanned card
 
 const INK = '#414243';
 const INK_SOFT = '#6C6D6D';
@@ -262,6 +263,7 @@ function QuoteView({ onBack }) {
 
 export default function BookingSheet({ open, onClose }) {
   const [view, setView] = useState('choose'); // choose | call | quote
+  const quickBuzz = () => { try { if (navigator.vibrate) navigator.vibrate(12); } catch { /* */ } };
 
   // Reset to the chooser each time the sheet is opened.
   useEffect(() => {
@@ -343,13 +345,40 @@ export default function BookingSheet({ open, onClose }) {
                     Let&apos;s make something.
                   </h2>
                   <p className="mt-2 text-[13.5px] leading-[1.55]" style={{ color: INK_SOFT }}>
-                    Book a quick call, or get an instant ballpark price in about two minutes.
+                    Reach Caleb directly right now, book a proper call, or get an instant ballpark price.
                   </p>
-                  <div className="mt-6 space-y-3">
+
+                  {/* Instant path — the natural move for a tapped/scanned card */}
+                  <div className="mt-5 grid grid-cols-2 gap-2">
+                    <a
+                      href={`tel:${CALEB_TEL}`}
+                      onClick={quickBuzz}
+                      className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-[14px] font-semibold transition-transform duration-300 active:scale-[0.98]"
+                      style={{ backgroundColor: INK, color: '#F3F2F3' }}
+                    >
+                      <Phone size={16} strokeWidth={1.9} /> Call now
+                    </a>
+                    <a
+                      href={`sms:${CALEB_TEL}`}
+                      onClick={quickBuzz}
+                      className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-[14px] font-semibold transition-transform duration-300 active:scale-[0.98]"
+                      style={{ backgroundColor: '#FFFFFF', color: INK, border: `1px solid ${LINE}` }}
+                    >
+                      <MessageSquare size={16} strokeWidth={1.9} /> Text
+                    </a>
+                  </div>
+
+                  <div className="my-4 flex items-center gap-3" aria-hidden="true">
+                    <span className="h-px flex-1" style={{ backgroundColor: LINE }} />
+                    <span className="text-[11px] uppercase tracking-[0.16em]" style={{ color: INK_SOFT }}>or</span>
+                    <span className="h-px flex-1" style={{ backgroundColor: LINE }} />
+                  </div>
+
+                  <div className="space-y-3">
                     <ChoiceButton
-                      icon={Phone}
+                      icon={Calendar}
                       title="Book a call"
-                      sub="A 15-min chat about your project. Caleb replies fast."
+                      sub="Not free to talk now? Leave your details and a time that suits."
                       onClick={() => setView('call')}
                       primary
                     />

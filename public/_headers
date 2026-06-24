@@ -17,10 +17,12 @@
 /sitemap.xsl
   Content-Type: text/xsl; charset=utf-8
 
-# vCard download (networking card → /welcome → "Save my contact")
+# vCard (networking card → /welcome → "Save my contact").
+# Served INLINE (no attachment disposition) so iOS Safari opens the native
+# "Add to Contacts" sheet on tap rather than downloading the file to Files.
+# Android/desktop still download it cleanly.
 /caleb.vcf
   Content-Type: text/vcard; charset=utf-8
-  Content-Disposition: attachment; filename="Caleb Scott - C4 Studios.vcf"
 
 # Avenue A scrub frames — immutable, long-cache (filenames are versioned by run)
 /welcome/frames/*
