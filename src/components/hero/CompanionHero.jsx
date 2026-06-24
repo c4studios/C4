@@ -1,21 +1,23 @@
+/* eslint-disable react/no-unknown-property */
 /**
  * CompanionHero — the "Digital Experiential" companion for /welcome.
  *
  * A real-time 3D companion (rigged .glb) that genuinely tracks the pointer
- * (unprojected through the camera from the head's real world position — not a
- * container-relative approximation), blinks, and reacts to each CTA it is asked
- * to look at: glances over, eyes change colour, plays an emote + facial morph,
- * leans/tilts, and pops a drawn-on speech bubble. three / R3F / drei + bloom.
+ * (unprojected through the camera from the head's real world position), blinks,
+ * and reacts to each CTA: glances over, eyes change colour, plays an emote +
+ * facial morph, leans/tilts, pops a speech bubble — and *talks*. It types a
+ * contextual line letter-by-letter with a haptic pulse per character (its eyes
+ * pulse as it speaks), and what it says changes with what you're doing and how
+ * you arrived (NFC tap vs QR scan, read from ?ref). three / R3F / drei + bloom,
+ * HDRI lighting, clear-coat lens eyes.
  *
- * Model: /public/models/companion.glb (CC0 placeholder, re-skinned to charcoal
- * + brand accents). Swap that one file for a custom C4 robot later.
- *
- * Production: studio Environment + ContactShadows + Bloom + ACES; mobile
- * gyro-gaze; renders pause offscreen / for reduced-motion; static C4-mark
- * fallback when WebGL is unavailable.
+ * Model: /public/models/companion.glb (swap one file for a custom/realistic
+ * robot; the behaviour is model-agnostic — it needs a head bone, optionally a
+ * Surprised morph + Wave/ThumbsUp/Yes clips). Static C4-mark fallback when
+ * WebGL is unavailable; reduced-motion + offscreen render pause respected.
  */
 import React, { useRef, useMemo, useState, useEffect, Suspense, lazy } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Environment, ContactShadows, useGLTF, useAnimations } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -34,6 +36,36 @@ const REACT = {
   folio: { eye: '#e3c08a', ei: 1.5, morph: 0.0, tilt: 0.2, lean: 0.0 },
 };
 const EMOTE = { call: 'Wave', save: 'ThumbsUp', folio: 'Yes' };
+
+/* ── What the companion says, by entry method + by what you're doing ── */
+function getEntryVariant(ref) {
+  if (!ref) return 'neutral';
+  if (ref.endsWith('-nfc') || ref === 'phone-tap') return 'tap';
+  if (ref.endsWith('-qr')) return 'scan';
+  return 'neutral';
+}
+const HEADLINE = {
+  tap: 'That tap was just the beginning.',
+  scan: 'So you found the card.',
+  neutral: "Welcome — glad you're here.",
+};
+/* C4-01 — the studio's "reception unit": holds the first impression
+   while the team's heads-down building. Its voice branches by entry. */
+const GREETING = {
+  tap: "That tap connected us. I'm C4-01.",
+  scan: "Good eye. I'm C4-01 — the studio's welcome.",
+  neutral: "I'm C4-01. I mind the door while C4 builds.",
+};
+const SAY = {
+  call: 'A call? Good call.',
+  save: 'Drop me into your phone.',
+  folio: 'The work says it better — look.',
+};
+const IDLE_LINES = [
+  "Hover an option — I'll point you to it.",
+  'Perth web design & dev, by the way.',
+  "Still here when you're ready.",
+];
 
 function Robot({ gaze }) {
   const group = useRef();
@@ -79,16 +111,9 @@ function Robot({ gaze }) {
       if (Array.isArray(o.material)) o.material = o.material.map(recolor);
       else if (o.material) o.material = recolor(o.material);
       if (o.material && !Array.isArray(o.material) && o.material.name === 'Black') {
-        // Glossy clear-coat "lens" eyes — reflect the HDRI, glow softly.
         const em = new THREE.MeshPhysicalMaterial({
-          color: '#0a0f0c',
-          emissive: new THREE.Color('#4fae6a'),
-          emissiveIntensity: 0.9,
-          metalness: 0.0,
-          roughness: 0.22,
-          clearcoat: 1.0,
-          clearcoatRoughness: 0.12,
-          envMapIntensity: 1.8,
+          color: '#0a0f0c', emissive: new THREE.Color('#4fae6a'), emissiveIntensity: 0.9,
+          metalness: 0.0, roughness: 0.22, clearcoat: 1.0, clearcoatRoughness: 0.12, envMapIntensity: 1.8,
         });
         o.material = em;
         eyeMat.current = em;
@@ -96,12 +121,11 @@ function Robot({ gaze }) {
     });
     actions?.Idle?.reset().fadeIn(0.3).play();
     return () => { actions?.Idle?.fadeOut(0.2); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scene, actions]);
 
   useFrame((state) => {
     const now = performance.now();
-    const G = gaze.current || { sx: 0, sy: 0, mode: 'none', t: 0, gt: 0, gx: 0, gy: 0 };
+    const G = gaze.current;
     const R = REACT[G.mode];
 
     if (G.mode !== lastMode.current) {
@@ -110,7 +134,6 @@ function Robot({ gaze }) {
       if (a) { a.reset(); a.setLoop(THREE.LoopOnce, 1); a.clampWhenFinished = true; a.fadeIn(0.12).play(); }
     }
 
-    // ── Resolve a target yaw/pitch the head should aim at ──
     let yaw, pitch;
     const gyroActive = G.mode === 'none' && now - (G.gt || 0) < 500;
     if (G.mode === 'none' && !gyroActive && now - (G.t || 0) > 2600) {
@@ -118,13 +141,12 @@ function Robot({ gaze }) {
     } else if (gyroActive) {
       yaw = G.gx * 0.6; pitch = G.gy * 0.35;
     } else if (headBone) {
-      // Unproject the real cursor through the camera, relative to the canvas.
       const rect = state.gl.domElement.getBoundingClientRect();
       const nx = (((G.sx - rect.left) / rect.width) * 2 - 1);
       const ny = -(((G.sy - rect.top) / rect.height) * 2 - 1);
       tmpV.current.set(clamp(nx, -2, 2), clamp(ny, -2, 2), 0.5).unproject(state.camera);
       headBone.getWorldPosition(tmpH.current);
-      tmpV.current.sub(tmpH.current); // head → cursor direction
+      tmpV.current.sub(tmpH.current);
       yaw = Math.atan2(tmpV.current.x, tmpV.current.z);
       pitch = Math.atan2(tmpV.current.y, Math.hypot(tmpV.current.x, tmpV.current.z));
     } else { yaw = 0; pitch = 0; }
@@ -150,7 +172,6 @@ function Robot({ gaze }) {
     }
     if (group.current) group.current.position.z = cur.current.lean;
 
-    // ── Facial morph (surprise) for stronger reactions ──
     if (morphMesh?.morphTargetInfluences) {
       const idx = morphMesh.morphTargetDictionary.Surprised;
       if (idx !== undefined) {
@@ -159,7 +180,6 @@ function Robot({ gaze }) {
       }
     }
 
-    // ── Eyes: colour + eased blink (glowing eyes "blink" by dimming) ──
     const b = blink.current;
     if (b.state === 0 && now >= b.next) { b.state = 1; b.start = now; b.dur = 150 + Math.random() * 70; }
     let bAmt = 0;
@@ -171,7 +191,8 @@ function Robot({ gaze }) {
     if (eyeMat.current) {
       tmpC.current.set(R ? R.eye : '#4fae6a');
       eyeMat.current.emissive.lerp(tmpC.current, 0.16);
-      const eiTarget = (R ? R.ei : 1.1) * (1 - 0.92 * bAmt);
+      const talking = now - (G.talk || 0) < 110; // pulse while "speaking"
+      const eiTarget = (R ? R.ei : 1.1) * (1 - 0.92 * bAmt) + (talking ? 0.5 : 0);
       cur.current.ei += (eiTarget - cur.current.ei) * 0.4;
       eyeMat.current.emissiveIntensity = cur.current.ei;
     }
@@ -222,28 +243,71 @@ function hasWebGL() {
 }
 
 export default function CompanionHero() {
-  const gaze = useRef({ sx: 0, sy: 0, mode: 'none', t: 0, gt: 0, gx: 0, gy: 0 });
+  const [params] = useSearchParams();
+  const variant = useMemo(() => getEntryVariant(params.get('ref')), [params]);
+
+  const gaze = useRef({ sx: 0, sy: 0, mode: 'none', t: 0, gt: 0, gx: 0, gy: 0, talk: 0 });
   const [mode, setMode] = useState('none');
   const [bookingOpen, setBookingOpen] = useState(false);
   const [inView, setInView] = useState(true);
+  const [speech, setSpeech] = useState('');
+  const [typed, setTyped] = useState('');
   const stageRef = useRef(null);
+  const idleIdx = useRef(0);
+  const lastAct = useRef(0);
+  const gestured = useRef(false); // haptics need a prior user gesture (browser policy)
   const webgl = useMemo(hasWebGL, []);
   const reduced = useMemo(
     () => typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
     [],
   );
 
+  const buzz = (p) => { try { if (gestured.current && navigator.vibrate) navigator.vibrate(p); } catch (err) { /* no haptics */ } };
+  const say = (line) => { setSpeech(line); lastAct.current = performance.now(); };
+
   const onMove = (e) => {
     if (gaze.current.mode !== 'none') return;
     gaze.current.sx = e.clientX; gaze.current.sy = e.clientY; gaze.current.t = performance.now();
+    lastAct.current = performance.now();
   };
   const enter = (m) => (e) => {
     const t = e.currentTarget.getBoundingClientRect();
     gaze.current.sx = t.left + t.width / 2; gaze.current.sy = t.top + t.height / 2;
     gaze.current.mode = m; gaze.current.t = performance.now();
-    setMode(m);
+    setMode(m); say(SAY[m]); buzz(6);
   };
   const leave = () => { gaze.current.mode = 'none'; gaze.current.t = performance.now(); setMode('none'); };
+
+  /* Greeting — branches by how they arrived (tap vs scan). */
+  useEffect(() => { say(GREETING[variant]); }, [variant]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* Typewriter + per-character haptic; eyes pulse via gaze.talk. */
+  useEffect(() => {
+    if (!speech) { setTyped(''); return undefined; }
+    if (reduced) { setTyped(speech); return undefined; }
+    setTyped('');
+    let i = 0; let id;
+    const tick = () => {
+      i += 1;
+      setTyped(speech.slice(0, i));
+      const ch = speech[i - 1];
+      if (ch && ch !== ' ') { buzz(4); gaze.current.talk = performance.now(); }
+      if (i < speech.length) id = setTimeout(tick, 26);
+    };
+    id = setTimeout(tick, 50);
+    return () => clearTimeout(id);
+  }, [speech, reduced]);
+
+  /* Idle: rotate ambient lines when nobody's interacting. */
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (gaze.current.mode === 'none' && performance.now() - lastAct.current > 5200) {
+        idleIdx.current = (idleIdx.current + 1) % IDLE_LINES.length;
+        say(IDLE_LINES[idleIdx.current]);
+      }
+    }, 5400);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     const el = stageRef.current;
@@ -275,7 +339,7 @@ export default function CompanionHero() {
   const ctaBase = { display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left', padding: '12px 16px', borderRadius: 12, cursor: 'pointer', textDecoration: 'none' };
 
   return (
-    <div className="c4-companion" ref={stageRef} onPointerMove={onMove}>
+    <div className="c4-companion" ref={stageRef} onPointerMove={onMove} onPointerDown={() => { gestured.current = true; }}>
       <div className="c4-companion__stage">
         <Bubble mode={mode} />
         {webgl ? (
@@ -308,20 +372,25 @@ export default function CompanionHero() {
       </div>
 
       <div className="c4-companion__copy">
-        <div style={{ fontSize: 12, letterSpacing: '0.26em', color: 'rgba(243,242,239,0.5)' }}>c4 studios · perth</div>
+        <div style={{ fontSize: 12, letterSpacing: '0.26em', color: 'rgba(243,242,239,0.5)', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff5a52', display: 'inline-block' }} />
+          c4-01 · online
+        </div>
         <h1 style={{ margin: '12px 0 6px', fontSize: 30, lineHeight: 1.08, fontWeight: 500, letterSpacing: '-0.03em', color: '#f4f2ef' }}>
-          What can we build?
+          {HEADLINE[variant]}
         </h1>
-        <p style={{ margin: '0 0 20px', fontSize: 15, lineHeight: 1.55, color: 'rgba(243,242,239,0.6)' }}>
-          Hover a button — it watches, and reacts.
+        <p style={{ margin: '0 0 18px', fontSize: 15, lineHeight: 1.5, color: 'rgba(243,242,239,0.82)', minHeight: 46 }} aria-live="polite">
+          {typed}<span className="c4-typed-cursor" style={{ color: '#ff5a52' }}>|</span>
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 330 }}>
-          <button type="button" onClick={() => setBookingOpen(true)}
+          <button type="button"
+            onClick={() => { setBookingOpen(true); say("Pick a time — Caleb's keen."); buzz([14]); }}
             onMouseEnter={enter('call')} onMouseLeave={leave} onFocus={enter('call')} onBlur={leave}
             style={{ ...ctaBase, border: 'none', background: '#f3f2ef', color: '#15161a' }}>
             <span style={{ fontSize: 15, fontWeight: 500 }}>Book a call</span>
           </button>
           <a href="/caleb.vcf" download="Caleb Scott - C4 Studios.vcf"
+            onClick={() => { say("Saved. We'll be in touch."); buzz([10, 30, 10]); }}
             onMouseEnter={enter('save')} onMouseLeave={leave} onFocus={enter('save')} onBlur={leave}
             style={{ ...ctaBase, border: '0.5px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.04)', color: '#f3f2ef' }}>
             <span style={{ fontSize: 15, fontWeight: 500 }}>Save my contact</span>

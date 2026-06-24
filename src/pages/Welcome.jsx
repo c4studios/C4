@@ -1,351 +1,168 @@
 /**
- * /welcome — networking-card landing.
+ * /welcome — networking-card landing (dark "helix takeover").
  *
- * A scanned QR or tapped NFC card opens this page. It is phone-first, loads in
- * front of a prospect on mobile data, and is itself a portfolio piece — so the
- * headline must paint instantly and nothing may stall (handoff §1, §5).
+ * A scanned QR or tapped NFC card opens this page. The hero is an interactive
+ * particle double-helix in C4's red + green; run the cursor through it and it
+ * scatters and reforms. The three ranked actions (book / save / portfolio),
+ * the vCard, scan tracking, and the tap-vs-scan headline branching all carry
+ * over from the original build.
  *
- * Build order (handoff §8): static hero + 3 ranked actions + vCard ship first;
- * the Avenue A frame-scrub layers in once Caleb renders the asset (set
- * AVENUE_FRAME_COUNT below). Until then the "proof" slot shows the live,
- * tap-to-build C4 logo — capability on display with zero new assets.
- *
- * Routing note: this page is mounted as an explicit, chrome-free route in
- * App.jsx (no NavHeader/Footer) so the landing stays focused and fast.
+ * Performance (this loads on mobile data in front of a prospect): the text +
+ * a brand-glow placeholder paint instantly; the heavy 3D chunk (HelixCanvas)
+ * is lazy-loaded after first paint via requestIdleCallback. WebGL-unavailable
+ * or prefers-reduced-motion → the static glow placeholder stays (never blank).
  */
-import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowDown, Phone, Download, ArrowUpRight } from 'lucide-react';
-import C4Mark from '@/components/welcome/C4Mark';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { recordScan } from '@/api/submissions';
 import { createPageUrl } from '@/utils';
-import '../components/welcome/welcome.css';
+import '../components/hero/welcome-dark.css';
 
-/* Heavy/animation bundles are split out so the hero paints immediately. */
-const AvenueScrub = lazy(() => import('@/components/welcome/AvenueScrub'));
-const C4Logo = lazy(() => import('@/components/c4/C4Logo'));
+const HelixCanvas = lazy(() => import('@/components/hero/HelixCanvas'));
 const BookingSheet = lazy(() => import('@/components/welcome/BookingSheet'));
 
-/* ── Avenue A frame sequence ──────────────────────────────────────────
-   Set this to the rendered frame count once WebP frames are dropped into
-   /public/welcome/frames/ (named avenue-001.webp …). While it is 0, the
-   proof section shows the interactive logo instead of the scrub. */
-const AVENUE_FRAME_COUNT = 0;
+const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
-const ease = [0.22, 1, 0.36, 1];
+function getEntryVariant(ref) {
+  if (!ref) return 'neutral';
+  if (ref.endsWith('-nfc') || ref === 'phone-tap') return 'tap';
+  if (ref.endsWith('-qr')) return 'scan';
+  return 'neutral';
+}
+const HEADLINE = {
+  tap: 'That tap was just the beginning.',
+  scan: 'So you found the card.',
+  neutral: "Welcome — glad you're here.",
+};
+const SUBLINE = {
+  idle: 'Perth web design & development. This is what we’re built from — run your cursor through it.',
+  call: 'A call? Let’s build something.',
+  save: 'Take the studio with you.',
+  folio: 'See what we’ve made.',
+};
 
-/* Fire the scan event exactly once per page load (survives StrictMode's
-   double-mount in dev via this module-level flag). */
+function hasWebGL() {
+  try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'))); } catch (e) { return false; }
+}
+
+/* Fire the scan event exactly once per page load. */
 let scanFired = false;
 
 export default function Welcome() {
   const [params] = useSearchParams();
+  const variant = useMemo(() => getEntryVariant(params.get('ref')), [params]);
+
+  const [sub, setSub] = useState('idle');
   const [bookingOpen, setBookingOpen] = useState(false);
-  const scrubRef = useRef(null);
-  const hasFrames = AVENUE_FRAME_COUNT > 0;
+  const [inView, setInView] = useState(true);
+  const [show3D, setShow3D] = useState(false);
+  const agitate = useRef(0);
+  const gestured = useRef(false);
+  const stageRef = useRef(null);
+  const webgl = useMemo(hasWebGL, []);
+  const reduced = useMemo(() => typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches, []);
 
   useDocumentHead({
     title: 'You found the card — C4 Studios',
-    description:
-      'You scanned the C4 Studios card. Perth web design & development. Book a call, save the contact, or see the work.',
+    description: 'You scanned the C4 Studios card. Perth web design & development. Book a call, save the contact, or see the work.',
     path: '/welcome',
     noIndex: true,
   });
 
-  /* Force the greige card palette regardless of the visitor's theme, and
-     paint the browser chrome to match. Restored on unmount. */
+  /* Force the dark palette + browser chrome; restore on unmount. */
   useEffect(() => {
     const root = document.documentElement;
     const prevClass = root.className;
-    root.classList.add('light-mode');
-    root.classList.remove('dark-mode', 'vivid');
-
-    const prevBodyBg = document.body.style.backgroundColor;
-    document.body.style.backgroundColor = '#E8E4DB';
-
-    let themeMeta = document.querySelector('meta[name="theme-color"]');
-    const createdMeta = !themeMeta;
-    const prevThemeColor = themeMeta?.getAttribute('content');
-    if (!themeMeta) {
-      themeMeta = document.createElement('meta');
-      themeMeta.setAttribute('name', 'theme-color');
-      document.head.appendChild(themeMeta);
-    }
-    themeMeta.setAttribute('content', '#E8E4DB');
-
+    root.classList.add('dark-mode'); root.classList.remove('light-mode', 'vivid');
+    const prevBg = document.body.style.backgroundColor;
+    document.body.style.backgroundColor = '#07080a';
+    let meta = document.querySelector('meta[name="theme-color"]');
+    const created = !meta; const prevColor = meta?.getAttribute('content');
+    if (!meta) { meta = document.createElement('meta'); meta.setAttribute('name', 'theme-color'); document.head.appendChild(meta); }
+    meta.setAttribute('content', '#07080a');
     return () => {
-      root.className = prevClass;
-      document.body.style.backgroundColor = prevBodyBg;
-      if (createdMeta) themeMeta.remove();
-      else if (prevThemeColor != null) themeMeta.setAttribute('content', prevThemeColor);
+      root.className = prevClass; document.body.style.backgroundColor = prevBg;
+      if (created) meta.remove(); else if (prevColor != null) meta.setAttribute('content', prevColor);
     };
   }, []);
 
-  /* One scan event on mount. Attribution (`ref`) stays server-side. */
+  /* One scan event on mount (full raw ref, server-side only). */
   useEffect(() => {
     if (scanFired) return;
-    // Skip the build-time prerenderer (see scripts/prerender.mjs).
     if (typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent)) return;
     scanFired = true;
     recordScan({ ref: params.get('ref') || '', user_agent: navigator.userAgent });
   }, [params]);
 
+  /* Defer the heavy 3D until after first paint, so the page is alive instantly. */
+  useEffect(() => {
+    if (!webgl || reduced) return undefined;
+    const ric = window.requestIdleCallback || ((f) => setTimeout(f, 300));
+    const id = ric(() => setShow3D(true));
+    return () => { if (window.cancelIdleCallback && typeof id === 'number') try { window.cancelIdleCallback(id); } catch (e) { /* */ } };
+  }, [webgl, reduced]);
+
+  /* Pause the render loop when scrolled out of view. */
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el || !('IntersectionObserver' in window)) return undefined;
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.02 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const buzz = (p) => { try { if (gestured.current && navigator.vibrate) navigator.vibrate(p); } catch (e) { /* */ } };
+  const enter = (m) => () => { setSub(m); agitate.current = clamp(agitate.current + 0.5, 0, 1); buzz(5); };
+  const leave = () => setSub('idle');
+
+  const ctaStyle = {
+    p1: { background: '#f3f2ef', color: '#15161a' },
+    p2: { background: 'rgba(255,255,255,0.04)', color: '#f4f2ef', border: '0.5px solid rgba(255,255,255,0.18)' },
+    p3: { background: 'transparent', color: 'rgba(243,242,239,0.62)', fontSize: 14 },
+  };
+
   return (
-    <div className="c4-welcome">
-      {/* ─── Section 1 — Acknowledgement (above the fold) ─── */}
-      <section className="relative flex min-h-[100svh] flex-col items-center justify-center px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease }}
-          className="flex items-center gap-3 mb-8"
-        >
-          <span className="h-px w-7" style={{ backgroundColor: 'var(--w-red)' }} />
-          <span
-            className="text-[10px] uppercase tracking-[0.28em] font-medium"
-            style={{ color: 'var(--w-ink-soft)' }}
-          >
-            C4 Studios · Perth
-          </span>
-          <span className="h-px w-7" style={{ backgroundColor: 'var(--w-red)' }} />
-        </motion.div>
+    <div className="cwd" onPointerDown={() => { gestured.current = true; }}>
+      <div className="cwd__stage" ref={stageRef}>
+        <div className="cwd__ph" aria-hidden="true" />
+        {show3D && webgl && !reduced && (
+          <Suspense fallback={null}>
+            <HelixCanvas agitate={agitate} reduced={reduced} inView={inView} />
+          </Suspense>
+        )}
+      </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.08, ease }}
-          style={{ height: 'clamp(86px, 21vw, 128px)' }}
-          className="mb-9"
-        >
-          <C4Mark size={128} className="h-full w-auto" />
-        </motion.div>
+      <div className="cwd__copy">
+        <div className="cwd__kick">c4 studios · perth</div>
+        <h1 className="cwd__h1">{HEADLINE[variant]}</h1>
+        <p className="cwd__sub" aria-live="polite">{SUBLINE[sub]}</p>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.18, ease }}
-          className="text-[clamp(2rem,9vw,3.25rem)] font-semibold leading-[1.04] tracking-[-0.04em]"
-          style={{ color: 'var(--w-ink)' }}
-        >
-          You found the card.
-          <br />
-          <span style={{ color: 'var(--w-red)' }}>Nice.</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.32, ease }}
-          className="mt-5 max-w-[20rem] text-[14.5px] leading-[1.6]"
-          style={{ color: 'var(--w-ink-soft)' }}
-        >
-          Perth web design &amp; development — C4 Studios.
-        </motion.p>
-
-        <motion.a
-          href="#actions"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
-          className="c4-scroll-cue absolute bottom-8 flex flex-col items-center gap-1.5"
-          style={{ color: 'var(--w-ink-soft)' }}
-          aria-label="Scroll down"
-        >
-          <span className="text-[9.5px] uppercase tracking-[0.24em]">Scroll</span>
-          <ArrowDown size={16} strokeWidth={1.6} />
-        </motion.a>
-      </section>
-
-      {/* ─── Section 2 — The proof (frame-scrub, or live logo until rendered) ─── */}
-      <section
-        ref={scrubRef}
-        className="relative"
-        style={{ height: hasFrames ? '260vh' : 'auto' }}
-      >
-        <div className="sticky top-0 flex h-[100svh] w-full items-center justify-center overflow-hidden">
-          <div className="absolute inset-0">
-            <Suspense fallback={<div className="h-full w-full" />}>
-              <AvenueScrub
-                scrollContainerRef={scrubRef}
-                frameCount={AVENUE_FRAME_COUNT}
-                framePath="/welcome/frames/avenue-"
-                ext="webp"
-              >
-                {/* Poster / fallback: the live, tap-to-build C4 lockup. */}
-                <div className="flex h-full w-full flex-col items-center justify-center gap-7">
-                  <Suspense fallback={<C4Mark size={120} />}>
-                    <C4Logo size={132} variant="full" context="header" />
-                  </Suspense>
-                  <span
-                    className="text-[10px] uppercase tracking-[0.26em]"
-                    style={{ color: 'var(--w-ink-soft)' }}
-                  >
-                    Tap the mark
-                  </span>
-                </div>
-              </AvenueScrub>
-            </Suspense>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 0.6, ease }}
-            className="pointer-events-none absolute left-0 right-0 top-12 px-6 text-center"
-          >
-            <span
-              className="text-[10px] uppercase tracking-[0.28em] font-medium"
-              style={{ color: 'var(--w-ink-soft)' }}
-            >
-              Built live
-            </span>
-            <p
-              className="mx-auto mt-3 max-w-[18rem] text-[clamp(1.15rem,5vw,1.5rem)] font-semibold leading-[1.2] tracking-[-0.03em]"
-              style={{ color: 'var(--w-ink)' }}
-            >
-              The card was the teaser. This page is the studio.
-            </p>
-          </motion.div>
+        <div className="cwd__acts">
+          <button type="button" className="cwd__cta" style={ctaStyle.p1}
+            onClick={() => { setBookingOpen(true); buzz([14]); }}
+            onMouseEnter={enter('call')} onMouseLeave={leave} onFocus={enter('call')} onBlur={leave}>
+            Book a call
+          </button>
+          <a className="cwd__cta" style={ctaStyle.p2} href="/caleb.vcf" download="Caleb Scott - C4 Studios.vcf"
+            onClick={() => buzz([10, 30, 10])}
+            onMouseEnter={enter('save')} onMouseLeave={leave} onFocus={enter('save')} onBlur={leave}>
+            Save my contact
+          </a>
+          <Link className="cwd__cta" style={ctaStyle.p3} to={createPageUrl('Portfolio')}
+            onMouseEnter={enter('folio')} onMouseLeave={leave} onFocus={enter('folio')} onBlur={leave}>
+            See the portfolio
+          </Link>
         </div>
-      </section>
 
-      {/* ─── Section 3 — Three ranked actions ─── */}
-      <section
-        id="actions"
-        className="relative flex min-h-[100svh] flex-col justify-center px-6 py-20"
-      >
-        <div className="mx-auto w-full max-w-[26rem]">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.55, ease }}
-          >
-            <span
-              className="text-[10px] uppercase tracking-[0.28em] font-medium"
-              style={{ color: 'var(--w-ink-soft)' }}
-            >
-              What now
-            </span>
-            <h2
-              className="mt-3 text-[clamp(1.6rem,7vw,2.25rem)] font-semibold leading-[1.1] tracking-[-0.035em]"
-              style={{ color: 'var(--w-ink)' }}
-            >
-              Three ways to keep this going.
-            </h2>
-          </motion.div>
-
-          <div className="mt-9 space-y-3">
-            {/* 1 — Book a call (primary, highest contrast) */}
-            <motion.button
-              type="button"
-              onClick={() => setBookingOpen(true)}
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.5, delay: 0.05, ease }}
-              whileTap={{ scale: 0.985 }}
-              className="group flex w-full items-center gap-4 rounded-xl px-5 py-4 text-left transition-transform duration-300"
-              style={{ backgroundColor: 'var(--w-ink)', color: '#F3F2F3' }}
-            >
-              <span
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-                style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}
-              >
-                <Phone size={18} strokeWidth={1.8} />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-[15.5px] font-semibold tracking-[-0.01em]">
-                  Book a call
-                </span>
-                <span className="block text-[12.5px] mt-0.5" style={{ color: 'rgba(243,242,243,0.72)' }}>
-                  15-min chat · or lock in a price now
-                </span>
-              </span>
-              <ArrowUpRight
-                size={18}
-                strokeWidth={1.8}
-                className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                style={{ color: 'rgba(243,242,243,0.7)' }}
-              />
-            </motion.button>
-
-            {/* 2 — Save my contact (vCard download) */}
-            <motion.a
-              href="/caleb.vcf"
-              download="Caleb Scott - C4 Studios.vcf"
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.5, delay: 0.12, ease }}
-              className="group flex w-full items-center gap-4 rounded-xl px-5 py-4 text-left transition-transform duration-300 active:scale-[0.985]"
-              style={{ backgroundColor: '#FFFFFF', color: 'var(--w-ink)', border: '1px solid var(--w-line)' }}
-            >
-              <span
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-                style={{ backgroundColor: 'rgba(34,99,47,0.10)', color: 'var(--w-green)' }}
-              >
-                <Download size={18} strokeWidth={1.8} />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-[15.5px] font-semibold tracking-[-0.01em]">
-                  Save my contact
-                </span>
-                <span className="block text-[12.5px] mt-0.5" style={{ color: 'var(--w-ink-soft)' }}>
-                  One tap — adds Caleb to your phone
-                </span>
-              </span>
-            </motion.a>
-
-            {/* 3 — See portfolio (ghost link) */}
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.5, delay: 0.19, ease }}
-              className="pt-1"
-            >
-              <Link
-                to={createPageUrl('Portfolio')}
-                className="group inline-flex items-center gap-2 px-1 py-2 text-[14px] font-medium"
-                style={{ color: 'var(--w-ink-soft)' }}
-              >
-                See the portfolio
-                <ArrowUpRight
-                  size={16}
-                  strokeWidth={1.8}
-                  className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                />
-              </Link>
-            </motion.div>
-          </div>
-
-          {/* Contact strip — mirrors the card back */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.6, delay: 0.3, ease }}
-            className="mt-12 border-t pt-6 text-[12px] leading-[1.8]"
-            style={{ borderColor: 'var(--w-line)', color: 'var(--w-ink-soft)' }}
-          >
-            <a href="mailto:caleb@c4studios.com.au" className="hover:underline">
-              caleb@c4studios.com.au
-            </a>
-            <span className="mx-2" style={{ color: 'var(--w-line)' }}>·</span>
-            <a href="https://c4studios.com.au" className="hover:underline">
-              c4studios.com.au
-            </a>
-            <span className="mx-2" style={{ color: 'var(--w-line)' }}>·</span>
-            <span>Perth WA</span>
-          </motion.div>
+        <div className="cwd__strip">
+          <a href="mailto:caleb@c4studios.com.au">caleb@c4studios.com.au</a>
+          <span> · </span>
+          <a href="https://c4studios.com.au">c4studios.com.au</a>
+          <span> · Perth WA</span>
         </div>
-      </section>
+      </div>
 
-      {/* Booking sheet — lazy, only mounts when opened */}
       {bookingOpen && (
         <Suspense fallback={null}>
           <BookingSheet open={bookingOpen} onClose={() => setBookingOpen(false)} />
