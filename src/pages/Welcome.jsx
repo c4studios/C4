@@ -1,18 +1,23 @@
 /**
- * /welcome — networking-card landing (dark "helix takeover").
+ * /welcome — the networking-card landing (dark "helix takeover").
  *
- * A scanned QR or tapped NFC card opens this page. The hero is an interactive
- * particle double-helix in C4's red + green; run the cursor through it and it
- * scatters and reforms. The three ranked actions (book / save / portfolio),
- * the vCard, scan tracking, and the tap-vs-scan headline branching all carry
- * over from the original build.
+ * A scanned QR or tapped NFC card opens this page. It's a full immersive scroll
+ * journey: a procedural red+green particle double-helix (HelixCanvas) fills the
+ * screen, spins on its own axis, scatters where the cursor slices it and springs
+ * back, and the camera glides DOWN the helix as you scroll. The copy sits inside
+ * the helix — strands pass behind AND in front of the text.
  *
- * Performance (this loads on mobile data in front of a prospect): the text +
- * a brand-glow placeholder paint instantly; the heavy 3D chunk (HelixCanvas)
- * is lazy-loaded after first paint via requestIdleCallback. WebGL-unavailable
- * or prefers-reduced-motion → the static glow placeholder stays (never blank).
+ * Performance (this loads on mobile data in front of a prospect): the copy + a
+ * brand-glow placeholder paint instantly; the heavy 3D chunk is lazy-loaded
+ * after first paint via requestIdleCallback. WebGL-unavailable or
+ * prefers-reduced-motion → the static glow stays (never blank).
+ *
+ * The three ranked actions (book / save / portfolio), the premium vCard (with
+ * photo + phone, saved natively), tap-vs-scan headline branching, and the
+ * fire-once scan tracking (full raw ref, server-side only — never leaked into
+ * the vCard or booking links) all carry over.
  */
-import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { recordScan } from '@/api/submissions';
@@ -21,8 +26,6 @@ import '../components/hero/welcome-dark.css';
 
 const HelixCanvas = lazy(() => import('@/components/hero/HelixCanvas'));
 const BookingSheet = lazy(() => import('@/components/welcome/BookingSheet'));
-
-const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
 function getEntryVariant(ref) {
   if (!ref) return 'neutral';
@@ -33,17 +36,17 @@ function getEntryVariant(ref) {
 const HEADLINE = {
   tap: 'That tap was just the beginning.',
   scan: 'So you found the card.',
-  neutral: "Welcome — glad you're here.",
+  neutral: 'Welcome — glad you’re here.',
 };
-const SUBLINE = {
-  idle: 'Perth web design & development. This is what we’re built from — run your cursor through it.',
-  call: 'A call? Let’s build something.',
-  save: 'Take the studio with you.',
-  folio: 'See what we’ve made.',
+const LINES = {
+  idle: 'Perth web design & development — run your cursor through the helix.',
+  book: 'A call it is. Let’s find a time that works.',
+  save: 'Saved straight to your phone — no typing, no forms.',
+  folio: 'Opening the work →',
 };
 
 function hasWebGL() {
-  try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'))); } catch (e) { return false; }
+  try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'))); } catch { return false; }
 }
 
 /* Fire the scan event exactly once per page load. */
@@ -53,15 +56,24 @@ export default function Welcome() {
   const [params] = useSearchParams();
   const variant = useMemo(() => getEntryVariant(params.get('ref')), [params]);
 
-  const [sub, setSub] = useState('idle');
   const [bookingOpen, setBookingOpen] = useState(false);
-  const [inView, setInView] = useState(true);
   const [show3D, setShow3D] = useState(false);
-  const agitate = useRef(0);
+  const [active3D, setActive3D] = useState(true);
+  const [typed, setTyped] = useState('');
+  const [barOn, setBarOn] = useState(false);
+  const [cueHidden, setCueHidden] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [savedFlash, setSavedFlash] = useState(false);
+
+  const rootRef = useRef(null);
   const gestured = useRef(false);
-  const stageRef = useRef(null);
+  const interacted = useRef(false);
+  const iosTap = useRef(() => {});
+  const typeTok = useRef(0);
+
   const webgl = useMemo(hasWebGL, []);
   const reduced = useMemo(() => typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches, []);
+  const hasVibe = typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function';
 
   useDocumentHead({
     title: 'You found the card — C4 Studios',
@@ -100,67 +112,225 @@ export default function Welcome() {
     if (!webgl || reduced) return undefined;
     const ric = window.requestIdleCallback || ((f) => setTimeout(f, 300));
     const id = ric(() => setShow3D(true));
-    return () => { if (window.cancelIdleCallback && typeof id === 'number') try { window.cancelIdleCallback(id); } catch (e) { /* */ } };
+    return () => { if (window.cancelIdleCallback && typeof id === 'number') try { window.cancelIdleCallback(id); } catch { /* */ } };
   }, [webgl, reduced]);
 
-  /* Pause the render loop when scrolled out of view. */
+  /* Pause the render loop when the tab is hidden. */
   useEffect(() => {
-    const el = stageRef.current;
-    if (!el || !('IntersectionObserver' in window)) return undefined;
-    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.02 });
-    io.observe(el);
-    return () => io.disconnect();
+    const onVis = () => setActive3D(!document.hidden);
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
   }, []);
 
-  const buzz = (p) => { try { if (gestured.current && navigator.vibrate) navigator.vibrate(p); } catch (e) { /* */ } };
-  const enter = (m) => () => { setSub(m); agitate.current = clamp(agitate.current + 0.5, 0, 1); buzz(5); };
-  const leave = () => setSub('idle');
+  /* iOS Safari has NO Vibration API — the only web haptic is the <input switch>
+     trick (Safari 17.4+): a single subtle tap on a user gesture. */
+  useEffect(() => {
+    if (hasVibe) return undefined;
+    const l = document.createElement('label');
+    l.style.cssText = 'position:fixed;opacity:0;width:0;height:0;overflow:hidden;pointer-events:none';
+    const sw = document.createElement('input'); sw.type = 'checkbox'; sw.setAttribute('switch', '');
+    l.appendChild(sw); document.body.appendChild(l);
+    iosTap.current = () => { try { l.click(); } catch { /* */ } };
+    return () => { try { l.remove(); } catch { /* */ } };
+  }, [hasVibe]);
 
-  const ctaStyle = {
-    p1: { background: '#f3f2ef', color: '#15161a' },
-    p2: { background: 'rgba(255,255,255,0.04)', color: '#f4f2ef', border: '0.5px solid rgba(255,255,255,0.18)' },
-    p3: { background: 'transparent', color: 'rgba(243,242,239,0.62)', fontSize: 14 },
-  };
+  const buzz = useCallback((p) => {
+    try { if (!gestured.current) return; if (hasVibe) navigator.vibrate(p); else iosTap.current(); } catch { /* */ }
+  }, [hasVibe]);
+
+  /* Cursor struck particles → a tiny buzz (Android; iOS has no continuous haptic). */
+  const onKnock = useCallback((speed) => {
+    try { if (gestured.current && hasVibe) navigator.vibrate(Math.max(2, Math.min(15, speed * 0.45))); } catch { /* */ }
+  }, [hasVibe]);
+
+  /* Conversational microcopy: phrases TYPE IN depending on the next step. */
+  const typeOut = useCallback((text) => {
+    const my = ++typeTok.current; let i = 0;
+    const tick = () => { if (my !== typeTok.current) return; setTyped(text.slice(0, i)); if (i++ < text.length) setTimeout(tick, 15 + Math.random() * 30); };
+    tick();
+  }, []);
+  useEffect(() => { typeOut(LINES.idle); }, [typeOut]);
+
+  /* Section reveal + a tap on each, sticky bar + scroll cue, first-touch hint. */
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || !('IntersectionObserver' in window)) return undefined;
+    const secs = [...root.querySelectorAll('.sec')];
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => { if (e.isIntersecting && !e.target.classList.contains('on')) { e.target.classList.add('on'); buzz(9); } });
+    }, { threshold: 0.45 });
+    secs.forEach((s) => io.observe(s));
+    return () => io.disconnect();
+  }, [buzz]);
+
+  const markInteract = useCallback(() => { if (!interacted.current) { interacted.current = true; setShowHint(false); } }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setCueHidden(window.scrollY > 40);
+      setBarOn(window.scrollY > window.innerHeight * 0.85);
+      markInteract();
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [markInteract]);
+
+  useEffect(() => {
+    const t = setTimeout(() => { if (!interacted.current) setShowHint(true); }, 4000);
+    return () => clearTimeout(t);
+  }, []);
+
+  const openBooking = () => { setBookingOpen(true); buzz([14]); };
+  const onSave = () => { buzz([10, 30, 10]); setSavedFlash(true); setTimeout(() => setSavedFlash(false), 1200); };
+  const saveLabel = savedFlash ? 'Saved ✓' : 'Save my contact';
 
   return (
-    <div className="cwd" onPointerDown={() => { gestured.current = true; }}>
-      <div className="cwd__stage" ref={stageRef}>
-        <div className="cwd__ph" aria-hidden="true" />
-        {show3D && webgl && !reduced && (
-          <Suspense fallback={null}>
-            <HelixCanvas agitate={agitate} reduced={reduced} inView={inView} />
-          </Suspense>
-        )}
+    <div
+      className="cwd"
+      ref={rootRef}
+      onPointerDown={() => { gestured.current = true; markInteract(); }}
+    >
+      <div className="ph" aria-hidden="true" />
+      <div className="scrim" aria-hidden="true" />
+
+      {show3D && webgl && !reduced && (
+        <Suspense fallback={null}>
+          <HelixCanvas reduced={reduced} inView={active3D} onKnock={onKnock} />
+        </Suspense>
+      )}
+
+      <div className="grain" aria-hidden="true" />
+
+      {/* liquid-glass refraction (Chromium); Safari falls back to plain blur */}
+      <svg width="0" height="0" aria-hidden="true" style={{ position: 'absolute' }}>
+        <defs>
+          <filter id="lg" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.009 0.013" numOctaves="2" seed="7" result="n" />
+            <feGaussianBlur in="n" stdDeviation="1.6" result="nb" />
+            <feDisplacementMap in="SourceGraphic" in2="nb" scale="34" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
+
+      <main>
+        {/* Hero */}
+        <section className="sec on">
+          <div className="inner">
+            <div className="kick">c4 studios · perth</div>
+            <h1>{HEADLINE[variant]}</h1>
+            <p className="sub" aria-live="polite">{typed}<span className="car">▏</span></p>
+            <div className="acts">
+              <button type="button" className="cta p1"
+                onClick={openBooking}
+                onMouseEnter={() => typeOut(LINES.book)} onMouseLeave={() => typeOut(LINES.idle)}
+                onFocus={() => typeOut(LINES.book)} onBlur={() => typeOut(LINES.idle)}>
+                Book a call
+              </button>
+              <a className="cta p2" href="/caleb.vcf"
+                onClick={onSave}
+                onMouseEnter={() => typeOut(LINES.save)} onMouseLeave={() => typeOut(LINES.idle)}
+                onFocus={() => typeOut(LINES.save)} onBlur={() => typeOut(LINES.idle)}>
+                {saveLabel}
+              </a>
+              <Link className="cta p3" to={createPageUrl('Portfolio')}
+                onMouseEnter={() => typeOut(LINES.folio)} onMouseLeave={() => typeOut(LINES.idle)}
+                onFocus={() => typeOut(LINES.folio)} onBlur={() => typeOut(LINES.idle)}>
+                See the portfolio
+              </Link>
+            </div>
+            <div className="strip">
+              <a href="mailto:caleb@c4studios.com.au">caleb@c4studios.com.au</a>
+              <span> · </span>
+              <a href="https://c4studios.com.au">c4studios.com.au</a>
+              <span> · Perth WA</span>
+            </div>
+          </div>
+        </section>
+
+        {/* What this is */}
+        <section className="sec">
+          <div className="inner">
+            <div className="kick">what this is</div>
+            <h2>Loud websites. Quiet systems.</h2>
+            <p className="body">{`This page is the pitch. We’re a Perth studio that builds the site people see and the systems they don’t — websites that sell, and the automations that quietly do the work behind them. A website is 30% of the job; we look at the whole operation and build things that compound. The helix you’re playing with? We built that too. That’s the point.`}</p>
+            <div className="tags">
+              <span className="tag">Web &amp; Applications</span>
+              <span className="tag">Brand &amp; Growth</span>
+              <span className="tag">AI &amp; Software</span>
+              <span className="tag">C4 Lens</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Who you're talking to */}
+        <section className="sec">
+          <div className="inner">
+            <div className="kick">who you’re talking to</div>
+            <h2>One studio. One person. First call to launch.</h2>
+            <p className="body">{`C4 Studios is Caleb Scott — founder and sole operator, in Perth. Every conversation, every design decision, every line of code comes from one person: the one you’ll talk to. No account managers, no handoff, no telephone game. That’s not a limitation. It’s the model.`}</p>
+          </div>
+        </section>
+
+        {/* Recent builds */}
+        <section className="sec">
+          <div className="inner">
+            <div className="kick">the work says it better</div>
+            <h2>Recent builds.</h2>
+            <div className="rows">
+              <div className="row"><b>DS Racing Karts</b><span>{`499+ products migrated from Square, AI-written descriptions, PCI-compliant checkout, and a custom Canvas racing mini-game. The biggest, most technical build on the shelf.`}</span></div>
+              <div className="row"><b>GoCC — Coaching &amp; Counselling</b><span>{`A performance consult that took mobile Lighthouse from the mid-60s to 90+. CLS gone, LCP down, weight cut. The numbers, measured.`}</span></div>
+              <div className="row"><b>Sharp Bricklaying</b><span>{`Site, brand copy, drone and GoPro footage for a Perth brickie with 15 years on the tools and no web presence. Shipped in 9 days.`}</span></div>
+            </div>
+            <Link className="folio" to={createPageUrl('Portfolio')}>See the full portfolio →</Link>
+          </div>
+        </section>
+
+        {/* Flat facts */}
+        <section className="sec">
+          <div className="inner">
+            <div className="kick">the flat facts</div>
+            <h2>Founder-led since 2022.</h2>
+            <div className="stats">
+              <div className="stat"><b>2022</b><span>founded</span></div>
+              <div className="stat"><b>50+</b><span>Perth businesses</span></div>
+              <div className="stat"><b>200+</b><span>assets shipped</span></div>
+              <div className="stat"><b>6</b><span>own products</span></div>
+            </div>
+            <p className="body">{`Owned, not rented — you keep the keys to everything we build. No lock-in, no hostage situations, no surprise fees for access to your own work.`}</p>
+          </div>
+        </section>
+
+        {/* Close */}
+        <section className="sec">
+          <div className="inner">
+            <div className="kick">no pressure</div>
+            <h2>Still here when you’re ready.</h2>
+            <p className="body">{`Best way in is a short call — no pressure, just a conversation about what you’re building. Not ready tonight? Save the contact and reach out whenever. Either way — glad you tapped.`}</p>
+            <div className="acts">
+              <button type="button" className="cta p1" onClick={openBooking}>Book a call</button>
+              <a className="cta p2" href="/caleb.vcf" onClick={onSave}>{saveLabel}</a>
+            </div>
+            <div className="strip">
+              <a href="mailto:caleb@c4studios.com.au">caleb@c4studios.com.au</a>
+              <span> · </span>
+              <a href="https://c4studios.com.au">c4studios.com.au</a>
+              <span> · Perth WA</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <div className={`cue${cueHidden ? ' hide' : ''}`} aria-hidden="true">
+        <span>scroll</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
       </div>
 
-      <div className="cwd__copy">
-        <div className="cwd__kick">c4 studios · perth</div>
-        <h1 className="cwd__h1">{HEADLINE[variant]}</h1>
-        <p className="cwd__sub" aria-live="polite">{SUBLINE[sub]}</p>
+      <div className={`hint${showHint ? ' show' : ''}`} aria-hidden="true">go on — run your cursor through it</div>
 
-        <div className="cwd__acts">
-          <button type="button" className="cwd__cta" style={ctaStyle.p1}
-            onClick={() => { setBookingOpen(true); buzz([14]); }}
-            onMouseEnter={enter('call')} onMouseLeave={leave} onFocus={enter('call')} onBlur={leave}>
-            Book a call
-          </button>
-          <a className="cwd__cta" style={ctaStyle.p2} href="/caleb.vcf" download="Caleb Scott - C4 Studios.vcf"
-            onClick={() => buzz([10, 30, 10])}
-            onMouseEnter={enter('save')} onMouseLeave={leave} onFocus={enter('save')} onBlur={leave}>
-            Save my contact
-          </a>
-          <Link className="cwd__cta" style={ctaStyle.p3} to={createPageUrl('Portfolio')}
-            onMouseEnter={enter('folio')} onMouseLeave={leave} onFocus={enter('folio')} onBlur={leave}>
-            See the portfolio
-          </Link>
-        </div>
-
-        <div className="cwd__strip">
-          <a href="mailto:caleb@c4studios.com.au">caleb@c4studios.com.au</a>
-          <span> · </span>
-          <a href="https://c4studios.com.au">c4studios.com.au</a>
-          <span> · Perth WA</span>
-        </div>
+      <div className={`bar${barOn ? ' on' : ''}`}>
+        <button type="button" className="cta p1" onClick={openBooking}>Book a call</button>
+        <a className="cta p2" href="/caleb.vcf" onClick={onSave}>{saveLabel}</a>
       </div>
 
       {bookingOpen && (

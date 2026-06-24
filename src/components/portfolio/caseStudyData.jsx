@@ -11,6 +11,115 @@
  */
 
 export const CASE_STUDIES = {
+  'evidence-advisory': {
+    slug: 'evidence-advisory',
+    name: 'Evidence Advisory',
+    oneLiner: 'A brand-defining site for one of WA\'s leading digital-forensics firms — anchored by an interactive 3D "crime-scene reconstruction" the visitor solves by scrolling.',
+    client: 'Evidence Advisory — Digital Forensic Experts',
+    location: 'Perth, WA',
+    timeline: '',
+    budget: '',
+    role: 'Solo (brand, design, development, 3D / WebGL, motion, SEO)',
+    liveUrl: 'https://evidenceadvisory.com.au',
+    year: '2026',
+    category: 'web_design',
+    tags: ['Web Design', 'Web Development', '3D / WebGL', 'Branding', 'SEO'],
+    featured: true,
+    budgetOrder: 7,
+
+    cover: '/covers/evidence-advisory.png',
+    brandColor: '#0B1320',
+    thumbnail: '/covers/evidence-advisory.png',
+
+    overview: 'Evidence Advisory are court-trusted digital forensic investigators — they deal in admissible evidence, not assumptions. C4 Studios designed and built their new website around a single, unforgettable idea: a shattered smartphone, suspended like crime-scene evidence and tagged with yellow forensic markers, that the visitor reassembles as they scroll. As you move down the page the glass shards fly back into place, the cracks knit shut, and the screen powers on — a literal reconstruction of evidence that mirrors exactly what the firm does. It is built in WebGL with a hand-tuned, scroll-scrubbed animation, real-time lighting and a bespoke studio environment, and it is fully grabbable in 3D. Around that hero sits a complete, conversion-focused platform: founder profiles, four service lines with dedicated landing pages, an anonymised casework portfolio, an insights/articles engine and an animated FAQ — every page a statically-rendered, individually-indexable URL with structured data, per-page metadata, a sitemap and a working contact form. It is engineered on Next.js (App Router) and shipped as a static export for fast, resilient hosting; the 3D scene is performance-budgeted — a single instanced mesh for the shards, no transmissive materials and a capped device-pixel-ratio — and it degrades gracefully, so a device that cannot run WebGL gets a clean fallback hero with zero impact on the rest of the page. The result is a site that makes a forensics firm feel as precise and modern as the work it does: distinctive enough to be remembered, disciplined enough to be trusted.',
+
+    screenshots: [
+      { url: '', caption: 'Hero — the shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers' },
+      { url: '', caption: 'Mid-reconstruction — the phone partly reassembled as the shards fly back into place on scroll' },
+      { url: '', caption: 'Experts — founder profiles for the firm\'s two principals' },
+      { url: '', caption: 'Service detail — a dedicated, individually-indexable service landing page (e.g. Digital Forensics)' },
+      { url: '', caption: 'Insights — the articles index, showing the content and SEO depth' },
+    ],
+
+    desktopScreenshots: [
+      { url: '', caption: 'Hero — the shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers' },
+      { url: '', caption: 'Mid-reconstruction — the phone partly reassembled as the shards fly back into place on scroll' },
+      { url: '', caption: 'Experts — founder profiles for the firm\'s two principals' },
+      { url: '', caption: 'Service detail — a dedicated, individually-indexable service landing page (e.g. Digital Forensics)' },
+      { url: '', caption: 'Insights — the articles index, showing the content and SEO depth' },
+    ],
+
+    mobileScreenshots: [
+      { url: '', caption: 'Mobile — hero with the evidence-reconstruction scene' },
+      { url: '', caption: 'Mobile — a service landing page' },
+      { url: '', caption: 'Mobile — insights / contact' },
+    ],
+
+    delivered: [
+      'Brand-led website — design, full-stack development and deployment',
+      'Signature interactive 3D hero — a scroll-scrubbed "evidence reconstruction" of a shattered, evidence-tagged smartphone, built in WebGL',
+      'Bespoke 3D studio environment with real-time lighting and full grab-to-rotate interaction',
+      'Multi-page platform — home, experts/founders, four service landing pages, casework portfolio, insights/articles and contact',
+      'Anonymised casework portfolio',
+      'Insights / articles engine for ongoing content and SEO',
+      'Animated FAQ',
+      'Working contact form',
+      'Full SEO foundation — per-page metadata, JSON-LD structured data, XML sitemap and individually-indexable static URLs',
+      'Branded Open Graph / social share card',
+      'Graceful WebGL fallback for unsupported devices',
+    ],
+
+    features: [
+      'Interactive 3D hero: a shattered, evidence-tagged smartphone that reassembles as you scroll — shards fly back into place, cracks knit shut and the screen powers on',
+      'Scroll-scrubbed WebGL animation with real-time lighting and a bespoke studio environment, fully grabbable in 3D',
+      'Performance-budgeted 3D scene — a single instanced mesh for all shards, no transmissive materials and a capped device-pixel-ratio',
+      'Graceful degradation — a clean fallback hero when WebGL is unavailable, with zero impact on the rest of the page',
+      'Four service lines, each on its own dedicated, individually-indexable landing page',
+      'Founder / expert profiles for the firm\'s principals',
+      'Anonymised casework portfolio',
+      'Insights / articles engine to build topical authority',
+      'Animated FAQ',
+      'Statically-rendered pages with structured data, per-page metadata and an XML sitemap',
+    ],
+
+    stack: [
+      'Next.js (App Router, static export)',
+      'React',
+      'TypeScript',
+      'React Three Fiber / Three.js',
+      'GSAP + ScrollTrigger',
+      'Lenis (smooth scroll)',
+      'Tailwind CSS',
+    ],
+
+    integrations: [
+      'Working contact form with server-side submission handling',
+      'JSON-LD structured data and an XML sitemap for search engines',
+      'Open Graph / Twitter card metadata for social sharing',
+    ],
+
+    performance: [
+      'Shipped as a static export — no server runtime, for fast and resilient hosting',
+      'Performance-budgeted 3D: a single instanced mesh for all shards, no transmissive materials and a capped device-pixel-ratio',
+      'WebGL hero degrades gracefully to a clean fallback on unsupported devices',
+      'Every page statically rendered and individually indexable',
+      'Scroll animation tuned for smooth frame pacing',
+    ],
+
+    challenges: [
+      'Creating a brand-defining interaction for a discerning audience — law-firm partners — that feels modern and memorable without tipping into gimmick',
+      'Turning the firm\'s craft (reconstructing evidence) into a literal, scroll-driven 3D interaction that reads instantly',
+      'Keeping a heavy WebGL hero fast and resilient — performance-budgeting the scene and making it degrade cleanly when WebGL is unavailable',
+      'Building a genuine SEO platform rather than a brochure — individually-indexable URLs, structured data, metadata and a sitemap around a showpiece hero',
+    ],
+
+    improvements: [
+      'Add anonymised case outcomes and metrics to the casework portfolio as they become publishable',
+      'Expand the insights / articles library to deepen topical SEO authority',
+      'Offer a lighter-weight, non-WebGL animated hero for the lowest-powered devices',
+    ],
+  },
+
   'transform-fremantle': {
     slug: 'transform-fremantle',
     name: 'Transform Fremantle',
