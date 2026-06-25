@@ -34,14 +34,14 @@ function getEntryVariant(ref) {
   return 'neutral';
 }
 const HEADLINE = {
-  tap: 'That tap was just the beginning.',
-  scan: 'So you found the card.',
-  neutral: 'Welcome — glad you’re here.',
+  tap: 'Thanks for the tap.',
+  scan: 'You scanned the card — nice.',
+  neutral: 'Hey, glad you’re here.',
 };
 const LINES = {
   idle: 'Perth web design & development — run your cursor through the helix.',
-  book: 'A call it is. Let’s find a time that works.',
-  save: 'Saved straight to your phone — no typing, no forms.',
+  book: 'Sounds good — let’s find a time that works.',
+  save: 'Saved straight to your phone — no typing.',
   folio: 'Opening the work →',
 };
 
@@ -252,8 +252,8 @@ export default function Welcome() {
         <section className="sec">
           <div className="inner">
             <div className="kick">what this is</div>
-            <h2>Loud websites. Quiet systems.</h2>
-            <p className="body">{`This page is the pitch. We’re a Perth studio that builds the site people see and the systems they don’t — websites that sell, and the automations that quietly do the work behind them. A website is 30% of the job; we look at the whole operation and build things that compound. The helix you’re playing with? We built that too. That’s the point.`}</p>
+            <h2>Websites and the systems behind them</h2>
+            <p className="body">{`C4 is a Perth web studio. I build websites, and the automations that handle the repetitive work behind them. A site on its own only does part of the job. Most of the difference comes from looking at how your business actually runs, then building to fit it.`}</p>
             <div className="tags">
               <span className="tag">Web &amp; Applications</span>
               <span className="tag">Brand &amp; Growth</span>
@@ -267,20 +267,20 @@ export default function Welcome() {
         <section className="sec">
           <div className="inner">
             <div className="kick">who you’re talking to</div>
-            <h2>One studio. One person. First call to launch.</h2>
-            <p className="body">{`C4 Studios is Caleb Scott — founder and sole operator, in Perth. Every conversation, every design decision, every line of code comes from one person: the one you’ll talk to. No account managers, no handoff, no telephone game. That’s not a limitation. It’s the model.`}</p>
+            <h2>It’s just me, Caleb</h2>
+            <p className="body">{`C4 Studios is Caleb Scott — founder and sole operator, here in Perth. Every conversation, every design call, every line of code comes from me. The person you talk to is the person doing the work, start to finish, and I like keeping it that way.`}</p>
           </div>
         </section>
 
         {/* Recent builds */}
         <section className="sec">
           <div className="inner">
-            <div className="kick">the work says it better</div>
-            <h2>Recent builds.</h2>
+            <div className="kick">recent work</div>
+            <h2>A few recent builds</h2>
             <div className="rows">
-              <div className="row"><b>DS Racing Karts</b><span>{`499+ products migrated from Square, AI-written descriptions, PCI-compliant checkout, and a custom Canvas racing mini-game. The biggest, most technical build on the shelf.`}</span></div>
-              <div className="row"><b>GoCC — Coaching &amp; Counselling</b><span>{`A performance consult that took mobile Lighthouse from the mid-60s to 90+. CLS gone, LCP down, weight cut. The numbers, measured.`}</span></div>
-              <div className="row"><b>Sharp Bricklaying</b><span>{`Site, brand copy, drone and GoPro footage for a Perth brickie with 15 years on the tools and no web presence. Shipped in 9 days.`}</span></div>
+              <div className="row"><b>DS Racing Karts</b><span>{`Moved 499+ products off Square, wrote the product descriptions with AI, set up a PCI-compliant checkout, and built them a custom Canvas racing mini-game.`}</span></div>
+              <div className="row"><b>Evidence Advisory</b><span>{`Brand site for a Perth digital-forensics firm, built around a 3D WebGL hero — a shattered, evidence-tagged phone that reassembles as you scroll — over a full, SEO-ready multi-page platform.`}</span></div>
+              <div className="row"><b>Tidy Gardens</b><span>{`A motion-led site for a Perth garden & reticulation business — a vine that grows, a poly-pipe that fills, and a mower that lays down stripes as you scroll. Four service pages, a before/after gallery, and a quote form straight to the owner.`}</span></div>
             </div>
             <Link className="folio" to={createPageUrl('Portfolio')}>See the full portfolio →</Link>
           </div>
@@ -289,15 +289,15 @@ export default function Welcome() {
         {/* Flat facts */}
         <section className="sec">
           <div className="inner">
-            <div className="kick">the flat facts</div>
-            <h2>Founder-led since 2022.</h2>
+            <div className="kick">the basics</div>
+            <h2>Running this since 2022</h2>
             <div className="stats">
               <div className="stat"><b>2022</b><span>founded</span></div>
               <div className="stat"><b>50+</b><span>Perth businesses</span></div>
               <div className="stat"><b>200+</b><span>assets shipped</span></div>
               <div className="stat"><b>6</b><span>own products</span></div>
             </div>
-            <p className="body">{`Owned, not rented — you keep the keys to everything we build. No lock-in, no hostage situations, no surprise fees for access to your own work.`}</p>
+            <p className="body">{`You own everything I build — code, accounts, domains, all of it. If you ever move on, you take the lot with you.`}</p>
           </div>
         </section>
 
@@ -305,8 +305,8 @@ export default function Welcome() {
         <section className="sec">
           <div className="inner">
             <div className="kick">no pressure</div>
-            <h2>Still here when you’re ready.</h2>
-            <p className="body">{`Best way in is a short call — no pressure, just a conversation about what you’re building. Not ready tonight? Save the contact and reach out whenever. Either way — glad you tapped.`}</p>
+            <h2>Here whenever you’re ready</h2>
+            <p className="body">{`Easiest way in is a quick call — no pressure, just a chat about what you’re building. If tonight’s not the night, save my contact and reach out whenever. Either way, glad you tapped.`}</p>
             <div className="acts">
               <button type="button" className="cta p1" onClick={openBooking}>Book a call</button>
               <a className="cta p2" href="/caleb.vcf" onClick={onSave}>{saveLabel}</a>

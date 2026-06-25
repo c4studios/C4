@@ -44,7 +44,7 @@ function ChoiceButton({ icon: Icon, title, sub, onClick, primary }) {
     <button
       type="button"
       onClick={onClick}
-      className="w-full flex items-center gap-4 rounded-lg px-5 py-4 text-left transition-transform duration-300 active:scale-[0.98]"
+      className="w-full flex items-center gap-4 rounded-lg px-5 py-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_18px_rgba(0,0,0,0.10)] active:scale-[0.98]"
       style={
         primary
           ? { backgroundColor: INK, color: '#F3F2F3' }
@@ -404,7 +404,7 @@ export default function BookingSheet({ open, onClose }) {
                     <a
                       href={`tel:${CALEB_TEL}`}
                       onClick={quickBuzz}
-                      className="flex items-center justify-center gap-1.5 rounded-lg px-2 py-3 text-[13.5px] font-semibold transition-transform duration-300 active:scale-[0.98]"
+                      className="flex items-center justify-center gap-1.5 rounded-lg px-2 py-3 text-[13.5px] font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_5px_14px_rgba(0,0,0,0.10)] active:scale-[0.98]"
                       style={{ backgroundColor: INK, color: '#F3F2F3' }}
                     >
                       <Phone size={15} strokeWidth={1.9} /> Call
@@ -412,7 +412,7 @@ export default function BookingSheet({ open, onClose }) {
                     <a
                       href={`mailto:${CALEB_EMAIL}`}
                       onClick={quickBuzz}
-                      className="flex items-center justify-center gap-1.5 rounded-lg px-2 py-3 text-[13.5px] font-semibold transition-transform duration-300 active:scale-[0.98]"
+                      className="flex items-center justify-center gap-1.5 rounded-lg px-2 py-3 text-[13.5px] font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_5px_14px_rgba(0,0,0,0.10)] active:scale-[0.98]"
                       style={{ backgroundColor: '#FFFFFF', color: INK, border: `1px solid ${LINE}` }}
                     >
                       <Mail size={15} strokeWidth={1.9} /> Email
@@ -420,7 +420,7 @@ export default function BookingSheet({ open, onClose }) {
                     <a
                       href={`sms:${CALEB_TEL}`}
                       onClick={quickBuzz}
-                      className="flex items-center justify-center gap-1.5 rounded-lg px-2 py-3 text-[13.5px] font-semibold transition-transform duration-300 active:scale-[0.98]"
+                      className="flex items-center justify-center gap-1.5 rounded-lg px-2 py-3 text-[13.5px] font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_5px_14px_rgba(0,0,0,0.10)] active:scale-[0.98]"
                       style={{ backgroundColor: '#FFFFFF', color: INK, border: `1px solid ${LINE}` }}
                     >
                       <MessageSquare size={15} strokeWidth={1.9} /> Text
