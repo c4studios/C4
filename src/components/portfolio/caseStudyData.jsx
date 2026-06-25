@@ -34,25 +34,25 @@ export const CASE_STUDIES = {
     overview: 'Evidence Advisory are court-trusted digital forensic investigators — they deal in admissible evidence, not assumptions. C4 Studios designed and built their new website around a single, unforgettable idea: a shattered smartphone, suspended like crime-scene evidence and tagged with yellow forensic markers, that the visitor reassembles as they scroll. As you move down the page the glass shards fly back into place, the cracks knit shut, and the screen powers on — a literal reconstruction of evidence that mirrors exactly what the firm does. It is built in WebGL with a hand-tuned, scroll-scrubbed animation, real-time lighting and a bespoke studio environment, and it is fully grabbable in 3D. Around that hero sits a complete, conversion-focused platform: founder profiles, four service lines with dedicated landing pages, an anonymised casework portfolio, an insights/articles engine and an animated FAQ — every page a statically-rendered, individually-indexable URL with structured data, per-page metadata, a sitemap and a working contact form. It is engineered on Next.js (App Router) and shipped as a static export for fast, resilient hosting; the 3D scene is performance-budgeted — a single instanced mesh for the shards, no transmissive materials and a capped device-pixel-ratio — and it degrades gracefully, so a device that cannot run WebGL gets a clean fallback hero with zero impact on the rest of the page. The result is a site that makes a forensics firm feel as precise and modern as the work it does: distinctive enough to be remembered, disciplined enough to be trusted.',
 
     screenshots: [
-      { url: '', caption: 'Hero — the shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers' },
-      { url: '', caption: 'Mid-reconstruction — the phone partly reassembled as the shards fly back into place on scroll' },
-      { url: '', caption: 'Experts — founder profiles for the firm\'s two principals' },
-      { url: '', caption: 'Service detail — a dedicated, individually-indexable service landing page (e.g. Digital Forensics)' },
-      { url: '', caption: 'Insights — the articles index, showing the content and SEO depth' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/01-hero.png', caption: 'Hero — the shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers and a live "evidence integrity" HUD' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/02-reconstruction.png', caption: 'Mid-reconstruction — the phone partly reassembled as the shards fly back into place on scroll' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/03-experts.png', caption: 'Experts — "Built on three decades of court-tested practice", with founder profiles for the firm\'s principals' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/04-service-digital-forensics.png', caption: 'Service detail — the Digital Forensics & Investigations landing page, one of four individually-indexable service routes' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/05-insights.png', caption: 'Insights — the articles index ("Commentary from the evidence coalface"), showing the content and SEO depth' },
     ],
 
     desktopScreenshots: [
-      { url: '', caption: 'Hero — the shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers' },
-      { url: '', caption: 'Mid-reconstruction — the phone partly reassembled as the shards fly back into place on scroll' },
-      { url: '', caption: 'Experts — founder profiles for the firm\'s two principals' },
-      { url: '', caption: 'Service detail — a dedicated, individually-indexable service landing page (e.g. Digital Forensics)' },
-      { url: '', caption: 'Insights — the articles index, showing the content and SEO depth' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/01-hero.png', caption: 'Hero — the shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers and a live "evidence integrity" HUD' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/02-reconstruction.png', caption: 'Mid-reconstruction — the phone partly reassembled as the shards fly back into place on scroll' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/03-experts.png', caption: 'Experts — "Built on three decades of court-tested practice", with founder profiles for the firm\'s principals' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/04-service-digital-forensics.png', caption: 'Service detail — the Digital Forensics & Investigations landing page, one of four individually-indexable service routes' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/05-insights.png', caption: 'Insights — the articles index ("Commentary from the evidence coalface"), showing the content and SEO depth' },
     ],
 
     mobileScreenshots: [
-      { url: '', caption: 'Mobile — hero with the evidence-reconstruction scene' },
-      { url: '', caption: 'Mobile — a service landing page' },
-      { url: '', caption: 'Mobile — insights / contact' },
+      { url: '/captures/evidenceadvisory-com-au/mobile/01-hero.png', caption: 'Mobile — hero with the evidence-reconstruction scene' },
+      { url: '/captures/evidenceadvisory-com-au/mobile/02-service.png', caption: 'Mobile — the Digital Forensics service page' },
+      { url: '/captures/evidenceadvisory-com-au/mobile/03-insights.png', caption: 'Mobile — the insights index' },
     ],
 
     delivered: [
@@ -1031,7 +1031,6 @@ export const CASE_STUDIES = {
       { url: '/captures/sharpbricklaying-com-au/desktop/11-before-after-broome.png', caption: 'Before & After — Broome St Cottesloe (curved brickwork)' },
       { url: '/captures/sharpbricklaying-com-au/desktop/14-lightbox-open.png', caption: 'Gallery lightbox — full-screen accessible image expand with keyboard close' },
       { url: '/captures/sharpbricklaying-com-au/desktop/15-loader.png', caption: 'Animated brick canvas loader — brick-by-brick Canvas build with percentage counter' },
-      { url: '/captures/sharpbricklaying-com-au/desktop/16-nav-scrolled.png', caption: 'Navigation — scrolled state (white background, green border, dark links)' },
       { url: '/captures/sharpbricklaying-com-au/desktop/12-contact-form.png', caption: 'Contact — enquiry form with project-type selector and social links on dark green' },
       { url: '/captures/sharpbricklaying-com-au/desktop/13-footer.png', caption: 'Footer — logo, tagline, navigation columns, and C4 Studios credit' },
       { url: '/captures/sharpbricklaying-com-au/desktop/17-privacy.png', caption: 'Privacy Policy page — green header, clean typeset body' },
