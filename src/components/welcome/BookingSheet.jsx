@@ -14,7 +14,7 @@
  */
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Phone, MessageSquare, Calendar, Calculator, X, ArrowLeft } from 'lucide-react';
+import { Phone, MessageSquare, Mail, Calendar, Calculator, X, ArrowLeft } from 'lucide-react';
 import { submitProjectInquiry } from '@/api/submissions';
 import { buildQuotrSrc, postQuotrTheme } from '@/components/home/quotrTheme';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
@@ -24,6 +24,8 @@ import SubmissionSuccess from '@/components/c4/SubmissionSuccess';
 const ease = [0.22, 1, 0.36, 1];
 const QUOTR_SLUG = 'fixm4qeq';
 const CALEB_TEL = '+61479000404'; // direct line — the instant path for a tapped/scanned card
+const CALEB_EMAIL = 'caleb@c4studios.com.au';
+const CAL_LINK = 'c4studios/intro'; // Cal.com 15-min Intro Call
 
 const INK = '#414243';
 const INK_SOFT = '#6C6D6D';
@@ -261,8 +263,57 @@ function QuoteView({ onBack }) {
   );
 }
 
+function SchedulerView({ onBack, onUseForm }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    /* Official Cal.com inline embed loader (vendored — no npm dependency). */
+    (function (C, A, L) {
+      const p = function (a, ar) { a.q.push(ar); };
+      const d = C.document;
+      C.Cal = C.Cal || function () {
+        const cal = C.Cal; const ar = arguments;
+        if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement('script')).src = A; cal.loaded = true; }
+        if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === 'string') { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ['initNamespace', namespace]); } else p(cal, ar); return; }
+        p(cal, ar);
+      };
+    })(window, 'https://app.cal.com/embed/embed.js', 'init');
+    const Cal = window.Cal;
+    Cal('init', { origin: 'https://cal.com' });
+    Cal('inline', { elementOrSelector: ref.current, calLink: CAL_LINK, layout: 'month_view', config: { theme: 'light' } });
+    Cal('ui', { hideEventTypeDetails: false, layout: 'month_view', cssVarsPerTheme: { light: { 'cal-brand': '#A30000' } } });
+    const el = ref.current;
+    return () => { if (el) el.innerHTML = ''; };
+  }, []);
+
+  return (
+    <div className="flex flex-col h-full">
+      <button
+        type="button"
+        onClick={onBack}
+        className="inline-flex items-center gap-1.5 text-[12px] font-medium mb-3"
+        style={{ color: INK_SOFT }}
+      >
+        <ArrowLeft size={14} /> Back
+      </button>
+      <div
+        ref={ref}
+        className="flex-1 min-h-[58vh] overflow-y-auto rounded-lg"
+        style={{ border: `1px solid ${LINE}`, backgroundColor: '#FFFFFF' }}
+      />
+      <button
+        type="button"
+        onClick={onUseForm}
+        className="mt-3 self-center text-[12px] font-medium"
+        style={{ color: INK_SOFT }}
+      >
+        Rather not pick a time? Send a request instead →
+      </button>
+    </div>
+  );
+}
+
 export default function BookingSheet({ open, onClose }) {
-  const [view, setView] = useState('choose'); // choose | call | quote
+  const [view, setView] = useState('choose'); // choose | schedule | call | quote
   const quickBuzz = () => { try { if (navigator.vibrate) navigator.vibrate(12); } catch { /* */ } };
 
   // Reset to the chooser each time the sheet is opened.
@@ -349,22 +400,30 @@ export default function BookingSheet({ open, onClose }) {
                   </p>
 
                   {/* Instant path — the natural move for a tapped/scanned card */}
-                  <div className="mt-5 grid grid-cols-2 gap-2">
+                  <div className="mt-5 grid grid-cols-3 gap-2">
                     <a
                       href={`tel:${CALEB_TEL}`}
                       onClick={quickBuzz}
-                      className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-[14px] font-semibold transition-transform duration-300 active:scale-[0.98]"
+                      className="flex items-center justify-center gap-1.5 rounded-lg px-2 py-3 text-[13.5px] font-semibold transition-transform duration-300 active:scale-[0.98]"
                       style={{ backgroundColor: INK, color: '#F3F2F3' }}
                     >
-                      <Phone size={16} strokeWidth={1.9} /> Call now
+                      <Phone size={15} strokeWidth={1.9} /> Call
+                    </a>
+                    <a
+                      href={`mailto:${CALEB_EMAIL}`}
+                      onClick={quickBuzz}
+                      className="flex items-center justify-center gap-1.5 rounded-lg px-2 py-3 text-[13.5px] font-semibold transition-transform duration-300 active:scale-[0.98]"
+                      style={{ backgroundColor: '#FFFFFF', color: INK, border: `1px solid ${LINE}` }}
+                    >
+                      <Mail size={15} strokeWidth={1.9} /> Email
                     </a>
                     <a
                       href={`sms:${CALEB_TEL}`}
                       onClick={quickBuzz}
-                      className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-[14px] font-semibold transition-transform duration-300 active:scale-[0.98]"
+                      className="flex items-center justify-center gap-1.5 rounded-lg px-2 py-3 text-[13.5px] font-semibold transition-transform duration-300 active:scale-[0.98]"
                       style={{ backgroundColor: '#FFFFFF', color: INK, border: `1px solid ${LINE}` }}
                     >
-                      <MessageSquare size={16} strokeWidth={1.9} /> Text
+                      <MessageSquare size={15} strokeWidth={1.9} /> Text
                     </a>
                   </div>
 
@@ -378,8 +437,8 @@ export default function BookingSheet({ open, onClose }) {
                     <ChoiceButton
                       icon={Calendar}
                       title="Book a call"
-                      sub="Not free to talk now? Leave your details and a time that suits."
-                      onClick={() => setView('call')}
+                      sub="Pick a time that suits — straight into Caleb's calendar."
+                      onClick={() => setView('schedule')}
                       primary
                     />
                     <ChoiceButton
@@ -389,6 +448,19 @@ export default function BookingSheet({ open, onClose }) {
                       onClick={() => setView('quote')}
                     />
                   </div>
+                </motion.div>
+              )}
+
+              {view === 'schedule' && (
+                <motion.div
+                  key="schedule"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.25, ease }}
+                  className="h-[80vh]"
+                >
+                  <SchedulerView onBack={() => setView('choose')} onUseForm={() => setView('call')} />
                 </motion.div>
               )}
 
