@@ -25,7 +25,7 @@ export const PRODUCTS = [
     siteUrl: 'https://quotr.us',
     name: 'Quotr',
     status: 'Live',
-    logo: '/Software/quotr-icon.jpeg',
+    logo: '/Software/quotr-icon.png',
     logoBg: '#000000',
     oneLiner: 'Instant quote calculators for service businesses.',
     summary:
