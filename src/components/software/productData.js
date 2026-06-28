@@ -117,7 +117,7 @@ export const PRODUCTS = [
     siteUrl: 'https://reviewloop.c4studios.com.au',
     name: 'ReviewLoop',
     status: 'Live',
-    logo: '/Software/reviewloop-minimal.png',
+    logo: '/Software/reviewloop-mark.png',
     logoBg: '#ffffff',
     oneLiner: 'Turn happy jobs into Google reviews.',
     summary:
