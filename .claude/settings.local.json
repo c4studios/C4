@@ -3,7 +3,20 @@
     "allow": [
       "Bash(wc -l /c/Users/belac/Downloads/C4-main/C4-main/src/pages/*.jsx)",
       "Bash(grep -E \"\\\\.\\(jsx|js\\)$\")",
-      "Bash(npx vite:*)"
+      "Bash(npx vite:*)",
+      "Bash(git --no-pager diff -- src/components/software/productData.js)",
+      "Bash(git rev-list *)",
+      "Bash(git --no-pager show --stat --oneline 42dea6e -- src/components/software/productData.js)",
+      "Bash(git --no-pager diff origin/main HEAD -- src/components/software/productData.js)",
+      "Bash(git checkout *)",
+      "Bash(git --no-pager log --oneline -1)",
+      "Bash(gh pr create --base main --head fix/software-cta-live-sites --title 'fix\\(software\\): repoint flagship product CTAs to live marketing sites' --body ' *)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(gh pr *)",
+      "Bash(echo \"=== exit: $? ===\")",
+      "Bash(gh run *)",
+      "Bash(echo \"=== watch exit: $? ===\")",
+      "Bash(git --no-pager log --oneline -2 main)"
     ]
   }
 }

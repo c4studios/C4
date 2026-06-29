@@ -1356,7 +1356,7 @@ export const CASE_STUDIES = {
     timeline: '',
     budget: '',
     role: 'Solo (concept, design, development, deployment)',
-    liveUrl: 'https://wooster-core.vercel.app',
+    liveUrl: 'https://wooster-henna.vercel.app',
     year: '2026',
     category: 'ecommerce',
     tags: ['E-Commerce', 'Concept', '3D / WebGL', 'Watersports', 'Next.js', 'Storefront'],

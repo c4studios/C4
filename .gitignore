@@ -50,3 +50,5 @@ reports/
 # public repo (the Lead Engine kit contains margins and unit economics)
 /c4-lead-engine-service-kit.md
 /c4-seo-page-matrix.md
+
+.vercel
