@@ -3,26 +3,22 @@
  * chunk so the page can lazy-load it AFTER first paint (the scan page must feel
  * alive in 3s on 4G — text paints instantly, this streams in behind).
  *
- * It is a procedural red+green double helix rendered as ONE particle simulation
- * drawn on TWO stacked canvases:
- *   • .hx-bg  (z behind the copy) — the full helix, with additive bloom.
- *   • .hx-fg  (z in front of the copy, pointer-events:none) — the SAME particles,
- *     but a depth-fade shader shows only the strand nearest the camera, so it
- *     crosses OVER the headlines. A screen-space "zone" fades it where the text
- *     sits, keeping copy readable.
+ * A procedural red+green double helix (one particle simulation). It spins on its
+ * own axis, the cursor imparts its velocity to the few particles it slices
+ * through (they spring back to the spinning home), and scrolling glides the
+ * camera down the strand. onKnock(speed) fires when particles are struck.
  *
- * Behaviour (all in tandem):
- *   • The helix spins on its own axis — a live, moving "home".
- *   • The cursor imparts ITS OWN velocity (direction + speed) to only the few
- *     particles it slices through (a small bubble); everything springs back to
- *     the spinning home, and stays knockable mid-return. A resting cursor does
- *     nothing.
- *   • Scrolling the page glides the camera DOWN the helix's axis — a journey.
- *   • onKnock(speed) fires when particles are actually struck (page → haptics).
+ * PERFORMANCE — this page is opened almost entirely from phones (QR/NFC), so the
+ * render budget is tuned hard for mobile:
+ *   • DESKTOP: two canvases — back (bloom) + a front depth-fade layer that
+ *     crosses OVER the copy — full particle count, DPR up to 2.
+ *   • MOBILE: ONE lean canvas — a single WebGL context, NO post-processing bloom
+ *     (the biggest mobile cost), NO second context/front layer, fewer particles,
+ *     DPR capped low, MSAA off. Bigger additive points + the CSS brand glow keep
+ *     it looking alive without the GPU load that made it stutter.
  *
- * Raw three.js (not R3F) because the two-canvas / one-shared-buffer depth split
- * can't be expressed as a single <Canvas>. Renderers, listeners and RAF are all
- * torn down on unmount.
+ * Raw three.js (not R3F) so the two-canvas depth split is expressible. Renderers,
+ * listeners and RAF are torn down on unmount.
  */
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
@@ -48,8 +44,8 @@ function makeDotTexture() {
 }
 
 /* Tall double helix in RAW coords (tilt + spin applied live each frame). */
-function makeField() {
-  const S = 950, turns = 13, Hh = 20, R = 1.7;
+function makeField(S) {
+  const turns = 13, Hh = 20, R = 1.7;
   const h0 = [], cols = [];
   const red = new THREE.Color('#ff5038'), grn = new THREE.Color('#2fe07c'), rung = new THREE.Color('#c4cfdd');
   const put = (x, y, z, c) => { h0.push(x, y, z); cols.push(c.r, c.g, c.b); };
@@ -79,65 +75,75 @@ export default function HelixCanvas({ reduced = false, inView = true, onKnock })
   useEffect(() => {
     if (reduced) return undefined;
     const bg = bgRef.current, fg = fgRef.current;
-    if (!bg || !fg) return undefined;
+    if (!bg) return undefined;
 
-    const PR = Math.min(window.devicePixelRatio || 1, window.innerWidth < 760 ? 1.6 : 2);
+    const MOBILE = window.innerWidth < 760 || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+    const PR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.3 : 2);
     const TEX = makeDotTexture();
-    const field = makeField();
+    const field = makeField(MOBILE ? 650 : 950);
     const { home0: hm, pos, vel: v } = field;
 
     const camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(0, 0, 8.0); camera.lookAt(0, 0, 0);
 
     const mkRenderer = (canvas) => {
-      const r = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      const r = new THREE.WebGLRenderer({ canvas, antialias: !MOBILE, alpha: true, powerPreference: 'high-performance' });
       r.setPixelRatio(PR); r.outputColorSpace = THREE.SRGBColorSpace;
-      r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.12;
+      r.toneMapping = MOBILE ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.12;
       r.setClearColor(0x000000, 0);
       return r;
     };
 
-    // BACK — full helix + bloom, behind the copy
+    // BACK — the helix. Bloom only on desktop (post-processing is the #1 mobile cost).
     const rB = mkRenderer(bg);
     const sB = new THREE.Scene(); sB.fog = new THREE.FogExp2(0x07080a, 0.016);
     const geoB = new THREE.BufferGeometry();
     geoB.setAttribute('position', new THREE.BufferAttribute(field.pos, 3));
     geoB.setAttribute('color', new THREE.BufferAttribute(field.cols, 3));
-    const matB = new THREE.PointsMaterial({ size: 0.1, vertexColors: true, map: TEX, transparent: true, opacity: 1, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true, fog: true });
+    const matB = new THREE.PointsMaterial({ size: MOBILE ? 0.135 : 0.1, vertexColors: true, map: TEX, transparent: true, opacity: 1, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true, fog: true });
     sB.add(new THREE.Points(geoB, matB));
-    const comp = new EffectComposer(rB);
-    comp.addPass(new RenderPass(sB, camera));
-    const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.95, 0.55, 0.18);
-    comp.addPass(bloom);
-    comp.addPass(new OutputPass());
+    let comp = null, bloom = null;
+    if (!MOBILE) {
+      comp = new EffectComposer(rB);
+      comp.addPass(new RenderPass(sB, camera));
+      bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.95, 0.55, 0.18);
+      comp.addPass(bloom);
+      comp.addPass(new OutputPass());
+    }
 
-    // FRONT — same particles (shared buffer); only the nearest strand shows, over the copy
-    const rF = mkRenderer(fg);
-    const sF = new THREE.Scene();
-    const geoF = new THREE.BufferGeometry();
-    geoF.setAttribute('position', new THREE.BufferAttribute(field.pos, 3));
-    geoF.setAttribute('color', new THREE.BufferAttribute(field.cols, 3));
-    const frontMat = new THREE.ShaderMaterial({
-      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-      uniforms: {
-        uMap: { value: TEX }, uSize: { value: window.innerHeight * PR * 0.16 },
-        uNear: { value: 6.5 }, uFar: { value: 8.1 }, uOp: { value: 0.6 },
-        uZone: { value: new THREE.Vector4(0, 0.26, 0.5, 0.78) }, uZoneMin: { value: 0.24 },
-      },
-      vertexShader: 'attribute vec3 color; varying vec3 vC; varying float vA; varying vec2 vU; uniform float uSize,uNear,uFar; void main(){ vC=color; vec4 mv=modelViewMatrix*vec4(position,1.0); float d=-mv.z; vA=1.0-smoothstep(uNear,uFar,d); gl_PointSize=uSize/d; gl_Position=projectionMatrix*mv; vU=(gl_Position.xy/gl_Position.w)*0.5+0.5; }',
-      fragmentShader: 'uniform sampler2D uMap; uniform float uOp,uZoneMin; uniform vec4 uZone; varying vec3 vC; varying float vA; varying vec2 vU; void main(){ if(vA<=0.01) discard; vec4 t=texture2D(uMap,gl_PointCoord); float ix=smoothstep(uZone.x-0.05,uZone.x+0.05,vU.x)*(1.0-smoothstep(uZone.z-0.05,uZone.z+0.05,vU.x)); float iy=smoothstep(uZone.y-0.05,uZone.y+0.05,vU.y)*(1.0-smoothstep(uZone.w-0.05,uZone.w+0.05,vU.y)); float zf=mix(1.0,uZoneMin,ix*iy); gl_FragColor=vec4(vC, t.a*vA*uOp*zf); }',
-    });
-    sF.add(new THREE.Points(geoF, frontMat));
+    // FRONT (over-text depth layer) — DESKTOP ONLY. A second WebGL context is too
+    // heavy on mobile, and dropping it also clears the copy (better mobile readability).
+    let rF = null, geoF = null, frontMat = null, sF = null;
+    if (!MOBILE && fg) {
+      rF = mkRenderer(fg);
+      sF = new THREE.Scene();
+      geoF = new THREE.BufferGeometry();
+      geoF.setAttribute('position', new THREE.BufferAttribute(field.pos, 3));
+      geoF.setAttribute('color', new THREE.BufferAttribute(field.cols, 3));
+      frontMat = new THREE.ShaderMaterial({
+        transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+        uniforms: {
+          uMap: { value: TEX }, uSize: { value: window.innerHeight * PR * 0.16 },
+          uNear: { value: 6.5 }, uFar: { value: 8.1 }, uOp: { value: 0.6 },
+          uZone: { value: new THREE.Vector4(0, 0.26, 0.5, 0.78) }, uZoneMin: { value: 0.24 },
+        },
+        vertexShader: 'attribute vec3 color; varying vec3 vC; varying float vA; varying vec2 vU; uniform float uSize,uNear,uFar; void main(){ vC=color; vec4 mv=modelViewMatrix*vec4(position,1.0); float d=-mv.z; vA=1.0-smoothstep(uNear,uFar,d); gl_PointSize=uSize/d; gl_Position=projectionMatrix*mv; vU=(gl_Position.xy/gl_Position.w)*0.5+0.5; }',
+        fragmentShader: 'uniform sampler2D uMap; uniform float uOp,uZoneMin; uniform vec4 uZone; varying vec3 vC; varying float vA; varying vec2 vU; void main(){ if(vA<=0.01) discard; vec4 t=texture2D(uMap,gl_PointCoord); float ix=smoothstep(uZone.x-0.05,uZone.x+0.05,vU.x)*(1.0-smoothstep(uZone.z-0.05,uZone.z+0.05,vU.x)); float iy=smoothstep(uZone.y-0.05,uZone.y+0.05,vU.y)*(1.0-smoothstep(uZone.w-0.05,uZone.w+0.05,vU.y)); float zf=mix(1.0,uZoneMin,ix*iy); gl_FragColor=vec4(vC, t.a*vA*uOp*zf); }',
+      });
+      sF.add(new THREE.Points(geoF, frontMat));
+    }
 
     const setZone = () => {
+      if (!frontMat) return;
       if (window.innerWidth < 760) frontMat.uniforms.uZone.value.set(0, 0.04, 1, 0.54);
       else frontMat.uniforms.uZone.value.set(0, 0.26, 0.5, 0.78);
     };
     const resize = () => {
       const w = window.innerWidth, h = window.innerHeight;
       camera.aspect = w / h; camera.updateProjectionMatrix();
-      rB.setSize(w, h); comp.setSize(w, h); rF.setSize(w, h);
-      frontMat.uniforms.uSize.value = h * PR * 0.16; setZone();
+      rB.setSize(w, h); if (comp) comp.setSize(w, h);
+      if (rF) { rF.setSize(w, h); frontMat.uniforms.uSize.value = h * PR * 0.16; }
+      setZone();
     };
     resize();
 
@@ -185,7 +191,7 @@ export default function HelixCanvas({ reduced = false, inView = true, onKnock })
 
     const frame = (now) => {
       raf = requestAnimationFrame(frame);
-      if (!inViewRef.current) { last = now; return; } // pause sim when scrolled away
+      if (!inViewRef.current) { last = now; return; } // pause sim when scrolled away / tab hidden
       let dt = Math.min((now - last) / 1000, 0.033); last = now;
       const tgt = (0.5 - scrollT) * TRAVEL; camS += (tgt - camS) * Math.min(1, dt * 5);
       camera.position.set(AX.x * camS, AX.y * camS, 8.0); camera.lookAt(AX.x * camS, AX.y * camS, 0); O.copy(camera.position);
@@ -197,8 +203,9 @@ export default function HelixCanvas({ reduced = false, inView = true, onKnock })
       pNdcX = ndc.x; pNdcY = ndc.y; havePrev = true;
       const hits = step(dt, cs, sn, cvx, cvy, cvz, ndc.active);
       if (hits > 0 && onKnockRef.current && now - lastKnock > 70) { lastKnock = now; onKnockRef.current(Math.hypot(cvx, cvy)); }
-      geoB.attributes.position.needsUpdate = true; geoF.attributes.position.needsUpdate = true;
-      comp.render(); rF.render(sF, camera);
+      geoB.attributes.position.needsUpdate = true; if (geoF) geoF.attributes.position.needsUpdate = true;
+      if (comp) comp.render(); else rB.render(sB, camera);
+      if (rF) rF.render(sF, camera);
     };
     raf = requestAnimationFrame(frame);
 
@@ -208,9 +215,10 @@ export default function HelixCanvas({ reduced = false, inView = true, onKnock })
       window.removeEventListener('touchmove', onTouch);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', resize);
-      geoB.dispose(); geoF.dispose(); matB.dispose(); frontMat.dispose(); TEX.dispose();
-      comp.dispose(); rB.dispose(); rF.dispose();
-      try { rB.forceContextLoss(); rF.forceContextLoss(); } catch { /* */ }
+      geoB.dispose(); matB.dispose(); TEX.dispose();
+      if (geoF) geoF.dispose(); if (frontMat) frontMat.dispose(); if (comp) comp.dispose();
+      rB.dispose(); if (rF) rF.dispose();
+      try { rB.forceContextLoss(); if (rF) rF.forceContextLoss(); } catch { /* */ }
     };
   }, [reduced]);
 
