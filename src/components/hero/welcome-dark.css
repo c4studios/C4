@@ -13,6 +13,9 @@
   color: #f4f2ef;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  touch-action: pan-y;            /* vertical scroll only — no horizontal drag / edge-swipe-back */
+  overscroll-behavior: none;
 }
 
 /* fixed full-bleed layers */
@@ -142,6 +145,12 @@
   .cwd .scrim { background: linear-gradient(to top, rgba(7, 8, 10, 0.9) 30%, rgba(7, 8, 10, 0.3) 62%, transparent 86%); }
   .cwd .inner { max-width: none; }
   .cwd .bar .p3 { display: none; }
+  /* mobile runs without bloom — a slightly richer ambient glow keeps the helix lush */
+  .cwd .ph {
+    background:
+      radial-gradient(circle at 62% 34%, rgba(255, 80, 56, 0.26), transparent 54%),
+      radial-gradient(circle at 44% 62%, rgba(47, 224, 124, 0.20), transparent 58%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

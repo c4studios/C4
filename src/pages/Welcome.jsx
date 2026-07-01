@@ -89,12 +89,22 @@ export default function Welcome() {
     root.classList.add('dark-mode'); root.classList.remove('light-mode', 'vivid');
     const prevBg = document.body.style.backgroundColor;
     document.body.style.backgroundColor = '#07080a';
+    // Hold the page firm on mobile — vertical scroll only; no horizontal drag,
+    // overscroll, or edge-swipe-back while playing with the helix.
+    const rs = root.style, bs = document.body.style;
+    const prevScroll = { rob: rs.overscrollBehavior, bob: bs.overscrollBehavior, box: bs.overflowX, bta: bs.touchAction };
+    rs.overscrollBehavior = 'none';
+    bs.overscrollBehavior = 'none';
+    bs.overflowX = 'hidden';
+    bs.touchAction = 'pan-y';
     let meta = document.querySelector('meta[name="theme-color"]');
     const created = !meta; const prevColor = meta?.getAttribute('content');
     if (!meta) { meta = document.createElement('meta'); meta.setAttribute('name', 'theme-color'); document.head.appendChild(meta); }
     meta.setAttribute('content', '#07080a');
     return () => {
       root.className = prevClass; document.body.style.backgroundColor = prevBg;
+      rs.overscrollBehavior = prevScroll.rob; bs.overscrollBehavior = prevScroll.bob;
+      bs.overflowX = prevScroll.box; bs.touchAction = prevScroll.bta;
       if (created) meta.remove(); else if (prevColor != null) meta.setAttribute('content', prevColor);
     };
   }, []);
