@@ -77,10 +77,12 @@ export default function HelixCanvas({ reduced = false, inView = true, onKnock })
     const bg = bgRef.current, fg = fgRef.current;
     if (!bg) return undefined;
 
-    const MOBILE = window.innerWidth < 760 || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
-    const PR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.3 : 2);
+    // Touch phones/tablets (no hover) get the lean path; anything with a mouse (incl. touch
+    // laptops/desktops, which report hover) stays on the full rich desktop version.
+    const MOBILE = (window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches) || window.innerWidth < 760;
+    const PR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.1 : 2);
     const TEX = makeDotTexture();
-    const field = makeField(MOBILE ? 650 : 950);
+    const field = makeField(MOBILE ? 550 : 950);
     const { home0: hm, pos, vel: v } = field;
 
     const camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -153,7 +155,7 @@ export default function HelixCanvas({ reduced = false, inView = true, onKnock })
     const setP = (x, y) => { ndc.x = x / window.innerWidth * 2 - 1; ndc.y = -(y / window.innerHeight * 2 - 1); ndc.active = true; };
     const onMouse = (e) => setP(e.clientX, e.clientY);
     const onTouch = (e) => { if (e.touches[0]) setP(e.touches[0].clientX, e.touches[0].clientY); };
-    const onScroll = () => { const max = document.body.scrollHeight - window.innerHeight; scrollT = max > 0 ? window.scrollY / max : 0; };
+    const onScroll = () => { const max = document.body.scrollHeight - window.innerHeight; scrollT = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0; };
     onScroll();
     window.addEventListener('mousemove', onMouse);
     window.addEventListener('touchmove', onTouch, { passive: true });
@@ -162,8 +164,8 @@ export default function HelixCanvas({ reduced = false, inView = true, onKnock })
 
     const O = new THREE.Vector3(), D = new THREE.Vector3(), cur = new THREE.Vector3();
     const AX = new THREE.Vector3(-sinT, cosT, 0).normalize(); // "up the helix" on screen
-    const TRAVEL = 12;
-    let camS = 6, pNdcX = 0, pNdcY = 0, havePrev = false, last = performance.now(), lastKnock = 0, raf = 0;
+    const TRAVEL = MOBILE ? 8 : 12; // gentler scroll-journey on mobile → less sensitive to viewport jitter
+    let camS = 0.5 * TRAVEL, pNdcX = 0, pNdcY = 0, havePrev = false, last = performance.now(), lastKnock = 0, raf = 0;
 
     // spinning, springy home + surgical cursor momentum-transfer (small bubble)
     const step = (dt, cs, sn, cvx, cvy, cvz, on) => {
@@ -193,7 +195,7 @@ export default function HelixCanvas({ reduced = false, inView = true, onKnock })
       raf = requestAnimationFrame(frame);
       if (!inViewRef.current) { last = now; return; } // pause sim when scrolled away / tab hidden
       let dt = Math.min((now - last) / 1000, 0.033); last = now;
-      const tgt = (0.5 - scrollT) * TRAVEL; camS += (tgt - camS) * Math.min(1, dt * 5);
+      const tgt = (0.5 - scrollT) * TRAVEL; camS += (tgt - camS) * Math.min(1, dt * (MOBILE ? 3.5 : 5));
       camera.position.set(AX.x * camS, AX.y * camS, 8.0); camera.lookAt(AX.x * camS, AX.y * camS, 0); O.copy(camera.position);
       const spin = now / 1000 * 0.32, cs = Math.cos(spin), sn = Math.sin(spin);
       cur.set(ndc.x, ndc.y, 0.5).unproject(camera); D.copy(cur).sub(camera.position).normalize();

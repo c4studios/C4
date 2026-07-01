@@ -8,7 +8,7 @@
 
 .cwd {
   position: relative;
-  min-height: 100vh;
+  min-height: 100svh;
   background: #07080a;
   color: #f4f2ef;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -151,6 +151,11 @@
       radial-gradient(circle at 62% 34%, rgba(255, 80, 56, 0.26), transparent 54%),
       radial-gradient(circle at 44% 62%, rgba(47, 224, 124, 0.20), transparent 58%);
   }
+  /* backdrop-filter re-samples the moving helix every scroll frame on mobile — a major
+     stutter + text-flicker source. Drop it for solid fallbacks (desktop keeps the glass). */
+  .cwd .inner::before { -webkit-backdrop-filter: none; backdrop-filter: none; background: radial-gradient(130% 108% at 26% 50%, rgba(7, 8, 10, 0.86), rgba(7, 8, 10, 0.55) 54%, transparent 84%); }
+  .cwd .p2 { -webkit-backdrop-filter: none; backdrop-filter: none; background: linear-gradient(140deg, rgba(46, 48, 54, 0.94), rgba(26, 28, 32, 0.94)); }
+  .cwd .bar { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(9, 10, 12, 0.97); }
 }
 
 @media (prefers-reduced-motion: reduce) {
