@@ -56,10 +56,13 @@ function makeField(S) {
     if (i % 3 === 0) for (const m of [0.4, 0.6]) put(ax + (bx - ax) * m, y, az + (bz - az) * m, rung);
   }
   const home0 = new Float32Array(h0), pos = new Float32Array(home0.length), vel = new Float32Array(home0.length);
+  // ENTRANCE: start every particle scattered in a loose cloud — the spring then
+  // gathers them into the (spinning) helix over the first ~1.5s. Assembly, not a pop.
   for (let i = 0; i < home0.length; i += 3) {
-    pos[i] = home0[i] * cosT - home0[i + 1] * sinT;
-    pos[i + 1] = home0[i] * sinT + home0[i + 1] * cosT;
-    pos[i + 2] = home0[i + 2];
+    const th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1), r = 5 + Math.random() * 7;
+    pos[i] = Math.sin(ph) * Math.cos(th) * r;
+    pos[i + 1] = Math.sin(ph) * Math.sin(th) * r * 1.2;
+    pos[i + 2] = Math.cos(ph) * r * 0.5;
   }
   return { home0, pos, vel, cols: new Float32Array(cols) };
 }
@@ -165,11 +168,16 @@ export default function HelixCanvas({ reduced = false, inView = true, onKnock })
     const O = new THREE.Vector3(), D = new THREE.Vector3(), cur = new THREE.Vector3();
     const AX = new THREE.Vector3(-sinT, cosT, 0).normalize(); // "up the helix" on screen
     const TRAVEL = MOBILE ? 8 : 12; // gentler scroll-journey on mobile → less sensitive to viewport jitter
-    let camS = 0.5 * TRAVEL, pNdcX = 0, pNdcY = 0, havePrev = false, last = performance.now(), lastKnock = 0, raf = 0;
+    let camS = 0.5 * TRAVEL, parX = 0, parY = 0, pNdcX = 0, pNdcY = 0, havePrev = false, last = performance.now(), lastKnock = 0, raf = 0;
 
     // spinning, springy home + surgical cursor momentum-transfer (small bubble)
+    let simT = 0; // seconds since the sim started — drives the assembly entrance
     const step = (dt, cs, sn, cvx, cvy, cvz, on) => {
-      const hitR = 0.31, transfer = 0.92, springK = 5.0, maxV = 36, damp = Math.pow(0.88, dt * 60);
+      simT += dt;
+      // ASSEMBLY: extra spring strength for the first ~1.5s pulls the scattered
+      // cloud into the helix fast, then eases back to the normal playful feel.
+      const boost = Math.max(0, 1 - simT / 1.5);
+      const hitR = 0.31, transfer = 0.92, springK = 5.0 + 22 * boost, maxV = 36, damp = Math.pow(0.88, dt * 60);
       const ox = O.x, oy = O.y, oz = O.z, dx = D.x, dy = D.y, dz = D.z;
       const cvm = cvx * cvx + cvy * cvy + cvz * cvz; let hits = 0;
       for (let i = 0; i < pos.length; i += 3) {
@@ -196,7 +204,9 @@ export default function HelixCanvas({ reduced = false, inView = true, onKnock })
       if (!inViewRef.current) { last = now; return; } // pause sim when scrolled away / tab hidden
       let dt = Math.min((now - last) / 1000, 0.033); last = now;
       const tgt = (0.5 - scrollT) * TRAVEL; camS += (tgt - camS) * Math.min(1, dt * (MOBILE ? 3.5 : 5));
-      camera.position.set(AX.x * camS, AX.y * camS, 8.0); camera.lookAt(AX.x * camS, AX.y * camS, 0); O.copy(camera.position);
+      // desktop: a whisper of cursor parallax — the scene has depth, so let it show
+      if (!MOBILE) { parX += (ndc.x * 0.42 - parX) * Math.min(1, dt * 3); parY += (ndc.y * 0.28 - parY) * Math.min(1, dt * 3); }
+      camera.position.set(AX.x * camS + parX, AX.y * camS + parY, 8.0); camera.lookAt(AX.x * camS, AX.y * camS, 0); O.copy(camera.position);
       const spin = now / 1000 * 0.32, cs = Math.cos(spin), sn = Math.sin(spin);
       cur.set(ndc.x, ndc.y, 0.5).unproject(camera); D.copy(cur).sub(camera.position).normalize();
       const halfH = Math.tan(44 * Math.PI / 360) * 8.0, halfW = halfH * (window.innerWidth / window.innerHeight);
