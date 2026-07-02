@@ -240,6 +240,23 @@ export default function Welcome() {
     return () => clearTimeout(t);
   }, []);
 
+  /* Arm the app-wide "back to the card" button: whenever an internal link on
+     this page is followed to another PAGE (not a file, mailto, or off-site),
+     remember where to return so the destination can offer a way back. */
+  const armReturn = useCallback((e) => {
+    const a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    const raw = a.getAttribute('href') || '';
+    if (/^(mailto:|tel:|sms:)/i.test(raw) || a.hasAttribute('download')) return;
+    try {
+      const url = new URL(a.href, window.location.origin);
+      if (url.origin !== window.location.origin) return;    // off-site
+      if (/\.[a-z0-9]+$/i.test(url.pathname)) return;        // a file (e.g. /caleb.vcf), not a page
+      if (url.pathname === window.location.pathname) return; // same page
+      sessionStorage.setItem('c4:welcomeReturn', window.location.pathname + window.location.search);
+    } catch { /* */ }
+  }, []);
+
   const openBooking = () => { setBookingOpen(true); buzz([14]); };
   const onSave = () => { buzz([10, 30, 10]); setSavedFlash(true); setTimeout(() => setSavedFlash(false), 1200); };
   const saveLabel = savedFlash ? 'Saved ✓' : 'Save my contact';
@@ -248,6 +265,7 @@ export default function Welcome() {
     <div
       className="cwd"
       ref={rootRef}
+      onClickCapture={armReturn}
       onPointerDown={() => { gestured.current = true; markInteract(); }}
     >
       <div className="ph" aria-hidden="true" />
@@ -326,7 +344,7 @@ export default function Welcome() {
         <section className="sec">
           <div className="inner">
             <div className="kick">who you’re talking to</div>
-            <h2>It’s just me, Caleb</h2>
+            <h2>Straight to the founder.</h2>
             <p className="body">{`C4 Studios is Caleb Scott — founder and sole operator, here in Perth. Every conversation, every design call, every line of code comes from me. The person you talk to is the person doing the work, start to finish, and I like keeping it that way.`}</p>
           </div>
         </section>
@@ -337,9 +355,9 @@ export default function Welcome() {
             <div className="kick">recent work</div>
             <h2>A few recent builds</h2>
             <div className="rows">
-              <div className="row"><b>DS Racing Karts</b><span>{`Moved 499+ products off Square, wrote the product descriptions with AI, set up a PCI-compliant checkout, and built them a custom Canvas racing mini-game.`}</span></div>
-              <div className="row"><b>Evidence Advisory</b><span>{`Brand site for a Perth digital-forensics firm, built around a 3D WebGL hero — a shattered, evidence-tagged phone that reassembles as you scroll — over a full, SEO-ready multi-page platform.`}</span></div>
-              <div className="row"><b>Tidy Gardens</b><span>{`A motion-led site for a Perth garden & reticulation business — a vine that grows, a poly-pipe that fills, and a mower that lays down stripes as you scroll. Four service pages, a before/after gallery, and a quote form straight to the owner.`}</span></div>
+              <Link className="row" to={createPageUrl('CaseStudy?slug=ds-racing-karts')}><b>DS Racing Karts</b><span>{`Moved 499+ products off Square, wrote the product descriptions with AI, set up a PCI-compliant checkout, and built them a custom Canvas racing mini-game.`}</span></Link>
+              <Link className="row" to={createPageUrl('CaseStudy?slug=evidence-advisory')}><b>Evidence Advisory</b><span>{`Brand site for a Perth digital-forensics firm, built around a 3D WebGL hero — a shattered, evidence-tagged phone that reassembles as you scroll — over a full, SEO-ready multi-page platform.`}</span></Link>
+              <Link className="row" to={createPageUrl('CaseStudy?slug=tidy-gardens-australia')}><b>Tidy Gardens</b><span>{`A motion-led site for a Perth garden & reticulation business — a vine that grows, a poly-pipe that fills, and a mower that lays down stripes as you scroll. Four service pages, a before/after gallery, and a quote form straight to the owner.`}</span></Link>
             </div>
             <Link className="folio" to={createPageUrl('Portfolio')}>See the full portfolio →</Link>
           </div>
