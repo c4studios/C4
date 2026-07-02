@@ -27,6 +27,21 @@ export function buildQuotrSrc(slug, isDark) {
   return `${QUOTR_ORIGIN}/q/${slug}?theme=${mode}&accent=${accent}`;
 }
 
+let preconnected = false;
+
+/* Warm the connection to quotr.us (DNS + TLS) before the iframe mounts, so
+   the calculator appears noticeably faster when the visitor reaches it. */
+export function preconnectQuotr() {
+  if (preconnected || typeof document === 'undefined') return;
+  preconnected = true;
+  ['preconnect', 'dns-prefetch'].forEach((rel) => {
+    const link = document.createElement('link');
+    link.rel = rel;
+    link.href = QUOTR_ORIGIN;
+    document.head.appendChild(link);
+  });
+}
+
 export function postQuotrTheme(iframeEl, isDark) {
   const win = iframeEl?.contentWindow;
   if (!win) return;

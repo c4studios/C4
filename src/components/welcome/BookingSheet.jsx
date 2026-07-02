@@ -16,7 +16,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, MessageSquare, Mail, Calendar, Calculator, X, ArrowLeft } from 'lucide-react';
 import { submitProjectInquiry } from '@/api/submissions';
-import { buildQuotrSrc, postQuotrTheme } from '@/components/home/quotrTheme';
+import { buildQuotrSrc, postQuotrTheme, preconnectQuotr } from '@/components/home/quotrTheme';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
 import SubmitButton from '@/components/c4/SubmitButton';
 import SubmissionSuccess from '@/components/c4/SubmissionSuccess';
@@ -255,7 +255,6 @@ function QuoteView({ onBack }) {
           src={src}
           className="w-full h-full"
           style={{ border: 0, minHeight: '60vh' }}
-          loading="lazy"
           onLoad={() => postQuotrTheme(iframeRef.current, false)}
         />
       </div>
@@ -316,9 +315,13 @@ export default function BookingSheet({ open, onClose }) {
   const [view, setView] = useState('choose'); // choose | schedule | call | quote
   const quickBuzz = () => { try { if (navigator.vibrate) navigator.vibrate(12); } catch { /* */ } };
 
-  // Reset to the chooser each time the sheet is opened.
+  // Reset to the chooser each time the sheet is opened, and warm the
+  // connection to quotr.us so the calculator view loads fast if chosen.
   useEffect(() => {
-    if (open) setView('choose');
+    if (open) {
+      setView('choose');
+      preconnectQuotr();
+    }
   }, [open]);
 
   // Lock body scroll while open.
