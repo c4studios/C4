@@ -9,6 +9,7 @@ import SeoPage from './pages/SeoPage';
 import LeadEngine from './pages/LeadEngine';
 import { liveSeoPages } from './content/seo/registry';
 import { createPageUrl } from './utils';
+import WelcomeReturnButton from './components/welcome/WelcomeReturnButton';
 
 // Networking-card landing — explicit, chrome-free route (no NavHeader/Footer)
 // so the post-scan experience stays focused and fast. Lazy so it stays out of
@@ -107,6 +108,7 @@ function App() {
             </LayoutWrapper>
           } />
         </Routes>
+        <WelcomeReturnButton />
       </Router>
       <Toaster />
     </QueryClientProvider>

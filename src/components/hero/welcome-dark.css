@@ -113,13 +113,15 @@
 .cwd .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 .cwd .tag { font-size: 12.5px; padding: 7px 14px; border-radius: 999px; border: 0.5px solid rgba(255, 255, 255, 0.16); color: rgba(243, 242, 239, 0.8); transition: border-color 0.3s, color 0.3s; }
 .cwd .rows { margin-top: 8px; display: flex; flex-direction: column; }
-.cwd .row { padding: 18px 0; border-top: 0.5px solid rgba(255, 255, 255, 0.1); transition: padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s; }
+.cwd .row { position: relative; display: block; padding: 18px 30px 18px 0; text-decoration: none; color: inherit; cursor: pointer; border-top: 0.5px solid rgba(255, 255, 255, 0.1); transition: padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s; }
+.cwd .row::after { content: '→'; position: absolute; top: 18px; right: 2px; font-size: 15px; color: rgba(243, 242, 239, 0.3); transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s; }
 .cwd .row:last-child { border-bottom: 0.5px solid rgba(255, 255, 255, 0.1); }
 .cwd .row b { font-weight: 500; font-size: 16px; transition: color 0.3s; }
 @media (hover: hover) {
   .cwd .tag:hover { border-color: rgba(255, 255, 255, 0.42); color: #f4f2ef; }
   .cwd .row:hover { padding-left: 7px; border-top-color: rgba(255, 255, 255, 0.22); }
   .cwd .row:hover b { color: #ffffff; }
+  .cwd .row:hover::after { color: #f4f2ef; transform: translateX(4px); }
 }
 .cwd .row span { display: block; margin-top: 5px; font-size: 13.5px; line-height: 1.55; color: rgba(243, 242, 239, 0.6); }
 .cwd .stats { display: flex; flex-wrap: wrap; gap: 26px 36px; margin: 6px 0 18px; }
