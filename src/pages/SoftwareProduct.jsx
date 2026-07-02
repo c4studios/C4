@@ -7,6 +7,8 @@ import { getProduct, PRODUCTS, statusColor } from '../components/software/produc
 import SweepDemo from '../components/software/demos/SweepDemo';
 import PulseDemo from '../components/software/demos/PulseDemo';
 import HandoverDemo from '../components/software/demos/HandoverDemo';
+import CountUpStat from '../components/software/CountUpStat';
+import HowItWorks from '../components/software/HowItWorks';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema, faqSchema } from '@/lib/schema';
 
@@ -57,6 +59,15 @@ export default function SoftwareProduct() {
   const color = statusColor(product.status);
   const others = PRODUCTS.filter((p) => p.slug !== product.slug).slice(0, 3);
   const CtaIcon = product.ctaExternal ? ArrowUpRight : ArrowRight;
+
+  // A small, truthful reassurance cue shown under the primary CTA. Kept honest
+  // per product: "Start free" apps really do start free with no card; early
+  // access and preview products route to a friendly, no-obligation chat.
+  const reassurance = /start free/i.test(product.ctaLabel)
+    ? 'Free to start · no card required · cancel anytime'
+    : product.status === 'Early access'
+      ? 'No obligation · we onboard you personally'
+      : 'No pressure · just a friendly chat';
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--c4-bg)', color: 'var(--c4-text)' }}>
@@ -125,7 +136,7 @@ export default function SoftwareProduct() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: i * 0.08, ease }}
               >
-                <p className="text-[1.9rem] font-semibold tracking-[-0.03em] leading-[1]" style={{ color: 'var(--c4-text)' }}>{h.stat}</p>
+                <CountUpStat className="block text-[1.9rem] font-semibold tracking-[-0.03em] leading-[1]" style={{ color: 'var(--c4-text)' }}>{h.stat}</CountUpStat>
                 <p className="mt-2 text-[12px] leading-[1.5] uppercase tracking-[0.1em]" style={{ color: 'var(--c4-text-subtle)' }}>{h.label}</p>
               </motion.div>
             ))}
@@ -152,31 +163,8 @@ export default function SoftwareProduct() {
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      {product.howItWorks?.length ? (
-        <section className="pb-16 md:pb-24">
-          <div className="mx-auto max-w-[1100px] px-6 md:px-12">
-            <p className="text-[10px] uppercase tracking-[0.22em] font-medium mb-8" style={{ color: 'var(--c4-text-subtle)' }}>How it works</p>
-            <div className="grid gap-px rounded-[3px] overflow-hidden sm:grid-cols-3" style={{ backgroundColor: 'var(--c4-border)' }}>
-              {product.howItWorks.map((step, i) => (
-                <motion.div
-                  key={step.step}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: i * 0.08, ease }}
-                  className="p-7 md:p-8"
-                  style={{ backgroundColor: 'var(--c4-bg)' }}
-                >
-                  <span className="text-[11px] font-semibold tabular-nums tracking-[0.12em]" style={{ color: 'var(--c4-accent)' }}>{step.step}</span>
-                  <p className="mt-3 text-[15px] font-semibold tracking-[-0.01em]" style={{ color: 'var(--c4-text)' }}>{step.title}</p>
-                  <p className="mt-2 text-[13px] leading-[1.7]" style={{ color: 'var(--c4-text-muted)' }}>{step.body}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : null}
+      {/* HOW IT WORKS — scroll-driven, step by step */}
+      <HowItWorks steps={product.howItWorks} accent={color} />
 
       {/* INTERACTIVE DEMO */}
       {product.slug === 'sweep' ? (
@@ -292,6 +280,9 @@ export default function SoftwareProduct() {
                   <CtaIcon size={13} strokeWidth={2} />
                 </a>
               )}
+              <p className="mt-3 text-center text-[11px] leading-[1.5]" style={{ color: 'var(--c4-text-subtle)' }}>
+                {reassurance}
+              </p>
               {product.lifetime && (
                 <a
                   href={product.lifetime.href}
