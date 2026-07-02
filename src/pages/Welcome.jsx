@@ -38,12 +38,13 @@ const HEADLINE = {
   scan: 'You scanned the card — nice.',
   neutral: 'Hey, glad you’re here.',
 };
-const LINES = {
-  idle: 'Perth web design & development — run your cursor through the helix.',
+/* built per-device: "finger" on touch, "cursor" with a mouse */
+const makeLines = (coarse) => ({
+  idle: `Perth web design & development — run your ${coarse ? 'finger' : 'cursor'} through the helix.`,
   book: 'Sounds good — let’s find a time that works.',
   save: 'Saved straight to your phone — no typing.',
   folio: 'Opening the work →',
-};
+});
 
 function hasWebGL() {
   try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'))); } catch { return false; }
@@ -66,6 +67,7 @@ export default function Welcome() {
   const [savedFlash, setSavedFlash] = useState(false);
 
   const rootRef = useRef(null);
+  const progRef = useRef(null);
   const gestured = useRef(false);
   const interacted = useRef(false);
   const iosTap = useRef(() => {});
@@ -73,6 +75,8 @@ export default function Welcome() {
 
   const webgl = useMemo(hasWebGL, []);
   const reduced = useMemo(() => typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches, []);
+  const coarse = useMemo(() => typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(hover: none)').matches, []);
+  const LINES = useMemo(() => makeLines(coarse), [coarse]);
   const hasVibe = typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function';
 
   useDocumentHead({
@@ -159,7 +163,47 @@ export default function Welcome() {
     const tick = () => { if (my !== typeTok.current) return; setTyped(text.slice(0, i)); if (i++ < text.length) setTimeout(tick, 15 + Math.random() * 30); };
     tick();
   }, []);
-  useEffect(() => { typeOut(LINES.idle); }, [typeOut]);
+  useEffect(() => { typeOut(LINES.idle); }, [typeOut, LINES]);
+
+  /* Stats roll up from zero when their section reveals. */
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || reduced || !('IntersectionObserver' in window)) return undefined;
+    const stats = root.querySelector('.stats');
+    const els = [...root.querySelectorAll('.stat b[data-n]')];
+    if (!stats || !els.length) return undefined;
+    let done = false;
+    const io = new IntersectionObserver((es) => {
+      if (done || !es.some((e) => e.isIntersecting)) return;
+      done = true; io.disconnect();
+      const t0 = performance.now(), D = 1400;
+      const tick = (now) => {
+        const p = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - p, 3);
+        els.forEach((el) => { el.textContent = Math.round(Number(el.dataset.n) * e) + (el.dataset.s || ''); });
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }, { threshold: 0.5 });
+    io.observe(stats);
+    return () => io.disconnect();
+  }, [reduced]);
+
+  /* Desktop: CTAs lean a few px toward the cursor (magnetic hover). */
+  useEffect(() => {
+    if (!(window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches)) return undefined;
+    const root = rootRef.current;
+    if (!root) return undefined;
+    const btns = [...root.querySelectorAll('.acts .cta')];
+    const move = (e) => {
+      const b = e.currentTarget.getBoundingClientRect();
+      const dx = (e.clientX - b.left - b.width / 2) / b.width, dy = (e.clientY - b.top - b.height / 2) / b.height;
+      e.currentTarget.style.setProperty('--mx', `${(dx * 7).toFixed(1)}px`);
+      e.currentTarget.style.setProperty('--my', `${(dy * 5).toFixed(1)}px`);
+    };
+    const leave = (e) => { e.currentTarget.style.setProperty('--mx', '0px'); e.currentTarget.style.setProperty('--my', '0px'); };
+    btns.forEach((b) => { b.addEventListener('mousemove', move); b.addEventListener('mouseleave', leave); });
+    return () => btns.forEach((b) => { b.removeEventListener('mousemove', move); b.removeEventListener('mouseleave', leave); });
+  }, []);
 
   /* Section reveal + a tap on each, sticky bar + scroll cue, first-touch hint. */
   useEffect(() => {
@@ -179,6 +223,11 @@ export default function Welcome() {
     const onScroll = () => {
       setCueHidden(window.scrollY > 40);
       setBarOn(window.scrollY > window.innerHeight * 0.85);
+      if (progRef.current) {
+        const max = document.body.scrollHeight - window.innerHeight;
+        const t = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        progRef.current.style.transform = `scaleY(${t.toFixed(4)})`;
+      }
       markInteract();
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -302,10 +351,10 @@ export default function Welcome() {
             <div className="kick">the basics</div>
             <h2>Running this since 2022</h2>
             <div className="stats">
-              <div className="stat"><b>2022</b><span>founded</span></div>
-              <div className="stat"><b>50+</b><span>Perth businesses</span></div>
-              <div className="stat"><b>200+</b><span>assets shipped</span></div>
-              <div className="stat"><b>6</b><span>own products</span></div>
+              <div className="stat"><b data-n="2022">2022</b><span>founded</span></div>
+              <div className="stat"><b data-n="50" data-s="+">50+</b><span>Perth businesses</span></div>
+              <div className="stat"><b data-n="200" data-s="+">200+</b><span>assets shipped</span></div>
+              <div className="stat"><b data-n="6">6</b><span>own products</span></div>
             </div>
             <p className="body">{`You own everything I build — code, accounts, domains, all of it. If you ever move on, you take the lot with you.`}</p>
           </div>
@@ -336,7 +385,9 @@ export default function Welcome() {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
       </div>
 
-      <div className={`hint${showHint ? ' show' : ''}`} aria-hidden="true">go on — run your cursor through it</div>
+      <div className={`hint${showHint ? ' show' : ''}`} aria-hidden="true">{`go on — run your ${coarse ? 'finger' : 'cursor'} through it`}</div>
+
+      <div className="prog" aria-hidden="true"><i ref={progRef} /></div>
 
       <div className={`bar${barOn ? ' on' : ''}`}>
         <button type="button" className="cta p1" onClick={openBooking}>Book a call</button>
