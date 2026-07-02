@@ -10,13 +10,14 @@
  * interest to the contact page.
  */
 
-/* Lifetime one-time payment links (live Stripe). */
+/* Lifetime one-time payment links (live Stripe, verified against the
+   current Lifetime prices: RD $690 / RL $450 / Complia $690 / FF $890). */
 export const LIFETIME_LINKS = {
   quotr: 'https://buy.stripe.com/00wbJ1ftC0oQ2st9aE3ZK0l',
-  returndesk: 'https://buy.stripe.com/dRmbJ16X68Vmfff4Uo3ZK0h',
-  reviewloop: 'https://buy.stripe.com/00w28r6X60oQaYZeuY3ZK0i',
-  complia: 'https://buy.stripe.com/cNibJ1a9i7Ri1op72w3ZK0j',
-  firmflow: 'https://buy.stripe.com/00w4gz1CMdbC4ABgD63ZK0k',
+  returndesk: 'https://buy.stripe.com/cNieVdftC6Ne7MN2Mg3ZK0m',
+  reviewloop: 'https://buy.stripe.com/cNi6oH4OY0oQaYZeuY3ZK0n',
+  complia: 'https://buy.stripe.com/7sY28rchqfjK9UV5Ys3ZK0o',
+  firmflow: 'https://buy.stripe.com/cNibJ13KU5Ja9UVeuY3ZK0p',
 };
 
 export const PRODUCTS = [
