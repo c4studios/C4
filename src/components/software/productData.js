@@ -3,12 +3,12 @@
  * Consumed by the Software list page, the per-product detail page,
  * and the home C4Originals preview.
  *
- * ReviewLoop, Complia and FirmFlow run inside the C4 suite app —
- * accounts and paid plans are managed in-app so purchases grant
- * access directly. Lifetime one-time purchases use live Stripe links.
+ * Each live product runs as its own standalone app (app.<product>.
+ * c4studios.com.au) with accounts and paid plans managed in-app.
+ * Lifetime one-time purchases use live Stripe links. Products not yet
+ * relaunched as standalone apps are listed as Early access and route
+ * interest to the contact page.
  */
-
-export const SUITE_APP_URL = 'https://c4-saas-suite.vercel.app';
 
 /* Lifetime one-time payment links (live Stripe). */
 export const LIFETIME_LINKS = {
@@ -58,11 +58,11 @@ export const PRODUCTS = [
     ],
     tiers: [
       { label: 'Starter', price: 29 },
-      { label: 'Pro', price: 59 },
-      { label: 'Agency', price: 99 },
+      { label: 'Pro', price: 79 },
+      { label: 'Agency', price: 199 },
     ],
-    lifetime: { price: 690, href: LIFETIME_LINKS.quotr },
-    pricing: 'From $29/mo — use code C4HALF for 50% off your first 3 months.',
+    lifetime: { price: 690, href: 'https://quotr.us/pricing' },
+    pricing: 'From $29/mo — use code C4HALF for 50% off your first 3 months. Lifetime plans from $690.',
     ctaLabel: 'Start free at quotr.us',
     ctaHref: 'https://quotr.us',
     ctaExternal: true,
@@ -106,7 +106,7 @@ export const PRODUCTS = [
       { label: 'Early bird', price: 29, note: 'locked in forever' },
       { label: 'Pro at launch', price: 59 },
     ],
-    lifetime: { price: 690, href: 'https://returndesk.c4studios.com.au' },
+    lifetime: { price: 690, href: LIFETIME_LINKS.returndesk },
     pricing: 'Early bird $29/mo — locks in forever. Start free, upgrade in the app.',
     ctaLabel: 'Start free in the app',
     ctaHref: 'https://returndesk.c4studios.com.au',
@@ -151,10 +151,10 @@ export const PRODUCTS = [
       { label: 'Starter', price: 19 },
       { label: 'Pro', price: 45 },
     ],
-    lifetime: { price: 450, href: 'https://reviewloop.c4studios.com.au' },
+    lifetime: { price: 450, href: LIFETIME_LINKS.reviewloop },
     pricing: 'Starter $19/mo · Pro $45/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
-    ctaHref: 'https://reviewloop.c4studios.com.au',
+    ctaHref: 'https://app.reviewloop.c4studios.com.au/signup',
     ctaExternal: true,
   },
   {
@@ -196,7 +196,7 @@ export const PRODUCTS = [
       { label: 'Starter', price: 29 },
       { label: 'Pro', price: 59 },
     ],
-    lifetime: { price: 690, href: 'https://complia.c4studios.com.au' },
+    lifetime: { price: 690, href: LIFETIME_LINKS.complia },
     pricing: 'Starter $29/mo · Pro $59/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
     ctaHref: 'https://complia.c4studios.com.au',
@@ -205,7 +205,7 @@ export const PRODUCTS = [
   {
     slug: 'rebook',
     name: 'Rebook',
-    status: 'Live',
+    status: 'Early access',
     logo: '/Software/Rebook.svg',
     logoBg: '#ffffff',
     oneLiner: 'Automated service reminders that bring customers back.',
@@ -240,16 +240,15 @@ export const PRODUCTS = [
       { label: 'Starter', price: 19 },
       { label: 'Pro', price: 45 },
     ],
-    lifetime: { price: 450, href: SUITE_APP_URL },
-    pricing: 'Starter $19/mo · Pro $45/mo. Start free — paid plans unlock inside the app.',
-    ctaLabel: 'Start free in the app',
-    ctaHref: SUITE_APP_URL,
-    ctaExternal: true,
+    pricing: 'Starter $19/mo · Pro $45/mo at relaunch. Early access — register interest and we’ll onboard you personally.',
+    ctaLabel: 'Register interest',
+    ctaHref: '/Contact',
+    ctaExternal: false,
   },
   {
     slug: 'crewcheck',
     name: 'CrewCheck',
-    status: 'Live',
+    status: 'Early access',
     logo: '/Software/CrewCheck.svg',
     logoBg: '#ffffff',
     oneLiner: 'Licence and insurance expiry tracking for your crew.',
@@ -284,16 +283,15 @@ export const PRODUCTS = [
       { label: 'Starter', price: 29 },
       { label: 'Pro', price: 59 },
     ],
-    lifetime: { price: 690, href: SUITE_APP_URL },
-    pricing: 'Starter $29/mo · Pro $59/mo. Start free — paid plans unlock inside the app.',
-    ctaLabel: 'Start free in the app',
-    ctaHref: SUITE_APP_URL,
-    ctaExternal: true,
+    pricing: 'Starter $29/mo · Pro $59/mo at relaunch. Early access — register interest and we’ll onboard you personally.',
+    ctaLabel: 'Register interest',
+    ctaHref: '/Contact',
+    ctaExternal: false,
   },
   {
     slug: 'safedraft',
     name: 'SafeDraft',
-    status: 'Live',
+    status: 'Early access',
     logo: '/Software/SafeDraft.svg',
     logoBg: '#ffffff',
     oneLiner: 'AI-drafted Safe Work Method Statements.',
@@ -328,16 +326,15 @@ export const PRODUCTS = [
       { label: 'Starter', price: 29 },
       { label: 'Pro', price: 59 },
     ],
-    lifetime: { price: 690, href: SUITE_APP_URL },
-    pricing: 'Starter $29/mo · Pro $59/mo. Start free — paid plans unlock inside the app.',
-    ctaLabel: 'Start free in the app',
-    ctaHref: SUITE_APP_URL,
-    ctaExternal: true,
+    pricing: 'Starter $29/mo · Pro $59/mo at relaunch. Early access — register interest and we’ll onboard you personally.',
+    ctaLabel: 'Register interest',
+    ctaHref: '/Contact',
+    ctaExternal: false,
   },
   {
     slug: 'nudge',
     name: 'Nudge',
-    status: 'Live',
+    status: 'Early access',
     logo: '/Software/Nudge.svg',
     logoBg: '#ffffff',
     oneLiner: 'Polite, escalating invoice reminders.',
@@ -372,11 +369,10 @@ export const PRODUCTS = [
       { label: 'Starter', price: 19 },
       { label: 'Pro', price: 39 },
     ],
-    lifetime: { price: 450, href: SUITE_APP_URL },
-    pricing: 'Starter $19/mo · Pro $39/mo. Start free — paid plans unlock inside the app.',
-    ctaLabel: 'Start free in the app',
-    ctaHref: SUITE_APP_URL,
-    ctaExternal: true,
+    pricing: 'Starter $19/mo · Pro $39/mo at relaunch. Early access — register interest and we’ll onboard you personally.',
+    ctaLabel: 'Register interest',
+    ctaHref: '/Contact',
+    ctaExternal: false,
   },
   {
     slug: 'firmflow',
@@ -417,7 +413,7 @@ export const PRODUCTS = [
       { label: 'Starter', price: 39 },
       { label: 'Pro', price: 89 },
     ],
-    lifetime: { price: 890, href: 'https://firmflow.c4studios.com.au' },
+    lifetime: { price: 890, href: LIFETIME_LINKS.firmflow },
     pricing: 'Starter $39/mo · Pro $89/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
     ctaHref: 'https://firmflow.c4studios.com.au',

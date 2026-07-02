@@ -5,7 +5,7 @@ import { ArrowRight, ArrowUpRight, Check } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema } from '@/lib/schema';
-import { PRODUCTS, statusColor as productStatusColor, SUITE_APP_URL } from '../components/software/productData';
+import { PRODUCTS, statusColor as productStatusColor } from '../components/software/productData';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -85,13 +85,11 @@ export default function Software() {
                 $149<span className="text-[12px] font-normal" style={{ color: 'var(--c4-text-muted)' }}>/mo · AUD</span>
               </p>
               <a
-                href={SUITE_APP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/Contact"
                 className="flex items-center justify-center gap-2 rounded-[3px] px-5 py-3 text-[10.5px] uppercase tracking-[0.14em] font-semibold transition-opacity duration-200 hover:opacity-75"
                 style={{ backgroundColor: 'var(--c4-accent)', color: 'var(--c4-bg)' }}
               >
-                Start free
+                Talk to us
                 <ArrowUpRight size={12} strokeWidth={2.5} />
               </a>
             </div>

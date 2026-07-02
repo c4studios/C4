@@ -45,6 +45,7 @@ const navLinks = [
   { label: 'Home', page: 'Home' },
   { label: 'About', page: 'About' },
   { label: 'Services', page: 'Services', hasDropdown: true },
+  { label: 'Software', page: 'Software' },
   { label: 'Portfolio', page: 'Portfolio' },
 ];
 
