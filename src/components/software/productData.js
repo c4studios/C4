@@ -110,7 +110,7 @@ export const PRODUCTS = [
     lifetime: { price: 690, href: LIFETIME_LINKS.returndesk },
     pricing: 'Early bird $29/mo — locks in forever. Start free, upgrade in the app.',
     ctaLabel: 'Start free in the app',
-    ctaHref: 'https://returndesk.c4studios.com.au',
+    ctaHref: 'https://app.returndesk.c4studios.com.au/signup',
     ctaExternal: true,
   },
   {
@@ -200,7 +200,7 @@ export const PRODUCTS = [
     lifetime: { price: 690, href: LIFETIME_LINKS.complia },
     pricing: 'Starter $29/mo · Pro $59/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
-    ctaHref: 'https://complia.c4studios.com.au',
+    ctaHref: 'https://app.complia.c4studios.com.au/signup',
     ctaExternal: true,
   },
   {
@@ -417,7 +417,7 @@ export const PRODUCTS = [
     lifetime: { price: 890, href: LIFETIME_LINKS.firmflow },
     pricing: 'Starter $39/mo · Pro $89/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
-    ctaHref: 'https://firmflow.c4studios.com.au',
+    ctaHref: 'https://app.firmflow.c4studios.com.au/signup',
     ctaExternal: true,
   },
   {
