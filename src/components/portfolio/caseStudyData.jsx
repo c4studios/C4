@@ -2082,7 +2082,7 @@ export const CASE_STUDIES = {
     timeline: '',
     budget: '',
     role: 'Solo (concept, design, full-stack development, deployment)',
-    liveUrl: 'https://c4-saas-suite.vercel.app',
+    liveUrl: 'https://returndesk.c4studios.com.au',
     purchaseUrl: '/software',
     year: '2025',
     category: 'saas',

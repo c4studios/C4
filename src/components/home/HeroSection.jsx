@@ -7,7 +7,7 @@ import { createPageUrl } from '@/utils';
 import TypedHeading from '../c4/TypedHeading';
 import CraftHeatmap from './CraftHeatmap';
 import { useTheme } from '../c4/ThemeContext';
-import { buildQuotrSrc, postQuotrTheme } from './quotrTheme';
+import { buildQuotrSrc, postQuotrTheme, preconnectQuotr } from './quotrTheme';
 
 const START_PROJECT_PATH = '/start';
 
@@ -155,6 +155,11 @@ function QuotrPanel() {
   const [launched, setLaunched] = useState(false);
   const iframeRef = useRef(null);
   const { isDark } = useTheme();
+
+  // Warm DNS+TLS to quotr.us before the visitor launches the calculator.
+  useEffect(() => {
+    preconnectQuotr();
+  }, []);
 
   // Bake the theme into the src once so the iframe never reloads mid-form.
   const [src] = useState(() => buildQuotrSrc(QUOTR_SLUG, isDark));
@@ -338,6 +343,11 @@ function MobileQuotrModal({ open, onClose }) {
   const iframeRef = useRef(null);
   const { isDark } = useTheme();
   const [src] = useState(() => buildQuotrSrc(QUOTR_SLUG, isDark));
+
+  // Warm DNS+TLS to quotr.us before the visitor opens the calculator.
+  useEffect(() => {
+    preconnectQuotr();
+  }, []);
 
   // Lock body scroll while the sheet is open.
   useEffect(() => {
