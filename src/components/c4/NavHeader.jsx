@@ -39,6 +39,12 @@ const serviceDropdown = [
     page: 'Foresight',
     brief: 'Workplace AI training & workshops',
   },
+  {
+    label: 'Private AI',
+    code: 'C6',
+    page: 'PrivateAI',
+    brief: 'AI systems installed on hardware inside your practice',
+  },
 ];
 
 const navLinks = [
