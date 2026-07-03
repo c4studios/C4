@@ -116,11 +116,14 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="border-t py-5 flex justify-between items-center" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+        <div className="border-t py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
           <span className="text-[10.5px]" style={{ color: 'var(--c4-footer-text-muted)' }}>© {new Date().getFullYear()} C4 Studios</span>
-          <div className="flex items-center gap-4">
-            <Link to={createPageUrl('Terms')} className="text-[10.5px] transition-colors duration-300 hover:brightness-150" style={{ color: 'var(--c4-footer-text-muted)' }}>
-              Terms & Conditions
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <Link to={createPageUrl('PrivacyPolicy')} className="text-[10.5px] transition-colors duration-300 hover:brightness-150" style={{ color: 'var(--c4-footer-text-muted)' }}>
+              Privacy Policy
+            </Link>
+            <Link to={createPageUrl('TermsOfService')} className="text-[10.5px] transition-colors duration-300 hover:brightness-150" style={{ color: 'var(--c4-footer-text-muted)' }}>
+              Terms of Service
             </Link>
             <span className="text-[10.5px]" style={{ color: 'var(--c4-footer-text-muted)' }}>Available worldwide</span>
           </div>

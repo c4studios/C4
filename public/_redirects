@@ -5,4 +5,7 @@
 
 /StartProject  /start  301
 
+# /Services retired — individual service pages live under the nav dropdown.
+/Services  /  301
+
 /*  /index.html  200
