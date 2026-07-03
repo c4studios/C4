@@ -110,7 +110,7 @@ export const PRODUCTS = [
     lifetime: { price: 690, href: LIFETIME_LINKS.returndesk },
     pricing: 'Early bird $29/mo — locks in forever. Start free, upgrade in the app.',
     ctaLabel: 'Start free in the app',
-    ctaHref: 'https://returndesk.c4studios.com.au',
+    ctaHref: 'https://app.returndesk.c4studios.com.au/signup',
     ctaExternal: true,
   },
   {
@@ -180,7 +180,7 @@ export const PRODUCTS = [
       { stat: 'Checklist', label: 'for every obligation' },
     ],
     problem:
-      'Compliance deadlines are non-negotiable and easy to miss. A late BAS or ASIC review means penalties that dwarf the cost of staying organised.',
+      'Compliance deadlines are easy to lose track of when you are busy running the business. Staying a step ahead of each BAS, super and ASIC date is far simpler — and cheaper — than catching up after one slips.',
     solution:
       'Complia maps your obligations to the Australian calendar, reminds you before each one, and walks you through exactly what to prepare.',
     howItWorks: [
@@ -200,7 +200,7 @@ export const PRODUCTS = [
     lifetime: { price: 690, href: LIFETIME_LINKS.complia },
     pricing: 'Starter $29/mo · Pro $59/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
-    ctaHref: 'https://complia.c4studios.com.au',
+    ctaHref: 'https://app.complia.c4studios.com.au/signup',
     ctaExternal: true,
   },
   {
@@ -267,7 +267,7 @@ export const PRODUCTS = [
       { stat: '1 register', label: 'for the whole crew' },
     ],
     problem:
-      'An expired ticket or lapsed insurance discovered on site is a compliance breach, a liability, and a job delay — and spreadsheets never warn you in time.',
+      'Keeping every ticket and insurance certificate current across a crew is hard to do from a spreadsheet — it only tells you something has lapsed once you go looking. A little early warning keeps everyone site-ready without the last-minute scramble.',
     solution:
       'CrewCheck tracks every credential’s expiry, alerts you at 30, 14 and 3 days out, and nudges the crew member directly so renewals happen before they bite.',
     howItWorks: [
@@ -417,7 +417,7 @@ export const PRODUCTS = [
     lifetime: { price: 890, href: LIFETIME_LINKS.firmflow },
     pricing: 'Starter $39/mo · Pro $89/mo. Start free — paid plans unlock inside the app.',
     ctaLabel: 'Start free in the app',
-    ctaHref: 'https://firmflow.c4studios.com.au',
+    ctaHref: 'https://app.firmflow.c4studios.com.au/signup',
     ctaExternal: true,
   },
   {
@@ -480,7 +480,7 @@ export const PRODUCTS = [
       { stat: 'Every account', label: 'mapped and handed over' },
     ],
     problem:
-      'The handoff is the most-skipped deliverable in agency work. Clients end up owning nothing and understanding nothing, and developers get haunted by every past project as unpaid support forever.',
+      'The handoff is the most-skipped deliverable in agency work — so clients end up unsure what they actually own, and developers keep fielding one-off questions long after a project wraps. A clear handover pack gives the client real independence and gives you a clean finish.',
     solution:
       'Handover scans the project for the hard facts, asks the handful of questions only a human knows, and generates a branded pack that makes the client genuinely independent — domain, hosting, code and accounts all accounted for.',
     howItWorks: [
