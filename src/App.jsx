@@ -18,6 +18,10 @@ const Welcome = lazy(() => import('./pages/Welcome'));
 const HeroLab = lazy(() => import('./pages/HeroLab'));
 const HelixLab = lazy(() => import('./pages/HelixLab'));
 
+// Private AI — offering landing page (flat slug). Lazy so GSAP-heavy page
+// code stays out of the main bundle.
+const PrivateAI = lazy(() => import('./pages/PrivateAI'));
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : () => <></>;
@@ -99,6 +103,14 @@ function App() {
           <Route path="/lead-engine" element={
             <LayoutWrapper currentPageName="LeadEngine">
               <LeadEngine />
+            </LayoutWrapper>
+          } />
+          {/* Private AI — offering landing page (flat slug) */}
+          <Route path="/private-ai" element={
+            <LayoutWrapper currentPageName="PrivateAI">
+              <Suspense fallback={null}>
+                <PrivateAI />
+              </Suspense>
             </LayoutWrapper>
           } />
           <Route path="/StartProject" element={<LegacyStartProjectRedirect />} />
