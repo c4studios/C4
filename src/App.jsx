@@ -114,6 +114,9 @@ function App() {
             </LayoutWrapper>
           } />
           <Route path="/StartProject" element={<LegacyStartProjectRedirect />} />
+          {/* /Services retired: the services live as individual pages reached
+              via the nav dropdown. Old links land on home. */}
+          <Route path="/Services" element={<Navigate to="/" replace />} />
           <Route path="*" element={
             <LayoutWrapper currentPageName="NotFound">
               <PageNotFound />
