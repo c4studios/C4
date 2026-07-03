@@ -5,6 +5,13 @@ import { ArrowRight, Check, Star } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import PageHero from '../components/c4/PageHero';
 import useDocumentHead from '@/hooks/useDocumentHead';
+import { webDesignPackages, subscriptionInfo } from '@/data/pricing';
+
+// Monthly-price lookup, keyed to the single source of truth in pricing.js
+// so the switch never drifts from the canonical numbers.
+const monthlyByKey = Object.fromEntries(
+  webDesignPackages.map((p) => [p.key, p.monthlyLabel]),
+);
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -16,6 +23,7 @@ const ease = [0.22, 1, 0.36, 1];
 
 const packages = [
   {
+    key: 'starter',
     name: 'Landing Page',
     path: '/launch',
     price: '$500',
@@ -33,6 +41,7 @@ const packages = [
     ],
   },
   {
+    key: 'brochure',
     name: 'Brochure Site',
     path: '/about',
     price: '$800',
@@ -51,6 +60,7 @@ const packages = [
     ],
   },
   {
+    key: 'business',
     name: 'Business Website',
     path: '/grow',
     price: '$1,500',
@@ -71,6 +81,7 @@ const packages = [
     ],
   },
   {
+    key: 'custom',
     name: 'Custom Website',
     path: '/bespoke',
     price: '$2,500',
@@ -88,6 +99,7 @@ const packages = [
     ],
   },
   {
+    key: 'commerce-starter',
     name: 'Ecommerce Store',
     path: '/shop',
     price: '$3,500',
@@ -108,6 +120,7 @@ const packages = [
     ],
   },
   {
+    key: 'web-application',
     name: 'Web App Starter',
     path: '/app',
     price: '$4,500',
@@ -213,6 +226,9 @@ function BrowserChrome({ path, popular }) {
 
 export default function ServiceWeb() {
   const [hoverIndex, setHoverIndex] = useState(null);
+  // 'once' = one-off build price, 'monthly' = subscription alternative.
+  const [billing, setBilling] = useState('once');
+  const isMonthly = billing === 'monthly';
 
   useDocumentHead({
     title: 'Web & Applications — C4 Studios Perth',
@@ -282,12 +298,68 @@ export default function ServiceWeb() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease }}
-            className="mb-10 md:mb-14"
+            className="mb-10 md:mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
           >
-            <p className="text-[10px] uppercase tracking-[0.22em] font-medium mb-1" style={{ color: 'var(--c4-text-subtle)' }}>Packages & Pricing</p>
-            <h2 className="text-[clamp(1.4rem,3vw,2rem)] font-semibold tracking-[-0.025em]">Pick a starting point.</h2>
-            <p className="mt-2 text-[13px]" style={{ color: 'var(--c4-text-muted)' }}>
-              Each tier sketched to scale — what you see is the shape of what we build.
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.22em] font-medium mb-1" style={{ color: 'var(--c4-text-subtle)' }}>Packages & Pricing</p>
+              <h2 className="text-[clamp(1.4rem,3vw,2rem)] font-semibold tracking-[-0.025em]">Pick a starting point.</h2>
+              <p className="mt-2 text-[13px]" style={{ color: 'var(--c4-text-muted)' }}>
+                Each tier sketched to scale — what you see is the shape of what we build.
+              </p>
+            </div>
+
+            {/* Billing switch: pay once, or spread it monthly */}
+            <div className="flex-shrink-0">
+              <div
+                role="radiogroup"
+                aria-label="Billing option"
+                className="relative inline-flex p-1 rounded-full"
+                style={{ backgroundColor: 'var(--c4-bg-alt)', border: '1px solid var(--c4-border)' }}
+              >
+                {[
+                  { id: 'once', label: 'Pay once' },
+                  { id: 'monthly', label: 'Monthly' },
+                ].map((opt) => {
+                  const active = billing === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={active}
+                      onClick={() => setBilling(opt.id)}
+                      className="relative px-4 md:px-5 py-2 text-[11px] uppercase tracking-[0.13em] font-medium rounded-full transition-colors duration-200"
+                      style={{ color: active ? 'var(--c4-bg)' : 'var(--c4-text-subtle)', cursor: 'pointer' }}
+                    >
+                      {active && (
+                        <motion.span
+                          layoutId="web-billing-pill"
+                          className="absolute inset-0 rounded-full"
+                          style={{ backgroundColor: 'var(--c4-text)' }}
+                          transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                        />
+                      )}
+                      <span className="relative z-10">{opt.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* What monthly means — only when the switch is on monthly */}
+          <motion.div
+            initial={false}
+            animate={{ height: isMonthly ? 'auto' : 0, opacity: isMonthly ? 1 : 0 }}
+            transition={{ duration: 0.35, ease }}
+            className="overflow-hidden"
+            aria-hidden={!isMonthly}
+          >
+            <p
+              className="mb-8 text-[13px] leading-[1.7] max-w-[680px]"
+              style={{ color: 'var(--c4-text-muted)' }}
+            >
+              {subscriptionInfo.howItWorks} {subscriptionInfo.ownership} {subscriptionInfo.cancellation}
             </p>
           </motion.div>
 
@@ -315,15 +387,22 @@ export default function ServiceWeb() {
                   <WireframePreview blocks={pkg.wire} active={isHovered} />
 
                   <div className="flex flex-col flex-1 p-7 md:p-8" style={{ borderTop: '1px solid var(--c4-border)' }}>
-                    {/* Price — visual hero */}
-                    <div className="mb-5 flex items-baseline justify-between">
-                      <p
-                        className="text-[1.8rem] md:text-[2.1rem] font-semibold tracking-[-0.04em] tabular-nums leading-[1]"
-                        style={{ color: 'var(--c4-text)' }}
-                      >
-                        {pkg.price}
-                      </p>
-                      <p className="text-[11px] uppercase tracking-[0.15em]" style={{ color: 'var(--c4-text-faint)' }}>{pkg.timeline}</p>
+                    {/* Price — visual hero, swaps with the billing switch */}
+                    <div className="mb-5">
+                      <div className="flex items-baseline justify-between">
+                        <p
+                          className="text-[1.8rem] md:text-[2.1rem] font-semibold tracking-[-0.04em] tabular-nums leading-[1]"
+                          style={{ color: 'var(--c4-text)' }}
+                        >
+                          {isMonthly && monthlyByKey[pkg.key] ? monthlyByKey[pkg.key] : pkg.price}
+                        </p>
+                        <p className="text-[11px] uppercase tracking-[0.15em]" style={{ color: 'var(--c4-text-faint)' }}>{pkg.timeline}</p>
+                      </div>
+                      {monthlyByKey[pkg.key] && (
+                        <p className="mt-1.5 text-[11px]" style={{ color: 'var(--c4-text-faint)' }}>
+                          {isMonthly ? `or ${pkg.price} once-off` : `or ${monthlyByKey[pkg.key]}`}
+                        </p>
+                      )}
                     </div>
 
                     <h3 className="text-[0.95rem] font-semibold tracking-[-0.01em] mb-2">{pkg.name}</h3>
@@ -339,7 +418,7 @@ export default function ServiceWeb() {
                     </ul>
 
                     <Link
-                      to={`/start?service=${pkg.param}`}
+                      to={`/start?service=${pkg.param}${isMonthly ? '&billing=monthly' : ''}`}
                       className="group inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.13em] font-medium transition-colors duration-200"
                       style={{ color: isHovered ? 'var(--c4-text)' : 'var(--c4-text-subtle)' }}
                     >
