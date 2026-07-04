@@ -1,16 +1,16 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Globe, Palette, Sparkles, Camera } from 'lucide-react';
+import { ArrowRight, Globe, GraduationCap, Sparkles, Camera } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 
 const ease = [0.22, 1, 0.36, 1];
 
 const choices = [
   { key: 'web', label: 'Build a website', to: '/start?service=web_design', icon: Globe },
-  { key: 'brand', label: 'Build your brand', to: '/start?service=brand_platform', icon: Palette },
-  { key: 'ai', label: 'Request AI automations', to: '/start?service=automation', icon: Sparkles },
-  { key: 'lens', label: 'Book photography', to: '/start?service=lens', icon: Camera },
+  { key: 'c4i', label: 'Put AI to work', to: '/c4i', icon: Sparkles },
+  { key: 'lens', label: 'Brand & visual', to: '/Lens', icon: Camera },
+  { key: 'sight', label: 'Train your team', to: '/ai-training-enquiry', icon: GraduationCap },
 ];
 
 export default function FinalCTA() {
@@ -34,7 +34,7 @@ export default function FinalCTA() {
               Tell us what you’re building. We’ll come back with a clear next step.
             </h2>
             <p className="mt-4 text-[14px] leading-[1.7]" style={{ color: 'var(--c4-text-muted)' }}>
-              Each link below opens a short brief with the right service preselected. Founder-led reply, usually within a business day.
+              Each link takes you to the right starting point. Founder-led reply, usually within a business day.
             </p>
             <Link
               to={createPageUrl('StartProject')}
@@ -46,7 +46,7 @@ export default function FinalCTA() {
             </Link>
           </div>
 
-          {/* Right — the three direct paths, stacked */}
+          {/* Right — the four pillars, stacked */}
           <ul role="list" className="flex flex-col" style={{ borderTop: '1px solid var(--c4-border)' }}>
             {choices.map((c, i) => {
               const Icon = c.icon;
