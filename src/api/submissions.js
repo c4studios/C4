@@ -117,6 +117,30 @@ export async function recordScan(data) {
 }
 
 /**
+ * Record a /private-ai page analytics event (the /welcome scan pattern).
+ *
+ * Fire-and-forget: tracking must never block or break the page, so this
+ * swallows every error. Events: pa_view (with ref attribution),
+ * pa_tier_select ({ tier }), pa_cta_click ({ location }), pa_scroll_pricing.
+ *
+ * @param {string} event
+ * @param {Object} [data] - { ref?, tier?, location? }
+ * @returns {Promise<void>}
+ */
+export async function recordPrivateAiEvent(event, data = {}) {
+  try {
+    await fetch(`${API_BASE}/api/pa-event`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event, ...data, user_agent: navigator.userAgent }),
+      keepalive: true,
+    });
+  } catch {
+    /* tracking is best-effort — never surface to the user */
+  }
+}
+
+/**
  * Upload a file attachment to Cloudflare R2.
  * @param {File} file
  * @returns {Promise<{ file_url: string }>}

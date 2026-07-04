@@ -39,6 +39,12 @@ const serviceDropdown = [
     page: 'Foresight',
     brief: 'Workplace AI training & workshops',
   },
+  {
+    label: 'Private AI',
+    code: 'C6',
+    page: 'PrivateAI',
+    brief: 'AI systems installed on hardware inside your practice',
+  },
 ];
 
 const navLinks = [
@@ -121,9 +127,15 @@ export default function NavHeader() {
                     onMouseLeave={handleDropdownLeave}
                     ref={triggerRef}
                   >
-                    <Link
-                      to={createPageUrl(link.page)}
-                      className="flex items-center gap-1 text-[11px] uppercase tracking-[0.13em] transition-colors duration-300 font-medium"
+                    {/* Services is a menu, not a page: clicking opens the
+                        dropdown rather than routing to a standalone overview.
+                        The only reachable pages are the dropdown items. */}
+                    <button
+                      type="button"
+                      onClick={() => setServicesOpen(o => !o)}
+                      aria-haspopup="true"
+                      aria-expanded={servicesOpen}
+                      className="flex items-center gap-1 text-[11px] uppercase tracking-[0.13em] transition-colors duration-300 font-medium bg-transparent border-0 p-0"
                       style={{ color: servicesOpen ? 'var(--c4-link-hover)' : 'var(--c4-text-muted)', cursor: 'pointer' }}
                     >
                       {link.label}
@@ -134,7 +146,7 @@ export default function NavHeader() {
                       >
                         <ChevronDown size={11} strokeWidth={2} />
                       </motion.span>
-                    </Link>
+                    </button>
 
                     <AnimatePresence>
                       {servicesOpen && (
