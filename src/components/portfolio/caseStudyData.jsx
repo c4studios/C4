@@ -133,7 +133,7 @@ export const CASE_STUDIES = {
     year: '2026',
     category: 'web_design',
     tags: ['Website', 'Community', 'Non-Profit'],
-    featured: true,
+    featured: false,
     budgetOrder: 2,
 
     cover: '/covers/transform-fremantle.png',
@@ -374,7 +374,7 @@ export const CASE_STUDIES = {
     year: '2026',
     category: 'web_design',
     tags: ['Website', 'Fitness', 'Local Business'],
-    featured: true,
+    featured: false,
     budgetOrder: 3,
 
     cover: '/covers/jurassic-pt.png',
@@ -491,7 +491,7 @@ export const CASE_STUDIES = {
     year: '2026',
     category: 'web_app',
     tags: ['Web App', 'Social Platform', 'C4 Original'],
-    featured: true,
+    featured: false,
     budgetOrder: 5,
 
     cover: '/covers/people-power.png',
@@ -629,7 +629,7 @@ export const CASE_STUDIES = {
     year: '2026',
     category: 'brand_platform',
     tags: ['Consultancy', 'Optimisation', 'SEO'],
-    featured: true,
+    featured: false,
     budgetOrder: 2,
 
     cover: null,

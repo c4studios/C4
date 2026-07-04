@@ -117,6 +117,13 @@ function App() {
           {/* /Services retired: the services live as individual pages reached
               via the nav dropdown. Old links land on home. */}
           <Route path="/Services" element={<Navigate to="/" replace />} />
+          {/* Brand & Growth folded into C4 Lens (the brand & visual pillar). */}
+          <Route path="/ServiceBrand" element={<Navigate to={createPageUrl('Lens')} replace />} />
+          {/* Initiatives retired: Ventures and Rebuild are no longer offered. */}
+          <Route path="/Ventures" element={<Navigate to="/" replace />} />
+          <Route path="/Rebuild" element={<Navigate to="/" replace />} />
+          {/* The Ventures-specific Terms are gone; point old links at the ToS. */}
+          <Route path="/Terms" element={<Navigate to="/terms-of-service" replace />} />
           <Route path="*" element={
             <LayoutWrapper currentPageName="NotFound">
               <PageNotFound />

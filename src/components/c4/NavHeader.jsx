@@ -16,34 +16,22 @@ const serviceDropdown = [
     brief: 'Custom websites, web apps & SaaS platforms',
   },
   {
-    label: 'Brand & Growth',
+    label: 'C4i',
     code: 'C2',
-    page: 'ServiceBrand',
-    brief: 'Branding, identity, SEO & growth strategy',
-  },
-  {
-    label: 'AI & Software',
-    code: 'C3',
-    page: 'ServiceAI',
-    brief: 'Workflow automation, AI agents & custom software',
+    page: 'C4i',
+    brief: 'AI, local or cloud — private systems & automations',
   },
   {
     label: 'C4 Lens',
-    code: 'C4',
+    code: 'C3',
     page: 'Lens',
-    brief: 'Professional photography & videography',
+    brief: 'Photography, video & brand identity',
   },
   {
     label: 'C4Sight',
-    code: 'C5',
+    code: 'C4',
     page: 'Foresight',
     brief: 'Workplace AI training & workshops',
-  },
-  {
-    label: 'Private AI',
-    code: 'C6',
-    page: 'PrivateAI',
-    brief: 'AI systems installed on hardware inside your practice',
   },
 ];
 
