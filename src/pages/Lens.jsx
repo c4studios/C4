@@ -1595,7 +1595,7 @@ export default function Lens() {
       {/* â•â•â•â•â•â•â•â• SERVICES â•â•â•â•â•â•â•â• */}
       <section className="slab dark" id="services">
         <div className="sec-num lr"><span className="bar"></span>§ 02 — HOW WE WORK</div>
-        <h2 className="lr" style={{ '--lr-delay': '80ms' }}>FOUR WAYS<br />TO BE <em>unforgettable.</em></h2>
+        <h2 className="lr" style={{ '--lr-delay': '80ms' }}>FIVE WAYS<br />TO BE <em>unforgettable.</em></h2>
         <div className="svc-grid">
           <div className="svc-card lr lr-fade">
             <div className="svc-tag">Photography</div>
@@ -1624,6 +1624,13 @@ export default function Lens() {
             <div className="svc-tagline">&ldquo;Footage is a rough draft.&rdquo;</div>
             <div className="desc">Short-form reels. Brand cutdowns. Event highlights. Colour grading, sound design, motion graphics. Bring your raw footage — we&rsquo;ll bring it to life.</div>
             <div className="svc-foot">EDIT · GRADE · DELIVER</div>
+          </div>
+          <div className="svc-card lr lr-fade" style={{ '--lr-delay': '360ms' }}>
+            <div className="svc-tag">Branding</div>
+            <h3>A LOOK THAT<br />HOLDS TOGETHER.</h3>
+            <div className="svc-tagline">&ldquo;Consistency is the brand.&rdquo;</div>
+            <div className="desc">Logo and identity systems, colour and type, and the visual language that ties your photography, website and socials into one coherent brand.</div>
+            <div className="svc-foot">IDENTITY · SYSTEM · GUIDELINES</div>
           </div>
         </div>
       </section>

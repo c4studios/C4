@@ -119,23 +119,6 @@ const FAQ_ITEMS = [
       },
     ],
   },
-  {
-    category: 'Ventures & Partnerships',
-    items: [
-      {
-        q: 'What is C4 Ventures?',
-        a: 'C4 Ventures is our initiative to co-build and invest in promising ideas. If you have a concept but need a technical partner, we may contribute development resources in exchange for equity or revenue share.',
-      },
-      {
-        q: 'How do I submit a venture idea?',
-        a: 'Head to the Ventures page and fill out the submission form. Include your concept, target market, and what makes it compelling. We review every submission.',
-      },
-      {
-        q: 'Do you sign NDAs before I share my idea?',
-        a: 'Yes. You can request an NDA directly through the Ventures form. We take intellectual property seriously and are happy to sign before any detailed discussion.',
-      },
-    ],
-  },
 ];
 
 const labelClass = 'block text-[11px] uppercase tracking-[0.15em] font-medium mb-2';

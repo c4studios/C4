@@ -63,13 +63,10 @@ import ForesightSchools from './pages/ForesightSchools';
 import ForesightLaw from './pages/ForesightLaw';
 import TrainingEnquiry from './pages/TrainingEnquiry';
 import Portfolio from './pages/Portfolio';
-import Rebuild from './pages/Rebuild';
 import ServiceWeb from './pages/ServiceWeb';
-import ServiceBrand from './pages/ServiceBrand';
 import ServiceAI from './pages/ServiceAI';
+import C4i from './pages/C4i';
 import StartProject from './pages/StartProject';
-import Terms from './pages/Terms';
-import Ventures from './pages/Ventures';
 import __Layout from './Layout.jsx';
 
 
@@ -86,15 +83,12 @@ export const PAGES = {
     "ForesightLaw": ForesightLaw,
     "TrainingEnquiry": TrainingEnquiry,
     "Portfolio": Portfolio,
-    "Rebuild": Rebuild,
     "ServiceWeb": ServiceWeb,
-    "ServiceBrand": ServiceBrand,
     "ServiceAI": ServiceAI,
+    "C4i": C4i,
     "StartProject": StartProject,
-    "Terms": Terms,
     "PrivacyPolicy": PrivacyPolicy,
     "TermsOfService": TermsOfService,
-    "Ventures": Ventures,
     "Software": Software,
     "SoftwareProduct": SoftwareProduct,
 }

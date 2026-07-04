@@ -10,7 +10,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, Globe, Sparkles, Camera, Palette, Users, Eye, Clock, MapPin } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Globe, Sparkles, Camera, GraduationCap, Users, Eye, Clock, MapPin } from 'lucide-react';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -29,43 +29,43 @@ const products = [
     secondary: { label: 'See web packages', to: '/ServiceWeb' },
   },
   {
-    key: 'brand',
+    key: 'c4i',
     code: 'C2',
-    eyebrow: 'Brand & growth',
-    headline: 'Build your brand',
+    eyebrow: 'C4i · AI',
+    headline: 'Put AI to work',
     outcome:
-      'Logo, identity systems, SEO and content strategy — everything your brand needs to look right, rank well, and stay visible.',
-    fromPrice: 'From $800',
-    timeframe: '2–4 weeks',
-    icon: Palette,
-    primaryCta: { label: 'Start a brand brief', to: '/start?service=brand_platform' },
-    secondary: { label: 'See brand packages', to: '/ServiceBrand' },
-  },
-  {
-    key: 'ai',
-    code: 'C3',
-    eyebrow: 'AI & automation',
-    headline: 'Automate your work',
-    outcome:
-      'Workflow automations, AI agents and custom internal tools that replace manual work and compound over time.',
-    fromPrice: 'From $750',
-    timeframe: '1–4 weeks',
+      'A private AI system on your own hardware, or cloud-based automations, agents and custom tools. Choose the setup that fits.',
+    fromPrice: 'Local or cloud',
+    timeframe: 'Scoped to you',
     icon: Sparkles,
-    primaryCta: { label: 'Brief an automation', to: '/start?service=automation' },
-    secondary: { label: 'See AI packages', to: '/ServiceAI' },
+    primaryCta: { label: 'Explore C4i', to: '/c4i' },
+    secondary: { label: 'Local or cloud', to: '/c4i' },
   },
   {
     key: 'lens',
-    code: 'C4',
+    code: 'C3',
     eyebrow: 'C4 Lens',
-    headline: 'Professional photography',
+    headline: 'Brand & visual',
     outcome:
-      'Brand photography, headshots, product imagery and short-form video for Perth businesses ready to retire stock.',
+      'Photography, short-form video and brand identity — a coherent visual system for Perth businesses ready to retire stock.',
     fromPrice: 'From $200',
     timeframe: 'Half / full-day shoots',
     icon: Camera,
     primaryCta: { label: 'Book a shoot', to: '/start?service=lens' },
     secondary: { label: 'Visit C4 Lens', to: '/Lens' },
+  },
+  {
+    key: 'sight',
+    code: 'C4',
+    eyebrow: 'C4Sight',
+    headline: 'Train your team',
+    outcome:
+      'Practical, hands-on AI workshops that leave your team genuinely capable, using their own tools on their own work.',
+    fromPrice: 'From $800',
+    timeframe: 'Half / full-day',
+    icon: GraduationCap,
+    primaryCta: { label: 'Enquire about training', to: '/ai-training-enquiry' },
+    secondary: { label: 'Visit C4Sight', to: '/Foresight' },
   },
 ];
 
