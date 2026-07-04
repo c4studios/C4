@@ -1168,7 +1168,7 @@ export default function Lens() {
           <div className="site-nav-drop">
             <Link to={createPageUrl('Home')} onClick={() => setSiteMenuOpen(false)}>Home</Link>
             <Link to={createPageUrl('Portfolio')} onClick={() => setSiteMenuOpen(false)}>Portfolio</Link>
-            <Link to={createPageUrl('Services')} onClick={() => setSiteMenuOpen(false)}>Services</Link>
+            <Link to={createPageUrl('ServiceWeb')} onClick={() => setSiteMenuOpen(false)}>Services</Link>
             <Link to={createPageUrl('About')} onClick={() => setSiteMenuOpen(false)}>About</Link>
             <Link to={createPageUrl('StartProject')} className="site-nav-cta" onClick={() => setSiteMenuOpen(false)}>Start a Project →</Link>
           </div>

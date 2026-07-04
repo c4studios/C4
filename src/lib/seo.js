@@ -31,7 +31,10 @@ export function absoluteUrl(path = '/') {
   return `${SITE_URL}${path.startsWith('/') ? path : `/${path}`}`;
 }
 
-export function clampDescription(text, max = 160) {
+// 180 keeps this a safety net against runaway strings while allowing
+// deliberately written descriptions a little past Google's ~160 display
+// cutoff (search engines index the full tag either way).
+export function clampDescription(text, max = 180) {
   if (!text) return '';
   const single = String(text).replace(/\s+/g, ' ').trim();
   if (single.length <= max) return single;
