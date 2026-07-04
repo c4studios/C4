@@ -66,20 +66,6 @@ export async function submitTrainingEnquiry(data) {
 }
 
 /**
- * Submit a venture idea (Ventures page).
- * @param {Object} data - { name, email, idea_title, idea_type, idea_description, target_audience, existing_solution, nda, attachments, _gotcha, _loaded }
- * @returns {Promise<{ success: boolean, errors?: string[] }>}
- */
-export async function submitVentureIdea(data) {
-  const res = await fetch(`${API_BASE}/api/ventures`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  return handleResponse(res);
-}
-
-/**
  * Submit a support request (Support page).
  * @param {Object} data - { name, email, category, priority, order_number, subject, message, _gotcha, _loaded }
  * @returns {Promise<{ success: boolean, errors?: string[] }>}

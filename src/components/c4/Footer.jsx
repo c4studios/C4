@@ -19,18 +19,10 @@ const groups = [
     title: 'Services',
     links: [
       { label: 'Web & Applications', page: 'ServiceWeb' },
-      { label: 'Brand & Growth', page: 'ServiceBrand' },
-      { label: 'AI & Software', page: 'ServiceAI' },
+      { label: 'C4i', page: 'C4i' },
       { label: 'C4 Lens', page: 'Lens' },
       { label: 'C4Sight', page: 'Foresight' },
       { label: 'Lead Engine', to: '/lead-engine' },
-    ]
-  },
-  {
-    title: 'Initiatives',
-    links: [
-      { label: 'Ventures', page: 'Ventures' },
-      { label: 'Rebuild', page: 'Rebuild' },
     ]
   },
   {
