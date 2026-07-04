@@ -2,6 +2,7 @@ const PAGE_URLS = {
     StartProject: '/start',
     Software: '/software',
     PrivateAI: '/private-ai',
+    C4i: '/c4i',
     PrivacyPolicy: '/privacy-policy',
     TermsOfService: '/terms-of-service',
     ForesightBusiness: '/ai-training-for-business',

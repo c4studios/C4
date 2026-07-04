@@ -53,9 +53,9 @@ export function localBusinessSchema() {
     ],
     makesOffer: [
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Web design and development' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'AI automations and custom software' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Brand identity, SEO and growth' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Photography and videography (C4 Lens)' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'C4i: private and cloud AI systems, automations and agents' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'C4 Lens: photography, videography and brand identity' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'C4Sight: workplace AI training and workshops' } },
     ],
   };
 }
