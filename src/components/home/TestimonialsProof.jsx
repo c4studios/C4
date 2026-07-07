@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { createPageUrl } from '@/utils';
-import TestimonialSlider from '../testimonials/TestimonialSlider';
+import TestimonialReel from './TestimonialReel';
 import { getFeaturedTestimonials } from '../testimonials/testimonialData';
 
 const ease = [0.22, 1, 0.36, 1];
@@ -50,12 +50,7 @@ export default function TestimonialsProof() {
         </motion.div>
       </div>
 
-      <TestimonialSlider
-        testimonials={featured}
-        label="Client feedback"
-        variant="proof"
-        sectionClassName="pt-8 pb-8 md:pt-10 md:pb-10"
-      />
+      <TestimonialReel testimonials={featured} />
 
       <div className="relative pb-16 md:pb-24" style={{ backgroundColor: 'var(--c4-proof-bg)' }}>
         <div className="mx-auto max-w-[1400px] px-6 md:px-12">

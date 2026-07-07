@@ -31,6 +31,14 @@ export const TESTIMONIALS = [
     caseStudySlug: 'jurassic-pt',
     featured: true,
   },
+  {
+    id: 5,
+    quote: "Caleb was amazing from start to finish. Very helpful and patient with our lack of technology understanding! Built our website from the ground up, made any changes we requested and was very thorough! Highly recommend!",
+    name: 'Kristy & Bryan',
+    role: 'HVN CrossFit',
+    caseStudySlug: 'hvn-gym',
+    featured: true,
+  },
 ];
 
 export function getFeaturedTestimonials() {
@@ -39,4 +47,13 @@ export function getFeaturedTestimonials() {
 
 export function getAllTestimonials() {
   return TESTIMONIALS;
+}
+
+/**
+ * Returns the testimonial that belongs to a given case study slug, if any.
+ * Used to render a client note inside the matching portfolio page.
+ */
+export function getTestimonialForCaseStudy(slug) {
+  if (!slug) return null;
+  return TESTIMONIALS.find((testimonial) => testimonial.caseStudySlug === slug) || null;
 }

@@ -3,10 +3,14 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ExternalLink, ArrowRight, ArrowLeft } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import { getTestimonialForCaseStudy } from '../testimonials/testimonialData';
+import CaseStudyTestimonial from './CaseStudyTestimonial';
 
 const ease = [0.22, 1, 0.36, 1];
 
 export default function CaseStudyHero({ study }) {
+  const testimonial = getTestimonialForCaseStudy(study.slug);
+
   return (
     <section className="pt-24 md:pt-32 pb-0" style={{ backgroundColor: 'var(--c4-bg)' }}>
       <div className="max-w-[1100px] mx-auto px-6 md:px-12">
@@ -26,6 +30,15 @@ export default function CaseStudyHero({ study }) {
           </Link>
         </motion.div>
 
+        {/* Intro + pinned client note */}
+        <div
+          className={
+            testimonial
+              ? 'lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(280px,336px)] lg:gap-12 lg:items-start'
+              : ''
+          }
+        >
+          <div className="min-w-0">
         {/* Tags row */}
         <motion.div
           initial={{ opacity: 0, y: 6 }}
@@ -101,6 +114,14 @@ export default function CaseStudyHero({ study }) {
             <ArrowRight size={12} strokeWidth={2} />
           </Link>
         </motion.div>
+          </div>
+
+          {testimonial && (
+            <div className="mt-9 lg:mt-1">
+              <CaseStudyTestimonial testimonial={testimonial} />
+            </div>
+          )}
+        </div>
 
         {/* Cover banner */}
         {study.cover && (
