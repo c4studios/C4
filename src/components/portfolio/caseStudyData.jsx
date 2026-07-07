@@ -34,25 +34,32 @@ export const CASE_STUDIES = {
     overview: 'Evidence Advisory are court-trusted digital forensic investigators — they deal in admissible evidence, not assumptions. C4 Studios designed and built their new website around a single, unforgettable idea: a shattered smartphone, suspended like crime-scene evidence and tagged with yellow forensic markers, that the visitor reassembles as they scroll. As you move down the page the glass shards fly back into place, the cracks knit shut, and the screen powers on — a literal reconstruction of evidence that mirrors exactly what the firm does. It is built in WebGL with a hand-tuned, scroll-scrubbed animation, real-time lighting and a bespoke studio environment, and it is fully grabbable in 3D. Around that hero sits a complete, conversion-focused platform: founder profiles, four service lines with dedicated landing pages, an anonymised casework portfolio, an insights/articles engine and an animated FAQ — every page a statically-rendered, individually-indexable URL with structured data, per-page metadata, a sitemap and a working contact form. It is engineered on Next.js (App Router) and shipped as a static export for fast, resilient hosting; the 3D scene is performance-budgeted — a single instanced mesh for the shards, no transmissive materials and a capped device-pixel-ratio — and it degrades gracefully, so a device that cannot run WebGL gets a clean fallback hero with zero impact on the rest of the page. The result is a site that makes a forensics firm feel as precise and modern as the work it does: distinctive enough to be remembered, disciplined enough to be trusted.',
 
     screenshots: [
-      { url: '', caption: 'Hero — the shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers' },
-      { url: '', caption: 'Mid-reconstruction — the phone partly reassembled as the shards fly back into place on scroll' },
-      { url: '', caption: 'Experts — founder profiles for the firm\'s two principals' },
-      { url: '', caption: 'Service detail — a dedicated, individually-indexable service landing page (e.g. Digital Forensics)' },
-      { url: '', caption: 'Insights — the articles index, showing the content and SEO depth' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/01-hero.png', caption: 'Hero — the shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/02-hero-reconstruct.png', caption: 'Reconstructed — scrolling reassembles the phone and powers it on: "Every contact leaves a trace" (evidence integrity 100%, verified)' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/03-digital-forensics.png', caption: 'Digital Forensics — one of four individually-indexable service landing pages' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/04-ediscovery.png', caption: 'eDiscovery — dedicated service landing page' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/05-expert-witness.png', caption: 'Expert Witness — dedicated service landing page' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/06-mobile-cloud.png', caption: 'Mobile & Cloud Forensics — dedicated service landing page' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/07-insights.png', caption: 'Insights — the articles index, "Commentary from the evidence coalface"' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/08-insight-article.png', caption: 'Insight — a full long-form article page' },
     ],
 
     desktopScreenshots: [
-      { url: '', caption: 'Hero — the shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers' },
-      { url: '', caption: 'Mid-reconstruction — the phone partly reassembled as the shards fly back into place on scroll' },
-      { url: '', caption: 'Experts — founder profiles for the firm\'s two principals' },
-      { url: '', caption: 'Service detail — a dedicated, individually-indexable service landing page (e.g. Digital Forensics)' },
-      { url: '', caption: 'Insights — the articles index, showing the content and SEO depth' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/01-hero.png', caption: 'Hero — the shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/02-hero-reconstruct.png', caption: 'Reconstructed — scrolling reassembles the phone and powers it on: "Every contact leaves a trace" (evidence integrity 100%, verified)' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/03-digital-forensics.png', caption: 'Digital Forensics — one of four individually-indexable service landing pages' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/04-ediscovery.png', caption: 'eDiscovery — dedicated service landing page' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/05-expert-witness.png', caption: 'Expert Witness — dedicated service landing page' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/06-mobile-cloud.png', caption: 'Mobile & Cloud Forensics — dedicated service landing page' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/07-insights.png', caption: 'Insights — the articles index, "Commentary from the evidence coalface"' },
+      { url: '/captures/evidenceadvisory-com-au/desktop/08-insight-article.png', caption: 'Insight — a full long-form article page' },
     ],
 
     mobileScreenshots: [
-      { url: '', caption: 'Mobile — hero with the evidence-reconstruction scene' },
-      { url: '', caption: 'Mobile — a service landing page' },
-      { url: '', caption: 'Mobile — insights / contact' },
+      { url: '/captures/evidenceadvisory-com-au/mobile/01-hero.png', caption: 'Mobile — hero with the evidence-reconstruction scene' },
+      { url: '/captures/evidenceadvisory-com-au/mobile/02-digital-forensics.png', caption: 'Mobile — a service landing page (Digital Forensics)' },
+      { url: '/captures/evidenceadvisory-com-au/mobile/03-insights.png', caption: 'Mobile — the insights index' },
+      { url: '/captures/evidenceadvisory-com-au/mobile/04-insight-article.png', caption: 'Mobile — a long-form article' },
     ],
 
     delivered: [
