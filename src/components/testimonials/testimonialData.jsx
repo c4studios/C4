@@ -39,6 +39,14 @@ export const TESTIMONIALS = [
     caseStudySlug: 'hvn-gym',
     featured: true,
   },
+  {
+    id: 6,
+    quote: "Caleb did my website for Tidy Gardens. Absolute pleasure to deal with. Very helpful and efficient. I have already recommended him to friends and family.",
+    name: 'Mark',
+    role: 'Tidy Gardens Australia',
+    caseStudySlug: 'tidy-gardens-australia',
+    featured: true,
+  },
 ];
 
 export function getFeaturedTestimonials() {
