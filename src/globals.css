@@ -168,6 +168,30 @@ html { scroll-behavior: smooth; }
   }
 }
 
+/* ── Testimonial reel: continuous orbit (GPU-composited) ── */
+@keyframes c4-reel-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes c4-reel-spin-rev {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+.c4-reel-ring {
+  animation: c4-reel-spin 58s linear infinite;
+  will-change: transform;
+}
+.c4-reel-counter {
+  animation: c4-reel-spin-rev 58s linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .c4-reel-ring,
+  .c4-reel-counter {
+    animation: none !important;
+  }
+}
+
 /* =================================================================
    Portfolio cover backdrops — animated card / hero thumbnails.
    Applied via `backdropClassName` on a case study.
