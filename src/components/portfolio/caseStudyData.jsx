@@ -2151,6 +2151,103 @@ export const CASE_STUDIES = {
     challenges: [],
     improvements: [],
   },
+
+  'rocksstream': {
+    slug: 'rocksstream',
+    name: 'RocksStream',
+    oneLiner: "A pixel-accurate, streaming-style pre-service experience for The Rocks Church — the weekly announcement reel reimagined as a self-running show the volunteer team updates in minutes, with zero code.",
+    client: 'The Rocks Church',
+    location: 'Perth, WA',
+    timeline: '',
+    budget: '',
+    role: 'Solo (concept, UX/UI, interactive front-end, motion, media system)',
+    liveUrl: '',
+    year: '2026',
+    category: 'web_app',
+    tags: ['Interactive Experience', 'Custom Build', 'Church / Non-Profit', 'Motion', 'Streaming-Style UI'],
+    featured: true,
+    budgetOrder: 4,
+
+    cover: null,
+    brandColor: '#0E0E11',
+    thumbnail: '/captures/rocksstream/desktop/03-browse-cannington.png',
+
+    overview: "The Rocks Church runs pre-service loops across its Cannington and Baldivis campuses — announcements, ministry highlights and welcomes that play on the big screen before each service. The usual approach, videos back-to-back on the projector, did the job but lacked personality. C4 Studios reimagined it as a streaming-style experience: a pixel-accurate interface — animated sign-in, a custom-branded intro, a campus profile picker, and a full browse screen with a hero billboard, categorised rows, hover-to-expand tiles, detail modals and inline playback — that wraps the church's own content in something genuinely fun to watch. It is campus-aware, tailoring the line-up to whichever campus is selected from a single build, and it is powered by a resilient, self-updating media system: videos live in a simple folder, and tile artwork resolves intelligently from a custom image, to an auto-generated video frame, to an embedded fallback. The whole thing is a single, self-contained package engineered around proportional units so it holds its shape on any display — landscape projector, ultra-wide or portrait — and it runs completely offline. The volunteer tech team refreshes it each week by dropping in new files: no developer, no hosting, no downtime.",
+
+    screenshots: [
+      { url: '/captures/rocksstream/desktop/03-browse-cannington.png', caption: 'Browse — the streaming-style home screen: a hero billboard over categorised content rows' },
+      { url: '/captures/rocksstream/desktop/01-login.png', caption: 'Sign-in — a self-playing, streaming-style sign-in sequence' },
+      { url: '/captures/rocksstream/desktop/02-profiles.png', caption: '"Who\'s watching?" — a campus profile picker for Cannington or Baldivis' },
+      { url: '/captures/rocksstream/desktop/05-browse-rows.png', caption: 'Browse — the billboard rotates through featured content above the rows' },
+      { url: '/captures/rocksstream/desktop/04-detail-modal.png', caption: "Detail — a title's info panel with description, metadata and play" },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/rocksstream/desktop/03-browse-cannington.png', caption: 'Browse — the streaming-style home screen: a hero billboard over categorised content rows' },
+      { url: '/captures/rocksstream/desktop/01-login.png', caption: 'Sign-in — a self-playing, streaming-style sign-in sequence' },
+      { url: '/captures/rocksstream/desktop/02-profiles.png', caption: '"Who\'s watching?" — a campus profile picker for Cannington or Baldivis' },
+      { url: '/captures/rocksstream/desktop/05-browse-rows.png', caption: 'Browse — the billboard rotates through featured content above the rows' },
+      { url: '/captures/rocksstream/desktop/04-detail-modal.png', caption: "Detail — a title's info panel with description, metadata and play" },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/rocksstream/mobile/03-browse.png', caption: 'Mobile / portrait — the full browse with billboard and stacked content rows' },
+      { url: '/captures/rocksstream/mobile/02-profiles.png', caption: 'Mobile — the campus profile picker' },
+      { url: '/captures/rocksstream/mobile/01-login.png', caption: 'Mobile — the streaming-style sign-in' },
+    ],
+
+    delivered: [
+      'Bespoke, single-file interactive experience — designed and built from scratch, with no templates, page builders or third-party streaming libraries',
+      'Complete streaming-style journey — animated sign-in, custom-branded intro, campus profile picker and a full browse interface',
+      'Hero billboard, categorised content rows, hover-to-expand tiles, detail modals and inline video playback',
+      'Campus-aware line-ups for Cannington and Baldivis from a single build',
+      'Self-updating media system — drop videos into a folder and the interface updates itself',
+      'Three-tier thumbnail resolution (custom image → auto-generated video frame → embedded fallback)',
+      'Resolution-independent layout that holds its shape across landscape, ultra-wide and portrait displays',
+      'Fully offline, self-contained package — no hosting, no dependencies, no internet required',
+      'Drop-in weekly content workflow the volunteer tech team runs with zero code',
+    ],
+
+    features: [
+      'Pixel-accurate streaming UI — login, profiles, browse, detail modals and playback that mirror a premium streaming service',
+      'Animated intro sequence — a custom-branded opening animation sets the tone',
+      'Scripted cursor storytelling — a self-playing sign-in sequence with a personality-filled password moment',
+      'Campus-aware content — tailored line-ups per location, all from a single build',
+      'Self-updating thumbnails — a three-tier resolution system (custom, auto-generated, then fallback)',
+      'Drop-in content management — swap videos weekly with zero code',
+      'Universally responsive — adapts to any display resolution or orientation',
+      'Fully offline and self-contained — no hosting, no dependencies, no internet required',
+    ],
+
+    stack: [
+      'Vanilla JavaScript (zero dependencies)',
+      'HTML + CSS, single-file build',
+      'Proportional / viewport-based responsive layout engine',
+      'HTML5 video for inline playback',
+      'Canvas-based auto-generation of tile thumbnails from video frames',
+    ],
+
+    performance: [
+      'Fully offline and self-contained — no network dependency during a live service',
+      'Zero third-party dependencies',
+      'Resolution-independent layout built on proportional units — no fixed breakpoints to maintain',
+      'Runs on any church computer, any display, any orientation',
+      'Single-file package — nothing to deploy, subscribe to, or keep updated',
+    ],
+
+    challenges: [
+      'Making it indistinguishable from a real streaming interface — pixel-accurate, not a rough approximation',
+      'Running reliably on any display the church might plug into — standard projectors, ultra-wide screens and portrait displays alike',
+      'Staying completely self-contained and offline, with no internet dependency during a live service',
+      'Letting a non-technical volunteer team swap content every week by dropping in files, with no developer involvement',
+    ],
+
+    improvements: [
+      'Optional scheduling so weekly line-ups can rotate automatically by date',
+      'A lightweight admin screen for reordering rows and tiles without touching files',
+      'Optional cloud sync so both campuses can share content updates from one place',
+    ],
+  },
 };
 
 export function getCaseStudy(slug) {
