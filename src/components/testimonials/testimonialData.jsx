@@ -47,6 +47,14 @@ export const TESTIMONIALS = [
     caseStudySlug: 'tidy-gardens-australia',
     featured: true,
   },
+  {
+    id: 7,
+    quote: "C4 Studios helped our church create amazing motion graphics for our At The Movies series. It was extremely interactive and super creative. Thank you so much Caleb for doing this for us! Will definitely be asking again.",
+    name: 'The Rocks Church',
+    role: 'Cannington & Baldivis',
+    caseStudySlug: 'rocksstream',
+    featured: true,
+  },
 ];
 
 export function getFeaturedTestimonials() {
