@@ -6,6 +6,7 @@ import CaseStudySection from '../components/portfolio/CaseStudySection';
 import CaseStudyBullets from '../components/portfolio/CaseStudyBullets';
 import CaseStudyGallery from '../components/portfolio/CaseStudyGallery';
 import CaseStudyCTA from '../components/portfolio/CaseStudyCTA';
+import CaseStudyTOC from '../components/portfolio/CaseStudyTOC';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema, caseStudyArticleSchema } from '@/lib/schema';
 
@@ -56,85 +57,101 @@ export default function CaseStudy() {
     || (study.desktopScreenshots?.length || 0) > 0
     || (study.mobileScreenshots?.length || 0) > 0;
 
-  // Dynamic section numbering — skips sections that have no content
-  let sectionNum = 0;
-  const nextNum = () => String(++sectionNum).padStart(2, '0');
+  // Build the visible sections once — skipping those with no content — so the
+  // numbering, the rendered body and the sticky table of contents all read from
+  // a single source of truth and can never drift out of sync.
+  const sections = [
+    {
+      id: 'overview',
+      navLabel: 'Overview',
+      title: 'Overview',
+      className: 'mt-8',
+      content: (
+        <p className="text-[15px] leading-[1.8] max-w-[700px]" style={{ color: 'var(--c4-text-muted)' }}>
+          {study.overview}
+        </p>
+      ),
+    },
+    hasScreenshots && {
+      id: 'screenshots',
+      navLabel: 'Screenshots',
+      title: 'Screenshots',
+      content: (
+        <CaseStudyGallery
+          screenshots={study.screenshots}
+          desktopScreenshots={study.desktopScreenshots}
+          mobileScreenshots={study.mobileScreenshots}
+        />
+      ),
+    },
+    study.delivered?.length > 0 && {
+      id: 'delivered',
+      navLabel: 'Delivered',
+      title: 'What I Delivered',
+      content: <CaseStudyBullets items={study.delivered} />,
+    },
+    study.features?.length > 0 && {
+      id: 'features',
+      navLabel: 'Features',
+      title: 'Key Features',
+      content: <CaseStudyBullets items={study.features} />,
+    },
+    study.stack?.length > 0 && {
+      id: 'stack',
+      navLabel: 'Stack',
+      title: 'Stack & Tooling',
+      content: <CaseStudyBullets items={study.stack} columns={1} />,
+    },
+    study.integrations?.length > 0 && {
+      id: 'integrations',
+      navLabel: 'Integrations',
+      title: 'Integrations & Backend',
+      content: <CaseStudyBullets items={study.integrations} columns={1} />,
+    },
+    study.performance?.length > 0 && {
+      id: 'performance',
+      navLabel: 'Performance',
+      title: 'Performance / SEO / Accessibility',
+      content: <CaseStudyBullets items={study.performance} />,
+    },
+    study.challenges?.length > 0 && {
+      id: 'challenges',
+      navLabel: 'Challenges',
+      title: 'Challenges & Constraints',
+      content: <CaseStudyBullets items={study.challenges} />,
+    },
+    study.improvements?.length > 0 && {
+      id: 'improvements',
+      navLabel: 'Improvements',
+      title: "What I'd Improve Next",
+      content: <CaseStudyBullets items={study.improvements} columns={1} />,
+    },
+  ].filter(Boolean);
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--c4-bg)' }}>
       <CaseStudyHero study={study} />
 
-      {/* Overview */}
-      <CaseStudySection title="Overview" number={nextNum()} className="mt-8" style={{ borderTop: '1px solid var(--c4-border-light)' }}>
-        <p className="text-[15px] leading-[1.8] max-w-[700px]" style={{ color: 'var(--c4-text-muted)' }}>
-          {study.overview}
-        </p>
-      </CaseStudySection>
-
-      {/* Gallery — only if real screenshots exist */}
-      {hasScreenshots && (
-        <CaseStudySection title="Screenshots" number={nextNum()} style={{ borderTop: '1px solid var(--c4-border-light)' }}>
-          <CaseStudyGallery
-            screenshots={study.screenshots}
-            desktopScreenshots={study.desktopScreenshots}
-            mobileScreenshots={study.mobileScreenshots}
-          />
+      {sections.map((section, index) => (
+        <CaseStudySection
+          key={section.id}
+          id={section.id}
+          title={section.title}
+          number={String(index + 1).padStart(2, '0')}
+          className={section.className}
+          style={{ borderTop: '1px solid var(--c4-border-light)' }}
+        >
+          {section.content}
         </CaseStudySection>
-      )}
-
-      {/* Delivered */}
-      {study.delivered?.length > 0 && (
-        <CaseStudySection title="What I Delivered" number={nextNum()} style={{ borderTop: '1px solid var(--c4-border-light)' }}>
-          <CaseStudyBullets items={study.delivered} />
-        </CaseStudySection>
-      )}
-
-      {/* Features */}
-      {study.features?.length > 0 && (
-        <CaseStudySection title="Key Features" number={nextNum()} style={{ borderTop: '1px solid var(--c4-border-light)' }}>
-          <CaseStudyBullets items={study.features} />
-        </CaseStudySection>
-      )}
-
-      {/* Stack */}
-      {study.stack?.length > 0 && (
-        <CaseStudySection title="Stack & Tooling" number={nextNum()} style={{ borderTop: '1px solid var(--c4-border-light)' }}>
-          <CaseStudyBullets items={study.stack} columns={1} />
-        </CaseStudySection>
-      )}
-
-      {/* Integrations */}
-      {study.integrations?.length > 0 && (
-        <CaseStudySection title="Integrations & Backend" number={nextNum()} style={{ borderTop: '1px solid var(--c4-border-light)' }}>
-          <CaseStudyBullets items={study.integrations} columns={1} />
-        </CaseStudySection>
-      )}
-
-      {/* Performance */}
-      {study.performance?.length > 0 && (
-        <CaseStudySection title="Performance / SEO / Accessibility" number={nextNum()} style={{ borderTop: '1px solid var(--c4-border-light)' }}>
-          <CaseStudyBullets items={study.performance} />
-        </CaseStudySection>
-      )}
-
-      {/* Challenges */}
-      {study.challenges?.length > 0 && (
-        <CaseStudySection title="Challenges & Constraints" number={nextNum()} style={{ borderTop: '1px solid var(--c4-border-light)' }}>
-          <CaseStudyBullets items={study.challenges} />
-        </CaseStudySection>
-      )}
-
-      {/* Improvements */}
-      {study.improvements?.length > 0 && (
-        <CaseStudySection title="What I'd Improve Next" number={nextNum()} style={{ borderTop: '1px solid var(--c4-border-light)' }}>
-          <CaseStudyBullets items={study.improvements} columns={1} />
-        </CaseStudySection>
-      )}
+      ))}
 
       {/* CTA */}
       <div style={{ borderTop: '1px solid var(--c4-border-light)' }}>
         <CaseStudyCTA />
       </div>
+
+      {/* Sticky, proximity-reactive section index — desktop only, portaled to body */}
+      <CaseStudyTOC sections={sections.map(({ id, navLabel }) => ({ id, label: navLabel }))} />
     </div>
   );
 }
