@@ -55,6 +55,14 @@ export const TESTIMONIALS = [
     caseStudySlug: 'rocksstream',
     featured: true,
   },
+  {
+    id: 8,
+    quote: "I couldn't recommend Caleb from C4 highly enough. From the very beginning, the entire process of creating our company website was seamless. They took the time to understand our business, brought our vision to life, and delivered a website that exceeded our expectations in both design and functionality. What really sets them apart, though, is the ongoing support after the website was completed. They've continued to manage our website, make updates whenever needed, and are always incredibly quick to respond. No request is ever too much trouble, and every change is handled professionally and efficiently. Their communication is outstanding, and it's clear they genuinely care about their clients and the success of their businesses. It's rare to find someone who's not only highly skilled but also so reliable, proactive, and easy to work with.",
+    name: 'Luke Sharp',
+    role: 'Sharp Bricklaying',
+    caseStudySlug: 'sharp-bricklaying',
+    featured: true,
+  },
 ];
 
 export function getFeaturedTestimonials() {

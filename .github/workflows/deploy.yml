@@ -30,6 +30,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history so scripts/prerender.mjs can read real per-file commit
+          # dates for sitemap <lastmod> (a shallow checkout collapses them all
+          # to the latest commit).
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:

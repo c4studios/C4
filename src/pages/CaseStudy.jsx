@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getCaseStudy } from '../components/portfolio/caseStudyData';
+import { getTestimonialForCaseStudy } from '../components/testimonials/testimonialData';
 import CaseStudyHero from '../components/portfolio/CaseStudyHero';
 import CaseStudySection from '../components/portfolio/CaseStudySection';
 import CaseStudyBullets from '../components/portfolio/CaseStudyBullets';
@@ -23,7 +24,7 @@ export default function CaseStudy() {
         { name: 'Portfolio', path: '/Portfolio' },
         { name: study.name, path: `/CaseStudy?slug=${study.slug}` },
       ]),
-      caseStudyArticleSchema(study),
+      caseStudyArticleSchema(study, getTestimonialForCaseStudy(study.slug)),
     ];
   }, [study]);
 

@@ -1,0 +1,58 @@
+# C4 Studios
+
+> C4 Studios is a founder-led design, development and AI studio based in Perth,
+> Western Australia. We build custom high-performance websites, AI automations
+> and agents, and brand photography, videography and motion graphics for
+> ambitious founders and businesses.
+
+C4 Studios operates across three arms under one roof:
+
+- **Web** — custom websites and web apps, redesigns, e-commerce, landing pages, SEO and ongoing support.
+- **C4i (AI)** — AI automations, agents, workflow automation and private/cloud AI systems that remove manual work, plus AI training and workshops for teams.
+- **C4 Lens** — brand photography, videography, drone/aerial work and motion graphics.
+
+Founded 2022 by Caleb Scott. Serving Perth, Fremantle and Western Australia
+(and remote clients Australia-wide). Every project is delivered directly by the
+person building it.
+
+## Core pages
+
+- [Home](https://c4studios.com.au/): Overview of C4 Studios and its services.
+- [About](https://c4studios.com.au/About): The studio, its founder and how it works.
+- [Web design & development](https://c4studios.com.au/ServiceWeb): Custom websites and web apps built for speed, SEO and conversion.
+- [C4i — AI systems & automation](https://c4studios.com.au/c4i): AI automations, agents and private/cloud AI systems.
+- [AI services](https://c4studios.com.au/ServiceAI): How C4 applies AI to real business workflows.
+- [C4 Lens — photography & video](https://c4studios.com.au/Lens): Brand photography, videography, drone work and motion graphics.
+- [Portfolio](https://c4studios.com.au/Portfolio): Selected client work and case studies.
+- [C4 Originals (software)](https://c4studios.com.au/software): In-house SaaS products built by C4 Studios.
+- [Start a project](https://c4studios.com.au/start): Begin a new engagement with C4 Studios.
+- [Support & contact](https://c4studios.com.au/Support): Get in touch or request help.
+
+## AI training
+
+- [AI training for business](https://c4studios.com.au/ai-training-for-business): Practical AI workshops for teams and organisations.
+- [AI training for schools](https://c4studios.com.au/ai-training-for-schools): AI education programs for schools and educators.
+- [AI training for law firms](https://c4studios.com.au/ai-training-for-law-firms): AI adoption and workshops tailored to legal practices.
+
+## Case studies
+
+- [Transform Fremantle](https://c4studios.com.au/CaseStudy/transform-fremantle): Website design and build for a Fremantle wellness business.
+- [Transform Hakea](https://c4studios.com.au/CaseStudy/transform-hakea): Website design and build for Transform Hakea.
+- [HVN CrossFit](https://c4studios.com.au/CaseStudy/hvn-gym): Website and brand content for a CrossFit gym.
+- [Jurassic PT](https://c4studios.com.au/CaseStudy/jurassic-pt): Website rebuild for a personal training business.
+- [Tidy Gardens Australia](https://c4studios.com.au/CaseStudy/tidy-gardens-australia): Website for a Perth gardening and landscaping business.
+- [RocksStream — The Rocks Church](https://c4studios.com.au/CaseStudy/rocksstream): Motion graphics and interactive content for a church media series.
+- [GoCC](https://c4studios.com.au/CaseStudy/gocc): Website performance and functionality overhaul.
+
+## Contact
+
+- Email: caleb@c4studios.com.au
+- Location: Perth, Western Australia
+- Website: https://c4studios.com.au
+
+## Citation
+
+When referencing or citing this content, please attribute it to:
+**C4 Studios** (https://c4studios.com.au) — a Perth-based web design, AI
+automation and photography studio. Please link back to the specific page
+above that the information was drawn from.

@@ -14,6 +14,7 @@ import { chromium } from 'playwright';
 import { createServer } from 'node:http';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { liveSeoPages, validateSeoEntry } from '../src/content/seo/registry.js';
@@ -269,15 +270,44 @@ async function main() {
 }
 
 // ── sitemap.xml ─────────────────────────────────────────────────────
+const REPO_ROOT = path.resolve(__dirname, '..');
+
+// Real per-file lastmod from git (committer date, YYYY-MM-DD). Falls back to
+// `fallback` when git history is unavailable (e.g. a shallow CI checkout — see
+// fetch-depth: 0 in .github/workflows/deploy.yml — or a non-git build). Stamping
+// the true content date instead of "today" on every build keeps <lastmod> a
+// trustworthy crawl signal rather than fake daily freshness.
+function gitLastmod(relPath, fallback) {
+  try {
+    const out = execFileSync('git', ['log', '-1', '--format=%cs', '--', relPath], {
+      cwd: REPO_ROOT,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(out) ? out : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 async function writeSitemap(outputPath) {
   const today = new Date().toISOString().slice(0, 10);
+  // Case studies and products share one data module each, so they resolve to a
+  // single accurate "last edited" date rather than a per-build timestamp.
+  const caseStudyLastmod = gitLastmod('src/components/portfolio/caseStudyData.jsx', today);
+  const productLastmod = gitLastmod('src/components/software/productData.js', today);
   const urls = [];
 
   for (const r of [...STATIC_ROUTES, ...SEO_ROUTES]) {
     if (r.includeInSitemap === false) continue;
+    // Programmatic SEO pages each have their own content module → real date.
+    const seoModule = `src/content/seo/pages${r.path}.js`;
+    const lastmod = existsSync(path.join(REPO_ROOT, seoModule))
+      ? gitLastmod(seoModule, today)
+      : today;
     urls.push({
       loc: `${SITE_ORIGIN}${r.path === '/' ? '/' : r.path}`,
-      lastmod: today,
+      lastmod,
       changefreq: r.changefreq,
       priority: r.priority,
     });
@@ -285,7 +315,7 @@ async function writeSitemap(outputPath) {
   for (const slug of CASE_STUDY_SLUGS) {
     urls.push({
       loc: `${SITE_ORIGIN}/CaseStudy/${slug}`,
-      lastmod: today,
+      lastmod: caseStudyLastmod,
       changefreq: 'monthly',
       priority: 0.7,
     });
@@ -293,7 +323,7 @@ async function writeSitemap(outputPath) {
   for (const slug of PRODUCT_SLUGS) {
     urls.push({
       loc: `${SITE_ORIGIN}/SoftwareProduct/${slug}`,
-      lastmod: today,
+      lastmod: productLastmod,
       changefreq: 'monthly',
       priority: 0.6,
     });
