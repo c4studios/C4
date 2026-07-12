@@ -22,6 +22,23 @@ import { createPageUrl } from '@/utils';
 import gsap from 'gsap';
 
 import '../components/lens/lens.css';
+import useDocumentHead from '@/hooks/useDocumentHead';
+import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
+
+// Stable module-level ref so the head hook doesn't re-run each render.
+const LENS_JSONLD = [
+  serviceSchema({
+    name: 'C4 Lens — Photography & Videography',
+    description:
+      'Brand photography, videography, drone and aerial work, and motion graphics for Perth founders and businesses.',
+    url: '/Lens',
+    serviceType: 'Photography and videography',
+  }),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'C4 Lens', path: '/Lens' },
+  ]),
+];
 
 /* ── Force dark mode ── */
 function useForceDark() {
@@ -58,6 +75,13 @@ const WORDS = [
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 export default function Lens() {
   useForceDark();
+  useDocumentHead({
+    title: 'C4 Lens — Photography, Videography & Brand Content in Perth',
+    description:
+      'C4 Lens is the visual arm of C4 Studios — brand photography, videography, drone work and motion graphics for Perth founders and businesses.',
+    path: '/Lens',
+    jsonLd: LENS_JSONLD,
+  });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [siteMenuOpen, setSiteMenuOpen] = useState(false);
 

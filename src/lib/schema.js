@@ -109,8 +109,8 @@ export function breadcrumbSchema(items) {
   };
 }
 
-export function caseStudyArticleSchema(study) {
-  return {
+export function caseStudyArticleSchema(study, testimonial) {
+  const schema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: `${study.name} — ${study.tags?.[0] || 'Case Study'} | C4 Studios`,
@@ -123,6 +123,25 @@ export function caseStudyArticleSchema(study) {
     keywords: (study.tags || []).join(', '),
     mainEntityOfPage: absoluteUrl(`/CaseStudy?slug=${study.slug}`),
   };
+
+  // Attach the matching client testimonial as a Review of the delivered work.
+  // No numeric ratingValue is invented — the testimonials are unqualified
+  // praise but were never given as star ratings, so we publish the review body
+  // and author only. (Star rich-result snippets come from Google Business
+  // Profile reviews, not self-published testimonials.)
+  if (testimonial?.quote) {
+    schema.review = {
+      '@type': 'Review',
+      reviewBody: testimonial.quote,
+      author: { '@type': 'Person', name: testimonial.name },
+      itemReviewed: {
+        '@type': 'CreativeWork',
+        name: `${study.name} — website by C4 Studios`,
+      },
+    };
+  }
+
+  return schema;
 }
 
 export function faqSchema(faqs) {
