@@ -23,7 +23,7 @@ import gsap from 'gsap';
 
 import '../components/lens/lens.css';
 import useDocumentHead from '@/hooks/useDocumentHead';
-import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
+import { serviceSchema, breadcrumbSchema, videoObjectSchema } from '@/lib/schema';
 
 // Stable module-level ref so the head hook doesn't re-run each render.
 const LENS_JSONLD = [
@@ -38,6 +38,33 @@ const LENS_JSONLD = [
     { name: 'Home', path: '/' },
     { name: 'C4 Lens', path: '/Lens' },
   ]),
+  videoObjectSchema({
+    name: 'DS Racing Karts — site header & logo animation',
+    description:
+      'Animated website header and logo animation produced for DS Racing Karts by C4 Studios.',
+    thumbnailUrl: '/lens-posters/dsr.jpg',
+    contentUrl: '/DSR%20header.mp4',
+    uploadDate: '2026-06-09',
+    duration: 'PT7S',
+  }),
+  videoObjectSchema({
+    name: 'HVN — brand film & aerial drone work',
+    description:
+      'Full brand show reel with aerial drone videography for HVN, produced by C4 Studios.',
+    thumbnailUrl: '/lens-posters/hvn.jpg',
+    contentUrl: '/hvn.mp4',
+    uploadDate: '2026-06-09',
+    duration: 'PT30S',
+  }),
+  videoObjectSchema({
+    name: 'Sharp Bricklaying — aerial & on-site videography',
+    description:
+      'Aerial drone and on-site videography for Sharp Bricklaying, captured across active Perth job sites by C4 Studios.',
+    thumbnailUrl: '/lens-posters/sharp.jpg',
+    contentUrl: '/sharp-bricklaying-drone.mp4',
+    uploadDate: '2026-06-09',
+    duration: 'PT45S',
+  }),
 ];
 
 /* ── Force dark mode ── */
@@ -1794,9 +1821,9 @@ export default function Lens() {
           <div className="pf-hint">↑ SCROLL TO PAN →</div>
           <div className="pf-count" id="pfCount">FRAME 01 / 07</div>
           <div className="pf-track" id="pfTrack">
-            <div className="pf-card wide"><video src="/DSR%20header.mp4" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">01 · DSR</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">DS RACING KARTS</div><div className="cat">SITE HEADERS / LOGO ANIMATION</div></div></div>
-            <div className="pf-card wide"><video src="/hvn.mp4" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">02 · HVN</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">HVN</div><div className="cat">FULL SHOW / DRONE WORK</div></div></div>
-            <div className="pf-card wide"><video src="/sharp-bricklaying-drone.mp4" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">03 · SHARP</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">SHARP BRICKLAYING</div><div className="cat">AERIAL / ON-SITE PHOTOGRAPHY</div></div></div>
+            <div className="pf-card wide"><video src="/DSR%20header.mp4" poster="/lens-posters/dsr.jpg" preload="none" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">01 · DSR</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">DS RACING KARTS</div><div className="cat">SITE HEADERS / LOGO ANIMATION</div></div></div>
+            <div className="pf-card wide"><video src="/hvn.mp4" poster="/lens-posters/hvn.jpg" preload="none" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">02 · HVN</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">HVN</div><div className="cat">FULL SHOW / DRONE WORK</div></div></div>
+            <div className="pf-card wide"><video src="/sharp-bricklaying-drone.mp4" poster="/lens-posters/sharp.jpg" preload="none" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">03 · SHARP</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">SHARP BRICKLAYING</div><div className="cat">AERIAL / ON-SITE PHOTOGRAPHY</div></div></div>
             <div className="pf-card sq"><div className="pf-ph"></div><div className="pf-corner">04</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">TO BE ANNOUNCED</div><div className="cat">—</div></div></div>
             <div className="pf-card wide"><div className="pf-ph"></div><div className="pf-corner">05</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">TO BE ANNOUNCED</div><div className="cat">—</div></div></div>
             <div className="pf-card tall"><div className="pf-ph"></div><div className="pf-corner">06</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">TO BE ANNOUNCED</div><div className="cat">—</div></div></div>
