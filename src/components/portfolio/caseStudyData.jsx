@@ -639,7 +639,7 @@ export const CASE_STUDIES = {
     featured: false,
     budgetOrder: 2,
 
-    cover: null,
+    cover: '/covers/gocc.png',
     brandColor: '#2a6e5a',
     thumbnail: '/captures/gocc-com-au/desktop/01-hero.png',
 
@@ -1907,7 +1907,7 @@ export const CASE_STUDIES = {
     featured: true,
     budgetOrder: 3,
 
-    cover: null,
+    cover: '/covers/tidy-gardens-australia.png',
     brandColor: '#1e3a2a',
     thumbnail: '/captures/tidygardens-com-au/desktop/01-hero.png',
 
@@ -2168,7 +2168,7 @@ export const CASE_STUDIES = {
     featured: true,
     budgetOrder: 4,
 
-    cover: null,
+    cover: '/covers/rocksstream.png',
     brandColor: '#0E0E11',
     thumbnail: '/captures/rocksstream/desktop/03-browse-cannington.png',
 
