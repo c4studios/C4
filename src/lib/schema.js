@@ -144,6 +144,27 @@ export function caseStudyArticleSchema(study, testimonial) {
   return schema;
 }
 
+export function videoObjectSchema({
+  name,
+  description,
+  thumbnailUrl,
+  contentUrl,
+  uploadDate,
+  duration,
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name,
+    description,
+    thumbnailUrl: absoluteUrl(thumbnailUrl),
+    contentUrl: absoluteUrl(contentUrl),
+    uploadDate,
+    duration,
+    publisher: { '@id': `${SITE_URL}/#localbusiness` },
+  };
+}
+
 export function faqSchema(faqs) {
   return {
     '@context': 'https://schema.org',
