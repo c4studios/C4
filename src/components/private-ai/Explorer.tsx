@@ -21,6 +21,7 @@ import HardwareUnit from './HardwareUnit';
 gsap.registerPlugin(Flip);
 
 const UNIT_WIDTH: Record<TierId, number> = {
+  lite: 180,
   solo: 190,
   foundations: 205,
   practice: 220,

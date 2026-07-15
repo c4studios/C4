@@ -7,7 +7,7 @@
  * dashes anywhere.
  */
 
-export type TierId = 'solo' | 'foundations' | 'practice' | 'enterprise';
+export type TierId = 'lite' | 'solo' | 'foundations' | 'practice' | 'enterprise';
 
 export type ConsoleStepType =
   | 'status'
@@ -27,6 +27,25 @@ export interface ConsoleStep {
 }
 
 export const tiers = [
+  {
+    id: 'lite',
+    name: 'Lite',
+    suitedTo: 'Sole practitioners on a budget, single user',
+    upfront: 'from $4,900',
+    monthly: '$145',
+    hardwareLine:
+      'Supplied unit: Mac mini, M4 Pro, 24GB unified memory. New, with AppleCare+.',
+    unitCount: 1,
+    unitBadge: '24GB',
+    includes: [
+      'Private assistant over your own documents, with sources',
+      'One core use case, configured from a proven template',
+      'On-site transcription of dictation and consults',
+      'Local audit log of every query',
+      'Installation, a light training session and a 30-day tuning period',
+    ],
+    goLive: 'Typically live within 2 weeks of acceptance.',
+  },
   {
     id: 'solo',
     name: 'Solo',
@@ -140,6 +159,16 @@ export const heroScript: ConsoleStep[][] = [
 ];
 
 export const tierScripts: Record<TierId, ConsoleStep[]> = {
+  lite: [
+    { type: 'status', text: 'LOCAL NETWORK · NO EXTERNAL CONNECTION' },
+    { type: 'user', text: 'Draft a short follow-up to the client about Tuesday.' },
+    {
+      type: 'stream',
+      text: 'Drafted from your last two letters to this client, kept to your usual form.',
+    },
+    { type: 'chip', text: 'Client_letters_2026 · 2 sources' },
+    { type: 'status', text: '0 bytes sent outside this network', delay: 800 },
+  ],
   solo: [
     { type: 'status', text: 'LOCAL NETWORK · NO EXTERNAL CONNECTION' },
     { type: 'user', text: "Draft a letter confirming Thursday's settlement time." },
@@ -195,6 +224,7 @@ export const heroConsoleSummary =
   'Demonstration: the assistant answers a contract question with cited sources, entirely on the local network. Nothing is sent outside the building.';
 
 export const tierConsoleSummaries: Record<TierId, string> = {
+  lite: 'Demonstration: a short client letter drafted from prior correspondence, entirely on the local machine.',
   solo: 'Demonstration: a settlement letter drafted from your prior letters, transcription done on the machine itself.',
   foundations:
     'Demonstration: shared folders indexed locally as they change, a lease summarised with cited sources.',
