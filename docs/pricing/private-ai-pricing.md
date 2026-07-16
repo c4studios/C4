@@ -15,7 +15,7 @@ The client buys and owns the machine. Upfront covers hardware, install, configur
 
 | Tier | Suited to | Hardware | Upfront | Monthly |
 |------|-----------|----------|---------|---------|
-| **Lite** (new) | Sole practitioners on a budget, single user | Mac mini, M4 Pro, 24GB | **from $4,900** | **$145** |
+| **Lite** (new) | Sole practitioners on a budget, single user, small models only | Mac mini, M4 Pro, 24GB | **from $4,900** | **$145** |
 | Solo | Sole practitioners, 1 to 2 people | Mac Studio, M4 Max, 36GB | from $6,900 (anchor) | $245 |
 | Foundations | Small teams, 3 to 10 people | Mac Studio, M4 Max, 64GB | from $11,500 | $395 |
 | Practice | Established practices, 10 to 40 people | Mac Studio, M3 Ultra, 96GB | from $22,000 | $795 |

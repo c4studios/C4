@@ -30,7 +30,7 @@ export const tiers = [
   {
     id: 'lite',
     name: 'Lite',
-    suitedTo: 'Sole practitioners on a budget, single user',
+    suitedTo: 'Sole practitioners on a budget, single user, small models only',
     upfront: 'from $4,900',
     monthly: '$145',
     hardwareLine:
