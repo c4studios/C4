@@ -33,6 +33,9 @@ const MAILTO = 'mailto:caleb@c4studios.com.au?subject=Private%20AI%2C%2015%20min
 const FINE_PRINT =
   'Pricing in AUD, quoted to fit each practice. Upfront covers the hardware (yours to keep), installation, configuration, team training and a 30-day tuning period. Monthly care covers monitoring, updates, model upgrades and support. Cancel anytime: your system keeps working, you simply stop receiving updates and support.';
 
+const MANAGED_FINE_PRINT =
+  'Managed pricing in AUD, over a 36-month term. We own and maintain the hardware, so there is no capital outlay; the monthly covers the machine, monitoring, updates, model upgrades and support. A one-off setup fee covers install, configuration and training. At the end of the term you can renew, refresh the hardware, or buy the unit out.';
+
 function initialTier(): TierId {
   if (typeof window === 'undefined') return DEFAULT_TIER;
   const param = new URLSearchParams(window.location.search).get('tier');
@@ -59,6 +62,7 @@ function PriceChars({ value }: { value: string }) {
 
 export default function Explorer({ staticMode }: { staticMode: boolean }) {
   const [tierId, setTierId] = useState<TierId>(initialTier);
+  const [track, setTrack] = useState<'outright' | 'managed'>('outright');
   const tier = tiers.find((t) => t.id === tierId) ?? tiers[0];
 
   const rootRef = useRef<HTMLElement>(null);
@@ -268,17 +272,52 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
             </div>
           </div>
 
+          {/* Payment toggle: own outright vs managed subscription */}
+          <div className="pa-track" role="group" aria-label="Payment option">
+            <button
+              type="button"
+              className="pa-track-btn"
+              aria-pressed={track === 'outright'}
+              onClick={() => setTrack('outright')}
+            >
+              Own outright
+            </button>
+            <button
+              type="button"
+              className="pa-track-btn"
+              aria-pressed={track === 'managed'}
+              onClick={() => setTrack('managed')}
+            >
+              Managed monthly
+            </button>
+          </div>
+
           {/* Details row */}
           <div className="pa-details" aria-live="polite">
             <div>
-              <div className="pa-price" data-pa-price>
-                <PriceChars value={tier.upfront} />
-              </div>
-              <div className="pa-price-sub">Upfront, installed</div>
-              <div className="pa-price-monthly" data-pa-price style={{ marginTop: 20 }}>
-                <PriceChars value={tier.monthly} />
-              </div>
-              <div className="pa-price-sub">Monthly care</div>
+              {track === 'managed' ? (
+                <>
+                  <div className="pa-price" data-pa-price>
+                    <PriceChars value={tier.managedMonthly} />
+                  </div>
+                  <div className="pa-price-sub">Per month, 36-month term</div>
+                  <div className="pa-price-monthly" data-pa-price style={{ marginTop: 20 }}>
+                    <PriceChars value={tier.managedSetup} />
+                  </div>
+                  <div className="pa-price-sub">One-off setup</div>
+                </>
+              ) : (
+                <>
+                  <div className="pa-price" data-pa-price>
+                    <PriceChars value={tier.upfront} />
+                  </div>
+                  <div className="pa-price-sub">Upfront, installed</div>
+                  <div className="pa-price-monthly" data-pa-price style={{ marginTop: 20 }}>
+                    <PriceChars value={tier.monthly} />
+                  </div>
+                  <div className="pa-price-sub">Monthly care</div>
+                </>
+              )}
             </div>
             <div>
               <p className="pa-suited">{tier.suitedTo}</p>
@@ -294,7 +333,7 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
           </div>
         </div>
 
-        <p className="pa-fineprint">{FINE_PRINT}</p>
+        <p className="pa-fineprint">{track === 'managed' ? MANAGED_FINE_PRINT : FINE_PRINT}</p>
 
         <div style={{ marginTop: 36 }}>
           <a

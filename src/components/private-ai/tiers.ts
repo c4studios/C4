@@ -33,6 +33,8 @@ export const tiers = [
     suitedTo: 'Sole practitioners on a budget, single user, small models only',
     upfront: 'from $4,900',
     monthly: '$145',
+    managedMonthly: '$295',
+    managedSetup: '$1,000',
     hardwareLine:
       'Supplied unit: Mac mini, M4 Pro, 24GB unified memory. New, with AppleCare+.',
     unitCount: 1,
@@ -52,6 +54,8 @@ export const tiers = [
     suitedTo: 'Sole practitioners, 1 to 2 people',
     upfront: 'from $6,900',
     monthly: '$245',
+    managedMonthly: '$460',
+    managedSetup: '$1,500',
     hardwareLine:
       'Supplied unit: Mac Studio, M4 Max, 36GB unified memory. New, with AppleCare+.',
     unitCount: 1,
@@ -71,6 +75,8 @@ export const tiers = [
     suitedTo: 'Small teams, 3 to 10 people',
     upfront: 'from $11,500',
     monthly: '$395',
+    managedMonthly: '$745',
+    managedSetup: '$2,500',
     hardwareLine:
       'Supplied unit: Mac Studio, M4 Max, 64GB unified memory. New, with AppleCare+.',
     unitCount: 1,
@@ -90,6 +96,8 @@ export const tiers = [
     suitedTo: 'Established practices, 10 to 40 people',
     upfront: 'from $22,000',
     monthly: '$795',
+    managedMonthly: '$1,465',
+    managedSetup: '$3,900',
     hardwareLine:
       'Supplied unit: Mac Studio, M3 Ultra, 96GB unified memory. New, with AppleCare+.',
     unitCount: 1,
@@ -109,6 +117,8 @@ export const tiers = [
     suitedTo: 'Larger or high-stakes environments',
     upfront: 'from $40,000',
     monthly: 'from $1,500',
+    managedMonthly: 'from $2,760',
+    managedSetup: 'from $5,900',
     hardwareLine: 'Paired units or a purpose-built GPU system, scoped to the environment.',
     unitCount: 2,
     unitBadge: 'PAIRED',
