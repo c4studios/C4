@@ -10,14 +10,36 @@ export function organizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
+    '@id': `${SITE_URL}/#organization`,
     name: ORG_INFO.name,
     legalName: ORG_INFO.legalName,
     url: SITE_URL,
     logo: ORG_INFO.logo,
+    image: ORG_INFO.logo,
+    description: ORG_INFO.description,
     foundingDate: ORG_INFO.foundingDate,
     founder: { '@type': 'Person', name: ORG_INFO.founder },
     email: ORG_INFO.email,
+    areaServed: ORG_INFO.areaServed.map((name) => ({ '@type': 'Place', name })),
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Perth',
+      addressRegion: 'WA',
+      addressCountry: ORG_INFO.country,
+    },
     sameAs: ORG_INFO.sameAs,
+  };
+}
+
+export function personSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${SITE_URL}/#founder`,
+    name: ORG_INFO.founder,
+    jobTitle: 'Founder',
+    worksFor: { '@id': `${SITE_URL}/#organization` },
+    url: absoluteUrl('/About'),
   };
 }
 
@@ -30,6 +52,7 @@ export function localBusinessSchema() {
     image: ORG_INFO.logo,
     url: SITE_URL,
     email: ORG_INFO.email,
+    sameAs: ORG_INFO.sameAs,
     priceRange: '$$',
     address: {
       '@type': 'PostalAddress',

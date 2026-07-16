@@ -77,7 +77,7 @@ const PILLARS = [
     description: 'SEO for Perth businesses without the lock-in: one-off fixes from $400 or monthly growth plans from $500. Plain-English reporting, no smoke and mirrors.',
     priority: 0.9, changefreq: 'monthly',
     links: {
-      pillars: ['web-design-perth'],
+      pillars: ['web-design-perth', 'ai-search-optimisation-perth'],
       industries: ['websites-for-trades', 'websites-for-allied-health', 'websites-for-cafes'],
       comparisons: ['do-small-businesses-need-seo', 'how-much-does-a-website-cost-perth'],
     },
@@ -89,7 +89,7 @@ const PILLARS = [
     description: 'Practical AI and workflow automation for Perth businesses — single workflows from $750 to custom AI agents, built by a studio that runs its own.',
     priority: 0.9, changefreq: 'monthly',
     links: {
-      pillars: ['web-development-perth', 'seo-perth'],
+      pillars: ['web-development-perth', 'seo-perth', 'ai-search-optimisation-perth'],
       industries: ['websites-for-recruitment-agencies', 'websites-for-law-firms', 'websites-for-trades'],
       comparisons: ['how-much-does-a-website-cost-perth'],
     },
@@ -116,6 +116,18 @@ const PILLARS = [
       pillars: ['branding-perth', 'web-design-perth'],
       industries: ['websites-for-churches', 'websites-for-gyms', 'websites-for-cafes'],
       comparisons: [],
+    },
+  },
+  {
+    slug: 'ai-search-optimisation-perth', type: 'pillar', status: 'live', phase: 2,
+    name: 'AI Search Optimisation Perth', serviceType: 'AI search optimisation (GEO)',
+    title: 'AI Search Optimisation Perth (GEO) | C4 Studios',
+    description: 'Show up when Perth customers ask ChatGPT, Perplexity or Google AI who to hire. GEO and AI-search optimisation from the studio that ranks itself.',
+    priority: 0.9, changefreq: 'monthly',
+    links: {
+      pillars: ['seo-perth', 'web-design-perth', 'ai-automation-perth'],
+      industries: ['websites-for-trades', 'websites-for-law-firms', 'websites-for-allied-health'],
+      comparisons: ['do-small-businesses-need-seo', 'how-much-does-a-website-cost-perth'],
     },
   },
 ];

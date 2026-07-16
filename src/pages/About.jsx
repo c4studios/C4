@@ -9,11 +9,12 @@ import StudioProcess from '../components/about/StudioProcess';
 import WhyHireC4 from '../components/about/WhyHireC4';
 import WorkWithUs from '../components/about/WorkWithUs';
 import useDocumentHead from '@/hooks/useDocumentHead';
-import { breadcrumbSchema, organizationSchema } from '@/lib/schema';
+import { breadcrumbSchema, organizationSchema, personSchema } from '@/lib/schema';
 
 export default function About() {
   const jsonLd = useMemo(() => [
     organizationSchema(),
+    personSchema(),
     breadcrumbSchema([
       { name: 'Home', path: '/' },
       { name: 'About', path: '/About' },

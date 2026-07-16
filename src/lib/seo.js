@@ -14,14 +14,22 @@ export const ORG_INFO = {
   legalName: 'C4 Studios',
   url: SITE_URL,
   logo: `${SITE_URL}/c4-logo.png`,
+  description:
+    'Founder-led Perth studio building custom high-performance websites, AI ' +
+    'automations and agents, and brand photography, videography and motion ' +
+    'graphics for ambitious founders and businesses.',
   founder: 'Caleb Scott',
   foundingDate: '2022',
   email: 'caleb@c4studios.com.au',
   region: 'Perth, Western Australia',
   country: 'AU',
   areaServed: ['Perth', 'Fremantle', 'Western Australia', 'Australia'],
+  // Entity anchors for Google's Knowledge Graph and AI-search resolution. Every
+  // URL here must be a real, live, C4-owned profile — this is how a search/AI
+  // engine confirms "C4 Studios" is one consistent entity across the web.
+  // Add LinkedIn, YouTube, Facebook, TikTok, etc. as those profiles are confirmed.
   sameAs: [
-    // Add social profiles here when available
+    'https://www.instagram.com/c4.studio/',
   ],
 };
 
