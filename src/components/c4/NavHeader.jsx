@@ -37,7 +37,8 @@ const serviceDropdown = [
 ];
 
 const navLinks = [
-  { label: 'Home', page: 'Home' },
+  // Home routes to the canonical '/', not the duplicate '/Home'.
+  { label: 'Home', page: 'Home', to: '/' },
   { label: 'About', page: 'About' },
   { label: 'Services', page: 'Services', hasDropdown: true },
   { label: 'Software', page: 'Software' },
@@ -76,6 +77,21 @@ export default function NavHeader() {
     setMobileServicesOpen(false);
   }, [location.pathname]);
 
+  // Dismiss the services dropdown on Escape or a click/tap outside it.
+  useEffect(() => {
+    if (!servicesOpen) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') setServicesOpen(false); };
+    const onPointerDown = (e) => {
+      if (triggerRef.current && !triggerRef.current.contains(e.target)) setServicesOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [servicesOpen]);
+
   const handleDropdownEnter = () => {
     clearTimeout(closeTimer.current);
     setServicesOpen(true);
@@ -100,7 +116,7 @@ export default function NavHeader() {
         <div className="max-w-[1400px] mx-auto px-5 md:px-12">
           <div className="flex items-center justify-between h-[60px] md:h-[72px]">
             <Link
-              to={createPageUrl('Home')}
+              to="/"
               className="c4-header-logo-link relative flex items-center justify-center py-1"
             >
               <C4Logo size={48} variant="full" context="header" className="c4-header-logo-lockup" />
@@ -198,7 +214,7 @@ export default function NavHeader() {
                 ) : (
                   <Link
                     key={link.page}
-                    to={createPageUrl(link.page)}
+                    to={link.to || createPageUrl(link.page)}
                     className="text-[11px] uppercase tracking-[0.13em] transition-colors duration-300 font-medium"
                     style={{ color: 'var(--c4-text-muted)', cursor: 'pointer' }}
                     onMouseEnter={e => e.currentTarget.style.color = 'var(--c4-link-hover)'}
@@ -237,9 +253,12 @@ export default function NavHeader() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-40 flex flex-col justify-center px-8"
+            className="fixed inset-0 z-40 flex overflow-y-auto px-8"
             style={{ backgroundColor: 'var(--c4-bg)' }}
           >
+            {/* m-auto centres when content is short and lets it scroll when tall
+                (justify-center on the scroll container clips the top items). */}
+            <div className="m-auto w-full py-24">
             <nav className="flex flex-col gap-4">
               {navLinks.map((link, i) => (
                 <motion.div
@@ -299,7 +318,7 @@ export default function NavHeader() {
                     </div>
                   ) : (
                     <Link
-                      to={createPageUrl(link.page)}
+                      to={link.to || createPageUrl(link.page)}
                       onClick={() => setMobileOpen(false)}
                       className="text-[1.35rem] font-medium tracking-[-0.01em]"
                       style={{ color: 'var(--c4-text)' }}
@@ -319,6 +338,7 @@ export default function NavHeader() {
             >
               <ThemeToggle />
             </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -16,7 +16,7 @@
 
   /* Text */
   --c4-text: #1A1A1A;
-  --c4-text-muted: #76756F;
+  --c4-text-muted: #6B6A64;
   --c4-text-subtle: #908E88;
   --c4-text-faint: #B0ADA8;
 
@@ -82,7 +82,7 @@
   --c4-bg: #F7F5F2;
   --c4-bg-alt: #F0EDE8;
   --c4-text: #1A1A1A;
-  --c4-text-muted: #76756F;
+  --c4-text-muted: #6B6A64;
   --c4-text-subtle: #908E88;
   --c4-text-faint: #B0ADA8;
   --c4-accent: #D42B2B;
@@ -581,4 +581,22 @@ header a, header button {
   .c4-typed-cursor {
     animation: none;
   }
+}
+
+/* ── Skip link (a11y) — hidden until keyboard-focused ── */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: var(--c4-text);
+  color: var(--c4-bg);
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 16px;
 }

@@ -259,14 +259,14 @@ export default function Software() {
               <p className="text-[2rem] font-bold tracking-[-0.04em] leading-none" style={{ color: 'var(--c4-text)' }}>
                 $149<span className="text-[12px] font-normal" style={{ color: 'var(--c4-text-muted)' }}>/mo · AUD</span>
               </p>
-              <a
-                href="/Contact"
+              <Link
+                to={createPageUrl('StartProject')}
                 className="flex items-center justify-center gap-2 rounded-[3px] px-5 py-3 text-[10.5px] uppercase tracking-[0.14em] font-semibold transition-opacity duration-200 hover:opacity-75"
                 style={{ backgroundColor: 'var(--c4-accent)', color: 'var(--c4-bg)' }}
               >
                 Talk to us
                 <ArrowUpRight size={12} strokeWidth={2.5} />
-              </a>
+              </Link>
             </div>
           </motion.div>
 
@@ -314,7 +314,7 @@ export default function Software() {
               No vendor lock-in. No inflated SaaS markups.
             </p>
             <Link
-              to={createPageUrl('Contact')}
+              to={createPageUrl('StartProject')}
               className="group inline-flex items-center gap-2 mt-5 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
               style={{ color: 'var(--c4-text-subtle)' }}
               onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--c4-text)'; }}

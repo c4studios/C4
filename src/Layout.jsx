@@ -9,8 +9,9 @@ export default function Layout({ children, currentPageName }) {
   return (
     <ThemeProvider>
       <div className="min-h-screen transition-colors duration-200" style={{ backgroundColor: 'var(--c4-bg)', color: 'var(--c4-text)' }}>
+        <a href="#main" className="skip-link">Skip to content</a>
         <NavHeader />
-        <main>
+        <main id="main">
           <AnimatePresence mode="wait">
             <PageTransition pageKey={currentPageName}>
               {children}
