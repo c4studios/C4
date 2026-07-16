@@ -16,7 +16,7 @@ const sections = [
   {
     title: '2. Engagement documents come first',
     content:
-      'These Terms are the general terms for the Site and our services. Where we agree a specific project with you, that work is governed by a written proposal, quote or statement of work signed or accepted by both parties. If anything in a signed engagement document conflicts with these Terms, the engagement document prevails for that work. Some programmes, such as C4 Studios Ventures, have their own separate terms.',
+      'These Terms are the general terms for the Site and our services. Where we agree a specific project with you, that work is governed by a written proposal, quote or statement of work signed or accepted by both parties. If anything in a signed engagement document conflicts with these Terms, the engagement document prevails for that work. Some services or programmes may have their own separate terms, which we will provide where they apply.',
   },
   {
     title: '3. Using the Site',
