@@ -243,6 +243,27 @@
   margin-right: 7px;
 }
 
+/* Below ~700px the nowrap cells would clip or wrap into a ragged
+   fake-table; fold the title block into stacked rows instead. */
+@media (max-width: 700px) {
+  .wa-titleblock {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .wa-tb-cell {
+    white-space: normal;
+  }
+
+  .wa-tb-cell + .wa-tb-cell {
+    border-left: none;
+    border-top: 1px solid var(--wa-ink);
+  }
+}
+
 .wa-lede {
   margin: clamp(18px, 2.6vw, 28px) 0 0;
   font-size: clamp(15px, 1.1vw + 11px, 17px);
@@ -725,6 +746,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
+  min-height: 44px;
   margin-top: 14px;
   padding: 11px 2px;
   color: var(--wa-ink);
@@ -1079,4 +1101,54 @@
   .wa-armed [data-reveal] .wa-bar {
     transform: none;
   }
+}
+
+/* While the sheet page is mounted it stamps .wa-on-sheet on <html>.
+   Mirror of the sibling boards' force-dark pins: the daylight sheet is
+   light-committed, so the translucent chrome is pinned to its light
+   tokens even for OS-dark visitors (ThemeProvider's inline tokens
+   outrank classes, hence !important for the life of the page). */
+:root.wa-on-sheet {
+  --c4-bg: #f7f5f2 !important;
+  --c4-bg-alt: #f0ede8 !important;
+  --c4-card-bg: #ffffff !important;
+  --c4-text: #1a1a1a !important;
+  --c4-text-muted: #6b6a64 !important;
+  --c4-text-subtle: #908e88 !important;
+  --c4-text-faint: #b0ada8 !important;
+  --c4-accent: #c23030 !important;
+  --c4-accent-hover: #a82828 !important;
+  --c4-border: #dddbd7 !important;
+  --c4-border-light: #eceae6 !important;
+  --c4-link-hover: #1a1a1a !important;
+  --c4-nav-idle: rgba(247, 245, 242, 0.64) !important;
+  --c4-nav-idle-border: rgba(221, 219, 215, 0.45) !important;
+  --c4-nav-scrolled: rgba(247, 245, 242, 0.92) !important;
+  --c4-footer-bg: #1a1a1a !important;
+  --c4-footer-text: #9c9a94 !important;
+  --c4-footer-text-muted: #6b6963 !important;
+  --c4-footer-text-dim: #78766f !important;
+}
+
+/* Arriving from a dark page, the chrome's 300-500ms transitions can freeze
+   mid-flight in throttled tabs — snap the nav straight to the sheet's
+   light tokens (mirror of the sibling boards' pins). */
+:root.wa-on-sheet header.fixed.top-0.z-50,
+:root.wa-on-sheet header.fixed.top-0.z-50 * {
+  transition: none !important;
+}
+
+/* Fine print stays inside the readable measure (line-length cap). */
+.wa-fine p {
+  max-width: 75ch;
+}
+
+/* The Layout wrapper and footer carry their own colour transitions —
+   nav/footer text INHERITS from the wrapper, so a frozen mid-flight
+   transition (throttled tab, first paint) holds the wrong theme's
+   colours. Snap all chrome transitions while pinned. */
+:root.wa-on-sheet .min-h-screen.transition-colors,
+:root.wa-on-sheet footer,
+:root.wa-on-sheet footer * {
+  transition: none !important;
 }

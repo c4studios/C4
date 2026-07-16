@@ -15,7 +15,7 @@
  * IntersectionObserver scroll reveals. Styles live in
  * src/components/web-arm/web-arm.css, scoped under .wa-root.
  */
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check } from 'lucide-react';
 import { createPageUrl } from '@/utils';
@@ -359,7 +359,39 @@ function HeroDrawing() {
 
 /* ── Page ────────────────────────────────────────────────────────── */
 
+/* The sheet is light-committed ("structural documentation in daylight"),
+   so pin the site chrome to its light tokens even for OS-dark visitors —
+   the mirror of the sibling boards' force-dark. ThemeProvider re-applies
+   its own tokens from a parent effect, so a guarded MutationObserver
+   re-asserts for the life of the page (same pattern as ServiceAI). */
+function useForceLight() {
+  useEffect(() => {
+    const root = document.documentElement;
+    const prev = root.className;
+    const assertLight = () => {
+      if (
+        !root.classList.contains('light-mode') ||
+        !root.classList.contains('wa-on-sheet') ||
+        root.classList.contains('dark-mode') ||
+        root.classList.contains('vivid')
+      ) {
+        root.classList.add('light-mode', 'wa-on-sheet');
+        root.classList.remove('dark-mode', 'vivid');
+      }
+    };
+    assertLight();
+    const observer = new MutationObserver(assertLight);
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+    return () => {
+      observer.disconnect();
+      root.className = prev;
+      root.classList.remove('wa-on-sheet');
+    };
+  }, []);
+}
+
 export default function ServiceWeb() {
+  useForceLight();
   const rootRef = useRef(null);
   // 'once' = outright build price, 'monthly' = subscription alternative.
   const [billing, setBilling] = useState('once');
@@ -409,8 +441,10 @@ export default function ServiceWeb() {
   }, []);
 
   /* Arm entrance motion + scroll reveals. Never armed in static mode,
-     so reduced-motion users and the prerenderer get the final state. */
-  useEffect(() => {
+     so reduced-motion users and the prerenderer get the final state.
+     Layout effect (the PrivateAI house pattern) arms before first
+     paint, so the finished page never flashes ahead of its entrance. */
+  useLayoutEffect(() => {
     if (staticMode) return undefined;
     const root = rootRef.current;
     if (!root || typeof IntersectionObserver === 'undefined') return undefined;

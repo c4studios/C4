@@ -16,6 +16,55 @@
      red pen var(--c4-accent) #B33A3A on paper = 5.5:1
    ═══════════════════════════════════════════════════════════════════ */
 
+/* While the board page is mounted it stamps .sg-on-board on <html>
+   (alongside dark-mode). The site chrome (translucent NavHeader +
+   Footer) must read dark over the chalkboard — but ThemeProvider
+   applies its light/dark tokens as inline styles on <html>, which
+   outrank the .dark-mode class block. So the chrome tokens are pinned
+   here with !important for the life of the page (mirrors the
+   globals.css dark set; nav glass tinted to the board green). Scoped:
+   the class is removed on unmount. Same pattern as the C4i board page. */
+:root.sg-on-board {
+  --c4-bg: #0f1115 !important;
+  --c4-bg-alt: #161a21 !important;
+  --c4-card-bg: #161a21 !important;
+  --c4-tag-bg: #1c2029 !important;
+  --c4-nav-idle: rgba(9, 26, 20, 0.55) !important;
+  --c4-nav-idle-border: rgba(242, 240, 233, 0.08) !important;
+  --c4-nav-scrolled: rgba(9, 26, 20, 0.9) !important;
+  --c4-text: #ece7de !important;
+  --c4-text-muted: #a7abb4 !important;
+  --c4-text-subtle: #7d8290 !important;
+  --c4-text-faint: #505665 !important;
+  --c4-accent: #b33a3a !important;
+  --c4-accent-hover: #9e3232 !important;
+  --c4-border: rgba(236, 231, 222, 0.12) !important;
+  --c4-border-light: rgba(236, 231, 222, 0.07) !important;
+  --c4-link-hover: #ece7de !important;
+  --c4-footer-bg: #0a0c10 !important;
+  --c4-footer-text: #7d8290 !important;
+  --c4-footer-text-muted: #505665 !important;
+  --c4-footer-text-dim: #606573 !important;
+  --c4-ring: rgba(236, 231, 222, 0.35) !important;
+}
+
+/* framer-motion resolves the nav's background var() to a literal at
+   first paint — before this page's mount effect can flip the theme —
+   so the idle bar would stay light until the first scroll. Pin one
+   constant board-green translucency for the life of the page instead
+   (the blur, border and text all follow the token overrides above). */
+:root.sg-on-board header.fixed.top-0.z-50 {
+  background-color: rgba(9, 26, 20, 0.78) !important;
+}
+
+/* Chrome transitions freeze mid-flight in throttled/background tabs and
+   flash on entry — snap the nav (and its links) straight to the pinned
+   board tokens for the life of the page. */
+:root.sg-on-board header.fixed.top-0.z-50,
+:root.sg-on-board header.fixed.top-0.z-50 * {
+  transition: none !important;
+}
+
 .sg-root {
   --sg-board: #16352c;
   --sg-board-deep: #0e2a22;
@@ -69,12 +118,14 @@
   padding-inline: clamp(20px, 5vw, 56px);
 }
 
-/* Focus: chalk-yellow ring on everything interactive. */
+/* Focus: chalk-yellow ring on everything interactive. No border-radius
+   here — this rule out-specifies .sg-btn, and forcing 4px would snap
+   the 999px pill CTAs to a rectangle on keyboard focus. Outlines
+   follow each element's own radius in all supported browsers. */
 .sg-root a:focus-visible,
 .sg-root button:focus-visible {
   outline: 2.5px solid var(--sg-yellow);
   outline-offset: 3px;
-  border-radius: 4px;
 }
 
 /* ── Marks (the drawn chalk set) ─────────────────────────────────── */
@@ -857,4 +908,14 @@
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
+}
+
+/* The Layout wrapper and footer carry their own colour transitions —
+   nav/footer text INHERITS from the wrapper, so a frozen mid-flight
+   transition (throttled tab, first paint) holds the wrong theme's
+   colours. Snap all chrome transitions while pinned. */
+:root.sg-on-board .min-h-screen.transition-colors,
+:root.sg-on-board footer,
+:root.sg-on-board footer * {
+  transition: none !important;
 }
