@@ -1,187 +1,53 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, animate, useInView } from 'framer-motion';
-import { ArrowRight, Check, Terminal, Zap, Bot, Wrench } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
-import PageHero from '../components/c4/PageHero';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
-
-const ease = [0.22, 1, 0.36, 1];
+import { automationPackages, GST_NOTE } from '@/data/pricing';
+import C4iWordmark from '@/components/c4/C4iWordmark';
+import '../components/ai-arm/ai-arm.css';
 
 /*
- * Page motif: the terminal. The whole page reads like a runtime —
- * a live audit types itself in the hero, packages are commands,
- * the process is a log file, integrations stream past like stdout.
+ * /ServiceAI — the C4i cloud arm. Identity: "solder-mask & silkscreen".
+ * The page is a live circuit board — deep green solder mask, copper
+ * traces, gold pads, white silkscreen. Business processes are nets
+ * routed through one C4i core; packages are the BOM; the process is
+ * the assembly line. Reference: bare FR-4 boards from vintage
+ * HP / Tektronix service equipment.
  */
 
-const offerings = [
-  {
-    code: 'A1',
-    cmd: 'automate --scope=single',
-    title: 'Automation Core',
-    price: '$750',
-    timeline: '1–2 weeks',
-    icon: Zap,
-    desc: 'Eliminate a single painful manual process. One workflow, fully automated, tested and handed over.',
-    features: ['One workflow automated', 'Integration setup', 'Testing & QA', 'Documentation'],
-    param: 'automation&package=automation-core',
-  },
-  {
-    code: 'A2',
-    cmd: 'automate --scope=suite',
-    title: 'Workflow Starter',
-    price: '$1,500',
-    timeline: '2–3 weeks',
-    icon: Terminal,
-    desc: 'A connected system of automations that works across your tools without you lifting a finger.',
-    features: ['Up to 3 workflows', 'Multi-tool integration', 'Error handling', 'Training session'],
-    param: 'automation&package=workflow-starter',
-  },
-  {
-    code: 'A3',
-    cmd: 'deploy --type=ai-agent',
-    title: 'AI Agent Build',
-    price: 'From $2,500',
-    timeline: '3–5 weeks',
-    icon: Bot,
-    desc: 'A custom AI agent trained on your data and processes — built to handle tasks your team handles today.',
-    features: ['Custom LLM integration', 'Knowledge base setup', 'Prompt engineering', 'Monitoring dashboard'],
-    param: 'automation&package=ai-agent',
-  },
-  {
-    code: 'A4',
-    cmd: 'build --type=internal-tool',
-    title: 'Software Replacement',
-    price: 'From $4,000',
-    timeline: '5–8 weeks',
-    icon: Wrench,
-    desc: 'Replace expensive off-the-shelf software with lean, purpose-built internal tools.',
-    features: ['Requirements audit', 'Custom build', 'Data migration', 'Ongoing support option'],
-    param: 'automation&package=software-replacement',
-  },
+const EASE = [0.22, 1, 0.36, 1];
+
+/* ── Hero trace map geometry (SVG user units) ── */
+const NETS = [
+  { label: 'ENQUIRIES', d: 'M210 176 H288 L368 96 H466', bends: [[288, 176], [368, 96]], padY: 96, pulse: { dur: '5.4s', begin: '0.9s' } },
+  { label: 'QUOTES', d: 'M210 200 H320 L360 160 H466', bends: [[320, 200], [360, 160]], padY: 160, pulse: null },
+  { label: 'INVOICING', d: 'M210 224 H466', bends: [], padY: 224, pulse: { dur: '4.6s', begin: '1.7s' } },
+  { label: 'REPORTING', d: 'M210 248 H320 L360 288 H466', bends: [[320, 248], [360, 288]], padY: 288, pulse: null },
+  { label: 'ONBOARDING', d: 'M210 272 H288 L368 352 H466', bends: [[288, 272], [368, 352]], padY: 352, pulse: { dur: '6.1s', begin: '2.5s' } },
 ];
 
-const process = [
-  { step: '01', label: 'Map', desc: 'We document your current workflow and identify exactly where time is being lost.' },
-  { step: '02', label: 'Design', desc: 'The automation logic is designed before a line of code is written.' },
-  { step: '03', label: 'Build', desc: 'Integrated, tested, and edge-case covered.' },
-  { step: '04', label: 'Hand Over', desc: 'You get full documentation and a walkthrough — no black boxes.' },
+const PIN_YS = [176, 200, 224, 248, 272];
+
+/* ── What gets wired out — the netlist ── */
+const NET_ROWS = [
+  { net: 'ENQUIRIES', copy: 'Captured, qualified and logged in your CRM with a reply drafted — before you’ve opened the inbox.' },
+  { net: 'QUOTES', copy: 'Generated from your templates, sent, and followed up on a schedule. Nothing falls through.' },
+  { net: 'INVOICING', copy: 'Raised from job data, reconciled against payments, and chased politely when overdue.' },
+  { net: 'REPORTING', copy: 'Numbers pulled from every tool you run, compiled into the one report that lands each Monday.' },
+  { net: 'ONBOARDING', copy: 'New clients walked through welcome, forms, folders and a first booking — by a checklist that runs itself.' },
 ];
 
-const stats = [
-  { value: '14h', label: 'avg. saved per team member per week' },
-  { value: '3×', label: 'faster client onboarding after automation' },
-  { value: '100%', label: 'of projects delivered with full documentation' },
+const STEPS = [
+  { no: '01', label: 'Map', copy: 'We document your current workflow and identify exactly where time is being lost.' },
+  { no: '02', label: 'Design', copy: 'The automation logic is designed before a line of code is written.' },
+  { no: '03', label: 'Build', copy: 'Integrated, tested, and edge-case covered.' },
+  { no: '04', label: 'Hand over', copy: 'You get full documentation and a walkthrough — no black boxes.' },
 ];
 
-const integrations = ['Make', 'Zapier', 'n8n', 'Airtable', 'Notion', 'Slack', 'HubSpot', 'Stripe', 'OpenAI', 'Google Workspace'];
-
-/* Terminal panel colours — the panel is always dark, independent of site theme */
-const term = {
-  bg: 'var(--c4-inverted-bg)',
-  text: 'var(--c4-inverted-text)',
-  muted: 'var(--c4-inverted-text-muted)',
-  faint: 'var(--c4-inverted-text-faint)',
-  border: 'var(--c4-inverted-border)',
-  green: '#6FBF8E',
-  prompt: '#D98E85',
-};
-
-const HERO_CMD = 'c4 audit --workflows';
-const HERO_LINES = [
-  { color: term.muted, text: '→ scanning sales, ops and admin workflows …' },
-  { color: term.muted, text: '→ found 23 manual steps · 14h/week recoverable' },
-  { color: term.green, text: '✓ automation plan ready — 4 quick wins flagged' },
-];
-
-function HeroTerminal() {
-  const [typed, setTyped] = useState('');
-  const [lineCount, setLineCount] = useState(0);
-
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setTyped(HERO_CMD);
-      setLineCount(HERO_LINES.length);
-      return;
-    }
-    const timers = [];
-    let interval = null;
-    timers.push(setTimeout(() => {
-      let i = 0;
-      interval = setInterval(() => {
-        i += 1;
-        setTyped(HERO_CMD.slice(0, i));
-        if (i >= HERO_CMD.length) {
-          clearInterval(interval);
-          HERO_LINES.forEach((_, k) => {
-            timers.push(setTimeout(() => setLineCount(k + 1), 500 + k * 450));
-          });
-        }
-      }, 42);
-    }, 1100));
-    return () => {
-      timers.forEach(clearTimeout);
-      if (interval) clearInterval(interval);
-    };
-  }, []);
-
-  return (
-    <div
-      className="mt-10 w-full max-w-[480px] rounded-[5px] overflow-hidden"
-      style={{ border: '1px solid var(--c4-border)', boxShadow: '0 24px 60px -30px rgba(0,0,0,0.45)' }}
-    >
-      <div
-        className="flex items-center justify-between px-4 py-2.5"
-        style={{ backgroundColor: 'var(--c4-bg-alt)', borderBottom: '1px solid var(--c4-border)' }}
-      >
-        <div className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: 'rgba(255,90,90,0.7)' }} />
-          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: 'rgba(255,185,50,0.7)' }} />
-          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: 'rgba(40,200,100,0.7)' }} />
-        </div>
-        <span className="text-[10px]" style={{ fontFamily: 'monospace', color: 'var(--c4-text-subtle)' }}>c4 — audit</span>
-      </div>
-      <div
-        className="px-5 py-4 text-[12px] leading-[1.9]"
-        style={{ fontFamily: 'monospace', backgroundColor: term.bg, minHeight: '128px' }}
-      >
-        <div>
-          <span style={{ color: term.prompt }}>$ </span>
-          <span style={{ color: term.text }}>{typed}</span>
-          <span className="c4-caret" style={{ color: term.text }}>▌</span>
-        </div>
-        {HERO_LINES.slice(0, lineCount).map((line, i) => (
-          <div key={i} style={{ color: line.color }}>{line.text}</div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function CountUp({ value, className, style }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-10% 0px' });
-
-  useEffect(() => {
-    if (!inView || !ref.current) return undefined;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
-    const m = String(value).match(/^(\d+(?:\.\d+)?)(.*)$/);
-    if (!m) return undefined;
-    const target = parseFloat(m[1]);
-    const suffix = m[2] || '';
-    const controls = animate(0, target, {
-      duration: 1.4,
-      ease: [0.22, 1, 0.36, 1],
-      onUpdate: (v) => {
-        if (ref.current) ref.current.textContent = `${Math.round(v)}${suffix}`;
-      },
-    });
-    return () => controls.stop();
-  }, [inView, value]);
-
-  return <span ref={ref} className={className} style={style}>{value}</span>;
-}
+const TOOLS = ['Make', 'Zapier', 'n8n', 'Airtable', 'Notion', 'Slack', 'HubSpot', 'Stripe', 'OpenAI', 'Google Workspace'];
 
 // Stable module-level ref so the head hook doesn't re-run each render.
 const AI_JSONLD = [
@@ -198,8 +64,101 @@ const AI_JSONLD = [
   ]),
 ];
 
+/* Force dark chrome while on the board, Lens-style. The .cw-on-board
+   marker drives !important token overrides in ai-arm.css so the nav and
+   footer read dark even though ThemeProvider re-applies its own inline
+   tokens after this child effect runs. The dark-mode class is asserted
+   twice (immediately + next frame) to outlast that parent effect. */
+function useForceDark() {
+  useEffect(() => {
+    const root = document.documentElement;
+    const prev = root.className;
+    const apply = () => {
+      root.classList.add('dark-mode', 'cw-on-board');
+      root.classList.remove('light-mode', 'vivid');
+    };
+    apply();
+    const raf = requestAnimationFrame(apply);
+    return () => {
+      cancelAnimationFrame(raf);
+      root.className = prev;
+      root.classList.remove('cw-on-board');
+    };
+  }, []);
+}
+
+/* ── The hero trace map: one C4i core, five admin nets ── */
+function TraceMap({ staticMode }) {
+  const draw = (i) =>
+    staticMode
+      ? {}
+      : {
+          initial: { pathLength: 0, opacity: 0 },
+          animate: { pathLength: 1, opacity: 1 },
+          transition: {
+            pathLength: { duration: 0.9, delay: 0.55 + i * 0.12, ease: 'easeInOut' },
+            opacity: { duration: 0.2, delay: 0.55 + i * 0.12 },
+          },
+        };
+  const fade = (d) =>
+    staticMode
+      ? {}
+      : { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.5, delay: d, ease: EASE } };
+
+  return (
+    <svg
+      viewBox="0 0 560 440"
+      role="img"
+      aria-label="Circuit diagram: the C4i cloud core routing five business processes — enquiries, quotes, invoicing, reporting and onboarding."
+    >
+      {/* Silkscreen frame + fiducials */}
+      <motion.g {...fade(0.35)}>
+        <rect x="6" y="6" width="548" height="428" rx="10" className="cw-silk-frame" />
+        <g stroke="var(--cw-copper-dim)" strokeWidth="1.5" fill="none">
+          <circle cx="532" cy="34" r="5" />
+          <path d="M524 34 H540 M532 26 V42" />
+          <circle cx="28" cy="404" r="5" />
+          <path d="M20 404 H36 M28 396 V412" />
+        </g>
+      </motion.g>
+
+      {/* The core */}
+      <motion.g {...fade(0.4)}>
+        <rect x="28" y="198" width="16" height="4" style={{ fill: 'var(--cw-copper)' }} />
+        <rect x="28" y="246" width="16" height="4" style={{ fill: 'var(--cw-copper)' }} />
+        {PIN_YS.map((y) => (
+          <rect key={y} x="194" y={y - 2} width="16" height="4" style={{ fill: 'var(--cw-copper)' }} />
+        ))}
+        <rect x="44" y="150" width="150" height="150" rx="8" className="cw-chip-body" />
+        <circle cx="64" cy="170" r="3.5" style={{ fill: 'var(--cw-mute)' }} />
+        <text x="119" y="228" textAnchor="middle" className="cw-chip-name">C4i</text>
+        <text x="119" y="256" textAnchor="middle" className="cw-chip-sub">CLOUD CORE</text>
+      </motion.g>
+
+      {/* Nets */}
+      {NETS.map((net, i) => (
+        <g key={net.label}>
+          <motion.path d={net.d} className="cw-trace" {...draw(i)} />
+          <motion.g {...fade(0.8 + i * 0.12)}>
+            {net.bends.map(([bx, by]) => (
+              <circle key={`${bx}-${by}`} cx={bx} cy={by} r="3.5" className="cw-via" />
+            ))}
+            <rect x="466" y={net.padY - 8} width="16" height="16" rx="3" className="cw-pad" />
+            <text x="458" y={net.padY - 12} textAnchor="end" className="cw-netlabel">{net.label}</text>
+          </motion.g>
+          {!staticMode && net.pulse && (
+            <circle r="3.2" className="cw-pulse">
+              <animateMotion dur={net.pulse.dur} begin={net.pulse.begin} repeatCount="indefinite" path={net.d} />
+            </circle>
+          )}
+        </g>
+      ))}
+    </svg>
+  );
+}
+
 export default function ServiceAI() {
-  const [hoverIndex, setHoverIndex] = useState(null);
+  useForceDark();
 
   useDocumentHead({
     title: 'AI & Software — C4 Studios Perth',
@@ -209,296 +168,309 @@ export default function ServiceAI() {
     jsonLd: AI_JSONLD,
   });
 
+  const prerender = useMemo(
+    () => typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent),
+    [],
+  );
+  const reduced = useMemo(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    [],
+  );
+  const staticMode = reduced || prerender;
+
+  /* Fonts: Archivo (variable width) + B612 Mono, house link-injection pattern. */
+  useEffect(() => {
+    const els = [];
+    const pc1 = document.createElement('link');
+    pc1.rel = 'preconnect';
+    pc1.href = 'https://fonts.googleapis.com';
+    const pc2 = document.createElement('link');
+    pc2.rel = 'preconnect';
+    pc2.href = 'https://fonts.gstatic.com';
+    pc2.crossOrigin = 'anonymous';
+    const font = document.createElement('link');
+    font.rel = 'stylesheet';
+    font.href =
+      'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62.5..125,400..900&family=B612+Mono:ital,wght@0,400;0,700;1,700&display=swap';
+    [pc1, pc2, font].forEach((el) => {
+      document.head.appendChild(el);
+      els.push(el);
+    });
+    return () => els.forEach((el) => el.remove());
+  }, []);
+
+  /* Entrance helpers — no-ops in static mode so the final state renders
+     immediately for the prerenderer and reduced-motion visitors. */
+  const heroIn = (d = 0) =>
+    staticMode
+      ? {}
+      : {
+          initial: { opacity: 0, y: 18 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.7, delay: d, ease: EASE },
+        };
+  const inView = (i = 0) =>
+    staticMode
+      ? {}
+      : {
+          initial: { opacity: 0, y: 16 },
+          whileInView: { opacity: 1, y: 0 },
+          viewport: { once: true, margin: '-70px 0px' },
+          transition: { duration: 0.6, delay: i * 0.06, ease: EASE },
+        };
+
+  const startUrl = createPageUrl('StartProject') + '?service=automation';
+
   return (
-    <div style={{ backgroundColor: 'var(--c4-bg)', color: 'var(--c4-text)' }}>
-      <style>{`
-        @keyframes c4-caret { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-        .c4-caret { animation: c4-caret 1.1s step-end infinite; }
-        @keyframes c4-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .c4-marquee { animation: c4-marquee 30s linear infinite; }
-        .c4-marquee:hover { animation-play-state: paused; }
-        @media (prefers-reduced-motion: reduce) {
-          .c4-caret { animation: none; }
-          .c4-marquee { animation: none; }
-        }
-      `}</style>
+    <div className={`cw-root${staticMode ? ' cw-static' : ''}`}>
+      {/* ═══ Hero — the board corner ═══ */}
+      <header className="cw-hero">
+        <span className="cw-hole cw-hole--l" aria-hidden="true" />
+        <span className="cw-hole cw-hole--r" aria-hidden="true" />
 
-      <PageHero
-        label="C3 — AI & Software"
-        titleLines={['Software that replaces', 'hours, not headcount.']}
-        description="Workflow automation, AI agents, and custom integrations that compound over time — turning repetitive tasks into systems that run themselves."
-      >
-        <div className="flex items-center gap-5">
-          <Link
-            to={createPageUrl('StartProject') + '?service=automation'}
-            className="inline-flex items-center gap-2 px-6 py-3 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
-            style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-          >
-            Start a brief
-            <ArrowRight size={12} strokeWidth={2} />
-          </Link>
-          <Link
-            to={createPageUrl('Portfolio')}
-            className="text-[11px] uppercase tracking-[0.14em] font-medium"
-            style={{ color: 'var(--c4-text-subtle)' }}
-          >
-            See the work
-          </Link>
+        <div className="cw-container">
+          <motion.div className="cw-hero-legend" {...heroIn(0.05)}>
+            <span className="cw-legend cw-arm">
+              <strong>C2</strong> — <C4iWordmark /> · cloud automation
+            </span>
+            <span className="cw-pwr" aria-hidden="true">
+              <span className="cw-led" />
+              <span className="cw-legend">PWR</span>
+            </span>
+          </motion.div>
+
+          <div className="cw-hero-grid">
+            <div>
+              <motion.h1 className="cw-h1" {...heroIn(0.12)}>
+                Your business, hard&#8209;wired to run itself.
+              </motion.h1>
+              <motion.p className="cw-sub" {...heroIn(0.22)}>
+                Workflow automation, AI agents and custom integrations that compound
+                over time — repetitive tasks become quiet systems that run themselves.
+              </motion.p>
+              <motion.div className="cw-hero-ctas" {...heroIn(0.32)}>
+                <Link to={startUrl} className="cw-btn">
+                  Start a brief
+                  <ArrowRight size={14} strokeWidth={2.25} />
+                </Link>
+                <Link to={createPageUrl('Portfolio')} className="cw-btn cw-btn--ghost">
+                  See the work
+                </Link>
+              </motion.div>
+
+              {/* Mobile-only micro board */}
+              <div className="cw-microboard" aria-hidden="true">
+                <span className="cw-chip-mini">C4i</span>
+                <span className="cw-mini-trace" />
+              </div>
+            </div>
+
+            <motion.figure className="cw-heromap" style={{ margin: 0 }} {...heroIn(0.2)}>
+              <TraceMap staticMode={staticMode} />
+              <figcaption className="cw-mapcaption">
+                fig. 01 — five admin nets, one core. The pulses are your paperwork, moving on its own.
+              </figcaption>
+            </motion.figure>
+          </div>
         </div>
-        <HeroTerminal />
-      </PageHero>
+      </header>
 
-      {/* Stats — counted up live */}
-      <section className="py-12 md:py-16 border-y" style={{ borderColor: 'var(--c4-border)' }}>
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-12">
-            {stats.map((s, i) => (
-              <motion.div
-                key={s.label}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: i * 0.1, ease }}
-              >
-                <CountUp
-                  value={s.value}
-                  className="block text-[clamp(1.8rem,4vw,2.8rem)] font-semibold tracking-[-0.04em] tabular-nums"
-                  style={{ color: 'var(--c4-text)' }}
-                />
-                <p className="mt-1 text-[12.5px] leading-[1.55]" style={{ color: 'var(--c4-text-muted)' }}>{s.label}</p>
+      <hr className="cw-rail" aria-hidden="true" />
+
+      {/* ═══ Netlist — what gets wired out ═══ */}
+      <section className="cw-nets">
+        <div className="cw-container">
+          <motion.div className="cw-nets-head" {...inView()}>
+            <h2 className="cw-h2">What gets wired out of your week.</h2>
+            <p className="cw-lead">
+              If it happens in software more than twice a week, it's a candidate.
+              These five come up in almost every scoping call.
+            </p>
+          </motion.div>
+
+          <div>
+            {NET_ROWS.map((row, i) => (
+              <motion.div className="cw-net-row" key={row.net} {...inView(i)}>
+                <span className="cw-net-name">{row.net}</span>
+                <p>{row.copy}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Offerings — terminal-style cards */}
-      <section className="py-16 md:py-24">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease }}
-            className="mb-10 md:mb-14"
-          >
-            <p className="text-[10px] uppercase tracking-[0.22em] font-medium mb-1" style={{ color: 'var(--c4-text-subtle)' }}>Packages & Pricing</p>
-            <h2 className="text-[clamp(1.4rem,3vw,2rem)] font-semibold tracking-[-0.025em]">Start where the pain is.</h2>
+      <hr className="cw-rail" aria-hidden="true" />
+
+      {/* ═══ BOM — packages, straight from the central pricing list ═══ */}
+      <section className="cw-bom">
+        <div className="cw-container">
+          <motion.div className="cw-bom-head" {...inView()}>
+            <div>
+              <h2 className="cw-h2">Start where the pain is.</h2>
+              <p className="cw-lead">
+                Four builds, priced from the studio's central list — the same
+                numbers wherever you find them.
+              </p>
+            </div>
+            <span className="cw-bom-meta">BOM · Automation · 04 lines</span>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {offerings.map((o, i) => {
-              const Icon = o.icon;
-              const isHovered = hoverIndex === i;
-              return (
-                <motion.div
-                  key={o.code}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.08, ease }}
-                  onMouseEnter={() => setHoverIndex(i)}
-                  onMouseLeave={() => setHoverIndex(null)}
-                  className="flex flex-col rounded-[3px] overflow-hidden transition-[box-shadow,transform] duration-300"
-                  style={{
-                    border: '1px solid var(--c4-border)',
-                    transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
-                    boxShadow: isHovered ? '0 20px 50px -20px rgba(0,0,0,0.4)' : 'none',
-                  }}
-                >
-                  {/* Terminal header bar */}
-                  <div
-                    className="flex items-center justify-between px-4 py-2.5"
-                    style={{
-                      backgroundColor: 'var(--c4-bg-alt)',
-                      borderBottom: '1px solid var(--c4-border)',
-                    }}
+          <div>
+            {automationPackages.map((pkg, i) => (
+              <motion.article
+                key={pkg.key}
+                className={`cw-bom-row${pkg.popular ? ' is-popular' : ''}`}
+                {...inView(i)}
+              >
+                <div>
+                  <h3 className="cw-bom-name">
+                    {pkg.name}
+                    {pkg.popular && <span className="cw-tag">Most specified</span>}
+                  </h3>
+                  <p className="cw-bom-desc">{pkg.description}</p>
+                </div>
+                <ul className="cw-bom-feats">
+                  {pkg.features.map((f) => (
+                    <li key={f}>
+                      <span className="cw-pin" aria-hidden="true" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <div className="cw-bom-buy">
+                  <p className="cw-price">{pkg.priceLabel}</p>
+                  <Link
+                    to={createPageUrl('StartProject') + `?service=automation&package=${pkg.key}`}
+                    className="cw-textlink"
                   >
-                    <div className="flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: 'rgba(255,90,90,0.7)' }} />
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: 'rgba(255,185,50,0.7)' }} />
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: 'rgba(40,200,100,0.7)' }} />
-                    </div>
-                    <code
-                      className="text-[10px] tracking-[0.06em]"
-                      style={{ fontFamily: 'monospace', color: isHovered ? 'var(--c4-text)' : 'var(--c4-text-subtle)', transition: 'color .25s ease' }}
-                    >
-                      c4 {o.cmd}<span className="c4-caret" style={{ color: 'var(--c4-accent)' }}>▌</span>
-                    </code>
-                  </div>
-
-                  {/* Card body */}
-                  <div className="flex flex-col p-7 md:p-8 flex-1" style={{ backgroundColor: 'var(--c4-bg)' }}>
-                    <div className="flex items-start justify-between mb-5">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="w-9 h-9 rounded flex items-center justify-center"
-                          style={{ backgroundColor: 'color-mix(in srgb, var(--c4-accent) 12%, transparent)' }}
-                        >
-                          <Icon size={16} strokeWidth={1.5} style={{ color: 'var(--c4-accent)' }} />
-                        </div>
-                        <span
-                          className="text-[10px] font-mono tracking-wider"
-                          style={{ color: 'var(--c4-accent)' }}
-                        >{o.code}</span>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-[1.2rem] font-semibold tabular-nums tracking-[-0.025em]" style={{ color: 'var(--c4-text)' }}>{o.price}</p>
-                        <p className="text-[11px]" style={{ color: 'var(--c4-text-faint)' }}>{o.timeline}</p>
-                      </div>
-                    </div>
-
-                    <h3 className="text-[1.05rem] font-semibold tracking-[-0.01em] mb-3">{o.title}</h3>
-                    <p className="text-[13px] leading-[1.65] mb-6 flex-1" style={{ color: 'var(--c4-text-muted)' }}>{o.desc}</p>
-
-                    <ul className="space-y-2 mb-8">
-                      {o.features.map(f => (
-                        <li key={f} className="flex items-center gap-2 text-[12.5px]" style={{ color: 'var(--c4-text-muted)' }}>
-                          <Check size={11} strokeWidth={2.5} style={{ color: 'var(--c4-accent)', flexShrink: 0 }} />
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <Link
-                      to={`/start?service=${o.param}`}
-                      className="group inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.13em] font-medium transition-colors duration-200"
-                      style={{ color: isHovered ? 'var(--c4-text)' : 'var(--c4-text-subtle)' }}
-                    >
-                      Start this
-                      <ArrowRight size={11} strokeWidth={2} className="group-hover:translate-x-0.5 transition-transform duration-200" />
-                    </Link>
-                  </div>
-                </motion.div>
-              );
-            })}
+                    Start this build
+                    <ArrowRight size={13} strokeWidth={2.25} />
+                  </Link>
+                </div>
+              </motion.article>
+            ))}
           </div>
+
+          <motion.p className="cw-fineprint" {...inView(1)}>{GST_NOTE}</motion.p>
         </div>
       </section>
 
-      {/* Integrations — streaming marquee */}
-      <section className="py-12 md:py-16 border-t" style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-bg-alt)' }}>
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease }}
-            className="flex flex-col md:flex-row md:items-center gap-5 md:gap-10"
-          >
-            <p className="text-[10px] uppercase tracking-[0.2em] font-medium flex-shrink-0" style={{ color: 'var(--c4-text-subtle)' }}>
-              Tools we work with
+      {/* ═══ Compatible parts — the tool conveyor ═══ */}
+      <section className="cw-tools">
+        <div className="cw-container">
+          <motion.div {...inView()}>
+            <h2 className="cw-h2">Plays nicely with what you already run.</h2>
+            <p className="cw-tools-note">
+              …and most things with an API. If a tool can talk, we can wire it in.
             </p>
-            <div
-              className="relative flex-1 overflow-hidden"
-              style={{
-                maskImage: 'linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent)',
-                WebkitMaskImage: 'linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent)',
-              }}
-            >
-              <div className="c4-marquee flex w-max">
-                {[...integrations, ...integrations].map((tool, i) => (
-                  <span
-                    key={`${tool}-${i}`}
-                    className="mr-2 px-3 py-1.5 text-[11px] font-medium rounded-[2px] whitespace-nowrap"
-                    style={{
-                      backgroundColor: 'var(--c4-bg)',
-                      border: '1px solid var(--c4-border)',
-                      color: 'var(--c4-text-muted)',
-                      fontFamily: 'monospace',
-                    }}
-                  >
-                    {tool}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Process — rendered as a log file */}
-      <section className="py-16 md:py-20 border-t" style={{ borderColor: 'var(--c4-border)' }}>
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease }}
-            className="mb-10 md:mb-14"
-          >
-            <p className="text-[10px] uppercase tracking-[0.22em] font-medium mb-1" style={{ color: 'var(--c4-text-subtle)' }}>Process</p>
-            <h2 className="text-[clamp(1.4rem,3vw,2rem)] font-semibold tracking-[-0.025em]">No guesswork. Just systems.</h2>
           </motion.div>
 
-          <div className="rounded-[5px] overflow-hidden" style={{ border: '1px solid var(--c4-border)' }}>
-            <div
-              className="flex items-center justify-between px-4 py-2.5"
-              style={{ backgroundColor: 'var(--c4-bg-alt)', borderBottom: '1px solid var(--c4-border)' }}
-            >
-              <div className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: 'var(--c4-border)' }} />
-                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: 'var(--c4-border)' }} />
-                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: 'var(--c4-border)' }} />
-              </div>
-              <span className="text-[10px]" style={{ fontFamily: 'monospace', color: 'var(--c4-text-subtle)' }}>process.log</span>
-            </div>
-            <div className="px-5 md:px-8 py-4 md:py-6" style={{ backgroundColor: term.bg, fontFamily: 'monospace' }}>
-              {process.map((p, i) => (
-                <motion.div
-                  key={p.step}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: i * 0.14, ease }}
-                  className="flex flex-col sm:flex-row sm:items-baseline gap-x-4 gap-y-1 py-3.5"
-                  style={{ borderBottom: i < process.length - 1 ? `1px solid ${'var(--c4-inverted-border)'}` : 'none' }}
-                >
-                  <span className="text-[10px] flex-shrink-0 tabular-nums" style={{ color: term.faint }}>[{p.step}]</span>
-                  <span className="text-[12px] uppercase tracking-[0.12em] font-semibold flex-shrink-0 sm:w-24" style={{ color: term.text }}>{p.label}</span>
-                  <span className="text-[12.5px] leading-[1.7] flex-1" style={{ color: term.muted }}>{p.desc}</span>
-                  <span className="text-[12px] flex-shrink-0 hidden sm:block" style={{ color: term.green }}>✓</span>
-                </motion.div>
+          {staticMode ? (
+            <ul className="cw-toolgrid">
+              {TOOLS.map((tool) => (
+                <li key={tool} className="cw-toolchip">{tool}</li>
               ))}
-            </div>
-          </div>
+            </ul>
+          ) : (
+            <motion.div className="cw-belt" {...inView(1)}>
+              <div className="cw-belt-track">
+                <ul>
+                  {TOOLS.map((tool) => (
+                    <li key={tool} className="cw-toolchip">{tool}</li>
+                  ))}
+                </ul>
+                <ul aria-hidden="true">
+                  {TOOLS.map((tool) => (
+                    <li key={tool} className="cw-toolchip">{tool}</li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+          )}
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 md:py-28 border-t" style={{ borderColor: 'var(--c4-border)' }}>
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease }}
-          >
-            <code
-              className="inline-block mb-7 px-4 py-2 rounded-[3px] text-[11px]"
-              style={{
-                fontFamily: 'monospace',
-                backgroundColor: 'var(--c4-bg-alt)',
-                border: '1px solid var(--c4-border)',
-                color: 'var(--c4-text-muted)',
-              }}
-            >
-              <span style={{ color: 'var(--c4-accent)' }}>$ </span>
-              c4 start --project=automation<span className="c4-caret" style={{ color: 'var(--c4-accent)' }}>▌</span>
-            </code>
-            <h2 className="text-[clamp(1.6rem,4vw,2.8rem)] font-semibold tracking-[-0.03em] mb-4 max-w-[560px] mx-auto">
-              Your team spends 14h a week being a database. Stop that.
-            </h2>
-            <p className="text-[14px] mb-10" style={{ color: 'var(--c4-text-muted)' }}>
-              Tell us which process is the biggest drain. We'll scope the fix.
+      {/* ═══ Process — the assembly line ═══ */}
+      <section className="cw-proc">
+        <div className="cw-container">
+          <motion.div className="cw-proc-head" {...inView()}>
+            <h2 className="cw-h2">From mapped to humming.</h2>
+            <p className="cw-lead">
+              Four steps, documented as we go — you can see the whole board at any point.
             </p>
-            <Link
-              to={createPageUrl('StartProject') + '?service=automation'}
-              className="inline-flex items-center gap-2 px-8 py-4 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
-              style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-            >
+          </motion.div>
+
+          <div className="cw-proc-track" aria-hidden="true">
+            <motion.div
+              className="cw-proc-fill"
+              {...(staticMode
+                ? {}
+                : {
+                    initial: { scaleX: 0 },
+                    whileInView: { scaleX: 1 },
+                    viewport: { once: true, margin: '-70px 0px' },
+                    transition: { duration: 1.1, ease: EASE },
+                  })}
+            />
+            <span className="cw-proc-via" style={{ left: 0 }} />
+            <span className="cw-proc-via" style={{ left: 'calc(33.333% - 5px)' }} />
+            <span className="cw-proc-via" style={{ left: 'calc(66.666% - 5px)' }} />
+            <span className="cw-proc-via" style={{ right: 0 }} />
+          </div>
+
+          <ol className="cw-proc-steps" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+            {STEPS.map((s, i) => (
+              <motion.li className="cw-step" key={s.no} {...inView(i)}>
+                <span className="cw-step-no">{s.no}</span>
+                <h3 className="cw-step-label">{s.label}</h3>
+                <p>{s.copy}</p>
+              </motion.li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ═══ The sibling system — private, on your own hardware ═══ */}
+      <section className="cw-sibling">
+        <div className="cw-container">
+          <motion.div className="cw-sibling-inner" {...inView()}>
+            <div className="cw-sibling-copy">
+              <span className="cw-sibling-tagline">Alt. configuration</span>
+              <p>
+                Prefer AI that never leaves the building? <C4iWordmark /> also installs
+                private systems on your own hardware — documents indexed, questions
+                answered and logged locally.
+              </p>
+            </div>
+            <Link to={createPageUrl('PrivateAI')} className="cw-textlink">
+              See the private system
+              <ArrowUpRight size={14} strokeWidth={2.25} />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      <hr className="cw-rail" aria-hidden="true" />
+
+      {/* ═══ Power header — closing CTA ═══ */}
+      <section className="cw-cta">
+        <div className="cw-container">
+          <motion.div {...inView()}>
+            <span className="cw-cta-ready">
+              <span className="cw-led" aria-hidden="true" />
+              Systems ready
+            </span>
+            <h2 className="cw-h2">Your team isn't middleware.</h2>
+            <p className="cw-cta-sub">
+              Tell us which process is the biggest drain. We'll scope the fix,
+              price it, and wire it in.
+            </p>
+            <Link to={startUrl} className="cw-btn">
               Start a project
-              <ArrowRight size={12} strokeWidth={2} />
+              <ArrowRight size={14} strokeWidth={2.25} />
             </Link>
           </motion.div>
         </div>

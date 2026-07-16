@@ -1,0 +1,980 @@
+/* ═══════════════════════════════════════════════════════════════════
+   /ServiceAI — the C4i cloud arm. "Solder-mask & silkscreen."
+   The page is a live circuit board: deep green solder mask, copper
+   traces, gold ENIG pads, white silkscreen legend. Reference: bare
+   FR-4 service boards from vintage HP / Tektronix test equipment.
+   Type: Archivo (variable width — silkscreen grotesque) + B612 Mono
+   (the Airbus cockpit instrument face). Scoped under .cw-*.
+   Contrast (computed): ink 10.9:1, body 7.9:1, mute 6.0:1,
+   copper 5.3:1, gold 7.3:1 — all against --cw-board.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* While the board page is mounted it stamps .cw-on-board on <html>.
+   The site chrome (translucent NavHeader + Footer) must read dark over
+   the deep green board. ThemeProvider applies its light/dark tokens as
+   inline styles on <html>, which outrank the .dark-mode class block —
+   so the chrome tokens are pinned here with !important for the life of
+   the page (mirrors the globals.css dark set). Scoped: the class is
+   removed on unmount. */
+:root.cw-on-board {
+  --c4-bg: #0f1115 !important;
+  --c4-bg-alt: #161a21 !important;
+  --c4-card-bg: #161a21 !important;
+  --c4-tag-bg: #1c2029 !important;
+  --c4-nav-idle: rgba(8, 24, 16, 0.55) !important;
+  --c4-nav-idle-border: rgba(236, 231, 222, 0.08) !important;
+  --c4-nav-scrolled: rgba(8, 24, 16, 0.9) !important;
+  --c4-text: #ece7de !important;
+  --c4-text-muted: #a7abb4 !important;
+  --c4-text-subtle: #7d8290 !important;
+  --c4-text-faint: #505665 !important;
+  --c4-accent: #b33a3a !important;
+  --c4-accent-hover: #9e3232 !important;
+  --c4-border: rgba(236, 231, 222, 0.12) !important;
+  --c4-border-light: rgba(236, 231, 222, 0.07) !important;
+  --c4-link-hover: #ece7de !important;
+  --c4-footer-bg: #0a0c10 !important;
+  --c4-footer-text: #7d8290 !important;
+  --c4-footer-text-muted: #606573 !important;
+  --c4-footer-text-dim: #606573 !important;
+  --c4-ring: rgba(236, 231, 222, 0.35) !important;
+}
+
+/* framer-motion resolves the nav's background var() to a literal at
+   first paint — before this page's mount effect can flip the theme —
+   so the idle bar would stay light until the first scroll. Pin one
+   constant dark translucency for the life of the board page instead
+   (the blur, border and text all follow the token overrides above). */
+:root.cw-on-board header.fixed.top-0.z-50 {
+  background-color: rgba(8, 24, 16, 0.78) !important;
+}
+
+.cw-root {
+  /* Board surfaces */
+  --cw-board: #0f3d2e;
+  --cw-deep: #0b2f23;
+  --cw-deepest: #082418;
+  --cw-module: #134634;
+
+  /* Silkscreen inks */
+  --cw-ink: #edf5ee;
+  --cw-body-ink: #bfd6c6;
+  --cw-mute: #9fbeac;
+
+  /* Metals */
+  --cw-copper: #dd9e63;
+  --cw-copper-dim: rgba(221, 158, 99, 0.34);
+  --cw-copper-faint: rgba(221, 158, 99, 0.16);
+  --cw-gold: #e8c56c;
+
+  /* Hairlines */
+  --cw-hair: rgba(237, 245, 238, 0.13);
+  --cw-hair-soft: rgba(237, 245, 238, 0.07);
+
+  /* The one C4 constant — the power LED and nothing else */
+  --cw-led: var(--c4-accent, #b33a3a);
+
+  --cw-disp: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --cw-mono: 'B612 Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  background-color: var(--cw-board);
+  background-image: radial-gradient(rgba(221, 158, 99, 0.05) 1px, transparent 1.4px);
+  background-size: 26px 26px;
+  color: var(--cw-body-ink);
+  font-family: var(--cw-disp);
+  font-size: 15.5px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+.cw-root *,
+.cw-root *::before,
+.cw-root *::after {
+  box-sizing: border-box;
+}
+
+.cw-root ::selection {
+  background: var(--cw-gold);
+  color: var(--cw-deepest);
+}
+
+.cw-root :focus-visible {
+  outline: 2px solid var(--cw-gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.cw-container {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 4.5vw, 56px);
+}
+
+/* ── Typography ──────────────────────────────────────────────────── */
+
+.cw-h1 {
+  margin: 0;
+  font-family: var(--cw-disp);
+  font-weight: 800;
+  font-stretch: 122%;
+  font-size: clamp(2.1rem, 5.2vw, 3.9rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--cw-ink);
+  text-wrap: balance;
+}
+
+.cw-h2 {
+  margin: 0;
+  font-family: var(--cw-disp);
+  font-weight: 750;
+  font-stretch: 118%;
+  font-size: clamp(1.55rem, 3.4vw, 2.35rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--cw-ink);
+  text-wrap: balance;
+}
+
+.cw-lead {
+  margin: 14px 0 0;
+  max-width: 58ch;
+  font-size: 15.5px;
+  color: var(--cw-body-ink);
+  text-wrap: pretty;
+}
+
+.cw-sub {
+  margin: 20px 0 0;
+  max-width: 54ch;
+  font-size: clamp(15.5px, 1.35vw, 17px);
+  line-height: 1.72;
+  color: var(--cw-body-ink);
+  text-wrap: pretty;
+}
+
+/* Silkscreen legend text — small mono, used sparingly, never as a
+   per-section eyebrow system. */
+.cw-legend {
+  font-family: var(--cw-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cw-mute);
+}
+
+.cw-legend strong {
+  font-weight: 700;
+  color: var(--cw-ink);
+}
+
+/* ── Copper rails (section separators) ───────────────────────────── */
+
+.cw-rail {
+  position: relative;
+  border: 0;
+  border-top: 1px solid var(--cw-copper-dim);
+  margin: 0;
+}
+
+.cw-rail::before,
+.cw-rail::after {
+  content: '';
+  position: absolute;
+  top: -3.5px;
+  width: 7px;
+  height: 7px;
+  background: var(--cw-copper);
+  border-radius: 1px;
+}
+
+.cw-rail::before { left: clamp(20px, 4.5vw, 56px); }
+.cw-rail::after { right: clamp(20px, 4.5vw, 56px); }
+
+/* ── Buttons & links ─────────────────────────────────────────────── */
+
+.cw-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 13px 26px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  font-family: var(--cw-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: var(--cw-copper);
+  color: var(--cw-deepest);
+  transition: background-color 0.22s ease, transform 0.18s ease, border-color 0.22s ease, color 0.22s ease;
+}
+
+.cw-btn:hover {
+  background: var(--cw-gold);
+  transform: translateY(-1px);
+}
+
+.cw-btn:active {
+  transform: translateY(0);
+}
+
+.cw-btn--ghost {
+  background: transparent;
+  border-color: rgba(237, 245, 238, 0.28);
+  color: var(--cw-ink);
+}
+
+.cw-btn--ghost:hover {
+  background: rgba(237, 245, 238, 0.05);
+  border-color: var(--cw-gold);
+  color: var(--cw-gold);
+}
+
+.cw-textlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 12px 4px;
+  font-family: var(--cw-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--cw-copper);
+  transition: color 0.2s ease;
+}
+
+.cw-textlink svg {
+  transition: transform 0.22s ease;
+}
+
+.cw-textlink:hover {
+  color: var(--cw-gold);
+}
+
+.cw-textlink:hover svg {
+  transform: translateX(3px);
+}
+
+/* ═══ HERO — the board corner ═════════════════════════════════════ */
+
+.cw-hero {
+  position: relative;
+  padding-top: clamp(7rem, 16vh, 10.5rem);
+  padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
+  overflow: hidden;
+}
+
+/* Mounting holes, top corners — pure ornament */
+.cw-hole {
+  position: absolute;
+  top: 92px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 5px solid rgba(221, 158, 99, 0.5);
+  background: var(--cw-deepest);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.55);
+  display: none;
+}
+
+.cw-hole--l { left: 26px; }
+.cw-hole--r { right: 26px; }
+
+.cw-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(36px, 5vw, 64px);
+  align-items: center;
+}
+
+.cw-hero-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 24px;
+  margin-bottom: clamp(26px, 4vw, 40px);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--cw-hair);
+}
+
+.cw-hero-legend .cw-arm {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.cw-pwr {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cw-led {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--cw-led);
+  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--cw-led) 65%, transparent);
+  animation: cw-led-breathe 3.4s ease-in-out infinite;
+}
+
+.cw-hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 22px;
+  margin-top: clamp(28px, 4.5vw, 40px);
+}
+
+/* Desktop trace map */
+.cw-heromap {
+  display: none;
+  position: relative;
+}
+
+.cw-heromap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cw-mapcaption {
+  margin: 14px 0 0;
+  font-family: var(--cw-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.03em;
+  color: var(--cw-mute);
+}
+
+/* SVG strokes & fills */
+.cw-trace {
+  fill: none;
+  stroke: var(--cw-copper);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cw-via {
+  fill: var(--cw-deepest);
+  stroke: var(--cw-copper);
+  stroke-width: 1.5;
+}
+
+.cw-pad {
+  fill: var(--cw-gold);
+  stroke: var(--cw-deepest);
+  stroke-width: 1;
+}
+
+.cw-silk-frame {
+  fill: none;
+  stroke: rgba(237, 245, 238, 0.28);
+  stroke-width: 1;
+  stroke-dasharray: 3 6;
+}
+
+.cw-netlabel {
+  font-family: var(--cw-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  fill: var(--cw-mute);
+}
+
+.cw-chip-body {
+  fill: var(--cw-deep);
+  stroke: var(--cw-copper);
+  stroke-width: 1.5;
+}
+
+.cw-chip-name {
+  font-family: var(--cw-mono);
+  font-size: 37px;
+  font-weight: 700;
+  font-style: italic;
+  fill: var(--cw-ink);
+}
+
+.cw-chip-sub {
+  font-family: var(--cw-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.24em;
+  fill: var(--cw-mute);
+}
+
+.cw-pulse {
+  fill: var(--cw-gold);
+}
+
+/* Mobile micro-board — a small abstract module in place of the map */
+.cw-microboard {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: clamp(30px, 6vw, 44px);
+}
+
+.cw-microboard .cw-chip-mini {
+  position: relative;
+  flex-shrink: 0;
+  width: 74px;
+  height: 58px;
+  border: 1.5px solid var(--cw-copper);
+  border-radius: 6px;
+  background: var(--cw-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--cw-mono);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--cw-ink);
+}
+
+.cw-microboard .cw-chip-mini::before {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cw-mute);
+}
+
+.cw-microboard .cw-mini-trace {
+  flex: 1;
+  height: 2px;
+  background: var(--cw-copper);
+  position: relative;
+}
+
+.cw-microboard .cw-mini-trace::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: -5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--cw-gold);
+}
+
+@media (min-width: 768px) {
+  .cw-hole { display: block; }
+  .cw-microboard { display: none; }
+  .cw-heromap { display: block; }
+  .cw-hero-grid { grid-template-columns: 1.04fr 0.96fr; }
+}
+
+/* ═══ NETLIST — what gets wired out ═══════════════════════════════ */
+
+.cw-nets {
+  padding-block: clamp(4rem, 8.5vw, 6.5rem);
+}
+
+.cw-nets-head {
+  max-width: 720px;
+  margin-bottom: clamp(30px, 5vw, 48px);
+}
+
+.cw-net-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px 32px;
+  padding-block: 18px;
+  border-top: 1px solid var(--cw-hair);
+  transition: background-color 0.25s ease;
+}
+
+.cw-net-row:last-of-type {
+  border-bottom: 1px solid var(--cw-hair);
+}
+
+.cw-net-row:hover {
+  background-color: rgba(237, 245, 238, 0.03);
+}
+
+.cw-net-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--cw-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--cw-copper);
+}
+
+.cw-net-name::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+  background: transparent;
+  border: 1.5px solid var(--cw-copper);
+  flex-shrink: 0;
+}
+
+.cw-net-row p {
+  margin: 0;
+  max-width: 68ch;
+  font-size: 15px;
+  color: var(--cw-body-ink);
+  text-wrap: pretty;
+}
+
+@media (min-width: 768px) {
+  .cw-net-row {
+    grid-template-columns: 220px 1fr;
+    align-items: baseline;
+    padding-block: 22px;
+  }
+}
+
+/* ═══ BOM — the module bank (packages) ════════════════════════════ */
+
+.cw-bom {
+  padding-block: clamp(4rem, 8.5vw, 6.5rem);
+}
+
+.cw-bom-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 40px;
+  margin-bottom: clamp(28px, 4.5vw, 44px);
+}
+
+.cw-bom-meta {
+  font-family: var(--cw-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cw-mute);
+  padding-bottom: 6px;
+}
+
+.cw-bom-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px 40px;
+  padding: clamp(24px, 3.5vw, 34px) clamp(16px, 2.4vw, 28px);
+  border-top: 1px solid var(--cw-hair);
+  transition: background-color 0.25s ease;
+}
+
+.cw-bom-row:last-of-type {
+  border-bottom: 1px solid var(--cw-hair);
+}
+
+.cw-bom-row:hover {
+  background-color: rgba(237, 245, 238, 0.03);
+}
+
+.cw-bom-row.is-popular {
+  background-color: color-mix(in srgb, var(--cw-gold) 6%, transparent);
+  border-top: 1px solid rgba(232, 197, 108, 0.55);
+}
+
+.cw-bom-row.is-popular + .cw-bom-row {
+  border-top: 1px solid rgba(232, 197, 108, 0.55);
+}
+
+.cw-bom-row.is-popular:last-of-type {
+  border-bottom: 1px solid rgba(232, 197, 108, 0.55);
+}
+
+.cw-bom-row.is-popular:hover {
+  background-color: color-mix(in srgb, var(--cw-gold) 9%, transparent);
+}
+
+.cw-bom-name {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--cw-disp);
+  font-weight: 750;
+  font-stretch: 118%;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  letter-spacing: -0.01em;
+  color: var(--cw-ink);
+}
+
+.cw-tag {
+  font-family: var(--cw-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 2px;
+  background: var(--cw-gold);
+  color: var(--cw-deepest);
+}
+
+.cw-bom-desc {
+  margin: 10px 0 0;
+  font-size: 15px;
+  max-width: 40ch;
+  color: var(--cw-body-ink);
+  text-wrap: pretty;
+}
+
+.cw-bom-feats {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px 28px;
+  align-content: start;
+}
+
+.cw-bom-feats li {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--cw-body-ink);
+}
+
+.cw-pin {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+  background: var(--cw-copper);
+  transform: translateY(-1px);
+}
+
+.cw-bom-buy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.cw-price {
+  margin: 0;
+  font-family: var(--cw-mono);
+  font-weight: 700;
+  font-size: clamp(1.45rem, 2.4vw, 1.8rem);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--cw-ink);
+}
+
+.cw-fineprint {
+  margin: 22px 0 0;
+  font-family: var(--cw-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--cw-mute);
+}
+
+@media (min-width: 640px) {
+  .cw-bom-feats { grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 980px) {
+  .cw-bom-row {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.35fr) minmax(180px, 0.55fr);
+  }
+  .cw-bom-buy {
+    align-items: flex-end;
+    text-align: right;
+  }
+  .cw-bom-feats { grid-template-columns: 1fr 1fr; }
+}
+
+/* ═══ TOOLS — compatible parts conveyor ═══════════════════════════ */
+
+.cw-tools {
+  padding-block: clamp(3rem, 6vw, 4.5rem);
+  background: var(--cw-deep);
+}
+
+.cw-tools .cw-h2 {
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+}
+
+.cw-tools-note {
+  margin: 12px 0 0;
+  font-size: 14.5px;
+  color: var(--cw-mute);
+}
+
+.cw-belt {
+  margin-top: 26px;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.cw-belt-track {
+  display: flex;
+  width: max-content;
+  animation: cw-belt 38s linear infinite;
+}
+
+.cw-belt:hover .cw-belt-track {
+  animation-play-state: paused;
+}
+
+.cw-belt ul,
+.cw-toolgrid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 10px;
+}
+
+.cw-belt ul {
+  padding-right: 10px;
+}
+
+.cw-toolgrid {
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+.cw-toolchip {
+  display: inline-block;
+  padding: 9px 15px;
+  border: 1px solid var(--cw-hair);
+  border-radius: 3px;
+  background: rgba(237, 245, 238, 0.035);
+  font-family: var(--cw-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--cw-body-ink);
+}
+
+/* ═══ PROCESS — the assembly line ═════════════════════════════════ */
+
+.cw-proc {
+  padding-block: clamp(4rem, 8.5vw, 6.5rem);
+}
+
+.cw-proc-head {
+  max-width: 720px;
+  margin-bottom: clamp(34px, 5vw, 52px);
+}
+
+.cw-proc-track {
+  position: relative;
+  height: 2px;
+  background: var(--cw-copper-faint);
+  margin-bottom: 34px;
+  display: none;
+}
+
+.cw-proc-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--cw-copper);
+  transform-origin: left center;
+}
+
+.cw-proc-track .cw-proc-via {
+  position: absolute;
+  top: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cw-deepest);
+  border: 2px solid var(--cw-copper);
+}
+
+.cw-proc-steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 26px;
+  position: relative;
+}
+
+/* Mobile: vertical trace down the left */
+.cw-proc-steps::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 4px;
+  width: 2px;
+  background: var(--cw-copper-faint);
+}
+
+.cw-step {
+  position: relative;
+  padding-left: 30px;
+}
+
+.cw-step::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cw-deepest);
+  border: 2px solid var(--cw-copper);
+}
+
+.cw-step-no {
+  font-family: var(--cw-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--cw-copper);
+}
+
+.cw-step-label {
+  margin: 6px 0 8px;
+  font-family: var(--cw-disp);
+  font-weight: 750;
+  font-stretch: 118%;
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--cw-ink);
+}
+
+.cw-step p {
+  margin: 0;
+  font-size: 14.5px;
+  color: var(--cw-body-ink);
+  text-wrap: pretty;
+}
+
+@media (min-width: 900px) {
+  .cw-proc-track { display: block; }
+  .cw-proc-steps { grid-template-columns: repeat(4, 1fr); gap: 36px; }
+  .cw-proc-steps::before { display: none; }
+  .cw-step { padding-left: 0; }
+  .cw-step::before { display: none; }
+}
+
+/* ═══ SIBLING — the private system note ═══════════════════════════ */
+
+.cw-sibling {
+  padding-block: clamp(2.6rem, 5vw, 3.6rem);
+}
+
+.cw-sibling-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 40px;
+  padding: clamp(20px, 3vw, 28px) clamp(18px, 2.6vw, 30px);
+  border: 1px solid var(--cw-hair);
+  border-radius: 4px;
+  background: var(--cw-deep);
+}
+
+.cw-sibling-copy {
+  max-width: 62ch;
+}
+
+.cw-sibling-tagline {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--cw-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cw-mute);
+}
+
+.cw-sibling-copy p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--cw-body-ink);
+  text-wrap: pretty;
+}
+
+/* ═══ CTA — the power header ══════════════════════════════════════ */
+
+.cw-cta {
+  padding-block: clamp(5.5rem, 11vw, 8.5rem);
+  background: var(--cw-deep);
+  background-image: radial-gradient(rgba(221, 158, 99, 0.06) 1px, transparent 1.4px);
+  background-size: 26px 26px;
+  text-align: center;
+}
+
+.cw-cta-ready {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 26px;
+  font-family: var(--cw-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cw-mute);
+}
+
+.cw-cta .cw-h2 {
+  font-size: clamp(1.9rem, 4.6vw, 3.1rem);
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.cw-cta-sub {
+  margin: 18px auto 0;
+  max-width: 46ch;
+  font-size: 15.5px;
+  color: var(--cw-body-ink);
+  text-wrap: pretty;
+}
+
+.cw-cta .cw-btn {
+  margin-top: 38px;
+}
+
+/* ═══ Motion ══════════════════════════════════════════════════════ */
+
+@keyframes cw-led-breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+@keyframes cw-belt {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cw-led { animation: none; opacity: 1; }
+  .cw-belt-track { animation: none; }
+}
+
+/* Static mode (prerender or reduced motion, set from JS) —
+   final state, nothing moving. */
+.cw-root.cw-static .cw-led {
+  animation: none;
+  opacity: 1;
+}
+
+.cw-root.cw-static .cw-belt-track {
+  animation: none;
+}
