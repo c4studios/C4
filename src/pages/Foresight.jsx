@@ -154,17 +154,21 @@ function useForceDark() {
     const root = document.documentElement;
     const prev = root.className;
     const apply = () => {
-      root.classList.add('dark-mode');
+      root.classList.add('dark-mode', 'sg-on-board');
       root.classList.remove('light-mode', 'vivid');
     };
     apply();
     /* On a direct page load ThemeProvider's mount effect runs after this
-       one and re-applies the stored theme class; one deferred re-apply
-       wins that ordering. SPA navigations are unaffected. */
+       one and re-applies the stored theme class AND its inline --c4-*
+       tokens (inline styles outrank the .dark-mode class block). One
+       deferred re-apply wins the class ordering, and the .sg-on-board
+       block in sight-arm.css pins the chrome tokens with !important so
+       the nav and footer read dark whatever theme the visitor stored. */
     const id = window.setTimeout(apply, 0);
     return () => {
       window.clearTimeout(id);
       root.className = prev;
+      root.classList.remove('sg-on-board');
     };
   }, []);
 }

@@ -1,17 +1,17 @@
 /* ═══════════════════════════════════════════════════════════════════
    /ServiceAI — the C4i cloud arm. "Solder-mask & silkscreen."
-   The page is a live circuit board: deep green solder mask, copper
+   The page is a live circuit board: solder-mask blue, copper
    traces, gold ENIG pads, white silkscreen legend. Reference: bare
    FR-4 service boards from vintage HP / Tektronix test equipment.
    Type: Archivo (variable width — silkscreen grotesque) + B612 Mono
    (the Airbus cockpit instrument face). Scoped under .cw-*.
    Contrast (computed): ink 10.9:1, body 7.9:1, mute 6.0:1,
-   copper 5.3:1, gold 7.3:1 — all against --cw-board.
+   copper 6.0:1, gold 8.2:1 — all against --cw-board.
    ═══════════════════════════════════════════════════════════════════ */
 
 /* While the board page is mounted it stamps .cw-on-board on <html>.
    The site chrome (translucent NavHeader + Footer) must read dark over
-   the deep green board. ThemeProvider applies its light/dark tokens as
+   the deep blue board. ThemeProvider applies its light/dark tokens as
    inline styles on <html>, which outrank the .dark-mode class block —
    so the chrome tokens are pinned here with !important for the life of
    the page (mirrors the globals.css dark set). Scoped: the class is
@@ -40,20 +40,28 @@
   --c4-ring: rgba(236, 231, 222, 0.35) !important;
 }
 
-/* framer-motion resolves the nav's background var() to a literal at
-   first paint — before this page's mount effect can flip the theme —
-   so the idle bar would stay light until the first scroll. Pin one
-   constant dark translucency for the life of the board page instead
-   (the blur, border and text all follow the token overrides above). */
+/* The nav paints its light idle background before this page's mount
+   effect can flip the theme. Pin one constant dark translucency for
+   the life of the board page (the blur, border and text all follow
+   the token overrides above), and kill the chrome's 500ms
+   background transition so the pinned colour applies instantly —
+   otherwise every entry starts with a light bar fading dark, and a
+   backgrounded tab freezes mid-transition. */
 :root.cw-on-board header.fixed.top-0.z-50 {
-  background-color: rgba(8, 24, 16, 0.78) !important;
+  background-color: rgba(6, 21, 38, 0.78) !important;
+  transition: none !important;
+}
+
+/* Nav links carry their own colour transitions — same freeze class. */
+:root.cw-on-board header.fixed.top-0.z-50 * {
+  transition: none !important;
 }
 
 .cw-root {
   /* Board surfaces */
-  --cw-board: #0f3d2e;
-  --cw-deep: #0b2f23;
-  --cw-deepest: #082418;
+  --cw-board: #0e2f4e;
+  --cw-deep: #0a2440;
+  --cw-deepest: #071b31;
   --cw-module: #134634;
 
   /* Silkscreen inks */
@@ -731,8 +739,31 @@
   animation: cw-belt 38s linear infinite;
 }
 
-.cw-belt:hover .cw-belt-track {
+.cw-belt:hover .cw-belt-track,
+.cw-belt:focus-within .cw-belt-track,
+.cw-belt[data-paused='true'] .cw-belt-track {
   animation-play-state: paused;
+}
+
+/* The ticker's stop mechanism (WCAG 2.2.2) — silkscreen-quiet, real target. */
+.cw-belt-pause {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 2px;
+  padding: 0.2rem 0.4rem;
+  background: none;
+  border: 0;
+  font-family: var(--cw-mono, ui-monospace, monospace);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--cw-mute);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cw-belt-pause:hover {
+  color: var(--cw-silk);
 }
 
 .cw-belt ul,
@@ -977,4 +1008,14 @@
 
 .cw-root.cw-static .cw-belt-track {
   animation: none;
+}
+
+/* The Layout wrapper and footer carry their own colour transitions —
+   nav/footer text INHERITS from the wrapper, so a frozen mid-flight
+   transition (throttled tab, first paint) holds the wrong theme's
+   colours. Snap all chrome transitions while pinned. */
+:root.cw-on-board .min-h-screen.transition-colors,
+:root.cw-on-board footer,
+:root.cw-on-board footer * {
+  transition: none !important;
 }

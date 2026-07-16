@@ -1,0 +1,380 @@
+/* ═══════════════════════════════════════════════════════════════════
+   /c4i — the fork. "Two material samples on the C4 bench."
+   The page shell stays quiet, theme-following C4 (--c4 tokens, light
+   AND dark). Each door is a committed, theme-independent material
+   sample of its destination, like swatches on an engineer's desk:
+   · Local → /private-ai : a sheet of the ink-on-white print
+     collateral. Paper ground, ink top bar, hairline rules, Geist Mono
+     console details, red registration mark.
+   · Cloud → /ServiceAI : an off-cut of the FR-4 board. Solder-mask
+     green, copper traces, B612 Mono silkscreen, red power LED.
+   The red mark is the one C4 constant repeated on hero + both doors.
+   Scoped under .fk-*.
+   Contrast (computed, door grounds are fixed so both themes pass):
+   paper: ink 17.98, body 13.30, meta 6.08 — all vs #ffffff.
+   board: silk 10.94, body 7.90, meta 6.04, copper 5.29 — vs #0f3d2e.
+   shell: text 15.99/15.34, muted 4.99/8.21 (light/dark tokens).
+   ═══════════════════════════════════════════════════════════════════ */
+
+.fk-root {
+  --fk-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Paper sample (quotes /private-ai) */
+  --fk-paper: #ffffff;
+  --fk-paper-ink: #14171b;
+  --fk-paper-body: #2b3036;
+  --fk-paper-meta: #5c636b;
+  --fk-paper-hair: #dadde1;
+  --fk-paper-edge: #d4d7db;
+
+  /* Board sample (quotes /ServiceAI) */
+  --fk-board: #0f3d2e;
+  --fk-board-deep: #0b2f23;
+  --fk-silk: #edf5ee;
+  --fk-board-body: #bfd6c6;
+  --fk-board-meta: #9fbeac;
+  --fk-copper: #dd9e63;
+  --fk-board-hair: rgba(237, 245, 238, 0.16);
+
+  /* The one constant carried into both worlds */
+  --fk-red: var(--c4-accent, #c23030);
+
+  --fk-mono-pa: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --fk-mono-cw: 'B612 Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ── Hero mark: ▪ C2 · C4i ─────────────────────────────────────── */
+
+.fk-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--c4-text);
+}
+
+.fk-mark-code {
+  color: var(--c4-text-muted);
+}
+
+/* Registration square — the C4 red constant (paper world) */
+.fk-reg {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  background: var(--fk-red);
+}
+
+/* Power LED — the C4 red constant (board world) */
+.fk-led {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--fk-red);
+  box-shadow: 0 0 8px rgba(194, 48, 48, 0.55);
+}
+
+/* ── The "or" seal on the seam between the doors ───────────────── */
+
+.fk-or {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .fk-or {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--c4-bg);
+    border: 1px solid var(--c4-border);
+    color: var(--c4-text-muted);
+    font-size: 12px;
+    font-style: italic;
+    pointer-events: none;
+  }
+}
+
+/* ── Doors: shared behaviour ───────────────────────────────────── */
+
+.fk-door {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-decoration: none;
+  transition:
+    transform 0.45s var(--fk-ease),
+    box-shadow 0.45s var(--fk-ease),
+    border-color 0.45s var(--fk-ease);
+}
+
+.fk-door:hover,
+.fk-door:focus-visible {
+  transform: translateY(-5px);
+}
+
+.fk-door:focus-visible {
+  outline: 2px solid var(--c4-text);
+  outline-offset: 4px;
+}
+
+.fk-door-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fk-cta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 18px;
+  padding-top: 16px;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+
+.fk-arrow {
+  flex: 0 0 auto;
+  transition: transform 0.3s var(--fk-ease);
+}
+
+.fk-door:hover .fk-arrow,
+.fk-door:focus-visible .fk-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* Non-motion hover feedback (also the reduced-motion end state) */
+.fk-door:hover .fk-cta-label,
+.fk-door:focus-visible .fk-cta-label {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Door 1: the paper sample ──────────────────────────────────── */
+
+.fk-paper-door {
+  background: var(--fk-paper);
+  border: 1px solid var(--fk-paper-edge);
+  border-radius: 3px;
+  color: var(--fk-paper-body);
+  padding: clamp(26px, 3.2vw, 36px);
+  padding-top: calc(clamp(26px, 3.2vw, 36px) + 5px);
+  box-shadow: 0 12px 32px -26px rgba(20, 23, 27, 0.35);
+}
+
+.fk-paper-door:hover,
+.fk-paper-door:focus-visible {
+  border-color: #b9bec5;
+  box-shadow: 0 30px 64px -30px rgba(20, 23, 27, 0.45);
+}
+
+/* The 5px ink bar across the top — /private-ai's topbar, quoted */
+.fk-inkbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--fk-paper-ink);
+  border-radius: 3px 3px 0 0;
+  transform-origin: left center;
+}
+
+.fk-meta-pa {
+  font-family: var(--fk-mono-pa);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fk-paper-meta);
+}
+
+.fk-title-pa {
+  margin: 18px 0 10px;
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.6vw, 2.05rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--fk-paper-ink);
+}
+
+.fk-body-pa {
+  margin: 0 0 22px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--fk-paper-body);
+  max-width: 44ch;
+}
+
+/* One console line, hairline-boxed — the /private-ai flavour beat */
+.fk-console {
+  display: block;
+  margin-top: auto;
+  padding: 9px 12px;
+  border: 1px solid var(--fk-paper-hair);
+  border-radius: 2px;
+  font-family: var(--fk-mono-pa);
+  font-size: 11px;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  color: var(--fk-paper-meta);
+}
+
+.fk-console-prompt {
+  color: var(--fk-paper-ink);
+  margin-right: 6px;
+}
+
+.fk-cta-pa {
+  font-family: var(--fk-mono-pa);
+  font-weight: 500;
+  color: var(--fk-paper-ink);
+  border-top: 1px solid var(--fk-paper-hair);
+}
+
+/* ── Door 2: the board sample ──────────────────────────────────── */
+
+.fk-board-door {
+  background-color: var(--fk-board);
+  background-image: radial-gradient(rgba(221, 158, 99, 0.07) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  border: 1px solid var(--fk-board-hair);
+  border-radius: 10px;
+  color: var(--fk-board-body);
+  padding: clamp(26px, 3.2vw, 36px);
+  box-shadow: 0 12px 32px -26px rgba(4, 22, 15, 0.6);
+}
+
+.fk-board-door:hover,
+.fk-board-door:focus-visible {
+  border-color: rgba(237, 245, 238, 0.32);
+  box-shadow: 0 30px 64px -30px rgba(4, 22, 15, 0.75);
+}
+
+/* The focus outline draws over the SHELL (outside the door), so it
+   follows the theme ink from the base .fk-door rule — no gold override:
+   gold would vanish on the light shell. */
+
+/* Silkscreen keepout frame, inset like a routed board edge */
+.fk-silkframe {
+  position: absolute;
+  inset: 9px;
+  border: 1px solid rgba(237, 245, 238, 0.2);
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+.fk-meta-cw {
+  font-family: var(--fk-mono-cw);
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fk-board-meta);
+}
+
+.fk-trace {
+  display: block;
+  width: 100%;
+  max-width: 270px;
+  height: auto;
+  margin: 20px 0 2px;
+}
+
+.fk-trace-chip {
+  fill: var(--fk-board-deep);
+  stroke: rgba(237, 245, 238, 0.35);
+  stroke-width: 1;
+}
+
+.fk-trace-name {
+  font-family: var(--fk-mono-cw);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  fill: var(--fk-silk);
+}
+
+.fk-trace-ref {
+  font-family: var(--fk-mono-cw);
+  font-size: 6.5px;
+  letter-spacing: 0.1em;
+  fill: var(--fk-copper);
+}
+
+.fk-title-cw {
+  margin: 16px 0 10px;
+  font-family: var(--fk-mono-cw);
+  font-weight: 700;
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  line-height: 1.15;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--fk-silk);
+}
+
+.fk-body-cw {
+  margin: 0 0 22px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--fk-board-body);
+  max-width: 44ch;
+}
+
+.fk-cta-cw {
+  margin-top: auto;
+  font-family: var(--fk-mono-cw);
+  font-weight: 700;
+  color: var(--fk-copper);
+  border-top: 1px solid var(--fk-board-hair);
+}
+
+/* ── Footer fallback link ──────────────────────────────────────── */
+
+.fk-fallback-link {
+  display: inline-block;
+  padding: 12px 4px;
+  margin: -12px -4px;
+  color: var(--c4-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.fk-fallback-link:hover {
+  color: var(--c4-text-muted);
+}
+
+/* ── Reduced motion: end states, no movement ───────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .fk-door,
+  .fk-arrow {
+    transition: none;
+  }
+
+  .fk-door:hover,
+  .fk-door:focus-visible {
+    transform: none;
+  }
+
+  .fk-door:hover .fk-arrow,
+  .fk-door:focus-visible .fk-arrow {
+    transform: none;
+  }
+
+  .fk-led {
+    box-shadow: none;
+  }
+}

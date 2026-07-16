@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
@@ -11,11 +11,12 @@ import '../components/ai-arm/ai-arm.css';
 
 /*
  * /ServiceAI — the C4i cloud arm. Identity: "solder-mask & silkscreen".
- * The page is a live circuit board — deep green solder mask, copper
+ * The page is a live circuit board — solder-mask blue, copper
  * traces, gold pads, white silkscreen. Business processes are nets
  * routed through one C4i core; packages are the BOM; the process is
- * the assembly line. Reference: bare FR-4 boards from vintage
- * HP / Tektronix service equipment.
+ * the assembly line. Reference: blue FR-4 prototyping boards,
+ * Arduino-lineage lab equipment. (Blue, not green, so the board and
+ * C4Sight's chalkboard stay unmistakably different worlds.)
  */
 
 const EASE = [0.22, 1, 0.36, 1];
@@ -67,20 +68,31 @@ const AI_JSONLD = [
 /* Force dark chrome while on the board, Lens-style. The .cw-on-board
    marker drives !important token overrides in ai-arm.css so the nav and
    footer read dark even though ThemeProvider re-applies its own inline
-   tokens after this child effect runs. The dark-mode class is asserted
-   twice (immediately + next frame) to outlast that parent effect. */
+   tokens after this child effect runs. ThemeProvider strips the class
+   from a parent effect (and a one-shot rAF re-assert never fires in a
+   backgrounded tab), so a MutationObserver re-asserts for the life of
+   the page — it runs as a microtask even while hidden. The guard means
+   our own corrective write settles in one pass instead of looping. */
 function useForceDark() {
   useEffect(() => {
     const root = document.documentElement;
     const prev = root.className;
-    const apply = () => {
-      root.classList.add('dark-mode', 'cw-on-board');
-      root.classList.remove('light-mode', 'vivid');
+    const assertDark = () => {
+      if (
+        !root.classList.contains('dark-mode') ||
+        !root.classList.contains('cw-on-board') ||
+        root.classList.contains('light-mode') ||
+        root.classList.contains('vivid')
+      ) {
+        root.classList.add('dark-mode', 'cw-on-board');
+        root.classList.remove('light-mode', 'vivid');
+      }
     };
-    apply();
-    const raf = requestAnimationFrame(apply);
+    assertDark();
+    const observer = new MutationObserver(assertDark);
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] });
     return () => {
-      cancelAnimationFrame(raf);
+      observer.disconnect();
       root.className = prev;
       root.classList.remove('cw-on-board');
     };
@@ -159,6 +171,7 @@ function TraceMap({ staticMode }) {
 
 export default function ServiceAI() {
   useForceDark();
+  const [beltPaused, setBeltPaused] = useState(false);
 
   useDocumentHead({
     title: 'AI & Software — C4 Studios Perth',
@@ -286,7 +299,7 @@ export default function ServiceAI() {
           <motion.div className="cw-nets-head" {...inView()}>
             <h2 className="cw-h2">What gets wired out of your week.</h2>
             <p className="cw-lead">
-              If it happens in software more than twice a week, it's a candidate.
+              If it happens in software more than twice a week, it’s a candidate.
               These five come up in almost every scoping call.
             </p>
           </motion.div>
@@ -311,11 +324,13 @@ export default function ServiceAI() {
             <div>
               <h2 className="cw-h2">Start where the pain is.</h2>
               <p className="cw-lead">
-                Four builds, priced from the studio's central list — the same
+                Four builds, priced from the studio’s central list — the same
                 numbers wherever you find them.
               </p>
             </div>
-            <span className="cw-bom-meta">BOM · Automation · 04 lines</span>
+            <span className="cw-bom-meta">
+              BOM · Automation · {String(automationPackages.length).padStart(2, '0')} lines
+            </span>
           </motion.div>
 
           <div>
@@ -375,20 +390,31 @@ export default function ServiceAI() {
               ))}
             </ul>
           ) : (
-            <motion.div className="cw-belt" {...inView(1)}>
-              <div className="cw-belt-track">
-                <ul>
-                  {TOOLS.map((tool) => (
-                    <li key={tool} className="cw-toolchip">{tool}</li>
-                  ))}
-                </ul>
-                <ul aria-hidden="true">
-                  {TOOLS.map((tool) => (
-                    <li key={tool} className="cw-toolchip">{tool}</li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
+            <>
+              <motion.div className="cw-belt" data-paused={beltPaused || undefined} {...inView(1)}>
+                <div className="cw-belt-track">
+                  <ul>
+                    {TOOLS.map((tool) => (
+                      <li key={tool} className="cw-toolchip">{tool}</li>
+                    ))}
+                  </ul>
+                  <ul aria-hidden="true">
+                    {TOOLS.map((tool) => (
+                      <li key={tool} className="cw-toolchip">{tool}</li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
+              {/* WCAG 2.2.2 — a real mechanism to stop the moving ticker. */}
+              <button
+                type="button"
+                className="cw-belt-pause"
+                aria-pressed={beltPaused}
+                onClick={() => setBeltPaused((p) => !p)}
+              >
+                {beltPaused ? '▶ run ticker' : '❚❚ pause ticker'}
+              </button>
+            </>
           )}
         </div>
       </section>
@@ -463,9 +489,9 @@ export default function ServiceAI() {
               <span className="cw-led" aria-hidden="true" />
               Systems ready
             </span>
-            <h2 className="cw-h2">Your team isn't middleware.</h2>
+            <h2 className="cw-h2">Your team isn’t middleware.</h2>
             <p className="cw-cta-sub">
-              Tell us which process is the biggest drain. We'll scope the fix,
+              Tell us which process is the biggest drain. We’ll scope the fix,
               price it, and wire it in.
             </p>
             <Link to={startUrl} className="cw-btn">
