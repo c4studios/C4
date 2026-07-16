@@ -1,154 +1,54 @@
-import React, { useState } from 'react';
+/**
+ * /ServiceWeb — C1 · Web & Applications.
+ *
+ * Arm identity: "Issued for Construction" — structural documentation
+ * in daylight. Reference: Centre Pompidou's expressed structure ×
+ * USM Haller / tower-crane gantry yellow. Every package is drawn as a
+ * scaled structure elevation: the silhouette tells you the scope
+ * before you read a word. All package facts render from
+ * src/data/pricing.js (single source of truth — fixes the audited
+ * data drift), with only delivery timelines kept as page metadata.
+ *
+ * Motion: CSS-only. Content is fully visible by default; the .wa-armed
+ * class (added on mount, never under prefers-reduced-motion or the
+ * Prerender UA) arms hero keyframes, an SVG line-draw, and
+ * IntersectionObserver scroll reveals. Styles live in
+ * src/components/web-arm/web-arm.css, scoped under .wa-root.
+ */
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight, Check, Star } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { createPageUrl } from '@/utils';
-import PageHero from '../components/c4/PageHero';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
-import { webDesignPackages, subscriptionInfo } from '@/data/pricing';
+import {
+  webPackageSections,
+  webPricingGuides,
+  webScopeNotes,
+  subscriptionInfo,
+  ASTERISK_CLAUSE,
+  GST_NOTE,
+  INDUSTRY_SURCHARGE_NOTE,
+} from '@/data/pricing';
+import '../components/web-arm/web-arm.css';
 
-// Monthly-price lookup, keyed to the single source of truth in pricing.js
-// so the switch never drifts from the canonical numbers.
-const monthlyByKey = Object.fromEntries(
-  webDesignPackages.map((p) => [p.key, p.monthlyLabel]),
-);
+const START = createPageUrl('StartProject');
 
-const ease = [0.22, 1, 0.36, 1];
+/* Delivery windows are page metadata (they don't exist in pricing.js).
+   The six original windows are preserved verbatim; proposal-scoped
+   tiers say so instead of inventing a number. */
+const TIMELINES = {
+  starter: '1–2 weeks',
+  brochure: '2–3 weeks',
+  business: '3–4 weeks',
+  custom: '4–6 weeks',
+  'commerce-starter': '4–6 weeks',
+  'web-application': '5–8 weeks',
+  growth: 'By proposal',
+  platform: 'By proposal',
+};
 
-/*
- * Page motif: the browser viewport. Every package is shown as a tiny
- * site wireframe inside browser chrome — the silhouette tells you what
- * you're buying before you read a word.
- */
-
-const packages = [
-  {
-    key: 'starter',
-    name: 'Landing Page',
-    path: '/launch',
-    price: '$500',
-    timeline: '1–2 weeks',
-    desc: 'Single-page site for campaigns, product launches, or lead capture.',
-    features: ['Responsive design', 'SEO setup', 'Contact form', 'Analytics'],
-    param: 'web_design&package=starter',
-    popular: false,
-    wire: [
-      { x: 4, y: 6, w: 14, h: 4, t: 'soft' },
-      { x: 70, y: 6.5, w: 26, h: 3, t: 'line' },
-      { x: 22, y: 16, w: 56, h: 6, t: 'soft' },
-      { x: 30, y: 25, w: 40, h: 3, t: 'line' },
-      { x: 41, y: 32, w: 18, h: 6, t: 'accent' },
-    ],
-  },
-  {
-    key: 'brochure',
-    name: 'Brochure Site',
-    path: '/about',
-    price: '$800',
-    timeline: '2–3 weeks',
-    desc: 'Multi-page site covering your full business story.',
-    features: ['Up to 5 pages', 'CMS integration', 'SEO structure', 'Mobile-first'],
-    param: 'web_design&package=brochure',
-    popular: false,
-    wire: [
-      { x: 4, y: 5, w: 92, h: 4, t: 'soft' },
-      { x: 4, y: 13, w: 16, h: 25, t: 'accent' },
-      { x: 23, y: 13, w: 16, h: 25, t: 'soft' },
-      { x: 42, y: 13, w: 16, h: 25, t: 'soft' },
-      { x: 61, y: 13, w: 16, h: 25, t: 'soft' },
-      { x: 80, y: 13, w: 16, h: 25, t: 'soft' },
-    ],
-  },
-  {
-    key: 'business',
-    name: 'Business Website',
-    path: '/grow',
-    price: '$1,500',
-    timeline: '3–4 weeks',
-    desc: 'A polished, conversion-focused site that does the selling for you.',
-    features: ['Up to 10 pages', 'Blog / content hub', 'Lead tracking', 'Performance optimised'],
-    param: 'web_design&package=business',
-    popular: true,
-    wire: [
-      { x: 4, y: 5, w: 92, h: 4, t: 'soft' },
-      { x: 4, y: 14, w: 40, h: 5, t: 'soft' },
-      { x: 4, y: 21, w: 32, h: 3, t: 'line' },
-      { x: 4, y: 27, w: 14, h: 5, t: 'accent' },
-      { x: 52, y: 13, w: 44, h: 20, t: 'soft' },
-      { x: 4, y: 37, w: 28, h: 4, t: 'line' },
-      { x: 36, y: 37, w: 28, h: 4, t: 'line' },
-      { x: 68, y: 37, w: 28, h: 4, t: 'line' },
-    ],
-  },
-  {
-    key: 'custom',
-    name: 'Custom Website',
-    path: '/bespoke',
-    price: '$2,500',
-    timeline: '4–6 weeks',
-    desc: 'Fully tailored design and build for brands with exacting standards.',
-    features: ['Bespoke design system', 'Advanced animations', 'Full CMS', 'Priority support'],
-    param: 'web_design&package=custom',
-    popular: false,
-    wire: [
-      { x: 4, y: 6, w: 52, h: 26, t: 'soft' },
-      { x: 60, y: 10, w: 36, h: 12, t: 'line' },
-      { x: 60, y: 26, w: 28, h: 8, t: 'soft' },
-      { x: 44, y: 34, w: 20, h: 6, t: 'accent' },
-      { x: 92, y: 6, w: 4, h: 4, t: 'accent' },
-    ],
-  },
-  {
-    key: 'commerce-starter',
-    name: 'Ecommerce Store',
-    path: '/shop',
-    price: '$3,500',
-    timeline: '4–6 weeks',
-    desc: 'A store built to convert — designed around your products and customers.',
-    features: ['Product catalogue', 'Payment integration', 'Inventory management', 'Abandoned cart flows'],
-    param: 'web_design&package=commerce-starter',
-    popular: false,
-    wire: [
-      { x: 4, y: 5, w: 70, h: 4, t: 'soft' },
-      { x: 88, y: 5, w: 8, h: 4, t: 'accent' },
-      { x: 4, y: 13, w: 28, h: 11, t: 'soft' },
-      { x: 36, y: 13, w: 28, h: 11, t: 'soft' },
-      { x: 68, y: 13, w: 28, h: 11, t: 'soft' },
-      { x: 4, y: 28, w: 28, h: 11, t: 'soft' },
-      { x: 36, y: 28, w: 28, h: 11, t: 'soft' },
-      { x: 68, y: 28, w: 28, h: 11, t: 'soft' },
-    ],
-  },
-  {
-    key: 'web-application',
-    name: 'Web App Starter',
-    path: '/app',
-    price: '$4,500',
-    timeline: '5–8 weeks',
-    desc: 'Your SaaS or internal tool — fully designed, fully functional.',
-    features: ['Auth & user accounts', 'Database design', 'Admin dashboard', 'API integrations'],
-    param: 'web_design&package=web-application',
-    popular: false,
-    wire: [
-      { x: 4, y: 5, w: 16, h: 35, t: 'soft' },
-      { x: 24, y: 5, w: 72, h: 5, t: 'soft' },
-      { x: 24, y: 14, w: 72, h: 4, t: 'line' },
-      { x: 24, y: 21, w: 72, h: 4, t: 'line' },
-      { x: 24, y: 28, w: 72, h: 4, t: 'line' },
-      { x: 24, y: 35, w: 46, h: 5, t: 'accent' },
-    ],
-  },
-];
-
-const process = [
-  { step: '01', label: 'Brief', desc: 'You describe the outcome you need. We ask the right questions.' },
-  { step: '02', label: 'Design', desc: 'Wireframes and visual designs — reviewed and approved before build.' },
-  { step: '03', label: 'Build', desc: 'Clean code, responsive layout, tested across devices.' },
-  { step: '04', label: 'Launch', desc: 'Deployment, DNS, analytics, and a handover guide.' },
-];
-
-const included = [
+const INCLUDED = [
   'Mobile-first responsive layout',
   'Basic SEO setup',
   'Performance optimised',
@@ -157,75 +57,31 @@ const included = [
   'Full code handover — you own it',
 ];
 
-const wireFill = {
-  soft: 'color-mix(in srgb, var(--c4-text) 9%, transparent)',
-  line: 'color-mix(in srgb, var(--c4-text) 5%, transparent)',
-  accent: 'color-mix(in srgb, var(--c4-accent) 75%, transparent)',
-};
+/* Four real stages — the one sequence on the page that earns its
+   numbers. Bar spans are relative programme positions, not promises. */
+const PROCESS = [
+  { num: '01', label: 'Brief', desc: 'You describe the outcome you need. We ask the right questions.', bar: [0, 14] },
+  { num: '02', label: 'Design', desc: 'Wireframes and visual designs — reviewed and approved before build.', bar: [11, 26] },
+  { num: '03', label: 'Build', desc: 'Clean code, responsive layout, tested across devices.', bar: [34, 44] },
+  { num: '04', label: 'Launch', desc: 'Deployment, DNS, analytics, and a handover guide.', bar: [76, 24] },
+];
 
-function WireframePreview({ blocks, active }) {
-  return (
-    <div
-      className="relative w-full overflow-hidden"
-      style={{ aspectRatio: '100 / 46', backgroundColor: 'var(--c4-bg-alt)' }}
-      aria-hidden="true"
-    >
-      {blocks.map((b, i) => (
-        <div
-          key={i}
-          className="absolute rounded-[1.5px]"
-          style={{
-            left: `${b.x}%`,
-            top: `${b.y * (100 / 46)}%`,
-            width: `${b.w}%`,
-            height: `${b.h * (100 / 46)}%`,
-            backgroundColor: wireFill[b.t],
-            opacity: active ? 1 : b.t === 'accent' ? 0.85 : 0.55,
-            transform: active ? 'translateY(0)' : 'translateY(2.5px)',
-            transition: `opacity .45s ease ${i * 40}ms, transform .45s cubic-bezier(.22,1,.36,1) ${i * 40}ms`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
+/* Sections with a running schedule reference (W·01…W·08) across
+   groups. webPricingGuides is parallel to webPackageSections
+   (base / ecommerce / apps) — zipped by index. */
+const SECTIONS = (() => {
+  let n = 0;
+  return webPackageSections.map((section, i) => ({
+    ...section,
+    guide: webPricingGuides[i],
+    packages: section.packages.map((pkg) => {
+      n += 1;
+      return { ...pkg, ref: `W·${String(n).padStart(2, '0')}` };
+    }),
+  }));
+})();
 
-function BrowserChrome({ path, popular }) {
-  return (
-    <div
-      className="flex items-center gap-3 px-4 py-2.5"
-      style={{ backgroundColor: 'var(--c4-bg-alt)', borderBottom: '1px solid var(--c4-border)' }}
-    >
-      <div className="flex items-center gap-1.5 flex-shrink-0">
-        {[0, 1, 2].map(i => (
-          <span key={i} className="h-2 w-2 rounded-full" style={{ backgroundColor: 'var(--c4-border)' }} />
-        ))}
-      </div>
-      <div
-        className="flex-1 min-w-0 px-3 py-1 rounded-full text-[10px] truncate"
-        style={{
-          backgroundColor: 'var(--c4-bg)',
-          border: '1px solid var(--c4-border-light)',
-          color: 'var(--c4-text-subtle)',
-          fontFamily: 'monospace',
-        }}
-      >
-        yourbrand.com.au<span style={{ color: 'var(--c4-accent)' }}>{path}</span>
-      </div>
-      {popular && (
-        <span
-          className="inline-flex items-center gap-1 px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] font-medium flex-shrink-0 rounded-[2px]"
-          style={{ backgroundColor: 'var(--c4-accent)', color: '#fff' }}
-        >
-          <Star size={8} strokeWidth={2} />
-          Popular
-        </span>
-      )}
-    </div>
-  );
-}
-
-// Stable module-level ref so the head hook doesn't re-run each render.
+/* Stable module-level ref so the head hook doesn't re-run each render. */
 const WEB_JSONLD = [
   serviceSchema({
     name: 'Web Design & Development',
@@ -240,11 +96,287 @@ const WEB_JSONLD = [
   ]),
 ];
 
+/* ── Structure elevations ─────────────────────────────────────────
+   Each package drawn as a scaled elevation: more storeys and bays as
+   the scope grows. Ink linework, one gantry-yellow element each. */
+
+function Ground() {
+  return (
+    <g>
+      <line x1="6" y1="76" x2="114" y2="76" strokeWidth="2" />
+      {[18, 34, 50, 66, 82, 98].map((x) => (
+        <line key={x} x1={x} y1="76" x2={x - 7} y2="83" strokeWidth="1" />
+      ))}
+    </g>
+  );
+}
+
+const ELEVATIONS = {
+  /* Landing Page — a single-bay pavilion. */
+  starter: (
+    <>
+      <line x1="38" y1="76" x2="38" y2="48" />
+      <line x1="82" y1="76" x2="82" y2="48" />
+      <line x1="32" y1="48" x2="88" y2="48" strokeWidth="2" />
+      <line x1="32" y1="48" x2="32" y2="53" />
+      <line x1="88" y1="48" x2="88" y2="53" />
+      <rect x="55" y="60" width="11" height="16" fill="var(--wa-yellow)" stroke="none" />
+    </>
+  ),
+  /* Brochure Site — one long storey, five bays. */
+  brochure: (
+    <>
+      <line x1="10" y1="52" x2="110" y2="52" strokeWidth="2" />
+      {[12, 36, 60, 84, 108].map((x) => (
+        <line key={x} x1={x} y1="76" x2={x} y2="52" />
+      ))}
+      <line x1="10" y1="57" x2="110" y2="57" strokeWidth="1" />
+      <rect x="61.5" y="58" width="21" height="18" fill="var(--wa-yellow)" stroke="none" />
+    </>
+  ),
+  /* Business Website — two storeys, three bays, entry canopy. */
+  business: (
+    <>
+      {[24, 52, 80, 108].map((x) => (
+        <line key={x} x1={x} y1="76" x2={x} y2="28" />
+      ))}
+      <line x1="20" y1="28" x2="112" y2="28" strokeWidth="2" />
+      <line x1="20" y1="52" x2="112" y2="52" />
+      <line x1="59" y1="30" x2="59" y2="50" strokeWidth="1" />
+      <line x1="66" y1="30" x2="66" y2="50" strokeWidth="1" />
+      <line x1="73" y1="30" x2="73" y2="50" strokeWidth="1" />
+      <rect x="10" y="59" width="15" height="4" fill="var(--wa-yellow)" stroke="none" />
+      <line x1="24" y1="63" x2="24" y2="67" strokeWidth="1" />
+    </>
+  ),
+  /* Custom Website — asymmetric volumes with a cantilever. */
+  custom: (
+    <>
+      <line x1="22" y1="76" x2="22" y2="22" />
+      <line x1="22" y1="22" x2="60" y2="22" strokeWidth="2" />
+      <line x1="60" y1="76" x2="60" y2="22" />
+      <line x1="32" y1="24" x2="32" y2="74" strokeWidth="1" />
+      <line x1="42" y1="24" x2="42" y2="74" strokeWidth="1" />
+      <line x1="52" y1="24" x2="52" y2="74" strokeWidth="1" />
+      <line x1="60" y1="50" x2="104" y2="50" strokeWidth="2" />
+      <line x1="104" y1="76" x2="104" y2="50" />
+      <line x1="60" y1="34" x2="116" y2="34" strokeWidth="2" />
+      <line x1="84" y1="50" x2="60" y2="34" strokeWidth="1" />
+      <rect x="103" y="29" width="13" height="5" fill="var(--wa-yellow)" stroke="none" />
+    </>
+  ),
+  /* Ecommerce Store — a gabled warehouse with roller doors. */
+  'commerce-starter': (
+    <>
+      <polyline points="14,76 14,46 60,30 106,46 106,76" />
+      <line x1="60" y1="30" x2="60" y2="37" strokeWidth="1" />
+      <rect x="24" y="56" width="16" height="20" />
+      <line x1="24" y1="62" x2="40" y2="62" strokeWidth="1" />
+      <line x1="24" y1="68" x2="40" y2="68" strokeWidth="1" />
+      <rect x="52" y="56" width="16" height="20" fill="var(--wa-yellow)" stroke="none" />
+      <rect x="80" y="56" width="16" height="20" />
+    </>
+  ),
+  /* Web App Starter — a three-storey block with a service core. */
+  'web-application': (
+    <>
+      <line x1="32" y1="76" x2="32" y2="18" />
+      <line x1="76" y1="76" x2="76" y2="18" />
+      <line x1="32" y1="18" x2="76" y2="18" strokeWidth="2" />
+      <line x1="32" y1="33" x2="76" y2="33" />
+      <line x1="32" y1="48" x2="76" y2="48" />
+      <line x1="32" y1="63" x2="76" y2="63" />
+      <rect x="84" y="28" width="14" height="48" />
+      {[36, 44, 52, 60, 68].map((y) => (
+        <line key={y} x1="84" y1={y} x2="98" y2={y} strokeWidth="1" />
+      ))}
+      <rect x="85" y="29" width="12" height="7" fill="var(--wa-yellow)" stroke="none" />
+      <line x1="54" y1="18" x2="54" y2="8" strokeWidth="1" />
+      <line x1="51" y1="8" x2="57" y2="8" strokeWidth="1" />
+    </>
+  ),
+  /* Growth Build — a four-storey frame with a roof hoist. */
+  growth: (
+    <>
+      {[20, 48, 76, 104].map((x) => (
+        <line key={x} x1={x} y1="76" x2={x} y2="20" />
+      ))}
+      <line x1="16" y1="20" x2="108" y2="20" strokeWidth="2" />
+      <line x1="16" y1="34" x2="108" y2="34" />
+      <line x1="16" y1="48" x2="108" y2="48" />
+      <line x1="16" y1="62" x2="108" y2="62" />
+      <line x1="20" y1="76" x2="48" y2="62" strokeWidth="1" />
+      <line x1="48" y1="76" x2="20" y2="62" strokeWidth="1" />
+      <rect x="49" y="21" width="26" height="12" fill="var(--wa-yellow)" stroke="none" />
+      <line x1="104" y1="20" x2="115" y2="20" strokeWidth="1" />
+      <line x1="112" y1="20" x2="112" y2="40" strokeWidth="1" />
+      <rect x="107" y="40" width="10" height="6" fill="var(--wa-yellow)" stroke="none" />
+    </>
+  ),
+  /* Custom Platform — podium, tower, and a tower crane. */
+  platform: (
+    <>
+      <line x1="12" y1="76" x2="12" y2="60" />
+      <line x1="12" y1="60" x2="64" y2="60" strokeWidth="2" />
+      <line x1="64" y1="76" x2="64" y2="60" />
+      <line x1="38" y1="76" x2="38" y2="60" strokeWidth="1" />
+      <line x1="20" y1="60" x2="20" y2="10" />
+      <line x1="52" y1="60" x2="52" y2="10" />
+      <line x1="20" y1="10" x2="52" y2="10" strokeWidth="2" />
+      <line x1="20" y1="22" x2="52" y2="22" />
+      <line x1="20" y1="34" x2="52" y2="34" />
+      <line x1="20" y1="46" x2="52" y2="46" />
+      <rect x="21" y="11" width="30" height="6" fill="var(--wa-yellow)" stroke="none" />
+      <line x1="86" y1="76" x2="86" y2="12" />
+      <line x1="70" y1="12" x2="118" y2="12" strokeWidth="1" />
+      <line x1="86" y1="12" x2="86" y2="4" strokeWidth="1" />
+      <line x1="86" y1="4" x2="106" y2="12" strokeWidth="1" />
+      <line x1="86" y1="4" x2="74" y2="12" strokeWidth="1" />
+      <rect x="70" y="12" width="7" height="5" fill="currentColor" stroke="none" />
+      <line x1="108" y1="12" x2="108" y2="26" strokeWidth="1" />
+      <rect x="103" y="26" width="10" height="6" fill="var(--wa-yellow)" stroke="none" />
+    </>
+  ),
+};
+
+function Elevation({ kind }) {
+  return (
+    <svg
+      className="wa-el"
+      viewBox="0 0 120 84"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="square"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <Ground />
+      {ELEVATIONS[kind] || null}
+    </svg>
+  );
+}
+
+/* ── Hero drawing — a frame going up in daylight ─────────────────
+   Tower crane lowering a gantry-yellow beam into an expressed
+   structural frame. Strokes line-draw on load (pathLength="1");
+   static mode renders it complete. */
+
+const CRANE_BRACES = Array.from({ length: 8 }, (_, i) => ({
+  x1: i % 2 === 0 ? 166 : 174,
+  y1: 300 - i * 28,
+  x2: i % 2 === 0 ? 174 : 166,
+  y2: 300 - (i + 1) * 28,
+}));
+
+const SUN_RAYS = Array.from({ length: 8 }, (_, i) => {
+  const a = (i * 45 * Math.PI) / 180;
+  return {
+    x1: (70 + Math.cos(a) * 32).toFixed(1),
+    y1: (66 + Math.sin(a) * 32).toFixed(1),
+    x2: (70 + Math.cos(a) * 43).toFixed(1),
+    y2: (66 + Math.sin(a) * 43).toFixed(1),
+  };
+});
+
+function HeroDrawing() {
+  const draw = { className: 'wa-draw', pathLength: 1 };
+  return (
+    <svg
+      viewBox="0 0 560 330"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="square"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {/* Ground plane with survey hatching — present from frame one. */}
+      <g>
+        <line x1="8" y1="300" x2="552" y2="300" strokeWidth="2" />
+        {Array.from({ length: 14 }, (_, i) => 22 + i * 39).map((x) => (
+          <line key={x} x1={x} y1="300" x2={x - 14} y2="316" strokeWidth="1" />
+        ))}
+      </g>
+
+      {/* Daylight. */}
+      <g style={{ '--d': '0.1s' }}>
+        <circle cx="70" cy="66" r="24" strokeWidth="2" {...draw} />
+        {SUN_RAYS.map((r) => (
+          <line key={r.x1 + r.y1} {...r} strokeWidth="1.5" className="wa-draw" pathLength={1} />
+        ))}
+      </g>
+
+      {/* Tower crane. */}
+      <g style={{ '--d': '0.25s' }}>
+        <line x1="166" y1="300" x2="166" y2="70" {...draw} />
+        <line x1="174" y1="300" x2="174" y2="70" {...draw} />
+        {CRANE_BRACES.map((b) => (
+          <line key={b.y1} {...b} strokeWidth="1" className="wa-draw" pathLength={1} />
+        ))}
+        <rect x="158" y="56" width="24" height="16" {...draw} />
+        <line x1="174" y1="66" x2="470" y2="66" {...draw} />
+        <line x1="166" y1="66" x2="84" y2="66" {...draw} />
+        <line x1="170" y1="56" x2="170" y2="48" strokeWidth="1" {...draw} />
+        <line x1="170" y1="48" x2="300" y2="66" strokeWidth="1" {...draw} />
+        <line x1="170" y1="48" x2="430" y2="66" strokeWidth="1" {...draw} />
+        <line x1="170" y1="48" x2="100" y2="66" strokeWidth="1" {...draw} />
+        <rect x="84" y="66" width="20" height="14" fill="currentColor" stroke="none" className="wa-fill" style={{ '--d': '0.9s' }} />
+        <rect x="294" y="66" width="12" height="7" fill="currentColor" stroke="none" className="wa-fill" style={{ '--d': '0.9s' }} />
+        <line x1="300" y1="73" x2="300" y2="120" strokeWidth="1" {...draw} />
+        {/* The beam being lowered into place. */}
+        <rect x="270" y="120" width="60" height="13" fill="var(--wa-yellow)" stroke="none" className="wa-fill" style={{ '--d': '1.1s' }} />
+        {/* Aviation light — a C4-red datum point. */}
+        <circle cx="170" cy="42" r="3.5" fill="var(--wa-red)" stroke="none" className="wa-fill" style={{ '--d': '1.2s' }} />
+      </g>
+
+      {/* The frame under construction. */}
+      <g style={{ '--d': '0.5s' }}>
+        {[250, 320, 390, 460, 530].map((x) => (
+          <line key={x} x1={x} y1="300" x2={x} y2="140" className="wa-draw" pathLength={1} />
+        ))}
+        <line x1="250" y1="140" x2="530" y2="140" strokeWidth="2" {...draw} />
+        <line x1="250" y1="193" x2="530" y2="193" {...draw} />
+        <line x1="250" y1="246" x2="530" y2="246" {...draw} />
+        <line x1="252" y1="298" x2="318" y2="248" strokeWidth="1" {...draw} />
+        <line x1="318" y1="298" x2="252" y2="248" strokeWidth="1" {...draw} />
+        <rect x="322" y="248" width="66" height="50" fill="var(--wa-yellow)" stroke="none" className="wa-fill" style={{ '--d': '1s' }} />
+        <rect x="462" y="195" width="66" height="49" fill="var(--wa-yellow)" stroke="none" className="wa-fill" style={{ '--d': '1.15s' }} />
+      </g>
+
+      {/* Dimension line with oblique ticks, and the survey benchmark. */}
+      <g style={{ '--d': '0.85s' }}>
+        <line x1="250" y1="140" x2="250" y2="100" strokeWidth="1" {...draw} />
+        <line x1="530" y1="140" x2="530" y2="100" strokeWidth="1" {...draw} />
+        <line x1="250" y1="104" x2="530" y2="104" strokeWidth="1" {...draw} />
+        <line x1="245" y1="109" x2="255" y2="99" strokeWidth="1" {...draw} />
+        <line x1="525" y1="109" x2="535" y2="99" strokeWidth="1" {...draw} />
+        <path d="M536 300 L552 300 L544 288 Z" fill="var(--wa-red)" stroke="none" className="wa-fill" style={{ '--d': '1.25s' }} />
+      </g>
+    </svg>
+  );
+}
+
+/* ── Page ────────────────────────────────────────────────────────── */
+
 export default function ServiceWeb() {
-  const [hoverIndex, setHoverIndex] = useState(null);
-  // 'once' = one-off build price, 'monthly' = subscription alternative.
+  const rootRef = useRef(null);
+  // 'once' = outright build price, 'monthly' = subscription alternative.
   const [billing, setBilling] = useState('once');
   const isMonthly = billing === 'monthly';
+
+  const prerender = useMemo(
+    () => typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent),
+    [],
+  );
+  const reduced = useMemo(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    [],
+  );
+  const staticMode = reduced || prerender;
 
   useDocumentHead({
     title: 'Web & Applications — C4 Studios Perth',
@@ -254,287 +386,303 @@ export default function ServiceWeb() {
     jsonLd: WEB_JSONLD,
   });
 
+  /* Fonts — Archivo variable (one profile, three extrusions), house
+     pattern: injected link with cleanup. */
+  useEffect(() => {
+    const els = [];
+    const pc1 = document.createElement('link');
+    pc1.rel = 'preconnect';
+    pc1.href = 'https://fonts.googleapis.com';
+    const pc2 = document.createElement('link');
+    pc2.rel = 'preconnect';
+    pc2.href = 'https://fonts.gstatic.com';
+    pc2.crossOrigin = 'anonymous';
+    const font = document.createElement('link');
+    font.rel = 'stylesheet';
+    font.href =
+      'https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&display=swap';
+    [pc1, pc2, font].forEach((el) => {
+      document.head.appendChild(el);
+      els.push(el);
+    });
+    return () => els.forEach((el) => el.remove());
+  }, []);
+
+  /* Arm entrance motion + scroll reveals. Never armed in static mode,
+     so reduced-motion users and the prerenderer get the final state. */
+  useEffect(() => {
+    if (staticMode) return undefined;
+    const root = rootRef.current;
+    if (!root || typeof IntersectionObserver === 'undefined') return undefined;
+
+    root.classList.add('wa-armed');
+    const targets = root.querySelectorAll('[data-reveal]');
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('wa-in');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -5% 0px' },
+    );
+    const raf = requestAnimationFrame(() => targets.forEach((el) => io.observe(el)));
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+      root.classList.remove('wa-armed');
+    };
+  }, [staticMode]);
+
+  const monthlyNote = `${subscriptionInfo.howItWorks} ${subscriptionInfo.whatsIncluded} ${subscriptionInfo.ownership} ${subscriptionInfo.cancellation}`;
+
   return (
-    <div style={{ backgroundColor: 'var(--c4-bg)', color: 'var(--c4-text)' }}>
-      <PageHero
-        label="C1 — Web & Applications"
-        titleLines={['Websites built to', 'convert and scale.']}
-        description="From a crisp landing page to a full web application — every project is scoped clearly, designed carefully, and delivered on time."
-      >
-        <div className="flex items-center gap-5">
-          <Link
-            to={createPageUrl('StartProject') + '?service=web_design'}
-            className="inline-flex items-center gap-2 px-6 py-3 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
-            style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-          >
-            Start a brief
-            <ArrowRight size={12} strokeWidth={2} />
-          </Link>
-          <Link
-            to={createPageUrl('Portfolio')}
-            className="text-[11px] uppercase tracking-[0.14em] font-medium"
-            style={{ color: 'var(--c4-text-subtle)' }}
-          >
-            See the work
-          </Link>
-        </div>
-      </PageHero>
-
-      {/* Included in every project */}
-      <section className="py-10 md:py-12 border-b" style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-bg-alt)' }}>
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-10">
-            <p className="text-[10px] uppercase tracking-[0.2em] font-medium flex-shrink-0" style={{ color: 'var(--c4-text-subtle)' }}>
-              Every project includes
-            </p>
-            <div className="flex flex-wrap gap-x-6 gap-y-2">
-              {included.map((item, i) => (
-                <motion.span
-                  key={item}
-                  initial={{ opacity: 0, y: 6 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: i * 0.05, ease }}
-                  className="inline-flex items-center gap-1.5 text-[12px]"
-                  style={{ color: 'var(--c4-text-muted)' }}
-                >
-                  <Check size={10} strokeWidth={2.5} style={{ color: 'var(--c4-accent)' }} />
-                  {item}
-                </motion.span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Packages — every tier rendered as a browser-framed wireframe */}
-      <section className="py-16 md:py-24">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease }}
-            className="mb-10 md:mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
-          >
+    <div className="wa-root" ref={rootRef}>
+      {/* ── Hero — the drawing sheet ─────────────────────────────── */}
+      <section className="wa-hero">
+        <div className="wa-frame">
+          <div className="wa-hero-grid">
             <div>
-              <p className="text-[10px] uppercase tracking-[0.22em] font-medium mb-1" style={{ color: 'var(--c4-text-subtle)' }}>Packages & Pricing</p>
-              <h2 className="text-[clamp(1.4rem,3vw,2rem)] font-semibold tracking-[-0.025em]">Pick a starting point.</h2>
-              <p className="mt-2 text-[13px]" style={{ color: 'var(--c4-text-muted)' }}>
-                Each tier sketched to scale — what you see is the shape of what we build.
+              {/* The single arm plate: C1, named once, as a title block. */}
+              <p className="wa-titleblock wa-h-item" style={{ '--d': '0ms' }}>
+                <span className="wa-tb-cell">
+                  <span className="wa-tb-code">C1</span>
+                  Web &amp; Applications
+                </span>
+                <span className="wa-tb-cell">Arm of C4 Studios</span>
+                <span className="wa-tb-cell">Perth, WA — issued for construction</span>
               </p>
-            </div>
-
-            {/* Billing switch: pay once, or spread it monthly */}
-            <div className="flex-shrink-0">
-              <div
-                role="radiogroup"
-                aria-label="Billing option"
-                className="relative inline-flex p-1 rounded-full"
-                style={{ backgroundColor: 'var(--c4-bg-alt)', border: '1px solid var(--c4-border)' }}
-              >
-                {[
-                  { id: 'once', label: 'Pay once' },
-                  { id: 'monthly', label: 'Monthly' },
-                ].map((opt) => {
-                  const active = billing === opt.id;
-                  return (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      role="radio"
-                      aria-checked={active}
-                      onClick={() => setBilling(opt.id)}
-                      className="relative px-4 md:px-5 py-2 text-[11px] uppercase tracking-[0.13em] font-medium rounded-full transition-colors duration-200"
-                      style={{ color: active ? 'var(--c4-bg)' : 'var(--c4-text-subtle)', cursor: 'pointer' }}
-                    >
-                      {active && (
-                        <motion.span
-                          layoutId="web-billing-pill"
-                          className="absolute inset-0 rounded-full"
-                          style={{ backgroundColor: 'var(--c4-text)' }}
-                          transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                        />
-                      )}
-                      <span className="relative z-10">{opt.label}</span>
-                    </button>
-                  );
-                })}
+              <h1 className="wa-h1 wa-h-item" style={{ '--d': '80ms' }}>
+                Websites built to <span className="wa-mark">convert and scale.</span>
+              </h1>
+              <p className="wa-lede wa-h-item" style={{ '--d': '160ms' }}>
+                From a crisp landing page to a full web application — every project is
+                scoped clearly, designed carefully, and delivered on time.
+              </p>
+              <div className="wa-hero-cta wa-h-item" style={{ '--d': '240ms' }}>
+                <Link className="wa-btn" to={`${START}?service=web_design`}>
+                  Start a brief
+                  <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
+                </Link>
+                <Link className="wa-link" to={createPageUrl('Portfolio')}>
+                  See the work
+                  <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
+                </Link>
               </div>
             </div>
-          </motion.div>
+            <div className="wa-hero-fig wa-h-item" style={{ '--d': '180ms' }}>
+              <HeroDrawing />
+            </div>
+          </div>
+        </div>
+        <div className="wa-rule" aria-hidden="true" />
+      </section>
 
-          {/* What monthly means — only when the switch is on monthly */}
-          <motion.div
-            initial={false}
-            animate={{ height: isMonthly ? 'auto' : 0, opacity: isMonthly ? 1 : 0 }}
-            transition={{ duration: 0.35, ease }}
-            className="overflow-hidden"
-            aria-hidden={!isMonthly}
-          >
-            <p
-              className="mb-8 text-[13px] leading-[1.7] max-w-[680px]"
-              style={{ color: 'var(--c4-text-muted)' }}
-            >
-              {subscriptionInfo.howItWorks} {subscriptionInfo.ownership} {subscriptionInfo.cancellation}
-            </p>
-          </motion.div>
+      {/* ── Standard specification — included in every project ──── */}
+      <section className="wa-band" data-reveal>
+        <div className="wa-frame wa-band-in">
+          <h2 className="wa-band-h">
+            Every project
+            <br />
+            includes
+          </h2>
+          <ul className="wa-band-list">
+            {INCLUDED.map((item) => (
+              <li key={item}>
+                <span className="wa-band-tick" aria-hidden="true">
+                  <Check size={11} strokeWidth={3.5} />
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {packages.map((pkg, i) => {
-              const isHovered = hoverIndex === i;
-              return (
-                <motion.div
-                  key={pkg.name}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.07, ease }}
-                  onMouseEnter={() => setHoverIndex(i)}
-                  onMouseLeave={() => setHoverIndex(null)}
-                  className="relative flex flex-col rounded-[4px] overflow-hidden transition-[box-shadow,transform] duration-300"
-                  style={{
-                    backgroundColor: 'var(--c4-bg)',
-                    border: pkg.popular ? '1px solid var(--c4-accent)' : '1px solid var(--c4-border)',
-                    transform: isHovered ? 'translateY(-3px)' : 'translateY(0)',
-                    boxShadow: isHovered ? '0 20px 50px -20px rgba(0,0,0,0.4)' : 'none',
-                  }}
-                >
-                  <BrowserChrome path={pkg.path} popular={pkg.popular} />
-                  <WireframePreview blocks={pkg.wire} active={isHovered} />
+      {/* ── The schedule — packages from pricing.js ─────────────── */}
+      <section className="wa-sched">
+        <div className="wa-frame">
+          <div className="wa-sched-head" data-reveal>
+            <div>
+              <h2 className="wa-h2">Pick a starting point.</h2>
+              <p className="wa-sub">
+                Each tier drawn to scale — the silhouette is the shape of what we build.
+              </p>
+            </div>
+            <div className="wa-switch" role="group" aria-label="Billing option">
+              <span
+                className="wa-switch-thumb"
+                data-pos={isMonthly ? 'b' : 'a'}
+                aria-hidden="true"
+              />
+              <button
+                type="button"
+                aria-pressed={!isMonthly}
+                onClick={() => setBilling('once')}
+              >
+                Pay once
+              </button>
+              <button
+                type="button"
+                aria-pressed={isMonthly}
+                onClick={() => setBilling('monthly')}
+              >
+                Monthly
+              </button>
+            </div>
+          </div>
 
-                  <div className="flex flex-col flex-1 p-7 md:p-8" style={{ borderTop: '1px solid var(--c4-border)' }}>
-                    {/* Price — visual hero, swaps with the billing switch */}
-                    <div className="mb-5">
-                      <div className="flex items-baseline justify-between">
-                        <p
-                          className="text-[1.8rem] md:text-[2.1rem] font-semibold tracking-[-0.04em] tabular-nums leading-[1]"
-                          style={{ color: 'var(--c4-text)' }}
-                        >
-                          {isMonthly && monthlyByKey[pkg.key] ? monthlyByKey[pkg.key] : pkg.price}
-                        </p>
-                        <p className="text-[11px] uppercase tracking-[0.15em]" style={{ color: 'var(--c4-text-faint)' }}>{pkg.timeline}</p>
-                      </div>
-                      {monthlyByKey[pkg.key] && (
-                        <p className="mt-1.5 text-[11px]" style={{ color: 'var(--c4-text-faint)' }}>
-                          {isMonthly ? `or ${pkg.price} once-off` : `or ${monthlyByKey[pkg.key]}`}
-                        </p>
-                      )}
+          {/* What monthly means — straight from subscriptionInfo. */}
+          <div className={`wa-subnote${isMonthly ? ' is-open' : ''}`} aria-hidden={!isMonthly}>
+            <div>
+              <p>{monthlyNote}</p>
+            </div>
+          </div>
+
+          {SECTIONS.map((section) => (
+            <div className="wa-group" key={section.heading}>
+              <header className="wa-plate" data-reveal>
+                <div className="wa-plate-top">
+                  <h3>{section.heading}</h3>
+                  {section.guide && <span className="wa-range">{section.guide.range}</span>}
+                </div>
+                <p className="wa-plate-desc">{section.description}</p>
+                {section.guide && <p className="wa-plate-guide">{section.guide.description}</p>}
+              </header>
+
+              <div className="wa-rows">
+                {section.packages.map((pkg, pi) => (
+                  <article
+                    className="wa-row"
+                    key={pkg.key}
+                    data-reveal
+                    style={{ '--rd': `${pi * 70}ms` }}
+                  >
+                    <div className="wa-row-fig" data-popular={pkg.popular ? 'true' : undefined}>
+                      <Elevation kind={pkg.key} />
+                      {pkg.popular && <span className="wa-tag">Most specified</span>}
                     </div>
 
-                    <h3 className="text-[0.95rem] font-semibold tracking-[-0.01em] mb-2">{pkg.name}</h3>
-                    <p className="text-[13px] leading-[1.65] mb-6" style={{ color: 'var(--c4-text-muted)' }}>{pkg.desc}</p>
+                    <div className="wa-row-id">
+                      <p className="wa-ref">{pkg.ref}</p>
+                      <h4 className="wa-row-name">{pkg.name}</h4>
+                      <p className="wa-row-desc">{pkg.description}</p>
+                    </div>
 
-                    <ul className="space-y-2 mb-8 flex-1">
-                      {pkg.features.map(f => (
-                        <li key={f} className="flex items-center gap-2 text-[12.5px]" style={{ color: 'var(--c4-text-muted)' }}>
-                          <Check size={11} strokeWidth={2.5} style={{ color: 'var(--c4-accent)', flexShrink: 0 }} />
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="wa-row-specwrap">
+                      <ul className="wa-row-spec">
+                        {pkg.features.map((feature) => (
+                          <li key={feature}>
+                            <Check size={12} strokeWidth={3} aria-hidden="true" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
 
-                    <Link
-                      to={`/start?service=${pkg.param}${isMonthly ? '&billing=monthly' : ''}`}
-                      className="group inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.13em] font-medium transition-colors duration-200"
-                      style={{ color: isHovered ? 'var(--c4-text)' : 'var(--c4-text-subtle)' }}
-                    >
-                      Start this
-                      <ArrowRight size={11} strokeWidth={2} className="group-hover:translate-x-0.5 transition-transform duration-200" />
-                    </Link>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+                    <div className="wa-row-buy">
+                      <p className="wa-price">
+                        {isMonthly && pkg.monthlyLabel ? pkg.monthlyLabel : pkg.priceLabel}
+                      </p>
+                      {pkg.monthlyLabel && (
+                        <p className="wa-alt">
+                          {isMonthly ? `or ${pkg.priceLabel} outright` : `or ${pkg.monthlyLabel}`}
+                        </p>
+                      )}
+                      <p className="wa-tl">{TIMELINES[pkg.key]}</p>
+                      <Link
+                        className="wa-row-cta"
+                        to={`${START}?service=web_design&package=${pkg.key}${
+                          isMonthly ? '&pricing=subscription' : ''
+                        }`}
+                      >
+                        Start this
+                        <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
+                      </Link>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          ))}
 
-      {/* Process — build pipeline with connecting line */}
-      <section className="py-16 md:py-20 border-t" style={{ borderColor: 'var(--c4-border)' }}>
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease }}
-            className="mb-10 md:mb-14"
-          >
-            <p className="text-[10px] uppercase tracking-[0.22em] font-medium mb-1" style={{ color: 'var(--c4-text-subtle)' }}>Process</p>
-            <h2 className="text-[clamp(1.4rem,3vw,2rem)] font-semibold tracking-[-0.025em]">Brief to launch, one pipeline.</h2>
-          </motion.div>
-
-          <div className="relative">
-            {/* Track + animated progress line connecting the steps */}
-            <div className="hidden sm:block absolute left-0 right-0 top-[14px] h-px" style={{ backgroundColor: 'var(--c4-border)' }} />
-            <motion.div
-              className="hidden sm:block absolute left-0 right-0 top-[14px] h-px origin-left"
-              style={{ backgroundColor: 'var(--c4-accent)' }}
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.4, delay: 0.2, ease }}
-            />
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
-              {process.map((p, i) => (
-                <motion.div
-                  key={p.step}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.2 + i * 0.18, ease }}
-                  className="relative"
-                >
-                  <div
-                    className="w-7 h-7 rounded-full flex items-center justify-center mb-4 text-[10px] font-medium tabular-nums relative z-10"
-                    style={{
-                      backgroundColor: 'var(--c4-bg)',
-                      border: '1px solid var(--c4-accent)',
-                      color: 'var(--c4-accent)',
-                    }}
-                  >
-                    {p.step}
-                  </div>
-                  <h3 className="text-[1rem] font-semibold mb-2 tracking-[-0.01em]">{p.label}</h3>
-                  <p className="text-[13px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>{p.desc}</p>
-                </motion.div>
+          {/* General notes — scope boundaries, like any good drawing. */}
+          <aside className="wa-notes" data-reveal>
+            <h3 className="wa-notes-h">General notes</h3>
+            <div className="wa-notes-cols">
+              {webScopeNotes.map((note) => (
+                <div className="wa-note" key={note.title}>
+                  <h4>{note.title}</h4>
+                  <ul>
+                    {note.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
+          </aside>
 
-      {/* CTA */}
-      <section className="py-20 md:py-28 border-t" style={{ borderColor: 'var(--c4-border)' }}>
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease }}
-          >
-            <div className="flex items-center justify-center gap-1.5 mb-6" aria-hidden="true">
-              {[0, 1, 2].map(i => (
-                <span key={i} className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: i === 0 ? 'var(--c4-accent)' : 'var(--c4-border)' }} />
-              ))}
-            </div>
-            <h2 className="text-[clamp(1.6rem,4vw,2.8rem)] font-semibold tracking-[-0.03em] mb-4 max-w-[560px] mx-auto">
-              Ready to build something worth showing?
-            </h2>
-            <p className="text-[14px] mb-10" style={{ color: 'var(--c4-text-muted)' }}>
-              Send us a brief — we'll scope it, price it, and come back with a clear plan.
+          <div className="wa-fine" data-reveal>
+            <p>
+              <span className="wa-star" aria-hidden="true">
+                *
+              </span>
+              {ASTERISK_CLAUSE}
             </p>
-            <Link
-              to={createPageUrl('StartProject') + '?service=web_design'}
-              className="inline-flex items-center gap-2 px-8 py-4 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
-              style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-            >
-              Start a project
-              <ArrowRight size={12} strokeWidth={2} />
-            </Link>
-          </motion.div>
+            <p>{GST_NOTE}</p>
+            <p>{INDUSTRY_SURCHARGE_NOTE}</p>
+          </div>
         </div>
+      </section>
+
+      {/* ── The programme — brief to launch ─────────────────────── */}
+      <section className="wa-prog">
+        <div className="wa-frame">
+          <div data-reveal>
+            <h2 className="wa-h2">Brief to launch, one pipeline.</h2>
+            <p className="wa-sub">Four stages on one board.</p>
+          </div>
+
+          <div className="wa-gantt">
+            {PROCESS.map((stage, i) => (
+              <div className="wa-stage" key={stage.num} data-reveal style={{ '--rd': `${i * 90}ms` }}>
+                <div className="wa-stage-id">
+                  <span className="wa-stage-num" aria-hidden="true">
+                    {stage.num}
+                  </span>
+                  <div>
+                    <h3>{stage.label}</h3>
+                    <p>{stage.desc}</p>
+                  </div>
+                </div>
+                <div className="wa-lane" aria-hidden="true">
+                  <span
+                    className="wa-bar"
+                    style={{ left: `${stage.bar[0]}%`, width: `${stage.bar[1]}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Closing CTA — the yellow drench ─────────────────────── */}
+      <section className="wa-cta" data-reveal>
+        <div className="wa-frame wa-cta-in">
+          <h2 className="wa-cta-h">Ready to build something worth showing?</h2>
+          <p className="wa-cta-sub">
+            Send us a brief — we&rsquo;ll scope it, price it, and come back with a clear plan.
+          </p>
+          <Link className="wa-btn wa-btn--onyellow" to={`${START}?service=web_design`}>
+            Start a project
+            <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
+          </Link>
+        </div>
+        <div className="wa-hatch" aria-hidden="true" />
       </section>
     </div>
   );

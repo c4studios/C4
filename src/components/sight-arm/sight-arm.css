@@ -1,0 +1,860 @@
+/* ═══════════════════════════════════════════════════════════════════
+   /Foresight — "The Good Room". C4Sight's training-arm identity.
+   Chalkboard-green drench (Exploratorium Tinkering Studio energy,
+   School of Life colour commitment): the page is the board, headings
+   are the writing, marker-yellow is the teacher's emphasis, and the
+   C4 red appears as the red pen on the take-home worksheet.
+   Scoped under .sg- so nothing leaks. Page forces dark-mode (Lens
+   pattern), so tokens below are computed against fixed surfaces.
+
+   Contrast (WCAG, computed not eyeballed):
+     chalk   #F2F0E9 on board #16352C = 11.7:1 · on deep #0E2A22 = 13.4:1
+     dim     #B9C6BC on board          =  7.5:1 · on deep          =  8.6:1
+     yellow  #F0CE4A on board          =  8.6:1 · on deep          =  9.9:1
+     deep    #0E2A22 on yellow button  =  9.9:1
+     ink     #1C2420 on paper #FAF8F2  = 15.0:1 · ink-soft #4A554E =  7.3:1
+     red pen var(--c4-accent) #B33A3A on paper = 5.5:1
+   ═══════════════════════════════════════════════════════════════════ */
+
+.sg-root {
+  --sg-board: #16352c;
+  --sg-board-deep: #0e2a22;
+  --sg-raise: rgba(242, 240, 233, 0.04);
+  --sg-chalk: #f2f0e9;
+  --sg-dim: #b9c6bc;
+  --sg-yellow: #f0ce4a;
+  --sg-red: var(--c4-accent);
+  --sg-paper: #faf8f2;
+  --sg-ink: #1c2420;
+  --sg-ink-soft: #4a554e;
+  --sg-line: rgba(242, 240, 233, 0.16);
+  --sg-line-strong: rgba(242, 240, 233, 0.34);
+  --sg-font: 'Bricolage Grotesque', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  background-color: var(--sg-board);
+  color: var(--sg-chalk);
+  font-family: var(--sg-font);
+  font-size: 16px;
+  line-height: 1.65;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sg-root *,
+.sg-root *::before,
+.sg-root *::after {
+  box-sizing: border-box;
+}
+
+.sg-root ::selection {
+  background: var(--sg-yellow);
+  color: var(--sg-board-deep);
+}
+
+/* Chalk dust: one static grain tile, composited, never repainted. */
+.sg-root::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+.sg-wrap {
+  max-width: 1160px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 56px);
+}
+
+/* Focus: chalk-yellow ring on everything interactive. */
+.sg-root a:focus-visible,
+.sg-root button:focus-visible {
+  outline: 2.5px solid var(--sg-yellow);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Marks (the drawn chalk set) ─────────────────────────────────── */
+
+.sg-mark {
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.sg-mark path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Hand-drawn underline sitting under a word. */
+.sg-underlined {
+  position: relative;
+  white-space: nowrap;
+}
+
+.sg-underlined .sg-mark {
+  position: absolute;
+  left: -1.5%;
+  bottom: -0.13em;
+  width: 103%;
+  height: 0.16em;
+  color: var(--sg-yellow);
+}
+
+/* Red-pen squiggle under a corrected phrase (worksheet only). */
+.sg-corrected {
+  position: relative;
+  white-space: nowrap;
+  font-style: normal;
+}
+
+.sg-corrected .sg-mark {
+  position: absolute;
+  left: 0;
+  bottom: -0.28em;
+  width: 100%;
+  height: 0.42em;
+  color: var(--sg-red);
+}
+
+/* Circled annotation: "Most value" in the teacher's hand. */
+.sg-annot {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5em 1.15em;
+  color: var(--sg-yellow);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transform: rotate(-2.5deg);
+  white-space: nowrap;
+}
+
+.sg-annot .sg-mark {
+  position: absolute;
+  inset: -2px -4px;
+  width: calc(100% + 8px);
+  height: calc(100% + 4px);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────── */
+
+.sg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 14px 30px;
+  border-radius: 999px;
+  border: none;
+  background: var(--sg-yellow);
+  color: var(--sg-board-deep);
+  font-family: var(--sg-font);
+  font-size: 15.5px;
+  font-weight: 650;
+  letter-spacing: 0.005em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
+}
+
+.sg-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px -12px rgba(0, 0, 0, 0.55);
+}
+
+.sg-btn:active {
+  transform: translateY(0);
+}
+
+.sg-btn .sg-mark {
+  width: 26px;
+  height: 11px;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sg-btn:hover .sg-mark {
+  transform: translateX(3px);
+}
+
+.sg-btn--ghost {
+  background: transparent;
+  color: var(--sg-chalk);
+  border: 1.5px solid var(--sg-line-strong);
+}
+
+.sg-btn--ghost:hover {
+  box-shadow: none;
+  background: var(--sg-raise);
+  border-color: var(--sg-chalk);
+}
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+
+.sg-hero {
+  background-color: var(--sg-board-deep);
+  background-image:
+    radial-gradient(640px 240px at 16% 28%, rgba(242, 240, 233, 0.045), transparent 70%),
+    radial-gradient(520px 200px at 82% 72%, rgba(242, 240, 233, 0.035), transparent 70%);
+  padding-top: clamp(138px, 18vh, 190px);
+  padding-bottom: clamp(56px, 9vw, 104px);
+}
+
+.sg-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px;
+  border: 1px solid var(--sg-line-strong);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--sg-dim);
+  margin: 0 0 clamp(26px, 4vw, 40px);
+}
+
+.sg-chip-code {
+  color: var(--sg-yellow);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.sg-hero h1 {
+  margin: 0;
+  font-size: clamp(2.55rem, 7.2vw, 4.75rem);
+  font-weight: 780;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  max-width: 17ch;
+  text-wrap: balance;
+}
+
+.sg-lede {
+  margin: clamp(22px, 3.5vw, 34px) 0 0;
+  max-width: 58ch;
+  font-size: clamp(1.02rem, 1.5vw, 1.17rem);
+  line-height: 1.68;
+  color: var(--sg-dim);
+  text-wrap: pretty;
+}
+
+.sg-hero-cta {
+  margin-top: clamp(30px, 4.5vw, 46px);
+}
+
+.sg-tray {
+  margin-top: clamp(52px, 8vw, 88px);
+  height: 2px;
+  background: var(--sg-line);
+  border-radius: 2px;
+}
+
+/* ── Section scaffolding ─────────────────────────────────────────── */
+
+.sg-section {
+  padding-block: clamp(64px, 10vw, 120px);
+}
+
+.sg-h2 {
+  margin: 0;
+  font-size: clamp(1.75rem, 3.8vw, 2.7rem);
+  font-weight: 730;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--sg-chalk);
+  text-wrap: balance;
+}
+
+.sg-sub {
+  margin: 18px 0 0;
+  max-width: 56ch;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: var(--sg-dim);
+  text-wrap: pretty;
+}
+
+/* Word circled inside a heading ("Five"). */
+.sg-ringed {
+  position: relative;
+  white-space: nowrap;
+  z-index: 0;
+}
+
+.sg-ringed .sg-mark {
+  position: absolute;
+  inset: -0.28em -0.34em -0.34em;
+  width: calc(100% + 0.68em);
+  height: calc(100% + 0.62em);
+  color: var(--sg-yellow);
+  z-index: -1;
+}
+
+/* ── Formats: the day plan, two columns, one chalk rule ──────────── */
+
+.sg-formats-head {
+  margin-bottom: clamp(40px, 6vw, 64px);
+}
+
+.sg-formats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(40px, 6vw, 56px);
+}
+
+@media (min-width: 820px) {
+  .sg-formats-grid {
+    grid-template-columns: 1fr 1px 1fr;
+    gap: clamp(40px, 5vw, 72px);
+  }
+}
+
+.sg-vrule {
+  background: var(--sg-line);
+  display: none;
+}
+
+@media (min-width: 820px) {
+  .sg-vrule {
+    display: block;
+  }
+}
+
+.sg-format-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.sg-format h3 {
+  margin: 0;
+  font-size: clamp(1.55rem, 2.6vw, 1.95rem);
+  font-weight: 730;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+
+.sg-format-duration {
+  font-size: 14px;
+  color: var(--sg-dim);
+}
+
+.sg-format-annot {
+  margin-top: 14px;
+}
+
+/* Schedule bars: hours drawn to scale (am 3.5h, pm 2.5h of a 6h day). */
+.sg-sched {
+  display: flex;
+  gap: 6px;
+  margin-top: 22px;
+  height: 30px;
+}
+
+.sg-sched-block {
+  display: flex;
+  align-items: center;
+  padding-inline: 10px;
+  border: 1.5px solid var(--sg-line-strong);
+  border-radius: 7px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--sg-dim);
+}
+
+.sg-sched-block--am {
+  width: 58.3%;
+}
+
+.sg-sched-block--pm {
+  width: 41.7%;
+  border-color: rgba(240, 206, 74, 0.65);
+  color: var(--sg-yellow);
+}
+
+.sg-format-body {
+  margin: 22px 0 0;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: var(--sg-dim);
+  max-width: 52ch;
+  text-wrap: pretty;
+}
+
+/* ── Outcomes: the numbered board list ───────────────────────────── */
+
+.sg-outcomes {
+  border-top: 1px solid var(--sg-line);
+}
+
+.sg-outcomes-head {
+  margin-bottom: clamp(34px, 5vw, 52px);
+}
+
+.sg-outcome-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sg-outcome {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  align-items: center;
+  gap: clamp(18px, 3vw, 34px);
+  padding-block: clamp(18px, 2.6vw, 26px);
+  border-top: 1px solid var(--sg-line);
+}
+
+.sg-outcome:last-child {
+  border-bottom: 1px solid var(--sg-line);
+}
+
+.sg-outcome-num {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  font-size: 1.35rem;
+  font-weight: 730;
+  font-variant-numeric: tabular-nums;
+  color: var(--sg-chalk);
+}
+
+.sg-outcome-num .sg-mark {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: rgba(242, 240, 233, 0.5);
+}
+
+.sg-outcome p {
+  margin: 0;
+  font-size: clamp(1.02rem, 1.6vw, 1.19rem);
+  line-height: 1.55;
+  color: var(--sg-chalk);
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+/* ── Governance: the framed rules panel ──────────────────────────── */
+
+.sg-rules {
+  position: relative;
+  background: var(--sg-board-deep);
+  border: 1.5px solid var(--sg-line-strong);
+  border-radius: 12px;
+  padding: clamp(28px, 5vw, 60px);
+}
+
+/* Second chalk line inside the frame: ruled twice so it stays put. */
+.sg-rules::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1px solid var(--sg-line);
+  border-radius: 7px;
+  pointer-events: none;
+}
+
+.sg-rules-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(32px, 5vw, 64px);
+}
+
+@media (min-width: 880px) {
+  .sg-rules-grid {
+    grid-template-columns: 0.9fr 1.1fr;
+  }
+}
+
+.sg-rules-lead {
+  margin: 0 0 16px;
+  font-size: 13.5px;
+  letter-spacing: 0.02em;
+  color: var(--sg-dim);
+}
+
+.sg-rules-copy {
+  margin: 20px 0 0;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: var(--sg-dim);
+  max-width: 44ch;
+  text-wrap: pretty;
+}
+
+.sg-rule-item {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 16px;
+  padding-block: 20px;
+}
+
+.sg-rule-item + .sg-rule-item {
+  border-top: 1px solid var(--sg-line);
+}
+
+.sg-rule-item .sg-mark {
+  width: 22px;
+  height: 22px;
+  margin-top: 3px;
+  color: var(--sg-yellow);
+}
+
+.sg-rule-item strong {
+  display: block;
+  font-size: 16.5px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  color: var(--sg-chalk);
+  margin-bottom: 5px;
+}
+
+.sg-rule-item span {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--sg-dim);
+  text-wrap: pretty;
+}
+
+/* ── The take-home worksheet (paper on the board) ────────────────── */
+
+.sg-paper {
+  max-width: 880px;
+  background: var(--sg-paper);
+  color: var(--sg-ink);
+  border-radius: 6px;
+  padding: clamp(28px, 5vw, 56px);
+  box-shadow:
+    0 30px 70px -28px rgba(0, 0, 0, 0.6),
+    0 8px 22px -10px rgba(0, 0, 0, 0.45);
+}
+
+.sg-paper-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  margin-bottom: clamp(24px, 4vw, 36px);
+  border-bottom: 1.5px solid color-mix(in srgb, var(--sg-red) 40%, transparent);
+}
+
+.sg-paper-brand {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sg-red);
+}
+
+.sg-paper-note {
+  font-size: 12.5px;
+  color: var(--sg-ink-soft);
+}
+
+.sg-paper .sg-h2 {
+  color: var(--sg-ink);
+  font-size: clamp(1.55rem, 3.2vw, 2.15rem);
+}
+
+.sg-keep-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px 40px;
+  margin: clamp(26px, 4vw, 38px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 680px) {
+  .sg-keep-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.sg-keep-list li {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 13px;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--sg-ink-soft);
+  text-wrap: pretty;
+}
+
+.sg-keep-list .sg-mark {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  color: var(--sg-red);
+}
+
+/* ── Sectors: corridor rows ──────────────────────────────────────── */
+
+.sg-sectors {
+  border-top: 1px solid var(--sg-line);
+}
+
+.sg-sectors-head {
+  margin-bottom: clamp(34px, 5vw, 52px);
+}
+
+.sg-sector {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px 36px;
+  padding: clamp(24px, 3.6vw, 36px) clamp(12px, 2vw, 20px);
+  border-top: 1px solid var(--sg-line);
+  text-decoration: none;
+  color: inherit;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.sg-sector:last-of-type {
+  border-bottom: 1px solid var(--sg-line);
+}
+
+@media (min-width: 880px) {
+  .sg-sector {
+    grid-template-columns: minmax(200px, 250px) 1fr auto;
+    align-items: center;
+  }
+}
+
+.sg-sector:hover {
+  background-color: var(--sg-raise);
+}
+
+.sg-sector h3 {
+  position: relative;
+  display: inline-block;
+  justify-self: start;
+  margin: 0;
+  font-size: clamp(1.3rem, 2.3vw, 1.62rem);
+  font-weight: 730;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.sg-sector h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 2.5px;
+  border-radius: 2px;
+  background: var(--sg-yellow);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sg-sector:hover h3::after,
+.sg-sector:focus-visible h3::after {
+  transform: scaleX(1);
+}
+
+.sg-sector p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--sg-dim);
+  max-width: 58ch;
+  text-wrap: pretty;
+}
+
+.sg-sector-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--sg-chalk);
+  white-space: nowrap;
+}
+
+.sg-sector-go .sg-mark {
+  width: 26px;
+  height: 11px;
+  color: var(--sg-yellow);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sg-sector:hover .sg-sector-go .sg-mark {
+  transform: translateX(4px);
+}
+
+/* ── Pricing: chalk boxes on the deep board ──────────────────────── */
+
+.sg-pricing {
+  background-color: var(--sg-board-deep);
+  background-image:
+    radial-gradient(560px 220px at 84% 18%, rgba(242, 240, 233, 0.04), transparent 70%),
+    radial-gradient(480px 200px at 10% 82%, rgba(242, 240, 233, 0.03), transparent 70%);
+}
+
+.sg-pricing-head {
+  margin-bottom: clamp(36px, 5vw, 56px);
+}
+
+.sg-price-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(256px, 1fr));
+  gap: clamp(16px, 2.4vw, 28px);
+  align-items: stretch;
+}
+
+.sg-price {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1.5px solid var(--sg-line-strong);
+  border-radius: 10px;
+  background: var(--sg-raise);
+  padding: clamp(24px, 3vw, 32px);
+  margin-top: 16px;
+}
+
+.sg-price-annot {
+  position: absolute;
+  top: -17px;
+  right: 14px;
+  background: var(--sg-board-deep);
+  border-radius: 999px;
+}
+
+.sg-price h3 {
+  margin: 0 0 14px;
+  font-size: 1.06rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  color: var(--sg-chalk);
+}
+
+.sg-price-figure {
+  font-size: clamp(1.85rem, 2.6vw, 2.2rem);
+  font-weight: 780;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+  color: var(--sg-chalk);
+}
+
+.sg-price-desc {
+  margin: 14px 0 0;
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--sg-dim);
+  text-wrap: pretty;
+}
+
+.sg-price-rule {
+  height: 1px;
+  background: var(--sg-line);
+  margin-block: 20px;
+}
+
+.sg-price ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sg-price li {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 11px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--sg-dim);
+  text-wrap: pretty;
+}
+
+.sg-price li .sg-mark {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: var(--sg-yellow);
+}
+
+.sg-pricing-note {
+  margin: clamp(26px, 4vw, 36px) 0 0;
+  max-width: 68ch;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--sg-dim);
+  text-wrap: pretty;
+}
+
+.sg-pricing-cta {
+  margin-top: 30px;
+}
+
+/* ── Closing statement ───────────────────────────────────────────── */
+
+.sg-close {
+  padding-block: clamp(80px, 12vw, 150px);
+  text-align: center;
+}
+
+.sg-close .sg-h2 {
+  font-size: clamp(1.95rem, 4.6vw, 3.15rem);
+  max-width: 22ch;
+  margin-inline: auto;
+}
+
+.sg-close .sg-sub {
+  margin-inline: auto;
+}
+
+.sg-close-cta {
+  margin-top: clamp(30px, 4.5vw, 44px);
+}
+
+/* ── Small screens ───────────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .sg-outcome {
+    grid-template-columns: 46px 1fr;
+  }
+
+  .sg-outcome-num {
+    width: 42px;
+    height: 42px;
+    font-size: 1.15rem;
+  }
+
+  .sg-paper-head {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+/* ── Reduced motion: hovers settle instantly, GSAP is JS-gated ───── */
+
+@media (prefers-reduced-motion: reduce) {
+  .sg-root *,
+  .sg-root *::before,
+  .sg-root *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
