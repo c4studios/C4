@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useMotionValueEvent, useScroll } from 'framer-
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import C4Logo from './C4Logo';
+import C4iWordmark from './C4iWordmark';
 import ThemeToggle from './ThemeToggle';
 
 const ease = [0.22, 1, 0.36, 1];
@@ -16,7 +17,7 @@ const serviceDropdown = [
     brief: 'Custom websites, web apps & SaaS platforms',
   },
   {
-    label: 'C4i',
+    label: <C4iWordmark />,
     code: 'C2',
     page: 'C4i',
     brief: 'AI, local or cloud — private systems & automations',

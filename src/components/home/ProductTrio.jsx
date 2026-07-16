@@ -9,6 +9,7 @@
  */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import C4iWordmark from '@/components/c4/C4iWordmark';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, Globe, Sparkles, Camera, GraduationCap, Users, Eye, Clock, MapPin } from 'lucide-react';
 
@@ -31,14 +32,14 @@ const products = [
   {
     key: 'c4i',
     code: 'C2',
-    eyebrow: 'C4i · AI',
+    eyebrow: <><C4iWordmark /> · AI</>,
     headline: 'Put AI to work',
     outcome:
       'A private AI system on your own hardware, or cloud-based automations, agents and custom tools. Choose the setup that fits.',
     fromPrice: 'Local or cloud',
     timeframe: 'Scoped to you',
     icon: Sparkles,
-    primaryCta: { label: 'Explore C4i', to: '/c4i' },
+    primaryCta: { label: <>Explore <C4iWordmark /></>, to: '/c4i' },
     secondary: { label: 'Local or cloud', to: '/c4i' },
   },
   {

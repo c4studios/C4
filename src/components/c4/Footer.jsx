@@ -5,6 +5,7 @@ import { createPageUrl } from '@/utils';
 import { liveSeoPages } from '@/content/seo/registry';
 import { PRODUCTS } from '../software/productData';
 import C4Logo from './C4Logo';
+import C4iWordmark from './C4iWordmark';
 
 const groups = [
   {
@@ -19,7 +20,7 @@ const groups = [
     title: 'Services',
     links: [
       { label: 'Web & Applications', page: 'ServiceWeb' },
-      { label: 'C4i', page: 'C4i' },
+      { key: 'C4i', label: <C4iWordmark />, page: 'C4i' },
       { label: 'C4 Lens', page: 'Lens' },
       { label: 'C4Sight', page: 'Foresight' },
       { label: 'Lead Engine', to: '/lead-engine' },
@@ -72,7 +73,7 @@ export default function Footer() {
               <h4 className="text-[10.5px] uppercase tracking-[0.2em] font-medium mb-4" style={{ color: 'var(--c4-footer-text-muted)' }}>{g.title}</h4>
               <ul className="space-y-2">
                 {g.links.map(l => (
-                  <li key={l.label}>
+                  <li key={l.key || l.page || l.to || l.href || l.label}>
                     {l.to ? (
                       <Link
                         to={l.to}
