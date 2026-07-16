@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight, ServerCog, Cloud } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
+import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -35,6 +36,21 @@ const OPTIONS = [
   },
 ];
 
+// Stable module-level ref so the head hook doesn't re-run each render.
+const C4I_JSONLD = [
+  serviceSchema({
+    name: 'C4i — AI Systems & Automation',
+    description:
+      'Private on-premise AI, cloud automations, AI agents and custom software for Perth businesses.',
+    url: '/c4i',
+    serviceType: 'AI systems and automation',
+  }),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'C4i', path: '/c4i' },
+  ]),
+];
+
 export default function C4i() {
   const [hover, setHover] = useState(null);
 
@@ -43,6 +59,7 @@ export default function C4i() {
     description:
       'C4i is C4 Studios’ AI practice. Choose a private AI system on your own hardware, or cloud-based automations, agents and custom software. Perth-built.',
     path: '/c4i',
+    jsonLd: C4I_JSONLD,
   });
 
   return (
@@ -59,7 +76,7 @@ export default function C4i() {
           className="text-center mb-14 md:mb-20"
         >
           <p
-            className="text-[11px] uppercase tracking-[0.32em] font-medium mb-6 italic"
+            className="text-[15px] tracking-[0.02em] font-semibold mb-6 italic"
             style={{ color: 'var(--c4-accent)' }}
           >
             C4i

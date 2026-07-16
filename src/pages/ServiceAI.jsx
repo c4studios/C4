@@ -5,6 +5,7 @@ import { ArrowRight, Check, Terminal, Zap, Bot, Wrench } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import PageHero from '../components/c4/PageHero';
 import useDocumentHead from '@/hooks/useDocumentHead';
+import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -182,6 +183,21 @@ function CountUp({ value, className, style }) {
   return <span ref={ref} className={className} style={style}>{value}</span>;
 }
 
+// Stable module-level ref so the head hook doesn't re-run each render.
+const AI_JSONLD = [
+  serviceSchema({
+    name: 'AI & Workflow Automation',
+    description:
+      'Workflow automation, AI agents, custom integrations and lean software replacements for Perth businesses.',
+    url: '/ServiceAI',
+    serviceType: 'AI and workflow automation',
+  }),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'AI & Software', path: '/ServiceAI' },
+  ]),
+];
+
 export default function ServiceAI() {
   const [hoverIndex, setHoverIndex] = useState(null);
 
@@ -190,6 +206,7 @@ export default function ServiceAI() {
     description:
       'Workflow automation, AI agents, custom integrations and lean software replacements. Replace hours of manual work with systems that run themselves.',
     path: '/ServiceAI',
+    jsonLd: AI_JSONLD,
   });
 
   return (

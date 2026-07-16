@@ -5,6 +5,7 @@ import { ArrowRight, Check, Star } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import PageHero from '../components/c4/PageHero';
 import useDocumentHead from '@/hooks/useDocumentHead';
+import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
 import { webDesignPackages, subscriptionInfo } from '@/data/pricing';
 
 // Monthly-price lookup, keyed to the single source of truth in pricing.js
@@ -224,6 +225,21 @@ function BrowserChrome({ path, popular }) {
   );
 }
 
+// Stable module-level ref so the head hook doesn't re-run each render.
+const WEB_JSONLD = [
+  serviceSchema({
+    name: 'Web Design & Development',
+    description:
+      'Custom websites, web apps, SaaS platforms and ecommerce stores for Perth businesses — built to convert and designed to last.',
+    url: '/ServiceWeb',
+    serviceType: 'Web design and development',
+  }),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Web & Applications', path: '/ServiceWeb' },
+  ]),
+];
+
 export default function ServiceWeb() {
   const [hoverIndex, setHoverIndex] = useState(null);
   // 'once' = one-off build price, 'monthly' = subscription alternative.
@@ -235,6 +251,7 @@ export default function ServiceWeb() {
     description:
       'Custom websites, web apps, SaaS platforms and ecommerce stores. Built to convert, designed to last. Perth-based, working Australia-wide.',
     path: '/ServiceWeb',
+    jsonLd: WEB_JSONLD,
   });
 
   return (
