@@ -2,14 +2,15 @@
 
 > C4 Studios is a founder-led design, development and AI studio based in Perth,
 > Western Australia. We build custom high-performance websites, AI automations
-> and agents, and brand photography, videography and motion graphics for
-> ambitious founders and businesses.
+> and agents, private AI systems, brand photography, videography and motion
+> graphics, and run practical AI training for teams and schools.
 
-C4 Studios operates across three arms under one roof:
+C4 Studios operates across four arms under one roof:
 
 - **Web** — custom websites and web apps, redesigns, e-commerce, landing pages, SEO and ongoing support.
-- **C4i (AI)** — AI automations, agents, workflow automation and private/cloud AI systems that remove manual work, plus AI training and workshops for teams.
+- **C4i (AI)** — AI automations, agents, workflow automation, and private AI systems that run on your own hardware or in the cloud.
 - **C4 Lens** — brand photography, videography, drone/aerial work and motion graphics.
+- **C4Sight** — practical AI training, workshops and incursions for workplaces and schools.
 
 Founded 2022 by Caleb Scott. Serving Perth, Fremantle and Western Australia
 (and remote clients Australia-wide). Every project is delivered directly by the
@@ -21,12 +22,26 @@ person building it.
 - [About](https://c4studios.com.au/About): The studio, its founder and how it works.
 - [Web design & development](https://c4studios.com.au/ServiceWeb): Custom websites and web apps built for speed, SEO and conversion.
 - [C4i — AI systems & automation](https://c4studios.com.au/c4i): AI automations, agents and private/cloud AI systems.
+- [Private AI systems](https://c4studios.com.au/private-ai): AI installed on your own hardware — nothing leaves the building. Tiers from $4,900.
 - [AI services](https://c4studios.com.au/ServiceAI): How C4 applies AI to real business workflows.
 - [C4 Lens — photography & video](https://c4studios.com.au/Lens): Brand photography, videography, drone work and motion graphics.
+- [C4Sight — AI training](https://c4studios.com.au/Foresight): Practical AI workshops for workplaces and schools.
+- [Lead Engine](https://c4studios.com.au/lead-engine): Done-for-you lead generation system.
 - [Portfolio](https://c4studios.com.au/Portfolio): Selected client work and case studies.
 - [C4 Originals (software)](https://c4studios.com.au/software): In-house SaaS products built by C4 Studios.
 - [Start a project](https://c4studios.com.au/start): Begin a new engagement with C4 Studios.
 - [Support & contact](https://c4studios.com.au/Support): Get in touch or request help.
+
+## Perth services
+
+- [AI search optimisation (GEO) Perth](https://c4studios.com.au/ai-search-optimisation-perth): Get recommended by ChatGPT, Perplexity and Google AI. AI Visibility Check $400.
+- [Web design Perth](https://c4studios.com.au/web-design-perth): Custom-coded websites from $1,500 with fixed quotes.
+- [Web development Perth](https://c4studios.com.au/web-development-perth): Online stores, web apps, portals and integrations.
+- [SEO Perth](https://c4studios.com.au/seo-perth): One-off fixes from $400 or monthly growth plans from $500.
+- [AI & automation Perth](https://c4studios.com.au/ai-automation-perth): Workflows from $750 to custom AI agents.
+- [Branding Perth](https://c4studios.com.au/branding-perth): Logos from $250 to full identity systems.
+- [Photo & video Perth](https://c4studios.com.au/photo-video-perth): Headshots, brand shoots, drone and short-form content.
+- [How much does a website cost in Perth?](https://c4studios.com.au/how-much-does-a-website-cost-perth): Honest 2026 price bands.
 
 ## AI training
 

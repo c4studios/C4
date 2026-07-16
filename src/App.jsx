@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { MotionConfig } from 'framer-motion';
 import { Suspense, lazy } from 'react';
 import PageNotFound from './lib/PageNotFound';
 import SeoPage from './pages/SeoPage';
@@ -36,9 +37,25 @@ function LegacyStartProjectRedirect() {
   return <Navigate to={`${createPageUrl('StartProject')}${location.search}${location.hash}`} replace />;
 }
 
+/* Path-style aliases for the URLs the sitemap/llms.txt publish
+   (/CaseStudy/<slug>, /SoftwareProduct/<slug>). The prerenderer writes real
+   HTML at those paths for crawlers, but the SPA only routes the ?slug= form —
+   without these, hydration replaced the content with a 404. */
+function CaseStudyPathAlias() {
+  const { slug } = useParams();
+  return <Navigate to={`/CaseStudy?slug=${encodeURIComponent(slug)}`} replace />;
+}
+
+function SoftwareProductPathAlias() {
+  const { slug } = useParams();
+  return <Navigate to={`/SoftwareProduct?slug=${encodeURIComponent(slug)}`} replace />;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClientInstance}>
+      {/* Honour prefers-reduced-motion for every framer-motion animation. */}
+      <MotionConfig reducedMotion="user">
       <Router>
         <Routes>
           {/* Networking-card landing — no Layout chrome, lazy-loaded */}
@@ -113,6 +130,9 @@ function App() {
               </Suspense>
             </LayoutWrapper>
           } />
+          {/* Path-style deep links from the sitemap/llms.txt */}
+          <Route path="/CaseStudy/:slug" element={<CaseStudyPathAlias />} />
+          <Route path="/SoftwareProduct/:slug" element={<SoftwareProductPathAlias />} />
           <Route path="/StartProject" element={<LegacyStartProjectRedirect />} />
           {/* /Services retired: the services live as individual pages reached
               via the nav dropdown. Old links land on home. */}
@@ -132,6 +152,7 @@ function App() {
         </Routes>
         <WelcomeReturnButton />
       </Router>
+      </MotionConfig>
       <Toaster />
     </QueryClientProvider>
   )

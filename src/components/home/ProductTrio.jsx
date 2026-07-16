@@ -40,7 +40,7 @@ const products = [
     timeframe: 'Scoped to you',
     icon: Sparkles,
     primaryCta: { label: <>Explore <C4iWordmark /></>, to: '/c4i' },
-    secondary: { label: 'Local or cloud', to: '/c4i' },
+    secondary: { label: 'Private AI', to: '/private-ai' },
   },
   {
     key: 'lens',
