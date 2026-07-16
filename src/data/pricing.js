@@ -767,58 +767,6 @@ export const boosterPacks = [
   { name: 'Emergency Fix', price: 250, detail: 'Same-day critical fix (site down, broken functionality)' },
 ];
 
-/* ── Service Categories (for overview page) ── */
-export const serviceCategories = [
-  {
-    key: 'web-design',
-    title: 'Websites & Ecommerce',
-    description: 'Landing pages, brochure sites, ecommerce stores, and web app starters priced by scope.',
-    startingFrom: '$500 / $3,500 ecommerce',
-    route: '/WebDesignPricing',
-    icon: 'globe',
-  },
-  {
-    key: 'branding',
-    title: 'Branding & Identity',
-    description: 'Logos, brand systems, and visual identity that set you apart.',
-    startingFrom: '$250',
-    route: '/BrandingPricing',
-    icon: 'palette',
-  },
-  {
-    key: 'c4-lens',
-    title: 'C4 Lens',
-    description: 'Professional photography and videography for your brand.',
-    startingFrom: '$200',
-    route: '/C4LensPricing',
-    icon: 'camera',
-  },
-  {
-    key: 'seo',
-    title: 'SEO & Search',
-    description: 'Technical SEO, content strategy, and search dominance.',
-    startingFrom: '$400',
-    route: '/SEOPricing',
-    icon: 'search',
-  },
-  {
-    key: 'automation',
-    title: 'Automation & AI',
-    description: 'Workflow automation, AI agents, and custom integrations.',
-    startingFrom: '$750',
-    route: '/AutomationPricing',
-    icon: 'zap',
-  },
-  {
-    key: 'social-media',
-    title: 'Social Media & Content',
-    description: 'Content creation, community management, and social strategy.',
-    startingFrom: '$350/mo',
-    route: '/SocialMediaPricing',
-    icon: 'share2',
-  },
-];
-
 /* ── Shared Constants ── */
 export const ASTERISK_CLAUSE = 'All prices are starting prices based on defined scope. Landing pages start at $500, brochure sites at $800, ecommerce stores at $3,500, and web app starters at $4,500. Larger builds scale with pages, catalogue size, integrations, content volume, and custom functionality.';
 
@@ -875,5 +823,5 @@ export const c4SightPackages = [
   },
 ];
 
-// Indicative-pricing note for C4Sight surfaces (page + pricing modal).
+// Indicative-pricing note for C4Sight surfaces (Foresight page).
 export const C4SIGHT_PRICING_NOTE = 'Prices are indicative starting points. You get a fixed quote after a short scoping call, based on group size, location and format. All prices in AUD, excluding GST.';
