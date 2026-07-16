@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 5173
+    },
+    {
+      "name": "schools-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["-C", "C:/Users/belac/Projects/C4-Internal/c4sight-schools/apps/web", "dev"],
+      "port": 3000
     }
   ]
 }
