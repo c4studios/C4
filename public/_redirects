@@ -2,10 +2,27 @@
 # Cloudflare Pages reads this file from the build output directory.
 #
 # Docs: https://developers.cloudflare.com/pages/configuration/redirects/
+#
+# CAUTION: redirect rules run BEFORE static assets are served, so never add a
+# rule for a path the prerenderer writes real HTML to (/CaseStudy/:slug,
+# /SoftwareProduct/:slug, and every route in scripts/prerender.mjs) — the rule
+# would shadow the static file. Only retired legacy paths belong here.
 
 /StartProject  /start  301
 
 # /Services retired — individual service pages live under the nav dropdown.
 /Services  /  301
+
+# Retired legacy paths — server-side mirrors of the client redirects in
+# src/App.jsx, so old links 301 without booting the SPA first.
+# Brand & Growth folded into C4 Lens.
+/ServiceBrand  /Lens  301
+# Ventures and Rebuild initiatives are no longer offered.
+/Ventures  /  301
+/Rebuild  /  301
+# The Ventures-specific Terms are gone; old links go to the ToS.
+/Terms  /terms-of-service  301
+# Legacy Contact page superseded by Support.
+/Contact  /Support  301
 
 /*  /index.html  200
