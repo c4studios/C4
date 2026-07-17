@@ -18,6 +18,8 @@ interface HardwareUnitProps {
   /** Retriggers the sheen sweep; pass the tier id. */
   sweepKey: string;
   staticMode: boolean;
+  /** 'byo' draws the client's own machine: a dashed outline, no sheen. */
+  variant?: 'solid' | 'byo';
 }
 
 function SlabFace({ badge }: { badge?: string }) {
@@ -44,6 +46,7 @@ export default function HardwareUnit({
   widthPx = 220,
   sweepKey,
   staticMode,
+  variant = 'solid',
 }: HardwareUnitProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const paired = unitCount >= 2;
@@ -146,7 +149,11 @@ export default function HardwareUnit({
           <span className="pa-hw-link" data-pa-link style={{ opacity: 0 }}>
             ⇄
           </span>
-          <div className="pa-hw-slab" data-flip-id="pa-unit-1" style={{ width: widthPx }}>
+          <div
+            className={`pa-hw-slab${variant === 'byo' ? ' is-byo' : ''}`}
+            data-flip-id="pa-unit-1"
+            style={{ width: widthPx }}
+          >
             <SlabFace badge={badge} />
             <span className="pa-hw-sheen" data-pa-sheen />
           </div>

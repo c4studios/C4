@@ -89,17 +89,26 @@ export default function PrivateAI() {
       url: absoluteUrl('/private-ai'),
       provider: { '@type': 'Organization', name: 'C4 Studios', url: SITE_URL },
       areaServed: { '@type': 'Place', name: 'Perth, Western Australia' },
-      offers: tiers.map((t) => ({
-        '@type': 'Offer',
-        name: `${t.name} system`,
-        url: absoluteUrl(`/private-ai?tier=${t.id}`),
-        availability: 'https://schema.org/InStock',
-        priceSpecification: {
-          '@type': 'PriceSpecification',
-          minPrice: Number(t.upfront.replace(/[^0-9]/g, '')),
-          priceCurrency: 'AUD',
-        },
-      })),
+      offers: tiers.flatMap((t) => {
+        const num = (s: string) => Number(s.replace(/[^0-9]/g, '')) || 0;
+        const offer = (label: string, supply: string, minPrice: number) => ({
+          '@type': 'Offer',
+          name: `${t.name} system, ${label}`,
+          url: absoluteUrl(`/private-ai?tier=${t.id}&supply=${supply}`),
+          availability: 'https://schema.org/InStock',
+          priceSpecification: {
+            '@type': 'PriceSpecification',
+            minPrice,
+            priceCurrency: 'AUD',
+          },
+        });
+        const out = [];
+        const byo = num(t.byo.upfront);
+        if (byo) out.push(offer('installed on your hardware', 'byo', byo));
+        const supplied = num(t.supplied.upfront);
+        if (supplied) out.push(offer('supplied hardware', 'supplied', supplied));
+        return out;
+      }),
     }),
     [],
   );

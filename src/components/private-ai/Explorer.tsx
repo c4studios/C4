@@ -1,20 +1,38 @@
 /**
  * Explorer — systems and pricing, the centrepiece of /private-ai.
  *
- * A proper radiogroup of four tiers (arrow keys, roving tabindex, ink
- * focus rings). The ink underline slides between segments via GSAP Flip.
- * Selected tier syncs to the URL as ?tier=… (replaceState, read on load).
- * Each switch: outgoing console fades 0.15s, hardware morphs via Flip,
- * badge crossfades, price digits roll, includes restagger. Under 0.5s,
- * transform and opacity only. Reduced motion: crossfade only.
+ * Two axes over the tier radiogroup:
+ *   supply — "Your hardware" (BYO install) or "We supply it" (hardware
+ *   choice per tier, Windows first). The switch is the page's hero
+ *   control: an ink pill slides between the two worlds, the slab morphs
+ *   solid ⇄ dashed via GSAP Flip, price digits roll, includes restagger.
+ *   payment — own outright / managed monthly (supplied only; managed
+ *   needs C4-owned hardware, so the track hides under BYO).
+ *
+ * Selected tier and supply sync to the URL (?tier=…&supply=…). Each
+ * switch: outgoing content fades 0.15s, hardware morphs via Flip, price
+ * digits roll, includes restagger. Under 0.5s, transform and opacity
+ * only. Reduced motion: crossfade only.
  */
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { gsap } from 'gsap';
 import { Flip } from 'gsap/Flip';
 import { recordPrivateAiEvent } from '@/api/submissions';
-import { tiers, tierScripts, tierConsoleSummaries, isTierId, DEFAULT_TIER } from './tiers';
-import type { TierId } from './tiers';
+import {
+  tiers,
+  tierScripts,
+  tierConsoleSummaries,
+  isTierId,
+  isSupplyMode,
+  DEFAULT_TIER,
+  DEFAULT_SUPPLY,
+  BYO_SPEC,
+  FINE_PRINT_BYO,
+  FINE_PRINT_SUPPLIED,
+  FINE_PRINT_MANAGED,
+} from './tiers';
+import type { TierId, SupplyMode } from './tiers';
 import ConsoleWindow from './ConsoleWindow';
 import HardwareUnit from './HardwareUnit';
 
@@ -30,21 +48,22 @@ const UNIT_WIDTH: Record<TierId, number> = {
 
 const MAILTO = 'mailto:caleb@c4studios.com.au?subject=Private%20AI%2C%2015%20minutes';
 
-const FINE_PRINT =
-  'Pricing in AUD, quoted to fit each practice. Upfront covers the hardware (yours to keep), installation, configuration, team training and a 30-day tuning period. Monthly care covers monitoring, updates, model upgrades and support. Cancel anytime: your system keeps working, you simply stop receiving updates and support.';
-
-const MANAGED_FINE_PRINT =
-  'Managed pricing in AUD, over a 36-month term. We own and maintain the hardware, so there is no capital outlay; the monthly covers the machine, monitoring, updates, model upgrades and support. A one-off setup fee covers install, configuration and training. At the end of the term you can renew, refresh the hardware, or buy the unit out.';
-
 function initialTier(): TierId {
   if (typeof window === 'undefined') return DEFAULT_TIER;
   const param = new URLSearchParams(window.location.search).get('tier');
   return isTierId(param) ? param : DEFAULT_TIER;
 }
 
-function syncUrl(id: TierId) {
+function initialSupply(): SupplyMode {
+  if (typeof window === 'undefined') return DEFAULT_SUPPLY;
+  const param = new URLSearchParams(window.location.search).get('supply');
+  return isSupplyMode(param) ? param : DEFAULT_SUPPLY;
+}
+
+function syncUrl(id: TierId, supply: SupplyMode) {
   const url = new URL(window.location.href);
   url.searchParams.set('tier', id);
+  url.searchParams.set('supply', supply);
   window.history.replaceState(null, '', url.pathname + url.search + url.hash);
 }
 
@@ -62,8 +81,14 @@ function PriceChars({ value }: { value: string }) {
 
 export default function Explorer({ staticMode }: { staticMode: boolean }) {
   const [tierId, setTierId] = useState<TierId>(initialTier);
+  const [supply, setSupply] = useState<SupplyMode>(initialSupply);
   const [track, setTrack] = useState<'outright' | 'managed'>('outright');
   const tier = tiers.find((t) => t.id === tierId) ?? tiers[0];
+  const [hwKey, setHwKey] = useState<string>(tier.supplied.hardware[0].key);
+
+  const hw =
+    tier.supplied.hardware.find((h) => h.key === hwKey) ?? tier.supplied.hardware[0];
+  const byoMode = supply === 'byo';
 
   const rootRef = useRef<HTMLElement>(null);
   const segRef = useRef<HTMLDivElement>(null);
@@ -72,9 +97,8 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
   const flipStateRef = useRef<ReturnType<typeof Flip.getState> | null>(null);
   const indicatorStateRef = useRef<ReturnType<typeof Flip.getState> | null>(null);
   const firstRender = useRef(true);
-  const switching = useRef(false);
 
-  /* Position the underline indicator on the selected segment. */
+  /* Position the underline indicator on the selected tier segment. */
   const placeIndicator = () => {
     const seg = segRef.current;
     const indicator = indicatorRef.current;
@@ -116,33 +140,49 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
     return () => io.disconnect();
   }, []);
 
-  const select = (id: TierId) => {
-    if (id === tierId || switching.current) return;
-    recordPrivateAiEvent('pa_tier_select', { tier: id });
-    syncUrl(id);
-
+  /* Shared switch mechanic: capture Flip states, then apply state
+     IMMEDIATELY. The dip-to-fade is pure decoration (the entrance effect
+     fades back in) so a throttled or backgrounded tab can never wedge the
+     control waiting on a tween's onComplete. */
+  const transition = (apply: () => void) => {
     if (staticMode) {
-      setTierId(id);
+      apply();
       return;
     }
-
-    // Capture Flip states before the DOM changes.
     flipStateRef.current = Flip.getState('[data-flip-id]');
     indicatorStateRef.current = indicatorRef.current ? Flip.getState(indicatorRef.current) : null;
+    gsap.set(fadeRef.current, { opacity: 0.25 });
+    apply();
+  };
 
-    switching.current = true;
-    gsap.to(fadeRef.current, {
-      opacity: 0,
-      duration: 0.15,
-      ease: 'power1.in',
-      onComplete: () => {
-        switching.current = false;
-        setTierId(id);
-      },
+  const selectTier = (id: TierId) => {
+    if (id === tierId) return;
+    recordPrivateAiEvent('pa_tier_select', { tier: id });
+    const next = tiers.find((t) => t.id === id) ?? tiers[0];
+    syncUrl(id, supply);
+    transition(() => {
+      setTierId(id);
+      setHwKey(next.supplied.hardware[0].key);
     });
   };
 
-  /* Entrance animations after a tier switch. */
+  const selectSupply = (mode: SupplyMode) => {
+    if (mode === supply) return;
+    recordPrivateAiEvent('pa_supply_select', { supply: mode, tier: tierId });
+    syncUrl(tierId, mode);
+    transition(() => {
+      setSupply(mode);
+      if (mode === 'byo') setTrack('outright');
+    });
+  };
+
+  const selectHw = (key: string) => {
+    if (key === hwKey) return;
+    recordPrivateAiEvent('pa_hw_select', { tier: tierId, hardware: key });
+    transition(() => setHwKey(key));
+  };
+
+  /* Entrance animations after any switch. */
   useLayoutEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
@@ -182,7 +222,7 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
     }
 
     const ctx = gsap.context(() => {
-      gsap.to(fadeRef.current, { opacity: 1, duration: 0.2, ease: 'power1.out' });
+      gsap.to(fadeRef.current, { opacity: 1, duration: 0.3, ease: 'power1.out' });
       gsap.fromTo(
         '[data-pa-price] .pa-ch',
         { autoAlpha: 0, y: 8 },
@@ -196,7 +236,7 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
     }, root);
     return () => ctx.revert();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tierId, staticMode]);
+  }, [tierId, supply, track, hwKey, staticMode]);
 
   const order = tiers.map((t) => t.id);
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -209,9 +249,17 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
     else if (e.key === 'End') next = order[order.length - 1];
     if (!next) return;
     e.preventDefault();
-    select(next);
+    selectTier(next);
     segRef.current?.querySelector<HTMLElement>(`[data-tier="${next}"]`)?.focus();
   };
+
+  const finePrint = byoMode
+    ? FINE_PRINT_BYO
+    : track === 'managed'
+      ? FINE_PRINT_MANAGED
+      : FINE_PRINT_SUPPLIED;
+
+  const goLive = byoMode ? tier.byo.goLive : tier.supplied.goLive;
 
   return (
     <section ref={rootRef} id="pricing" className="pa-section" aria-labelledby="pa-pricing-h2">
@@ -238,7 +286,7 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
               tabIndex={t.id === tierId ? 0 : -1}
               data-tier={t.id}
               className="pa-seg-btn"
-              onClick={() => select(t.id)}
+              onClick={() => selectTier(t.id)}
             >
               {t.name}
             </button>
@@ -246,19 +294,82 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
           <div ref={indicatorRef} className="pa-seg-indicator" aria-hidden="true" />
         </div>
 
+        {/* The supply switch: whose machine does it run on? */}
+        <div className="pa-supply-row">
+          <span className="pa-supply-label" id="pa-supply-label">
+            The machine
+          </span>
+          <div
+            className="pa-supply"
+            role="radiogroup"
+            aria-labelledby="pa-supply-label"
+            data-supply={supply}
+          >
+            <span className="pa-supply-thumb" aria-hidden="true" />
+            <button
+              type="button"
+              role="radio"
+              aria-checked={byoMode}
+              className="pa-supply-cell"
+              onClick={() => selectSupply('byo')}
+            >
+              Your hardware
+            </button>
+            <button
+              type="button"
+              role="radio"
+              aria-checked={!byoMode}
+              className="pa-supply-cell"
+              onClick={() => selectSupply('supplied')}
+            >
+              We supply it
+            </button>
+          </div>
+        </div>
+
         {/* Stage */}
         <div ref={fadeRef}>
           <div className="pa-stage">
             <div className="pa-stage-panel pa-stage-hw">
-              <div className="pa-stage-panel-head">Supplied hardware</div>
+              <div className="pa-stage-panel-head">
+                {byoMode ? 'Your hardware' : 'Supplied hardware'}
+              </div>
               <HardwareUnit
-                badge={tier.unitBadge}
-                unitCount={tier.unitCount}
+                badge={byoMode ? 'YOURS' : hw.badge}
+                unitCount={byoMode ? 1 : hw.unitCount}
                 widthPx={UNIT_WIDTH[tier.id]}
-                sweepKey={tier.id}
+                sweepKey={`${tier.id}-${supply}-${hw.key}`}
                 staticMode={staticMode}
+                variant={byoMode ? 'byo' : 'solid'}
               />
-              <p className="pa-hwline">{tier.hardwareLine}</p>
+              {byoMode ? (
+                <div className="pa-spec">
+                  <p className="pa-spec-h">{BYO_SPEC.heading}</p>
+                  <p className="pa-hwline">{BYO_SPEC.minimum}</p>
+                  <p className="pa-hwline">{BYO_SPEC.recommended}</p>
+                  <p className="pa-spec-note">{BYO_SPEC.note}</p>
+                </div>
+              ) : (
+                <>
+                  {tier.supplied.hardware.length > 1 && (
+                    <div className="pa-hwpick" role="radiogroup" aria-label="Supplied hardware option">
+                      {tier.supplied.hardware.map((option) => (
+                        <button
+                          key={option.key}
+                          type="button"
+                          role="radio"
+                          aria-checked={option.key === hw.key}
+                          className="pa-hwpick-chip"
+                          onClick={() => selectHw(option.key)}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <p className="pa-hwline">{hw.line}</p>
+                </>
+              )}
             </div>
             <div className="pa-stage-panel pa-stage-console">
               <div className="pa-stage-panel-head">The software, live</div>
@@ -272,48 +383,62 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
             </div>
           </div>
 
-          {/* Payment toggle: own outright vs managed subscription */}
-          <div className="pa-track" role="group" aria-label="Payment option">
-            <button
-              type="button"
-              className="pa-track-btn"
-              aria-pressed={track === 'outright'}
-              onClick={() => setTrack('outright')}
-            >
-              Own outright
-            </button>
-            <button
-              type="button"
-              className="pa-track-btn"
-              aria-pressed={track === 'managed'}
-              onClick={() => setTrack('managed')}
-            >
-              Managed monthly
-            </button>
-          </div>
+          {/* Payment toggle: own outright vs managed monthly (supplied only —
+              managed means C4 owns the machine, so it has no BYO form). */}
+          {!byoMode && (
+            <div className="pa-track" role="group" aria-label="Payment option">
+              <button
+                type="button"
+                className="pa-track-btn"
+                aria-pressed={track === 'outright'}
+                onClick={() => setTrack('outright')}
+              >
+                Own outright
+              </button>
+              <button
+                type="button"
+                className="pa-track-btn"
+                aria-pressed={track === 'managed'}
+                onClick={() => setTrack('managed')}
+              >
+                Managed monthly
+              </button>
+            </div>
+          )}
 
           {/* Details row */}
           <div className="pa-details" aria-live="polite">
             <div>
-              {track === 'managed' ? (
+              {byoMode ? (
                 <>
                   <div className="pa-price" data-pa-price>
-                    <PriceChars value={tier.managedMonthly} />
+                    <PriceChars value={tier.byo.upfront} />
+                  </div>
+                  <div className="pa-price-sub">Installed on your machine</div>
+                  <div className="pa-price-monthly" data-pa-price style={{ marginTop: 20 }}>
+                    <PriceChars value={tier.byo.monthly} />
+                  </div>
+                  <div className="pa-price-sub">Monthly care, software only</div>
+                </>
+              ) : track === 'managed' ? (
+                <>
+                  <div className="pa-price" data-pa-price>
+                    <PriceChars value={tier.supplied.managedMonthly} />
                   </div>
                   <div className="pa-price-sub">Per month, 36-month term</div>
                   <div className="pa-price-monthly" data-pa-price style={{ marginTop: 20 }}>
-                    <PriceChars value={tier.managedSetup} />
+                    <PriceChars value={tier.supplied.managedSetup} />
                   </div>
                   <div className="pa-price-sub">One-off setup</div>
                 </>
               ) : (
                 <>
                   <div className="pa-price" data-pa-price>
-                    <PriceChars value={tier.upfront} />
+                    <PriceChars value={tier.supplied.upfront} />
                   </div>
                   <div className="pa-price-sub">Upfront, installed</div>
                   <div className="pa-price-monthly" data-pa-price style={{ marginTop: 20 }}>
-                    <PriceChars value={tier.monthly} />
+                    <PriceChars value={tier.supplied.monthly} />
                   </div>
                   <div className="pa-price-sub">Monthly care</div>
                 </>
@@ -321,7 +446,7 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
             </div>
             <div>
               <p className="pa-suited">{tier.suitedTo}</p>
-              <p className="pa-golive">{tier.goLive}</p>
+              <p className="pa-golive">{goLive}</p>
             </div>
             <div>
               <ul className="pa-list" data-pa-includes>
@@ -333,7 +458,7 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
           </div>
         </div>
 
-        <p className="pa-fineprint">{track === 'managed' ? MANAGED_FINE_PRINT : FINE_PRINT}</p>
+        <p className="pa-fineprint">{finePrint}</p>
 
         <div style={{ marginTop: 36 }}>
           <a
