@@ -663,6 +663,155 @@
   width: 80px;
 }
 
+/* ── The supply switch: whose machine does it run on? ─────────────
+   The hero control of the two-axis offer. An ink pill slides between
+   "your hardware" and "we supply it"; everything downstream (slab,
+   prices, fine print) follows. */
+.pa-supply-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  margin-top: 28px;
+}
+
+.pa-supply-label {
+  font-family: var(--pa-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pa-mute);
+}
+
+.pa-supply {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1.5px solid var(--pa-ink);
+  border-radius: 999px;
+  padding: 3px;
+  background: transparent;
+}
+
+.pa-supply-thumb {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  background: var(--pa-ink);
+  border-radius: 999px;
+  transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pa-supply[data-supply='supplied'] .pa-supply-thumb {
+  transform: translateX(100%);
+}
+
+.pa-supply-cell {
+  position: relative;
+  z-index: 1;
+  appearance: none;
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--pa-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  min-height: 44px;
+  color: var(--pa-mute);
+  cursor: pointer;
+  transition: color 0.25s ease;
+  white-space: nowrap;
+}
+
+.pa-supply-cell:hover {
+  color: var(--pa-ink);
+}
+
+.pa-supply-cell[aria-checked='true'] {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* The client's own machine: same slab, drawn as a dashed outline. */
+.pa-hw-slab.is-byo {
+  background: transparent;
+  border: 2px dashed var(--pa-ink);
+  box-shadow: none;
+}
+
+.pa-hw-slab.is-byo .pa-hw-sheen {
+  display: none;
+}
+
+/* Hardware picker chips (supplied mode, tiers with a choice). */
+.pa-hwpick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.pa-hwpick-chip {
+  appearance: none;
+  background: none;
+  border: 1.5px solid var(--pa-hair);
+  border-radius: 999px;
+  font-family: var(--pa-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 15px;
+  min-height: 40px;
+  color: var(--pa-mute);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.pa-hwpick-chip:hover {
+  color: var(--pa-ink);
+}
+
+.pa-hwpick-chip[aria-checked='true'] {
+  border-color: var(--pa-ink);
+  color: var(--pa-ink);
+  font-weight: 700;
+}
+
+/* BYO machine spec block. */
+.pa-spec {
+  margin-top: 18px;
+}
+
+.pa-spec-h {
+  font-family: var(--pa-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pa-mute);
+  margin: 0 0 6px;
+}
+
+.pa-spec .pa-hwline {
+  margin: 8px 0 0;
+}
+
+.pa-spec-note {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--pa-mute);
+  margin: 10px 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pa-supply-thumb {
+    transition: none;
+  }
+}
+
 .pa-track {
   display: inline-flex;
   gap: 26px;
