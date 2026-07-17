@@ -1,4 +1,4 @@
-﻿import React, { useCallback, useId, useMemo, useRef } from 'react';
+﻿import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import {
@@ -175,8 +175,30 @@ function computeImpactChain(baseImpactAt) {
   return times;
 }
 
-function useLogoColours(context) {
+/* The RENDERED chrome, not the theme preference. Board pages (ServiceAI,
+   Foresight, Lens) force dark chrome for light-theme visitors and the
+   daylight sheet (ServiceWeb) forces light chrome for dark-theme visitors
+   by asserting/removing the dark-mode class on <html> — ThemeContext state
+   doesn't know. The class is the truth, so the wordmark follows it;
+   otherwise "Studios" renders near-black on a dark board (invisible). */
+function useRenderedDark() {
   const { isDark } = useTheme();
+  const [renderedDark, setRenderedDark] = useState(isDark);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const update = () => setRenderedDark(root.classList.contains('dark-mode'));
+    update();
+    const observer = new MutationObserver(update);
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  return renderedDark;
+}
+
+function useLogoColours(context) {
+  const isDark = useRenderedDark();
 
   return useMemo(() => {
     const dormant = { ...COLOURS.dormant };
