@@ -41,12 +41,12 @@ export const tiers = [
     unitBadge: '24GB',
     includes: [
       'Private assistant over your own documents, with sources',
-      'One core use case, configured from a proven template',
-      'On-site transcription of dictation and consults',
+      'One core use case, configured around your work',
+      'Answers cite the source document, every time',
       'Local audit log of every query',
       'Installation, a light training session and a 30-day tuning period',
     ],
-    goLive: 'Typically live within 2 weeks of acceptance.',
+    goLive: 'Scoped to go live within about 2 weeks of acceptance.',
   },
   {
     id: 'solo',
@@ -62,12 +62,12 @@ export const tiers = [
     unitBadge: '36GB',
     includes: [
       'Private assistant over your own documents, with sources',
-      'On-site transcription of dictation and consults',
+      'Search across your files and matters, with citations',
       'Drafting of correspondence and file notes',
       'Local audit log of every query',
       'Installation, training and a 30-day tuning period',
     ],
-    goLive: 'Typically live within 2 to 3 weeks of acceptance.',
+    goLive: 'Scoped to go live within 2 to 3 weeks of acceptance.',
   },
   {
     id: 'foundations',
@@ -88,7 +88,7 @@ export const tiers = [
       'Per-person usage in the audit log',
       'Installation, training and a 30-day tuning period',
     ],
-    goLive: 'Built to order. Typically live within 7 to 11 weeks of acceptance.',
+    goLive: 'Built to order. Scoped to go live within 7 to 11 weeks of acceptance.',
   },
   {
     id: 'practice',
@@ -109,7 +109,7 @@ export const tiers = [
       'Practice-wide audit trail for oversight',
       'Installation, training and a 30-day tuning period',
     ],
-    goLive: 'Typically live within 2 to 3 weeks of acceptance.',
+    goLive: 'Scoped to go live within 3 to 5 weeks of acceptance.',
   },
   {
     id: 'enterprise',
@@ -159,12 +159,12 @@ export const heroScript: ConsoleStep[][] = [
     { type: 'status', text: '0 bytes sent outside this network', delay: 800 },
   ],
   [
-    { type: 'user', text: "Summarise yesterday's consult recording." },
+    { type: 'user', text: 'Summarise everything we hold on the Meadows matter.' },
     {
       type: 'stream',
-      text: 'Done. 14 minute consult transcribed on this machine. Draft note created.',
+      text: 'Seven documents found. Key dates, amounts and the one unresolved query summarised below.',
     },
-    { type: 'chip', text: 'consult_0322.m4a · local' },
+    { type: 'chip', text: 'Meadows_Deed_2025.pdf · p.3' },
   ],
 ];
 
@@ -187,11 +187,7 @@ export const tierScripts: Record<TierId, ConsoleStep[]> = {
       text: 'Drafted. Based on your two prior letters to this client, kept to your usual form.',
     },
     { type: 'chip', text: 'Settlement_letters_2026 · 2 sources' },
-    {
-      type: 'status',
-      text: 'consult_0322.m4a transcribed on this machine · draft note created',
-      delay: 800,
-    },
+    { type: 'status', text: '0 bytes sent outside this network', delay: 800 },
   ],
   foundations: [
     { type: 'status', text: 'WATCHING: /Shared/Matters · LOCAL ONLY' },
@@ -235,7 +231,7 @@ export const heroConsoleSummary =
 
 export const tierConsoleSummaries: Record<TierId, string> = {
   lite: 'Demonstration: a short client letter drafted from prior correspondence, entirely on the local machine.',
-  solo: 'Demonstration: a settlement letter drafted from your prior letters, transcription done on the machine itself.',
+  solo: 'Demonstration: a settlement letter drafted from your prior letters, every answer cited to its source document.',
   foundations:
     'Demonstration: shared folders indexed locally as they change, a lease summarised with cited sources.',
   practice:
