@@ -43,7 +43,7 @@ const TEAM_POINTS = [
   'Ask questions across your own documents and get answers with sources',
   'Summarise and review documents before the detailed read',
   'Draft correspondence, file notes and first-pass documents',
-  'Transcribe dictation and meetings on site, including client and consult notes',
+  'Search whole folders of documents at once, not one file at a time',
   'Review a local audit log of every query: who asked what, and when',
 ];
 
@@ -51,7 +51,7 @@ const PROCESS_STEPS = [
   'A 15-minute call, then a written quote.',
   'Hardware ordered new through authorised channels.',
   'Built and tested on our bench before it ever reaches you.',
-  'Installed in half a day, with your team trained the same day.',
+  'Installed on site, with your team trained the same day.',
   'A 30-day tuning period, then monthly care begins.',
 ];
 
@@ -360,8 +360,10 @@ export default function PrivateAI() {
               <PaLabel>What it is, and what it isn&rsquo;t</PaLabel>
               <p>
                 It is a capable private assistant for everyday document work. It is not a
-                replacement for professional judgement, and it is not a frontier cloud model. If
-                your needs are better served another way, we will say so plainly.
+                replacement for professional judgement, and it is not a frontier cloud model.
+                It also does not move your existing files out of Microsoft's or Google's cloud,
+                it simply adds no new exposure of its own. If your needs are better served
+                another way, we will say so plainly.
               </p>
             </div>
           </div>
@@ -391,7 +393,9 @@ export default function PrivateAI() {
             <PaLabel>Who is behind it</PaLabel>
             <p className="pa-col-copy" style={{ maxWidth: '58ch' }}>
               Caleb Scott, founder of C4 Studios, a Perth software studio, and a current JD
-              candidate at UWA. Every system is built and supported locally in Perth.
+              candidate at UWA. Every system is built and supported locally in Perth. The first
+              system is being built now for a Perth accounting practice with a 400-client book,
+              running on the practice's own hardware.
             </p>
           </div>
         </div>
