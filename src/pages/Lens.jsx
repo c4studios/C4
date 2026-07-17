@@ -19,6 +19,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { c4LensPackages } from '@/data/pricing';
 import gsap from 'gsap';
 
 import '../components/lens/lens.css';
@@ -96,6 +97,48 @@ const WORDS = [
   { text: 'voice',     col: '#b388ff' },
   { text: 'story',     col: '#3ff8ff' },
 ];
+
+/* Package cards render from c4LensPackages (src/data/pricing.js) — the same
+   source StartProject quotes from — so names, prices, order and the popular
+   flag can't drift. The lines below are this page's abbreviated display copy
+   for each package's canonical feature list; packages without an entry fall
+   back to the pricing.js strings. Update both when inclusions change. */
+const PKG_FEATURE_DISPLAY = {
+  'mini-session': [
+    <><strong>30-min</strong> shoot</>,
+    '1 location',
+    <><strong>5</strong> edited digital images</>,
+    'Online gallery delivery',
+  ],
+  'portrait': [
+    <><strong>1-hour</strong> shoot</>,
+    '1 location',
+    <><strong>15</strong> edited digital images</>,
+    'Online gallery delivery',
+  ],
+  'business-branding': [
+    <><strong>2-hour</strong> shoot</>,
+    <>Up to <strong>2 locations</strong></>,
+    <><strong>30</strong> edited digital images</>,
+    'Headshots + workspace/lifestyle',
+    'Online gallery delivery',
+  ],
+  'content-creation': [
+    <><strong>Half-day</strong> shoot (4 hrs)</>,
+    'Photo + video',
+    <><strong>40</strong> edited photos</>,
+    <><strong>2</strong> short-form videos (30–60s)</>,
+    'Gallery + video delivery',
+  ],
+  'full-production': [
+    <><strong>Full-day</strong> shoot (8 hrs)</>,
+    'Photo + video',
+    <><strong>60+</strong> edited photos</>,
+    <><strong>4</strong> short-form + 1 long-form (3 min)</>,
+    'Grade, sound, motion graphics',
+    'Gallery + video delivery',
+  ],
+};
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    COMPONENT
@@ -1691,86 +1734,35 @@ export default function Lens() {
         <div className="sec-num lr"><span className="bar"></span>§ 03 — PACKAGES &amp; PRICING</div>
         <h2 className="lr" style={{ '--lr-delay': '80ms' }}>CLEAR SCOPE.<br /><em>No surprises.</em></h2>
         <div className="pkg-grid">
-          <div className="pkg-card lr lr-fade">
-            <div className="pkg-id">PKG — 01</div>
-            <h3>CORE</h3>
-            <div className="pkg-price"><span className="cur">$</span>200</div>
-            <div className="pkg-div"></div>
-            <ul className="pkg-ul">
-              <li><strong>30-min</strong> shoot</li>
-              <li>1 location</li>
-              <li><strong>5</strong> edited digital images</li>
-              <li>Online gallery delivery</li>
-            </ul>
-            <div className="pkg-cta">
-              <Link to={createPageUrl('StartProject') + '?service=lens&package=mini-session'} className="btn">Select <span className="btn-arrow">→</span></Link>
-            </div>
-          </div>
-          <div className="pkg-card lr lr-fade" style={{ '--lr-delay': '80ms' }}>
-            <div className="pkg-id">PKG — 02</div>
-            <h3>PORTRAIT SESSION</h3>
-            <div className="pkg-price"><span className="cur">$</span>350</div>
-            <div className="pkg-div"></div>
-            <ul className="pkg-ul">
-              <li><strong>1-hour</strong> shoot</li>
-              <li>1 location</li>
-              <li><strong>15</strong> edited digital images</li>
-              <li>Online gallery delivery</li>
-            </ul>
-            <div className="pkg-cta">
-              <Link to={createPageUrl('StartProject') + '?service=lens&package=portrait'} className="btn">Select <span className="btn-arrow">→</span></Link>
-            </div>
-          </div>
-          <div className="pkg-card pop lr lr-fade" style={{ '--lr-delay': '160ms' }}>
-            <div className="pop-badge">★ Most Popular</div>
-            <div className="pkg-id">PKG — 03</div>
-            <h3>BUSINESS BRANDING</h3>
-            <div className="pkg-price"><span className="cur">$</span>650</div>
-            <div className="pkg-div"></div>
-            <ul className="pkg-ul">
-              <li><strong>2-hour</strong> shoot</li>
-              <li>Up to <strong>2 locations</strong></li>
-              <li><strong>30</strong> edited digital images</li>
-              <li>Headshots + workspace/lifestyle</li>
-              <li>Online gallery delivery</li>
-            </ul>
-            <div className="pkg-cta">
-              <Link to={createPageUrl('StartProject') + '?service=lens&package=business-branding'} className="btn primary">Select <span className="btn-arrow">→</span></Link>
-            </div>
-          </div>
-          <div className="pkg-card lr lr-fade" style={{ '--lr-delay': '240ms' }}>
-            <div className="pkg-id">PKG — 04</div>
-            <h3>CONTENT CREATION</h3>
-            <div className="pkg-price"><span className="cur">$</span>1,200</div>
-            <div className="pkg-div"></div>
-            <ul className="pkg-ul">
-              <li><strong>Half-day</strong> shoot (4 hrs)</li>
-              <li>Photo + video</li>
-              <li><strong>40</strong> edited photos</li>
-              <li><strong>2</strong> short-form videos (30–60s)</li>
-              <li>Gallery + video delivery</li>
-            </ul>
-            <div className="pkg-cta">
-              <Link to={createPageUrl('StartProject') + '?service=lens&package=content-creation'} className="btn">Select <span className="btn-arrow">→</span></Link>
-            </div>
-          </div>
-          <div className="pkg-card lr lr-fade" style={{ '--lr-delay': '320ms' }}>
-            <div className="pkg-id">PKG — 05</div>
-            <h3>FULL PRODUCTION</h3>
-            <div className="pkg-price"><span className="cur">$</span>2,500<span style={{ fontSize: '.38em', color: 'var(--ink-3)', fontFamily: "'Geist Mono', monospace" }}>+</span></div>
-            <div className="pkg-div"></div>
-            <ul className="pkg-ul">
-              <li><strong>Full-day</strong> shoot (8 hrs)</li>
-              <li>Photo + video</li>
-              <li><strong>60+</strong> edited photos</li>
-              <li><strong>4</strong> short-form + 1 long-form (3 min)</li>
-              <li>Grade, sound, motion graphics</li>
-              <li>Gallery + video delivery</li>
-            </ul>
-            <div className="pkg-cta">
-              <Link to={createPageUrl('StartProject') + '?service=lens&package=full-production'} className="btn">Select <span className="btn-arrow">→</span></Link>
-            </div>
-          </div>
+          {c4LensPackages.map((pkg, i) => {
+            const lines = PKG_FEATURE_DISPLAY[pkg.key] ?? pkg.features;
+            const amount = pkg.priceLabel.replace(/^\$/, '').replace(/\+$/, '');
+            const plus = pkg.priceLabel.endsWith('+');
+            return (
+              <div
+                key={pkg.key}
+                className={`pkg-card${pkg.popular ? ' pop' : ''} lr lr-fade`}
+                style={i ? { '--lr-delay': `${i * 80}ms` } : undefined}
+              >
+                {pkg.popular && <div className="pop-badge">★ Most Popular</div>}
+                <div className="pkg-id">PKG — {String(i + 1).padStart(2, '0')}</div>
+                <h3>{pkg.name.toUpperCase()}</h3>
+                <div className="pkg-price">
+                  <span className="cur">$</span>{amount}
+                  {plus && <span style={{ fontSize: '.38em', color: 'var(--ink-3)', fontFamily: "'Geist Mono', monospace" }}>+</span>}
+                </div>
+                <div className="pkg-div"></div>
+                <ul className="pkg-ul">
+                  {lines.map((line, li) => <li key={li}>{line}</li>)}
+                </ul>
+                <div className="pkg-cta">
+                  <Link to={`${createPageUrl('StartProject')}?service=lens&package=${pkg.key}`} className={pkg.popular ? 'btn primary' : 'btn'}>
+                    Select <span className="btn-arrow">→</span>
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
         </div>
         <div className="pkg-note lr">
           <strong>All prices exclude GST.</strong> Starting prices based on defined scope — if scope changes, we communicate immediately and pause until revised pricing is agreed. No surprises.<br />
