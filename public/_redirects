@@ -22,7 +22,6 @@
 /Rebuild  /  301
 # The Ventures-specific Terms are gone; old links go to the ToS.
 /Terms  /terms-of-service  301
-# Legacy Contact page superseded by Support.
-/Contact  /Support  301
+# /Contact is a real page again (fable pass — "The Direct Line").
 
 /*  /index.html  200
