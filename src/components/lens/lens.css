@@ -33,6 +33,14 @@
 }
 body.cursor-on, body.cursor-on * { cursor: none !important; }
 
+/* Screen-reader-only h1 — zero visual delta */
+.lens-sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%);
+  white-space: nowrap; border: 0;
+}
+
 /* ── NAV ── */
 .lens-page nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 60;
@@ -204,8 +212,8 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 @keyframes lens-nudge { 0%,100%{transform:translateY(0)} 50%{transform:translateY(4px)} }
 .tick-flash { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; border-radius: 50%; background: var(--amber); transform: translate(-50%,-50%); opacity: 0; pointer-events: none; z-index: 20; filter: blur(5px); }
 
-/* RETICLE */
-.reticle { position: fixed; top: 0; left: 0; width: 40px; height: 40px; pointer-events: none; transform: translate(-50%,-50%); z-index: 999; mix-blend-mode: difference; }
+/* RETICLE — hidden by default; JS shows it on fine pointers only */
+.reticle { position: fixed; top: 0; left: 0; width: 40px; height: 40px; pointer-events: none; transform: translate(-50%,-50%); z-index: 999; mix-blend-mode: difference; display: none; }
 
 /* ── CAPTURE SECTION ── */
 .capture {
@@ -337,8 +345,9 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 .pkg-ul li strong { color: var(--ink); font-weight: 500; }
 .pkg-cta { margin-top: 18px; }
 .pkg-cta .btn { width: 100%; justify-content: center; padding: 10px 16px; font-size: 9px; }
-.pkg-note { margin-top: 44px; padding: 24px 28px; border: 1px solid var(--line); font-size: 13px; color: var(--ink-3); line-height: 1.65; }
-.pkg-note strong { color: var(--ink-2); }
+/* Body-size copy: ink-2 (#9a9a95 on #000 ≈ 7.4:1) — ink-3 computed 2.29:1, under the 4.5:1 floor */
+.pkg-note { margin-top: 44px; padding: 24px 28px; border: 1px solid var(--line); font-size: 13px; color: var(--ink-2); line-height: 1.65; }
+.pkg-note strong { color: var(--ink); }
 
 /* ── CALEB (with photo) ── */
 .caleb-inner { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: .55fr 1fr; gap: 80px; align-items: center; }
@@ -370,10 +379,10 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 /* ── PORTFOLIO ── */
 .portfolio-outer { position: relative; background: #000; height: calc(100vh + var(--pf-travel, 100vh)); }
 .portfolio-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; }
-.pf-track { display: flex; gap: 24px; padding: 0 10vw; will-change: transform; }
+.pf-track { display: flex; gap: 28px; padding: 0 10vw; will-change: transform; }
 .pf-card { flex: 0 0 auto; position: relative; background: #111; overflow: hidden; height: 68vh; align-self: center; }
 .pf-card.tall { width: 22vw; aspect-ratio: 3/4; }
-.pf-card.wide { width: 40vw; aspect-ratio: 16/9; }
+.pf-card.wide { width: 47vw; aspect-ratio: 16/9; }
 .pf-card.sq { width: 30vw; aspect-ratio: 1; }
 .pf-ph { position: absolute; inset: 0; background-image: repeating-linear-gradient(135deg, transparent 0 18px, rgba(245,245,240,.018) 18px 19px); }
 .pf-mask { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,.9) 100%); opacity: 0; transition: opacity .5s cubic-bezier(.4,0,.2,1); }
@@ -390,6 +399,30 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 .pf-top-row .t { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: .14em; color: var(--ink); }
 .pf-hint { position: absolute; bottom: calc(7vh + 14px); right: 10vw; font-family: 'Geist Mono', monospace; font-size: 9px; letter-spacing: .3em; color: var(--ink-3); text-transform: uppercase; z-index: 5; }
 .pf-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* ── END OF REEL slate — leader punctuation, not a frame ── */
+.pf-slate {
+  flex: 0 0 auto; align-self: center;
+  display: flex; flex-direction: column; justify-content: center; gap: 18px;
+  padding: 0 6vw 0 3vw;
+  font-family: 'Geist Mono', monospace; text-transform: uppercase; white-space: nowrap;
+}
+.pf-slate-reel {
+  display: flex; align-items: center; gap: 14px;
+  font-size: 11px; letter-spacing: .3em; color: var(--ink-2);
+}
+.pf-slate-reel::before {
+  content: ''; width: 30px; height: 1px; background: var(--amber); flex-shrink: 0;
+}
+.pf-slate-next { font-size: 10px; letter-spacing: .26em; color: var(--ink-2); }
+.pf-slate-next a {
+  position: relative; display: inline-flex; align-items: center;
+  min-height: 44px; min-width: 44px; margin: -17px -4px; padding: 0 4px;
+  color: var(--amber); text-decoration: none;
+  transition: color .25s ease;
+}
+.pf-slate-next a:hover { color: #f2c98c; }
+.pf-slate-next a:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
 
 /* ── CASE STUDY ── */
 .case-study { background: #0a0a0a; border-top: 1px solid var(--line); }
@@ -433,33 +466,19 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 50px; }
 
 /* ── FOOTER ── */
+/* ink-2 not ink-3: footer text (incl. the C4 Studios escape Link) must clear the 4.5:1 floor */
 .lens-page > footer {
   padding: 40px; display: flex; justify-content: space-between; align-items: center;
   font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
-  color: var(--ink-3); border-top: 1px solid var(--line);
+  color: var(--ink-2); border-top: 1px solid var(--line);
 }
 .foot-logo { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: .14em; color: var(--ink-2); }
-
-/* ── TWEAKS ── */
-.tweaks {
-  position: fixed; bottom: 22px; right: 22px; width: 248px;
-  background: rgba(10,10,10,.96); border: 1px solid var(--line-2); backdrop-filter: blur(12px);
-  padding: 16px; z-index: 200; font-family: 'Geist Mono', monospace; font-size: 11px;
-  letter-spacing: .1em; color: var(--ink); display: none;
-}
-.tweaks.open { display: block; }
-.tweaks h4 { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: .15em; margin-bottom: 14px; }
-.tweaks label { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; text-transform: uppercase; font-size: 10px; letter-spacing: .2em; color: var(--ink-2); }
-.tweaks input[type=range] { width: 118px; accent-color: var(--amber); }
-.tog { width: 30px; height: 16px; border-radius: 10px; background: var(--ink-3); position: relative; cursor: pointer; }
-.tog::after { content: ""; position: absolute; width: 12px; height: 12px; background: var(--ink); border-radius: 50%; top: 2px; left: 2px; transition: left .2s; }
-.tog.on { background: var(--amber); }
-.tog.on::after { left: 16px; background: #000; }
 
 /* ── Hamburger (hidden on desktop) ── */
 .lens-hamburger {
   display: none; background: none; border: none; color: #fff; cursor: pointer;
-  padding: 8px; -webkit-tap-highlight-color: transparent;
+  /* 12px pad + 20px icon = 44×44 target; negative margin keeps the nav's rendered metrics unchanged */
+  padding: 12px; margin: -4px; -webkit-tap-highlight-color: transparent;
 }
 
 /* ── Mobile menu overlay ── */
@@ -481,27 +500,50 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 .lens-mobile-menu a.book { color: var(--amber); }
 .lens-mobile-back {
   font-family: 'Geist Mono', monospace !important;
-  font-size: 12px !important; letter-spacing: .22em;
-  color: rgba(245,245,240,.4) !important; text-transform: uppercase;
+  font-size: 14px !important; letter-spacing: .22em;
+  color: var(--amber) !important; text-transform: uppercase; /* #e8a658 on #000 ≈ 10:1 */
   transition: color .25s !important;
+  display: inline-flex; align-items: center; min-height: 44px;
 }
-.lens-mobile-back:hover { color: rgba(245,245,240,.75) !important; }
+.lens-mobile-back:hover { color: #f2c98c !important; }
 .lens-mobile-sep {
   width: 36px; height: 1px; background: rgba(245,245,240,.1);
 }
 
 /* ── Site nav (back to main site) ── */
-.nav-left-wrap { position: relative; }
+.nav-left-wrap { position: relative; display: flex; align-items: center; gap: 16px; }
+/* The Exit Sign — direct one-click escape, in the page's own HUD register */
+.site-back {
+  position: relative; display: inline-flex; align-items: center;
+  min-height: 44px; min-width: 44px;
+  margin: -15px 0; /* 44px target without inflating the fixed nav's metrics */
+  font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .22em;
+  text-transform: uppercase; color: inherit; text-decoration: none;
+  white-space: nowrap; opacity: .92; transition: opacity .25s ease;
+}
+.site-back::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 12px; height: 1px;
+  background: var(--amber);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .35s cubic-bezier(.22,1,.36,1);
+}
+.site-back:hover { opacity: 1; }
+.site-back:hover::after { transform: scaleX(1); }
 .site-nav-btn {
-  display: flex; align-items: center; gap: 8px;
+  display: grid; place-items: center;
+  width: 44px; height: 44px; margin: -15px 0; padding: 0;
   background: none; border: none; color: inherit;
-  font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
-  cursor: pointer; padding: 6px 0; opacity: .72;
+  cursor: pointer; opacity: .72;
   transition: opacity .25s ease;
   -webkit-tap-highlight-color: transparent;
 }
 .site-nav-btn:hover { opacity: 1; }
 .site-nav-btn svg { flex-shrink: 0; }
+.site-back:focus-visible,
+.site-nav-btn:focus-visible,
+.lens-mobile-back:focus-visible {
+  outline: 2px solid var(--amber); outline-offset: 3px; opacity: 1;
+}
 .site-nav-overlay {
   position: fixed; inset: 0; z-index: 65;
 }
@@ -589,7 +631,9 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 
   /* Site nav drop */
   .site-nav-drop { left: 20px; top: 60px; }
-  .site-nav-btn span { display: none; }
+  .nav-left-wrap { gap: 10px; }
+  .site-back-tail { display: none; } /* escape reads "← C4" on small screens */
+  .pf-slate { padding: 0 10vw 0 2vw; gap: 14px; }
 }
 
 /* ═══════════════════════════════════════════
@@ -717,4 +761,5 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   .lens-page .sec-num .bar { transform: scaleX(1); transition: none; }
   .cta-iris { animation: none; }
   .lens-flare { display: none; }
+  .site-back::after { transition: none; }
 }
