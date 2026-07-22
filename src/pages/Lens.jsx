@@ -157,17 +157,9 @@ export default function Lens() {
 
   useEffect(() => {
     /* â•â•â•â•â•â•â•â•â•â•â• FONTS â•â•â•â•â•â•â•â•â•â•â• */
-    const fontElements = [];
-    const pc1 = document.createElement('link');
-    pc1.rel = 'preconnect'; pc1.href = 'https://fonts.googleapis.com';
-    document.head.appendChild(pc1); fontElements.push(pc1);
-    const pc2 = document.createElement('link');
-    pc2.rel = 'preconnect'; pc2.href = 'https://fonts.gstatic.com'; pc2.crossOrigin = 'anonymous';
-    document.head.appendChild(pc2); fontElements.push(pc2);
-    const fontLink = document.createElement('link');
-    fontLink.rel = 'stylesheet';
-    fontLink.href = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;700&display=swap';
-    document.head.appendChild(fontLink); fontElements.push(fontLink);
+    /* All five families (Bebas Neue, Geist, Geist Mono, Instrument Serif, Caveat)
+       are self-hosted in src/styles/fonts.css and loaded globally via main.jsx —
+       no runtime Google Fonts injection. */
 
     /* â•â•â•â•â•â•â•â•â•â•â• BODY â•â•â•â•â•â•â•â•â•â•â• */
     const prevBodyBg = document.body.style.background;
@@ -183,11 +175,13 @@ export default function Lens() {
     function eio(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
     function eoc(t) { return 1 - Math.pow(1-t, 3); }
 
-    const TWEAKS = { cursor: true, ticks: false, motion: 65 };
+    /* Hero visibility flag — the clutch (IntersectionObserver below) flips it. */
+    let heroVisible = true;
 
     /* â•â•â•â•â•â•â•â•â•â•â• QUOTES â•â•â•â•â•â•â•â•â•â•â• */
     let qIdx = 0;
     const quoteInterval = setInterval(() => {
+      if (!heroVisible) return; /* no class-toggling while the hero is offscreen */
       const all = document.querySelectorAll('.q-item');
       if (!all.length) return;
       all[qIdx].classList.remove('on');
@@ -344,17 +338,6 @@ export default function Lens() {
     if (lensEye) lensEye.style.opacity = '0.65';
 
     let audioCtx = null;
-    function playTick() {
-      if (!TWEAKS.ticks) return;
-      try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-        o.type = 'square'; o.frequency.value = 1700 + Math.random() * 350;
-        g.gain.value = 0.04; o.connect(g); g.connect(audioCtx.destination);
-        g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.03);
-        o.start(); o.stop(audioCtx.currentTime + 0.035);
-      } catch (e) { /* ignore */ }
-    }
     function playShutter() {
       try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -382,13 +365,15 @@ export default function Lens() {
 
     /* Mouse parallax — subtle lens tilt, fine pointers only */
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    /* staticMode: prerender UA + reduced-motion both rest at the finished end state */
+    const staticMode = prefersReduced || /Prerender/i.test(navigator.userAgent);
     const finePointer = window.matchMedia('(pointer: fine)').matches;
     let plxX = 0, plxY = 0, plxTX = 0, plxTY = 0;
     const onLensParallax = (e) => {
       plxTX = e.clientX / window.innerWidth - 0.5;
       plxTY = e.clientY / window.innerHeight - 0.5;
     };
-    if (finePointer && !prefersReduced) document.addEventListener('mousemove', onLensParallax, { passive: true });
+    if (finePointer && !staticMode) document.addEventListener('mousemove', onLensParallax, { passive: true });
 
     let lastTickStep = -1, lastMs = performance.now();
     let shutterFired = false;
@@ -404,7 +389,6 @@ export default function Lens() {
       /* Slower smoothing for more deliberate feel */
       smoothT = lerp(smoothT, rawT, 0.06);
       const t = smoothT;
-      const mScale = TWEAKS.motion / 65;
 
       /* ── SCROLL PHASES ──
        *
@@ -417,7 +401,7 @@ export default function Lens() {
 
       /* Focus ring rotation: slow idle drift + scroll-driven turn — capped for readable numbers */
       const idleDrift = now * 0.00012;
-      const rot = bladeProgress * 22 * mScale + idleDrift * (1 - bladeProgress * 0.9);
+      const rot = bladeProgress * 22 + idleDrift * (1 - bladeProgress * 0.9);
       if (focusRing) focusRing.setAttribute('transform', `rotate(${rot.toFixed(2)} 500 500)`);
 
       /* Tick sounds */
@@ -425,7 +409,6 @@ export default function Lens() {
         const step = Math.floor(rot / 8);
         if (step !== lastTickStep) {
           lastTickStep = step;
-          playTick();
           if (tickFlash) {
             tickFlash.style.transition = 'none';
             tickFlash.style.opacity = '.4';
@@ -445,8 +428,8 @@ export default function Lens() {
       const lensScale = 1 + bladeProgress * 0.04;
       plxX = lerp(plxX, plxTX, 0.05);
       plxY = lerp(plxY, plxTY, 0.05);
-      const tiltX = (-plxY * 3.4 * mScale).toFixed(3);
-      const tiltY = (plxX * 3.8 * mScale).toFixed(3);
+      const tiltX = (-plxY * 3.4).toFixed(3);
+      const tiltY = (plxX * 3.8).toFixed(3);
       if (lensWrap) lensWrap.style.transform = `scale(${(lensScale + breath).toFixed(5)}) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(0)`;
 
       /* Anamorphic flare — bright while the aperture is open, dies as it closes */
@@ -538,9 +521,31 @@ export default function Lens() {
       }
       if (bladeProgress < 0.85) shutterFired = false;
 
-      heroRafId = requestAnimationFrame(heroFrame);
+      /* Guarded tail — the loop cannot self-resurrect while the hero is offscreen */
+      heroRafId = heroVisible ? requestAnimationFrame(heroFrame) : 0;
     }
     heroRafId = requestAnimationFrame(heroFrame);
+
+    /* The motor stops between takes: 0 fps once the hero scroll stage leaves view. */
+    let heroIO = null;
+    if (heroScroll) {
+      heroIO = new IntersectionObserver((entries) => {
+        const vis = entries[0].isIntersecting;
+        if (vis === heroVisible) return;
+        heroVisible = vis;
+        if (!vis) {
+          cancelAnimationFrame(heroRafId);
+          heroRafId = 0;
+        } else if (!heroRafId) {
+          lastMs = performance.now();
+          onHeroScroll();
+          /* Snap only on real drift — a fast anchor jump must not whip the aperture */
+          if (Math.abs(rawT - smoothT) > 0.2) smoothT = rawT;
+          heroRafId = requestAnimationFrame(heroFrame);
+        }
+      }, { rootMargin: '15% 0px' });
+      heroIO.observe(heroScroll);
+    }
 
     /* â•â•â•â•â•â•â•â•â•â•â• WORD DRAW-IN — SVG stroke animation via GSAP â•â•â•â•â•â•â•â•â•â•â• */
     /* ═══ WORD DRAW-IN — per-letter SVG stroke via GSAP ═══ */
@@ -1038,16 +1043,54 @@ export default function Lens() {
       });
     }
 
+    /* staticMode end state: the first word rests fully drawn — no timelines,
+       so prerender captures a deterministic, complete sentence. */
+    function renderStaticWord() {
+      const svgEl = document.getElementById('wordSvg');
+      if (!svgEl) return;
+      const word = WORDS[0];
+      svgEl.setAttribute('viewBox', '0 -200 2000 400');
+      const t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', '0');
+      t.setAttribute('y', '0');
+      t.setAttribute('class', 'svg-word-letter');
+      t.textContent = word.text;
+      t.style.fill = word.col;
+      svgEl.appendChild(t);
+      const box = t.getBBox();
+      const padX = 20, padY = 15;
+      svgEl.setAttribute('viewBox', `${box.x - padX} ${box.y - padY} ${box.width + padX * 2} ${box.height + padY * 2}`);
+    }
+
+    /* Word-stage clutch — same hygiene as the hero motor: the crayon loop only
+       runs while §01 is on screen (paused offscreen, resumed on re-entry). */
     let captureStarted = false;
-    const capIO = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && !captureStarted) {
-        captureStarted = true;
-        /* Small delay before first word */
-        setTimeout(animateWord, 400);
-      }
-    }, { threshold: 0.3 });
-    const captureEl = document.getElementById('capture');
-    if (captureEl) capIO.observe(captureEl);
+    let capVisible = false;
+    let wordStartTimer = 0;
+    let capIO = null;
+    if (staticMode) {
+      renderStaticWord();
+    } else {
+      capIO = new IntersectionObserver(entries => {
+        capVisible = entries[0].isIntersecting;
+        if (capVisible) {
+          if (!captureStarted) {
+            captureStarted = true;
+            /* Small delay before first word */
+            wordStartTimer = setTimeout(() => {
+              /* Scrolled away during the delay? Re-arm for the next entry. */
+              if (capVisible) animateWord(); else captureStarted = false;
+            }, 400);
+          } else if (wordTl) {
+            wordTl.play();
+          }
+        } else if (wordTl) {
+          wordTl.pause();
+        }
+      }, { threshold: 0.3 });
+      const captureEl = document.getElementById('capture');
+      if (captureEl) capIO.observe(captureEl);
+    }
 
 
     /* â•â•â•â•â•â•â•â•â•â•â• PORTFOLIO SCROLL â•â•â•â•â•â•â•â•â•â•â• */
@@ -1069,7 +1112,7 @@ export default function Lens() {
       pfTrack.style.transform = `translateX(${-t2 * Math.max(0, pfTrack.scrollWidth - window.innerWidth)}px)`;
       pfBar.style.width = `${t2 * 100}%`;
       if (pfCount) {
-        const nCards = pfTrack.children.length;
+        const nCards = pfTrack.querySelectorAll('.pf-card').length;
         const cur = 1 + Math.round(t2 * (nCards - 1));
         pfCount.textContent = `FRAME ${String(cur).padStart(2, '0')} / ${String(nCards).padStart(2, '0')}`;
       }
@@ -1082,7 +1125,7 @@ export default function Lens() {
     /* â•â•â•â•â•â•â•â•â•â•â• SCROLL REVEALS + STAT COUNT-UP â•â•â•â•â•â•â•â•â•â•â• */
     const revealEls = document.querySelectorAll('.lens-page .lr');
     let revealIO = null;
-    if (prefersReduced) {
+    if (staticMode) {
       revealEls.forEach(el => el.classList.add('in'));
     } else {
       revealIO = new IntersectionObserver((entries) => {
@@ -1108,9 +1151,18 @@ export default function Lens() {
       };
       requestAnimationFrame(tick);
     }
+    /* Static mode: strip video autoplay so the posters stand (honest end state) */
+    if (staticMode) {
+      document.querySelectorAll('.lens-page video.pf-img').forEach(v => {
+        v.autoplay = false;
+        v.removeAttribute('autoplay');
+        try { v.pause(); } catch { /* ignore */ }
+      });
+    }
+
     let statIO = null;
     const statsRowEl = document.querySelector('.lens-page .stats-row');
-    if (statsRowEl && !prefersReduced) {
+    if (statsRowEl && !staticMode) {
       statIO = new IntersectionObserver((entries) => {
         entries.forEach(en => {
           if (en.isIntersecting) {
@@ -1125,35 +1177,27 @@ export default function Lens() {
     /* â•â•â•â•â•â•â•â•â•â•â• CURSOR â•â•â•â•â•â•â•â•â•â•â• */
     const reticle = document.getElementById('reticle');
     let rx = window.innerWidth / 2, ry = window.innerHeight / 2, tx = rx, ty = ry;
-    const onMouseMove = (e) => { tx = e.clientX; ty = e.clientY; };
-    document.addEventListener('mousemove', onMouseMove);
-    let cursorRafId;
+    let cursorRafId = 0;
     function animR() {
       rx = lerp(rx, tx, 0.22); ry = lerp(ry, ty, 0.22);
       if (reticle) reticle.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+      /* Self-suspending: once settled within a quarter-pixel the loop parks itself */
+      if (Math.hypot(tx - rx, ty - ry) < 0.25) { cursorRafId = 0; return; }
       cursorRafId = requestAnimationFrame(animR);
     }
-    cursorRafId = requestAnimationFrame(animR);
-
-    /* â•â•â•â•â•â•â•â•â•â•â• TWEAKS â•â•â•â•â•â•â•â•â•â•â• */
-    function applyTweaks() {
-      document.body.classList.toggle('cursor-on', TWEAKS.cursor);
-      if (reticle) reticle.style.display = TWEAKS.cursor ? 'block' : 'none';
-      const tc = document.getElementById('togCursor'), tt = document.getElementById('togTicks'), mr = document.getElementById('motionRange');
-      if (tc) tc.classList.toggle('on', TWEAKS.cursor);
-      if (tt) tt.classList.toggle('on', TWEAKS.ticks);
-      if (mr) mr.value = TWEAKS.motion;
+    const onMouseMove = (e) => {
+      tx = e.clientX; ty = e.clientY;
+      if (!cursorRafId) cursorRafId = requestAnimationFrame(animR);
+    };
+    /* The reticle is a fine-pointer instrument — never a stuck crosshair on touch */
+    if (finePointer) {
+      document.body.classList.add('cursor-on');
+      if (reticle) reticle.style.display = 'block';
+      document.addEventListener('mousemove', onMouseMove);
+      cursorRafId = requestAnimationFrame(animR);
     }
-    applyTweaks();
-    const togCursor = document.getElementById('togCursor');
-    const togTicks = document.getElementById('togTicks');
-    const motionRange = document.getElementById('motionRange');
-    const onTogC = () => { TWEAKS.cursor = !TWEAKS.cursor; applyTweaks(); };
-    const onTogT = () => { TWEAKS.ticks = !TWEAKS.ticks; applyTweaks(); };
-    const onMotion = (e) => { TWEAKS.motion = +e.target.value; };
-    if (togCursor) togCursor.addEventListener('click', onTogC);
-    if (togTicks) togTicks.addEventListener('click', onTogT);
-    if (motionRange) motionRange.addEventListener('input', onMotion);
+
+    /* â•â•â•â•â•â•â•â•â•â•â• AUDIO â•â•â•â•â•â•â•â•â•â•â• */
     const onAudioInit = () => { if (!audioCtx) try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} };
     document.addEventListener('click', onAudioInit, { once: true });
 
@@ -1170,15 +1214,13 @@ export default function Lens() {
       document.removeEventListener('mousemove', onLensParallax);
       if (revealIO) revealIO.disconnect();
       if (statIO) statIO.disconnect();
+      if (heroIO) heroIO.disconnect();
       document.removeEventListener('click', onAudioInit);
-      if (togCursor) togCursor.removeEventListener('click', onTogC);
-      if (togTicks) togTicks.removeEventListener('click', onTogT);
-      if (motionRange) motionRange.removeEventListener('input', onMotion);
-      capIO.disconnect();
+      clearTimeout(wordStartTimer);
+      if (capIO) capIO.disconnect();
       document.body.style.background = prevBodyBg;
       document.body.classList.remove('cursor-on');
       if (siteHeader) siteHeader.style.display = '';
-      fontElements.forEach(el => { if (el.parentNode) el.parentNode.removeChild(el); });
       if (audioCtx) try { audioCtx.close(); } catch (e) {}
     };
   }, []);
@@ -1188,6 +1230,8 @@ export default function Lens() {
      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
   return (
     <div className="lens-page">
+      <h1 className="lens-sr-only">C4 Lens — Photography, Videography &amp; Brand Content in Perth</h1>
+
       {/* Reticle cursor */}
       <svg className="reticle" id="reticle" viewBox="0 0 40 40" fill="none">
         <circle cx="20" cy="20" r="14" stroke="#fff" strokeWidth=".75" opacity=".5" />
@@ -1205,6 +1249,7 @@ export default function Lens() {
       {/* Nav */}
       <nav>
         <div className="nav-left-wrap">
+          <Link to="/" className="site-back">← C4<span className="site-back-tail"> Studios</span></Link>
           <button
             className="site-nav-btn"
             onClick={() => setSiteMenuOpen(o => !o)}
@@ -1217,7 +1262,6 @@ export default function Lens() {
               <rect x=".5" y="9" width="5.5" height="5.5" rx=".4"/>
               <rect x="9" y="9" width="5.5" height="5.5" rx=".4"/>
             </svg>
-            <span>C4 STUDIOS</span>
           </button>
         </div>
         <div className="brand"><span className="logo-dot"></span>C4 LENS</div>
@@ -1245,7 +1289,7 @@ export default function Lens() {
       {/* Mobile menu overlay */}
       {mobileMenuOpen && (
         <div className="lens-mobile-menu">
-          <Link to={createPageUrl('Home')} className="lens-mobile-back" onClick={() => setMobileMenuOpen(false)}>← C4 Studios</Link>
+          <Link to="/" className="lens-mobile-back" onClick={() => setMobileMenuOpen(false)}>← C4 Studios</Link>
           <div className="lens-mobile-sep" />
           <a href="#capture" onClick={() => setMobileMenuOpen(false)}>Our Work</a>
           <a href="#services" onClick={() => setMobileMenuOpen(false)}>Services</a>
@@ -1777,7 +1821,7 @@ export default function Lens() {
             <div className="caleb-photo-wrap">
               <img
                 src="/Caleb%20Walker%20-%20C4%20Lens%20Profile.jpeg"
-                alt="Caleb Scott — Lead Photographer & Videographer at C4 Lens"
+                alt="Caleb Walker — Lead Photographer & Videographer at C4 Lens"
                 loading="lazy"
               />
               <div className="caleb-photo-meta">
@@ -1788,12 +1832,12 @@ export default function Lens() {
           </div>
           <div className="caleb-right">
             <div className="sec-num lr"><span className="bar"></span>§ 04 — THE PHOTOGRAPHER</div>
-            <h2 className="lr" style={{ '--lr-delay': '70ms' }}>CALEB<br /><em>Scott.</em></h2>
+            <h2 className="lr" style={{ '--lr-delay': '70ms' }}>CALEB<br /><em>Walker.</em></h2>
             <blockquote className="caleb-quote lr" style={{ '--lr-delay': '140ms' }}>&ldquo;If the brand has weight,<br />the visuals should too.&rdquo;</blockquote>
             <p className="lr" style={{ '--lr-delay': '200ms' }}>Caleb leads C4 Lens — the photography, videography, and editing arm of C4 Studios. From commercial brand shoots and corporate headshots to events and social content, he brings a <strong>considered, story-first approach</strong> to every frame.</p>
             <p className="lr" style={{ '--lr-delay': '250ms' }}>His drone work captures perspectives most businesses never think to show. His editing transforms raw footage into polished brand films, reels, and launch content that <strong>actually converts</strong>.</p>
             <p className="lr" style={{ '--lr-delay': '300ms' }}>Australian businesses trust Caleb to replace stock imagery with visual proof — the kind of content that makes clients feel like they already know you before the first conversation.</p>
-            <p className="lr" style={{ '--lr-delay': '350ms', marginTop: '28px', paddingTop: '24px', borderTop: '1px solid var(--line)', fontFamily: "'Geist Mono', monospace", fontSize: '10px', letterSpacing: '.22em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
+            <p className="lr" style={{ '--lr-delay': '350ms', marginTop: '28px', paddingTop: '24px', borderTop: '1px solid var(--line)', fontFamily: "'Geist Mono', monospace", fontSize: '10px', letterSpacing: '.22em', textTransform: 'uppercase', color: 'var(--ink-2)' }}>
               Based in Perth, W.A. · Available nationally
             </p>
             <div className="lr" style={{ '--lr-delay': '400ms', marginTop: '24px' }}>
@@ -1811,15 +1855,15 @@ export default function Lens() {
             <span>PERTH, W.A. · 2024–2026</span>
           </div>
           <div className="pf-hint">↑ SCROLL TO PAN →</div>
-          <div className="pf-count" id="pfCount">FRAME 01 / 07</div>
+          <div className="pf-count" id="pfCount">FRAME 01 / 03</div>
           <div className="pf-track" id="pfTrack">
             <div className="pf-card wide"><video src="/DSR%20header.mp4" poster="/lens-posters/dsr.jpg" preload="none" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">01 · DSR</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">DS RACING KARTS</div><div className="cat">SITE HEADERS / LOGO ANIMATION</div></div></div>
             <div className="pf-card wide"><video src="/hvn.mp4" poster="/lens-posters/hvn.jpg" preload="none" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">02 · HVN</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">HVN</div><div className="cat">FULL SHOW / DRONE WORK</div></div></div>
             <div className="pf-card wide"><video src="/sharp-bricklaying-drone.mp4" poster="/lens-posters/sharp.jpg" preload="none" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">03 · SHARP</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">SHARP BRICKLAYING</div><div className="cat">AERIAL / ON-SITE PHOTOGRAPHY</div></div></div>
-            <div className="pf-card sq"><div className="pf-ph"></div><div className="pf-corner">04</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">TO BE ANNOUNCED</div><div className="cat">—</div></div></div>
-            <div className="pf-card wide"><div className="pf-ph"></div><div className="pf-corner">05</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">TO BE ANNOUNCED</div><div className="cat">—</div></div></div>
-            <div className="pf-card tall"><div className="pf-ph"></div><div className="pf-corner">06</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">TO BE ANNOUNCED</div><div className="cat">—</div></div></div>
-            <div className="pf-card sq"><div className="pf-ph"></div><div className="pf-corner">07</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">TO BE ANNOUNCED</div><div className="cat">—</div></div></div>
+            <div className="pf-slate">
+              <div className="pf-slate-reel">END OF REEL · 03 PRODUCTIONS</div>
+              <div className="pf-slate-next">NEXT SLOT — <a href="#contact">YOURS? →</a></div>
+            </div>
           </div>
           <div className="pf-bar-wrap"><div className="pf-bar" id="pfBar"></div></div>
         </div>
@@ -1858,23 +1902,16 @@ export default function Lens() {
       <footer>
         <div>
           <div className="foot-logo">C4 LENS</div>
-          <div style={{ marginTop: '6px', color: 'var(--ink-3)' }}>
-            <a href="https://c4studios.com.au" style={{ color: 'inherit', textDecoration: 'none' }}>C4 Studios</a> · Perth W.A. · © {new Date().getFullYear()}
+          <div style={{ marginTop: '6px', color: 'var(--ink-2)' }}>
+            <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>C4 Studios</Link> · Perth W.A. · © {new Date().getFullYear()}
           </div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div>ABN AVAILABLE ON REQUEST</div>
-          <div style={{ marginTop: '6px', color: 'var(--ink-3)' }}>TRACKING · FOCUS · FRAME</div>
+          <div style={{ marginTop: '6px', color: 'var(--ink-2)' }}>TRACKING · FOCUS · FRAME</div>
         </div>
       </footer>
 
-      {/* Tweaks */}
-      <div className="tweaks" id="tweaks">
-        <h4>TWEAKS — C4 LENS</h4>
-        <label>Cursor reticle <span className="tog" id="togCursor"></span></label>
-        <label>Tick sounds <span className="tog" id="togTicks"></span></label>
-        <label>Motion <input type="range" id="motionRange" min="0" max="100" step="5" /></label>
-      </div>
     </div>
   );
 }
