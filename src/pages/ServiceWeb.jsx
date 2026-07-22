@@ -1,30 +1,43 @@
 /**
- * /ServiceWeb — C1 · Web & Applications.
+ * /ServiceWeb — C1 · Web & Applications. "The Red Thread."
  *
- * Arm identity: "Issued for Construction" — structural documentation
- * in daylight. Reference: Centre Pompidou's expressed structure ×
- * USM Haller / tower-crane gantry yellow. Every package is drawn as a
- * scaled structure elevation: the silhouette tells you the scope
- * before you read a word. All package facts render from
- * src/data/pricing.js (single source of truth — fixes the audited
- * data drift), with only delivery timelines kept as page metadata.
+ * Arm identity (fable pass, decision memo §1.1): one red line — drawn
+ * like a pen stroke, pressure and overshoot in the geometry — runs the
+ * whole page, and the page builds itself along it. The hero ignites
+ * from a silver wireframe skeleton (Archivo played wdth 62/wght 300 →
+ * 100/800 — the raw→built telling), real client sites browse
+ * themselves inside browser frames as you scroll (2 live drive sets:
+ * DSR with the desktop→phone responsive handoff, Groverz as the light
+ * set), the rate card rolls its prices on an odometer, and the thread
+ * morphs Brief → Design → Build → Launch before landing as the closing
+ * CTA's underline. A self-reporting vitals strip (fps / transferred kB
+ * / LCP, real Performance-API numbers) sits in the hero corner and is
+ * reprised before the close.
  *
- * Motion: content is fully visible by default. The .wa-armed class
- * (added on mount, never under prefers-reduced-motion or the Prerender
- * UA) arms the hero load choreography, an SVG line-draw, and
- * IntersectionObserver reveals (fade/rise + a plotter-wipe for the
- * as-built plates). One GSAP ScrollTrigger scrubs ≤0.6 viewport of the
- * hero into a --wa-build variable — the crane installs its beam and one
- * storey as you scroll; it moves only while scrolling, never idle. The
- * closing certification stamp lands once. All states rest complete for
- * static/prerender. Styles live in src/components/web-arm/web-arm.css,
- * scoped under .wa-root.
+ * Motion: GSAP is the engine; every trigger lives inside
+ * gsap.matchMedia() and nothing arms under prefers-reduced-motion or
+ * the Prerender UA (staticMode). The DOM default IS the finished end
+ * state everywhere — timelines only disassemble away from it, so the
+ * prerender ships the built page for free. No WebGL (memo §2.2), no
+ * continuous motion below the fold except the 1Hz vitals readout while
+ * visible (memo §2.3.4). Flip is click-time only (case morphs), never
+ * inside a pin. Styles: src/components/web-arm/web-arm.css (.lv-root).
+ *
+ * Chrome: forced DARK. `.wa-on-sheet` is retired; `.lv-on-stage` pins
+ * the full --c4-* token set dark for the life of the page (guarded
+ * MutationObserver, cleanup restore — house pattern).
  */
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, X } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
+import { SplitText } from 'gsap/SplitText';
+import { Flip } from 'gsap/Flip';
+import { CustomEase } from 'gsap/CustomEase';
+import Lenis from 'lenis';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
@@ -39,13 +52,40 @@ import {
 } from '@/data/pricing';
 import '../components/web-arm/web-arm.css';
 
-gsap.registerPlugin(ScrollTrigger);
+/* Derived capture assets — generated from public/captures (read-only)
+   via the memo §3 sharp pipeline; ≤900px desktop / ≤480px mobile WebP,
+   363KB for the entire page's imagery. */
+import sharpHero from '../components/web-arm/assets/sharp-hero.webp';
+import dsrD1 from '../components/web-arm/assets/dsr-d1.webp';
+import dsrD2 from '../components/web-arm/assets/dsr-d2.webp';
+import dsrD3 from '../components/web-arm/assets/dsr-d3.webp';
+import dsrD4 from '../components/web-arm/assets/dsr-d4.webp';
+import dsrM1 from '../components/web-arm/assets/dsr-m1.webp';
+import dsrM2 from '../components/web-arm/assets/dsr-m2.webp';
+import dsrM3 from '../components/web-arm/assets/dsr-m3.webp';
+import dsrM4 from '../components/web-arm/assets/dsr-m4.webp';
+import gzD1 from '../components/web-arm/assets/gz-d1.webp';
+import gzD2 from '../components/web-arm/assets/gz-d2.webp';
+import gzD3 from '../components/web-arm/assets/gz-d3.webp';
+import gzD4 from '../components/web-arm/assets/gz-d4.webp';
+import gzD5 from '../components/web-arm/assets/gz-d5.webp';
+import gzD6 from '../components/web-arm/assets/gz-d6.webp';
+import eaHero from '../components/web-arm/assets/ea-hero.webp';
+import hvnHero from '../components/web-arm/assets/hvn-hero.webp';
+import tidyHero from '../components/web-arm/assets/tidy-hero.webp';
+import jptHero from '../components/web-arm/assets/jpt-hero.webp';
+
+gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin, MorphSVGPlugin, SplitText, Flip, CustomEase);
+
+/* One shared house ease for every non-scrub tween on the page. */
+if (!CustomEase.get('c4')) CustomEase.create('c4', 'M0,0 C0.2,0 0.1,1 1,1');
 
 const START = createPageUrl('StartProject');
+const PORTFOLIO = createPageUrl('Portfolio');
 
 /* Delivery windows are page metadata (they don't exist in pricing.js).
-   The six original windows are preserved verbatim; proposal-scoped
-   tiers say so instead of inventing a number. */
+   The six original windows preserved verbatim; proposal-scoped tiers
+   say so instead of inventing a number. */
 const TIMELINES = {
   starter: '1–2 weeks',
   brochure: '2–3 weeks',
@@ -66,106 +106,124 @@ const INCLUDED = [
   'Full code handover — you own it',
 ];
 
-const PORTFOLIO = createPageUrl('Portfolio');
+/* Brief → Design → Build → Launch. The thread IS the sequence, so the
+   stage numbers are gone; the four descriptions are preserved verbatim. */
+const PROCESS = [
+  { label: 'Brief', desc: 'You describe the outcome you need. We ask the right questions.' },
+  { label: 'Design', desc: 'Wireframes and visual designs — reviewed and approved before build.' },
+  { label: 'Build', desc: 'Clean code, responsive layout, tested across devices.' },
+  { label: 'Launch', desc: 'Deployment, DNS, analytics, and a handover guide.' },
+];
 
-/* The as-built record — real client sites we drew and delivered, read
-   straight from public/captures/ (read-only assets) and presented as
-   numbered drawing plates. Scope lines and intrinsic pixel dimensions
-   are taken from the portfolio case-study source; width/height reserve
-   layout so lazy images cause no CLS. Every plate links to /Portfolio
-   (crawl equity for the full set). */
-const AS_BUILT = [
+/* ── The proof reel ────────────────────────────────────────────────
+   All six pass-1 clients preserved (scope lines + alt text are SEO
+   contract copy), plus DS Racing Karts as the featured live drive
+   (memo graft 1 — its mobile capture set powers the phone handoff).
+   Groverz is the second (light) live set; the rest are static frames
+   with the click-time FLIP case morph. */
+const DSR = {
+  key: 'dsr',
+  name: 'DS Racing Karts',
+  url: 'dsracingkarts.com.au',
+  place: 'Perth, WA',
+  year: '2026',
+  scope:
+    'Ecommerce platform for a WA karting supplier — full shop and checkout, race results, team pages and a custom admin.',
+  desktop: [
+    { src: dsrD1, w: 900, h: 563, alt: 'DS Racing Karts home page — a dark motorsport hero with the DSR wordmark.' },
+    { src: dsrD2, w: 900, h: 563, alt: 'DS Racing Karts kart category range on a dark grid.' },
+    { src: dsrD3, w: 900, h: 563, alt: 'DS Racing Karts online shop — parts and racewear catalogue.' },
+    { src: dsrD4, w: 900, h: 563, alt: 'DS Racing Karts contact page with workshop details.' },
+  ],
+  mobile: [
+    { src: dsrM1, w: 480, h: 1040, alt: 'DS Racing Karts mobile home screen.' },
+    { src: dsrM2, w: 480, h: 1040, alt: 'DS Racing Karts mobile shop view.' },
+    { src: dsrM3, w: 480, h: 1040, alt: 'DS Racing Karts mobile services view.' },
+    { src: dsrM4, w: 480, h: 1040, alt: 'DS Racing Karts mobile contact view.' },
+  ],
+};
+
+const GROVERZ = {
+  key: 'groverz',
+  name: 'Groverz Tax & Accounting',
+  url: 'groverztax.com.au',
+  place: 'East Cannington, WA',
+  year: '2026',
+  scope: 'Tax-practice site with an interactive refund estimator and a physics-driven hero.',
+  frames: [
+    { src: gzD1, w: 900, h: 434, alt: 'Groverz Tax & Accounting home page — a professional accounting-practice website hero.' },
+    { src: gzD2, w: 900, h: 465, alt: 'Groverz Tax & Accounting — benefits section.' },
+    { src: gzD3, w: 900, h: 426, alt: 'Groverz Tax & Accounting — client testimonials.' },
+    { src: gzD4, w: 900, h: 509, alt: 'Groverz Tax & Accounting — interactive refund calculator.' },
+    { src: gzD5, w: 900, h: 633, alt: 'Groverz Tax & Accounting — services overview.' },
+    { src: gzD6, w: 900, h: 317, alt: 'Groverz Tax & Accounting — booking call-to-action.' },
+  ],
+};
+
+const CASES = [
   {
-    ref: 'A·01',
+    key: 'evidence',
     name: 'Evidence Advisory',
     place: 'Perth, WA',
     year: '2026',
     scope: 'Digital-forensics brand site anchored by a scroll-solved 3D crime-scene reconstruction.',
-    img: '/captures/evidenceadvisory-com-au/desktop/01-hero.png',
-    w: 1440,
-    h: 900,
+    img: eaHero,
+    w: 900,
+    h: 563,
     alt: 'Evidence Advisory home page — a shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers.',
   },
   {
-    ref: 'A·02',
+    key: 'sharp',
     name: 'Sharp Bricklaying',
     place: 'Perth, WA',
     year: '2026',
     scope: 'Premium bricklayer’s site built from licensed drone aerials and a multi-job gallery.',
-    img: '/captures/sharpbricklaying-com-au/desktop/01-hero.png',
-    w: 1440,
-    h: 900,
+    img: sharpHero,
+    w: 900,
+    h: 563,
     alt: 'Sharp Bricklaying home page — a drone aerial of finished brickwork behind the studio wordmark.',
   },
   {
-    ref: 'A·03',
+    key: 'hvn',
     name: 'HVN CrossFit',
     place: 'Port Kennedy, WA',
     year: '2026',
     scope: 'Cinematic Next.js gym site with live class booking and a scroll-driven mini-game.',
-    img: '/captures/thehvncrossfit-com/desktop/01-hero.png',
-    w: 1440,
-    h: 900,
+    img: hvnHero,
+    w: 900,
+    h: 563,
     alt: 'HVN CrossFit home page — a dark, cinematic hero for a Port Kennedy gym.',
   },
   {
-    ref: 'A·04',
+    key: 'tidy',
     name: 'Tidy Gardens Australia',
     place: 'Perth, WA',
     year: '2026',
     scope: 'Motion-led site for a garden & reticulation business, with a living scroll motif.',
-    img: '/captures/tidygardens-com-au/desktop/01-hero.png',
-    w: 1440,
-    h: 900,
+    img: tidyHero,
+    w: 900,
+    h: 563,
     alt: 'Tidy Gardens Australia home page — a green, motion-led hero for a Perth garden-care business.',
   },
   {
-    ref: 'A·05',
+    key: 'jurassic',
     name: 'Jurassic PT',
     place: 'Cannington, WA',
     year: '2026',
     scope: 'Conversion-focused fitness studio site — memberships, timetable and direct booking.',
-    img: '/captures/jurassic-pt-vercel-app/desktop/01-hero.png',
-    w: 2880,
-    h: 1800,
+    img: jptHero,
+    w: 900,
+    h: 563,
     alt: 'Jurassic PT home page — a dark, lime-accented hero for a Cannington personal-training studio.',
   },
-  {
-    ref: 'A·06',
-    name: 'Groverz Tax & Accounting',
-    place: 'East Cannington, WA',
-    year: '2026',
-    scope: 'Tax-practice site with an interactive refund estimator and a physics-driven hero.',
-    img: '/captures/groverztax-com-au/desktop/01-hero.png',
-    w: 1440,
-    h: 695,
-    alt: 'Groverz Tax & Accounting home page — a professional accounting-practice website hero.',
-  },
 ];
 
-/* Four real stages — the one sequence on the page that earns its
-   numbers. Bar spans are relative programme positions, not promises. */
-const PROCESS = [
-  { num: '01', label: 'Brief', desc: 'You describe the outcome you need. We ask the right questions.', bar: [0, 14] },
-  { num: '02', label: 'Design', desc: 'Wireframes and visual designs — reviewed and approved before build.', bar: [11, 26] },
-  { num: '03', label: 'Build', desc: 'Clean code, responsive layout, tested across devices.', bar: [34, 44] },
-  { num: '04', label: 'Launch', desc: 'Deployment, DNS, analytics, and a handover guide.', bar: [76, 24] },
-];
-
-/* Sections with a running schedule reference (W·01…W·08) across
-   groups. webPricingGuides is parallel to webPackageSections
-   (base / ecommerce / apps) — zipped by index. */
-const SECTIONS = (() => {
-  let n = 0;
-  return webPackageSections.map((section, i) => ({
-    ...section,
-    guide: webPricingGuides[i],
-    packages: section.packages.map((pkg) => {
-      n += 1;
-      return { ...pkg, ref: `W·${String(n).padStart(2, '0')}` };
-    }),
-  }));
-})();
+/* Sections zipped with their pricing guides (parallel arrays in
+   pricing.js — base / ecommerce / apps). */
+const SECTIONS = webPackageSections.map((section, i) => ({
+  ...section,
+  guide: webPricingGuides[i],
+}));
 
 /* Stable module-level ref so the head hook doesn't re-run each render. */
 const WEB_JSONLD = [
@@ -182,338 +240,207 @@ const WEB_JSONLD = [
   ]),
 ];
 
-/* ── Structure elevations ─────────────────────────────────────────
-   Each package drawn as a scaled elevation: more storeys and bays as
-   the scope grows. Ink linework, one gantry-yellow element each. */
+/* ── Thread geometry ───────────────────────────────────────────────
+   Every segment is authored with hand-weighted curvature, pressure
+   ghosts and overshoot hooks at direction changes — a pen stroke, not
+   a polyline (memo quality bar). All decorative, aria-hidden; the
+   fully-drawn state is the DOM/CSS default. */
 
-function Ground() {
+const THREAD_HERO_D = [
+  'M 522 118',
+  'C 494 168, 430 208, 352 236',
+  'C 286 259, 178 270, 118 300',
+  'C 96 311, 88 330, 108 341',
+  'C 150 362, 260 360, 380 355',
+  'C 470 351, 560 346, 618 338',
+  'C 648 334, 662 326, 654 318',
+  'C 648 312, 632 314, 624 323',
+  'C 610 340, 560 372, 470 408',
+  'C 380 444, 240 470, 168 502',
+  'C 128 520, 118 546, 142 558',
+  'C 168 570, 212 561, 224 540',
+  'C 233 523, 220 509, 198 512',
+  'C 246 520, 420 556, 560 592',
+  'C 700 628, 820 668, 900 716',
+  'C 960 752, 1002 800, 1016 908',
+].join(' ');
+
+/* Spec-pass segment: four S-periods at deliberately uneven wavelengths
+   (~192 / 264 / 204 / 296) and amplitudes, with one overshoot hook
+   where the long swing turns — hand-weighted, never metronomic. */
+const THREAD_SPEC_D = [
+  'M 96 -4',
+  'C 62 66, 150 122, 120 188',
+  'C 94 262, 190 330, 148 452',
+  'C 142 444, 128 446, 124 458',
+  'C 146 540, 172 590, 146 662',
+  'C 120 740, 196 830, 154 958',
+  'C 146 980, 140 994, 141 1006',
+].join(' ');
+
+const BRANCH_D = 'M 4 30 C 44 22, 64 34, 96 24 C 120 17, 142 20, 156 12';
+
+const ROW_LINE_D = 'M 3 10 C 130 14, 330 6, 540 10 C 680 13, 780 8, 836 10';
+
+const DRENCH_LINE_D = 'M 12 58 C 190 72, 420 66, 600 46 C 668 38, 716 30, 744 16';
+
+/* The pipeline morph — one stroke living four lives. The DOM default
+   is the final launch arc; arming rewinds it to the scribble. */
+const PIPE_STATES = [
+  'M 62 196 C 92 118, 156 108, 134 172 C 112 238, 196 244, 206 172 C 214 112, 152 96, 172 162 C 192 228, 254 212, 240 150',
+  'M 36 208 C 104 84, 148 316, 196 176 C 232 72, 272 232, 296 120',
+  'M 70 96 C 160 90, 236 92, 252 100 C 262 106, 264 130, 262 168 C 260 206, 258 222, 244 226 C 180 234, 104 232, 82 224 C 68 218, 64 196, 66 152 C 67 122, 66 104, 78 98',
+  'M 44 268 C 130 258, 216 196, 268 96 C 282 68, 292 44, 298 22',
+];
+
+function ThreadPath({ d, ghost = true }) {
   return (
-    <g>
-      <line x1="6" y1="76" x2="114" y2="76" strokeWidth="2" />
-      {[18, 34, 50, 66, 82, 98].map((x) => (
-        <line key={x} x1={x} y1="76" x2={x - 7} y2="83" strokeWidth="1" />
-      ))}
-    </g>
+    <>
+      {ghost && <path className="lv-tghost" d={d} pathLength="1" />}
+      <path className="lv-tmain" d={d} pathLength="1" />
+    </>
   );
 }
 
-const ELEVATIONS = {
-  /* Landing Page — a single-bay pavilion. */
-  starter: (
-    <>
-      <line x1="38" y1="76" x2="38" y2="48" />
-      <line x1="82" y1="76" x2="82" y2="48" />
-      <line x1="32" y1="48" x2="88" y2="48" strokeWidth="2" />
-      <line x1="32" y1="48" x2="32" y2="53" />
-      <line x1="88" y1="48" x2="88" y2="53" />
-      <rect x="55" y="60" width="11" height="16" fill="var(--wa-yellow)" stroke="none" />
-    </>
-  ),
-  /* Brochure Site — one long storey, five bays. */
-  brochure: (
-    <>
-      <line x1="10" y1="52" x2="110" y2="52" strokeWidth="2" />
-      {[12, 36, 60, 84, 108].map((x) => (
-        <line key={x} x1={x} y1="76" x2={x} y2="52" />
-      ))}
-      <line x1="10" y1="57" x2="110" y2="57" strokeWidth="1" />
-      <rect x="61.5" y="58" width="21" height="18" fill="var(--wa-yellow)" stroke="none" />
-    </>
-  ),
-  /* Business Website — two storeys, three bays, entry canopy. */
-  business: (
-    <>
-      {[24, 52, 80, 108].map((x) => (
-        <line key={x} x1={x} y1="76" x2={x} y2="28" />
-      ))}
-      <line x1="20" y1="28" x2="112" y2="28" strokeWidth="2" />
-      <line x1="20" y1="52" x2="112" y2="52" />
-      <line x1="59" y1="30" x2="59" y2="50" strokeWidth="1" />
-      <line x1="66" y1="30" x2="66" y2="50" strokeWidth="1" />
-      <line x1="73" y1="30" x2="73" y2="50" strokeWidth="1" />
-      <rect x="10" y="59" width="15" height="4" fill="var(--wa-yellow)" stroke="none" />
-      <line x1="24" y1="63" x2="24" y2="67" strokeWidth="1" />
-    </>
-  ),
-  /* Custom Website — asymmetric volumes with a cantilever. */
-  custom: (
-    <>
-      <line x1="22" y1="76" x2="22" y2="22" />
-      <line x1="22" y1="22" x2="60" y2="22" strokeWidth="2" />
-      <line x1="60" y1="76" x2="60" y2="22" />
-      <line x1="32" y1="24" x2="32" y2="74" strokeWidth="1" />
-      <line x1="42" y1="24" x2="42" y2="74" strokeWidth="1" />
-      <line x1="52" y1="24" x2="52" y2="74" strokeWidth="1" />
-      <line x1="60" y1="50" x2="104" y2="50" strokeWidth="2" />
-      <line x1="104" y1="76" x2="104" y2="50" />
-      <line x1="60" y1="34" x2="116" y2="34" strokeWidth="2" />
-      <line x1="84" y1="50" x2="60" y2="34" strokeWidth="1" />
-      <rect x="103" y="29" width="13" height="5" fill="var(--wa-yellow)" stroke="none" />
-    </>
-  ),
-  /* Ecommerce Store — a gabled warehouse with roller doors. */
-  'commerce-starter': (
-    <>
-      <polyline points="14,76 14,46 60,30 106,46 106,76" />
-      <line x1="60" y1="30" x2="60" y2="37" strokeWidth="1" />
-      <rect x="24" y="56" width="16" height="20" />
-      <line x1="24" y1="62" x2="40" y2="62" strokeWidth="1" />
-      <line x1="24" y1="68" x2="40" y2="68" strokeWidth="1" />
-      <rect x="52" y="56" width="16" height="20" fill="var(--wa-yellow)" stroke="none" />
-      <rect x="80" y="56" width="16" height="20" />
-    </>
-  ),
-  /* Web App Starter — a three-storey block with a service core. */
-  'web-application': (
-    <>
-      <line x1="32" y1="76" x2="32" y2="18" />
-      <line x1="76" y1="76" x2="76" y2="18" />
-      <line x1="32" y1="18" x2="76" y2="18" strokeWidth="2" />
-      <line x1="32" y1="33" x2="76" y2="33" />
-      <line x1="32" y1="48" x2="76" y2="48" />
-      <line x1="32" y1="63" x2="76" y2="63" />
-      <rect x="84" y="28" width="14" height="48" />
-      {[36, 44, 52, 60, 68].map((y) => (
-        <line key={y} x1="84" y1={y} x2="98" y2={y} strokeWidth="1" />
-      ))}
-      <rect x="85" y="29" width="12" height="7" fill="var(--wa-yellow)" stroke="none" />
-      <line x1="54" y1="18" x2="54" y2="8" strokeWidth="1" />
-      <line x1="51" y1="8" x2="57" y2="8" strokeWidth="1" />
-    </>
-  ),
-  /* Growth Build — a four-storey frame with a roof hoist. */
-  growth: (
-    <>
-      {[20, 48, 76, 104].map((x) => (
-        <line key={x} x1={x} y1="76" x2={x} y2="20" />
-      ))}
-      <line x1="16" y1="20" x2="108" y2="20" strokeWidth="2" />
-      <line x1="16" y1="34" x2="108" y2="34" />
-      <line x1="16" y1="48" x2="108" y2="48" />
-      <line x1="16" y1="62" x2="108" y2="62" />
-      <line x1="20" y1="76" x2="48" y2="62" strokeWidth="1" />
-      <line x1="48" y1="76" x2="20" y2="62" strokeWidth="1" />
-      <rect x="49" y="21" width="26" height="12" fill="var(--wa-yellow)" stroke="none" />
-      <line x1="104" y1="20" x2="115" y2="20" strokeWidth="1" />
-      <line x1="112" y1="20" x2="112" y2="40" strokeWidth="1" />
-      <rect x="107" y="40" width="10" height="6" fill="var(--wa-yellow)" stroke="none" />
-    </>
-  ),
-  /* Custom Platform — podium, tower, and a tower crane. */
-  platform: (
-    <>
-      <line x1="12" y1="76" x2="12" y2="60" />
-      <line x1="12" y1="60" x2="64" y2="60" strokeWidth="2" />
-      <line x1="64" y1="76" x2="64" y2="60" />
-      <line x1="38" y1="76" x2="38" y2="60" strokeWidth="1" />
-      <line x1="20" y1="60" x2="20" y2="10" />
-      <line x1="52" y1="60" x2="52" y2="10" />
-      <line x1="20" y1="10" x2="52" y2="10" strokeWidth="2" />
-      <line x1="20" y1="22" x2="52" y2="22" />
-      <line x1="20" y1="34" x2="52" y2="34" />
-      <line x1="20" y1="46" x2="52" y2="46" />
-      <rect x="21" y="11" width="30" height="6" fill="var(--wa-yellow)" stroke="none" />
-      <line x1="86" y1="76" x2="86" y2="12" />
-      <line x1="70" y1="12" x2="118" y2="12" strokeWidth="1" />
-      <line x1="86" y1="12" x2="86" y2="4" strokeWidth="1" />
-      <line x1="86" y1="4" x2="106" y2="12" strokeWidth="1" />
-      <line x1="86" y1="4" x2="74" y2="12" strokeWidth="1" />
-      <rect x="70" y="12" width="7" height="5" fill="currentColor" stroke="none" />
-      <line x1="108" y1="12" x2="108" y2="26" strokeWidth="1" />
-      <rect x="103" y="26" width="10" height="6" fill="var(--wa-yellow)" stroke="none" />
-    </>
-  ),
-};
+/* ── Price odometer (memo graft 3) ─────────────────────────────────
+   Rolling digits on the Pay once / Monthly toggle. Labels that don't
+   decompose into digits fall back to an instant swap; Geist Mono keeps
+   every numeral the same width and the price cell is fixed-width, so
+   the roll causes zero layout shift. Static mode renders plain text. */
+const PRICE_RE = /^([^0-9]*)([0-9][0-9,]*)(.*)$/;
 
-function Elevation({ kind }) {
+function PriceOdometer({ label, animate }) {
+  const hostRef = useRef(null);
+  const prevLabelRef = useRef(label);
+  const m = animate ? PRICE_RE.exec(label) : null;
+
+  useLayoutEffect(() => {
+    const prevLabel = prevLabelRef.current;
+    prevLabelRef.current = label;
+    if (!animate || prevLabel === label) return;
+    const host = hostRef.current;
+    if (!host) return;
+    const pm = PRICE_RE.exec(prevLabel);
+    const nm = PRICE_RE.exec(label);
+    if (!pm || !nm) return; /* defensive: instant swap already rendered */
+    const prevChars = pm[2].split('');
+    const nextChars = nm[2].split('');
+    const offset = prevChars.length - nextChars.length;
+    host.querySelectorAll('.lv-odo-slot').forEach((slot) => {
+      const idx = Number(slot.dataset.idx);
+      const target = Number(slot.dataset.digit);
+      const strip = slot.firstElementChild;
+      const h = slot.clientHeight;
+      const prevChar = prevChars[idx + offset];
+      const from = prevChar != null && /[0-9]/.test(prevChar) ? Number(prevChar) : null;
+      if (from == null) {
+        gsap.fromTo(strip, { y: -target * h, opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power1.out' });
+      } else if (from !== target) {
+        gsap.fromTo(
+          strip,
+          { y: -from * h, opacity: 1 },
+          { y: -target * h, duration: 0.55, ease: 'power3.inOut', delay: idx * 0.035 },
+        );
+      } else {
+        gsap.set(strip, { y: -target * h, opacity: 1 });
+      }
+    });
+    if (pm[3] !== nm[3]) {
+      const suffix = host.querySelector('.lv-odo-suffix');
+      if (suffix) gsap.fromTo(suffix, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power1.out' });
+    }
+  }, [label, animate]);
+
+  if (!m) return <span className="lv-price-text">{label}</span>;
+  const [, prefix, digits, suffix] = m;
   return (
-    <svg
-      className="wa-el"
-      viewBox="0 0 120 84"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="square"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <Ground />
-      {ELEVATIONS[kind] || null}
-    </svg>
-  );
-}
-
-/* ── Hero drawing — a frame going up in daylight ─────────────────
-   Tower crane lowering a gantry-yellow beam into an expressed
-   structural frame. Strokes line-draw on load (pathLength="1");
-   static mode renders it complete. */
-
-const CRANE_BRACES = Array.from({ length: 8 }, (_, i) => ({
-  x1: i % 2 === 0 ? 166 : 174,
-  y1: 300 - i * 28,
-  x2: i % 2 === 0 ? 174 : 166,
-  y2: 300 - (i + 1) * 28,
-}));
-
-const SUN_RAYS = Array.from({ length: 8 }, (_, i) => {
-  const a = (i * 45 * Math.PI) / 180;
-  return {
-    x1: (70 + Math.cos(a) * 32).toFixed(1),
-    y1: (66 + Math.sin(a) * 32).toFixed(1),
-    x2: (70 + Math.cos(a) * 43).toFixed(1),
-    y2: (66 + Math.sin(a) * 43).toFixed(1),
-  };
-});
-
-function HeroDrawing() {
-  const draw = { className: 'wa-draw', pathLength: 1 };
-  return (
-    <svg
-      viewBox="0 0 560 330"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="square"
-      aria-hidden="true"
-      focusable="false"
-    >
-      {/* Ground plane with survey hatching — present from frame one. */}
-      <g>
-        <line x1="8" y1="300" x2="552" y2="300" strokeWidth="2" />
-        {Array.from({ length: 14 }, (_, i) => 22 + i * 39).map((x) => (
-          <line key={x} x1={x} y1="300" x2={x - 14} y2="316" strokeWidth="1" />
-        ))}
-      </g>
-
-      {/* Daylight. */}
-      <g style={{ '--d': '0.1s' }}>
-        <circle cx="70" cy="66" r="24" strokeWidth="2" {...draw} />
-        {SUN_RAYS.map((r) => (
-          <line key={r.x1 + r.y1} {...r} strokeWidth="1.5" className="wa-draw" pathLength={1} />
-        ))}
-      </g>
-
-      {/* Tower crane. */}
-      <g style={{ '--d': '0.25s' }}>
-        <line x1="166" y1="300" x2="166" y2="70" {...draw} />
-        <line x1="174" y1="300" x2="174" y2="70" {...draw} />
-        {CRANE_BRACES.map((b) => (
-          <line key={b.y1} {...b} strokeWidth="1" className="wa-draw" pathLength={1} />
-        ))}
-        <rect x="158" y="56" width="24" height="16" {...draw} />
-        <line x1="174" y1="66" x2="470" y2="66" {...draw} />
-        <line x1="166" y1="66" x2="84" y2="66" {...draw} />
-        <line x1="170" y1="56" x2="170" y2="48" strokeWidth="1" {...draw} />
-        <line x1="170" y1="48" x2="300" y2="66" strokeWidth="1" {...draw} />
-        <line x1="170" y1="48" x2="430" y2="66" strokeWidth="1" {...draw} />
-        <line x1="170" y1="48" x2="100" y2="66" strokeWidth="1" {...draw} />
-        <rect x="84" y="66" width="20" height="14" fill="currentColor" stroke="none" className="wa-fill" style={{ '--d': '0.9s' }} />
-        <rect x="294" y="66" width="12" height="7" fill="currentColor" stroke="none" className="wa-fill" style={{ '--d': '0.9s' }} />
-        {/* Hoist cable — pays out as the build scrubs (scaleY driven by
-            --wa-build); rests fully paid-out when the var is 1. */}
-        <line className="wa-cable" x1="300" y1="73" x2="300" y2="127" strokeWidth="1" />
-        {/* The gantry-yellow beam: a placed object craned into position.
-            The whole load lowers on scroll (translateY driven by
-            --wa-build) — never energy travelling along a line (memo R3). */}
-        <g className="wa-crane-load">
-          <rect x="294" y="120" width="12" height="7" fill="currentColor" stroke="none" className="wa-fill" style={{ '--d': '1s' }} />
-          <rect x="270" y="127" width="60" height="13" fill="var(--wa-yellow)" stroke="none" className="wa-fill" style={{ '--d': '1.1s' }} />
-        </g>
-        {/* Aviation light — a C4-red datum point. */}
-        <circle cx="170" cy="42" r="3.5" fill="var(--wa-red)" stroke="none" className="wa-fill" style={{ '--d': '1.2s' }} />
-      </g>
-
-      {/* The frame under construction. */}
-      <g style={{ '--d': '0.5s' }}>
-        {[250, 320, 390, 460, 530].map((x) => (
-          <line key={x} x1={x} y1="300" x2={x} y2="140" className="wa-draw" pathLength={1} />
-        ))}
-        <line x1="250" y1="140" x2="530" y2="140" strokeWidth="2" {...draw} />
-        <line x1="250" y1="193" x2="530" y2="193" {...draw} />
-        <line x1="250" y1="246" x2="530" y2="246" {...draw} />
-        <line x1="252" y1="298" x2="318" y2="248" strokeWidth="1" {...draw} />
-        <line x1="318" y1="298" x2="252" y2="248" strokeWidth="1" {...draw} />
-        <rect x="322" y="248" width="66" height="50" fill="var(--wa-yellow)" stroke="none" className="wa-fill" style={{ '--d': '1s' }} />
-        {/* The storey the crane installs — seats in as the build scrubs
-            (opacity + translateY driven by --wa-build). */}
-        <g className="wa-storey">
-          <rect x="462" y="195" width="66" height="49" fill="var(--wa-yellow)" stroke="none" />
-        </g>
-      </g>
-
-      {/* Dimension line with oblique ticks, and the survey benchmark. */}
-      <g style={{ '--d': '0.85s' }}>
-        <line x1="250" y1="140" x2="250" y2="100" strokeWidth="1" {...draw} />
-        <line x1="530" y1="140" x2="530" y2="100" strokeWidth="1" {...draw} />
-        <line x1="250" y1="104" x2="530" y2="104" strokeWidth="1" {...draw} />
-        <line x1="245" y1="109" x2="255" y2="99" strokeWidth="1" {...draw} />
-        <line x1="525" y1="109" x2="535" y2="99" strokeWidth="1" {...draw} />
-        <path d="M536 300 L552 300 L544 288 Z" fill="var(--wa-red)" stroke="none" className="wa-fill" style={{ '--d': '1.25s' }} />
-      </g>
-    </svg>
-  );
-}
-
-/* ── The certification stamp ─────────────────────────────────────
-   Web's one red object (memo R1): a single "ISSUED FOR CONSTRUCTION"
-   rubber stamp on the closing sheet. Rendered twice — a ghost layer
-   offset behind the ink layer for baked (non-animated) misregistration.
-   The whole mark is decorative (aria-hidden); the heading carries the
-   meaning. It is the only stamp on the site that lands (thump handled
-   in CSS on reveal). */
-function StampBody() {
-  return (
-    <span className="wa-stamp-body">
-      <span className="wa-stamp-l1">Issued for</span>
-      <span className="wa-stamp-l2">Construction</span>
-      <span className="wa-stamp-rule" aria-hidden="true" />
-      <span className="wa-stamp-l3">C4 Studios · Perth WA</span>
+    <span className="lv-odo" ref={hostRef}>
+      <span className="lv-odo-live" aria-hidden="true">
+        {prefix && <span className="lv-odo-fix">{prefix}</span>}
+        {digits.split('').map((ch, i) =>
+          /[0-9]/.test(ch) ? (
+            <span className="lv-odo-slot" key={i} data-idx={i} data-digit={ch}>
+              <span
+                className="lv-odo-strip"
+                style={{ transform: `translateY(${-Number(ch) * 1.18}em)` }}
+              >
+                {['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].map((d) => (
+                  <span key={d}>{d}</span>
+                ))}
+              </span>
+            </span>
+          ) : (
+            <span className="lv-odo-fix" key={i}>
+              {ch}
+            </span>
+          ),
+        )}
+        {suffix && <span className="lv-odo-fix lv-odo-suffix">{suffix}</span>}
+      </span>
+      <span className="lv-sr">{label}</span>
     </span>
   );
 }
 
-/* ── Page ────────────────────────────────────────────────────────── */
+/* ── Vitals strip (memo graft 2) ───────────────────────────────────
+   Real fps / transferred kB / LCP from the Performance APIs, updated
+   at 1Hz only while a strip is on screen and the tab is visible
+   (memo §2.3.4). Prerender/reduced-motion rests on em-dashes. */
+function VitalsStrip({ id }) {
+  return (
+    <p className="lv-vitals" id={id} aria-hidden="true">
+      <span className="lv-vit-label">live vitals</span>
+      <span className="lv-vit" data-vit="fps">— fps</span>
+      <span className="lv-vit" data-vit="kb">— kb</span>
+      <span className="lv-vit" data-vit="lcp">lcp —</span>
+    </p>
+  );
+}
 
-/* The sheet is light-committed ("structural documentation in daylight"),
-   so pin the site chrome to its light tokens even for OS-dark visitors —
-   the mirror of the sibling boards' force-dark. ThemeProvider re-applies
-   its own tokens from a parent effect, so a guarded MutationObserver
-   re-asserts for the life of the page (same pattern as ServiceAI). */
-function useForceLight() {
+/* ── Chrome pin — forced dark stage ────────────────────────────────
+   `.lv-on-stage` pins the full --c4-* set dark (web-arm.css) for the
+   life of the page. ThemeProvider re-applies its own tokens from a
+   parent effect, so a guarded MutationObserver re-asserts (house
+   pattern: ServiceAI/Foresight). `.wa-on-sheet` is retired. */
+function useForceDark() {
   useEffect(() => {
     const root = document.documentElement;
     const prev = root.className;
-    const assertLight = () => {
+    const assertDark = () => {
       if (
-        !root.classList.contains('light-mode') ||
-        !root.classList.contains('wa-on-sheet') ||
-        root.classList.contains('dark-mode') ||
+        !root.classList.contains('dark-mode') ||
+        !root.classList.contains('lv-on-stage') ||
+        root.classList.contains('light-mode') ||
         root.classList.contains('vivid')
       ) {
-        root.classList.add('light-mode', 'wa-on-sheet');
-        root.classList.remove('dark-mode', 'vivid');
+        root.classList.add('dark-mode', 'lv-on-stage');
+        root.classList.remove('light-mode', 'vivid');
       }
     };
-    assertLight();
-    const observer = new MutationObserver(assertLight);
+    assertDark();
+    const observer = new MutationObserver(assertDark);
     observer.observe(root, { attributes: true, attributeFilter: ['class'] });
     return () => {
       observer.disconnect();
       root.className = prev;
-      root.classList.remove('wa-on-sheet');
+      root.classList.remove('lv-on-stage');
     };
   }, []);
 }
 
 export default function ServiceWeb() {
-  useForceLight();
+  useForceDark();
   const rootRef = useRef(null);
-  const heroFigRef = useRef(null);
-  // Fine-pointer only: the self-measuring dimension lines never arm on touch.
-  const canHoverRef = useRef(false);
-  // 'once' = outright build price, 'monthly' = subscription alternative.
+  const h1Ref = useRef(null);
+  const ledeRef = useRef(null);
+  const lenisRef = useRef(null);
+  const openerRef = useRef(null);
+  const flipStateRef = useRef(null);
+  const panelRef = useRef(null);
+
   const [billing, setBilling] = useState('once');
   const isMonthly = billing === 'monthly';
+  const [openCase, setOpenCase] = useState(null);
 
   const prerender = useMemo(
     () => typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent),
@@ -536,160 +463,708 @@ export default function ServiceWeb() {
     jsonLd: WEB_JSONLD,
   });
 
-  /* Fonts — Archivo variable is now self-hosted globally (src/styles/fonts.css,
-     loaded in main.jsx); no runtime Google Fonts request. */
+  /* Lenis owns scroll on this route (shared instance if another page
+     already made one — PrivateAI pattern). Never in static mode. */
+  useEffect(() => {
+    if (staticMode) return undefined;
+    const w = window;
+    if (w.__c4Lenis) {
+      lenisRef.current = w.__c4Lenis;
+      return undefined;
+    }
+    const lenis = new Lenis({ duration: 1.05 });
+    w.__c4Lenis = lenis;
+    lenisRef.current = lenis;
+    lenis.on('scroll', ScrollTrigger.update);
+    const raf = (time) => lenis.raf(time * 1000);
+    gsap.ticker.add(raf);
+    gsap.ticker.lagSmoothing(0);
+    return () => {
+      gsap.ticker.remove(raf);
+      gsap.ticker.lagSmoothing(500, 33); /* restore the GSAP default */
+      lenis.destroy();
+      delete w.__c4Lenis;
+      lenisRef.current = null;
+    };
+  }, [staticMode]);
 
-  /* Arm entrance motion + scroll reveals. Never armed in static mode,
-     so reduced-motion users and the prerenderer get the final state.
-     Layout effect (the PrivateAI house pattern) arms before first
-     paint, so the finished page never flashes ahead of its entrance.
-     Two reveal grammars share one observer: [data-reveal] fades/rises;
-     [data-wipe] (as-built plates only) prints in behind a pen head,
-     whose travel needs the plate's measured width as --wa-fig-w. */
+  /* ── The whole motion system ──────────────────────────────────────
+     One matchMedia block; every trigger created inside it. The armed
+     class only marks the root (sticky-stage heights); GSAP owns all
+     pre-animation states via fromTo, so the static DOM stays final. */
   useLayoutEffect(() => {
     if (staticMode) return undefined;
     const root = rootRef.current;
-    if (!root || typeof IntersectionObserver === 'undefined') return undefined;
+    if (!root) return undefined;
+    root.classList.add('lv-armed');
+    const mm = gsap.matchMedia(root);
+    const splits = [];
 
-    root.classList.add('wa-armed');
-    const targets = root.querySelectorAll('[data-reveal], [data-wipe], [data-stamp]');
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const el = entry.target;
-          if (el.hasAttribute('data-wipe')) {
-            const fig = el.querySelector('.wa-ab-fig');
-            if (fig) el.style.setProperty('--wa-fig-w', `${fig.clientWidth}px`);
-          }
-          el.classList.add('wa-in');
-          io.unobserve(el);
-        });
+    mm.add(
+      {
+        desk: '(min-width: 900px) and (prefers-reduced-motion: no-preference)',
+        mob: '(max-width: 899.98px) and (prefers-reduced-motion: no-preference)',
       },
-      { threshold: 0.12, rootMargin: '0px 0px -5% 0px' },
+      (ctx) => {
+        const { desk } = ctx.conditions;
+        const q = gsap.utils.selector(root);
+
+        /* ── Fold 0: ignition. The hero disassembles to raw (skeleton
+           type, scattered wireframe, undrawn thread) and rebuilds as
+           you scrub — performing the job on itself. Desktop pins;
+           mobile plays the same beats once as a 1.2s load pass. */
+        const buildHero = (tl) => {
+          tl.fromTo(
+            q('.lv-thread--hero path'),
+            { drawSVG: '0%' },
+            { drawSVG: '100%', ease: 'none', duration: 0.62 },
+            0,
+          );
+          tl.fromTo(
+            q('.lv-kicker'),
+            { y: 14, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.1, ease: 'c4' },
+            0.02,
+          );
+          if (desk && h1Ref.current) {
+            const split = SplitText.create(h1Ref.current, { type: 'chars', charsClass: 'lv-ch' });
+            splits.push(split);
+            tl.fromTo(
+              split.chars,
+              { '--lv-wght': 300, '--lv-wdth': 62, color: '#8a8f98' },
+              {
+                '--lv-wght': 800,
+                '--lv-wdth': 100,
+                color: '#f4f3f1',
+                duration: 0.42,
+                stagger: { each: 0.007 },
+                ease: 'power2.out',
+              },
+              0.05,
+            );
+          } else {
+            tl.fromTo(
+              q('.lv-h1'),
+              { '--lv-wght': 300, '--lv-wdth': 62, color: '#8a8f98' },
+              { '--lv-wght': 800, '--lv-wdth': 100, color: '#f4f3f1', duration: 0.45, ease: 'power2.out' },
+              0.05,
+            );
+          }
+          if (desk && ledeRef.current) {
+            const ledeSplit = SplitText.create(ledeRef.current, { type: 'lines', mask: 'lines' });
+            splits.push(ledeSplit);
+            tl.fromTo(
+              ledeSplit.lines,
+              { yPercent: 115 },
+              { yPercent: 0, duration: 0.2, stagger: 0.05, ease: 'power3.out' },
+              0.18,
+            );
+          } else {
+            tl.fromTo(
+              q('.lv-lede'),
+              { y: 18, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.2, ease: 'c4' },
+              0.18,
+            );
+          }
+          /* autoAlpha, not opacity: at scrub rest the hidden CTAs also
+             get visibility:hidden, so they can't take clicks or tab
+             focus while invisible. */
+          tl.fromTo(
+            q('.lv-hero-cta > *'),
+            { y: 24, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 0.16, stagger: 0.05, ease: 'c4' },
+            0.3,
+          );
+          /* Browser frame assembles out of the silver wireframe; the
+             capture arrives ALREADY GRADED behind a clip wipe (the
+             mono→colour grade belongs to Home — memo §2.1.3). */
+          tl.fromTo(
+            q('.lv-wire-piece'),
+            {
+              opacity: 1,
+              x: (i) => [-46, 60, -28][i % 3],
+              y: (i) => [38, -30, 52][i % 3],
+              rotation: (i) => [-7, 5, -3][i % 3],
+            },
+            { opacity: 0, x: 0, y: 0, rotation: 0, duration: 0.3, ease: 'power2.inOut' },
+            0.24,
+          );
+          tl.fromTo(
+            q('.lv-hero-browser'),
+            { opacity: 0 },
+            { opacity: 1, duration: 0.2, ease: 'power1.inOut' },
+            0.34,
+          );
+          tl.fromTo(
+            q('.lv-hero-browser .lv-browser-view img'),
+            { clipPath: 'inset(0 0 100% 0)' },
+            { clipPath: 'inset(0% 0 0% 0)', duration: 0.26, ease: 'power2.inOut' },
+            0.42,
+          );
+          tl.fromTo(
+            q('.lv-hero-cap'),
+            { opacity: 0 },
+            { opacity: 1, duration: 0.12, ease: 'power1.out' },
+            0.6,
+          );
+          tl.fromTo(
+            q('#lv-vitals-hero'),
+            { opacity: 0 },
+            { opacity: 1, duration: 0.12, ease: 'power1.out' },
+            0.12,
+          );
+        };
+
+        if (desk) {
+          const heroTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: q('.lv-hero')[0],
+              start: 'top top',
+              end: '+=180%',
+              pin: q('.lv-stagebox')[0],
+              scrub: 0.8,
+              anticipatePin: 1,
+            },
+          });
+          buildHero(heroTl);
+          /* Final beat: the built capture starts to pan — momentum
+             handed to the page. */
+          heroTl.to(
+            q('.lv-hero-browser .lv-browser-view img'),
+            { yPercent: -7, duration: 0.2, ease: 'none' },
+            0.8,
+          );
+        } else {
+          const loadTl = gsap.timeline({ defaults: { ease: 'c4' } });
+          buildHero(loadTl);
+          loadTl.duration(1.2);
+        }
+
+        /* ── Fold 1: the spec pass. Thread meanders the left third;
+           each included line typesets with a width-settle. */
+        gsap.fromTo(
+          q('.lv-thread--spec path'),
+          { drawSVG: '0%' },
+          {
+            drawSVG: '100%',
+            ease: 'none',
+            scrollTrigger: {
+              trigger: q('.lv-spec')[0],
+              start: 'top 78%',
+              end: 'bottom 55%',
+              scrub: 0.8,
+            },
+          },
+        );
+        q('.lv-spec-item').forEach((li) => {
+          gsap.fromTo(
+            li,
+            { opacity: 0, x: -20, fontStretch: '75%' },
+            {
+              opacity: 1,
+              x: 0,
+              fontStretch: '100%',
+              duration: 0.7,
+              ease: 'c4',
+              scrollTrigger: { trigger: li, start: 'top 88%', once: true },
+            },
+          );
+        });
+
+        /* ── Velocity rail: moves only with YOUR scroll energy —
+           diagonal shear reveal, then skew/translate fed by scroll
+           velocity, decaying dead-still at rest. */
+        const rail = q('.lv-rail')[0];
+        if (rail) {
+          gsap.fromTo(
+            rail,
+            { clipPath: 'polygon(0 100%, 100% 62%, 100% 100%, 0 100%)' },
+            {
+              clipPath: 'polygon(0 0%, 100% 0%, 100% 100%, 0 100%)',
+              ease: 'none',
+              scrollTrigger: { trigger: rail, start: 'top 96%', end: 'top 55%', scrub: 0.6 },
+            },
+          );
+          const track = q('.lv-rail-track')[0];
+          const xTo = gsap.quickTo(track, 'xPercent', { duration: 0.6, ease: 'power2.out' });
+          const skewTo = gsap.quickTo(track, 'skewX', { duration: 0.45, ease: 'power2.out' });
+          const settle = gsap.delayedCall(0.15, () => skewTo(0)).pause();
+          ScrollTrigger.create({
+            trigger: rail,
+            start: 'top bottom',
+            end: 'bottom top',
+            onUpdate: (self) => {
+              const v = gsap.utils.clamp(-2600, 2600, self.getVelocity());
+              xTo(-6 - self.progress * 22);
+              skewTo((v / 2600) * 5);
+              settle.restart(true);
+            },
+          });
+        }
+
+        /* ── Fold 2: proof reel. DSR featured drive — the desktop
+           capture browses itself, then hands off to the pre-positioned
+           phone via clip/transform crossfade on the same scrub (memo
+           amendment: no Flip inside an active scene). */
+        const dsr = q('.lv-drive--dsr')[0];
+        if (dsr && desk) {
+          const dCol = dsr.querySelector('.lv-dsr-dcol');
+          const dView = dsr.querySelector('.lv-dsr-desktop .lv-browser-view');
+          const mCol = dsr.querySelector('.lv-dsr-mcol');
+          const mView = dsr.querySelector('.lv-phone-view');
+          const driveTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: dsr,
+              start: 'top top',
+              end: 'bottom bottom',
+              scrub: 0.9,
+              invalidateOnRefresh: true,
+            },
+          });
+          driveTl.to(dCol, {
+            y: () => -(dCol.scrollHeight - dView.clientHeight),
+            ease: 'none',
+            duration: 0.45,
+          }, 0);
+          driveTl.to(
+            dsr.querySelector('.lv-dsr-desktop'),
+            { opacity: 0.35, scale: 0.965, duration: 0.13, ease: 'power1.inOut' },
+            0.47,
+          );
+          driveTl.fromTo(
+            dsr.querySelector('.lv-phone'),
+            { opacity: 0.3, scale: 0.94, clipPath: 'inset(56% 0% 0% 0% round 26px)' },
+            {
+              opacity: 1,
+              scale: 1,
+              clipPath: 'inset(0% 0% 0% 0% round 26px)',
+              duration: 0.15,
+              ease: 'power2.out',
+              immediateRender: true,
+            },
+            0.46,
+          );
+          driveTl.to(mCol, {
+            y: () => -(mCol.scrollHeight - mView.clientHeight),
+            ease: 'none',
+            duration: 0.38,
+          }, 0.62);
+        }
+
+        /* Groverz — the light set pans through its whole site as the
+           frame crosses the viewport. */
+        const gz = q('.lv-drive--gz')[0];
+        if (gz) {
+          const col = gz.querySelector('.lv-gz-col');
+          const view = gz.querySelector('.lv-browser-view');
+          gsap.to(col, {
+            y: () => -(col.scrollHeight - view.clientHeight),
+            ease: 'none',
+            scrollTrigger: {
+              trigger: gz,
+              start: 'top 85%',
+              end: 'bottom 15%',
+              scrub: 0.8,
+              invalidateOnRefresh: true,
+            },
+          });
+        }
+
+        /* Reel head + static case frames: staggered arrivals. */
+        gsap.fromTo(
+          q('.lv-reel-head'),
+          { y: 30, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: 'c4',
+            scrollTrigger: { trigger: q('.lv-reel')[0], start: 'top 80%', once: true },
+          },
+        );
+        q('.lv-case').forEach((el, i) => {
+          gsap.fromTo(
+            el,
+            { y: 44, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.85,
+              delay: (i % 2) * 0.08,
+              ease: 'c4',
+              scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+            },
+          );
+        });
+
+        /* Decode capture sets just ahead of their entrance so drive
+           swaps never jank (memo §3). */
+        const decodeIO = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.querySelectorAll('img').forEach((img) => {
+                if (img.decode) img.decode().catch(() => {});
+              });
+              decodeIO.unobserve(entry.target);
+            });
+          },
+          { rootMargin: '140% 0px' },
+        );
+        q('.lv-drive, .lv-cases').forEach((el) => decodeIO.observe(el));
+
+        /* ── Fold 3: rate card — group branches draw once; rows rise. */
+        q('.lv-branch path').forEach((p) => {
+          gsap.fromTo(
+            p,
+            { drawSVG: '0%' },
+            {
+              drawSVG: '100%',
+              duration: 0.7,
+              ease: 'power2.out',
+              scrollTrigger: { trigger: p.closest('.lv-group'), start: 'top 82%', once: true },
+            },
+          );
+        });
+        q('.lv-line').forEach((row) => {
+          gsap.fromTo(
+            row,
+            { y: 26, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.7,
+              ease: 'c4',
+              scrollTrigger: { trigger: row, start: 'top 92%', once: true },
+            },
+          );
+        });
+
+        /* ── Fold 4: the pipeline morph — the thread's four lives,
+           scribble → bezier → frame → launch arc. DOM default is the
+           arc; arming rewinds to the scribble first. */
+        const morphPaths = q('.lv-morph path');
+        if (morphPaths.length) {
+          gsap.set(morphPaths, { attr: { d: PIPE_STATES[0] } });
+          /* 0.72 dim floor: the 15px stage <p> (--lv-body over the
+             stage) blends to ~4.8:1 computed — above the 4.5:1 body
+             floor. (0.55 only cleared for the h3, not the body copy.) */
+          gsap.set(q('.lv-stage-item'), { opacity: 0.72 });
+          const pipeTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: q('.lv-pipe')[0],
+              start: 'top 62%',
+              end: 'bottom 55%',
+              scrub: 0.8,
+            },
+          });
+          const stages = q('.lv-stage-item');
+          pipeTl.to(stages[0], { opacity: 1, duration: 0.5, ease: 'none' }, 0);
+          PIPE_STATES.slice(1).forEach((state, i) => {
+            pipeTl.to(
+              morphPaths,
+              { morphSVG: state, duration: 1, ease: 'power1.inOut' },
+              0.5 + i,
+            );
+            pipeTl.to(stages[i + 1], { opacity: 1, duration: 0.5, ease: 'none' }, 1 + i);
+            if (i > 0) pipeTl.to(stages[i - 1], { opacity: 0.72, duration: 0.5, ease: 'none' }, 1 + i);
+          });
+          pipeTl.to(stages[2], { opacity: 0.72, duration: 0.5, ease: 'none' }, 3.4);
+        }
+
+        /* ── Fold 5: the drench wipes up; the thread lands as the
+           closing underline and hooks the CTA. */
+        gsap.fromTo(
+          q('.lv-drench')[0],
+          { clipPath: 'inset(16% 0% 0% 0%)' },
+          {
+            clipPath: 'inset(0% 0% 0% 0%)',
+            ease: 'none',
+            scrollTrigger: { trigger: q('.lv-drench')[0], start: 'top 95%', end: 'top 55%', scrub: 0.6 },
+          },
+        );
+        gsap.fromTo(
+          q('.lv-drench-line path'),
+          { drawSVG: '0%' },
+          {
+            drawSVG: '100%',
+            duration: 0.9,
+            ease: 'power2.inOut',
+            scrollTrigger: { trigger: q('.lv-drench')[0], start: 'top 62%', once: true },
+          },
+        );
+
+        return () => {
+          splits.forEach((s) => s.revert());
+          splits.length = 0;
+          decodeIO.disconnect();
+        };
+      },
     );
-    const raf = requestAnimationFrame(() => targets.forEach((el) => io.observe(el)));
+
     return () => {
-      cancelAnimationFrame(raf);
-      io.disconnect();
-      root.classList.remove('wa-armed');
+      mm.revert();
+      root.classList.remove('lv-armed');
     };
   }, [staticMode]);
 
-  /* The hero draws itself, then the crane installs its load on scroll.
-     House scrub pattern (ServiceAI): ScrollTrigger maps ≤0.6 viewport of
-     travel to --wa-build (0→1) on the figure; SVG transforms consume it,
-     so the beam and storey move only while scrolling — no idle drift, no
-     pin, no reserved-space jump. In static mode the effect never runs and
-     CSS rests --wa-build at 1 (the finished frame). */
+  /* ── Vitals sampling: 1Hz, only while a strip is visible AND the
+     tab is foreground. Writes straight to the DOM (no re-renders). */
   useEffect(() => {
     if (staticMode) return undefined;
-    const fig = heroFigRef.current;
-    if (!fig) return undefined;
-    const hero = fig.closest('.wa-hero') || fig;
-
-    const apply = (p) => {
-      fig.style.setProperty('--wa-build', Math.min(1, Math.max(0, p)).toFixed(3));
+    const root = rootRef.current;
+    if (!root) return undefined;
+    let rafId = 0;
+    let frames = 0;
+    let last = performance.now();
+    let running = false;
+    let anyVisible = false;
+    let lcpSec = null;
+    let po = null;
+    try {
+      po = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        const latest = entries[entries.length - 1];
+        if (latest) lcpSec = (latest.renderTime || latest.loadTime) / 1000;
+      });
+      po.observe({ type: 'largest-contentful-paint', buffered: true });
+    } catch {
+      po = null;
+    }
+    const count = () => {
+      frames += 1;
+      rafId = requestAnimationFrame(count);
     };
-    const st = ScrollTrigger.create({
-      trigger: hero,
-      start: 'top top',
-      end: '+=60%',
-      onUpdate: (self) => apply(self.progress),
-      onRefresh: (self) => apply(self.progress),
+    const setRunning = () => {
+      const should = anyVisible && !document.hidden;
+      if (should && !running) {
+        running = true;
+        frames = 0;
+        last = performance.now();
+        rafId = requestAnimationFrame(count);
+      } else if (!should && running) {
+        running = false;
+        cancelAnimationFrame(rafId);
+      }
+    };
+    const tick = window.setInterval(() => {
+      if (!running) return;
+      const now = performance.now();
+      const fps = Math.min(120, Math.round((frames * 1000) / Math.max(1, now - last)));
+      frames = 0;
+      last = now;
+      let bytes = 0;
+      try {
+        const nav = performance.getEntriesByType('navigation')[0];
+        if (nav) bytes += nav.transferSize || 0;
+        performance.getEntriesByType('resource').forEach((r) => {
+          bytes += r.transferSize || 0;
+        });
+      } catch {
+        bytes = 0;
+      }
+      const kb = Math.round(bytes / 1024);
+      root.querySelectorAll('[data-vit="fps"]').forEach((el) => {
+        el.textContent = `${fps} fps`;
+      });
+      root.querySelectorAll('[data-vit="kb"]').forEach((el) => {
+        el.textContent = kb > 0 ? `${kb} kb` : '— kb';
+      });
+      root.querySelectorAll('[data-vit="lcp"]').forEach((el) => {
+        el.textContent = lcpSec ? `lcp ${lcpSec.toFixed(2)}s` : 'lcp —';
+      });
+    }, 1000);
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        entry.target.dataset.vitOn = entry.isIntersecting ? '1' : '';
+      });
+      anyVisible = Array.from(root.querySelectorAll('.lv-vitals')).some((el) => el.dataset.vitOn === '1');
+      setRunning();
     });
-    const ro = new ResizeObserver(() => ScrollTrigger.refresh());
-    ro.observe(document.documentElement);
+    root.querySelectorAll('.lv-vitals').forEach((el) => io.observe(el));
+    const onVis = () => setRunning();
+    document.addEventListener('visibilitychange', onVis);
     return () => {
-      st.kill();
-      ro.disconnect();
+      window.clearInterval(tick);
+      cancelAnimationFrame(rafId);
+      io.disconnect();
+      if (po) po.disconnect();
+      document.removeEventListener('visibilitychange', onVis);
     };
   }, [staticMode]);
 
-  /* Fine-pointer capability, read once. */
-  useEffect(() => {
-    canHoverRef.current =
-      typeof window !== 'undefined' &&
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  }, []);
+  /* ── Case morph: click-time Flip (the one place Flip is allowed).
+     The overlay is an enhancement over the always-rendered captions
+     and links; static mode gets a plain conditional render. */
+  const activeCase = openCase ? CASES.find((c) => c.key === openCase) : null;
 
-  /* Self-measuring hover: a package row draws a dimension line annotated
-     with its own rendered width. Layout is read ONCE per mouseenter
-     (no mousemove listener), and the affordance never arms on touch. */
-  const showDim = (event) => {
-    if (!canHoverRef.current) return;
-    const row = event.currentTarget;
-    const dim = row.querySelector('.wa-dim');
-    if (!dim) return;
-    const width = Math.round(row.getBoundingClientRect().width);
-    const fig = dim.querySelector('.wa-dim-fig');
-    if (fig) fig.textContent = `${width} px`;
-    dim.classList.add('is-on');
+  const handleOpenCase = (key, event) => {
+    openerRef.current = event.currentTarget;
+    if (!staticMode) {
+      const img = event.currentTarget.querySelector('img');
+      if (img) flipStateRef.current = Flip.getState(img);
+    }
+    setOpenCase(key);
   };
-  const hideDim = (event) => {
-    const dim = event.currentTarget.querySelector('.wa-dim');
-    if (dim) dim.classList.remove('is-on');
+
+  const handleCloseCase = () => {
+    const panel = panelRef.current;
+    const finish = () => {
+      setOpenCase(null);
+      if (openerRef.current) openerRef.current.focus();
+    };
+    if (!staticMode && panel) {
+      gsap.to(panel, { opacity: 0, scale: 0.985, duration: 0.24, ease: 'power1.in', onComplete: finish });
+    } else {
+      finish();
+    }
   };
+
+  useLayoutEffect(() => {
+    if (!openCase) return undefined;
+    const panel = panelRef.current;
+    if (panel && !staticMode && flipStateRef.current) {
+      const img = panel.querySelector('img');
+      if (img) {
+        Flip.from(flipStateRef.current, {
+          targets: img,
+          absolute: true,
+          duration: 0.65,
+          ease: 'c4',
+        });
+      }
+      flipStateRef.current = null;
+      gsap.fromTo(
+        panel.querySelectorAll('.lv-panel-copy > *'),
+        { y: 18, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.4, stagger: 0.05, delay: 0.3, ease: 'c4' },
+      );
+    }
+    const closeBtn = panel ? panel.querySelector('.lv-panel-close') : null;
+    if (closeBtn) closeBtn.focus();
+    const lenis = lenisRef.current;
+    if (lenis) lenis.stop();
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        handleCloseCase();
+        return;
+      }
+      /* Contain Tab inside the dialog: aria-modal announces the page
+         as hidden to AT, so sighted keyboard focus must not walk into
+         the scroll-locked background either. */
+      if (e.key === 'Tab' && panel) {
+        const focusables = panel.querySelectorAll('a[href], button:not([disabled])');
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const inside = panel.contains(document.activeElement);
+        if (e.shiftKey && (!inside || document.activeElement === first)) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && (!inside || document.activeElement === last)) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+      if (lenis) lenis.start();
+    };
+  }, [openCase, staticMode]);
 
   const monthlyNote = `${subscriptionInfo.howItWorks} ${subscriptionInfo.whatsIncluded} ${subscriptionInfo.ownership} ${subscriptionInfo.cancellation}`;
 
   return (
-    <div className="wa-root" ref={rootRef}>
-      {/* ── Hero — the drawing sheet ─────────────────────────────── */}
-      <section className="wa-hero">
-        <div className="wa-frame">
-          <div className="wa-hero-grid">
-            <div>
-              {/* The single arm plate: C1, named once, as a title block. */}
-              <p className="wa-titleblock wa-h-item" style={{ '--d': '0ms' }}>
-                <span className="wa-tb-cell">
-                  <span className="wa-tb-code">C1</span>
-                  Web &amp; Applications
-                </span>
-                <span className="wa-tb-cell">Arm of C4 Studios</span>
-                <span className="wa-tb-cell">Perth, WA — issued for construction</span>
-              </p>
-              <h1 className="wa-h1 wa-h-item" style={{ '--d': '80ms' }}>
-                Websites built to <span className="wa-mark">convert and scale.</span>
+    <div className="lv-root" ref={rootRef}>
+      {/* ══ Fold 0 — IGNITION ═══════════════════════════════════════ */}
+      <section className="lv-hero">
+        <div className="lv-stagebox">
+          <svg
+            className="lv-thread lv-thread--hero"
+            viewBox="0 0 1440 900"
+            preserveAspectRatio="xMidYMid slice"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <ThreadPath d={THREAD_HERO_D} />
+          </svg>
+
+          <div className="lv-frame lv-hero-grid">
+            <div className="lv-hero-copy">
+              <p className="lv-kicker">C1 · Web &amp; Applications — arm of C4 Studios · Perth, WA</p>
+              <h1 className="lv-h1" ref={h1Ref}>
+                Websites built to convert and scale.
               </h1>
-              <p className="wa-lede wa-h-item" style={{ '--d': '160ms' }}>
+              <p className="lv-lede" ref={ledeRef}>
                 From a crisp landing page to a full web application — every project is
                 scoped clearly, designed carefully, and delivered on time.
               </p>
-              <div className="wa-hero-cta wa-h-item" style={{ '--d': '240ms' }}>
-                <Link className="wa-btn" to={`${START}?service=web_design`}>
+              <div className="lv-hero-cta">
+                <Link className="lv-btn" to={`${START}?service=web_design`}>
                   Start a brief
-                  <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
+                  <ArrowRight size={14} strokeWidth={2.5} aria-hidden="true" />
                 </Link>
-                <Link className="wa-link" to={createPageUrl('Portfolio')}>
+                <Link className="lv-link" to={PORTFOLIO}>
                   See the work
-                  <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
+                  <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
                 </Link>
               </div>
             </div>
-            <div className="wa-hero-fig wa-h-item" style={{ '--d': '180ms' }} ref={heroFigRef}>
-              <HeroDrawing />
-            </div>
+
+            <figure className="lv-hero-fig">
+              <span className="lv-wire-piece lv-wire-piece--bar" aria-hidden="true" />
+              <span className="lv-wire-piece lv-wire-piece--body" aria-hidden="true" />
+              <span className="lv-wire-piece lv-wire-piece--side" aria-hidden="true" />
+              <div className="lv-browser lv-hero-browser">
+                <div className="lv-browser-bar" aria-hidden="true">
+                  <span className="lv-dot" />
+                  <span className="lv-dot" />
+                  <span className="lv-dot" />
+                  <span className="lv-browser-url">sharpbricklaying.com.au</span>
+                </div>
+                <div className="lv-browser-view">
+                  <img
+                    src={sharpHero}
+                    width={900}
+                    height={563}
+                    loading="eager"
+                    decoding="async"
+                    alt="Sharp Bricklaying home page — a drone aerial of finished brickwork behind the studio wordmark."
+                  />
+                </div>
+              </div>
+              <figcaption className="lv-cap lv-hero-cap">
+                sharp bricklaying · shipped 2026
+              </figcaption>
+            </figure>
           </div>
+
+          <VitalsStrip id="lv-vitals-hero" />
         </div>
-        <div className="wa-rule" aria-hidden="true" />
       </section>
 
-      {/* ── Standard specification — included in every project ──── */}
-      <section className="wa-band" data-reveal>
-        <div className="wa-frame wa-band-in">
-          <h2 className="wa-band-h">
-            Every project
-            <br />
-            includes
-          </h2>
-          <ul className="wa-band-list">
+      {/* ══ Fold 1 — THE SPEC PASS ══════════════════════════════════ */}
+      <section className="lv-spec">
+        <svg
+          className="lv-thread lv-thread--spec"
+          viewBox="0 0 320 1000"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <ThreadPath d={THREAD_SPEC_D} />
+        </svg>
+        <div className="lv-frame">
+          <h2 className="lv-h2">Every project includes</h2>
+          <ul className="lv-spec-list">
             {INCLUDED.map((item) => (
-              <li key={item}>
-                <span className="wa-band-tick" aria-hidden="true">
-                  <Check size={11} strokeWidth={3.5} />
-                </span>
+              <li className="lv-spec-item" key={item}>
                 {item}
               </li>
             ))}
@@ -697,151 +1172,299 @@ export default function ServiceWeb() {
         </div>
       </section>
 
-      {/* ── The as-built record — real delivered sites ──────────── */}
-      <section className="wa-asbuilt">
-        <div className="wa-frame">
-          <div className="wa-asbuilt-head" data-reveal>
+      {/* ══ Divider — the velocity rail ═════════════════════════════ */}
+      <div className="lv-rail">
+        <div className="lv-rail-track">
+          <span className="lv-rail-text">Design · Build · Ship · Perth&ensp;·&ensp;</span>
+          <span className="lv-rail-text" aria-hidden="true">
+            Design · Build · Ship · Perth&ensp;·&ensp;
+          </span>
+        </div>
+      </div>
+
+      {/* ══ Fold 2 — THE PROOF REEL ═════════════════════════════════ */}
+      <section className="lv-reel">
+        <div className="lv-frame">
+          <div className="lv-reel-head">
             <div>
-              <h2 className="wa-h2">Issued, built, occupied.</h2>
-              <p className="wa-sub">
-                A short record of sites we drew and delivered — each plate opens the
-                full set.
+              <h2 className="lv-h2">Live sites, browsing themselves.</h2>
+              <p className="lv-sub">
+                Real client work, driving itself as you scroll. Every frame opens the
+                wider record.
               </p>
             </div>
-            <Link className="wa-link" to={PORTFOLIO}>
+            <Link className="lv-link" to={PORTFOLIO}>
               Full portfolio
-              <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
+              <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
             </Link>
           </div>
+        </div>
 
-          <div className="wa-ab-grid">
-            {AS_BUILT.map((plate) => (
-              <Link className="wa-ab" key={plate.ref} to={PORTFOLIO} data-wipe>
-                <span className="wa-ab-fig">
-                  <span className="wa-ab-pen" aria-hidden="true" />
+        {/* Featured drive — DSR with the desktop→phone handoff. */}
+        <div className="lv-drive lv-drive--dsr">
+          <div className="lv-drive-sticky">
+            <div className="lv-frame lv-drive-grid">
+              <div className="lv-drive-stage">
+                <div className="lv-browser lv-dsr-desktop">
+                  <div className="lv-browser-bar" aria-hidden="true">
+                    <span className="lv-dot" />
+                    <span className="lv-dot" />
+                    <span className="lv-dot" />
+                    <span className="lv-browser-url">{DSR.url}</span>
+                  </div>
+                  <div className="lv-browser-view">
+                    <div className="lv-col lv-dsr-dcol">
+                      {DSR.desktop.map((f) => (
+                        <img
+                          key={f.src}
+                          src={f.src}
+                          width={f.w}
+                          height={f.h}
+                          loading="lazy"
+                          decoding="async"
+                          alt={f.alt}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="lv-phone" aria-label="The same site, responsive on mobile">
+                  <span className="lv-phone-notch" aria-hidden="true" />
+                  <div className="lv-phone-view">
+                    <div className="lv-col lv-dsr-mcol">
+                      {DSR.mobile.map((f) => (
+                        <img
+                          key={f.src}
+                          src={f.src}
+                          width={f.w}
+                          height={f.h}
+                          loading="lazy"
+                          decoding="async"
+                          alt={f.alt}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="lv-drive-id">
+                <p className="lv-client">{DSR.name}</p>
+                <p className="lv-scope">{DSR.scope}</p>
+                <p className="lv-cap">
+                  {DSR.place} · {DSR.year} · one build, every screen
+                </p>
+                <Link className="lv-link lv-link--small" to={PORTFOLIO}>
+                  View in portfolio
+                  <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Light drive — Groverz pans its whole site in one frame. */}
+        <div className="lv-drive lv-drive--gz">
+          <div className="lv-frame lv-drive-grid lv-drive-grid--flip">
+            <div className="lv-drive-id">
+              <p className="lv-client">{GROVERZ.name}</p>
+              <p className="lv-scope">{GROVERZ.scope}</p>
+              <p className="lv-cap">
+                {GROVERZ.place} · {GROVERZ.year}
+              </p>
+              <Link className="lv-link lv-link--small" to={PORTFOLIO}>
+                View in portfolio
+                <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
+              </Link>
+            </div>
+            <div className="lv-drive-stage">
+              <div className="lv-browser">
+                <div className="lv-browser-bar" aria-hidden="true">
+                  <span className="lv-dot" />
+                  <span className="lv-dot" />
+                  <span className="lv-dot" />
+                  <span className="lv-browser-url">{GROVERZ.url}</span>
+                </div>
+                <div className="lv-browser-view lv-browser-view--tall">
+                  <div className="lv-col lv-gz-col">
+                    {GROVERZ.frames.map((f) => (
+                      <img
+                        key={f.src}
+                        src={f.src}
+                        width={f.w}
+                        height={f.h}
+                        loading="lazy"
+                        decoding="async"
+                        alt={f.alt}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* The record — static frames, click-time FLIP case morphs. */}
+        <div className="lv-frame">
+          <div className="lv-cases">
+            {CASES.map((c) => (
+              <div className={`lv-case lv-case--${c.key}`} key={c.key} data-open={openCase === c.key || undefined}>
+                <button
+                  type="button"
+                  className="lv-case-fig"
+                  onClick={(e) => handleOpenCase(c.key, e)}
+                  aria-haspopup="dialog"
+                  aria-label={`Open the ${c.name} case panel`}
+                >
                   <img
-                    src={plate.img}
-                    width={plate.w}
-                    height={plate.h}
+                    src={c.img}
+                    width={c.w}
+                    height={c.h}
                     loading="lazy"
                     decoding="async"
-                    alt={plate.alt}
+                    alt={c.alt}
+                    data-flip-id={`case-${c.key}`}
                   />
-                </span>
-                <span className="wa-ab-tb">
-                  <span className="wa-ab-ref">{plate.ref}</span>
-                  <span className="wa-ab-name">{plate.name}</span>
-                  <span className="wa-ab-scope">{plate.scope}</span>
-                  <span className="wa-ab-meta">
-                    {plate.place} · {plate.year}
-                    <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
+                </button>
+                <div className="lv-case-tb">
+                  <span className="lv-cap">
+                    {c.name} · {c.year}
                   </span>
-                </span>
-              </Link>
+                  <span className="lv-case-scope">{c.scope}</span>
+                  <Link className="lv-link lv-link--small" to={PORTFOLIO}>
+                    View in portfolio
+                    <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
+                  </Link>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── The schedule — packages from pricing.js ─────────────── */}
-      <section className="wa-sched">
-        <div className="wa-frame">
-          <div className="wa-sched-head" data-reveal>
-            <div>
-              <h2 className="wa-h2">Pick a starting point.</h2>
-              <p className="wa-sub">
-                Each tier drawn to scale — the silhouette is the shape of what we build.
-              </p>
+      {/* Case panel — the FLIP destination. */}
+      {activeCase && (
+        <div className="lv-panel-backdrop" onClick={handleCloseCase} role="presentation">
+          <div
+            className="lv-panel"
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${activeCase.name} — case detail`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button type="button" className="lv-panel-close" onClick={handleCloseCase} aria-label="Close case panel">
+              <X size={18} strokeWidth={2.5} aria-hidden="true" />
+            </button>
+            <div className="lv-browser lv-panel-browser">
+              <div className="lv-browser-bar" aria-hidden="true">
+                <span className="lv-dot" />
+                <span className="lv-dot" />
+                <span className="lv-dot" />
+              </div>
+              <div className="lv-browser-view">
+                <img
+                  src={activeCase.img}
+                  width={activeCase.w}
+                  height={activeCase.h}
+                  alt={activeCase.alt}
+                  data-flip-id={`case-${activeCase.key}`}
+                />
+              </div>
             </div>
-            <div className="wa-switch" role="group" aria-label="Billing option">
-              <span
-                className="wa-switch-thumb"
-                data-pos={isMonthly ? 'b' : 'a'}
-                aria-hidden="true"
-              />
-              <button
-                type="button"
-                aria-pressed={!isMonthly}
-                onClick={() => setBilling('once')}
-              >
+            <div className="lv-panel-copy">
+              <p className="lv-client">{activeCase.name}</p>
+              <p className="lv-scope">{activeCase.scope}</p>
+              <p className="lv-cap">
+                {activeCase.place} · {activeCase.year}
+              </p>
+              <Link className="lv-btn lv-btn--ghostline" to={PORTFOLIO}>
+                View in portfolio
+                <ArrowRight size={14} strokeWidth={2.5} aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══ Fold 3 — THE RATE CARD ══════════════════════════════════ */}
+      <section className="lv-rate">
+        <div className="lv-frame">
+          <div className="lv-rate-head">
+            <div>
+              <h2 className="lv-h2">Pick a starting point.</h2>
+              <p className="lv-sub">Clear scope at every tier — pay once, or spread it monthly.</p>
+            </div>
+            <div className="lv-switch" role="group" aria-label="Billing option">
+              <span className="lv-switch-thumb" data-pos={isMonthly ? 'b' : 'a'} aria-hidden="true" />
+              <button type="button" aria-pressed={!isMonthly} onClick={() => setBilling('once')}>
                 Pay once
               </button>
-              <button
-                type="button"
-                aria-pressed={isMonthly}
-                onClick={() => setBilling('monthly')}
-              >
+              <button type="button" aria-pressed={isMonthly} onClick={() => setBilling('monthly')}>
                 Monthly
               </button>
             </div>
           </div>
 
-          {/* What monthly means — straight from subscriptionInfo. */}
-          <div className={`wa-subnote${isMonthly ? ' is-open' : ''}`} aria-hidden={!isMonthly}>
+          <div className={`lv-subnote${isMonthly ? ' is-open' : ''}`} aria-hidden={!isMonthly}>
             <div>
               <p>{monthlyNote}</p>
             </div>
           </div>
 
           {SECTIONS.map((section) => (
-            <div className="wa-group" key={section.heading}>
-              <header className="wa-plate" data-reveal>
-                <div className="wa-plate-top">
+            <div className="lv-group" key={section.heading}>
+              <header className="lv-group-head">
+                <svg className="lv-branch" viewBox="0 0 160 40" aria-hidden="true" focusable="false">
+                  <path d={BRANCH_D} pathLength="1" />
+                </svg>
+                <div className="lv-group-title">
                   <h3>{section.heading}</h3>
-                  {section.guide && <span className="wa-range">{section.guide.range}</span>}
+                  {section.guide && <span className="lv-range">{section.guide.range}</span>}
                 </div>
-                <p className="wa-plate-desc">{section.description}</p>
-                {section.guide && <p className="wa-plate-guide">{section.guide.description}</p>}
+                <p className="lv-group-desc">{section.description}</p>
+                {section.guide && <p className="lv-group-guide">{section.guide.description}</p>}
               </header>
 
-              <div className="wa-rows">
-                {section.packages.map((pkg, pi) => (
-                  <article
-                    className="wa-row"
-                    key={pkg.key}
-                    data-reveal
-                    style={{ '--rd': `${pi * 70}ms` }}
-                    onMouseEnter={showDim}
-                    onMouseLeave={hideDim}
-                  >
-                    <span className="wa-dim" aria-hidden="true">
-                      <span className="wa-dim-line" />
-                      <span className="wa-dim-fig" />
-                    </span>
-                    <div className="wa-row-fig" data-popular={pkg.popular ? 'true' : undefined}>
-                      <Elevation kind={pkg.key} />
-                      {pkg.popular && <span className="wa-tag">Most specified</span>}
+              <div className="lv-rows">
+                {section.packages.map((pkg) => (
+                  <article className="lv-line" key={pkg.key}>
+                    <svg
+                      className="lv-line-under"
+                      viewBox="0 0 840 16"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path d={ROW_LINE_D} pathLength="1" />
+                    </svg>
+                    <div className="lv-line-id">
+                      <h4 className="lv-line-name">
+                        {pkg.name}
+                        {pkg.popular && <span className="lv-tag">Most specified</span>}
+                      </h4>
+                      <p className="lv-line-desc">{pkg.description}</p>
                     </div>
-
-                    <div className="wa-row-id">
-                      <p className="wa-ref">{pkg.ref}</p>
-                      <h4 className="wa-row-name">{pkg.name}</h4>
-                      <p className="wa-row-desc">{pkg.description}</p>
-                    </div>
-
-                    <div className="wa-row-specwrap">
-                      <ul className="wa-row-spec">
-                        {pkg.features.map((feature) => (
-                          <li key={feature}>
-                            <Check size={12} strokeWidth={3} aria-hidden="true" />
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="wa-row-buy">
-                      <p className="wa-price">
-                        {isMonthly && pkg.monthlyLabel ? pkg.monthlyLabel : pkg.priceLabel}
+                    <ul className="lv-line-spec">
+                      {pkg.features.map((feature) => (
+                        <li key={feature}>{feature}</li>
+                      ))}
+                    </ul>
+                    <div className="lv-line-buy">
+                      <p className="lv-price">
+                        <PriceOdometer
+                          label={isMonthly && pkg.monthlyLabel ? pkg.monthlyLabel : pkg.priceLabel}
+                          animate={!staticMode}
+                        />
                       </p>
                       {pkg.monthlyLabel && (
-                        <p className="wa-alt">
+                        <p className="lv-alt">
                           {isMonthly ? `or ${pkg.priceLabel} outright` : `or ${pkg.monthlyLabel}`}
                         </p>
                       )}
-                      <p className="wa-tl">{TIMELINES[pkg.key]}</p>
+                      <p className="lv-tl">{TIMELINES[pkg.key]}</p>
                       <Link
-                        className="wa-row-cta"
+                        className="lv-row-cta"
                         to={`${START}?service=web_design&package=${pkg.key}${
                           isMonthly ? '&pricing=subscription' : ''
                         }`}
@@ -856,12 +1479,11 @@ export default function ServiceWeb() {
             </div>
           ))}
 
-          {/* General notes — scope boundaries, like any good drawing. */}
-          <aside className="wa-notes" data-reveal>
-            <h3 className="wa-notes-h">General notes</h3>
-            <div className="wa-notes-cols">
+          <aside className="lv-notes">
+            <h3 className="lv-notes-h">General notes</h3>
+            <div className="lv-notes-cols">
               {webScopeNotes.map((note) => (
-                <div className="wa-note" key={note.title}>
+                <div className="lv-note" key={note.title}>
                   <h4>{note.title}</h4>
                   <ul>
                     {note.points.map((point) => (
@@ -873,74 +1495,60 @@ export default function ServiceWeb() {
             </div>
           </aside>
 
-          <div className="wa-fine" data-reveal>
-            <p>
-              <span className="wa-star" aria-hidden="true">
-                *
-              </span>
-              {ASTERISK_CLAUSE}
-            </p>
+          <div className="lv-fine">
+            <p>{ASTERISK_CLAUSE}</p>
             <p>{GST_NOTE}</p>
             <p>{INDUSTRY_SURCHARGE_NOTE}</p>
           </div>
         </div>
       </section>
 
-      {/* ── The programme — brief to launch ─────────────────────── */}
-      <section className="wa-prog">
-        <div className="wa-frame">
-          <div data-reveal>
-            <h2 className="wa-h2">Brief to launch, one pipeline.</h2>
-            <p className="wa-sub">Four stages on one board.</p>
+      {/* ══ Fold 4 — THE PIPELINE ═══════════════════════════════════ */}
+      <section className="lv-pipe">
+        <div className="lv-frame lv-pipe-grid">
+          <div className="lv-pipe-figwrap">
+            <h2 className="lv-h2">Brief to launch, one pipeline.</h2>
+            <p className="lv-sub">One line carries the job from first call to live site.</p>
+            <svg className="lv-morph" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+              <path className="lv-tghost" d={PIPE_STATES[3]} />
+              <path className="lv-tmain" d={PIPE_STATES[3]} />
+            </svg>
           </div>
-
-          <div className="wa-gantt">
-            {PROCESS.map((stage, i) => (
-              <div className="wa-stage" key={stage.num} data-reveal style={{ '--rd': `${i * 90}ms` }}>
-                <div className="wa-stage-id">
-                  <span className="wa-stage-num" aria-hidden="true">
-                    {stage.num}
-                  </span>
-                  <div>
-                    <h3>{stage.label}</h3>
-                    <p>{stage.desc}</p>
-                  </div>
-                </div>
-                <div className="wa-lane" aria-hidden="true">
-                  <span
-                    className="wa-bar"
-                    style={{ left: `${stage.bar[0]}%`, width: `${stage.bar[1]}%` }}
-                  />
-                </div>
+          <div className="lv-stages">
+            {PROCESS.map((stage) => (
+              <div className="lv-stage-item" key={stage.label}>
+                <h3>{stage.label}</h3>
+                <p>{stage.desc}</p>
               </div>
             ))}
           </div>
         </div>
+        <div className="lv-frame lv-close-vitals">
+          <VitalsStrip id="lv-vitals-close" />
+        </div>
       </section>
 
-      {/* ── Closing CTA — the yellow drench, stamped complete ───── */}
-      <section className="wa-cta">
-        <div className="wa-frame wa-cta-in">
-          <div className="wa-cta-copy" data-reveal>
-            <h2 className="wa-cta-h">Ready to build something worth showing?</h2>
-            <p className="wa-cta-sub">
-              Send us a brief — we&rsquo;ll scope it, price it, and come back with a clear plan.
-            </p>
-            <Link className="wa-btn wa-btn--onyellow" to={`${START}?service=web_design`}>
-              Start a project
-              <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
-            </Link>
-          </div>
-          <span className="wa-stamp" aria-hidden="true" data-stamp>
-            <span className="wa-stamp-ghost">
-              <StampBody />
-            </span>
-            <span className="wa-stamp-ink">
-              <StampBody />
-            </span>
-          </span>
+      {/* ══ Fold 5 — THE DRENCH ═════════════════════════════════════ */}
+      <section className="lv-drench">
+        <div className="lv-frame lv-drench-in">
+          <h2 className="lv-h2 lv-drench-h">Ready to build something worth showing?</h2>
+          <svg
+            className="lv-drench-line"
+            viewBox="0 0 760 80"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d={DRENCH_LINE_D} pathLength="1" />
+          </svg>
+          <p className="lv-drench-sub">
+            Send us a brief — we&rsquo;ll scope it, price it, and come back with a clear plan.
+          </p>
+          <Link className="lv-btn lv-btn--onred" to={`${START}?service=web_design`}>
+            Start a project
+            <ArrowRight size={14} strokeWidth={2.5} aria-hidden="true" />
+          </Link>
         </div>
-        <div className="wa-hatch" aria-hidden="true" />
       </section>
     </div>
   );
