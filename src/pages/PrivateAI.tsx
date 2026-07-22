@@ -121,26 +121,8 @@ export default function PrivateAI() {
     jsonLd,
   });
 
-  /* Fonts, Lens-style: Instrument Sans + Geist Mono, swap display. */
-  useEffect(() => {
-    const els: HTMLLinkElement[] = [];
-    const pc1 = document.createElement('link');
-    pc1.rel = 'preconnect';
-    pc1.href = 'https://fonts.googleapis.com';
-    const pc2 = document.createElement('link');
-    pc2.rel = 'preconnect';
-    pc2.href = 'https://fonts.gstatic.com';
-    pc2.crossOrigin = 'anonymous';
-    const font = document.createElement('link');
-    font.rel = 'stylesheet';
-    font.href =
-      'https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;700&family=Geist+Mono:wght@400;700&display=swap';
-    [pc1, pc2, font].forEach((el) => {
-      document.head.appendChild(el);
-      els.push(el);
-    });
-    return () => els.forEach((el) => el.remove());
-  }, []);
+  /* Fonts (Instrument Sans + Geist Mono) are self-hosted globally
+     (src/styles/fonts.css, loaded in main.jsx); no runtime Google Fonts. */
 
   /* Lenis smooth scroll for this route, shared instance if one exists. */
   useEffect(() => {

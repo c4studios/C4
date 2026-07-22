@@ -80,15 +80,49 @@ const SECTORS = [
   },
 ];
 
-/* ── The drawn chalk marks (a coherent three-mark set) ────────────── */
+/* ── The drawn chalk marks — layered dry-media strokes ────────────── */
+/* Every mark is two passes on the same path. A faint, broken "ghost"
+   is laid down first and slightly off-register (the dry skips a real
+   chalk stick leaves), then a crisp primary draws in on top. The pair
+   reads as pressed chalk, never a clean vector rule. Only the primary
+   carries data-sg-draw, so the ghost stays static and the draw-in stays
+   a cheap stroke-dashoffset tween — no live SVG filters on moving paths.*/
 
-function MarkUnderline({ strokeWidth = 5 }) {
+function Stroke({ d, w = 2.4, ghostDash }) {
+  return (
+    <>
+      <path
+        className="sg-ghost"
+        d={d}
+        strokeWidth={w * 1.2}
+        strokeDasharray={ghostDash}
+        transform="translate(0.9 1.1)"
+      />
+      <path data-sg-draw="" d={d} strokeWidth={w} />
+    </>
+  );
+}
+
+/* A settling puff of chalk dust. Rendered as plain elements beside the
+   mark (not inside its stretched viewBox, so the dots stay round), kept
+   invisible until the mark finishes drawing, then animated out once. */
+function PuffDots() {
+  return (
+    <span className="sg-puff" aria-hidden="true">
+      <i className="sg-puff-dot" />
+      <i className="sg-puff-dot" />
+      <i className="sg-puff-dot" />
+    </span>
+  );
+}
+
+function MarkUnderline() {
   return (
     <svg className="sg-mark" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true">
-      <path
-        data-sg-draw=""
+      <Stroke
         d="M3 8.5 C 36 4, 80 10, 119 6.5 C 149 4.2, 179 6.8, 197 5.4"
-        strokeWidth={strokeWidth}
+        w={5}
+        ghostDash="46 8 64 7 48"
       />
     </svg>
   );
@@ -97,10 +131,10 @@ function MarkUnderline({ strokeWidth = 5 }) {
 function MarkSquiggle() {
   return (
     <svg className="sg-mark" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true">
-      <path
-        data-sg-draw=""
+      <Stroke
         d="M2 6 Q 8 1.5 14 6 T 26 6 T 38 6 T 50 6 T 62 6 T 74 6 T 86 6 T 98 6 T 110 6 T 118 6"
-        strokeWidth="2.4"
+        w={2.4}
+        ghostDash="16 4 22 3 18"
       />
     </svg>
   );
@@ -109,7 +143,11 @@ function MarkSquiggle() {
 function MarkTick() {
   return (
     <svg className="sg-mark" viewBox="0 0 22 22" aria-hidden="true">
-      <path data-sg-draw="" d="M3.5 12.5 C 5.5 14.2, 7.2 16.2, 8.8 18.2 C 11.5 13.4, 14.8 8.6, 19 4.5" strokeWidth="2.5" />
+      <Stroke
+        d="M3.5 12.5 C 5.5 14.2, 7.2 16.2, 8.8 18.2 C 11.5 13.4, 14.8 8.6, 19 4.5"
+        w={2.5}
+        ghostDash="8 2 26"
+      />
     </svg>
   );
 }
@@ -117,8 +155,8 @@ function MarkTick() {
 function MarkArrow() {
   return (
     <svg className="sg-mark" viewBox="0 0 30 12" aria-hidden="true">
-      <path data-sg-draw="" d="M1.5 6.4 C 9 5.5, 18 6.7, 27 5.9" strokeWidth="2.2" />
-      <path data-sg-draw="" d="M21 1.6 C 23.5 3.3, 25.6 4.9, 28.2 6 C 25.4 7.5, 23 9.2, 21.2 10.8" strokeWidth="2.2" />
+      <Stroke d="M1.5 6.4 C 9 5.5, 18 6.7, 27 5.9" w={2.2} ghostDash="8 2 16 2 6" />
+      <Stroke d="M21 1.6 C 23.5 3.3, 25.6 4.9, 28.2 6 C 25.4 7.5, 23 9.2, 21.2 10.8" w={2.2} />
     </svg>
   );
 }
@@ -126,10 +164,10 @@ function MarkArrow() {
 function MarkRing() {
   return (
     <svg className="sg-mark" viewBox="0 0 120 46" preserveAspectRatio="none" aria-hidden="true">
-      <path
-        data-sg-draw=""
+      <Stroke
         d="M17 24 C 15 12.5, 40 5.5, 63 5.8 C 91 6.2, 107 13, 106 23.5 C 105 34.5, 82 41, 56 40.4 C 32 39.8, 18 33.6, 17 22.5 C 16.5 17.8, 21.5 12.6, 28 10.4"
-        strokeWidth="2.6"
+        w={2.6}
+        ghostDash="34 6 52 6 40 5 30"
       />
     </svg>
   );
@@ -138,10 +176,10 @@ function MarkRing() {
 function MarkLoop() {
   return (
     <svg className="sg-mark" viewBox="0 0 46 46" aria-hidden="true">
-      <path
-        data-sg-draw=""
+      <Stroke
         d="M23.5 4.6 C 12 4.2, 4.6 12, 4.6 23 C 4.6 34.4, 12.5 41.8, 23.5 41.4 C 35 41, 41.4 33.4, 41.4 22.6 C 41.4 12.2, 34 5, 25.6 5.2 C 21.2 5.3, 17.2 7, 14.6 9.6"
-        strokeWidth="2.2"
+        w={2.2}
+        ghostDash="22 4 40 5 28"
       />
     </svg>
   );
@@ -216,26 +254,8 @@ export default function Foresight() {
     ],
   });
 
-  /* Bricolage Grotesque, house font-injection pattern with cleanup. */
-  useEffect(() => {
-    const els = [];
-    const pc1 = document.createElement('link');
-    pc1.rel = 'preconnect';
-    pc1.href = 'https://fonts.googleapis.com';
-    const pc2 = document.createElement('link');
-    pc2.rel = 'preconnect';
-    pc2.href = 'https://fonts.gstatic.com';
-    pc2.crossOrigin = 'anonymous';
-    const font = document.createElement('link');
-    font.rel = 'stylesheet';
-    font.href =
-      'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap';
-    [pc1, pc2, font].forEach((el) => {
-      document.head.appendChild(el);
-      els.push(el);
-    });
-    return () => els.forEach((el) => el.remove());
-  }, []);
+  /* Bricolage Grotesque is self-hosted globally (src/styles/fonts.css,
+     loaded in main.jsx); no runtime Google Fonts request. */
 
   /* Entrances. Everything renders visible first; GSAP animates FROM. */
   useLayoutEffect(() => {
@@ -243,6 +263,28 @@ export default function Foresight() {
     if (!root || staticMode) return undefined;
 
     const ctx = gsap.context(() => {
+      /* Settling dust: 3-4 particles beside a mark, animated out once as
+         the stroke lands. Entry-only, never ambient (Lens owns the beam).*/
+      const puff = (p) => {
+        const host = p.ownerSVGElement && p.ownerSVGElement.parentElement;
+        if (!host) return;
+        const dots = host.querySelectorAll('.sg-puff-dot');
+        if (!dots.length) return;
+        gsap.fromTo(
+          dots,
+          { autoAlpha: 0.9, scale: 0.5, y: 0 },
+          {
+            autoAlpha: 0,
+            scale: 1.35,
+            y: -8,
+            duration: 0.55,
+            ease: 'power2.out',
+            stagger: 0.06,
+            transformOrigin: '50% 50%',
+          },
+        );
+      };
+
       /* Chalk strokes draw in; default DOM has no dash, so the static
          and prerendered states are always fully drawn. */
       const drawIn = (paths, trigger, delay = 0.2) => {
@@ -262,6 +304,7 @@ export default function Foresight() {
               duration: 0.7,
               ease: 'power2.out',
               delay,
+              onComplete: () => puff(p),
               ...(trigger
                 ? { scrollTrigger: { trigger, start: 'top 80%', once: true } }
                 : {}),
@@ -283,6 +326,11 @@ export default function Foresight() {
           '[data-sg-tray]',
           { scaleX: 0, transformOrigin: 'left center', duration: 0.8, ease: 'power2.inOut' },
           '-=0.35',
+        )
+        .from(
+          ['.sg-tray-chalk', '.sg-tray-marker'],
+          { autoAlpha: 0, y: 6, duration: 0.5, stagger: 0.08, ease: 'power2.out' },
+          '-=0.28',
         );
       drawIn(Array.from(root.querySelectorAll('.sg-hero [data-sg-draw]')), null, 0.85);
 
@@ -326,6 +374,21 @@ export default function Foresight() {
           scrollTrigger: { trigger: '.sg-formats', start: 'top 72%', once: true },
         });
       }
+
+      /* Pricing figures are pressed onto the board — a short scale + tilt
+         settle, transform-only so it never fights the card's own rise. */
+      const figures = root.querySelectorAll('[data-sg-press]');
+      if (figures.length) {
+        gsap.from(figures, {
+          scale: 1.045,
+          rotate: 0.8,
+          transformOrigin: 'left center',
+          duration: 0.5,
+          ease: 'power2.out',
+          stagger: 0.09,
+          scrollTrigger: { trigger: '.sg-pricing', start: 'top 70%', once: true },
+        });
+      }
     }, root);
 
     return () => ctx.revert();
@@ -333,6 +396,34 @@ export default function Foresight() {
 
   return (
     <div ref={rootRef} className="sg-root">
+      {/* Static chalk-edge filter — feTurbulence displacement, never
+          animated, applied to the hero h1 text only (§5 no live filters).*/}
+      <svg className="sg-defs" width="0" height="0" aria-hidden="true" focusable="false">
+        <filter
+          id="sg-chalk-edge"
+          x="-6%"
+          y="-30%"
+          width="112%"
+          height="160%"
+          colorInterpolationFilters="sRGB"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.86 0.62"
+            numOctaves="1"
+            seed="7"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="1.6"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </svg>
+
       {/* ── Hero: the arm statement. The C-code appears here, once. ── */}
       <header className="sg-hero">
         <div className="sg-wrap">
@@ -340,11 +431,12 @@ export default function Foresight() {
             <span className="sg-chip-code">C4</span>
             <span>C4Sight — the training arm</span>
           </p>
-          <h1 data-sg-hero="">
+          <h1 className="sg-chalk-edge" data-sg-hero="">
             The fourth C stands for{' '}
             <span className="sg-underlined">
               foresight.
               <MarkUnderline />
+              <PuffDots />
             </span>
           </h1>
           <p className="sg-lede" data-sg-hero="">
@@ -358,7 +450,11 @@ export default function Foresight() {
               <MarkArrow />
             </Link>
           </div>
-          <div className="sg-tray" data-sg-tray="" aria-hidden="true" />
+          <div className="sg-tray" aria-hidden="true">
+            <span className="sg-tray-ledge" data-sg-tray="" />
+            <span className="sg-tray-chalk" />
+            <span className="sg-tray-marker" />
+          </div>
         </div>
       </header>
 
@@ -385,6 +481,7 @@ export default function Foresight() {
                       <span className="sg-annot">
                         Most value
                         <MarkRing />
+                        <PuffDots />
                       </span>
                     </div>
                   )}
@@ -415,6 +512,7 @@ export default function Foresight() {
               <span className="sg-ringed">
                 Five
                 <MarkRing />
+                <PuffDots />
               </span>{' '}
               things your team walks out with.
             </h2>
@@ -437,6 +535,26 @@ export default function Foresight() {
       <section className="sg-section" data-sg-rise="">
         <div className="sg-wrap">
           <div className="sg-rules" data-sg-item="">
+            {/* The frame that never gets rubbed out — drawn twice, chalk
+                doubled and deliberately off, the one crisp thing on a
+                board of smudges. */}
+            <svg
+              className="sg-rules-frame"
+              viewBox="0 0 100 62"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path
+                data-sg-draw=""
+                vectorEffect="non-scaling-stroke"
+                d="M2 4.4 C 2 2.7 3.1 1.7 5 1.7 L 95.4 2.2 C 97.6 2.2 98.4 3.3 98.3 5.2 L 97.9 57.2 C 97.9 59.4 96.8 60.3 94.8 60.3 L 4.8 59.8 C 2.6 59.8 1.7 58.7 1.8 56.8 Z"
+              />
+              <path
+                data-sg-draw=""
+                vectorEffect="non-scaling-stroke"
+                d="M4.6 6.4 C 4.6 4.8 5.6 3.9 7.4 4 L 92.8 4.4 C 94.8 4.5 95.6 5.6 95.5 7.3 L 95.1 54.9 C 95.1 57 94 57.8 92.1 57.7 L 7 57.3 C 5 57.2 4.2 56.2 4.3 54.5 Z"
+              />
+            </svg>
             <div className="sg-rules-grid">
               <div>
                 <p className="sg-rules-lead">Written in the corner of the board, never rubbed out —</p>
@@ -545,10 +663,13 @@ export default function Foresight() {
                   <span className="sg-price-annot sg-annot">
                     Most value
                     <MarkRing />
+                    <PuffDots />
                   </span>
                 )}
                 <h3>{pkg.name}</h3>
-                <p className="sg-price-figure">{pkg.priceLabel}</p>
+                <p className="sg-price-figure" data-sg-press="">
+                  {pkg.priceLabel}
+                </p>
                 <p className="sg-price-desc">{pkg.description}</p>
                 <div className="sg-price-rule" aria-hidden="true" />
                 <ul>
@@ -582,6 +703,7 @@ export default function Foresight() {
             <span className="sg-underlined">
               safely.
               <MarkUnderline />
+              <PuffDots />
             </span>
           </h2>
           <p className="sg-sub" data-sg-item="">

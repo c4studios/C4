@@ -100,19 +100,43 @@
   color: var(--sg-board-deep);
 }
 
-/* Chalk dust: one static grain tile, composited, never repainted. */
+/* Chalk dust: one static grain tile, composited, never repainted. The
+   mask lets the dust settle — sparse up top, pooling toward the page
+   foot — instead of an even wash (the tray carries its own local pool).*/
 .sg-root::after {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 3;
   pointer-events: none;
-  opacity: 0.05;
+  opacity: 0.06;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.72) 58%,
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.72) 58%,
+    #000 100%
+  );
+}
+
+/* Hidden filter host (chalk-edge feTurbulence for the hero h1). */
+.sg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 .sg-wrap {
+  position: relative;
+  z-index: 1;
   max-width: 1160px;
   margin-inline: auto;
   padding-inline: clamp(20px, 5vw, 56px);
@@ -140,6 +164,66 @@
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+/* The dry-media ghost pass: a fainter, broken second stroke laid just
+   off the primary, so the mark reads as pressed chalk with skips rather
+   than a clean vector line. Static — the primary alone draws in. */
+.sg-mark .sg-ghost {
+  opacity: 0.32;
+}
+
+/* Static chalk-edge on the hero h1 text only. feTurbulence displacement
+   roughens the glyph edges; it never animates (§5) and leaves the fill
+   colour untouched, so measured contrast is unchanged. */
+.sg-chalk-edge {
+  filter: url(#sg-chalk-edge);
+}
+
+/* Settling chalk dust — one puff of a few motes at a mark's trailing
+   end. Invisible at rest (GSAP reveals then clears them once); absent
+   entirely in staticMode, which is correct for a pure delight accent. */
+.sg-puff {
+  position: absolute;
+  top: -7px;
+  right: -3px;
+  width: 26px;
+  height: 20px;
+  pointer-events: none;
+}
+
+.sg-puff-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--sg-chalk);
+  opacity: 0;
+}
+
+.sg-puff-dot:nth-child(1) {
+  right: 2px;
+  top: 9px;
+}
+
+.sg-puff-dot:nth-child(2) {
+  right: 9px;
+  top: 2px;
+  width: 3px;
+  height: 3px;
+}
+
+.sg-puff-dot:nth-child(3) {
+  right: 16px;
+  top: 8px;
+  width: 3px;
+  height: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sg-puff {
+    display: none;
+  }
 }
 
 /* Hand-drawn underline sitting under a word. */
@@ -250,12 +334,44 @@
 /* ── Hero ────────────────────────────────────────────────────────── */
 
 .sg-hero {
+  position: relative;
+  overflow: clip;
   background-color: var(--sg-board-deep);
   background-image:
     radial-gradient(640px 240px at 16% 28%, rgba(242, 240, 233, 0.045), transparent 70%),
     radial-gradient(520px 200px at 82% 72%, rgba(242, 240, 233, 0.035), transparent 70%);
-  padding-top: clamp(138px, 18vh, 190px);
+  /* Top pad clears the fixed back-ribbon keep-out zone (220×160 desktop):
+     content starts below 160px so the hero chip never sits under it. */
+  padding-top: clamp(168px, 19vh, 200px);
   padding-bottom: clamp(56px, 9vw, 104px);
+}
+
+/* Palimpsest: a half-erased fragment of a previous lesson, ghosted at
+   ≤4.5% behind the empty right of the hero — display region only, never
+   behind the lede or any body text. Hidden where the column goes full
+   width and could reach running text. */
+.sg-hero::before {
+  content: '';
+  position: absolute;
+  top: clamp(150px, 15vh, 220px);
+  right: -56px;
+  width: min(38vw, 430px);
+  height: 320px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.045;
+  background-repeat: no-repeat;
+  background-position: top right;
+  background-size: contain;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 520 340' fill='none' stroke='%23f2f0e9' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M44 250 C 130 176 250 150 372 116'/%3E%3Cpath d='M338 92 C 356 100 376 110 398 116 C 376 128 356 140 340 158'/%3E%3Cpath d='M120 66 L 214 132 M214 66 L 120 132'/%3E%3Cpath d='M300 210 C 300 188 330 176 360 178 C 396 180 414 198 412 220 C 410 244 380 256 350 254 C 322 252 302 236 302 214'/%3E%3Cpath d='M70 300 C 140 292 210 300 276 296'/%3E%3C/svg%3E");
+}
+
+/* Only paint where the right of the hero is genuinely empty canvas —
+   below this the text column widens toward it, so it's hidden. */
+@media (max-width: 1023px) {
+  .sg-hero::before {
+    display: none;
+  }
 }
 
 .sg-chip {
@@ -299,11 +415,82 @@
   margin-top: clamp(30px, 4.5vw, 46px);
 }
 
+/* The chalk tray: a shallow ledge at the foot of the board holding a
+   worn chalk stub and the marker-yellow pen, with dust pooled beneath. */
 .sg-tray {
+  position: relative;
   margin-top: clamp(52px, 8vw, 88px);
-  height: 2px;
-  background: var(--sg-line);
+  height: 30px;
+}
+
+.sg-tray-ledge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10px;
+  border-radius: 3px;
+  transform-origin: left center;
+  background: linear-gradient(
+    to bottom,
+    rgba(242, 240, 233, 0.24),
+    rgba(242, 240, 233, 0.06) 42%,
+    rgba(0, 0, 0, 0.3)
+  );
+  box-shadow:
+    0 1px 0 rgba(242, 240, 233, 0.16) inset,
+    0 6px 14px -9px rgba(0, 0, 0, 0.7);
+}
+
+/* Dust pooled in the groove, under the chalk stub. */
+.sg-tray::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 20px;
+  pointer-events: none;
+  background: radial-gradient(
+    58% 100% at 20% 0%,
+    rgba(242, 240, 233, 0.11),
+    transparent 72%
+  );
+}
+
+.sg-tray-chalk,
+.sg-tray-marker {
+  position: absolute;
+  bottom: 7px;
+  height: 9px;
+  border-radius: 3px;
+  box-shadow: 0 4px 9px -6px rgba(0, 0, 0, 0.75);
+}
+
+.sg-tray-chalk {
+  left: clamp(24px, 6vw, 92px);
+  width: 46px;
+  background: linear-gradient(to bottom, #f6f4ee, #d7d4ca);
+  transform: rotate(-1.6deg);
+}
+
+.sg-tray-marker {
+  left: clamp(82px, 13vw, 156px);
+  width: 58px;
+  background: linear-gradient(to bottom, #f4d76a, var(--sg-yellow) 52%, #cca838);
+  transform: rotate(1deg);
+}
+
+/* The marker's dark tip cap. */
+.sg-tray-marker::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 1px;
+  bottom: 1px;
+  width: 7px;
   border-radius: 2px;
+  background: var(--sg-board-deep);
 }
 
 /* ── Section scaffolding ─────────────────────────────────────────── */
@@ -443,8 +630,33 @@
 
 /* ── Outcomes: the numbered board list ───────────────────────────── */
 
+/* The section seam is a wiped eraser band, not a crisp rule — chalk half
+   dragged away, streaky and irregular (static mask; no live filter). */
 .sg-outcomes {
-  border-top: 1px solid var(--sg-line);
+  position: relative;
+}
+
+.sg-outcomes::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(242, 240, 233, 0.15),
+    rgba(242, 240, 233, 0.02) 55%,
+    transparent
+  );
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='30'%3E%3Cg fill='%23fff'%3E%3Crect x='0' y='5' width='120' height='20' opacity='0.85'/%3E%3Crect x='96' y='2' width='96' height='24' opacity='0.5'/%3E%3Crect x='188' y='7' width='150' height='16' opacity='0.9'/%3E%3Crect x='300' y='3' width='110' height='22' opacity='0.55'/%3E%3C/g%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='30'%3E%3Cg fill='%23fff'%3E%3Crect x='0' y='5' width='120' height='20' opacity='0.85'/%3E%3Crect x='96' y='2' width='96' height='24' opacity='0.5'/%3E%3Crect x='188' y='7' width='150' height='16' opacity='0.9'/%3E%3Crect x='300' y='3' width='110' height='22' opacity='0.55'/%3E%3C/g%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }
 
 .sg-outcomes-head {
@@ -504,22 +716,35 @@
 .sg-rules {
   position: relative;
   background: var(--sg-board-deep);
-  border: 1.5px solid var(--sg-line-strong);
   border-radius: 12px;
   padding: clamp(28px, 5vw, 60px);
 }
 
-/* Second chalk line inside the frame: ruled twice so it stays put. */
-.sg-rules::before {
-  content: '';
+/* The framed rules — drawn as two overlapping, deliberately off-register
+   chalk rectangles (constant-width via non-scaling-stroke, PAR-none so
+   the hand-wobble reads). Draws in on scroll; solid in staticMode. This
+   is the one crisp artefact on a board of smudges — never rubbed out. */
+.sg-rules-frame {
   position: absolute;
-  inset: 7px;
-  border: 1px solid var(--sg-line);
-  border-radius: 7px;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
   pointer-events: none;
 }
 
+.sg-rules-frame path {
+  fill: none;
+  stroke: var(--sg-line-strong);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .sg-rules-grid {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(32px, 5vw, 64px);
@@ -656,8 +881,32 @@
 
 /* ── Sectors: corridor rows ──────────────────────────────────────── */
 
+/* Second wiped seam, its own streak pattern (each smudge is unique). */
 .sg-sectors {
-  border-top: 1px solid var(--sg-line);
+  position: relative;
+}
+
+.sg-sectors::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(242, 240, 233, 0.15),
+    rgba(242, 240, 233, 0.02) 55%,
+    transparent
+  );
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='30'%3E%3Cg fill='%23fff'%3E%3Crect x='0' y='4' width='90' height='22' opacity='0.6'/%3E%3Crect x='70' y='8' width='150' height='15' opacity='0.9'/%3E%3Crect x='210' y='3' width='80' height='23' opacity='0.5'/%3E%3Crect x='280' y='6' width='130' height='18' opacity='0.85'/%3E%3C/g%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='30'%3E%3Cg fill='%23fff'%3E%3Crect x='0' y='4' width='90' height='22' opacity='0.6'/%3E%3Crect x='70' y='8' width='150' height='15' opacity='0.9'/%3E%3Crect x='210' y='3' width='80' height='23' opacity='0.5'/%3E%3Crect x='280' y='6' width='130' height='18' opacity='0.85'/%3E%3C/g%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }
 
 .sg-sectors-head {
@@ -754,10 +1003,39 @@
 /* ── Pricing: chalk boxes on the deep board ──────────────────────── */
 
 .sg-pricing {
+  position: relative;
+  overflow: clip;
   background-color: var(--sg-board-deep);
   background-image:
     radial-gradient(560px 220px at 84% 18%, rgba(242, 240, 233, 0.04), transparent 70%),
     radial-gradient(480px 200px at 10% 82%, rgba(242, 240, 233, 0.03), transparent 70%);
+}
+
+/* Palimpsest fragment behind the pricing heading — an eraser arc and a
+   crossed-out sum, ≤4% and up in the display region, clear of the card
+   feature lists. Hidden on narrow screens where the cards climb higher.*/
+.sg-pricing::before {
+  content: '';
+  position: absolute;
+  top: clamp(24px, 3.5vw, 52px);
+  left: -26px;
+  width: min(40vw, 420px);
+  height: 200px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-repeat: no-repeat;
+  background-position: top left;
+  background-size: contain;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 440 240' fill='none' stroke='%23f2f0e9' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M30 150 C 90 96 180 78 300 96'/%3E%3Cpath d='M60 60 C 120 52 180 60 236 56'/%3E%3Cpath d='M90 192 L 150 130 M150 192 L 90 130'/%3E%3Cpath d='M300 150 C 300 130 326 120 352 122 C 384 124 400 140 398 160 C 396 180 370 190 344 188'/%3E%3C/svg%3E");
+}
+
+/* Behind the short display heading only; hidden once the card grid
+   climbs up beside it on narrower viewports. */
+@media (max-width: 1023px) {
+  .sg-pricing::before {
+    display: none;
+  }
 }
 
 .sg-pricing-head {

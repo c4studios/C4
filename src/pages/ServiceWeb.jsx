@@ -9,15 +9,22 @@
  * src/data/pricing.js (single source of truth — fixes the audited
  * data drift), with only delivery timelines kept as page metadata.
  *
- * Motion: CSS-only. Content is fully visible by default; the .wa-armed
- * class (added on mount, never under prefers-reduced-motion or the
- * Prerender UA) arms hero keyframes, an SVG line-draw, and
- * IntersectionObserver scroll reveals. Styles live in
- * src/components/web-arm/web-arm.css, scoped under .wa-root.
+ * Motion: content is fully visible by default. The .wa-armed class
+ * (added on mount, never under prefers-reduced-motion or the Prerender
+ * UA) arms the hero load choreography, an SVG line-draw, and
+ * IntersectionObserver reveals (fade/rise + a plotter-wipe for the
+ * as-built plates). One GSAP ScrollTrigger scrubs ≤0.6 viewport of the
+ * hero into a --wa-build variable — the crane installs its beam and one
+ * storey as you scroll; it moves only while scrolling, never idle. The
+ * closing certification stamp lands once. All states rest complete for
+ * static/prerender. Styles live in src/components/web-arm/web-arm.css,
+ * scoped under .wa-root.
  */
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
@@ -31,6 +38,8 @@ import {
   INDUSTRY_SURCHARGE_NOTE,
 } from '@/data/pricing';
 import '../components/web-arm/web-arm.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const START = createPageUrl('StartProject');
 
@@ -55,6 +64,83 @@ const INCLUDED = [
   'Cross-browser tested',
   'Founder reply within 1 business day',
   'Full code handover — you own it',
+];
+
+const PORTFOLIO = createPageUrl('Portfolio');
+
+/* The as-built record — real client sites we drew and delivered, read
+   straight from public/captures/ (read-only assets) and presented as
+   numbered drawing plates. Scope lines and intrinsic pixel dimensions
+   are taken from the portfolio case-study source; width/height reserve
+   layout so lazy images cause no CLS. Every plate links to /Portfolio
+   (crawl equity for the full set). */
+const AS_BUILT = [
+  {
+    ref: 'A·01',
+    name: 'Evidence Advisory',
+    place: 'Perth, WA',
+    year: '2026',
+    scope: 'Digital-forensics brand site anchored by a scroll-solved 3D crime-scene reconstruction.',
+    img: '/captures/evidenceadvisory-com-au/desktop/01-hero.png',
+    w: 1440,
+    h: 900,
+    alt: 'Evidence Advisory home page — a shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers.',
+  },
+  {
+    ref: 'A·02',
+    name: 'Sharp Bricklaying',
+    place: 'Perth, WA',
+    year: '2026',
+    scope: 'Premium bricklayer’s site built from licensed drone aerials and a multi-job gallery.',
+    img: '/captures/sharpbricklaying-com-au/desktop/01-hero.png',
+    w: 1440,
+    h: 900,
+    alt: 'Sharp Bricklaying home page — a drone aerial of finished brickwork behind the studio wordmark.',
+  },
+  {
+    ref: 'A·03',
+    name: 'HVN CrossFit',
+    place: 'Port Kennedy, WA',
+    year: '2026',
+    scope: 'Cinematic Next.js gym site with live class booking and a scroll-driven mini-game.',
+    img: '/captures/thehvncrossfit-com/desktop/01-hero.png',
+    w: 1440,
+    h: 900,
+    alt: 'HVN CrossFit home page — a dark, cinematic hero for a Port Kennedy gym.',
+  },
+  {
+    ref: 'A·04',
+    name: 'Tidy Gardens Australia',
+    place: 'Perth, WA',
+    year: '2026',
+    scope: 'Motion-led site for a garden & reticulation business, with a living scroll motif.',
+    img: '/captures/tidygardens-com-au/desktop/01-hero.png',
+    w: 1440,
+    h: 900,
+    alt: 'Tidy Gardens Australia home page — a green, motion-led hero for a Perth garden-care business.',
+  },
+  {
+    ref: 'A·05',
+    name: 'Jurassic PT',
+    place: 'Cannington, WA',
+    year: '2026',
+    scope: 'Conversion-focused fitness studio site — memberships, timetable and direct booking.',
+    img: '/captures/jurassic-pt-vercel-app/desktop/01-hero.png',
+    w: 2880,
+    h: 1800,
+    alt: 'Jurassic PT home page — a dark, lime-accented hero for a Cannington personal-training studio.',
+  },
+  {
+    ref: 'A·06',
+    name: 'Groverz Tax & Accounting',
+    place: 'East Cannington, WA',
+    year: '2026',
+    scope: 'Tax-practice site with an interactive refund estimator and a physics-driven hero.',
+    img: '/captures/groverztax-com-au/desktop/01-hero.png',
+    w: 1440,
+    h: 695,
+    alt: 'Groverz Tax & Accounting home page — a professional accounting-practice website hero.',
+  },
 ];
 
 /* Four real stages — the one sequence on the page that earns its
@@ -323,9 +409,16 @@ function HeroDrawing() {
         <line x1="170" y1="48" x2="100" y2="66" strokeWidth="1" {...draw} />
         <rect x="84" y="66" width="20" height="14" fill="currentColor" stroke="none" className="wa-fill" style={{ '--d': '0.9s' }} />
         <rect x="294" y="66" width="12" height="7" fill="currentColor" stroke="none" className="wa-fill" style={{ '--d': '0.9s' }} />
-        <line x1="300" y1="73" x2="300" y2="120" strokeWidth="1" {...draw} />
-        {/* The beam being lowered into place. */}
-        <rect x="270" y="120" width="60" height="13" fill="var(--wa-yellow)" stroke="none" className="wa-fill" style={{ '--d': '1.1s' }} />
+        {/* Hoist cable — pays out as the build scrubs (scaleY driven by
+            --wa-build); rests fully paid-out when the var is 1. */}
+        <line className="wa-cable" x1="300" y1="73" x2="300" y2="127" strokeWidth="1" />
+        {/* The gantry-yellow beam: a placed object craned into position.
+            The whole load lowers on scroll (translateY driven by
+            --wa-build) — never energy travelling along a line (memo R3). */}
+        <g className="wa-crane-load">
+          <rect x="294" y="120" width="12" height="7" fill="currentColor" stroke="none" className="wa-fill" style={{ '--d': '1s' }} />
+          <rect x="270" y="127" width="60" height="13" fill="var(--wa-yellow)" stroke="none" className="wa-fill" style={{ '--d': '1.1s' }} />
+        </g>
         {/* Aviation light — a C4-red datum point. */}
         <circle cx="170" cy="42" r="3.5" fill="var(--wa-red)" stroke="none" className="wa-fill" style={{ '--d': '1.2s' }} />
       </g>
@@ -341,7 +434,11 @@ function HeroDrawing() {
         <line x1="252" y1="298" x2="318" y2="248" strokeWidth="1" {...draw} />
         <line x1="318" y1="298" x2="252" y2="248" strokeWidth="1" {...draw} />
         <rect x="322" y="248" width="66" height="50" fill="var(--wa-yellow)" stroke="none" className="wa-fill" style={{ '--d': '1s' }} />
-        <rect x="462" y="195" width="66" height="49" fill="var(--wa-yellow)" stroke="none" className="wa-fill" style={{ '--d': '1.15s' }} />
+        {/* The storey the crane installs — seats in as the build scrubs
+            (opacity + translateY driven by --wa-build). */}
+        <g className="wa-storey">
+          <rect x="462" y="195" width="66" height="49" fill="var(--wa-yellow)" stroke="none" />
+        </g>
       </g>
 
       {/* Dimension line with oblique ticks, and the survey benchmark. */}
@@ -354,6 +451,24 @@ function HeroDrawing() {
         <path d="M536 300 L552 300 L544 288 Z" fill="var(--wa-red)" stroke="none" className="wa-fill" style={{ '--d': '1.25s' }} />
       </g>
     </svg>
+  );
+}
+
+/* ── The certification stamp ─────────────────────────────────────
+   Web's one red object (memo R1): a single "ISSUED FOR CONSTRUCTION"
+   rubber stamp on the closing sheet. Rendered twice — a ghost layer
+   offset behind the ink layer for baked (non-animated) misregistration.
+   The whole mark is decorative (aria-hidden); the heading carries the
+   meaning. It is the only stamp on the site that lands (thump handled
+   in CSS on reveal). */
+function StampBody() {
+  return (
+    <span className="wa-stamp-body">
+      <span className="wa-stamp-l1">Issued for</span>
+      <span className="wa-stamp-l2">Construction</span>
+      <span className="wa-stamp-rule" aria-hidden="true" />
+      <span className="wa-stamp-l3">C4 Studios · Perth WA</span>
+    </span>
   );
 }
 
@@ -393,6 +508,9 @@ function useForceLight() {
 export default function ServiceWeb() {
   useForceLight();
   const rootRef = useRef(null);
+  const heroFigRef = useRef(null);
+  // Fine-pointer only: the self-measuring dimension lines never arm on touch.
+  const canHoverRef = useRef(false);
   // 'once' = outright build price, 'monthly' = subscription alternative.
   const [billing, setBilling] = useState('once');
   const isMonthly = billing === 'monthly';
@@ -418,46 +536,34 @@ export default function ServiceWeb() {
     jsonLd: WEB_JSONLD,
   });
 
-  /* Fonts — Archivo variable (one profile, three extrusions), house
-     pattern: injected link with cleanup. */
-  useEffect(() => {
-    const els = [];
-    const pc1 = document.createElement('link');
-    pc1.rel = 'preconnect';
-    pc1.href = 'https://fonts.googleapis.com';
-    const pc2 = document.createElement('link');
-    pc2.rel = 'preconnect';
-    pc2.href = 'https://fonts.gstatic.com';
-    pc2.crossOrigin = 'anonymous';
-    const font = document.createElement('link');
-    font.rel = 'stylesheet';
-    font.href =
-      'https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&display=swap';
-    [pc1, pc2, font].forEach((el) => {
-      document.head.appendChild(el);
-      els.push(el);
-    });
-    return () => els.forEach((el) => el.remove());
-  }, []);
+  /* Fonts — Archivo variable is now self-hosted globally (src/styles/fonts.css,
+     loaded in main.jsx); no runtime Google Fonts request. */
 
   /* Arm entrance motion + scroll reveals. Never armed in static mode,
      so reduced-motion users and the prerenderer get the final state.
      Layout effect (the PrivateAI house pattern) arms before first
-     paint, so the finished page never flashes ahead of its entrance. */
+     paint, so the finished page never flashes ahead of its entrance.
+     Two reveal grammars share one observer: [data-reveal] fades/rises;
+     [data-wipe] (as-built plates only) prints in behind a pen head,
+     whose travel needs the plate's measured width as --wa-fig-w. */
   useLayoutEffect(() => {
     if (staticMode) return undefined;
     const root = rootRef.current;
     if (!root || typeof IntersectionObserver === 'undefined') return undefined;
 
     root.classList.add('wa-armed');
-    const targets = root.querySelectorAll('[data-reveal]');
+    const targets = root.querySelectorAll('[data-reveal], [data-wipe], [data-stamp]');
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('wa-in');
-            io.unobserve(entry.target);
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          if (el.hasAttribute('data-wipe')) {
+            const fig = el.querySelector('.wa-ab-fig');
+            if (fig) el.style.setProperty('--wa-fig-w', `${fig.clientWidth}px`);
           }
+          el.classList.add('wa-in');
+          io.unobserve(el);
         });
       },
       { threshold: 0.12, rootMargin: '0px 0px -5% 0px' },
@@ -469,6 +575,62 @@ export default function ServiceWeb() {
       root.classList.remove('wa-armed');
     };
   }, [staticMode]);
+
+  /* The hero draws itself, then the crane installs its load on scroll.
+     House scrub pattern (ServiceAI): ScrollTrigger maps ≤0.6 viewport of
+     travel to --wa-build (0→1) on the figure; SVG transforms consume it,
+     so the beam and storey move only while scrolling — no idle drift, no
+     pin, no reserved-space jump. In static mode the effect never runs and
+     CSS rests --wa-build at 1 (the finished frame). */
+  useEffect(() => {
+    if (staticMode) return undefined;
+    const fig = heroFigRef.current;
+    if (!fig) return undefined;
+    const hero = fig.closest('.wa-hero') || fig;
+
+    const apply = (p) => {
+      fig.style.setProperty('--wa-build', Math.min(1, Math.max(0, p)).toFixed(3));
+    };
+    const st = ScrollTrigger.create({
+      trigger: hero,
+      start: 'top top',
+      end: '+=60%',
+      onUpdate: (self) => apply(self.progress),
+      onRefresh: (self) => apply(self.progress),
+    });
+    const ro = new ResizeObserver(() => ScrollTrigger.refresh());
+    ro.observe(document.documentElement);
+    return () => {
+      st.kill();
+      ro.disconnect();
+    };
+  }, [staticMode]);
+
+  /* Fine-pointer capability, read once. */
+  useEffect(() => {
+    canHoverRef.current =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  }, []);
+
+  /* Self-measuring hover: a package row draws a dimension line annotated
+     with its own rendered width. Layout is read ONCE per mouseenter
+     (no mousemove listener), and the affordance never arms on touch. */
+  const showDim = (event) => {
+    if (!canHoverRef.current) return;
+    const row = event.currentTarget;
+    const dim = row.querySelector('.wa-dim');
+    if (!dim) return;
+    const width = Math.round(row.getBoundingClientRect().width);
+    const fig = dim.querySelector('.wa-dim-fig');
+    if (fig) fig.textContent = `${width} px`;
+    dim.classList.add('is-on');
+  };
+  const hideDim = (event) => {
+    const dim = event.currentTarget.querySelector('.wa-dim');
+    if (dim) dim.classList.remove('is-on');
+  };
 
   const monthlyNote = `${subscriptionInfo.howItWorks} ${subscriptionInfo.whatsIncluded} ${subscriptionInfo.ownership} ${subscriptionInfo.cancellation}`;
 
@@ -506,7 +668,7 @@ export default function ServiceWeb() {
                 </Link>
               </div>
             </div>
-            <div className="wa-hero-fig wa-h-item" style={{ '--d': '180ms' }}>
+            <div className="wa-hero-fig wa-h-item" style={{ '--d': '180ms' }} ref={heroFigRef}>
               <HeroDrawing />
             </div>
           </div>
@@ -532,6 +694,52 @@ export default function ServiceWeb() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      {/* ── The as-built record — real delivered sites ──────────── */}
+      <section className="wa-asbuilt">
+        <div className="wa-frame">
+          <div className="wa-asbuilt-head" data-reveal>
+            <div>
+              <h2 className="wa-h2">Issued, built, occupied.</h2>
+              <p className="wa-sub">
+                A short record of sites we drew and delivered — each plate opens the
+                full set.
+              </p>
+            </div>
+            <Link className="wa-link" to={PORTFOLIO}>
+              Full portfolio
+              <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
+            </Link>
+          </div>
+
+          <div className="wa-ab-grid">
+            {AS_BUILT.map((plate) => (
+              <Link className="wa-ab" key={plate.ref} to={PORTFOLIO} data-wipe>
+                <span className="wa-ab-fig">
+                  <span className="wa-ab-pen" aria-hidden="true" />
+                  <img
+                    src={plate.img}
+                    width={plate.w}
+                    height={plate.h}
+                    loading="lazy"
+                    decoding="async"
+                    alt={plate.alt}
+                  />
+                </span>
+                <span className="wa-ab-tb">
+                  <span className="wa-ab-ref">{plate.ref}</span>
+                  <span className="wa-ab-name">{plate.name}</span>
+                  <span className="wa-ab-scope">{plate.scope}</span>
+                  <span className="wa-ab-meta">
+                    {plate.place} · {plate.year}
+                    <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -593,7 +801,13 @@ export default function ServiceWeb() {
                     key={pkg.key}
                     data-reveal
                     style={{ '--rd': `${pi * 70}ms` }}
+                    onMouseEnter={showDim}
+                    onMouseLeave={hideDim}
                   >
+                    <span className="wa-dim" aria-hidden="true">
+                      <span className="wa-dim-line" />
+                      <span className="wa-dim-fig" />
+                    </span>
                     <div className="wa-row-fig" data-popular={pkg.popular ? 'true' : undefined}>
                       <Elevation kind={pkg.key} />
                       {pkg.popular && <span className="wa-tag">Most specified</span>}
@@ -704,17 +918,27 @@ export default function ServiceWeb() {
         </div>
       </section>
 
-      {/* ── Closing CTA — the yellow drench ─────────────────────── */}
-      <section className="wa-cta" data-reveal>
+      {/* ── Closing CTA — the yellow drench, stamped complete ───── */}
+      <section className="wa-cta">
         <div className="wa-frame wa-cta-in">
-          <h2 className="wa-cta-h">Ready to build something worth showing?</h2>
-          <p className="wa-cta-sub">
-            Send us a brief — we&rsquo;ll scope it, price it, and come back with a clear plan.
-          </p>
-          <Link className="wa-btn wa-btn--onyellow" to={`${START}?service=web_design`}>
-            Start a project
-            <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
-          </Link>
+          <div className="wa-cta-copy" data-reveal>
+            <h2 className="wa-cta-h">Ready to build something worth showing?</h2>
+            <p className="wa-cta-sub">
+              Send us a brief — we&rsquo;ll scope it, price it, and come back with a clear plan.
+            </p>
+            <Link className="wa-btn wa-btn--onyellow" to={`${START}?service=web_design`}>
+              Start a project
+              <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
+            </Link>
+          </div>
+          <span className="wa-stamp" aria-hidden="true" data-stamp>
+            <span className="wa-stamp-ghost">
+              <StampBody />
+            </span>
+            <span className="wa-stamp-ink">
+              <StampBody />
+            </span>
+          </span>
         </div>
         <div className="wa-hatch" aria-hidden="true" />
       </section>

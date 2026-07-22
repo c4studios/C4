@@ -1,6 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
@@ -9,25 +11,29 @@ import { automationPackages, GST_NOTE } from '@/data/pricing';
 import C4iWordmark from '@/components/c4/C4iWordmark';
 import '../components/ai-arm/ai-arm.css';
 
+gsap.registerPlugin(ScrollTrigger);
+
 /*
- * /ServiceAI — the C4i cloud arm. Identity: "solder-mask & silkscreen".
- * The page is a live circuit board — solder-mask blue, copper
- * traces, gold pads, white silkscreen. Business processes are nets
- * routed through one C4i core; packages are the BOM; the process is
- * the assembly line. Reference: blue FR-4 prototyping boards,
- * Arduino-lineage lab equipment. (Blue, not green, so the board and
- * C4Sight's chalkboard stay unmistakably different worlds.)
+ * /ServiceAI — the C4i cloud arm. Identity: "solder-mask & silkscreen",
+ * now under power. The page is a circuit board mid bring-up: rails
+ * energise, the ratsnest routes, channels read, the assembly line
+ * fills. Scroll is the clock — a gold pulse rides the copper bus down
+ * the whole board. Business processes are nets routed through one C4i
+ * core; packages are the BOM; the process is the assembly line.
+ * Reference: Ben Eater's breadboard bring-up × KiCad's routed nets.
+ * (Blue, not green, so the board and C4Sight's chalkboard stay
+ * unmistakably different worlds.)
  */
 
 const EASE = [0.22, 1, 0.36, 1];
 
 /* ── Hero trace map geometry (SVG user units) ── */
 const NETS = [
-  { label: 'ENQUIRIES', d: 'M210 176 H288 L368 96 H466', bends: [[288, 176], [368, 96]], padY: 96, pulse: { dur: '5.4s', begin: '0.9s' } },
-  { label: 'QUOTES', d: 'M210 200 H320 L360 160 H466', bends: [[320, 200], [360, 160]], padY: 160, pulse: null },
-  { label: 'INVOICING', d: 'M210 224 H466', bends: [], padY: 224, pulse: { dur: '4.6s', begin: '1.7s' } },
-  { label: 'REPORTING', d: 'M210 248 H320 L360 288 H466', bends: [[320, 248], [360, 288]], padY: 288, pulse: null },
-  { label: 'ONBOARDING', d: 'M210 272 H288 L368 352 H466', bends: [[288, 272], [368, 352]], padY: 352, pulse: { dur: '6.1s', begin: '2.5s' } },
+  { label: 'ENQUIRIES', d: 'M210 176 H288 L368 96 H466', bends: [[288, 176], [368, 96]], padY: 96 },
+  { label: 'QUOTES', d: 'M210 200 H320 L360 160 H466', bends: [[320, 200], [360, 160]], padY: 160 },
+  { label: 'INVOICING', d: 'M210 224 H466', bends: [], padY: 224 },
+  { label: 'REPORTING', d: 'M210 248 H320 L360 288 H466', bends: [[320, 248], [360, 288]], padY: 288 },
+  { label: 'ONBOARDING', d: 'M210 272 H288 L368 352 H466', bends: [[288, 272], [368, 352]], padY: 352 },
 ];
 
 const PIN_YS = [176, 200, 224, 248, 272];
@@ -49,6 +55,13 @@ const STEPS = [
 ];
 
 const TOOLS = ['Make', 'Zapier', 'n8n', 'Airtable', 'Notion', 'Slack', 'HubSpot', 'Stripe', 'OpenAI', 'Google Workspace'];
+
+const PROC_VIAS = [
+  { left: 0 },
+  { left: 'calc(33.333% - 5px)' },
+  { left: 'calc(66.666% - 5px)' },
+  { right: 0 },
+];
 
 // Stable module-level ref so the head hook doesn't re-run each render.
 const AI_JSONLD = [
@@ -99,7 +112,10 @@ function useForceDark() {
   }, []);
 }
 
-/* ── The hero trace map: one C4i core, five admin nets ── */
+/* ── The hero trace map: one C4i core, five admin nets, under bring-up.
+   Airwires flash as the ratsnest first, traces route in over them, the
+   core POSTs, then everything sits routed and steady. pathLength +
+   opacity only; staticMode renders the finished, routed board. ── */
 function TraceMap({ staticMode }) {
   const draw = (i) =>
     staticMode
@@ -108,14 +124,19 @@ function TraceMap({ staticMode }) {
           initial: { pathLength: 0, opacity: 0 },
           animate: { pathLength: 1, opacity: 1 },
           transition: {
-            pathLength: { duration: 0.9, delay: 0.55 + i * 0.12, ease: 'easeInOut' },
-            opacity: { duration: 0.2, delay: 0.55 + i * 0.12 },
+            pathLength: { duration: 0.9, delay: 0.7 + i * 0.12, ease: 'easeInOut' },
+            opacity: { duration: 0.2, delay: 0.7 + i * 0.12 },
           },
         };
   const fade = (d) =>
     staticMode
       ? {}
       : { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.5, delay: d, ease: EASE } };
+  const airwire = (i) => ({
+    initial: { opacity: 0 },
+    animate: { opacity: [0, 0.5, 0.5, 0] },
+    transition: { duration: 1.5, delay: 0.2 + i * 0.1, times: [0, 0.16, 0.4, 1], ease: 'linear' },
+  });
 
   return (
     <svg
@@ -134,6 +155,20 @@ function TraceMap({ staticMode }) {
         </g>
       </motion.g>
 
+      {/* Ratsnest — transient straight airwires before the router runs */}
+      {!staticMode && (
+        <g>
+          {NETS.map((net, i) => (
+            <motion.path
+              key={net.label}
+              className="cw-airwire"
+              d={`M210 ${PIN_YS[i]} L466 ${net.padY}`}
+              {...airwire(i)}
+            />
+          ))}
+        </g>
+      )}
+
       {/* The core */}
       <motion.g {...fade(0.4)}>
         <rect x="28" y="198" width="16" height="4" style={{ fill: 'var(--cw-copper)' }} />
@@ -142,36 +177,79 @@ function TraceMap({ staticMode }) {
           <rect key={y} x="194" y={y - 2} width="16" height="4" style={{ fill: 'var(--cw-copper)' }} />
         ))}
         <rect x="44" y="150" width="150" height="150" rx="8" className="cw-chip-body" />
-        <circle cx="64" cy="170" r="3.5" style={{ fill: 'var(--cw-mute)' }} />
+        <motion.circle
+          cx="64"
+          cy="170"
+          r="3.5"
+          className="cw-post"
+          {...(staticMode
+            ? {}
+            : {
+                initial: { opacity: 0.35 },
+                animate: { opacity: [0.35, 1, 0.3, 1, 0.4, 1] },
+                transition: { duration: 1.0, delay: 0.28, times: [0, 0.18, 0.36, 0.54, 0.72, 1] },
+              })}
+        />
         <text x="119" y="228" textAnchor="middle" className="cw-chip-name">C4i</text>
         <text x="119" y="256" textAnchor="middle" className="cw-chip-sub">CLOUD CORE</text>
       </motion.g>
 
-      {/* Nets */}
+      {/* Nets — routed traces, pads, solder glints, labels */}
       {NETS.map((net, i) => (
         <g key={net.label}>
           <motion.path d={net.d} className="cw-trace" {...draw(i)} />
-          <motion.g {...fade(0.8 + i * 0.12)}>
+          <motion.g {...fade(1.05 + i * 0.12)}>
             {net.bends.map(([bx, by]) => (
-              <circle key={`${bx}-${by}`} cx={bx} cy={by} r="3.5" className="cw-via" />
+              <g key={`${bx}-${by}`}>
+                <circle cx={bx} cy={by} r="3.5" className="cw-via" />
+                <circle cx={bx - 1.1} cy={by - 1.1} r="1" className="cw-glint" />
+              </g>
             ))}
             <rect x="466" y={net.padY - 8} width="16" height="16" rx="3" className="cw-pad" />
+            <circle cx="470.5" cy={net.padY - 3.5} r="1.4" className="cw-glint" />
             <text x="458" y={net.padY - 12} textAnchor="end" className="cw-netlabel">{net.label}</text>
           </motion.g>
-          {!staticMode && net.pulse && (
-            <circle r="3.2" className="cw-pulse">
-              <animateMotion dur={net.pulse.dur} begin={net.pulse.begin} repeatCount="indefinite" path={net.d} />
-            </circle>
-          )}
         </g>
       ))}
     </svg>
   );
 }
 
+/* ── Logic-analyzer channel: one square wave per netlist row. Draws on
+   entry; a grease-bright cursor sweeps it only while the row is hovered
+   or focused, then stops. Decorative — the copy carries the meaning. ── */
+function NetChannel({ i, staticMode }) {
+  const wave = 'M0 16 H11 V5 H25 V16 H39 V5 H53 V16 H67 V5 H81 V16 H94';
+  return (
+    <span className="cw-chan" aria-hidden="true">
+      <svg className="cw-wave" viewBox="0 0 94 21" preserveAspectRatio="none" focusable="false">
+        <motion.path
+          className="cw-wave-path"
+          d={wave}
+          {...(staticMode
+            ? {}
+            : {
+                initial: { pathLength: 0 },
+                whileInView: { pathLength: 1 },
+                viewport: { once: true, margin: '-40px 0px' },
+                transition: { duration: 0.7, delay: 0.05 + i * 0.05, ease: 'easeInOut' },
+              })}
+        />
+      </svg>
+      <span className="cw-wave-scan" />
+    </span>
+  );
+}
+
 export default function ServiceAI() {
   useForceDark();
   const [beltPaused, setBeltPaused] = useState(false);
+  const [beltOffscreen, setBeltOffscreen] = useState(false);
+
+  const rootRef = useRef(null);
+  const busRef = useRef(null);
+  const pulseRef = useRef(null);
+  const beltRef = useRef(null);
 
   useDocumentHead({
     title: 'AI & Software — C4 Studios Perth',
@@ -194,26 +272,63 @@ export default function ServiceAI() {
   );
   const staticMode = reduced || prerender;
 
-  /* Fonts: Archivo (variable width) + B612 Mono, house link-injection pattern. */
+  /* Fonts (Archivo variable + B612 Mono) are self-hosted globally
+     (src/styles/fonts.css, loaded in main.jsx); no runtime Google Fonts. */
+
+  /* The bus — a gold pulse rides the copper spine down the whole board,
+     its position scrubbed by scroll (transform-only, so it moves only
+     while you scroll — no idle drift). In staticMode the effect never
+     runs and CSS parks the pulse at a via. */
   useEffect(() => {
-    const els = [];
-    const pc1 = document.createElement('link');
-    pc1.rel = 'preconnect';
-    pc1.href = 'https://fonts.googleapis.com';
-    const pc2 = document.createElement('link');
-    pc2.rel = 'preconnect';
-    pc2.href = 'https://fonts.gstatic.com';
-    pc2.crossOrigin = 'anonymous';
-    const font = document.createElement('link');
-    font.rel = 'stylesheet';
-    font.href =
-      'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62.5..125,400..900&family=B612+Mono:ital,wght@0,400;0,700;1,700&display=swap';
-    [pc1, pc2, font].forEach((el) => {
-      document.head.appendChild(el);
-      els.push(el);
+    if (staticMode) return undefined;
+    const root = rootRef.current;
+    const bus = busRef.current;
+    const pulse = pulseRef.current;
+    if (!root || !bus || !pulse) return undefined;
+
+    const PULSE = 14;
+    let range = Math.max(0, bus.clientHeight - PULSE);
+    const measure = () => {
+      range = Math.max(0, bus.clientHeight - PULSE);
+    };
+    const apply = (p) => {
+      const y = Math.min(1, Math.max(0, p)) * range;
+      pulse.style.transform = `translate3d(0, ${y}px, 0)`;
+    };
+
+    const st = ScrollTrigger.create({
+      trigger: root,
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: (self) => apply(self.progress),
+      onRefresh: (self) => {
+        measure();
+        apply(self.progress);
+      },
     });
-    return () => els.forEach((el) => el.remove());
-  }, []);
+
+    const ro = new ResizeObserver(() => ScrollTrigger.refresh());
+    ro.observe(root);
+
+    return () => {
+      st.kill();
+      ro.disconnect();
+    };
+  }, [staticMode]);
+
+  /* Perf whitelist (memo §5): the tools belt is the site's one marquee —
+     it must stop when it scrolls out of view, not just on hover. */
+  useEffect(() => {
+    if (staticMode) return undefined;
+    const el = beltRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => setBeltOffscreen(!entry.isIntersecting),
+      { rootMargin: '120px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [staticMode]);
 
   /* Entrance helpers — no-ops in static mode so the final state renders
      immediately for the prerenderer and reduced-motion visitors. */
@@ -238,12 +353,18 @@ export default function ServiceAI() {
   const startUrl = createPageUrl('StartProject') + '?service=automation';
 
   return (
-    <div className={`cw-root${staticMode ? ' cw-static' : ''}`}>
+    <div className={`cw-root${staticMode ? ' cw-static' : ''}`} ref={rootRef}>
+      {/* The copper bus — full-board spine with a scroll-scrubbed pulse */}
+      <div className="cw-bus" aria-hidden="true" ref={busRef}>
+        <span className="cw-bus-line" />
+        <span className="cw-bus-node" style={{ top: '19%' }} />
+        <span className="cw-bus-node" style={{ top: '47%' }} />
+        <span className="cw-bus-node" style={{ top: '78%' }} />
+        <span className="cw-bus-pulse" ref={pulseRef} />
+      </div>
+
       {/* ═══ Hero — the board corner ═══ */}
       <header className="cw-hero">
-        <span className="cw-hole cw-hole--l" aria-hidden="true" />
-        <span className="cw-hole cw-hole--r" aria-hidden="true" />
-
         <div className="cw-container">
           <motion.div className="cw-hero-legend" {...heroIn(0.05)}>
             <span className="cw-legend cw-arm">
@@ -307,7 +428,10 @@ export default function ServiceAI() {
           <div>
             {NET_ROWS.map((row, i) => (
               <motion.div className="cw-net-row" key={row.net} {...inView(i)}>
-                <span className="cw-net-name">{row.net}</span>
+                <div className="cw-net-head">
+                  <span className="cw-net-name">{row.net}</span>
+                  <NetChannel i={i} staticMode={staticMode} />
+                </div>
                 <p>{row.copy}</p>
               </motion.div>
             ))}
@@ -391,7 +515,12 @@ export default function ServiceAI() {
             </ul>
           ) : (
             <>
-              <motion.div className="cw-belt" data-paused={beltPaused || undefined} {...inView(1)}>
+              <motion.div
+                className="cw-belt"
+                data-paused={beltPaused || beltOffscreen || undefined}
+                ref={beltRef}
+                {...inView(1)}
+              >
                 <div className="cw-belt-track">
                   <ul>
                     {TOOLS.map((tool) => (
@@ -441,10 +570,21 @@ export default function ServiceAI() {
                     transition: { duration: 1.1, ease: EASE },
                   })}
             />
-            <span className="cw-proc-via" style={{ left: 0 }} />
-            <span className="cw-proc-via" style={{ left: 'calc(33.333% - 5px)' }} />
-            <span className="cw-proc-via" style={{ left: 'calc(66.666% - 5px)' }} />
-            <span className="cw-proc-via" style={{ right: 0 }} />
+            {PROC_VIAS.map((pos, n) => (
+              <motion.span
+                key={n}
+                className="cw-proc-via"
+                style={pos}
+                {...(staticMode
+                  ? {}
+                  : {
+                      initial: { opacity: 0.32 },
+                      whileInView: { opacity: 1 },
+                      viewport: { once: true, margin: '-70px 0px' },
+                      transition: { duration: 0.3, delay: 0.12 + n * 0.28, ease: EASE },
+                    })}
+              />
+            ))}
           </div>
 
           <ol className="cw-proc-steps" style={{ listStyle: 'none', margin: 0, padding: 0 }}>

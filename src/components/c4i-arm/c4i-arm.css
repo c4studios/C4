@@ -7,12 +7,14 @@
      collateral. Paper ground, ink top bar, hairline rules, Geist Mono
      console details, red registration mark.
    · Cloud → /ServiceAI : an off-cut of the FR-4 board. Solder-mask
-     green, copper traces, B612 Mono silkscreen, red power LED.
+     blue, copper traces, B612 Mono silkscreen, red power LED.
    The red mark is the one C4 constant repeated on hero + both doors.
    Scoped under .fk-*.
    Contrast (computed, door grounds are fixed so both themes pass):
    paper: ink 17.98, body 13.30, meta 6.08 — all vs #ffffff.
-   board: silk 10.94, body 7.90, meta 6.04, copper 5.29 — vs #0f3d2e.
+   board: silk 12.31, body 8.89, meta 6.80, copper 5.95 — vs #0e2f4e
+     (the retuned solder-mask blue; a hair lower over the copper dot,
+     copper still ≈5.7, so all four clear 4.5:1).
    shell: text 15.99/15.34, muted 4.99/8.21 (light/dark tokens).
    ═══════════════════════════════════════════════════════════════════ */
 
@@ -27,9 +29,12 @@
   --fk-paper-hair: #dadde1;
   --fk-paper-edge: #d4d7db;
 
-  /* Board sample (quotes /ServiceAI) */
-  --fk-board: #0f3d2e;
-  --fk-board-deep: #0b2f23;
+  /* Board sample (quotes /ServiceAI) — solder-mask BLUE, matched to the
+     retuned /ServiceAI board (--cw-board / --cw-deep) so the swatch and
+     its destination are literally the same material. Memo §6: this
+     releases chalk-green to C4Sight as its exclusive world. */
+  --fk-board: #0e2f4e;
+  --fk-board-deep: #0a2440;
   --fk-silk: #edf5ee;
   --fk-board-body: #bfd6c6;
   --fk-board-meta: #9fbeac;
@@ -255,13 +260,13 @@
   border-radius: 10px;
   color: var(--fk-board-body);
   padding: clamp(26px, 3.2vw, 36px);
-  box-shadow: 0 12px 32px -26px rgba(4, 22, 15, 0.6);
+  box-shadow: 0 12px 32px -26px rgba(4, 15, 26, 0.6);
 }
 
 .fk-board-door:hover,
 .fk-board-door:focus-visible {
   border-color: rgba(237, 245, 238, 0.32);
-  box-shadow: 0 30px 64px -30px rgba(4, 22, 15, 0.75);
+  box-shadow: 0 30px 64px -30px rgba(4, 15, 26, 0.75);
 }
 
 /* The focus outline draws over the SHELL (outside the door), so it
@@ -354,6 +359,14 @@
 
 .fk-fallback-link:hover {
   color: var(--c4-text-muted);
+}
+
+/* Explicit focus ring — the shell is theme-following, so pin to the ink
+   token which clears 4.5:1 on --c4-bg in both light and dark. */
+.fk-fallback-link:focus-visible {
+  outline: 2px solid var(--c4-text);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 /* ── Reduced motion: end states, no movement ───────────────────── */

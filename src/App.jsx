@@ -67,22 +67,28 @@ function App() {
               </Suspense>
             }
           />
-          <Route
-            path="/hero-lab"
-            element={
-              <Suspense fallback={null}>
-                <HeroLab />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/helix-lab"
-            element={
-              <Suspense fallback={null}>
-                <HelixLab />
-              </Suspense>
-            }
-          />
+          {/* Internal design-lab experiments — dev-only, never shipped to
+              production (unlinked, absent from the sitemap; no back chrome). */}
+          {import.meta.env.DEV && (
+            <>
+              <Route
+                path="/hero-lab"
+                element={
+                  <Suspense fallback={null}>
+                    <HeroLab />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/helix-lab"
+                element={
+                  <Suspense fallback={null}>
+                    <HelixLab />
+                  </Suspense>
+                }
+              />
+            </>
+          )}
           <Route path="/" element={
             <LayoutWrapper currentPageName={mainPageKey}>
               <MainPage />

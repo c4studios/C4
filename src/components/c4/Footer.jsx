@@ -23,6 +23,8 @@ const groups = [
       { key: 'C4i', label: <C4iWordmark />, page: 'C4i' },
       { label: 'C4 Lens', page: 'Lens' },
       { label: 'C4Sight', page: 'Foresight' },
+      // The orphaned Private AI offering now has a crawlable home here.
+      { label: 'Private AI', to: '/private-ai' },
       { label: 'Lead Engine', to: '/lead-engine' },
     ]
   },
@@ -35,6 +37,9 @@ const groups = [
     ]
   }
 ];
+
+const HAIRLINE = 'rgba(255, 255, 255, 0.08)';
+const HAIRLINE_FAINT = 'rgba(255, 255, 255, 0.06)';
 
 export default function Footer() {
   // "Perth & WA" group: live SEO pillars + the cost guide. Suburb pages
@@ -53,55 +58,101 @@ export default function Footer() {
     ? [...withProducts, { title: 'Perth & WA', links: seoLinks }]
     : withProducts;
 
-  // Columns = logo + each group. Literal classes so Tailwind JIT picks them up.
-  const colCount = 1 + footerGroups.length;
-  const gridCols = colCount >= 7 ? 'md:grid-cols-7' : colCount === 6 ? 'md:grid-cols-6' : 'md:grid-cols-5';
+  // Index columns adapt to the live group count. Literal classes so the
+  // Tailwind JIT keeps them.
+  const n = footerGroups.length;
+  const lgCols = n >= 5 ? 'lg:grid-cols-5' : n === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
+
+  const renderLink = (l) => {
+    if (l.to) {
+      return (
+        <Link to={l.to} className="c4-foot-link" style={{ color: 'var(--c4-footer-text)' }}>
+          {l.label}
+        </Link>
+      );
+    }
+    if (l.href) {
+      return (
+        <a
+          href={l.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="c4-foot-link inline-flex items-center gap-1.5"
+          style={{ color: 'var(--c4-footer-text)' }}
+        >
+          {l.label}
+          <ArrowUpRight size={11} strokeWidth={1.8} />
+        </a>
+      );
+    }
+    return (
+      <Link to={createPageUrl(l.page)} className="c4-foot-link" style={{ color: 'var(--c4-footer-text)' }}>
+        {l.label}
+      </Link>
+    );
+  };
 
   return (
     <footer className="transition-colors duration-200" style={{ backgroundColor: 'var(--c4-footer-bg)' }}>
+      <style>{`
+        .c4-foot-link {
+          font-size: 12.5px;
+          line-height: 1.5;
+          transition: color 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .c4-foot-link:hover { color: var(--c4-footer-text-hover, #ECE7DE) !important; }
+        @media (hover: hover) {
+          .c4-foot-link:hover { transform: translateX(2px); }
+        }
+        .c4-foot-link:focus-visible {
+          outline: 2px solid var(--c4-ring);
+          outline-offset: 2px;
+          border-radius: 2px;
+        }
+      `}</style>
+
       <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-        <div className={`py-14 md:py-18 grid grid-cols-2 gap-10 md:gap-6 ${gridCols}`}>
-          <div className="col-span-2 md:col-span-1 flex flex-col items-start">
+        {/* Masthead — the studio imprint */}
+        <div
+          className="pt-14 md:pt-20 pb-9 md:pb-11 flex flex-col md:flex-row md:items-end md:justify-between gap-8"
+          style={{ borderBottom: `1px solid ${HAIRLINE}` }}
+        >
+          <div className="max-w-[300px]">
             <C4Logo size={56} variant="full" context="footer" />
-            <p className="mt-4 text-[12.5px] leading-[1.6] max-w-[220px]" style={{ color: 'var(--c4-footer-text-dim)' }}>
+            <p className="mt-5 text-[12.5px] leading-[1.65]" style={{ color: 'var(--c4-footer-text-dim)' }}>
               Design and development studio building premium digital products.
             </p>
           </div>
+          <div className="flex flex-col items-start md:items-end gap-1.5">
+            <span
+              className="text-[10.5px] uppercase tracking-[0.24em] tabular-nums"
+              style={{ color: 'var(--c4-footer-text)' }}
+            >
+              Perth · Western Australia
+            </span>
+            <span
+              className="text-[10.5px] uppercase tracking-[0.24em]"
+              style={{ color: 'var(--c4-footer-text-dim)' }}
+            >
+              Studio &amp; Software
+            </span>
+          </div>
+        </div>
 
+        {/* Index — the back matter, ruled like a colophon */}
+        <div className={`py-12 md:py-14 grid grid-cols-2 sm:grid-cols-3 ${lgCols} gap-x-6 gap-y-11`}>
           {footerGroups.map(g => (
-            <div key={g.title}>
-              <h4 className="text-[10.5px] uppercase tracking-[0.2em] font-medium mb-4" style={{ color: 'var(--c4-footer-text-muted)' }}>{g.title}</h4>
-              <ul className="space-y-2">
+            <div key={g.title} className="pt-4" style={{ borderTop: `1px solid ${HAIRLINE}` }}>
+              <h4
+                className="text-[10.5px] uppercase tracking-[0.22em] font-medium mb-4"
+                style={{ color: 'var(--c4-footer-text-muted)' }}
+              >
+                {g.title}
+              </h4>
+              <ul className="space-y-2.5">
                 {g.links.map(l => (
                   <li key={l.key || l.page || l.to || l.href || l.label}>
-                    {l.to ? (
-                      <Link
-                        to={l.to}
-                        className="text-[12.5px] transition-colors duration-300 hover:brightness-150"
-                        style={{ color: 'var(--c4-footer-text)' }}
-                      >
-                        {l.label}
-                      </Link>
-                    ) : l.href ? (
-                      <a
-                        href={l.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-[12.5px] transition-colors duration-300 hover:brightness-150"
-                        style={{ color: 'var(--c4-footer-text)' }}
-                      >
-                        {l.label}
-                        <ArrowUpRight size={11} strokeWidth={1.8} />
-                      </a>
-                    ) : (
-                      <Link
-                        to={createPageUrl(l.page)}
-                        className="text-[12.5px] transition-colors duration-300 hover:brightness-150"
-                        style={{ color: 'var(--c4-footer-text)' }}
-                      >
-                        {l.label}
-                      </Link>
-                    )}
+                    {renderLink(l)}
                   </li>
                 ))}
               </ul>
@@ -109,13 +160,19 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="border-t py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-          <span className="text-[10.5px]" style={{ color: 'var(--c4-footer-text-muted)' }}>© {new Date().getFullYear()} C4 Studios</span>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <Link to={createPageUrl('PrivacyPolicy')} className="text-[10.5px] transition-colors duration-300 hover:brightness-150" style={{ color: 'var(--c4-footer-text-muted)' }}>
+        {/* Bottom bar */}
+        <div
+          className="py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+          style={{ borderTop: `1px solid ${HAIRLINE_FAINT}` }}
+        >
+          <span className="text-[10.5px] tabular-nums" style={{ color: 'var(--c4-footer-text-muted)' }}>
+            © {new Date().getFullYear()} C4 Studios
+          </span>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <Link to={createPageUrl('PrivacyPolicy')} className="text-[10.5px] transition-colors duration-300 hover:brightness-150" style={{ color: 'var(--c4-footer-text)' }}>
               Privacy Policy
             </Link>
-            <Link to={createPageUrl('TermsOfService')} className="text-[10.5px] transition-colors duration-300 hover:brightness-150" style={{ color: 'var(--c4-footer-text-muted)' }}>
+            <Link to={createPageUrl('TermsOfService')} className="text-[10.5px] transition-colors duration-300 hover:brightness-150" style={{ color: 'var(--c4-footer-text)' }}>
               Terms of Service
             </Link>
             <span className="text-[10.5px]" style={{ color: 'var(--c4-footer-text-muted)' }}>Available worldwide</span>

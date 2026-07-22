@@ -1,0 +1,1435 @@
+/* ═══════════════════════════════════════════════════════════════════
+   C4 WORKS REGISTER — software surface identity
+   -------------------------------------------------------------------
+   The C4 software catalogue as a manufacturer's line sheet: a ruled
+   register printed on the parent-brand warm paper, ink, and C4 red.
+   Every product is a manufactured unit — model designation (C4-QTR-01),
+   a decorative barcode, and a red rubber-stamped status. Reference:
+   Teenage Engineering's product index crossed with a works register /
+   printer's line sheet (crop marks, registration targets, tabular
+   columns). Parent-brand world — theme-adaptive (light + dark) via the
+   shared --c4-* tokens; nothing forces chrome, nothing leaks out of
+   .sw-root.
+
+   Red is an object with one job here: the status STAMP and the barcode
+   SCANLINE. No red gradients, no red section tints, no second ambient red.
+
+   Motion grammar (house pattern): content ships in its finished state.
+   JS adds `.sw-armed` (never under prefers-reduced-motion or the
+   Prerender UA), which arms one-shot reveals, the ink-bleed stamp pass,
+   the single barcode scanline, and the register drawers. Reduced-motion
+   / prerender therefore render everything visible and every drawer OPEN.
+
+   Contrast (computed, WCAG, light paper #F7F5F2):
+     ink   #1A1A1A → 13.9:1     mute #6B6A64 → 5.0:1
+     red   #C23030 → 5.1:1      subtle #908E88 → 3.0:1 (decorative marks only)
+   Dark (#0F1115): ink #ECE7DE → ~15:1, mute #A7ABB4 → ~8:1.
+   Meaningful small text uses ink or mute; subtle stays for non-text marks
+   (registration crosshair, hairlines). Red text is small, so on dark paper
+   the stamp switches to --sw-stamp-ink #DE6157 (→ ~5.2:1 on #161A21); the
+   scanline is decorative and exempt. Row/step numbers are mute, never red —
+   red is reserved for the STAMP and the barcode SCANLINE only.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.sw-root {
+  /* Map the register's material onto the shared parent-brand tokens so
+     the whole surface follows the site theme toggle automatically. */
+  --sw-paper: var(--c4-bg);
+  --sw-sheet: var(--c4-card-bg);
+  --sw-fig: var(--c4-bg-alt);
+  --sw-ink: var(--c4-text);
+  /* The site's muted token (#76756F light) computes to ~4.25:1 on the paper —
+     under the 4.5 body floor. Darken it a touch toward ink for reading prose
+     (→ ~5.7:1 light). color-mix stays theme-correct: in dark mode it mixes
+     toward the light ink, lifting contrast on the dark paper too. */
+  --sw-body: color-mix(in srgb, var(--c4-text-muted) 76%, var(--c4-text) 24%);
+  --sw-subtle: var(--c4-text-subtle);
+  --sw-faint: var(--c4-text-faint);
+  --sw-line: var(--c4-border);
+  --sw-line-soft: var(--c4-border-light);
+  --sw-red: var(--c4-accent);
+  /* Stamp ink = the brand red on light paper. On dark paper a pure brand red
+     is only ~3.2:1 at label size, so the dark override lifts it (see below). */
+  --sw-stamp-ink: var(--c4-accent);
+
+  /* Zero-network catalogue voice: a system monospace stack (tabular by
+     nature). No runtime Google Fonts anywhere on this surface. Documented
+     fallback ends in `monospace`. */
+  --sw-mono: ui-monospace, 'SF Mono', SFMono-Regular, 'Cascadia Mono', Menlo,
+    Consolas, 'Segoe UI Mono', 'Liberation Mono', 'DejaVu Sans Mono', monospace;
+  --sw-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Ribbon keep-out: the nav back-ribbon owns the top-left corner
+     (220×160 desktop / 140×120 mobile). Hero content clears it via top
+     padding. This base value is the MOBILE floor (clears the 120px zone);
+     ≥640px viewports get a taller floor below — see the media query, because
+     15vw only reaches 160px at ~1067px, leaving common laptop widths short. */
+  --sw-top: clamp(140px, 15vw, 180px);
+
+  color: var(--sw-body);
+  background: var(--sw-paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.sw-root *,
+.sw-root *::before,
+.sw-root *::after {
+  box-sizing: border-box;
+}
+
+/* Desktop keep-out is the full 220×160 corner. Raise the hero clearance
+   floor on ≥640px so the masthead bar / datasheet label block never sits
+   under the fixed back-ribbon on mid-width laptops (e.g. 1024px, where the
+   base 15vw resolves to ~154px < 160px). Matches the sibling arms' floors. */
+@media (min-width: 640px) {
+  .sw-root {
+    --sw-top: clamp(172px, 15vw, 188px);
+  }
+}
+
+.sw-root ::selection {
+  background: color-mix(in srgb, var(--sw-red) 22%, transparent);
+  color: var(--sw-ink);
+}
+
+.sw-root a:focus-visible,
+.sw-root button:focus-visible,
+.sw-root summary:focus-visible {
+  outline: 2px solid var(--sw-red);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* ── Frame ─────────────────────────────────────────────────────────── */
+
+.sw-wrap {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 56px);
+}
+
+/* Hairline ledger rule with survey ticks hanging below it. */
+.sw-rule {
+  height: 0;
+  border-top: 1px solid var(--sw-line);
+}
+
+.sw-rule--ticks {
+  height: 9px;
+  border-top: 1px solid var(--sw-line);
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--sw-line) 0 1px,
+    transparent 1px 40px
+  );
+  -webkit-mask-image: linear-gradient(180deg, #000 0, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0, transparent 100%);
+}
+
+/* Printer's registration target — a recurring line-sheet motif. */
+.sw-reg {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  /* Printer's registration target — a neutral line-sheet mark, not red.
+     Red on this surface is reserved for the stamp + scanline only. */
+  color: var(--sw-subtle);
+}
+.sw-reg::before,
+.sw-reg::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+}
+.sw-reg::before {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-0.5px);
+}
+.sw-reg::after {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform: translateY(-0.5px);
+}
+.sw-reg > i {
+  position: absolute;
+  inset: 3px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+/* ── Catalogue voice: mono code strings ────────────────────────────── */
+
+.sw-code {
+  font-family: var(--sw-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sw-model {
+  font-family: var(--sw-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--sw-body);
+  white-space: nowrap;
+}
+
+.sw-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Type ──────────────────────────────────────────────────────────── */
+
+.sw-h1 {
+  margin: 0;
+  color: var(--sw-ink);
+  font-size: clamp(2.1rem, 1.2rem + 4vw, 3.6rem);
+  font-weight: 680;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.sw-h2 {
+  margin: 0;
+  color: var(--sw-ink);
+  font-size: clamp(1.35rem, 1.05rem + 1.4vw, 1.95rem);
+  font-weight: 660;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.sw-h3 {
+  margin: 0;
+  color: var(--sw-ink);
+  font-size: 1.05rem;
+  font-weight: 640;
+  letter-spacing: -0.015em;
+}
+
+.sw-lede {
+  color: var(--sw-body);
+  font-size: clamp(0.95rem, 0.9rem + 0.3vw, 1.06rem);
+  line-height: 1.7;
+  max-width: 60ch;
+  text-wrap: pretty;
+}
+
+.sw-prose {
+  color: var(--sw-body);
+  line-height: 1.75;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+.sw-label {
+  font-family: var(--sw-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sw-body);
+}
+
+/* ── Masthead ──────────────────────────────────────────────────────── */
+
+.sw-masthead {
+  padding-top: var(--sw-top);
+  padding-bottom: clamp(28px, 4vw, 44px);
+}
+
+.sw-mast-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-bottom: 12px;
+}
+.sw-mast-bar .sw-mast-title {
+  font-family: var(--sw-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sw-ink);
+}
+.sw-mast-bar .sw-mast-meta {
+  margin-left: auto;
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-family: var(--sw-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sw-body);
+}
+.sw-mast-meta b {
+  color: var(--sw-body);
+  font-weight: 600;
+}
+
+.sw-mast-head {
+  margin-top: clamp(22px, 3vw, 34px);
+  max-width: 30ch;
+}
+.sw-mast-lede {
+  margin-top: 18px;
+}
+
+/* ── Suite order-line band ─────────────────────────────────────────── */
+
+.sw-suite {
+  position: relative;
+  border: 1px solid var(--sw-line);
+  /* Heavier ink top-rule = the register's "order line" masthead (never a
+     coloured side-stripe — that's a banned accent border). */
+  border-top: 2px solid var(--sw-ink);
+  background: var(--sw-sheet);
+  padding: clamp(20px, 3vw, 30px);
+  display: grid;
+  gap: 20px;
+}
+@media (min-width: 800px) {
+  .sw-suite {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 40px;
+  }
+}
+.sw-suite-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.sw-suite-price {
+  font-variant-numeric: tabular-nums;
+  color: var(--sw-ink);
+  font-size: clamp(1.9rem, 1.4rem + 1.8vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.sw-suite-price small {
+  font-size: 0.5em;
+  font-weight: 500;
+  color: var(--sw-body);
+  letter-spacing: 0;
+}
+.sw-suite-buy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+@media (min-width: 800px) {
+  .sw-suite-buy {
+    align-items: flex-end;
+  }
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────── */
+
+.sw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 11px 22px;
+  font-family: var(--sw-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  border: 1px solid var(--sw-ink);
+  background: var(--sw-ink);
+  color: var(--sw-paper);
+  cursor: pointer;
+  transition: background-color 220ms var(--sw-ease), color 220ms var(--sw-ease),
+    transform 220ms var(--sw-ease);
+}
+.sw-btn:hover {
+  background: var(--sw-red);
+  border-color: var(--sw-red);
+  color: #fff;
+}
+.sw-btn--red {
+  background: var(--sw-red);
+  border-color: var(--sw-red);
+  color: #fff;
+}
+.sw-btn--red:hover {
+  background: var(--sw-ink);
+  border-color: var(--sw-ink);
+  color: var(--sw-paper);
+}
+.sw-btn--ghost {
+  background: transparent;
+  color: var(--sw-ink);
+  border-color: var(--sw-line);
+}
+.sw-btn--ghost:hover {
+  background: var(--sw-ink);
+  border-color: var(--sw-ink);
+  color: var(--sw-paper);
+}
+.sw-btn:active {
+  transform: translateY(1px);
+}
+
+.sw-textlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  font-family: var(--sw-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--sw-body);
+  transition: color 200ms var(--sw-ease);
+}
+.sw-textlink:hover {
+  color: var(--sw-ink);
+}
+.sw-textlink svg {
+  transition: transform 260ms var(--sw-ease);
+}
+.sw-textlink:hover svg {
+  transform: translateX(3px);
+}
+
+/* ── Logo chip ─────────────────────────────────────────────────────── */
+
+.sw-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--sw-line);
+  flex: 0 0 auto;
+}
+.sw-chip img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ── Barcode ───────────────────────────────────────────────────────── */
+
+.sw-barcode {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+.sw-barcode svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.sw-barcode rect {
+  fill: var(--sw-ink);
+}
+/* The single red scanline — one traverse on entry, transform only,
+   confined to the barcode box. Invisible at rest (decorative). */
+.sw-scan {
+  position: absolute;
+  top: -6%;
+  left: 0;
+  width: 2px;
+  height: 112%;
+  background: var(--sw-red);
+  box-shadow: 0 0 7px 1px color-mix(in srgb, var(--sw-red) 60%, transparent);
+  opacity: 0;
+  transform: translateX(-4px);
+  pointer-events: none;
+}
+
+/* ── Status stamp (the red object) ─────────────────────────────────── */
+
+.sw-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px 5px;
+  font-family: var(--sw-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sw-stamp-ink);
+  border: 1.5px solid var(--sw-stamp-ink);
+  border-radius: 2px;
+  /* Baked, static rubber-stamp mottle: uneven ink coverage via layered
+     radial gradients (no animated filters — house law). */
+  background-image:
+    radial-gradient(circle at 18% 30%, transparent 0 38%, color-mix(in srgb, var(--sw-paper) 62%, transparent) 39% 41%, transparent 42%),
+    radial-gradient(circle at 72% 68%, transparent 0 30%, color-mix(in srgb, var(--sw-paper) 55%, transparent) 31% 33%, transparent 34%),
+    radial-gradient(circle at 44% 84%, transparent 0 44%, color-mix(in srgb, var(--sw-paper) 60%, transparent) 45% 47%, transparent 48%);
+  transform: rotate(-1.4deg);
+  transform-origin: center;
+  mix-blend-mode: multiply;
+  white-space: nowrap;
+}
+/* Rendered-dark = explicit .dark-mode class, or no class under an OS dark
+   preference. Both branches lift the stamp red and drop the multiply blend
+   (multiply eats the mark on dark paper). Light-default users keep the brand
+   red + multiply for the ink-into-paper look. */
+:root.dark-mode .sw-root {
+  --sw-stamp-ink: #DE6157;
+}
+:root.dark-mode .sw-stamp {
+  mix-blend-mode: normal;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not(.light-mode):not(.dark-mode) .sw-root {
+    --sw-stamp-ink: #DE6157;
+  }
+  :root:not(.light-mode):not(.dark-mode) .sw-stamp {
+    mix-blend-mode: normal;
+  }
+}
+.sw-stamp::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--sw-stamp-ink);
+  flex: 0 0 auto;
+}
+
+/* ── Register ──────────────────────────────────────────────────────── */
+
+.sw-register {
+  border-top: 1px solid var(--sw-line);
+}
+
+.sw-grouphead {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 22px 0 14px;
+  flex-wrap: wrap;
+}
+.sw-grouphead .sw-gh-title {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.sw-grouphead .sw-gh-no {
+  font-family: var(--sw-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--sw-body);
+}
+.sw-grouphead .sw-gh-blurb {
+  margin-left: auto;
+  max-width: 46ch;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--sw-body);
+}
+
+/* One register row = one manufactured unit. `contain: layout` bounds the
+   drawer's grid-rows animation so it never reflows the page. */
+.sw-row {
+  position: relative;
+  border-top: 1px solid var(--sw-line);
+  contain: layout;
+}
+.sw-row:last-child {
+  border-bottom: 1px solid var(--sw-line);
+}
+
+.sw-row-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px 16px;
+  padding: 16px 4px;
+}
+@media (min-width: 720px) {
+  .sw-row-head {
+    grid-template-columns: 40px minmax(0, 1fr) auto auto;
+    gap: 24px;
+    padding: 18px 6px;
+  }
+}
+
+.sw-row-chip {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+}
+
+.sw-row-ident {
+  min-width: 0;
+}
+.sw-row-model {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 4px;
+}
+.sw-row-barcode {
+  width: 46px;
+  height: 13px;
+  opacity: 0.7;
+}
+.sw-row-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--sw-ink);
+  font-size: 1.06rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+.sw-row-name svg {
+  opacity: 0;
+  transform: translateX(-3px);
+  transition: opacity 240ms var(--sw-ease), transform 240ms var(--sw-ease);
+  color: var(--sw-ink);
+}
+.sw-row:hover .sw-row-name svg,
+.sw-row-name:focus-visible svg {
+  opacity: 1;
+  transform: translateX(0);
+}
+.sw-row-one {
+  margin-top: 3px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--sw-body);
+  max-width: 52ch;
+}
+
+/* Price + stamp travel together. Full-width row 2 on mobile; an auto column
+   between ident and actions on desktop. */
+.sw-row-meta {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-left: 52px;
+}
+@media (min-width: 720px) {
+  .sw-row-meta {
+    grid-column: auto;
+    justify-content: flex-end;
+    gap: 18px;
+    padding-left: 0;
+  }
+}
+.sw-row-price {
+  font-family: var(--sw-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--sw-ink);
+  text-align: right;
+  white-space: nowrap;
+}
+.sw-row-price b {
+  font-weight: 700;
+}
+.sw-row-price small {
+  color: var(--sw-body);
+  font-weight: 500;
+}
+
+.sw-row-stamp {
+  flex: 0 0 auto;
+}
+
+.sw-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  grid-column: 1 / -1;
+  padding-left: 52px;
+}
+@media (min-width: 720px) {
+  .sw-row-actions {
+    grid-column: auto;
+    justify-self: end;
+    padding-left: 0;
+  }
+}
+
+/* The drawer toggle */
+.sw-row-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--sw-body);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: color 200ms var(--sw-ease), border-color 200ms var(--sw-ease);
+}
+.sw-row-toggle:hover {
+  color: var(--sw-ink);
+  border-color: var(--sw-line);
+}
+.sw-row-toggle svg {
+  transition: transform 260ms var(--sw-ease);
+}
+
+/* ── Drawer ────────────────────────────────────────────────────────── */
+/* Default (no JS / prerender / reduced-motion): OPEN, so the crawler and
+   reduced-motion users see the features. Armed JS collapses it and opens
+   on hover / focus-within / explicit toggle. */
+/* The collapse is a grid-track toggle (0fr ↔ 1fr) with NO transition on the
+   track itself: transitioning `fr` values is unreliable across engines (it can
+   stick open mid-value). The height snaps; the CONTENT does the animating
+   (opacity + slide on .sw-drawer-body), which is smooth and dependable. */
+.sw-drawer {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+.sw-drawer > .sw-drawer-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+.sw-drawer-body {
+  padding: 2px 6px 22px 6px;
+  display: grid;
+  gap: 20px;
+}
+@media (min-width: 720px) {
+  .sw-drawer-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    gap: 40px;
+    padding-left: 64px;
+    padding-right: 6px;
+  }
+}
+
+.sw-armed .sw-drawer {
+  grid-template-rows: 0fr;
+}
+.sw-armed .sw-drawer-body {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 240ms var(--sw-ease), transform 240ms var(--sw-ease);
+}
+/* Open on explicit toggle (data-open) or keyboard focus inside the row. Hover
+   is deliberately NOT a trigger: with an instant height snap, hover-open across
+   a 12-row register pops rows in and out — jarring. The chevron is the drawer. */
+.sw-armed .sw-row[data-open='true'] .sw-drawer,
+.sw-armed .sw-row:focus-within .sw-drawer {
+  grid-template-rows: 1fr;
+}
+.sw-armed .sw-row[data-open='true'] .sw-drawer-body,
+.sw-armed .sw-row:focus-within .sw-drawer-body {
+  opacity: 1;
+  transform: none;
+}
+.sw-armed .sw-row[data-open='true'] .sw-row-toggle svg,
+.sw-armed .sw-row:focus-within .sw-row-toggle svg {
+  transform: rotate(180deg);
+}
+
+/* Feature spec list inside the drawer */
+.sw-feat {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+.sw-feat li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 9px 0;
+  border-top: 1px solid var(--sw-line-soft);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--sw-ink);
+}
+.sw-feat li:first-child {
+  border-top: 0;
+}
+.sw-feat .sw-feat-no {
+  font-family: var(--sw-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--sw-body);
+  padding-top: 2px;
+}
+
+.sw-drawer-side {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+.sw-reassure {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--sw-body);
+}
+.sw-lifetime {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--sw-line-soft);
+  font-size: 12px;
+  color: var(--sw-body);
+}
+.sw-lifetime b {
+  color: var(--sw-ink);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+.sw-lifetime svg {
+  transition: transform 240ms var(--sw-ease);
+}
+.sw-lifetime:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* ── Footnote row (C4 Command) ─────────────────────────────────────── */
+.sw-footnote {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 6px;
+  margin-top: 2px;
+  border-top: 1px dashed var(--sw-line);
+  color: var(--sw-body);
+  font-size: 12.5px;
+  transition: color 200ms var(--sw-ease);
+}
+.sw-footnote:hover {
+  color: var(--sw-ink);
+}
+.sw-footnote .sw-fn-model {
+  font-family: var(--sw-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--sw-body);
+}
+.sw-footnote svg {
+  color: var(--sw-body);
+  transition: transform 240ms var(--sw-ease);
+}
+.sw-footnote:hover svg {
+  transform: translateX(3px);
+  color: var(--sw-ink);
+}
+
+/* ── Datasheet: spec strip, fault/fix, order block ─────────────────── */
+
+.sw-datasheet-head {
+  padding-top: var(--sw-top);
+  padding-bottom: clamp(22px, 3vw, 34px);
+}
+.sw-ds-labelblock {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px) {
+  .sw-ds-labelblock {
+    grid-template-columns: auto 1fr;
+    gap: 30px;
+    align-items: start;
+  }
+}
+.sw-ds-chip {
+  width: 76px;
+  height: 76px;
+  border-radius: 9px;
+}
+.sw-ds-code {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.sw-ds-barcode {
+  width: 132px;
+  height: 30px;
+}
+.sw-ds-one {
+  margin-top: 12px;
+  color: var(--sw-body);
+  font-size: clamp(1rem, 0.94rem + 0.4vw, 1.18rem);
+  line-height: 1.5;
+  max-width: 46ch;
+}
+
+.sw-section {
+  padding-block: clamp(40px, 6vw, 72px);
+}
+.sw-section--tight {
+  padding-block: clamp(28px, 4vw, 48px);
+}
+.sw-section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 26px;
+  flex-wrap: wrap;
+}
+.sw-section-head .sw-sh-no {
+  font-family: var(--sw-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--sw-body);
+}
+
+/* Spec strip (highlights) — a ruled table, not a hero-metric band. */
+.sw-spec {
+  border-top: 1px solid var(--sw-line);
+  border-bottom: 1px solid var(--sw-line);
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .sw-spec {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.sw-spec-cell {
+  padding: 22px 20px 22px 0;
+  border-top: 1px solid var(--sw-line-soft);
+}
+@media (min-width: 640px) {
+  .sw-spec-cell {
+    border-top: 0;
+    padding: 26px 26px 26px 0;
+  }
+  .sw-spec-cell + .sw-spec-cell {
+    border-left: 1px solid var(--sw-line-soft);
+    padding-left: 26px;
+  }
+}
+.sw-spec-val {
+  display: block;
+  color: var(--sw-ink);
+  font-size: clamp(1.6rem, 1.3rem + 1vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.sw-spec-lab {
+  margin-top: 10px;
+  font-family: var(--sw-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--sw-body);
+  line-height: 1.4;
+}
+
+/* Fault → Fix ledger pair */
+.sw-ff {
+  display: grid;
+  grid-template-columns: 1fr;
+  border: 1px solid var(--sw-line);
+}
+@media (min-width: 760px) {
+  .sw-ff {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.sw-ff-cell {
+  padding: clamp(22px, 3vw, 34px);
+}
+.sw-ff-cell + .sw-ff-cell {
+  border-top: 1px solid var(--sw-line);
+}
+@media (min-width: 760px) {
+  .sw-ff-cell + .sw-ff-cell {
+    border-top: 0;
+    border-left: 1px solid var(--sw-line);
+  }
+}
+.sw-ff-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sw-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.sw-ff-tag.is-fault {
+  color: var(--sw-body);
+}
+.sw-ff-tag.is-fix {
+  /* Ink, not red — red is the stamp/scanline only. The fix reads as resolved. */
+  color: var(--sw-ink);
+}
+.sw-ff-cell p {
+  margin: 0;
+  color: var(--sw-body);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+/* Order block (pricing) */
+.sw-order {
+  border: 1px solid var(--sw-line);
+  /* Heavier ink top-rule = order-form header. Red stays on the stamp only. */
+  border-top: 2px solid var(--sw-ink);
+  background: var(--sw-sheet);
+  padding: clamp(22px, 3vw, 28px);
+  align-self: start;
+}
+.sw-order-tier {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--sw-line-soft);
+  font-size: 13px;
+  color: var(--sw-body);
+}
+.sw-order-tier:first-of-type {
+  border-top: 0;
+}
+.sw-order-tier .sw-ot-price {
+  font-variant-numeric: tabular-nums;
+  color: var(--sw-ink);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.sw-order-tier .sw-ot-price small {
+  font-weight: 500;
+  color: var(--sw-body);
+}
+.sw-order-note {
+  margin: 14px 0 18px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--sw-body);
+}
+
+.sw-cols {
+  display: grid;
+  gap: clamp(28px, 4vw, 56px);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 900px) {
+  .sw-cols {
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+}
+
+/* How it works — real ordered sequence (allowed numbering) */
+.sw-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--sw-line);
+}
+.sw-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px;
+  padding: 22px 4px;
+  border-bottom: 1px solid var(--sw-line);
+}
+@media (min-width: 720px) {
+  .sw-step {
+    grid-template-columns: 56px 1fr;
+    gap: 30px;
+    padding: 26px 6px;
+  }
+}
+.sw-step-no {
+  font-family: var(--sw-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--sw-body);
+  padding-top: 3px;
+}
+.sw-step-body p {
+  margin: 6px 0 0;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--sw-body);
+  max-width: 56ch;
+}
+
+/* Demo framing */
+.sw-demo-note {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+/* FAQ */
+.sw-faq {
+  border: 1px solid var(--sw-line);
+}
+.sw-faq details {
+  border-top: 1px solid var(--sw-line);
+}
+.sw-faq details:first-child {
+  border-top: 0;
+}
+.sw-faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--sw-ink);
+  font-weight: 600;
+  font-size: 14.5px;
+}
+.sw-faq summary::-webkit-details-marker {
+  display: none;
+}
+.sw-faq summary svg {
+  flex: 0 0 auto;
+  color: var(--sw-body);
+  transition: transform 260ms var(--sw-ease);
+}
+.sw-faq details[open] summary svg {
+  transform: rotate(45deg);
+}
+.sw-faq-a {
+  margin: 0;
+  padding: 0 20px 18px;
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--sw-body);
+  max-width: 64ch;
+}
+
+/* Others / more-from grid */
+.sw-others {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--sw-line);
+}
+.sw-other {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 15px 6px;
+  border-bottom: 1px solid var(--sw-line);
+  transition: background-color 200ms var(--sw-ease);
+}
+.sw-other:hover {
+  background: var(--sw-fig);
+}
+.sw-other-chip {
+  width: 38px;
+  height: 38px;
+  border-radius: 5px;
+}
+.sw-other svg {
+  color: var(--sw-body);
+  transition: transform 240ms var(--sw-ease);
+}
+.sw-other:hover svg {
+  transform: translateX(3px);
+  color: var(--sw-ink);
+}
+
+/* Colophon */
+.sw-colophon {
+  border-top: 1px solid var(--sw-line);
+  background: var(--sw-fig);
+  padding-block: clamp(40px, 6vw, 64px);
+}
+
+/* ── Home surface: featured unit + compact register ────────────────── */
+/* Lives inside Home (theme-adaptive, no forced chrome). The keep-out zone
+   does not apply — this section sits far below the ribbon. */
+.sw-home {
+  padding-block: clamp(56px, 8vw, 104px);
+}
+.sw-home-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--sw-line);
+  margin-bottom: clamp(24px, 3vw, 36px);
+}
+.sw-home-kicker {
+  font-family: var(--sw-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sw-body);
+}
+.sw-home-count {
+  margin-left: auto;
+  font-family: var(--sw-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sw-body);
+}
+.sw-home-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(26px, 3vw, 40px);
+}
+.sw-home-lede {
+  margin-top: 10px;
+  max-width: 46ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--sw-body);
+}
+.sw-home-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(24px, 3vw, 40px);
+}
+@media (min-width: 900px) {
+  .sw-home-grid {
+    grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(32px, 4vw, 56px);
+  }
+}
+
+/* Featured unit — the lead label block (Quotr). */
+.sw-featured {
+  border: 1px solid var(--sw-line);
+  border-top: 2px solid var(--sw-ink);
+  background: var(--sw-sheet);
+  padding: clamp(22px, 3vw, 28px);
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+.sw-featured-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+.sw-featured-chip {
+  width: 52px;
+  height: 52px;
+  border-radius: 7px;
+}
+.sw-featured-model {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sw-featured-barcode {
+  width: 108px;
+  height: 24px;
+}
+.sw-featured-name {
+  display: inline-block;
+  color: var(--sw-ink);
+  font-size: 1.5rem;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.sw-featured-name:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.sw-featured-one {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--sw-body);
+  max-width: 38ch;
+}
+.sw-featured-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--sw-line-soft);
+}
+.sw-featured-price {
+  font-family: var(--sw-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 12.5px;
+  color: var(--sw-ink);
+}
+.sw-featured-price b {
+  font-weight: 700;
+}
+.sw-featured-price small {
+  color: var(--sw-body);
+}
+
+/* Compact register — model · name · price · arrow, per row. */
+.sw-mini {
+  border-top: 1px solid var(--sw-line);
+}
+.sw-mini-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 4px;
+  border-bottom: 1px solid var(--sw-line);
+  transition: background-color 200ms var(--sw-ease);
+}
+.sw-mini-row:hover {
+  background: var(--sw-fig);
+}
+.sw-mini-model {
+  flex: 0 0 auto;
+  font-family: var(--sw-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--sw-body);
+  white-space: nowrap;
+}
+@media (max-width: 519px) {
+  .sw-mini-model {
+    display: none;
+  }
+}
+.sw-mini-name {
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  color: var(--sw-ink);
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.sw-mini-name span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sw-mini-price {
+  flex: 0 0 auto;
+  font-family: var(--sw-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11.5px;
+  color: var(--sw-body);
+  white-space: nowrap;
+}
+@media (max-width: 599px) {
+  .sw-mini-price {
+    display: none;
+  }
+}
+.sw-mini-row svg {
+  flex: 0 0 auto;
+  color: var(--sw-body);
+  transition: transform 220ms var(--sw-ease);
+}
+.sw-mini-row:hover svg {
+  transform: translateX(3px);
+  color: var(--sw-ink);
+}
+
+/* ── Reveals (house armed pattern) ─────────────────────────────────── */
+[data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+.sw-armed [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 520ms var(--sw-ease), transform 520ms var(--sw-ease);
+  transition-delay: var(--d, 0ms);
+}
+.sw-armed [data-reveal].sw-in {
+  opacity: 1;
+  transform: none;
+}
+/* Stamp reveal = ink-bleed opacity only (no transform, no scale, no thump) */
+.sw-armed .sw-stamp[data-reveal] {
+  transform: rotate(-1.4deg);
+}
+.sw-armed .sw-stamp[data-reveal].sw-in {
+  transform: rotate(-1.4deg);
+}
+/* Scanline: single traverse when its barcode enters view */
+.sw-armed .sw-scan.sw-in {
+  animation: sw-scan-sweep 1100ms var(--sw-ease) 160ms 1 both;
+}
+@keyframes sw-scan-sweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(calc(var(--sw-scan-w, 132px) - 2px));
+  }
+}
+
+/* Safety net: honour reduced motion even if `.sw-armed` were ever present. */
+@media (prefers-reduced-motion: reduce) {
+  .sw-root [data-reveal],
+  .sw-root .sw-stamp[data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .sw-root .sw-stamp[data-reveal] {
+    transform: rotate(-1.4deg) !important;
+  }
+  .sw-root .sw-drawer {
+    grid-template-rows: 1fr !important;
+  }
+  .sw-root .sw-scan {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
