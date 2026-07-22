@@ -55,7 +55,7 @@ export default function FinalCTA() {
                 <ArrowRight size={14} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
               </Link>
               <Link
-                to={createPageUrl('StartProject')}
+                to={createPageUrl('Contact')}
                 className="hm-textlink group"
               >
                 Or send a general brief
