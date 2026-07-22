@@ -7,6 +7,15 @@
    Scoped under .sg- so nothing leaks. Page forces dark-mode (Lens
    pattern), so tokens below are computed against fixed surfaces.
 
+   Fable-pass material layer ("a board that has taught before"):
+   eraser bloom + legible palimpsest traces age the slate at ≤4.5%
+   chalk opacity, every aging layer multiplied by the single
+   `--sg-age` governor (set it to 0.5 to pull the whole pass back,
+   0 to strip it). Text columns are a no-haze zone by placement;
+   traces and blooms live in margins and display regions only, and
+   the governance panel interior stays the cleanest surface on the
+   page (its opaque deep green is the preserved corner).
+
    Contrast (WCAG, computed not eyeballed):
      chalk   #F2F0E9 on board #16352C = 11.7:1 · on deep #0E2A22 = 13.4:1
      dim     #B9C6BC on board          =  7.5:1 · on deep          =  8.6:1
@@ -14,6 +23,9 @@
      deep    #0E2A22 on yellow button  =  9.9:1
      ink     #1C2420 on paper #FAF8F2  = 15.0:1 · ink-soft #4A554E =  7.3:1
      red pen var(--c4-accent) #B33A3A on paper = 5.5:1
+     hand    Caveat yellow on board 8.6:1 (decorative, aria-hidden)
+   Aging layers peak at 4.5% chalk over the board; worst-case they
+   lift the board toward #1D3B31, where chalk still measures 11.1:1.
    ═══════════════════════════════════════════════════════════════════ */
 
 /* While the board page is mounted it stamps .sg-on-board on <html>
@@ -79,6 +91,12 @@
   --sg-line: rgba(242, 240, 233, 0.16);
   --sg-line-strong: rgba(242, 240, 233, 0.34);
   --sg-font: 'Bricolage Grotesque', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* The teacher's hand — margin arithmetic and the two "Most value"
+     annotations only. Self-hosted (fonts.css), weights 500/700. */
+  --sg-hand-font: 'Caveat', 'Segoe Script', cursive;
+  /* The aging governor: one dial for every bloom, trace, streak and
+     grain layer. 1 = the shipped look; tune down during critique. */
+  --sg-age: 1;
 
   background-color: var(--sg-board);
   color: var(--sg-chalk);
@@ -102,26 +120,27 @@
 
 /* Chalk dust: one static grain tile, composited, never repainted. The
    mask lets the dust settle — sparse up top, pooling toward the page
-   foot — instead of an even wash (the tray carries its own local pool).*/
+   foot, where every real board is most worked (the tray carries its
+   own local pool). */
 .sg-root::after {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 3;
   pointer-events: none;
-  opacity: 0.06;
+  opacity: calc(0.06 * var(--sg-age));
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
   -webkit-mask-image: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.5) 0%,
-    rgba(0, 0, 0, 0.72) 58%,
+    rgba(0, 0, 0, 0.42) 0%,
+    rgba(0, 0, 0, 0.6) 55%,
     #000 100%
   );
   mask-image: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.5) 0%,
-    rgba(0, 0, 0, 0.72) 58%,
+    rgba(0, 0, 0, 0.42) 0%,
+    rgba(0, 0, 0, 0.6) 55%,
     #000 100%
   );
 }
@@ -157,6 +176,7 @@
 .sg-mark {
   display: inline-block;
   flex-shrink: 0;
+  overflow: visible;
 }
 
 .sg-mark path {
@@ -168,9 +188,22 @@
 
 /* The dry-media ghost pass: a fainter, broken second stroke laid just
    off the primary, so the mark reads as pressed chalk with skips rather
-   than a clean vector line. Static — the primary alone draws in. */
+   than a clean vector line. Static — the mask wipe reveals it. */
 .sg-mark .sg-ghost {
   opacity: 0.32;
+}
+
+/* The dry tail: short broken dashes past the stroke's end, where the
+   stick lifted off the slate. Static, revealed last by the wipe. */
+.sg-mark .sg-tail {
+  opacity: 0.5;
+}
+
+/* The travelling wipe inside each mark's <mask>. Always white — mask
+   luminance, never themed — so the layered mark reveals at full
+   strength whatever colour the mark itself carries. */
+.sg-mark path.sg-wipe {
+  stroke: #fff;
 }
 
 /* Static chalk-edge on the hero h1 text only. feTurbulence displacement
@@ -257,17 +290,21 @@
   color: var(--sg-red);
 }
 
-/* Circled annotation: "Most value" in the teacher's hand. */
+/* Circled annotation: "Most value" — now genuinely in the teacher's
+   hand (Caveat, marker-yellow), because a hand-drawn ring around a
+   typeset word was a material contradiction. Exactly two instances
+   on the page (formats + pricing). */
 .sg-annot {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5em 1.15em;
+  padding: 0.42em 1.1em;
   color: var(--sg-yellow);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  font-family: var(--sg-hand-font);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.015em;
   transform: rotate(-2.5deg);
   white-space: nowrap;
 }
@@ -277,6 +314,54 @@
   inset: -2px -4px;
   width: calc(100% + 8px);
   height: calc(100% + 4px);
+}
+
+/* ── The margin hand (Caveat, arithmetic only) ───────────────────── */
+/* Three appearances: the formats clock, the outcomes tally, and the
+   pricing working. Every figure is computed at render from FORMATS /
+   c4SightPackages — the hand never states anything the page doesn't. */
+
+.sg-hand {
+  font-family: var(--sg-hand-font);
+  font-weight: 500;
+  color: var(--sg-yellow);
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+}
+
+.sg-format-hand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 14px 0 0;
+  font-size: 20px;
+  transform: rotate(-1.6deg);
+}
+
+.sg-format-hand .sg-mark {
+  width: 24px;
+  height: 10px;
+}
+
+.sg-price-hand {
+  margin: 0 0 4px;
+  font-size: clamp(19px, 2vw, 22px);
+  transform: rotate(-1.8deg);
+}
+
+.sg-hand-em {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.sg-hand-em .sg-mark {
+  position: absolute;
+  left: -4%;
+  bottom: -0.16em;
+  width: 108%;
+  height: 0.18em;
+  color: var(--sg-yellow);
 }
 
 /* ── Buttons ─────────────────────────────────────────────────────── */
@@ -337,19 +422,23 @@
   position: relative;
   overflow: clip;
   background-color: var(--sg-board-deep);
+  /* Eraser bloom: soft chalk clouds in the display regions, part of
+     the aging pass (≤4.5% chalk, governed by --sg-age). */
   background-image:
-    radial-gradient(640px 240px at 16% 28%, rgba(242, 240, 233, 0.045), transparent 70%),
-    radial-gradient(520px 200px at 82% 72%, rgba(242, 240, 233, 0.035), transparent 70%);
+    radial-gradient(640px 240px at 16% 28%, rgb(242 240 233 / calc(0.045 * var(--sg-age))), transparent 70%),
+    radial-gradient(520px 200px at 82% 72%, rgb(242 240 233 / calc(0.035 * var(--sg-age))), transparent 70%);
   /* Top pad clears the fixed back-ribbon keep-out zone (220×160 desktop):
      content starts below 160px so the hero chip never sits under it. */
   padding-top: clamp(168px, 19vh, 200px);
   padding-bottom: clamp(56px, 9vw, 104px);
 }
 
-/* Palimpsest: a half-erased fragment of a previous lesson, ghosted at
-   ≤4.5% behind the empty right of the hero — display region only, never
-   behind the lede or any body text. Hidden where the column goes full
-   width and could reach running text. */
+/* Palimpsest: a legible remnant of a previous session — a half-erased
+   two-column safe/not-safe tally (T-chart, ticks left, crosses right)
+   ghosted at ≤4.5% behind the empty right of the hero. Display region
+   only, never behind the lede or any body text; this is the layer the
+   walk-in eraser can never fully remove. Hidden where the column goes
+   full width and could reach running text. */
 .sg-hero::before {
   content: '';
   position: absolute;
@@ -359,17 +448,98 @@
   height: 320px;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.045;
+  opacity: calc(0.045 * var(--sg-age));
   background-repeat: no-repeat;
   background-position: top right;
   background-size: contain;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 520 340' fill='none' stroke='%23f2f0e9' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M44 250 C 130 176 250 150 372 116'/%3E%3Cpath d='M338 92 C 356 100 376 110 398 116 C 376 128 356 140 340 158'/%3E%3Cpath d='M120 66 L 214 132 M214 66 L 120 132'/%3E%3Cpath d='M300 210 C 300 188 330 176 360 178 C 396 180 414 198 412 220 C 410 244 380 256 350 254 C 322 252 302 236 302 214'/%3E%3Cpath d='M70 300 C 140 292 210 300 276 296'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 520 340' fill='none' stroke='%23f2f0e9' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M56 88 C 180 78, 350 80, 468 86'/%3E%3Cpath d='M262 64 C 258 140, 265 220, 259 316'/%3E%3Cpath d='M92 52 C 128 44, 166 50, 200 44'/%3E%3Cpath d='M318 48 C 356 42, 400 48, 442 42'/%3E%3Cpath d='M100 138 C 106 144, 111 150, 116 157 C 124 141, 135 124, 149 109'/%3E%3Cpath d='M104 205 C 110 211, 115 217, 120 224 C 128 208, 139 191, 153 176'/%3E%3Cpath d='M100 272 C 106 278, 111 284, 116 291 C 124 275, 135 258, 149 243'/%3E%3Cpath d='M330 128 L 382 184 M382 128 L 330 184'/%3E%3Cpath d='M338 224 L 386 276 M386 224 L 338 276'/%3E%3C/svg%3E");
 }
 
 /* Only paint where the right of the hero is genuinely empty canvas —
    below this the text column widens toward it, so it's hidden. */
 @media (max-width: 1023px) {
   .sg-hero::before {
+    display: none;
+  }
+}
+
+/* Last class's notes (walk-in residue) + the felt eraser. Mounted only
+   when motion is allowed; the eraser wipes the notes on load and then
+   rests on the chalk tray — its single appearance on the page. */
+.sg-walkin {
+  position: absolute;
+  top: clamp(150px, 15vh, 220px);
+  right: 24px;
+  width: min(36vw, 430px);
+  height: 300px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.sg-walkin-residue {
+  position: absolute;
+  inset: 0;
+  color: var(--sg-chalk);
+  opacity: 0.12;
+}
+
+.sg-walkin-note {
+  position: absolute;
+  font-family: var(--sg-hand-font);
+  font-size: 27px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.sg-walkin-note--a {
+  top: 16%;
+  left: 12%;
+  transform: rotate(-3deg);
+}
+
+.sg-walkin-note--b {
+  bottom: 10%;
+  right: 14%;
+  transform: rotate(2deg);
+}
+
+.sg-walkin-scribble {
+  position: absolute;
+  top: 32%;
+  left: 8%;
+  width: 62%;
+  height: auto;
+}
+
+.sg-walkin-scribble path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The felt eraser: wood back, felt edge dusted with chalk. Rests on
+   the tray (its CSS position IS the end state; GSAP plays the sweep
+   as a .from journey). Desktop-only, like the residue it erases. */
+.sg-eraser {
+  position: absolute;
+  right: clamp(20px, 6vw, 96px);
+  bottom: 7px;
+  width: 92px;
+  height: 30px;
+  border-radius: 5px 5px 3px 3px;
+  background: linear-gradient(to bottom, #8a6c4e 0%, #6f5640 50%, #333730 50%, #262a24 100%);
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.14),
+    inset 0 -2px 3px rgba(242, 240, 233, 0.18),
+    0 8px 16px -8px rgba(0, 0, 0, 0.7);
+  z-index: 2;
+}
+
+@media (max-width: 1023px) {
+  .sg-walkin,
+  .sg-eraser {
     display: none;
   }
 }
@@ -416,7 +586,8 @@
 }
 
 /* The chalk tray: a shallow ledge at the foot of the board holding a
-   worn chalk stub and the marker-yellow pen, with dust pooled beneath. */
+   worn chalk stub, the marker-yellow pen, and (after the walk-in) the
+   resting eraser, with dust pooled beneath. */
 .sg-tray {
   position: relative;
   margin-top: clamp(52px, 8vw, 88px);
@@ -534,7 +705,70 @@
   z-index: -1;
 }
 
+/* ── The scrubbed smear bands (exactly two on the page) ──────────── */
+/* An abstract eraser pass swept by the reader's own hand: the streak
+   track translates under ScrollTrigger scrub and rests as residue.
+   The governance instance carries an SVG mask whose black hole tracks
+   the rules frame's box, so the wipe visibly parts around the framed
+   corner — "never rubbed out", performed rather than captioned. */
+
+.sg-smear {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: var(--sg-age);
+}
+
+.sg-smear--gov {
+  top: -28px;
+  height: 230px;
+  z-index: 2;
+}
+
+.sg-smear--price {
+  top: 0;
+  height: 56px;
+  z-index: 0;
+}
+
+.sg-smear-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 /* ── Formats: the day plan, two columns, one chalk rule ──────────── */
+
+.sg-formats {
+  position: relative;
+}
+
+/* Palimpsest: a half-erased agenda arc from a previous session ghosts
+   in the display region right of the section head. Same ≤4.5%
+   discipline and <1024px hide as the hero fragment. */
+.sg-formats::before {
+  content: '';
+  position: absolute;
+  top: clamp(20px, 3vw, 48px);
+  right: -32px;
+  width: min(34vw, 400px);
+  height: 240px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: calc(0.04 * var(--sg-age));
+  background-repeat: no-repeat;
+  background-position: top right;
+  background-size: contain;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 440 260' fill='none' stroke='%23f2f0e9' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M36 208 C 96 128, 220 88, 404 100'/%3E%3Cpath d='M70 52 C 116 46, 164 52, 208 46'/%3E%3Cpath d='M76 92 C 118 87, 158 92, 196 87'/%3E%3Cpath d='M82 132 C 116 128, 148 132, 178 128'/%3E%3Cpath d='M330 44 C 352 38, 376 40, 396 48 C 380 58, 360 64, 342 62'/%3E%3C/svg%3E");
+}
+
+@media (max-width: 1023px) {
+  .sg-formats::before {
+    display: none;
+  }
+}
 
 .sg-formats-head {
   margin-bottom: clamp(40px, 6vw, 64px);
@@ -548,20 +782,38 @@
 
 @media (min-width: 820px) {
   .sg-formats-grid {
-    grid-template-columns: 1fr 1px 1fr;
+    grid-template-columns: 1fr 12px 1fr;
     gap: clamp(40px, 5vw, 72px);
   }
 }
 
+/* The formats divider, truth-fixed: a drawn chalk vertical (ghost pass
+   included) instead of a materially false crisp 1px CSS rule. Draws in
+   with the section; fully drawn at rest and in staticMode. */
 .sg-vrule {
-  background: var(--sg-line);
   display: none;
 }
 
 @media (min-width: 820px) {
   .sg-vrule {
     display: block;
+    width: 12px;
+    height: 100%;
+    overflow: visible;
   }
+}
+
+.sg-vrule path {
+  fill: none;
+  stroke: rgb(242 240 233 / 0.3);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sg-vrule .sg-ghost {
+  opacity: 0.32;
+  stroke-width: 2.4;
 }
 
 .sg-format-top {
@@ -647,8 +899,8 @@
   pointer-events: none;
   background: linear-gradient(
     to bottom,
-    rgba(242, 240, 233, 0.15),
-    rgba(242, 240, 233, 0.02) 55%,
+    rgb(242 240 233 / calc(0.15 * var(--sg-age))),
+    rgb(242 240 233 / calc(0.02 * var(--sg-age))) 55%,
     transparent
   );
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='30'%3E%3Cg fill='%23fff'%3E%3Crect x='0' y='5' width='120' height='20' opacity='0.85'/%3E%3Crect x='96' y='2' width='96' height='24' opacity='0.5'/%3E%3Crect x='188' y='7' width='150' height='16' opacity='0.9'/%3E%3Crect x='300' y='3' width='110' height='22' opacity='0.55'/%3E%3C/g%3E%3C/svg%3E");
@@ -659,8 +911,50 @@
   mask-repeat: no-repeat;
 }
 
+/* Eraser bloom in the display region beside the section head (the
+   tally corner). Kept clear of the outcome rows; hidden below 1024px
+   where the heading can span toward it. */
+.sg-outcomes::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 0;
+  width: min(38vw, 440px);
+  height: 130px;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    70% 80% at 70% 45%,
+    rgb(242 240 233 / calc(0.028 * var(--sg-age))),
+    transparent 72%
+  );
+}
+
+@media (max-width: 1023px) {
+  .sg-outcomes::after {
+    display: none;
+  }
+}
+
 .sg-outcomes-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px 32px;
+  flex-wrap: wrap;
   margin-bottom: clamp(34px, 5vw, 52px);
+}
+
+/* The tally gate: one stroke per outcome, counted off as the rows
+   land, the fifth stroke closing the gate — then the ring circles the
+   total. Count derives from OUTCOMES.length. */
+.sg-tally {
+  width: 66px;
+  height: 44px;
+  margin-top: 10px;
+  color: var(--sg-yellow);
+  transform: rotate(-4deg);
+  flex-shrink: 0;
 }
 
 .sg-outcome-list {
@@ -712,6 +1006,26 @@
 }
 
 /* ── Governance: the framed rules panel ──────────────────────────── */
+
+/* The preserved corner, inverted aging: the heaviest bloom on the page
+   crowds the OUTSIDE of the rules panel; the panel's opaque deep green
+   stays the cleanest surface on the board. The copy already says
+   "never rubbed out" — the surface now agrees. */
+.sg-govern {
+  position: relative;
+}
+
+.sg-govern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(420px 190px at 10% 4%, rgb(242 240 233 / calc(0.035 * var(--sg-age))), transparent 70%),
+    radial-gradient(380px 180px at 94% 38%, rgb(242 240 233 / calc(0.03 * var(--sg-age))), transparent 70%),
+    radial-gradient(540px 210px at 46% 100%, rgb(242 240 233 / calc(0.035 * var(--sg-age))), transparent 72%);
+}
 
 .sg-rules {
   position: relative;
@@ -809,6 +1123,7 @@
 /* ── The take-home worksheet (paper on the board) ────────────────── */
 
 .sg-paper {
+  position: relative;
   max-width: 880px;
   background: var(--sg-paper);
   color: var(--sg-ink);
@@ -817,6 +1132,40 @@
   box-shadow:
     0 30px 70px -28px rgba(0, 0, 0, 0.6),
     0 8px 22px -10px rgba(0, 0, 0, 0.45);
+}
+
+/* The honest answer to "why is paper on a board": one small magnet,
+   top edge, steel with a soft highlight. */
+.sg-paper::before {
+  content: '';
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at 34% 30%, #dfe3df, #99a29b 58%, #5c655e);
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.4),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.28);
+}
+
+/* Chalk dust kissing the sheet's bottom edge — it has been sitting
+   against worked slate. */
+.sg-paper::after {
+  content: '';
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: -13px;
+  height: 13px;
+  pointer-events: none;
+  background: radial-gradient(
+    52% 100% at 50% 0%,
+    rgb(242 240 233 / calc(0.045 * var(--sg-age))),
+    transparent 78%
+  );
 }
 
 .sg-paper-head {
@@ -897,8 +1246,8 @@
   pointer-events: none;
   background: linear-gradient(
     to bottom,
-    rgba(242, 240, 233, 0.15),
-    rgba(242, 240, 233, 0.02) 55%,
+    rgb(242 240 233 / calc(0.15 * var(--sg-age))),
+    rgb(242 240 233 / calc(0.02 * var(--sg-age))) 55%,
     transparent
   );
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='30'%3E%3Cg fill='%23fff'%3E%3Crect x='0' y='4' width='90' height='22' opacity='0.6'/%3E%3Crect x='70' y='8' width='150' height='15' opacity='0.9'/%3E%3Crect x='210' y='3' width='80' height='23' opacity='0.5'/%3E%3Crect x='280' y='6' width='130' height='18' opacity='0.85'/%3E%3C/g%3E%3C/svg%3E");
@@ -1007,13 +1356,15 @@
   overflow: clip;
   background-color: var(--sg-board-deep);
   background-image:
-    radial-gradient(560px 220px at 84% 18%, rgba(242, 240, 233, 0.04), transparent 70%),
-    radial-gradient(480px 200px at 10% 82%, rgba(242, 240, 233, 0.03), transparent 70%);
+    radial-gradient(560px 220px at 84% 18%, rgb(242 240 233 / calc(0.04 * var(--sg-age))), transparent 70%),
+    radial-gradient(480px 200px at 10% 82%, rgb(242 240 233 / calc(0.03 * var(--sg-age))), transparent 70%);
 }
 
 /* Palimpsest fragment behind the pricing heading — an eraser arc and a
    crossed-out sum, ≤4% and up in the display region, clear of the card
-   feature lists. Hidden on narrow screens where the cards climb higher.*/
+   feature lists. (The one legible worked sum lives in the margin hand;
+   this stays abstract — one worked sum on the board, not two.) Hidden
+   on narrow screens where the cards climb higher. */
 .sg-pricing::before {
   content: '';
   position: absolute;
@@ -1023,7 +1374,7 @@
   height: 200px;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.04;
+  opacity: calc(0.04 * var(--sg-age));
   background-repeat: no-repeat;
   background-position: top left;
   background-size: contain;
@@ -1039,6 +1390,11 @@
 }
 
 .sg-pricing-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px 32px;
+  flex-wrap: wrap;
   margin-bottom: clamp(36px, 5vw, 56px);
 }
 
@@ -1062,7 +1418,7 @@
 
 .sg-price-annot {
   position: absolute;
-  top: -17px;
+  top: -19px;
   right: 14px;
   background: var(--sg-board-deep);
   border-radius: 999px;
@@ -1185,6 +1541,14 @@
   .sg-root *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+  }
+
+  /* Motion-only furniture. These are conditionally unmounted in
+     staticMode; this covers the OS setting flipping mid-session. */
+  .sg-walkin,
+  .sg-eraser,
+  .sg-smear {
+    display: none !important;
   }
 }
 
