@@ -512,22 +512,29 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 
 /* ── Site nav (back to main site) ── */
 .nav-left-wrap { position: relative; display: flex; align-items: center; gap: 16px; }
-/* The Exit Sign — direct one-click escape, in the page's own HUD register */
+/* The Exit Sign — direct one-click escape, in the page's own HUD register.
+   A boxed tab (reads as a control, not a caption); the difference blend
+   keeps it legible over anything the page scrolls beneath it. */
 .site-back {
-  position: relative; display: inline-flex; align-items: center;
+  position: relative; display: inline-flex; align-items: center; gap: 7px;
   min-height: 44px; min-width: 44px;
-  margin: -15px 0; /* 44px target without inflating the fixed nav's metrics */
-  font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .22em;
+  margin: -11px 0; /* keep the fixed nav's metrics while boxing the tab */
+  padding: 9px 13px;
+  font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .18em;
   text-transform: uppercase; color: inherit; text-decoration: none;
-  white-space: nowrap; opacity: .92; transition: opacity .25s ease;
+  white-space: nowrap; opacity: 1;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.07);
+  transition: border-color .25s ease, background-color .25s ease;
 }
 .site-back::after {
-  content: ''; position: absolute; left: 0; right: 0; bottom: 12px; height: 1px;
+  content: ''; position: absolute; left: 12px; right: 12px; bottom: 6px; height: 1px;
   background: var(--amber);
   transform: scaleX(0); transform-origin: left;
   transition: transform .35s cubic-bezier(.22,1,.36,1);
 }
-.site-back:hover { opacity: 1; }
+.site-back:hover { border-color: var(--amber); background: rgba(255, 255, 255, 0.12); }
 .site-back:hover::after { transform: scaleX(1); }
 .site-nav-btn {
   display: grid; place-items: center;
