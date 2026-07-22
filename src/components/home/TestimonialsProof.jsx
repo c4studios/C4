@@ -1,19 +1,51 @@
+/* ─────────────────────────────────────────────────────────────────
+   FOLD 4a — TESTIMONY (clients speak in full)
+
+   Restaged on the gallery surface for the fable pass: the tracked
+   micro-eyebrows are retired (labels set in plain Geist), while every
+   substantive line survives verbatim — including the full-display
+   commitment copy, which IS the proof-engine ethos.
+   ───────────────────────────────────────────────────────────────── */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { createPageUrl } from '@/utils';
 import TestimonialReel from './TestimonialReel';
 import { getFeaturedTestimonials } from '../testimonials/testimonialData';
+import { useStaticMode } from './homeMotion';
 
 const ease = [0.22, 1, 0.36, 1];
 
 export default function TestimonialsProof() {
   const featured = getFeaturedTestimonials();
+  const staticMode = useStaticMode();
+
+  /* Reveals enhance, never gate: under staticMode (Prerender UA /
+     reduced motion) the wrappers carry no initial styles at all, so
+     the DOM default IS the finished end-state — no IntersectionObserver
+     needs to fire for this text to be readable. */
+  const headReveal = staticMode
+    ? {}
+    : {
+        initial: { opacity: 0, y: 12 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true },
+        transition: { duration: 0.6, ease },
+      };
+  const commitReveal = staticMode
+    ? {}
+    : {
+        initial: { opacity: 0 },
+        whileInView: { opacity: 1 },
+        viewport: { once: true },
+        transition: { duration: 0.5, delay: 0.1 },
+      };
 
   return (
     <div
       className="relative overflow-hidden"
       style={{ backgroundColor: 'var(--c4-proof-bg)' }}
+      data-proof
     >
       <div
         aria-hidden="true"
@@ -22,21 +54,12 @@ export default function TestimonialsProof() {
       />
 
       <div className="relative mx-auto max-w-[1400px] px-6 pt-20 md:px-12 md:pt-28">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease }}
-          className="max-w-[620px]"
-        >
-          <span
-            className="text-[10px] uppercase tracking-[0.24em] font-medium"
-            style={{ color: 'var(--c4-proof-faint)' }}
-          >
+        <motion.div {...headReveal} className="max-w-[620px]">
+          <p className="text-[13px] font-medium" style={{ color: 'var(--c4-proof-muted)' }}>
             Testimonials
-          </span>
+          </p>
           <h2
-            className="mt-4 text-[1.6rem] font-semibold tracking-[-0.035em] leading-[1.08] md:text-[2.15rem]"
+            className="hm-h2 mt-3 text-[clamp(1.6rem,3vw,2.15rem)]"
             style={{ color: 'var(--c4-proof-text)' }}
           >
             Client notes
@@ -55,17 +78,14 @@ export default function TestimonialsProof() {
       <div className="relative pb-16 md:pb-24" style={{ backgroundColor: 'var(--c4-proof-bg)' }}>
         <div className="mx-auto max-w-[1400px] px-6 md:px-12">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            {...commitReveal}
             className="flex flex-col gap-6 pt-6 md:flex-row md:items-end md:justify-between"
             style={{ borderTop: '1px solid var(--c4-proof-border)' }}
           >
             <div className="max-w-[520px]">
               <p
-                className="text-[10px] font-medium uppercase tracking-[0.22em]"
-                style={{ color: 'var(--c4-proof-accent)' }}
+                className="text-[14px] font-semibold"
+                style={{ color: 'var(--c4-proof-text)' }}
               >
                 Our commitment
               </p>
@@ -79,7 +99,7 @@ export default function TestimonialsProof() {
 
             <Link
               to={createPageUrl('StartProject')}
-              className="text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
+              className="inline-flex min-h-[44px] items-center text-[11px] font-medium uppercase tracking-[0.14em] transition-colors duration-300"
               style={{ color: 'var(--c4-proof-muted)' }}
               onMouseEnter={(event) => {
                 event.currentTarget.style.color = 'var(--c4-proof-text)';

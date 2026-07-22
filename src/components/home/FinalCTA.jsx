@@ -1,91 +1,91 @@
-import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Globe, GraduationCap, Sparkles, Camera } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+/* ─────────────────────────────────────────────────────────────────
+   FOLD 4b — CONVERGENCE (FinalCTA)
 
-const ease = [0.22, 1, 0.36, 1];
+   Everything the page has argued lands on one button: the tally of
+   proof you scrolled past drains into the /start verdict — the only
+   large red object on the page. The four choices render as the door
+   materials in miniature; every label and destination is verbatim
+   from the baseline. Static end-state: the verdict rests full red.
+   ───────────────────────────────────────────────────────────────── */
+import React, { useLayoutEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
+import { createPageUrl } from '@/utils';
+import { revealHeading, useStaticMode } from './homeMotion';
 
 const choices = [
-  { key: 'web', label: 'Build a website', to: '/start?service=web_design', icon: Globe },
-  { key: 'c4i', label: 'Put AI to work', to: '/c4i', icon: Sparkles },
-  { key: 'lens', label: 'Brand & visual', to: '/Lens', icon: Camera },
-  { key: 'sight', label: 'Train your team', to: '/ai-training-enquiry', icon: GraduationCap },
+  { key: 'web', label: 'Build a website', to: '/start?service=web_design', chip: 'hm-chip--web' },
+  { key: 'c4i', label: 'Put AI to work', to: '/c4i', chip: 'hm-chip--c4i' },
+  { key: 'lens', label: 'Brand & visual', to: '/Lens', chip: 'hm-chip--lens' },
+  { key: 'sight', label: 'Train your team', to: '/ai-training-enquiry', chip: 'hm-chip--sight' },
 ];
 
 export default function FinalCTA() {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end end'] });
-  const y = useTransform(scrollYProgress, [0, 1], [30, 0]);
-  const opacity = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
+  const h2Ref = useRef(null);
+  const staticMode = useStaticMode();
+
+  useLayoutEffect(() => {
+    if (staticMode) return undefined;
+    const reveal = revealHeading(h2Ref.current);
+    return () => {
+      reveal?.tween?.scrollTrigger?.kill();
+      reveal?.tween?.kill();
+    };
+  }, [staticMode]);
 
   return (
-    <section ref={ref} className="pb-24 pt-8 md:pb-32">
+    <section id="hm-final" className="pb-24 pt-8 md:pb-32">
       <div className="mx-auto max-w-[1400px] px-6 md:px-12">
         <div className="mb-16 h-px md:mb-24" style={{ backgroundColor: 'var(--c4-border)' }} />
 
-        <motion.div style={{ y, opacity }} className="grid gap-10 md:gap-14 md:grid-cols-[1.1fr_1fr] md:items-end">
-          {/* Left — headline + general brief */}
+        <div className="grid gap-10 md:grid-cols-[1.1fr_1fr] md:items-end md:gap-14">
+          {/* Left — headline + the verdict */}
           <div className="max-w-[560px]">
-            <p className="text-[10px] uppercase tracking-[0.22em] font-medium mb-3" style={{ color: 'var(--c4-text-subtle)' }}>
-              Pick a starting point
-            </p>
-            <h2 className="text-[1.6rem] md:text-[2.4rem] font-semibold tracking-[-0.035em] leading-[1.05]" style={{ color: 'var(--c4-text)' }}>
+            <p className="hm-label mb-3">Pick a starting point</p>
+            <h2 ref={h2Ref} className="hm-h2 text-[clamp(1.7rem,3.2vw,2.5rem)]">
               Tell us what you’re building. We’ll come back with a clear next step.
             </h2>
-            <p className="mt-4 text-[14px] leading-[1.7]" style={{ color: 'var(--c4-text-muted)' }}>
+            <p className="hm-sub mt-4 text-[14px]">
               Each link takes you to the right starting point. Founder-led reply, usually within a business day.
             </p>
-            <Link
-              to={createPageUrl('StartProject')}
-              className="group mt-7 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] font-medium"
-              style={{ color: 'var(--c4-text-subtle)' }}
-            >
-              Or send a general brief
-              <ArrowRight size={12} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-            </Link>
+
+            <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
+              <Link id="hm-start-verdict" to={createPageUrl('StartProject')} className="hm-verdict group">
+                Start a project
+                <ArrowRight size={14} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+              </Link>
+              <Link
+                to={createPageUrl('StartProject')}
+                className="hm-textlink group"
+              >
+                Or send a general brief
+                <ArrowRight size={12} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+              </Link>
+            </div>
           </div>
 
-          {/* Right — the four pillars, stacked */}
+          {/* Right — the four doors in miniature */}
           <ul role="list" className="flex flex-col" style={{ borderTop: '1px solid var(--c4-border)' }}>
-            {choices.map((c, i) => {
-              const Icon = c.icon;
-              return (
-                <motion.li
-                  key={c.key}
-                  initial={{ opacity: 0, y: 8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  transition={{ duration: 0.45, delay: i * 0.08, ease }}
-                  style={{ borderBottom: '1px solid var(--c4-border)' }}
-                >
-                  <Link
-                    to={c.to}
-                    className="group flex items-center justify-between py-5 md:py-6 transition-colors duration-300 hover:bg-[var(--c4-bg-alt)] px-3 -mx-3 rounded-sm"
-                  >
-                    <span className="flex items-center gap-4">
-                      <span
-                        className="w-9 h-9 rounded-lg flex items-center justify-center transition-transform duration-500 group-hover:rotate-[-6deg] group-hover:scale-105"
-                        style={{ backgroundColor: 'color-mix(in srgb, var(--c4-accent) 14%, transparent)' }}
-                      >
-                        <Icon size={16} strokeWidth={1.5} style={{ color: 'var(--c4-accent)' }} />
-                      </span>
-                      <span className="text-[1.05rem] md:text-[1.15rem] font-semibold tracking-[-0.015em]" style={{ color: 'var(--c4-text)' }}>
-                        {c.label}
-                      </span>
+            {choices.map((c) => (
+              <li key={c.key} style={{ borderBottom: '1px solid var(--c4-border)' }}>
+                <Link to={c.to} className="hm-choice group">
+                  <span className="flex min-w-0 items-center gap-4">
+                    <span className={`hm-chip ${c.chip}`} aria-hidden="true" />
+                    <span className="truncate text-[1.05rem] font-semibold tracking-[-0.015em] md:text-[1.15rem]" style={{ color: 'var(--c4-text)' }}>
+                      {c.label}
                     </span>
-                    <ArrowRight
-                      size={15}
-                      strokeWidth={2}
-                      className="opacity-30 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100"
-                      style={{ color: 'var(--c4-text)' }}
-                    />
-                  </Link>
-                </motion.li>
-              );
-            })}
+                  </span>
+                  <ArrowRight
+                    size={15}
+                    strokeWidth={2}
+                    className="opacity-30 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100"
+                    style={{ color: 'var(--c4-text)' }}
+                  />
+                </Link>
+              </li>
+            ))}
           </ul>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
