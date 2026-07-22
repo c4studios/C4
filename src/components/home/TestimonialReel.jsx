@@ -1,28 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+/* Fable-pass note: the reel is manual-advance only. The continuous
+   CSS orbit and the autoplay/progress loop were retired — the
+   site-wide continuous-animation budget permits neither (motion here
+   is state-change or scroll only). */
+import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ArrowUpRight, Pause } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { getCaseStudy } from '../portfolio/caseStudyData';
+import { useStaticMode } from './homeMotion';
 
-const AUTOPLAY_INTERVAL = 7000;
 const RING_SLOTS = 5;
 const RING_RADIUS = 37; // percent of stage
 const ease = [0.22, 1, 0.36, 1];
-
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReduced(mediaQuery.matches);
-    const handler = (event) => setReduced(event.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
-
-  return reduced;
-}
 
 // Pre-computed ring slot coordinates (percent), starting at top, going clockwise.
 const SLOT_POSITIONS = Array.from({ length: RING_SLOTS }, (_, k) => {
@@ -49,7 +39,9 @@ function useReelMedia(testimonial) {
   };
 }
 
-/** Cross-fades whenever `src` changes, keeping the frame size fixed. */
+/** Cross-fades whenever `src` changes, keeping the frame size fixed.
+    Under staticMode (`reduced`) no initial styles apply at all — the
+    image rests at the CSS default, fully visible, with no rAF needed. */
 function CrossfadeImage({ src, alt, className = '', imgClassName = '', reduced }) {
   return (
     <div className={`relative overflow-hidden ${className}`}>
@@ -61,7 +53,7 @@ function CrossfadeImage({ src, alt, className = '', imgClassName = '', reduced }
           loading="lazy"
           decoding="async"
           draggable={false}
-          initial={{ opacity: 0 }}
+          initial={reduced ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: reduced ? 0.001 : 0.7, ease }}
@@ -73,13 +65,11 @@ function CrossfadeImage({ src, alt, className = '', imgClassName = '', reduced }
 }
 
 export default function TestimonialReel({ testimonials = [] }) {
-  const reduced = usePrefersReducedMotion();
+  /* staticMode = Prerender UA OR prefers-reduced-motion (the shared
+     page-wide pattern): all mount reveals render at their end-state. */
+  const reduced = useStaticMode();
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [paused, setPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const rafRef = useRef(null);
-  const startRef = useRef(null);
   const total = testimonials.length;
 
   const active = testimonials[current];
@@ -88,33 +78,10 @@ export default function TestimonialReel({ testimonials = [] }) {
   const goTo = useCallback((index, dir) => {
     setDirection(dir);
     setCurrent(index);
-    setProgress(0);
-    startRef.current = null;
   }, []);
 
   const next = useCallback(() => goTo((current + 1) % total, 1), [current, goTo, total]);
   const prev = useCallback(() => goTo((current - 1 + total) % total, -1), [current, goTo, total]);
-
-  // Autoplay with a progress ring
-  useEffect(() => {
-    if (reduced || paused || total <= 1) {
-      cancelAnimationFrame(rafRef.current);
-      return undefined;
-    }
-    startRef.current = null;
-    setProgress(0);
-
-    const tick = (now) => {
-      if (!startRef.current) startRef.current = now;
-      const pct = Math.min((now - startRef.current) / AUTOPLAY_INTERVAL, 1);
-      setProgress(pct);
-      if (pct >= 1) next();
-      else rafRef.current = requestAnimationFrame(tick);
-    };
-
-    rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [current, next, paused, reduced, total]);
 
   if (total === 0 || !active) return null;
 
@@ -128,12 +95,8 @@ export default function TestimonialReel({ testimonials = [] }) {
       aria-label="Client testimonials"
     >
       <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-6 pb-8 pt-6 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] md:gap-14 md:px-12 md:pb-10 md:pt-8">
-        {/* ── Reel stage: centre project mark + orbiting screenshots ── */}
-        <div
-          className="order-1 flex justify-center"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-        >
+        {/* ── Reel stage: centre project mark + ring of screenshots ── */}
+        <div className="order-1 flex justify-center">
           <div className="relative aspect-square w-[min(86vw,430px)]">
             {/* soft radial glow behind the reel */}
             <div
@@ -155,8 +118,8 @@ export default function TestimonialReel({ testimonials = [] }) {
               }}
             />
 
-            {/* rotating ring of project screenshots (CSS-driven orbit) */}
-            <div className="c4-reel-ring absolute inset-0">
+            {/* still ring of project screenshots (crossfades on change) */}
+            <div className="absolute inset-0">
               {SLOT_POSITIONS.map((pos, k) => {
                 const src = media.shots.length ? media.shots[k % media.shots.length] : '';
                 if (!src) return null;
@@ -166,8 +129,7 @@ export default function TestimonialReel({ testimonials = [] }) {
                     className="absolute"
                     style={{ left: `${pos.left}%`, top: `${pos.top}%`, transform: 'translate(-50%, -50%)' }}
                   >
-                    {/* counter-rotate so screenshots stay upright while orbiting */}
-                    <div className="c4-reel-counter relative">
+                    <div className="relative">
                       <CrossfadeImage
                         src={src}
                         alt=""
@@ -190,7 +152,7 @@ export default function TestimonialReel({ testimonials = [] }) {
             <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
               <motion.div
                 key={active.caseStudySlug}
-                initial={{ scale: reduced ? 1 : 0.9, opacity: 0 }}
+                initial={reduced ? false : { scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: reduced ? 0.001 : 0.55, ease }}
                 className="flex h-[clamp(116px,32vw,158px)] w-[clamp(116px,32vw,158px)] items-center justify-center overflow-hidden rounded-full"
@@ -230,14 +192,14 @@ export default function TestimonialReel({ testimonials = [] }) {
               <motion.div
                 key={active.id}
                 custom={direction}
-                initial={{ opacity: 0, y: reduced ? 0 : 10 }}
+                initial={reduced ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: reduced ? 0 : -8 }}
                 transition={{ duration: reduced ? 0.05 : 0.5, ease }}
               >
                 <span
                   className="text-[10px] font-medium uppercase tracking-[0.22em]"
-                  style={{ color: 'var(--c4-proof-faint)' }}
+                  style={{ color: 'var(--c4-proof-muted)' }}
                 >
                   {media.name}
                 </span>
@@ -264,7 +226,7 @@ export default function TestimonialReel({ testimonials = [] }) {
                   {casePath && (
                     <Link
                       to={casePath}
-                      className="group ml-auto inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.14em] transition-colors duration-300"
+                      className="group ml-auto inline-flex min-h-[44px] items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.14em] transition-colors duration-300"
                       style={{ color: 'var(--c4-proof-muted)' }}
                       onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--c4-proof-text)'; }}
                       onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--c4-proof-muted)'; }}
@@ -278,14 +240,14 @@ export default function TestimonialReel({ testimonials = [] }) {
             </AnimatePresence>
           </div>
 
-          {/* controls */}
+          {/* controls — manual advance only (44px touch floor) */}
           {total > 1 && (
             <div className="mt-8 flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <button
                   onClick={prev}
                   aria-label="Previous testimonial"
-                  className="flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-300 hover:opacity-80"
+                  className="flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-300 hover:opacity-80"
                   style={{ border: '1px solid var(--c4-proof-border)', color: 'var(--c4-proof-muted)', backgroundColor: 'var(--c4-proof-surface)' }}
                 >
                   <ChevronLeft size={15} strokeWidth={2} />
@@ -293,51 +255,32 @@ export default function TestimonialReel({ testimonials = [] }) {
                 <button
                   onClick={next}
                   aria-label="Next testimonial"
-                  className="flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-300 hover:opacity-80"
+                  className="flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-300 hover:opacity-80"
                   style={{ border: '1px solid var(--c4-proof-border)', color: 'var(--c4-proof-muted)', backgroundColor: 'var(--c4-proof-surface)' }}
                 >
                   <ChevronRight size={15} strokeWidth={2} />
                 </button>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center">
                 {testimonials.map((t, index) => (
                   <button
                     key={t.id}
                     onClick={() => goTo(index, index > current ? 1 : -1)}
                     aria-label={`Go to testimonial ${index + 1}`}
                     aria-current={index === current}
-                    className="relative h-[3px] overflow-hidden rounded-full transition-all duration-500"
-                    style={{
-                      width: index === current ? 30 : 10,
-                      backgroundColor: index === current ? 'var(--c4-proof-border)' : 'color-mix(in srgb, var(--c4-proof-border) 55%, transparent)',
-                    }}
+                    className="flex h-11 items-center px-1.5"
                   >
-                    {index === current && !reduced && (
-                      <span
-                        className="absolute inset-y-0 left-0 rounded-full"
-                        style={{ width: `${progress * 100}%`, backgroundColor: 'var(--c4-proof-accent)' }}
-                      />
-                    )}
+                    <span
+                      className="block h-[3px] rounded-full transition-all duration-500"
+                      style={{
+                        width: index === current ? 30 : 10,
+                        backgroundColor: index === current ? 'var(--c4-proof-text)' : 'color-mix(in srgb, var(--c4-proof-border) 75%, transparent)',
+                      }}
+                    />
                   </button>
                 ))}
               </div>
-
-              <AnimatePresence>
-                {paused && !reduced && (
-                  <motion.span
-                    initial={{ opacity: 0, x: 4 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 4 }}
-                    transition={{ duration: 0.2 }}
-                    className="ml-1 hidden items-center gap-1.5 text-[9px] uppercase tracking-[0.12em] sm:inline-flex"
-                    style={{ color: 'var(--c4-proof-faint)' }}
-                  >
-                    <Pause size={9} strokeWidth={2.5} />
-                    Paused
-                  </motion.span>
-                )}
-              </AnimatePresence>
             </div>
           )}
         </div>

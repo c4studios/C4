@@ -1,0 +1,329 @@
+/* ─────────────────────────────────────────────────────────────────
+   FOLD 3 — FOUR DOORS (ProductTrio reborn; the identical card grid dies)
+
+   Four material doorways, each an honest sample of the destination
+   arm's own shipped identity, at doorway scale only (memo §1.2):
+     C1 · a weave of real client captures on studio dark
+     C2 · the solder-mask board — sampled ai-arm tokens + copper traces
+     C3 · black behind a hairline 9-gon aperture arc (no amber here —
+          the tungsten glow belongs to /Lens itself)
+     C4 · chalkboard green + one chalk stroke
+   Every ProductTrio destination, label, outcome line, price and
+   timeframe survives verbatim; both links per door sit in the DOM at
+   rest. The proof-strip stats are letterpressed into the lintel.
+   ───────────────────────────────────────────────────────────────── */
+import React, { useLayoutEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import C4iWordmark from '@/components/c4/C4iWordmark';
+import { gsap, EASE, revealHeading, useStaticMode } from './homeMotion';
+
+import weaveGocc from './assets/weave-gocc.webp';
+import weaveJk from './assets/weave-jk.webp';
+import weaveBarrys from './assets/weave-barrys.webp';
+import weaveHakea from './assets/weave-hakea.webp';
+
+const STATS = [
+  { value: '50+', label: 'Perth businesses served' },
+  { value: '200+', label: 'Assets delivered' },
+  { value: '<7', label: 'Day turnaround' },
+  { value: '100%', label: 'Founder-led' },
+];
+
+const WEAVE = [
+  { src: weaveGocc, alt: 'GoCC coaching practice website capture' },
+  { src: weaveJk, alt: 'JK Plumbing Solutions website capture' },
+  { src: weaveBarrys, alt: "Barry's Drink concept site capture" },
+  { src: weaveHakea, alt: 'Transform Hakea website capture' },
+];
+
+/* Hairline 9-gon arc for the C3 face — six of nine edges, off-centre. */
+function NineGonArc() {
+  const cx = 82;
+  const cy = 18;
+  const r = 58;
+  const pts = [];
+  for (let k = 0; k <= 6; k += 1) {
+    const a = ((k * 40 + 70) * Math.PI) / 180;
+    pts.push(`${(cx + r * Math.cos(a)).toFixed(2)},${(cy + r * Math.sin(a)).toFixed(2)}`);
+  }
+  return (
+    <svg className="hm-ninegon" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <polyline
+        points={pts.join(' ')}
+        fill="none"
+        stroke="rgba(255,255,255,0.3)"
+        strokeWidth="1"
+        vectorEffect="non-scaling-stroke"
+      />
+      <polyline
+        points={pts.map((p) => {
+          const [x, y] = p.split(',').map(Number);
+          return `${(cx + (x - cx) * 0.82).toFixed(2)},${(cy + (y - cy) * 0.82).toFixed(2)}`;
+        }).join(' ')}
+        fill="none"
+        stroke="rgba(255,255,255,0.14)"
+        strokeWidth="1"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
+
+/* Copper trace routing for the C2 face — sampled ai-arm values
+   (board #0e2f4e / module #134634 / copper #dd9e63 / gold #e8c56c). */
+function BoardTraces() {
+  return (
+    <svg className="hm-traces" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g fill="none" stroke="#dd9e63" strokeWidth="1" strokeOpacity="0.55" vectorEffect="non-scaling-stroke">
+        <path d="M-2 22 H 34 L 44 32 V 58" vectorEffect="non-scaling-stroke" />
+        <path d="M-2 30 H 28 L 38 40 V 96 L 48 106 H 70" vectorEffect="non-scaling-stroke" />
+        <path d="M102 12 H 74 L 64 22 V 42" vectorEffect="non-scaling-stroke" />
+        <path d="M102 84 H 84 L 76 76 V 30" vectorEffect="non-scaling-stroke" />
+      </g>
+      <g fill="#dd9e63" fillOpacity="0.8">
+        <circle cx="44" cy="58" r="1.7" />
+        <circle cx="64" cy="42" r="1.7" />
+        <circle cx="70" cy="106" r="1.7" />
+        <circle cx="76" cy="30" r="1.7" />
+      </g>
+      <rect x="50" y="46" width="22" height="16" rx="1.4" fill="#134634" stroke="#e8c56c" strokeWidth="0.8" strokeOpacity="0.85" />
+      <g fill="#e8c56c" fillOpacity="0.75">
+        <rect x="52.5" y="43.4" width="2.2" height="2.6" />
+        <rect x="57.5" y="43.4" width="2.2" height="2.6" />
+        <rect x="62.5" y="43.4" width="2.2" height="2.6" />
+        <rect x="67.5" y="43.4" width="2.2" height="2.6" />
+      </g>
+    </svg>
+  );
+}
+
+/* One chalk stroke + settled dust for the C4 face. */
+function ChalkStroke() {
+  return (
+    <svg className="hm-chalk" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <path
+        d="M10 96 C 26 92.5, 44 95.5, 60 93.2 S 86 94.8, 91 92.6"
+        fill="none"
+        stroke="#f2f0e9"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeOpacity="0.85"
+        vectorEffect="non-scaling-stroke"
+      />
+      <path
+        d="M12 99 C 30 96, 50 98.5, 68 96.4"
+        fill="none"
+        stroke="#f2f0e9"
+        strokeWidth="1.1"
+        strokeLinecap="round"
+        strokeOpacity="0.3"
+        vectorEffect="non-scaling-stroke"
+      />
+      <g fill="#f2f0e9">
+        <circle cx="22" cy="103" r="0.7" fillOpacity="0.4" />
+        <circle cx="47" cy="101.5" r="0.55" fillOpacity="0.32" />
+        <circle cx="73" cy="100" r="0.7" fillOpacity="0.38" />
+      </g>
+      <rect x="8" y="14" width="52" height="30" rx="2" fill="#f2f0e9" fillOpacity="0.035" transform="rotate(-3 34 29)" />
+    </svg>
+  );
+}
+
+const DOORS = [
+  {
+    key: 'web',
+    face: 'web',
+    faceTo: '/ServiceWeb',
+    faceAria: 'Enter Web & Applications',
+    tag: 'Web design & development',
+    word: 'Build a website',
+    outcome:
+      'Custom marketing sites, web apps and SaaS platforms — fast, refined, and built to convert. You own the codebase end-to-end.',
+    fromPrice: 'From $500',
+    timeframe: '2–3 weeks',
+    primary: { label: 'Start a website brief', to: '/start?service=web_design' },
+    secondary: { label: 'See web packages', to: '/ServiceWeb' },
+  },
+  {
+    key: 'c4i',
+    face: 'c4i',
+    faceTo: '/c4i',
+    faceAria: 'Enter C4i',
+    tag: (
+      <>
+        <C4iWordmark /> · AI
+      </>
+    ),
+    word: 'Put AI to work',
+    outcome:
+      'A private AI system on your own hardware, or cloud-based automations, agents and custom tools. Choose the setup that fits.',
+    fromPrice: 'Local or cloud',
+    timeframe: 'Scoped to you',
+    primary: {
+      label: (
+        <>
+          Explore <C4iWordmark />
+        </>
+      ),
+      to: '/c4i',
+    },
+    secondary: { label: 'Private AI', to: '/private-ai' },
+  },
+  {
+    key: 'lens',
+    face: 'lens',
+    faceTo: '/Lens',
+    faceAria: 'Enter C4 Lens',
+    tag: 'C4 Lens',
+    word: 'Brand & visual',
+    outcome:
+      'Photography, short-form video and brand identity — a coherent visual system for Perth businesses ready to retire stock.',
+    fromPrice: 'From $200',
+    timeframe: 'Half / full-day shoots',
+    primary: { label: 'Book a shoot', to: '/start?service=lens' },
+    secondary: { label: 'Visit C4 Lens', to: '/Lens' },
+  },
+  {
+    key: 'sight',
+    face: 'sight',
+    faceTo: '/Foresight',
+    faceAria: 'Enter C4Sight',
+    tag: 'C4Sight',
+    word: 'Train your team',
+    outcome:
+      'Practical, hands-on AI workshops that leave your team genuinely capable, using their own tools on their own work.',
+    fromPrice: 'From $800',
+    timeframe: 'Half / full-day',
+    primary: { label: 'Enquire about training', to: '/ai-training-enquiry' },
+    secondary: { label: 'Visit C4Sight', to: '/Foresight' },
+  },
+];
+
+function DoorFaceArt({ kind }) {
+  if (kind === 'web') {
+    return (
+      <span className="hm-weave" aria-hidden="true">
+        {WEAVE.map((w) => (
+          <img key={w.src} src={w.src} alt="" loading="lazy" decoding="async" />
+        ))}
+      </span>
+    );
+  }
+  if (kind === 'c4i') return <BoardTraces />;
+  if (kind === 'lens') return <NineGonArc />;
+  return <ChalkStroke />;
+}
+
+export default function FourDoors() {
+  const sectionRef = useRef(null);
+  const h2Ref = useRef(null);
+  const staticMode = useStaticMode();
+
+  useLayoutEffect(() => {
+    if (staticMode) return undefined;
+    const section = sectionRef.current;
+    if (!section) return undefined;
+
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      mm.add('(prefers-reduced-motion: no-preference)', () => {
+        revealHeading(h2Ref.current);
+        const doors = gsap.utils.toArray('.hm-door', section);
+        const tween = gsap.from(doors, {
+          y: 26,
+          autoAlpha: 0,
+          duration: 0.9,
+          stagger: 0.09,
+          ease: EASE,
+          clearProps: 'opacity,visibility,transform',
+          scrollTrigger: {
+            trigger: section.querySelector('.hm-doors'),
+            start: 'top 82%',
+            once: true,
+          },
+        });
+        return () => {
+          tween.scrollTrigger?.kill();
+          tween.kill();
+        };
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, [staticMode]);
+
+  return (
+    <section ref={sectionRef} aria-labelledby="home-products-heading" className="relative py-20 md:py-28" style={{ backgroundColor: 'var(--c4-bg)' }}>
+      <div className="mx-auto max-w-[1400px] px-6 md:px-12">
+        <div className="mb-10 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between">
+          <h2
+            id="home-products-heading"
+            ref={h2Ref}
+            className="hm-h2 max-w-[24ch] text-[clamp(1.7rem,3.4vw,2.7rem)]"
+          >
+            Four services. One studio. Pick a starting point.
+          </h2>
+          <p className="hm-sub max-w-[36ch] text-[13.5px]">
+            Most clients start with one of these. Each card opens a short brief — fixed scope, transparent pricing, founder reply within a business day.
+          </p>
+        </div>
+      </div>
+
+      {/* The lintel — proof letterpressed above the doors */}
+      <div className="hm-lintel">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-12">
+          <div className="hm-lintel-inner">
+            <span className="hm-label">C4 Services</span>
+            {STATS.map((s) => (
+              <span key={s.label} className="hm-lintel-stat">
+                <b>{s.value}</b>
+                <span>{s.label}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-[1400px] px-6 pt-10 md:px-12 md:pt-12">
+        <div className="hm-doors">
+          {DOORS.map((door) => (
+            <article key={door.key} className="hm-door" data-proof>
+              <Link
+                to={door.faceTo}
+                className={`hm-doorface hm-doorface--${door.face}`}
+                aria-label={door.faceAria}
+              >
+                <DoorFaceArt kind={door.face} />
+                <span className="hm-door-tag">{door.tag}</span>
+                <h3 className="hm-door-word">
+                  {door.word}
+                  <span className="hm-door-arrow" aria-hidden="true"> →</span>
+                </h3>
+              </Link>
+
+              <div className="hm-doorinfo">
+                <p>{door.outcome}</p>
+                <div className="hm-door-meta">
+                  <b>{door.fromPrice}</b>
+                  <i aria-hidden="true">/</i>
+                  <span>{door.timeframe}</span>
+                </div>
+                <div className="hm-door-ctas">
+                  <Link to={door.primary.to} className="hm-door-cta group">
+                    {door.primary.label}
+                    <ArrowRight size={12} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </Link>
+                  <Link to={door.secondary.to} className="hm-door-sec group">
+                    {door.secondary.label}
+                    <ArrowUpRight size={11} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </Link>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

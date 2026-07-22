@@ -201,6 +201,12 @@ async function main() {
     userAgent: 'C4-Prerenderer/1.0',
     viewport: { width: 1280, height: 800 },
   });
+  // The home intro plays once per visitor (localStorage-gated) and briefly
+  // unmounts the page content while it runs — seed the flag so the capture
+  // can never race the overlay and ship an H1-less home page.
+  await context.addInitScript(() => {
+    try { localStorage.setItem('c4_intro_seen', '1'); } catch { /* storage may be unavailable */ }
+  });
   const page = await context.newPage();
 
   // Suppress console noise from the rendered app

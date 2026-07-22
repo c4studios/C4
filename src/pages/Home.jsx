@@ -2,14 +2,15 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import IntroSequence from '../components/c4/IntroSequence';
 import HeroSection from '../components/home/HeroSection';
-import SocialProof from '../components/home/SocialProof';
-import ProductTrio from '../components/home/ProductTrio';
+import ShippingWall from '../components/home/ShippingWall';
+import FourDoors from '../components/home/FourDoors';
 import C4Originals from '../components/home/C4Originals';
-import PortfolioPreview from '../components/home/PortfolioPreview';
 import TestimonialsProof from '../components/home/TestimonialsProof';
 import FinalCTA from '../components/home/FinalCTA';
+import TallyRail from '../components/home/TallyRail';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { organizationSchema, localBusinessSchema, websiteSchema } from '@/lib/schema';
+import '../components/home/home.css';
 
 export default function Home() {
   const jsonLd = useMemo(() => [
@@ -48,14 +49,15 @@ export default function Home() {
       </AnimatePresence>
 
       {introComplete && (
-        <div style={{ backgroundColor: 'var(--c4-bg)' }}>
+        <div className="hm-root" style={{ backgroundColor: 'var(--c4-bg)' }}>
           <HeroSection />
-          <SocialProof />
-          <ProductTrio />
+          <ShippingWall />
+          <FourDoors />
+          {/* Software surface — untouched by law; clean air only. */}
           <C4Originals />
-          <PortfolioPreview />
           <TestimonialsProof />
           <FinalCTA />
+          <TallyRail />
         </div>
       )}
     </>
