@@ -38,34 +38,55 @@ const WEAVE = [
 ];
 
 /* Hairline 9-gon arc for the C3 face — six of nine edges, off-centre. */
-function NineGonArc() {
-  const cx = 82;
-  const cy = 18;
-  const r = 58;
-  const pts = [];
-  for (let k = 0; k <= 6; k += 1) {
-    const a = ((k * 40 + 70) * Math.PI) / 180;
-    pts.push(`${(cx + r * Math.cos(a)).toFixed(2)},${(cy + r * Math.sin(a)).toFixed(2)}`);
-  }
+/* A miniature of the /Lens hero: the 9-blade aperture iris inside its
+   barrel, f-stop ticks, HUD corner brackets and the REC lamp. The blade
+   group rotates on hover (CSS) like the lens being focused. */
+function ApertureIris() {
+  const CX = 50;
+  const CY = 54;
+  const R = 38;
+  const SWEEP = 112; // chord sweep — sets the inner opening (~0.56R)
+  const pt = (deg, r = R) => {
+    const a = ((deg - 90) * Math.PI) / 180;
+    return [CX + r * Math.cos(a), CY + r * Math.sin(a)];
+  };
+  const chord = (k, offset = 0) => {
+    const [x1, y1] = pt(k * 40 + offset);
+    const [x2, y2] = pt(k * 40 + offset + SWEEP);
+    return `M${x1.toFixed(2)} ${y1.toFixed(2)} L${x2.toFixed(2)} ${y2.toFixed(2)}`;
+  };
+  const blades = Array.from({ length: 9 }, (_, k) => chord(k));
+  const bladesGhost = Array.from({ length: 9 }, (_, k) => chord(k, 4));
+  const ticks = Array.from({ length: 36 }, (_, k) => {
+    const major = k % 4 === 0;
+    const [x1, y1] = pt(k * 10, R + 2);
+    const [x2, y2] = pt(k * 10, R + (major ? 5.4 : 3.6));
+    return { d: `M${x1.toFixed(2)} ${y1.toFixed(2)} L${x2.toFixed(2)} ${y2.toFixed(2)}`, major };
+  });
   return (
     <svg className="hm-ninegon" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <polyline
-        points={pts.join(' ')}
-        fill="none"
-        stroke="rgba(255,255,255,0.3)"
-        strokeWidth="1"
-        vectorEffect="non-scaling-stroke"
-      />
-      <polyline
-        points={pts.map((p) => {
-          const [x, y] = p.split(',').map(Number);
-          return `${(cx + (x - cx) * 0.82).toFixed(2)},${(cy + (y - cy) * 0.82).toFixed(2)}`;
-        }).join(' ')}
-        fill="none"
-        stroke="rgba(255,255,255,0.14)"
-        strokeWidth="1"
-        vectorEffect="non-scaling-stroke"
-      />
+      {/* barrel */}
+      <circle cx={CX} cy={CY} r={R} fill="none" stroke="rgba(255,255,255,0.34)" strokeWidth="1.3" vectorEffect="non-scaling-stroke" />
+      <circle cx={CX} cy={CY} r={R - 3.2} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+      {/* f-stop ticks */}
+      {ticks.map((t, i) => (
+        <path key={i} d={t.d} stroke={`rgba(255,255,255,${t.major ? 0.36 : 0.18})`} strokeWidth={t.major ? 1.2 : 1} strokeLinecap="round" vectorEffect="non-scaling-stroke" fill="none" />
+      ))}
+      {/* iris blades — rotates on hover via CSS */}
+      <g className="hm-iris-blades">
+        {bladesGhost.map((d, i) => (
+          <path key={`g${i}`} d={d} stroke="rgba(255,255,255,0.14)" strokeWidth="1" strokeLinecap="round" vectorEffect="non-scaling-stroke" fill="none" />
+        ))}
+        {blades.map((d, i) => (
+          <path key={i} d={d} stroke="rgba(255,255,255,0.56)" strokeWidth="1.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" fill="none" />
+        ))}
+      </g>
+      {/* the opening */}
+      <circle cx={CX} cy={CY} r={R * 0.5} fill="rgba(255,255,255,0.045)" />
+      {/* HUD whispers: corner brackets + REC lamp */}
+      <path d="M8 10 L8 4 L14 4 M92 130 L92 136 L86 136" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.1" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+      <circle cx="88" cy="8" r="1.7" fill="#ff3b30" fillOpacity="0.85" />
+      <circle cx="88" cy="8" r="3.4" fill="none" stroke="#ff3b30" strokeOpacity="0.28" strokeWidth="0.8" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }
@@ -98,34 +119,45 @@ function BoardTraces() {
   );
 }
 
-/* One chalk stroke + settled dust for the C4 face. */
-function ChalkStroke() {
+/* A worked lesson-board for the Sight face: tally strokes counted and
+   struck through, a chalk arrow to a tick that lands, a ghost of the
+   last class under an eraser pass, and the underline the word sits on. */
+function ChalkLesson() {
+  const CHALK = '#f2f0e9';
   return (
     <svg className="hm-chalk" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <path
-        d="M10 96 C 26 92.5, 44 95.5, 60 93.2 S 86 94.8, 91 92.6"
-        fill="none"
-        stroke="#f2f0e9"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeOpacity="0.85"
-        vectorEffect="non-scaling-stroke"
-      />
-      <path
-        d="M12 99 C 30 96, 50 98.5, 68 96.4"
-        fill="none"
-        stroke="#f2f0e9"
-        strokeWidth="1.1"
-        strokeLinecap="round"
-        strokeOpacity="0.3"
-        vectorEffect="non-scaling-stroke"
-      />
-      <g fill="#f2f0e9">
+      {/* ghost of the last lesson — erased, still faintly there */}
+      <g stroke={CHALK} strokeLinecap="round" fill="none" opacity="0.16">
+        <path d="M58 52 C 66 50.5, 76 52.5, 86 51" strokeWidth="1.6" vectorEffect="non-scaling-stroke" />
+        <path d="M60 58 C 68 56.8, 75 58.4, 82 57.2" strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
+      </g>
+      <rect x="52" y="44" width="42" height="22" rx="3" fill={CHALK} fillOpacity="0.035" transform="rotate(-2 73 55)" />
+      {/* the tally — four counted, the fifth strikes through */}
+      <g stroke={CHALK} strokeLinecap="round" fill="none">
+        <path d="M15 22 C 15.4 27, 14.8 32, 15.3 37" strokeWidth="2.3" strokeOpacity="0.82" vectorEffect="non-scaling-stroke" />
+        <path d="M21 21.5 C 20.6 26.5, 21.3 31.5, 20.8 36.6" strokeWidth="2.1" strokeOpacity="0.72" vectorEffect="non-scaling-stroke" />
+        <path d="M27 22.2 C 27.5 27, 26.9 32, 27.4 36.9" strokeWidth="2.3" strokeOpacity="0.85" vectorEffect="non-scaling-stroke" />
+        <path d="M33 21.8 C 32.6 26.8, 33.2 31.6, 32.8 36.4" strokeWidth="2" strokeOpacity="0.68" vectorEffect="non-scaling-stroke" />
+        <path d="M10 33.5 C 18 30.5, 28 28.5, 38 25.5" strokeWidth="2.5" strokeOpacity="0.88" vectorEffect="non-scaling-stroke" />
+      </g>
+      {/* chalk arrow to the tick — the lesson lands */}
+      <g stroke={CHALK} strokeLinecap="round" fill="none">
+        <path d="M44 30 C 52 26.5, 58 25, 65 24.5" strokeWidth="1.7" strokeOpacity="0.55" vectorEffect="non-scaling-stroke" />
+        <path d="M61.5 21.5 L 65.6 24.4 L 61.2 26.8" strokeWidth="1.6" strokeOpacity="0.55" vectorEffect="non-scaling-stroke" />
+        <path d="M72 25.5 L 75.4 29.5 L 82.5 18.5" strokeWidth="2.6" strokeOpacity="0.9" vectorEffect="non-scaling-stroke" />
+      </g>
+      {/* eraser pass above the tray */}
+      <rect x="6" y="58" width="34" height="12" rx="6" fill={CHALK} fillOpacity="0.04" transform="rotate(-3 23 64)" />
+      {/* the underline the door word sits on, and settled dust */}
+      <path d="M10 96 C 26 92.5, 44 95.5, 60 93.2 S 86 94.8, 91 92.6" fill="none" stroke={CHALK} strokeWidth="2.6" strokeLinecap="round" strokeOpacity="0.85" vectorEffect="non-scaling-stroke" />
+      <path d="M12 99 C 30 96, 50 98.5, 68 96.4" fill="none" stroke={CHALK} strokeWidth="1.1" strokeLinecap="round" strokeOpacity="0.3" vectorEffect="non-scaling-stroke" />
+      <g fill={CHALK}>
         <circle cx="22" cy="103" r="0.7" fillOpacity="0.4" />
+        <circle cx="35" cy="41" r="0.6" fillOpacity="0.35" />
         <circle cx="47" cy="101.5" r="0.55" fillOpacity="0.32" />
         <circle cx="73" cy="100" r="0.7" fillOpacity="0.38" />
+        <circle cx="78" cy="31" r="0.55" fillOpacity="0.3" />
       </g>
-      <rect x="8" y="14" width="52" height="30" rx="2" fill="#f2f0e9" fillOpacity="0.035" transform="rotate(-3 34 29)" />
     </svg>
   );
 }
@@ -211,8 +243,8 @@ function DoorFaceArt({ kind }) {
     );
   }
   if (kind === 'c4i') return <BoardTraces />;
-  if (kind === 'lens') return <NineGonArc />;
-  return <ChalkStroke />;
+  if (kind === 'lens') return <ApertureIris />;
+  return <ChalkLesson />;
 }
 
 export default function FourDoors() {
