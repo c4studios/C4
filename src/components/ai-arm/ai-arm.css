@@ -85,9 +85,20 @@
   --cw-disp: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --cw-mono: 'B612 Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
+  /* FR-4 glass-weave — a static crosshatch of two 1px copper hatches at
+     2.5% over the solder mask. Baked (no filter, no animation); alpha
+     capped so board-body copy (7.9:1 baseline) stays well clear of
+     4.5:1 even where the weave sits directly behind it. */
+  --cw-weave:
+    repeating-linear-gradient(45deg, rgba(221, 158, 99, 0.025) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(-45deg, rgba(221, 158, 99, 0.025) 0 1px, transparent 1px 8px);
+
+  position: relative;
+  isolation: isolate;
   background-color: var(--cw-board);
-  background-image: radial-gradient(rgba(221, 158, 99, 0.05) 1px, transparent 1.4px);
-  background-size: 26px 26px;
+  background-image: var(--cw-weave),
+    radial-gradient(rgba(221, 158, 99, 0.05) 1px, transparent 1.4px);
+  background-size: 8px 8px, 8px 8px, 26px 26px;
   color: var(--cw-body-ink);
   font-family: var(--cw-disp);
   font-size: 15.5px;
@@ -130,6 +141,10 @@
   line-height: 1.04;
   letter-spacing: -0.02em;
   color: var(--cw-ink);
+  /* Silkscreen misregistration — a 1px copper echo, as if the white
+     legend printed a hair off the copper. Solid offset layer, not a
+     gradient; alpha low enough to leave the ink at full legibility. */
+  text-shadow: 1px 0 0 color-mix(in srgb, var(--cw-copper) 16%, transparent);
   text-wrap: balance;
 }
 
@@ -142,6 +157,7 @@
   line-height: 1.1;
   letter-spacing: -0.015em;
   color: var(--cw-ink);
+  text-shadow: 1px 0 0 color-mix(in srgb, var(--cw-copper) 14%, transparent);
   text-wrap: balance;
 }
 
@@ -270,30 +286,70 @@
   transform: translateX(3px);
 }
 
+/* ═══ THE BUS — copper spine + scroll-scrubbed gold pulse (R3) ═════
+   One trace threads the whole board down the left margin; three vias
+   tap off it. The gold pulse is the only thing that moves, and only
+   while you scroll — its transform is written from JS (ScrollTrigger
+   progress), so it never drifts idle. The spine lives in the outer
+   gutter, clear of both body text and the top-left keep-out zone, and
+   is hidden on narrow screens where the gutter closes up. */
+.cw-bus {
+  display: none;
+  position: absolute;
+  top: clamp(168px, 18vh, 208px);
+  bottom: 0;
+  left: clamp(18px, 2vw, 34px);
+  width: 8px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.cw-bus-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 2px;
+  background: var(--cw-copper-dim);
+}
+
+.cw-bus-node {
+  position: absolute;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cw-deepest);
+  border: 1.5px solid var(--cw-copper);
+  transform: translateY(-50%);
+}
+
+.cw-bus-pulse {
+  position: absolute;
+  top: 0;
+  left: 1px;
+  width: 6px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--cw-gold);
+  box-shadow: 0 0 11px 2px color-mix(in srgb, var(--cw-gold) 55%, transparent);
+  will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .cw-bus { display: block; }
+}
+
 /* ═══ HERO — the board corner ═════════════════════════════════════ */
 
 .cw-hero {
   position: relative;
-  padding-top: clamp(7rem, 16vh, 10.5rem);
+  /* Clears the top-left ribbon keep-out (mobile 120px zone) so the
+     hero legend never sits under the back affordance. */
+  padding-top: clamp(8.5rem, 20vw, 9.5rem);
   padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
   overflow: hidden;
 }
-
-/* Mounting holes, top corners — pure ornament */
-.cw-hole {
-  position: absolute;
-  top: 92px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 5px solid rgba(221, 158, 99, 0.5);
-  background: var(--cw-deepest);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.55);
-  display: none;
-}
-
-.cw-hole--l { left: 26px; }
-.cw-hole--r { right: 26px; }
 
 .cw-hero-grid {
   display: grid;
@@ -331,7 +387,14 @@
   border-radius: 50%;
   background: var(--cw-led);
   box-shadow: 0 0 10px 1px color-mix(in srgb, var(--cw-led) 65%, transparent);
-  animation: cw-led-breathe 3.4s ease-in-out infinite;
+  /* Power LED — a single one-shot power-on flicker on mount, then held
+     lit. NOT an idle loop: the perf whitelist (memo §5) reserves
+     continuous idle motion for the tools belt alone, and bans any
+     continuous animation below the fold (the closing-CTA LED). Held lit
+     by default so it renders correctly with no JS; the reduced-motion
+     and staticMode blocks below disable the flicker entirely. */
+  opacity: 1;
+  animation: cw-led-on 0.4s ease-out both;
 }
 
 .cw-hero-ctas {
@@ -383,6 +446,26 @@
   stroke-width: 1;
 }
 
+/* Ratsnest — transient straight airwires shown before the router runs.
+   Thin dashed copper; framer-motion fades them in and out on load. */
+.cw-airwire {
+  fill: none;
+  stroke: var(--cw-copper-dim);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+
+/* Boot indicator on the core — flickers once through POST, then holds.
+   Gold, not red: red stays the single power LED. */
+.cw-post { fill: var(--cw-gold); }
+
+/* Solder-joint speculars — static bright pin-points at trace bends and
+   pads. Highlights, never a shimmer loop. */
+.cw-glint {
+  fill: var(--cw-ink);
+  opacity: 0.82;
+}
+
 .cw-silk-frame {
   fill: none;
   stroke: rgba(237, 245, 238, 0.28);
@@ -416,10 +499,6 @@
   font-size: 9.5px;
   letter-spacing: 0.24em;
   fill: var(--cw-mute);
-}
-
-.cw-pulse {
-  fill: var(--cw-gold);
 }
 
 /* Mobile micro-board — a small abstract module in place of the map */
@@ -478,7 +557,9 @@
 }
 
 @media (min-width: 768px) {
-  .cw-hole { display: block; }
+  /* Desktop keep-out is 220×160 from the top-left corner; the legend
+     starts below the 160px tail with room to breathe. */
+  .cw-hero { padding-top: clamp(11rem, 16vh, 12.5rem); }
   .cw-microboard { display: none; }
   .cw-heromap { display: block; }
   .cw-hero-grid { grid-template-columns: 1.04fr 0.96fr; }
@@ -531,6 +612,65 @@
   background: transparent;
   border: 1.5px solid var(--cw-copper);
   flex-shrink: 0;
+}
+
+/* Instrument channel: the net name over its own logic-analyzer trace. */
+.cw-net-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.cw-chan {
+  position: relative;
+  display: inline-flex;
+  width: 94px;
+  height: 21px;
+  overflow: hidden;
+}
+
+.cw-wave {
+  display: block;
+  width: 94px;
+  height: 21px;
+}
+
+.cw-wave-path {
+  fill: none;
+  stroke: var(--cw-copper);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.85;
+}
+
+/* Bright cursor sweeps the channel only while the row is hovered or
+   focused, then stops — the square wave itself is drawn once on entry
+   (framer-motion pathLength). No idle motion. */
+.cw-wave-scan {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 16px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--cw-gold) 65%, transparent),
+    transparent
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cw-net-row:hover .cw-wave-scan,
+.cw-net-row:focus-within .cw-wave-scan {
+  opacity: 1;
+  animation: cw-scan 1.5s linear infinite;
+}
+
+@keyframes cw-scan {
+  from { transform: translateX(-16px); }
+  to { transform: translateX(94px); }
 }
 
 .cw-net-row p {
@@ -713,7 +853,9 @@
 
 .cw-tools {
   padding-block: clamp(3rem, 6vw, 4.5rem);
-  background: var(--cw-deep);
+  background-color: var(--cw-deep);
+  background-image: var(--cw-weave);
+  background-size: 8px 8px, 8px 8px;
 }
 
 .cw-tools .cw-h2 {
@@ -763,7 +905,7 @@
   text-underline-offset: 3px;
 }
 .cw-belt-pause:hover {
-  color: var(--cw-silk);
+  color: var(--cw-ink);
 }
 
 .cw-belt ul,
@@ -945,9 +1087,10 @@
 
 .cw-cta {
   padding-block: clamp(5.5rem, 11vw, 8.5rem);
-  background: var(--cw-deep);
-  background-image: radial-gradient(rgba(221, 158, 99, 0.06) 1px, transparent 1.4px);
-  background-size: 26px 26px;
+  background-color: var(--cw-deep);
+  background-image: var(--cw-weave),
+    radial-gradient(rgba(221, 158, 99, 0.06) 1px, transparent 1.4px);
+  background-size: 8px 8px, 8px 8px, 26px 26px;
   text-align: center;
 }
 
@@ -984,9 +1127,14 @@
 
 /* ═══ Motion ══════════════════════════════════════════════════════ */
 
-@keyframes cw-led-breathe {
-  0%, 100% { opacity: 0.55; }
-  50% { opacity: 1; }
+/* One-shot power-on: a brief flicker up to full, then held lit. Runs
+   once on mount (within the 200–400ms one-shot family, memo §1) — no
+   infinite loop, no idle draw. */
+@keyframes cw-led-on {
+  0% { opacity: 0.2; }
+  35% { opacity: 1; }
+  55% { opacity: 0.45; }
+  100% { opacity: 1; }
 }
 
 @keyframes cw-belt {
@@ -997,6 +1145,11 @@
 @media (prefers-reduced-motion: reduce) {
   .cw-led { animation: none; opacity: 1; }
   .cw-belt-track { animation: none; }
+  .cw-net-row:hover .cw-wave-scan,
+  .cw-net-row:focus-within .cw-wave-scan {
+    animation: none;
+    opacity: 0;
+  }
 }
 
 /* Static mode (prerender or reduced motion, set from JS) —
@@ -1008,6 +1161,18 @@
 
 .cw-root.cw-static .cw-belt-track {
   animation: none;
+}
+
+/* No scroll-driven JS in static mode — park the pulse at the first via
+   with a calmer glow so the spine still reads as powered. */
+.cw-root.cw-static .cw-bus-pulse {
+  top: 19%;
+  box-shadow: 0 0 7px 1px color-mix(in srgb, var(--cw-gold) 45%, transparent);
+}
+
+.cw-root.cw-static .cw-wave-scan {
+  animation: none;
+  opacity: 0;
 }
 
 /* The Layout wrapper and footer carry their own colour transitions —

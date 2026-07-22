@@ -29,6 +29,10 @@
   --wa-yellow-tint: #fff3c9;
   --wa-on-yellow-soft: #4a4108;
   --wa-red: var(--c4-accent, #c23030);
+  /* Dried stamp ink — computed 5.0:1 on yellow #FFC400; the ghost layer
+     is a brighter red for baked misregistration. */
+  --wa-stamp: #9e1b1b;
+  --wa-stamp-ghost: #c23030;
 
   --wa-sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --wa-ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -112,15 +116,6 @@
   max-width: 58ch;
 }
 
-/* Condensed stencil label — the beam-marking voice. */
-.wa-cond {
-  font-family: var(--wa-sans);
-  font-stretch: 66%;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-}
-
 .wa-mark {
   background: var(--wa-yellow);
   color: var(--wa-ink);
@@ -194,9 +189,18 @@
 
 /* ── Hero ──────────────────────────────────────────────────────── */
 
+/* Top padding clears the nav back-ribbon keep-out zone (§3): 140×120 on
+   mobile, 220×160 on desktop. The title block is top-left, so the hero
+   must start below the ribbon's tail. */
 .wa-hero {
-  padding-top: clamp(116px, 15vh, 168px);
+  padding-top: 132px;
   padding-bottom: clamp(40px, 6vh, 72px);
+}
+
+@media (min-width: 640px) {
+  .wa-hero {
+    padding-top: clamp(176px, 12vh + 84px, 216px);
+  }
 }
 
 .wa-hero-grid {
@@ -294,6 +298,40 @@
   margin-inline: auto;
 }
 
+/* ── Scroll-driven build ───────────────────────────────────────────
+   --wa-build (0→1) is written by the hero ScrollTrigger; the SVG parts
+   consume it. It rests at 1 so the finished frame renders for static /
+   prerender / reduced-motion visitors. When armed it starts at 0 (the
+   crane holding its load aloft) and the scrub takes over via an inline
+   value. All three consumers are transform/opacity only — no layout. */
+.wa-hero-fig {
+  --wa-build: 1;
+}
+
+.wa-armed .wa-hero-fig {
+  --wa-build: 0;
+}
+
+/* Hoist cable pays out from the jib as the load lowers. */
+.wa-cable {
+  transform-box: view-box;
+  transform-origin: 300px 73px;
+  transform: scaleY(var(--wa-build, 1));
+}
+
+/* The beam + hook — a placed object craned into position (memo R3). */
+.wa-crane-load {
+  transform-box: view-box;
+  transform: translateY(calc((1 - var(--wa-build, 1)) * -54px));
+}
+
+/* The storey the crane installs — descends and seats as the build runs. */
+.wa-storey {
+  transform-box: view-box;
+  opacity: var(--wa-build, 1);
+  transform: translateY(calc((1 - var(--wa-build, 1)) * -9px));
+}
+
 /* ── Included band (yellow drench #1) ──────────────────────────── */
 
 .wa-band {
@@ -357,6 +395,149 @@
   background: var(--wa-ink);
   color: var(--wa-yellow);
   flex-shrink: 0;
+}
+
+/* ── As-built record — delivered sites as drawing plates ───────── */
+
+.wa-asbuilt {
+  padding-top: clamp(56px, 8vw, 104px);
+  padding-bottom: clamp(56px, 8vw, 104px);
+  border-bottom: 1px solid var(--wa-line);
+}
+
+.wa-asbuilt-head {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: clamp(26px, 4vw, 44px);
+}
+
+@media (min-width: 720px) {
+  .wa-asbuilt-head {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+  }
+}
+
+.wa-ab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: clamp(18px, 2.2vw, 28px);
+}
+
+/* Each plate is a drawing sheet: capture over a hairline title block. */
+.wa-ab {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--wa-line);
+  background: var(--wa-sheet);
+  text-decoration: none;
+  color: var(--wa-body-c);
+  transition: border-color 0.25s ease, transform 0.35s var(--wa-ease),
+    box-shadow 0.35s var(--wa-ease);
+}
+
+.wa-ab:hover {
+  border-color: var(--wa-ink);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px -22px rgba(22, 23, 26, 0.5);
+}
+
+.wa-ab-fig {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--wa-fig);
+  border-bottom: 1px solid var(--wa-line);
+}
+
+.wa-ab-fig img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transform: scale(1.001); /* hide sub-pixel cover seam */
+  transition: transform 0.5s var(--wa-ease);
+}
+
+.wa-ab:hover .wa-ab-fig img {
+  transform: scale(1.03);
+}
+
+/* Plotter pen head — the leading edge of the print wipe. */
+.wa-ab-pen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--wa-yellow);
+  box-shadow: 0 0 6px 1px rgba(255, 196, 0, 0.6);
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.wa-ab-tb {
+  display: grid;
+  gap: 5px;
+  padding: 15px 17px 17px;
+}
+
+.wa-ab-ref {
+  font-stretch: 66%;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--wa-mute);
+  transition: color 0.25s ease;
+}
+
+.wa-ab:hover .wa-ab-ref {
+  color: var(--wa-red);
+}
+
+.wa-ab-name {
+  font-stretch: 125%;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--wa-ink);
+}
+
+.wa-ab-scope {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--wa-mute);
+}
+
+.wa-ab-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 3px;
+  font-stretch: 66%;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--wa-body-c);
+}
+
+.wa-ab-meta svg {
+  margin-left: auto;
+  color: var(--wa-ink);
+  transition: transform 0.25s var(--wa-ease);
+}
+
+.wa-ab:hover .wa-ab-meta svg {
+  transform: translateX(3px);
 }
 
 /* ── Schedule (packages) ───────────────────────────────────────── */
@@ -540,6 +721,82 @@
 .wa-row:hover,
 .wa-row:focus-within {
   background: #fbfbf9;
+}
+
+/* Self-measuring hover: the row draws a pencil dimension line annotated
+   with its own rendered width (read once per mouseenter in JS, fine
+   pointers only). Ink, not red — red stays reserved for the stamp. */
+.wa-dim {
+  position: absolute;
+  top: 6px;
+  left: 16px;
+  right: 16px;
+  height: 10px;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.wa-dim.is-on {
+  opacity: 1;
+}
+
+.wa-dim-line {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--wa-ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s var(--wa-ease);
+}
+
+.wa-dim.is-on .wa-dim-line {
+  transform: scaleX(1);
+}
+
+.wa-dim-line::before,
+.wa-dim-line::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  width: 1px;
+  height: 9px;
+  background: var(--wa-ink);
+}
+
+.wa-dim-line::before {
+  left: 0;
+}
+
+.wa-dim-line::after {
+  right: 0;
+}
+
+.wa-dim-fig {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 7px;
+  background: var(--wa-sheet);
+  font-family: var(--wa-sans);
+  font-stretch: 66%;
+  font-weight: 600;
+  font-size: 10.5px;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  color: var(--wa-ink);
+  font-feature-settings: 'tnum';
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.22s;
+}
+
+.wa-dim.is-on .wa-dim-fig {
+  opacity: 1;
 }
 
 @media (min-width: 760px) {
@@ -987,6 +1244,104 @@
   margin-top: 34px;
 }
 
+/* On wider viewports the seal sits beside the copy; on mobile it drops
+   below, always in-flow so it can never overlap the heading. */
+@media (min-width: 640px) {
+  .wa-cta-in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(172px, 22vw, 238px);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+  }
+}
+
+/* ── The IFC certification stamp — web's one red object (memo R1) ─ */
+.wa-stamp {
+  align-self: center;
+  width: min(72vw, 244px);
+  margin: 36px auto 0;
+  transform: rotate(-8deg);
+  transform-origin: center;
+  pointer-events: none;
+  position: relative;
+}
+
+@media (min-width: 640px) {
+  .wa-stamp {
+    width: 100%;
+    margin: 0;
+    justify-self: end;
+  }
+}
+
+.wa-stamp-ink,
+.wa-stamp-ghost {
+  display: block;
+  width: 100%;
+  border: 3px solid currentColor;
+  border-radius: 4px;
+  padding: 11px 15px 12px;
+}
+
+.wa-stamp-ink {
+  position: relative;
+  z-index: 1;
+  color: var(--wa-stamp);
+}
+
+/* Baked ink misregistration — a brighter offset ghost behind the ink. */
+.wa-stamp-ghost {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  color: var(--wa-stamp-ghost);
+  opacity: 0.4;
+  transform: translate(2px, 1.5px) rotate(0.5deg);
+}
+
+.wa-stamp-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 1;
+  color: currentColor;
+}
+
+.wa-stamp-l1 {
+  font-family: var(--wa-sans);
+  font-stretch: 75%;
+  font-weight: 700;
+  font-size: clamp(9px, 1.4vw, 11px);
+  letter-spacing: 0.2em;
+}
+
+.wa-stamp-l2 {
+  font-family: var(--wa-sans);
+  font-stretch: 62%;
+  font-weight: 800;
+  font-size: clamp(19px, 3.4vw, 30px);
+  letter-spacing: 0.05em;
+}
+
+.wa-stamp-rule {
+  width: 100%;
+  height: 2px;
+  margin: 3px 0;
+  background: currentColor;
+}
+
+.wa-stamp-l3 {
+  font-family: var(--wa-sans);
+  font-stretch: 75%;
+  font-weight: 700;
+  font-size: clamp(7.5px, 1.1vw, 9px);
+  letter-spacing: 0.16em;
+}
+
 .wa-hatch {
   height: 14px;
   border-top: 1px solid rgba(22, 23, 26, 0.35);
@@ -1029,11 +1384,14 @@
   animation-delay: var(--d, 0s);
 }
 
-/* Hero drawing: strokes draw themselves (pathLength="1" in the SVG). */
+/* Hero drawing: strokes draw themselves (pathLength="1" in the SVG).
+   Timing is LINEAR — a mechanical, constant-rate pen (memo R3): web's
+   linework plots, it does not decelerate. That constant rate is the tell
+   that distinguishes it from AI's routing and Sight's hand wobble. */
 .wa-armed .wa-draw {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: waDraw 1.5s ease-out forwards;
+  animation: waDraw 1.5s linear forwards;
   animation-delay: var(--d, 0s);
 }
 
@@ -1068,6 +1426,64 @@
   transform: scaleX(1);
 }
 
+/* Plotter-wipe — as-built plates print in behind a yellow pen head
+   (exclusive to this section). The clip and the pen share a duration and
+   easing so the pen rides the leading edge; --wa-fig-w (set on the plate
+   in JS when it intersects) is the pen's travel. */
+@keyframes waPen {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  9% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(var(--wa-fig-w, 640px));
+    opacity: 0;
+  }
+}
+
+.wa-armed [data-wipe] {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.85s var(--wa-ease);
+}
+
+.wa-armed [data-wipe].wa-in {
+  clip-path: inset(0 0 0 0);
+}
+
+.wa-armed [data-wipe].wa-in .wa-ab-pen {
+  animation: waPen 0.85s var(--wa-ease) forwards;
+}
+
+/* The certification stamp lands once: scale 1.35→1, −2° settle (memo R1).
+   Web is the only stamp on the site that thumps. */
+@keyframes waStamp {
+  0% {
+    opacity: 0;
+    transform: rotate(-6deg) scale(1.35);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-8deg) scale(1);
+  }
+}
+
+.wa-armed .wa-stamp {
+  opacity: 0;
+  transform: rotate(-6deg) scale(1.35);
+}
+
+.wa-armed .wa-stamp.wa-in {
+  /* 380ms keeps the thump inside the house settle family (memo §1.4,
+     200–400ms ease-out) and lands sharper — a stamp hits, it doesn't drift. */
+  animation: waStamp 0.38s var(--wa-ease) forwards;
+}
+
 /* Belt-and-braces: if the class is ever present under reduced
    motion, neutralise every entrance. */
 @media (prefers-reduced-motion: reduce) {
@@ -1100,6 +1516,27 @@
 
   .wa-armed [data-reveal] .wa-bar {
     transform: none;
+  }
+
+  /* Build rests complete; plates and stamp render at their end state. */
+  .wa-armed .wa-hero-fig {
+    --wa-build: 1;
+  }
+
+  .wa-armed [data-wipe] {
+    clip-path: none;
+  }
+
+  .wa-armed [data-wipe].wa-in .wa-ab-pen {
+    animation: none;
+    opacity: 0;
+  }
+
+  .wa-armed .wa-stamp,
+  .wa-armed .wa-stamp.wa-in {
+    opacity: 1;
+    transform: rotate(-8deg) scale(1);
+    animation: none;
   }
 }
 

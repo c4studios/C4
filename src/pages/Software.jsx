@@ -1,181 +1,126 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema } from '@/lib/schema';
-import { PRODUCTS, statusColor as productStatusColor } from '../components/software/productData';
+import { PRODUCTS } from '../components/software/productData';
+import { Barcode, StatusStamp, LogoChip, Model, CtaLink } from '../components/software/RegisterUI';
+import { modelFor } from '../components/software/skus';
+import useRegisterMotion from '../components/software/useRegisterMotion';
+import '../components/software/software.css';
 
-const ease = [0.22, 1, 0.36, 1];
-
-const statusColor = productStatusColor;
-
-// A small, truthful reassurance cue shown under each card's CTA.
-function reassuranceFor(product) {
-  if (/start free/i.test(product.ctaLabel)) return 'Free to start · no card required';
-  if (product.status === 'Early access') return 'No obligation · early access';
-  return 'No pressure · just a chat';
+// Lowest monthly tier, used as the register's "price from" column. Products
+// still in preview carry no tiers and show no price (the stamp says PREVIEW).
+function priceFrom(product) {
+  if (!product.tiers?.length) return null;
+  return Math.min(...product.tiers.map((t) => t.price));
 }
 
-// One product card: value first (logo + name + one-liner), then the price/CTA.
-function ProductCard({ product, index }) {
-  const color = statusColor(product.status);
-  const reassurance = reassuranceFor(product);
+// One register row = one manufactured unit. Closed row carries model, name,
+// price and CTA; the drawer (in the DOM at rest, OPEN under prerender / reduced
+// motion) reveals the feature spec and the lifetime line.
+function RegisterRow({ product }) {
+  const [open, setOpen] = useState(false);
+  const detailHref = `${createPageUrl('SoftwareProduct')}?slug=${product.slug}`;
+  const from = priceFrom(product);
+  const CtaIcon = product.ctaExternal ? ArrowUpRight : ArrowRight;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay: Math.min(index, 4) * 0.06, ease }}
-      className="group flex flex-col rounded-[4px] overflow-hidden h-full"
-      style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
-    >
-      {/* VALUE — logo, status, name, one-liner (lead with what it does) */}
-      <Link
-        to={`${createPageUrl('SoftwareProduct')}?slug=${product.slug}`}
-        className="flex flex-col gap-4 p-6 md:p-7"
-      >
-        <div className="flex items-center justify-between gap-4">
-          <div
-            className="flex items-center justify-center rounded-[8px] overflow-hidden shrink-0"
-            style={{ width: 56, height: 56, backgroundColor: product.logoBg, border: '1px solid var(--c4-border)' }}
-          >
-            <img
-              src={product.logo}
-              alt={`${product.name} logo`}
-              className="h-full w-full"
-              style={{ objectFit: 'contain', padding: 10 }}
-              draggable="false"
-              loading="lazy"
-            />
-          </div>
-          <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ border: `1px solid ${color}` }}>
-            <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
-            <span className="text-[9.5px] uppercase tracking-[0.14em] font-medium" style={{ color }}>
-              {product.status}
-            </span>
-          </span>
-        </div>
+    <div className="sw-row" data-open={open ? 'true' : 'false'}>
+      <div className="sw-row-head">
+        <LogoChip product={product} className="sw-row-chip" />
 
-        <div>
-          <h3
-            className="text-[1.35rem] font-semibold tracking-[-0.02em] leading-[1.1] flex items-center gap-1.5"
-            style={{ color: 'var(--c4-text)' }}
-          >
+        <div className="sw-row-ident">
+          <div className="sw-row-model">
+            <Model slug={product.slug} />
+            <Barcode slug={product.slug} width={46} height={13} className="sw-row-barcode" />
+          </div>
+          <Link to={detailHref} className="sw-row-name">
             {product.name}
-            <ArrowRight
-              size={15}
-              strokeWidth={2}
-              className="opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
-              style={{ color: 'var(--c4-accent)' }}
-            />
-          </h3>
-          <p className="mt-2 text-[13.5px] leading-[1.6]" style={{ color: 'var(--c4-text-muted)' }}>
-            {product.oneLiner}
-          </p>
-        </div>
-      </Link>
-
-      {/* PRICE + CTA */}
-      <div
-        className="mt-auto flex flex-col gap-4 p-6 md:p-7 pt-5"
-        style={{ borderTop: '1px solid var(--c4-border-light)' }}
-      >
-        {product.tiers && (
-          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            {product.tiers.map((tier) => (
-              <span key={tier.label} className="text-[12px]" style={{ color: 'var(--c4-text-subtle)' }}>
-                {tier.label}{' '}
-                <span className="font-semibold tabular-nums" style={{ color: 'var(--c4-text)' }}>
-                  ${tier.price}
-                </span>
-                <span className="text-[10.5px]" style={{ color: 'var(--c4-text-faint)' }}>/mo</span>
-              </span>
-            ))}
-          </div>
-        )}
-        <p className="text-[12px] leading-[1.6]" style={{ color: 'var(--c4-text-muted)' }}>
-          {product.pricing}
-        </p>
-
-        <div className="flex flex-col gap-2">
-          {product.ctaExternal ? (
-            <a
-              href={product.ctaHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium rounded-[3px] transition-opacity duration-300 hover:opacity-80"
-              style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-            >
-              {product.ctaLabel}
-              <ArrowUpRight size={13} strokeWidth={2} />
-            </a>
-          ) : (
-            <a
-              href={product.ctaHref}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-[11px] uppercase tracking-[0.14em] font-medium rounded-[3px] transition-opacity duration-300 hover:opacity-80"
-              style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-            >
-              {product.ctaLabel}
-              <ArrowRight size={13} strokeWidth={2} />
-            </a>
-          )}
-          <p className="text-center text-[10.5px] leading-[1.4]" style={{ color: 'var(--c4-text-subtle)' }}>
-            {reassurance}
-          </p>
+            <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
+          </Link>
+          <p className="sw-row-one">{product.oneLiner}</p>
         </div>
 
-        {product.lifetime && (
-          <a
-            href={product.lifetime.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group/lt flex items-center justify-between text-[11.5px] pt-3"
-            style={{ borderTop: '1px solid var(--c4-border-light)', color: 'var(--c4-text-subtle)' }}
-          >
-            <span>
-              or own it forever — <span className="font-semibold tabular-nums" style={{ color: 'var(--c4-text)' }}>${product.lifetime.price}</span> lifetime
+        <div className="sw-row-meta">
+          {from != null && (
+            <span className="sw-row-price">
+              from <b>${from}</b>
+              <small>/mo</small>
             </span>
-            <ArrowUpRight size={12} strokeWidth={2} className="transition-transform duration-300 group-hover/lt:translate-x-0.5 group-hover/lt:-translate-y-0.5" />
-          </a>
-        )}
+          )}
+          <StatusStamp status={product.status} className="sw-row-stamp" />
+        </div>
+
+        <div className="sw-row-actions">
+          <CtaLink product={product} className="sw-textlink">
+            {product.ctaLabel}
+            <CtaIcon size={13} strokeWidth={2} aria-hidden="true" />
+          </CtaLink>
+          <button
+            type="button"
+            className="sw-row-toggle"
+            aria-expanded={open}
+            aria-label={open ? `Hide ${product.name} details` : `Show ${product.name} details`}
+            onClick={() => setOpen((o) => !o)}
+          >
+            <ChevronDown size={18} strokeWidth={2} aria-hidden="true" />
+          </button>
+        </div>
       </div>
-    </motion.div>
+
+      <div className="sw-drawer">
+        <div className="sw-drawer-inner">
+          <div className="sw-drawer-body">
+            <ul className="sw-feat">
+              {product.features.map((feat, i) => (
+                <li key={feat}>
+                  <span className="sw-feat-no">{String(i + 1).padStart(2, '0')}</span>
+                  <span>{feat}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="sw-drawer-side">
+              <p className="sw-reassure">{product.pricing}</p>
+              {product.lifetime && (
+                <a
+                  href={product.lifetime.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="sw-lifetime"
+                >
+                  <span>
+                    Own it forever — <b>${product.lifetime.price}</b> lifetime
+                  </span>
+                  <ArrowUpRight size={13} strokeWidth={2} aria-hidden="true" />
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
-function ProductGroup({ eyebrow, title, blurb, products }) {
+function RegisterGroup({ tag, title, blurb, products }) {
   if (!products.length) return null;
   return (
-    <div className="mb-16 md:mb-24 last:mb-0">
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: 0.5, ease }}
-        className="mb-8"
-      >
-        <p className="text-[10px] uppercase tracking-[0.2em] font-semibold" style={{ color: 'var(--c4-accent)' }}>
-          {eyebrow}
-        </p>
-        <h2 className="mt-2 text-[1.5rem] md:text-[1.8rem] font-semibold tracking-[-0.03em]" style={{ color: 'var(--c4-text)' }}>
-          {title}
-        </h2>
-        {blurb && (
-          <p className="mt-2 max-w-[560px] text-[13.5px] leading-[1.6]" style={{ color: 'var(--c4-text-muted)' }}>
-            {blurb}
-          </p>
-        )}
-      </motion.div>
-
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {products.map((product, i) => (
-          <ProductCard key={product.slug} product={product} index={i} />
-        ))}
+    <section className="sw-register" data-reveal>
+      <div className="sw-grouphead">
+        <div className="sw-gh-title">
+          <h2 className="sw-h2">{title}</h2>
+          <span className="sw-gh-no">
+            {tag} · {String(products.length).padStart(2, '0')}
+          </span>
+        </div>
+        <p className="sw-gh-blurb">{blurb}</p>
       </div>
-    </div>
+      {products.map((product) => (
+        <RegisterRow key={product.slug} product={product} />
+      ))}
+    </section>
   );
 }
 
@@ -191,139 +136,126 @@ export default function Software() {
     ]),
   });
 
-  // Group the catalogue. Hide the internal Studio tool (C4 Command) from the
-  // public buying list; split the rest into Live, Early access and Preview.
+  const rootRef = useRegisterMotion('software');
+
+  // Group the catalogue. Hide the internal Studio tool from the public buying
+  // list (it gets an honest footnote row below); split the rest into tiers.
   const publicProducts = PRODUCTS.filter((p) => p.status !== 'Studio');
   const live = publicProducts.filter((p) => p.status === 'Live');
   const earlyAccess = publicProducts.filter((p) => p.status === 'Early access');
   const preview = publicProducts.filter((p) => p.status === 'Preview');
+  const studio = PRODUCTS.find((p) => p.status === 'Studio');
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--c4-bg)' }}>
-      {/* HERO */}
-      <section className="pt-28 pb-14 md:pt-36 md:pb-16">
-        <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease }}
-          >
-            <span
-              className="text-[10px] uppercase tracking-[0.25em] font-medium"
-              style={{ color: 'var(--c4-text-subtle)' }}
-            >
-              C4 Software
+    <div ref={rootRef} className="sw-root min-h-screen">
+      {/* MASTHEAD */}
+      <header className="sw-masthead">
+        <div className="sw-wrap">
+          <div className="sw-mast-bar">
+            <span className="sw-mast-title">C4 · Works Register</span>
+            <span className="sw-mast-meta">
+              <span>
+                <b>{publicProducts.length}</b> units
+              </span>
+              <span>Perth · AU</span>
+              <span>AUD</span>
             </span>
-            <h1
-              className="mt-4 text-[2.2rem] font-semibold tracking-[-0.04em] leading-[1.05] md:text-[3.2rem]"
-              style={{ color: 'var(--c4-text)' }}
-            >
-              Tools built for the<br className="hidden md:block" /> businesses we serve.
-            </h1>
-            <p
-              className="mt-5 max-w-[520px] text-[14px] leading-[1.7] md:text-[15px]"
-              style={{ color: 'var(--c4-text-muted)' }}
-            >
-              Every product in the C4 suite started as something we needed ourselves or built for a client.
-              Most are free to start — pick one, try it, and only pay when it earns its place.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+          </div>
+          <div className="sw-rule sw-rule--ticks" aria-hidden="true" />
 
-      {/* PRODUCTS */}
-      <section className="pb-20 md:pb-28">
-        <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-          {/* C4 Suite — bundle banner */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.5, ease }}
-            className="mb-16 md:mb-24 flex flex-col gap-4 rounded-[3px] border p-6 md:flex-row md:items-center md:justify-between"
-            style={{ borderColor: 'var(--c4-accent)', backgroundColor: 'var(--c4-card-bg)' }}
-          >
+          <h1 className="sw-h1 sw-mast-head" data-reveal>
+            Tools built for the businesses we serve.
+          </h1>
+          <p className="sw-lede sw-mast-lede" data-reveal style={{ '--d': '60ms' }}>
+            Every product in the C4 suite started as something we needed ourselves or built for a
+            client. Most are free to start — pick one, try it, and only pay when it earns its place.
+          </p>
+        </div>
+      </header>
+
+      {/* SUITE ORDER-LINE */}
+      <section className="sw-section--tight">
+        <div className="sw-wrap">
+          <div className="sw-suite" data-reveal>
             <div>
-              <p className="text-[10px] uppercase tracking-[0.18em] font-semibold" style={{ color: 'var(--c4-accent)' }}>
-                C4 Suite
-              </p>
-              <h2 className="mt-1 text-[1.25rem] font-semibold tracking-[-0.02em]" style={{ color: 'var(--c4-text)' }}>
-                Everything. One subscription.
-              </h2>
-              <p className="mt-1 max-w-[560px] text-[13px] leading-[1.6]" style={{ color: 'var(--c4-text-muted)' }}>
+              <span className="sw-suite-tag">
+                <span className="sw-reg" aria-hidden="true">
+                  <i />
+                </span>
+                <span className="sw-label">C4 Suite</span>
+              </span>
+              <h2 className="sw-h2">Everything. One subscription.</h2>
+              <p className="sw-prose" style={{ marginTop: 12, fontSize: 14 }}>
                 All eight C4 modules at Pro level — ReturnDesk, ReviewLoop, Rebook, CrewCheck,
-                SafeDraft, Nudge, Complia, and FirmFlow — for under half the price of buying them separately.
+                SafeDraft, Nudge, Complia, and FirmFlow — for under half the price of buying them
+                separately.
               </p>
             </div>
-            <div className="flex items-center gap-5">
-              <p className="text-[2rem] font-bold tracking-[-0.04em] leading-none" style={{ color: 'var(--c4-text)' }}>
-                $149<span className="text-[12px] font-normal" style={{ color: 'var(--c4-text-muted)' }}>/mo · AUD</span>
+            <div className="sw-suite-buy">
+              <p className="sw-suite-price">
+                $149<small>/mo · AUD</small>
               </p>
-              <Link
-                to={createPageUrl('StartProject')}
-                className="flex items-center justify-center gap-2 rounded-[3px] px-5 py-3 text-[10.5px] uppercase tracking-[0.14em] font-semibold transition-opacity duration-200 hover:opacity-75"
-                style={{ backgroundColor: 'var(--c4-accent)', color: 'var(--c4-bg)' }}
-              >
+              <Link to={createPageUrl('StartProject')} className="sw-btn">
                 Talk to us
-                <ArrowUpRight size={12} strokeWidth={2.5} />
+                <ArrowUpRight size={13} strokeWidth={2.5} aria-hidden="true" />
               </Link>
             </div>
-          </motion.div>
-
-          <ProductGroup
-            eyebrow="Live now"
-            title="Ready to use today"
-            blurb="Standalone apps you can start free right now — no sales call, no setup fee."
-            products={live}
-          />
-
-          <ProductGroup
-            eyebrow="Early access"
-            title="Coming soon — get in first"
-            blurb="Relaunching as standalone apps. Register interest and we onboard you personally at early-bird pricing."
-            products={earlyAccess}
-          />
-
-          <ProductGroup
-            eyebrow="Preview"
-            title="In the workshop"
-            blurb="Tools we are actively building and using on live C4 work. Take a look, or try the interactive demos on each page."
-            products={preview}
-          />
+          </div>
         </div>
       </section>
 
-      {/* CLOSING STRIP */}
-      <section
-        className="py-16 md:py-20"
-        style={{ borderTop: '1px solid var(--c4-border-light)', backgroundColor: 'var(--c4-bg-alt)' }}
-      >
-        <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease }}
-            className="max-w-[640px]"
+      {/* THE REGISTER */}
+      <div className="sw-wrap" style={{ paddingBottom: 'clamp(48px, 7vw, 96px)' }}>
+        <RegisterGroup
+          tag="Live"
+          title="Ready to use today"
+          blurb="Standalone apps you can start free right now — no sales call, no setup fee."
+          products={live}
+        />
+        <RegisterGroup
+          tag="Early access"
+          title="Coming soon — get in first"
+          blurb="Relaunching as standalone apps. Register interest and we onboard you personally at early-bird pricing."
+          products={earlyAccess}
+        />
+        <RegisterGroup
+          tag="Preview"
+          title="In the workshop"
+          blurb="Tools we are actively building and using on live C4 work. Take a look, or try the interactive demos on each page."
+          products={preview}
+        />
+
+        {/* C4 Command — studio-internal, kept crawlable and honest */}
+        {studio && (
+          <Link
+            to={`${createPageUrl('SoftwareProduct')}?slug=${studio.slug}`}
+            className="sw-footnote"
           >
-            <p
-              className="text-[14px] leading-[1.7] md:text-[15px]"
-              style={{ color: 'var(--c4-text-muted)' }}
-            >
-              All C4 software is built on the same stack used for client work — Next.js, Supabase, TypeScript.
-              No vendor lock-in. No inflated SaaS markups.
-            </p>
-            <Link
-              to={createPageUrl('StartProject')}
-              className="group inline-flex items-center gap-2 mt-5 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
-              style={{ color: 'var(--c4-text-subtle)' }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--c4-text)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--c4-text-subtle)'; }}
-            >
-              Work with C4 Studios
-              <ArrowRight size={13} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-            </Link>
-          </motion.div>
+            <span className="sw-fn-model">{modelFor(studio.slug)}</span>
+            <span>
+              <b>{studio.name}</b> — the studio&rsquo;s own operational hub. Studio internal, not for
+              sale.
+            </span>
+            <ArrowRight size={14} strokeWidth={2} aria-hidden="true" />
+          </Link>
+        )}
+      </div>
+
+      {/* COLOPHON */}
+      <section className="sw-colophon">
+        <div className="sw-wrap">
+          <p className="sw-prose" data-reveal style={{ fontSize: 15 }}>
+            All C4 software is built on the same stack used for client work — Next.js, Supabase,
+            TypeScript. No vendor lock-in. No inflated SaaS markups.
+          </p>
+          <Link
+            to={createPageUrl('StartProject')}
+            className="sw-textlink"
+            style={{ marginTop: 8 }}
+          >
+            Work with C4 Studios
+            <ArrowRight size={13} strokeWidth={2} aria-hidden="true" />
+          </Link>
         </div>
       </section>
     </div>

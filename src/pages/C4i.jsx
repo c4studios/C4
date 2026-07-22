@@ -11,13 +11,13 @@
  * theme-following C4; each door is a committed, theme-independent sample of
  * its destination's world — a sheet of the /private-ai print collateral
  * (paper white, ink top bar, hairline rules, Geist Mono console line) and an
- * off-cut of the /ServiceAI FR-4 board (solder-mask green, copper traces,
+ * off-cut of the /ServiceAI FR-4 board (solder-mask blue, copper traces,
  * B612 Mono silkscreen). The C4 red repeats as one small constant on hero and
  * both doors: a registration mark on paper, a power LED on the board.
  * Static mode (prefers-reduced-motion or the prerenderer) renders final
  * state; hover feedback keeps non-motion equivalents.
  */
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
@@ -140,25 +140,8 @@ export default function C4i() {
   /* Fonts, house link-injection pattern: the two destination monos only.
      Geist Mono quotes /private-ai's consoles, B612 Mono quotes
      /ServiceAI's silkscreen. The shell keeps the site family. */
-  useEffect(() => {
-    const els = [];
-    const pc1 = document.createElement('link');
-    pc1.rel = 'preconnect';
-    pc1.href = 'https://fonts.googleapis.com';
-    const pc2 = document.createElement('link');
-    pc2.rel = 'preconnect';
-    pc2.href = 'https://fonts.gstatic.com';
-    pc2.crossOrigin = 'anonymous';
-    const font = document.createElement('link');
-    font.rel = 'stylesheet';
-    font.href =
-      'https://fonts.googleapis.com/css2?family=B612+Mono:wght@400;700&family=Geist+Mono:wght@400;500&display=swap';
-    [pc1, pc2, font].forEach((el) => {
-      document.head.appendChild(el);
-      els.push(el);
-    });
-    return () => els.forEach((el) => el.remove());
-  }, []);
+  /* Fonts (B612 Mono + Geist Mono) are self-hosted globally
+     (src/styles/fonts.css, loaded in main.jsx); no runtime Google Fonts. */
 
   /* Entrance helpers. In staticMode everything renders in final state. */
   const rise = (delay = 0) => ({

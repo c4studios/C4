@@ -1,0 +1,1031 @@
+/* ═══════════════════════════════════════════════════════════════════
+   THE FOUNDER'S BRIEF — About surface identity
+   -------------------------------------------------------------------
+   /About typeset as one continuous legal instrument: a barrister's
+   brief bound in red ribbon (the literal origin of "red tape"), crossed
+   with a statutory declaration. Not costume — the content already reads
+   as testimony, chronology, undertakings, a cited authority (Daniel
+   3:25) and terms of engagement. The apparatus of a real document —
+   caption, particulars, marginalia, clause numbering, an exhibit and a
+   pressed seal — replaces the old eyebrow+card-grid template.
+
+   Parent-brand world: warm-white paper, ink, C4 red — theme-adaptive
+   (light + dark) through the shared --c4-* tokens. About forces NO
+   chrome; nothing leaks outside .ab-root. The nav back-ribbon owns the
+   top-left keep-out; the masthead clears it and the binding thread
+   begins below it.
+
+   Red is an object with ONE job here (memo §1): the binding THREAD. A
+   thin stitched line with visible stitch gaps and knots — never a woven
+   band (that is nav's ribbon, R2), never a border-left stripe, never a
+   travelling pulse or glow (that is AI, R3). It is DRAWN: the stitch
+   extends top→down as you scroll; its end-state is fully sewn.
+
+   The connective site voice (memo §3): a diegetic reference-code set in
+   system mono with tabular numerals — file numbers, clause refs, exhibit
+   tags. Not a shared font; the register is the tell. Body prose is set
+   in a system document serif (Charter/Georgia family, zero-network) —
+   the artefact of a typeset legal brief, distinct from every sibling
+   surface. No runtime web fonts anywhere.
+
+   Motion grammar (house pattern, memo §1): content ships in its finished
+   state. A useLayoutEffect adds `.ab-armed` (NEVER under reduced-motion
+   or the Prerender UA), which arms one-shot reveals, the seal's press,
+   the thread draw and the undertaking marginalia collapse. Reduced-motion
+   / prerender therefore render EVERYTHING visible, the thread fully sewn,
+   every undertaking's detail shown, the seal at rest — no gated content.
+
+   Contrast (computed, WCAG):
+     Light paper #F7F5F2 — ink #1A1A1A 13.9:1 · body #6B6A64 5.0:1 ·
+       red #C23030 5.1:1 · subtle #908E88 3.0:1 (large / decorative only)
+     Dark slate #0F1115 — ink #ECE7DE ~15:1 · body #A7ABB4 ~8:1 ·
+       red #B33A3A 3.2:1 — the brand-red constant (memo §1) is a diegetic
+       MARK, never body text: chrono years, defined-term leads and step
+       numbers each sit beside bold ink text, so red is never the sole
+       carrier of meaning. Reaching 4.5:1 would require abandoning the
+       brand-red hue, regressing the "red is one constant object" invariant.
+   Meaningful body + small text uses ink or body; subtle/faint stay
+   decorative (rules, hairlines, large clause numerals). The laid-paper
+   texture is ≤4% opacity so prose contrast is unchanged against it.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.ab-root {
+  /* Material mapped onto the shared parent-brand tokens → follows the
+     site theme toggle automatically. */
+  --ab-paper: var(--c4-bg);
+  --ab-sheet: var(--c4-card-bg);
+  --ab-fig: var(--c4-bg-alt);
+  --ab-ink: var(--c4-text);
+  --ab-body: var(--c4-text-muted);
+  --ab-subtle: var(--c4-text-subtle);
+  --ab-faint: var(--c4-text-faint);
+  --ab-line: var(--c4-border);
+  --ab-line-soft: var(--c4-border-light);
+  --ab-red: var(--c4-accent);
+
+  /* Document serif — a court/statutory face, no network. Documented
+     fallback ends in serif. */
+  --ab-serif: 'Charter', 'Bitstream Charter', 'Iowan Old Style', 'Palatino Linotype',
+    'Book Antiqua', Georgia, Cambria, 'Times New Roman', serif;
+  /* Diegetic reference-code voice — tabular system mono. No network. */
+  --ab-mono: ui-monospace, 'SF Mono', SFMono-Regular, 'Cascadia Mono', Menlo,
+    Consolas, 'Segoe UI Mono', 'Liberation Mono', 'DejaVu Sans Mono', monospace;
+
+  --ab-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Layout apparatus. */
+  --ab-rail-w: clamp(104px, 12vw, 172px);
+  --ab-gap: clamp(24px, 3.2vw, 52px);
+  /* Ribbon keep-out (memo §3): the masthead clears the top-left corner.
+     Mobile zone is 140×120 → clear 120px; desktop zone is 220×160 →
+     clear 160px (the ≥640px override below). Mirrors the AI arm's proven
+     hero clearance. The old clamp(128px,14vw,168px) dipped below 160px
+     across the whole 640–1140px band and collided with the ribbon tail. */
+  --ab-top: clamp(136px, 20vw, 152px);
+
+  /* Laid-paper lines — directional, ≤4% (R5), tokenized for dark. */
+  --ab-laid: rgba(26, 26, 26, 0.028);
+  --ab-chain: rgba(26, 26, 26, 0.038);
+  /* Blind-emboss tones (inkless press). */
+  --ab-emboss-hi: rgba(255, 255, 255, 0.85);
+  --ab-emboss-lo: rgba(26, 26, 26, 0.16);
+
+  position: relative;
+  min-height: 100vh;
+  color: var(--ab-ink);
+  background-color: var(--ab-paper);
+  /* Laid paper: fine horizontal laid lines + wider vertical chain lines,
+     both ≤5% and only over the paper base. Static, gradient-only. */
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 3px, var(--ab-laid) 3px 4px),
+    repeating-linear-gradient(90deg, transparent 0 25px, var(--ab-chain) 25px 26px);
+  background-attachment: local;
+  font-family: var(--ab-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+@media (min-width: 640px) {
+  /* Desktop ribbon keep-out is 220×160 — the masthead starts below the
+     160px tail so no in-flow hero content sits under the fixed ribbon. */
+  .ab-root {
+    --ab-top: clamp(176px, 16vh, 200px);
+  }
+}
+
+:root.dark-mode .ab-root,
+:root:not(.light-mode) .ab-root {
+  --ab-laid: rgba(236, 231, 222, 0.03);
+  --ab-chain: rgba(236, 231, 222, 0.038);
+  --ab-emboss-hi: rgba(236, 231, 222, 0.14);
+  --ab-emboss-lo: rgba(0, 0, 0, 0.4);
+}
+/* OS-dark with no manual override. */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light-mode):not(.dark-mode) .ab-root {
+    --ab-laid: rgba(236, 231, 222, 0.03);
+    --ab-chain: rgba(236, 231, 222, 0.038);
+    --ab-emboss-hi: rgba(236, 231, 222, 0.14);
+    --ab-emboss-lo: rgba(0, 0, 0, 0.4);
+  }
+}
+
+.ab-root *,
+.ab-root *::before,
+.ab-root *::after {
+  box-sizing: border-box;
+}
+
+.ab-root ::selection {
+  background: color-mix(in srgb, var(--ab-red) 20%, transparent);
+  color: var(--ab-ink);
+}
+
+.ab-root a:focus-visible,
+.ab-root button:focus-visible {
+  outline: 2px solid var(--ab-red);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* ── Frame ─────────────────────────────────────────────────────────── */
+
+.ab-doc {
+  max-width: 1140px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 56px);
+  padding-bottom: clamp(56px, 9vw, 104px);
+}
+
+/* Diegetic code strings. */
+.ab-code {
+  font-family: var(--ab-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ab-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Masthead: head of the instrument ──────────────────────────────── */
+
+.ab-masthead {
+  padding-top: var(--ab-top);
+  padding-bottom: clamp(30px, 5vw, 52px);
+}
+
+/* Caption block — the "in the matter of" heading of a brief. ONE
+   masthead device, not a per-section eyebrow. */
+.ab-caption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-family: var(--ab-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ab-body);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ab-line);
+}
+.ab-caption .ab-cap-file {
+  margin-left: auto;
+  color: var(--ab-subtle);
+  letter-spacing: 0.1em;
+}
+.ab-caption .ab-cap-seal {
+  color: var(--ab-red);
+}
+
+.ab-mast-grid {
+  margin-top: clamp(26px, 4vw, 44px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(28px, 4vw, 44px);
+  align-items: start;
+}
+@media (min-width: 860px) {
+  .ab-mast-grid {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(40px, 5vw, 72px);
+  }
+}
+
+.ab-h1 {
+  margin: 0;
+  color: var(--ab-ink);
+  font-family: var(--ab-serif);
+  font-weight: 600;
+  font-size: clamp(2.1rem, 1.2rem + 3.6vw, 3.3rem);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.ab-lede {
+  margin: clamp(18px, 2.4vw, 26px) 0 0;
+  max-width: 40ch;
+  color: var(--ab-ink);
+  font-size: clamp(1.02rem, 0.96rem + 0.4vw, 1.2rem);
+  line-height: 1.68;
+  text-wrap: pretty;
+}
+/* ── Exhibit A: mounted headshot ───────────────────────────────────── */
+
+.ab-exhibit {
+  position: relative;
+  width: min(300px, 78vw);
+  justify-self: start;
+}
+@media (min-width: 860px) {
+  .ab-exhibit {
+    justify-self: end;
+  }
+}
+.ab-exhibit-plate {
+  position: relative;
+  background: var(--ab-sheet);
+  padding: 12px 12px 14px;
+  border: 1px solid var(--ab-line);
+  box-shadow: 0 20px 46px -30px rgba(20, 16, 14, 0.5);
+}
+.ab-exhibit-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--ab-fig);
+}
+.ab-exhibit-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+/* Photo-corner tabs (mounting) — four small paper triangles. */
+.ab-corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--ab-ink) 22%, transparent) 0 46%,
+    transparent 47%);
+}
+.ab-corner.tl { top: 6px; left: 6px; }
+.ab-corner.tr { top: 6px; right: 6px; transform: rotate(90deg); }
+.ab-corner.br { bottom: 6px; right: 6px; transform: rotate(180deg); }
+.ab-corner.bl { bottom: 6px; left: 6px; transform: rotate(270deg); }
+
+/* Typed caption tag — a slip pasted to the plate. */
+.ab-exhibit-tag {
+  margin-top: 12px;
+  padding: 9px 11px;
+  background: var(--ab-paper);
+  border: 1px solid var(--ab-line);
+}
+.ab-exhibit-tag .ab-tag-ref {
+  display: block;
+  font-family: var(--ab-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ab-red);
+  margin-bottom: 5px;
+}
+.ab-exhibit-tag .ab-tag-role {
+  font-family: var(--ab-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ab-ink);
+}
+.ab-exhibit-tag .ab-tag-loc {
+  margin-top: 3px;
+  font-family: var(--ab-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  color: var(--ab-body);
+}
+
+/* ── Bound region: the thread runs through here ────────────────────── */
+
+.ab-bound {
+  position: relative;
+  padding-left: 26px; /* room for the mobile thread at far left */
+}
+@media (min-width: 760px) {
+  .ab-bound {
+    padding-left: 0;
+  }
+}
+
+/* The red binding thread — dashed stitches + knots, DRAWN top→down.
+   `--ab-draw` (0→1) is scrubbed by GSAP while armed; default 1 = fully
+   sewn for no-JS / prerender / reduced-motion. */
+.ab-thread {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 9px;
+  width: 3px;
+  pointer-events: none;
+  z-index: 1;
+}
+@media (min-width: 760px) {
+  .ab-thread {
+    left: calc(var(--ab-rail-w) + (var(--ab-gap) / 2) - 1px);
+  }
+}
+.ab-thread-line {
+  position: absolute;
+  inset: 0;
+  width: 2px;
+  margin-inline: auto;
+  /* running stitch: 7px stitch, 5px gap */
+  background-image: repeating-linear-gradient(
+    180deg,
+    var(--ab-red) 0 7px,
+    transparent 7px 12px
+  );
+  clip-path: inset(0 0 calc((1 - var(--ab-draw, 1)) * 100%) 0);
+}
+/* Armed starts un-sewn before GSAP's first tick sets --ab-draw (no flash
+   of a fully-drawn thread on mount). */
+.ab-armed .ab-thread-line {
+  --ab-draw: 0;
+}
+/* Knots at the section seams — a small cross-over of thread. Placed by
+   the JSX at each part; revealed by the same clip as the stitch. */
+.ab-knot {
+  position: absolute;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: var(--ab-red);
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px var(--ab-paper);
+}
+.ab-knot::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--ab-red) 62%, #000 38%);
+}
+
+/* One part of the brief. */
+.ab-part {
+  position: relative;
+  padding-block: clamp(34px, 5.5vw, 62px);
+  border-top: 1px solid var(--ab-line);
+}
+.ab-part:first-of-type {
+  border-top: 0;
+}
+@media (min-width: 760px) {
+  .ab-part {
+    display: grid;
+    grid-template-columns: var(--ab-rail-w) minmax(0, 1fr);
+    column-gap: var(--ab-gap);
+    align-items: start;
+  }
+}
+
+/* Rail: margin apparatus (years, refs, notes). */
+.ab-rail {
+  margin-bottom: 14px;
+}
+@media (min-width: 760px) {
+  .ab-rail {
+    margin-bottom: 0;
+    text-align: right;
+    padding-top: 2px;
+  }
+}
+.ab-rail-label {
+  font-family: var(--ab-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ab-red);
+}
+.ab-rail-sub {
+  margin-top: 6px;
+  font-family: var(--ab-serif);
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ab-body);
+}
+
+.ab-body {
+  min-width: 0;
+}
+
+/* ── Type inside the body ──────────────────────────────────────────── */
+
+.ab-h2 {
+  margin: 0;
+  color: var(--ab-ink);
+  font-family: var(--ab-serif);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.ab-h3 {
+  margin: 0;
+  color: var(--ab-ink);
+  font-family: var(--ab-serif);
+  font-weight: 600;
+  font-size: 1.12rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+/* Section sub-line — a normal document sentence under a heading (not a
+   tracked eyebrow). */
+.ab-sub {
+  margin: 0;
+  font-family: var(--ab-serif);
+  font-size: 1rem;
+  line-height: 1.62;
+  color: var(--ab-body);
+  max-width: 58ch;
+}
+.ab-prose {
+  color: var(--ab-ink);
+  font-size: clamp(1rem, 0.96rem + 0.24vw, 1.09rem);
+  line-height: 1.72;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+.ab-prose + .ab-prose {
+  margin-top: 1.1em;
+}
+.ab-lead-in {
+  margin-top: clamp(16px, 2.2vw, 24px);
+}
+
+/* ── Particulars: the one ruled table (R6) ─────────────────────────── */
+
+.ab-particulars {
+  border-top: 1px solid var(--ab-ink);
+  border-bottom: 1px solid var(--ab-line);
+}
+.ab-particular {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 16px;
+  padding: 13px 2px;
+  border-top: 1px solid var(--ab-line-soft);
+}
+.ab-particular:first-child {
+  border-top: 0;
+}
+.ab-particular-label {
+  font-family: var(--ab-serif);
+  font-size: 0.98rem;
+  color: var(--ab-ink);
+}
+.ab-particular-value {
+  font-family: var(--ab-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--ab-ink);
+  white-space: nowrap;
+}
+
+/* ── Run-in schedules (At a glance / Terms) — defined-term prose, never
+   a ruled register (software owns the hairline ledger row, R6). No
+   per-item rules anywhere but the single Particulars table. ─────────── */
+
+.ab-glance {
+  margin-top: clamp(24px, 3.5vw, 38px);
+}
+.ab-runins-cap {
+  margin: 0 0 clamp(12px, 1.6vw, 16px);
+  font-family: var(--ab-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ab-subtle);
+}
+.ab-runins {
+  display: grid;
+  gap: clamp(15px, 2vw, 22px);
+}
+.ab-runin {
+  margin: 0;
+  font-family: var(--ab-serif);
+  font-size: 1rem;
+  line-height: 1.68;
+  color: var(--ab-ink);
+  max-width: 64ch;
+  text-wrap: pretty;
+}
+.ab-runin-lead {
+  font-weight: 600;
+}
+.ab-runin-sep {
+  color: var(--ab-faint);
+}
+.ab-runin--label .ab-runin-lead {
+  font-family: var(--ab-mono);
+  font-size: 0.8em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ab-red);
+}
+
+/* ── Chronology (R10: real sequence → dated recital; no ledger rules) ── */
+
+.ab-chrono {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(20px, 3vw, 30px);
+}
+.ab-chrono-item {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+@media (min-width: 640px) {
+  .ab-chrono-item {
+    grid-template-columns: 74px minmax(0, 1fr);
+    gap: 4px 26px;
+    align-items: baseline;
+  }
+}
+.ab-chrono-year {
+  font-family: var(--ab-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ab-red);
+}
+.ab-chrono-title {
+  display: block;
+  font-family: var(--ab-serif);
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--ab-ink);
+  letter-spacing: -0.01em;
+}
+.ab-chrono-text {
+  margin-top: 4px;
+  font-family: var(--ab-serif);
+  font-size: 0.96rem;
+  line-height: 1.62;
+  color: var(--ab-body);
+  max-width: 58ch;
+}
+
+/* ── Undertakings (values) — indented, detail as marginalia ────────── */
+
+.ab-undertakings {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(22px, 3vw, 32px);
+}
+/* .ab-undertaking is indented prose, not a ruled row — no per-item hairline (R6). */
+.ab-undertaking-head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.ab-undertaking-mark {
+  width: 8px;
+  height: 8px;
+  margin-top: 6px;
+  transform: rotate(45deg);
+  background: var(--ab-red);
+  border-radius: 1px;
+  flex: 0 0 auto;
+}
+.ab-undertaking-title {
+  font-family: var(--ab-serif);
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: var(--ab-ink);
+  letter-spacing: -0.01em;
+}
+.ab-undertaking-short {
+  margin-top: 3px;
+  font-family: var(--ab-serif);
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--ab-body);
+}
+/* Detail is ALWAYS in the DOM and visible by default (SEO / no-JS /
+   reduced-motion / touch). Armed desktop with a pointer collapses it to
+   a hover/focus reveal. */
+.ab-undertaking-detail {
+  display: grid;
+  grid-template-rows: 1fr;
+  margin-left: 22px;
+}
+.ab-undertaking-detail > span {
+  display: block;
+  overflow: hidden;
+  min-height: 0;
+  padding-top: 10px;
+  font-family: var(--ab-serif);
+  font-size: 0.94rem;
+  font-style: italic;
+  line-height: 1.65;
+  color: var(--ab-ink);
+  max-width: 56ch;
+}
+@media (hover: hover) and (min-width: 760px) {
+  .ab-armed .ab-undertaking-detail {
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 320ms var(--ab-ease);
+  }
+  .ab-armed .ab-undertaking-detail > span {
+    opacity: 0;
+    transition: opacity 240ms var(--ab-ease);
+  }
+  .ab-armed .ab-undertaking:hover .ab-undertaking-detail,
+  .ab-armed .ab-undertaking:focus-within .ab-undertaking-detail,
+  .ab-armed .ab-undertaking-detail[data-open='true'] {
+    grid-template-rows: 1fr;
+  }
+  .ab-armed .ab-undertaking:hover .ab-undertaking-detail > span,
+  .ab-armed .ab-undertaking:focus-within .ab-undertaking-detail > span,
+  .ab-armed .ab-undertaking-detail[data-open='true'] > span {
+    opacity: 1;
+  }
+  /* The keyboard/touch reveal control only exists where the detail is
+     actually collapsed (armed desktop with a pointer). */
+  .ab-armed .ab-undertaking-trigger {
+    display: inline-flex;
+  }
+}
+/* Reveal control — hidden by default (detail already shown for no-JS /
+   reduced-motion / touch / small screens; only armed desktop needs it). */
+.ab-undertaking-trigger {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  margin-left: 22px;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--ab-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ab-subtle);
+  transition: color 200ms var(--ab-ease);
+}
+.ab-undertaking-trigger:hover {
+  color: var(--ab-ink);
+}
+.ab-undertaking-trigger span {
+  width: 16px;
+  height: 1px;
+  background: var(--ab-red);
+}
+
+/* ── See Four: the cited authority + blind-emboss seal ─────────────── */
+
+.ab-authority {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(28px, 4vw, 44px);
+  align-items: start;
+}
+@media (min-width: 820px) {
+  .ab-authority {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(40px, 5vw, 64px);
+  }
+}
+.ab-verse {
+  margin-top: clamp(18px, 2.4vw, 26px);
+}
+.ab-verse-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--ab-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ab-body);
+  transition: color 200ms var(--ab-ease);
+}
+.ab-verse-toggle:hover {
+  color: var(--ab-ink);
+}
+.ab-verse-toggle .ab-verse-plus {
+  display: inline-flex;
+  color: var(--ab-red);
+  transition: transform 260ms var(--ab-ease);
+}
+.ab-verse-toggle[aria-expanded='true'] .ab-verse-plus {
+  transform: rotate(45deg);
+}
+/* Verse unfolds via grid-rows; content stays in the DOM. */
+.ab-verse-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 360ms var(--ab-ease);
+}
+.ab-verse-panel[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+.ab-verse-panel > div {
+  overflow: hidden;
+  min-height: 0;
+}
+.ab-verse-inner {
+  padding-top: 18px;
+  max-width: 52ch;
+}
+.ab-verse-quote {
+  margin: 0;
+  padding-left: 18px;
+  border-left: 1px solid color-mix(in srgb, var(--ab-red) 46%, transparent);
+  font-family: var(--ab-serif);
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--ab-ink);
+}
+.ab-verse-cite {
+  margin-top: 10px;
+  font-family: var(--ab-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--ab-body);
+}
+
+/* Blind emboss seal — inkless, pressed into the paper. Used once. */
+.ab-seal {
+  width: clamp(128px, 26vw, 158px);
+  height: clamp(128px, 26vw, 158px);
+  justify-self: start;
+  color: var(--ab-body);
+}
+@media (min-width: 820px) {
+  .ab-seal {
+    justify-self: end;
+  }
+}
+.ab-seal svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* Inkless blind emboss: a dark copy pressed up-left and a light copy down-
+   right — the pressed edges alone read the mark; no fill of its own. */
+.ab-seal .ab-seal-lo {
+  stroke: var(--ab-emboss-lo);
+  fill: var(--ab-emboss-lo);
+  transform: translate(-0.7px, -0.7px);
+  transform-origin: center;
+}
+.ab-seal .ab-seal-hi {
+  stroke: var(--ab-emboss-hi);
+  fill: var(--ab-emboss-hi);
+  transform: translate(0.9px, 0.9px);
+  transform-origin: center;
+}
+
+/* ── Procedure (real procedure → numbered, interactive reading marker) */
+
+.ab-procedure {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(20px, 3vw, 30px);
+}
+/* Numbered clauses as indented prose — no ledger rules, no side-stripe. */
+.ab-clause {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px 20px;
+}
+@media (min-width: 640px) {
+  .ab-clause {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 26px;
+  }
+}
+.ab-clause-no {
+  font-family: var(--ab-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ab-faint);
+  padding-top: 4px;
+  transition: color 260ms var(--ab-ease);
+}
+.ab-clause[data-active='true'] .ab-clause-no {
+  color: var(--ab-red);
+}
+.ab-clause-title {
+  font-family: var(--ab-serif);
+  font-size: clamp(1.12rem, 1rem + 0.5vw, 1.35rem);
+  font-weight: 600;
+  color: var(--ab-ink);
+  letter-spacing: -0.01em;
+  transition: transform 260ms var(--ab-ease);
+}
+.ab-clause[data-active='true'] .ab-clause-title {
+  transform: translateX(3px);
+}
+.ab-clause-text {
+  grid-column: 2; /* clause grid is always 2 columns — sit under the title */
+  margin-top: 6px;
+  font-family: var(--ab-serif);
+  font-size: 0.98rem;
+  line-height: 1.68;
+  color: var(--ab-body);
+  max-width: 56ch;
+}
+
+/* ── Execution block: what happens next + CTA ──────────────────────── */
+
+.ab-execution {
+  margin-top: clamp(8px, 1.5vw, 16px);
+  padding-top: clamp(30px, 4.5vw, 48px);
+  border-top: 1px solid var(--ab-ink);
+}
+.ab-next {
+  list-style: none;
+  margin: clamp(18px, 2.4vw, 26px) 0 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(13px, 1.8vw, 18px);
+}
+.ab-next-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 16px;
+}
+@media (min-width: 640px) {
+  .ab-next-item {
+    grid-template-columns: 34px minmax(120px, 0.3fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: baseline;
+  }
+}
+.ab-next-no {
+  font-family: var(--ab-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ab-red);
+}
+.ab-next-label {
+  font-family: var(--ab-serif);
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--ab-ink);
+}
+.ab-next-text {
+  font-family: var(--ab-serif);
+  font-size: 0.94rem;
+  line-height: 1.55;
+  color: var(--ab-body);
+  max-width: 56ch;
+}
+@media (max-width: 639px) {
+  .ab-next-label,
+  .ab-next-text {
+    grid-column: 2;
+  }
+}
+
+.ab-signoff {
+  margin-top: clamp(34px, 5vw, 56px);
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+}
+.ab-signoff-head {
+  font-family: var(--ab-serif);
+  font-size: clamp(1.3rem, 1.1rem + 1vw, 1.7rem);
+  font-weight: 600;
+  color: var(--ab-ink);
+  letter-spacing: -0.015em;
+}
+.ab-signoff-sub {
+  font-family: var(--ab-serif);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ab-body);
+  max-width: 44ch;
+}
+.ab-signoff-line {
+  margin-top: 6px;
+  font-family: var(--ab-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ab-subtle);
+}
+
+.ab-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 48px;
+  padding: 13px 26px;
+  font-family: var(--ab-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ab-paper);
+  background: var(--ab-ink);
+  border: 1px solid var(--ab-ink);
+  transition: background-color 240ms var(--ab-ease), color 240ms var(--ab-ease),
+    transform 240ms var(--ab-ease);
+}
+.ab-cta:hover {
+  background: var(--ab-red);
+  border-color: var(--ab-red);
+  color: #fff;
+}
+.ab-cta:active {
+  transform: translateY(1px);
+}
+.ab-cta svg {
+  transition: transform 260ms var(--ab-ease);
+}
+.ab-cta:hover svg {
+  transform: translateX(3px);
+}
+
+/* ── Reveals (house armed pattern) ─────────────────────────────────── */
+[data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+.ab-armed [data-reveal] {
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 560ms var(--ab-ease), transform 560ms var(--ab-ease);
+  transition-delay: var(--d, 0ms);
+}
+.ab-armed [data-reveal].ab-in {
+  opacity: 1;
+  transform: none;
+}
+/* The seal presses (scale only, no rotation). */
+.ab-armed .ab-seal[data-reveal] {
+  transform: scale(0.985);
+}
+.ab-armed .ab-seal[data-reveal].ab-in {
+  transform: scale(1);
+}
+
+/* ── Safety net: honour reduced motion even if `.ab-armed` were present */
+@media (prefers-reduced-motion: reduce) {
+  .ab-root [data-reveal],
+  .ab-root .ab-seal[data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .ab-root .ab-thread-line {
+    clip-path: none !important;
+  }
+  .ab-root .ab-undertaking-detail {
+    grid-template-rows: 1fr !important;
+  }
+  .ab-root .ab-undertaking-detail > span {
+    opacity: 1 !important;
+  }
+  .ab-root .ab-clause::before {
+    transition: none !important;
+  }
+}
