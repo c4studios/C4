@@ -87,7 +87,8 @@ const NAV_CSS = `
   --c4-back-ring: rgba(26, 26, 26, 0.55);
 }
 :root.cw-on-board,
-:root.sg-on-board {
+:root.sg-on-board,
+:root.lv-on-stage {
   --c4-back-elev:
     drop-shadow(0 9px 18px rgba(0, 0, 0, 0.55))
     drop-shadow(0 0 0.7px rgba(236, 231, 222, 0.32));
