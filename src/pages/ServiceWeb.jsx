@@ -3,16 +3,22 @@
  *
  * Arm identity (fable pass, decision memo §1.1): one red line — drawn
  * like a pen stroke, pressure and overshoot in the geometry — runs the
- * whole page, and the page builds itself along it. The hero ignites
- * from a silver wireframe skeleton (Archivo played wdth 62/wght 300 →
- * 100/800 — the raw→built telling), real client sites browse
- * themselves inside browser frames as you scroll (2 live drive sets:
- * DSR with the desktop→phone responsive handoff, Groverz as the light
- * set), the rate card rolls its prices on an odometer, and the thread
- * morphs Brief → Design → Build → Launch before landing as the closing
- * CTA's underline. A self-reporting vitals strip (fps / transferred kB
- * / LCP, real Performance-API numbers) sits in the hero corner and is
- * reprised before the close.
+ * whole page, and the page builds itself along it. Refinement pass:
+ * every stroke now DEPICTS something (no decorative wandering) — the
+ * hero pen travels the copy rail, underlines the finished headline,
+ * draws the browser frame's outline before the chrome assembles, runs
+ * a proof-reader's margin pass down the spec list (station dots fill
+ * as each line typesets), forks a branch per rate group, morphs
+ * Brief (annotated underlines) → Design (wireframe) → Build (truss) →
+ * Launch (climb-out arc), and finally SIGNS OFF beneath the closing
+ * CTA — a three-layer pen-pressure signature that tapers as the pen
+ * lifts. The hero ignites from a silver wireframe skeleton (Archivo
+ * wdth 62/wght 300 → 100/800, word-level boxes locked to final built
+ * metrics so the axes animate with zero reflow), real client sites
+ * browse themselves inside browser frames (DSR desktop→phone handoff,
+ * Groverz light set), the rate card rolls its prices on an odometer,
+ * and a self-reporting vitals strip (real Performance-API numbers)
+ * sits in the hero corner and is reprised before the close.
  *
  * Motion: GSAP is the engine; every trigger lives inside
  * gsap.matchMedia() and nothing arms under prefers-reduced-motion or
@@ -241,56 +247,115 @@ const WEB_JSONLD = [
 ];
 
 /* ── Thread geometry ───────────────────────────────────────────────
-   Every segment is authored with hand-weighted curvature, pressure
-   ghosts and overshoot hooks at direction changes — a pen stroke, not
-   a polyline (memo quality bar). All decorative, aria-hidden; the
-   fully-drawn state is the DOM/CSS default. */
+   Refined so every stroke DEPICTS something a visitor can read — no
+   decorative wandering. Hand-weighted curvature, pressure ghosts and
+   overshoot hooks at direction changes; all decorative, aria-hidden;
+   the fully-drawn state is the DOM/CSS default (or, where a stroke is
+   scaffolding, its dissolved end-state is the default). */
 
+/* Hero connector (desktop only — hidden when the grid stacks): the
+   pen's journey through the fold. Each leg is labelled. */
 const THREAD_HERO_D = [
-  'M 522 118',
-  'C 494 168, 430 208, 352 236',
-  'C 286 259, 178 270, 118 300',
-  'C 96 311, 88 330, 108 341',
-  'C 150 362, 260 360, 380 355',
-  'C 470 351, 560 346, 618 338',
-  'C 648 334, 662 326, 654 318',
-  'C 648 312, 632 314, 624 323',
-  'C 610 340, 560 372, 470 408',
-  'C 380 444, 240 470, 168 502',
-  'C 128 520, 118 546, 142 558',
-  'C 168 570, 212 561, 224 540',
-  'C 233 523, 220 509, 198 512',
-  'C 246 520, 420 556, 560 592',
-  'C 700 628, 820 668, 900 716',
-  'C 960 752, 1002 800, 1016 908',
+  'M 128 176', /* enters at the left rail, below the nav keep-out */
+  'C 116 258, 140 328, 128 402', /* runs the rail beside the copy */
+  'C 122 450, 134 470, 176 486', /* flattens under the headline zone */
+  'C 322 528, 522 540, 668 512', /* crosses the column gap — approved words flow toward the build */
+  'C 706 502, 722 470, 726 436', /* rises to the frame's left edge (hand-off) */
+  'C 728 416, 716 410, 710 424', /* overshoot hook — pen pressure at the turn */
+  'C 758 556, 898 678, 1078 758', /* dives under the frame toward the vitals corner */
+  'C 1148 790, 1206 810, 1252 818', /* terminal flick, settling at the caption line */
 ].join(' ');
 
-/* Spec-pass segment: four S-periods at deliberately uneven wavelengths
-   (~192 / 264 / 204 / 296) and amplitudes, with one overshoot hook
-   where the long swing turns — hand-weighted, never metronomic. */
+/* The pen's approval underline beneath the built H1 — drawn only once
+   the letterforms have solidified. Ends in a lift-off hook. */
+const H1_UNDER_D = [
+  'M 6 24', /* pen touches down at the first word */
+  'C 120 28, 300 26, 448 18', /* one confident sweep under the line */
+  'C 492 15, 520 12, 534 10', /* rises as the pen speeds up */
+  'C 545 8, 549 14, 541 18', /* overshoot hook — the pen lifts */
+].join(' ');
+
+/* Scaffold stroke: the pen DRAWS the browser frame's outline (rounded
+   rect, then the chrome divider) before the real frame assembles over
+   it — then dissolves. Its end-state (invisible) is the CSS default. */
+const FRAME_DRAW_D = [
+  'M 46 8', /* pen touches down past the top-left corner */
+  'C 300 4, 620 4, 872 10', /* top edge */
+  'C 906 12, 914 22, 913 52', /* top-right corner */
+  'C 916 200, 914 400, 908 548', /* right edge */
+  'C 906 578, 894 590, 862 589', /* bottom-right corner */
+  'C 620 596, 300 594, 60 588', /* bottom edge */
+  'C 28 586, 16 574, 17 544', /* bottom-left corner */
+  'C 12 400, 14 190, 18 64', /* left edge, back up */
+  'C 19 26, 28 9, 46 8', /* top-left corner — the rectangle closes */
+  'C 62 22, 62 40, 86 47', /* pen turns inward */
+  'C 300 60, 620 58, 886 52', /* rules the browser-bar divider */
+].join(' ');
+
+/* Spec pass: a proof-reader's margin line. Near-vertical rail with a
+   hand waver; at each included line's row the pen LEANS toward the
+   text (uneven amplitudes — never metronomic), then exits bottom-right
+   toward the velocity rail. Station dots on the items themselves fill
+   as each line typesets. */
 const THREAD_SPEC_D = [
-  'M 96 -4',
-  'C 62 66, 150 122, 120 188',
-  'C 94 262, 190 330, 148 452',
-  'C 142 444, 128 446, 124 458',
-  'C 146 540, 172 590, 146 662',
-  'C 120 740, 196 830, 154 958',
-  'C 146 980, 140 994, 141 1006',
+  'M 96 -4', /* enters from the fold above */
+  'C 84 64, 106 128, 94 206', /* passes the heading zone */
+  'C 90 254, 92 296, 96 328', /* settles to reading pace */
+  'C 122 340, 124 366, 100 382', /* lean 1 — toward the first included line */
+  'C 88 396, 90 416, 94 442', /* return to the rail */
+  'C 112 452, 114 476, 96 490', /* lean 2 (shallower) */
+  'C 86 506, 88 528, 94 552', /* return */
+  'C 126 566, 128 596, 102 612', /* lean 3 (deepest — the long line) */
+  'C 90 626, 90 644, 94 664', /* return */
+  'C 110 674, 112 696, 96 710', /* lean 4 (glancing) */
+  'C 86 726, 88 748, 94 772', /* return */
+  'C 120 784, 122 810, 100 826', /* lean 5 */
+  'C 88 840, 90 862, 94 884', /* return */
+  'C 114 894, 116 916, 98 930', /* lean 6 — the last line checked */
+  'C 92 944, 96 958, 108 968', /* the pass is done — pen accelerates */
+  'C 134 984, 176 992, 228 996', /* exits right, toward the velocity rail */
 ].join(' ');
 
+/* Rate card: the main thread FORKS a branch off itself for each
+   package group — flat entry (the through-line), then the branch
+   climbs away with a flick. */
 const BRANCH_D = 'M 4 30 C 44 22, 64 34, 96 24 C 120 17, 142 20, 156 12';
 
+/* Row hover: the pen underlines the exact line you're considering
+   (CSS dashoffset pull — fine pointers only). */
 const ROW_LINE_D = 'M 3 10 C 130 14, 330 6, 540 10 C 680 13, 780 8, 836 10';
 
-const DRENCH_LINE_D = 'M 12 58 C 190 72, 420 66, 600 46 C 668 38, 716 30, 744 16';
+/* The finale: the thread signs off beneath the closing headline — an
+   underline sweep that rises into a small loop flourish and exits with
+   a pen-lift. Rendered as three layered strokes (press/mid/tip) drawn
+   to different lengths, so the line visibly TAPERS as pressure comes
+   off the nib: a signature on the finished build. */
+const SIG_D = [
+  'M 10 52', /* pen touches down under the first word */
+  'C 150 62, 380 58, 552 44', /* the long sweep beneath the closing line */
+  'C 600 40, 634 32, 648 24', /* rises — the pen accelerates into the flourish */
+  'C 656 18, 648 12, 638 18', /* loop, top half */
+  'C 628 25, 638 34, 658 32', /* loop closes over itself */
+  'C 692 28, 718 18, 738 8', /* exit flick up-right — the pen leaves the page */
+].join(' ');
 
-/* The pipeline morph — one stroke living four lives. The DOM default
-   is the final launch arc; arming rewinds it to the scribble. */
+/* The pipeline morph — one stroke living four lives, each a legible
+   picture of its stage. The DOM default is the final Launch arc;
+   arming rewinds it to the Brief state. */
 const PIPE_STATES = [
-  'M 62 196 C 92 118, 156 108, 134 172 C 112 238, 196 244, 206 172 C 214 112, 152 96, 172 162 C 192 228, 254 212, 240 150',
-  'M 36 208 C 104 84, 148 316, 196 176 C 232 72, 272 232, 296 120',
-  'M 70 96 C 160 90, 236 92, 252 100 C 262 106, 264 130, 262 168 C 260 206, 258 222, 244 226 C 180 234, 104 232, 82 224 C 68 218, 64 196, 66 152 C 67 122, 66 104, 78 98',
-  'M 44 268 C 130 258, 216 196, 268 96 C 282 68, 292 44, 298 22',
+  /* BRIEF — the pen annotates the brief: three connected underline
+     strokes beneath imagined lines of text, ending in a lift hook. */
+  'M 46 118 C 108 110, 182 108, 240 114 C 262 117, 264 128, 240 134 C 180 146, 110 142, 64 150 C 46 153, 44 164, 62 170 C 112 180, 188 176, 246 182 C 270 185, 276 176, 266 168',
+  /* DESIGN — one stroke draws the wireframe: the page rectangle
+     closes, then the pen turns inward and rules the header bar. */
+  'M 76 84 C 140 78, 210 78, 246 84 C 256 110, 256 168, 250 222 C 192 230, 120 230, 78 224 C 70 180, 70 130, 74 94 C 82 100, 92 106, 108 108 C 158 112, 208 112, 244 108',
+  /* BUILD — a structural truss: bottom chord laid first, then the
+     web members triangulate up to the top chord. Scaffolding, not
+     glyph cosplay. */
+  'M 46 224 C 118 219, 196 219, 272 224 C 252 214, 226 182, 214 148 C 166 141, 112 141, 68 148 C 86 166, 118 196, 144 214 C 166 196, 192 170, 208 150',
+  /* LAUNCH — ground roll, rotation, climb-out: the terminal points
+     skyward. This is the state the static page ships. */
+  'M 44 254 C 98 252, 152 242, 196 212 C 244 180, 270 130, 282 74 C 286 56, 288 40, 287 26',
 ];
 
 function ThreadPath({ d, ghost = true }) {
@@ -472,7 +537,10 @@ export default function ServiceWeb() {
       lenisRef.current = w.__c4Lenis;
       return undefined;
     }
-    const lenis = new Lenis({ duration: 1.05 });
+    /* lerp (not duration) — a constant-rate catch-up reads calmer under
+       scrub than an eased fixed-duration glide, and 0.1 keeps Lenis and
+       the ScrollTrigger scrub smoothing (0.8–1) in the same register. */
+    const lenis = new Lenis({ lerp: 0.1 });
     w.__c4Lenis = lenis;
     lenisRef.current = lenis;
     lenis.on('scroll', ScrollTrigger.update);
@@ -509,15 +577,50 @@ export default function ServiceWeb() {
         const { desk } = ctx.conditions;
         const q = gsap.utils.selector(root);
 
+        /* ── Title prep: the raw→built telling, rebuilt for smoothness.
+           SplitText at WORD level (6 targets — cheap enough to
+           re-rasterize continuously, unlike ~35 chars), and every
+           word's box is LOCKED to its final built width. The DOM
+           default IS wght 800/wdth 100, so the measurement is exact:
+           the axes then animate inside fixed slots — skeleton glyphs
+           sit light and narrow in loose tracking, then inflate to
+           fill their line — with zero layout shift, zero rewrap. */
+        let h1Words = null;
+        const lockH1 = () => {
+          if (!h1Words) return;
+          h1Words.forEach((w) => {
+            /* Clearing the vars drops each word to the @property
+               initial values (800/100 — the built state) before
+               measuring, so a mid-scrub refresh still locks to the
+               FINAL metrics, never a half-inflated snapshot. */
+            w.style.removeProperty('--lv-wght');
+            w.style.removeProperty('--lv-wdth');
+            w.style.width = 'auto';
+          });
+          const widths = h1Words.map((w) => w.getBoundingClientRect().width);
+          h1Words.forEach((w, i) => {
+            w.style.width = `${widths[i]}px`;
+          });
+        };
+        if (h1Ref.current) {
+          const split = SplitText.create(h1Ref.current, { type: 'words', wordsClass: 'lv-w' });
+          splits.push(split);
+          h1Words = split.words;
+          lockH1();
+        }
+
         /* ── Fold 0: ignition. The hero disassembles to raw (skeleton
            type, scattered wireframe, undrawn thread) and rebuilds as
            you scrub — performing the job on itself. Desktop pins;
            mobile plays the same beats once as a 1.2s load pass. */
         const buildHero = (tl) => {
+          /* The pen's journey (legs labelled in THREAD_HERO_D): left
+             rail → under the headline → across the gap → hand-off at
+             the frame's edge → out to the vitals corner. */
           tl.fromTo(
             q('.lv-thread--hero path'),
             { drawSVG: '0%' },
-            { drawSVG: '100%', ease: 'none', duration: 0.62 },
+            { drawSVG: '100%', ease: 'none', duration: 0.66 },
             0,
           );
           tl.fromTo(
@@ -526,18 +629,16 @@ export default function ServiceWeb() {
             { y: 0, opacity: 1, duration: 0.1, ease: 'c4' },
             0.02,
           );
-          if (desk && h1Ref.current) {
-            const split = SplitText.create(h1Ref.current, { type: 'chars', charsClass: 'lv-ch' });
-            splits.push(split);
+          if (h1Words) {
             tl.fromTo(
-              split.chars,
+              h1Words,
               { '--lv-wght': 300, '--lv-wdth': 62, color: '#8a8f98' },
               {
                 '--lv-wght': 800,
                 '--lv-wdth': 100,
                 color: '#f4f3f1',
-                duration: 0.42,
-                stagger: { each: 0.007 },
+                duration: 0.38,
+                stagger: { each: 0.045 },
                 ease: 'power2.out',
               },
               0.05,
@@ -550,6 +651,14 @@ export default function ServiceWeb() {
               0.05,
             );
           }
+          /* The pen approves the finished words — the underline draws
+             as the last word settles (word ripple ends ~0.66). */
+          tl.fromTo(
+            q('.lv-h1-under path'),
+            { drawSVG: '0%' },
+            { drawSVG: '100%', duration: 0.16, ease: 'power2.inOut' },
+            0.56,
+          );
           if (desk && ledeRef.current) {
             const ledeSplit = SplitText.create(ledeRef.current, { type: 'lines', mask: 'lines' });
             splits.push(ledeSplit);
@@ -567,14 +676,35 @@ export default function ServiceWeb() {
               0.18,
             );
           }
-          /* autoAlpha, not opacity: at scrub rest the hidden CTAs also
-             get visibility:hidden, so they can't take clicks or tab
-             focus while invisible. */
+          /* autoAlpha on the CONTAINER (not the children): the buttons
+             stay free of y-transforms so the magnetic hover can own
+             them, and visibility:hidden still keeps the invisible CTAs
+             out of clicks and tab order at scrub rest. */
           tl.fromTo(
-            q('.lv-hero-cta > *'),
+            q('.lv-hero-cta'),
             { y: 24, autoAlpha: 0 },
-            { y: 0, autoAlpha: 1, duration: 0.16, stagger: 0.05, ease: 'c4' },
+            { y: 0, autoAlpha: 1, duration: 0.2, ease: 'c4' },
             0.3,
+          );
+          /* Parallax layer: the whole figure rises at its own rate
+             while the copy column sits still — two depths, one scrub. */
+          tl.fromTo(
+            q('.lv-hero-fig'),
+            { y: 34 },
+            { y: 0, duration: 0.3, ease: 'power2.out' },
+            0.3,
+          );
+          /* The pen DRAWS the frame before the frame exists: scaffold
+             outline + chrome divider (FRAME_DRAW_D), which dissolves
+             once the real browser has assembled over it. Its CSS
+             default is opacity 0, so static mode ships the finished
+             frame with no scaffold. */
+          tl.set(q('.lv-frame-draw'), { opacity: 1 }, 0.36);
+          tl.fromTo(
+            q('.lv-frame-draw path'),
+            { drawSVG: '0%' },
+            { drawSVG: '100%', duration: 0.18, ease: 'power2.inOut' },
+            0.38,
           );
           /* Browser frame assembles out of the silver wireframe; the
              capture arrives ALREADY GRADED behind a clip wipe (the
@@ -588,25 +718,32 @@ export default function ServiceWeb() {
               rotation: (i) => [-7, 5, -3][i % 3],
             },
             { opacity: 0, x: 0, y: 0, rotation: 0, duration: 0.3, ease: 'power2.inOut' },
-            0.24,
+            0.3,
           );
           tl.fromTo(
             q('.lv-hero-browser'),
             { opacity: 0 },
-            { opacity: 1, duration: 0.2, ease: 'power1.inOut' },
-            0.34,
+            { opacity: 1, duration: 0.18, ease: 'power1.inOut' },
+            0.46,
           );
           tl.fromTo(
             q('.lv-hero-browser .lv-browser-view img'),
             { clipPath: 'inset(0 0 100% 0)' },
-            { clipPath: 'inset(0% 0 0% 0)', duration: 0.26, ease: 'power2.inOut' },
-            0.42,
+            { clipPath: 'inset(0% 0 0% 0)', duration: 0.22, ease: 'power2.inOut' },
+            0.56,
+          );
+          /* Scaffold removed — the drawn outline dissolves under the
+             finished build (end-state: invisible, = the CSS default). */
+          tl.to(
+            q('.lv-frame-draw'),
+            { opacity: 0, duration: 0.08, ease: 'power1.out' },
+            0.74,
           );
           tl.fromTo(
             q('.lv-hero-cap'),
             { opacity: 0 },
             { opacity: 1, duration: 0.12, ease: 'power1.out' },
-            0.6,
+            0.78,
           );
           tl.fromTo(
             q('#lv-vitals-hero'),
@@ -623,8 +760,13 @@ export default function ServiceWeb() {
               start: 'top top',
               end: '+=180%',
               pin: q('.lv-stagebox')[0],
-              scrub: 0.8,
+              scrub: 1,
               anticipatePin: 1,
+              invalidateOnRefresh: true,
+              /* Re-lock the word boxes at every refresh (resize, font
+                 arrival) so the locked widths always match the final
+                 metrics at the CURRENT viewport. */
+              onRefreshInit: lockH1,
             },
           });
           buildHero(heroTl);
@@ -639,10 +781,21 @@ export default function ServiceWeb() {
           const loadTl = gsap.timeline({ defaults: { ease: 'c4' } });
           buildHero(loadTl);
           loadTl.duration(1.2);
+          /* Once the load pass lands, unlock the word boxes so the
+             built headline reflows naturally on later resizes. */
+          loadTl.eventCallback('onComplete', () => {
+            if (h1Words) {
+              h1Words.forEach((w) => {
+                w.style.width = '';
+              });
+            }
+          });
         }
 
-        /* ── Fold 1: the spec pass. Thread meanders the left third;
-           each included line typesets with a width-settle. */
+        /* ── Fold 1: the spec pass. The margin line runs a proof-
+           reader's pass down the list (leans labelled in
+           THREAD_SPEC_D); each included line typesets with a width-
+           settle and its station dot fills as the pen passes. */
         gsap.fromTo(
           q('.lv-thread--spec path'),
           { drawSVG: '0%' },
@@ -653,7 +806,7 @@ export default function ServiceWeb() {
               trigger: q('.lv-spec')[0],
               start: 'top 78%',
               end: 'bottom 55%',
-              scrub: 0.8,
+              scrub: 1,
             },
           },
         );
@@ -670,6 +823,22 @@ export default function ServiceWeb() {
               scrollTrigger: { trigger: li, start: 'top 88%', once: true },
             },
           );
+          /* Progress cue: the station fills (scales in) as its line is
+             checked off. Filled is the DOM default — static mode ships
+             every station lit. */
+          const dot = li.querySelector('.lv-station');
+          if (dot) {
+            gsap.fromTo(
+              dot,
+              { scale: 0 },
+              {
+                scale: 1,
+                duration: 0.5,
+                ease: 'c4',
+                scrollTrigger: { trigger: li, start: 'top 88%', once: true },
+              },
+            );
+          }
         });
 
         /* ── Velocity rail: moves only with YOUR scroll energy —
@@ -683,7 +852,7 @@ export default function ServiceWeb() {
             {
               clipPath: 'polygon(0 0%, 100% 0%, 100% 100%, 0 100%)',
               ease: 'none',
-              scrollTrigger: { trigger: rail, start: 'top 96%', end: 'top 55%', scrub: 0.6 },
+              scrollTrigger: { trigger: rail, start: 'top 96%', end: 'top 55%', scrub: 0.8 },
             },
           );
           const track = q('.lv-rail-track')[0];
@@ -713,15 +882,37 @@ export default function ServiceWeb() {
           const dView = dsr.querySelector('.lv-dsr-desktop .lv-browser-view');
           const mCol = dsr.querySelector('.lv-dsr-mcol');
           const mView = dsr.querySelector('.lv-phone-view');
+          /* Entrance: the stage focuses in (soft blur + scale) before
+             the pin engages — one short pass, filter cleared after. */
+          gsap.fromTo(
+            dsr.querySelector('.lv-drive-stage'),
+            { scale: 0.975, filter: 'blur(3px)' },
+            {
+              scale: 1,
+              filter: 'blur(0px)',
+              duration: 0.8,
+              ease: 'power2.out',
+              clearProps: 'filter',
+              scrollTrigger: { trigger: dsr, start: 'top 85%', once: true },
+            },
+          );
           const driveTl = gsap.timeline({
             scrollTrigger: {
               trigger: dsr,
               start: 'top top',
               end: 'bottom bottom',
-              scrub: 0.9,
+              scrub: 1,
               invalidateOnRefresh: true,
             },
           });
+          /* Counter-rate parallax: the copy column drifts slowly
+             against the browsing captures — two depths in the pin. */
+          driveTl.fromTo(
+            dsr.querySelector('.lv-drive-id'),
+            { y: 30 },
+            { y: -30, ease: 'none', duration: 1 },
+            0,
+          );
           driveTl.to(dCol, {
             y: () => -(dCol.scrollHeight - dView.clientHeight),
             ease: 'none',
@@ -758,6 +949,21 @@ export default function ServiceWeb() {
         if (gz) {
           const col = gz.querySelector('.lv-gz-col');
           const view = gz.querySelector('.lv-browser-view');
+          /* Frame focuses in as it enters (blur ≤3px, short), then the
+             capture pans under a clean filterless frame. */
+          gsap.fromTo(
+            gz.querySelector('.lv-browser'),
+            { scale: 0.97, filter: 'blur(3px)', opacity: 0.4 },
+            {
+              scale: 1,
+              filter: 'blur(0px)',
+              opacity: 1,
+              duration: 0.8,
+              ease: 'power2.out',
+              clearProps: 'filter',
+              scrollTrigger: { trigger: gz, start: 'top 88%', once: true },
+            },
+          );
           gsap.to(col, {
             y: () => -(col.scrollHeight - view.clientHeight),
             ease: 'none',
@@ -765,10 +971,26 @@ export default function ServiceWeb() {
               trigger: gz,
               start: 'top 85%',
               end: 'bottom 15%',
-              scrub: 0.8,
+              scrub: 1,
               invalidateOnRefresh: true,
             },
           });
+          /* Counter-rate copy drift — same depth grammar as the DSR
+             pin, running on the section's own transit. */
+          gsap.fromTo(
+            gz.querySelector('.lv-drive-id'),
+            { y: 26 },
+            {
+              y: -26,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: gz,
+                start: 'top 85%',
+                end: 'bottom 15%',
+                scrub: 1,
+              },
+            },
+          );
         }
 
         /* Reel head + static case frames: staggered arrivals. */
@@ -796,6 +1018,40 @@ export default function ServiceWeb() {
               scrollTrigger: { trigger: el, start: 'top 90%', once: true },
             },
           );
+          const fig = el.querySelector('.lv-case-fig');
+          if (!fig) return;
+          /* Frame focuses in — short soft blur/scale. Transform AND
+             filter cleared on completion: nothing keeps compositing,
+             and the CSS hover lift gets its transform slot back. */
+          gsap.fromTo(
+            fig,
+            { scale: 0.97, filter: 'blur(3px)' },
+            {
+              scale: 1,
+              filter: 'blur(0px)',
+              duration: 0.7,
+              delay: (i % 2) * 0.08,
+              ease: 'power2.out',
+              clearProps: 'transform,filter',
+              scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+            },
+          );
+          /* Depth: the capture drifts inside its cropped frame at an
+             alternating counter-rate to the scroll — transform-only,
+             scrubbed, dead still at rest. */
+          const img = fig.querySelector('img');
+          if (img) {
+            gsap.fromTo(
+              img,
+              { yPercent: i % 2 ? 3.2 : -3.2, scale: 1.07 },
+              {
+                yPercent: i % 2 ? -3.2 : 3.2,
+                scale: 1.07,
+                ease: 'none',
+                scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 1 },
+              },
+            );
+          }
         });
 
         /* Decode capture sets just ahead of their entrance so drive
@@ -841,9 +1097,14 @@ export default function ServiceWeb() {
           );
         });
 
-        /* ── Fold 4: the pipeline morph — the thread's four lives,
-           scribble → bezier → frame → launch arc. DOM default is the
-           arc; arming rewinds to the scribble first. */
+        /* ── Fold 4: the pipeline morph — the thread's four legible
+           lives (each state labelled in PIPE_STATES):
+             Brief  = annotated underlines on the brief's lines,
+             Design = one stroke draws the wireframe + header bar,
+             Build  = the structural truss triangulates,
+             Launch = ground roll → climb-out arc (the DOM default).
+           Arming rewinds the stroke to Brief; station dots stay lit
+           once their stage has been passed. */
         const morphPaths = q('.lv-morph path');
         if (morphPaths.length) {
           gsap.set(morphPaths, { attr: { d: PIPE_STATES[0] } });
@@ -851,57 +1112,142 @@ export default function ServiceWeb() {
              stage) blends to ~4.8:1 computed — above the 4.5:1 body
              floor. (0.55 only cleared for the h3, not the body copy.) */
           gsap.set(q('.lv-stage-item'), { opacity: 0.72 });
+          gsap.set(q('.lv-stage-dot'), { scale: 0.42, opacity: 0.4 });
           const pipeTl = gsap.timeline({
             scrollTrigger: {
               trigger: q('.lv-pipe')[0],
               start: 'top 62%',
               end: 'bottom 55%',
-              scrub: 0.8,
+              scrub: 1,
             },
           });
           const stages = q('.lv-stage-item');
-          pipeTl.to(stages[0], { opacity: 1, duration: 0.5, ease: 'none' }, 0);
+          const dots = q('.lv-stage-dot');
+          /* A stage "goes live": its copy lifts to full ink and its
+             station dot fills — and the dot STAYS filled afterwards
+             (progress already made), while the copy dims back. */
+          const liveStage = (i, at) => {
+            pipeTl.to(stages[i], { opacity: 1, duration: 0.5, ease: 'none' }, at);
+            if (dots[i]) {
+              pipeTl.to(dots[i], { scale: 1, opacity: 1, duration: 0.35, ease: 'none' }, at);
+            }
+          };
+          liveStage(0, 0); /* Brief goes live as the underlines settle */
           PIPE_STATES.slice(1).forEach((state, i) => {
+            /* i=0: Brief→Design (underlines become the wireframe)
+               i=1: Design→Build (wireframe becomes the truss)
+               i=2: Build→Launch (truss becomes the climb-out) */
             pipeTl.to(
               morphPaths,
               { morphSVG: state, duration: 1, ease: 'power1.inOut' },
               0.5 + i,
             );
-            pipeTl.to(stages[i + 1], { opacity: 1, duration: 0.5, ease: 'none' }, 1 + i);
+            liveStage(i + 1, 1 + i);
             if (i > 0) pipeTl.to(stages[i - 1], { opacity: 0.72, duration: 0.5, ease: 'none' }, 1 + i);
           });
           pipeTl.to(stages[2], { opacity: 0.72, duration: 0.5, ease: 'none' }, 3.4);
         }
 
-        /* ── Fold 5: the drench wipes up; the thread lands as the
-           closing underline and hooks the CTA. */
+        /* ── Fold 5: the drench wipes up, its content settling at a
+           slower rate (depth under the clip), and the thread SIGNS
+           OFF — the finale. Three layered strokes of one signature
+           (SIG_D) draw with the tip running ahead of the pressure
+           layers, so the line visibly tapers as the pen lifts: the
+           studio's signature on the finished build. The tapered,
+           fully-signed state is the CSS default (dasharray floors),
+           so static mode ships it complete. */
         gsap.fromTo(
           q('.lv-drench')[0],
           { clipPath: 'inset(16% 0% 0% 0%)' },
           {
             clipPath: 'inset(0% 0% 0% 0%)',
             ease: 'none',
-            scrollTrigger: { trigger: q('.lv-drench')[0], start: 'top 95%', end: 'top 55%', scrub: 0.6 },
+            scrollTrigger: { trigger: q('.lv-drench')[0], start: 'top 95%', end: 'top 55%', scrub: 0.9 },
           },
         );
         gsap.fromTo(
-          q('.lv-drench-line path'),
-          { drawSVG: '0%' },
+          q('.lv-drench-in'),
+          { y: 44 },
           {
-            drawSVG: '100%',
-            duration: 0.9,
-            ease: 'power2.inOut',
-            scrollTrigger: { trigger: q('.lv-drench')[0], start: 'top 62%', once: true },
+            y: 0,
+            ease: 'none',
+            scrollTrigger: { trigger: q('.lv-drench')[0], start: 'top 95%', end: 'top 45%', scrub: 0.9 },
           },
         );
+        const sigTl = gsap.timeline({
+          scrollTrigger: { trigger: q('.lv-drench')[0], start: 'top 60%', once: true },
+        });
+        /* Tip leads (full length), the mid and press layers trail and
+           stop short — composite = a stroke that thins to a point. */
+        sigTl.fromTo(
+          q('.lv-sig--tip'),
+          { drawSVG: '0%' },
+          { drawSVG: '0% 100%', duration: 1.05, ease: 'power2.inOut' },
+          0,
+        );
+        sigTl.fromTo(
+          q('.lv-sig--mid'),
+          { drawSVG: '0%' },
+          { drawSVG: '0% 88%', duration: 1, ease: 'power2.inOut' },
+          0.05,
+        );
+        sigTl.fromTo(
+          q('.lv-sig--press'),
+          { drawSVG: '0%' },
+          { drawSVG: '0% 72%', duration: 0.95, ease: 'power2.inOut' },
+          0.1,
+        );
+        /* Signed → sealed: the CTA settles under the fresh signature. */
+        sigTl.fromTo(
+          q('.lv-drench .lv-btn'),
+          { scale: 0.965 },
+          { scale: 1, duration: 0.45, ease: 'c4' },
+          0.9,
+        );
+
+        /* ── Magnetic primaries (fine pointers, desktop): the two red
+           CTAs lean toward the cursor inside their own hitbox and
+           glide back on leave. Transform-only; capped ±12/±8px. */
+        const magnetCleanups = [];
+        if (desk && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+          q('.lv-btn').forEach((btn) => {
+            const xTo = gsap.quickTo(btn, 'x', { duration: 0.4, ease: 'power3.out' });
+            const yTo = gsap.quickTo(btn, 'y', { duration: 0.4, ease: 'power3.out' });
+            const onMove = (e) => {
+              const r = btn.getBoundingClientRect();
+              xTo(gsap.utils.clamp(-12, 12, (e.clientX - (r.left + r.width / 2)) * 0.24));
+              yTo(gsap.utils.clamp(-8, 8, (e.clientY - (r.top + r.height / 2)) * 0.32));
+            };
+            const onLeave = () => {
+              xTo(0);
+              yTo(0);
+            };
+            btn.addEventListener('pointermove', onMove);
+            btn.addEventListener('pointerleave', onLeave);
+            magnetCleanups.push(() => {
+              btn.removeEventListener('pointermove', onMove);
+              btn.removeEventListener('pointerleave', onLeave);
+            });
+          });
+        }
 
         return () => {
+          magnetCleanups.forEach((fn) => fn());
+          magnetCleanups.length = 0;
           splits.forEach((s) => s.revert());
           splits.length = 0;
           decodeIO.disconnect();
         };
       },
     );
+
+    /* Cold-load safety: if Archivo lands after arming, the locked
+       word boxes were measured against the fallback face — one
+       refresh re-locks them (onRefreshInit) against the real
+       metrics and re-renders every scrubbed timeline in place. */
+    if (typeof document !== 'undefined' && document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => ScrollTrigger.refresh()).catch(() => {});
+    }
 
     return () => {
       mm.revert();
@@ -1101,6 +1447,18 @@ export default function ServiceWeb() {
               <h1 className="lv-h1" ref={h1Ref}>
                 Websites built to convert and scale.
               </h1>
+              {/* The pen's approval underline — anchored to the H1 so
+                  it registers at every viewport. Fully drawn is the
+                  DOM default. */}
+              <svg
+                className="lv-h1-under"
+                viewBox="0 0 560 34"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <ThreadPath d={H1_UNDER_D} />
+              </svg>
               <p className="lv-lede" ref={ledeRef}>
                 From a crisp landing page to a full web application — every project is
                 scoped clearly, designed carefully, and delivered on time.
@@ -1118,6 +1476,19 @@ export default function ServiceWeb() {
             </div>
 
             <figure className="lv-hero-fig">
+              {/* Scaffold stroke: the pen draws the frame's outline +
+                  chrome divider before the real browser assembles,
+                  then dissolves. Invisible (dissolved) is the DOM
+                  default — static mode ships the finished frame. */}
+              <svg
+                className="lv-frame-draw"
+                viewBox="0 0 920 600"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <ThreadPath d={FRAME_DRAW_D} ghost={false} />
+              </svg>
               <span className="lv-wire-piece lv-wire-piece--bar" aria-hidden="true" />
               <span className="lv-wire-piece lv-wire-piece--body" aria-hidden="true" />
               <span className="lv-wire-piece lv-wire-piece--side" aria-hidden="true" />
@@ -1165,6 +1536,7 @@ export default function ServiceWeb() {
           <ul className="lv-spec-list">
             {INCLUDED.map((item) => (
               <li className="lv-spec-item" key={item}>
+                <span className="lv-station" aria-hidden="true" />
                 {item}
               </li>
             ))}
@@ -1517,7 +1889,10 @@ export default function ServiceWeb() {
           <div className="lv-stages">
             {PROCESS.map((stage) => (
               <div className="lv-stage-item" key={stage.label}>
-                <h3>{stage.label}</h3>
+                <h3>
+                  <span className="lv-stage-dot" aria-hidden="true" />
+                  {stage.label}
+                </h3>
                 <p>{stage.desc}</p>
               </div>
             ))}
@@ -1532,6 +1907,10 @@ export default function ServiceWeb() {
       <section className="lv-drench">
         <div className="lv-frame lv-drench-in">
           <h2 className="lv-h2 lv-drench-h">Ready to build something worth showing?</h2>
+          {/* The sign-off: one signature in three pressure layers.
+              CSS dasharray floors (0.72 / 0.88 / full) are the static
+              default, so the tapered, fully-signed stroke ships in
+              prerender; arming only re-draws it. */}
           <svg
             className="lv-drench-line"
             viewBox="0 0 760 80"
@@ -1539,7 +1918,9 @@ export default function ServiceWeb() {
             aria-hidden="true"
             focusable="false"
           >
-            <path d={DRENCH_LINE_D} pathLength="1" />
+            <path className="lv-sig lv-sig--press" d={SIG_D} pathLength="1" />
+            <path className="lv-sig lv-sig--mid" d={SIG_D} pathLength="1" />
+            <path className="lv-sig lv-sig--tip" d={SIG_D} pathLength="1" />
           </svg>
           <p className="lv-drench-sub">
             Send us a brief — we&rsquo;ll scope it, price it, and come back with a clear plan.

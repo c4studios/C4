@@ -4,8 +4,13 @@
    stage (#0e0f12 — a neutral stage, not a lit set) on which the studio
    performs its own craft. One red line — drawn like a pen stroke, with
    pressure ghosts and overshoot hooks authored into the geometry —
-   runs hero → spec → reel → rate card → pipeline → close. Client work
-   supplies all the colour. Two voices only: Archivo Variable (display
+   runs hero → spec → reel → rate card → pipeline → close, and every
+   stroke DEPICTS something: the hero rail-and-hand-off journey, the
+   H1 approval underline, the drawn-then-dissolved frame scaffold, the
+   proof-reader's margin pass (station dots fill as lines are checked),
+   the group branches, the Brief/Design/Build/Launch morph, and the
+   closing three-layer pen-pressure signature. Client work supplies
+   all the colour. Two voices only: Archivo Variable (display
    AND body — the raw→built story is told inside its wght/wdth axes)
    and Geist Mono strictly for data (prices, client names, one hero
    kicker, capture captions, vitals).
@@ -125,8 +130,27 @@
   max-width: 14ch;
 }
 
-.lv-ch {
+/* SplitText word slots. Each word carries its own axis vars AND an
+   inline width locked (by JS) to its final built metrics, so the
+   variable-font build animates with zero reflow — glyphs inflate
+   inside fixed slots instead of pushing their neighbours around. */
+.lv-w {
   font-variation-settings: 'wght' var(--lv-wght, 800), 'wdth' var(--lv-wdth, 100);
+}
+
+/* The pen's approval underline beneath the built H1 — anchored to the
+   copy column so it registers at every viewport. Fully drawn is the
+   static default. */
+.lv-h1-under {
+  display: block;
+  width: min(100%, 30rem);
+  height: clamp(16px, 2.2vw, 26px);
+  margin-top: clamp(12px, 1.6vw, 20px);
+  overflow: visible;
+}
+
+.lv-h1-under .lv-tmain {
+  stroke-width: 2.6;
 }
 
 .lv-h2 {
@@ -201,6 +225,9 @@
 
 /* ── Buttons & links ───────────────────────────────────────────── */
 
+/* No transform in the transition list: GSAP's magnetic hover owns the
+   button's transform on fine pointers, and a CSS transition on the
+   same property would double-smooth (lag) every magnetic frame. */
 .lv-btn {
   display: inline-flex;
   align-items: center;
@@ -217,12 +244,11 @@
   font-weight: 650;
   letter-spacing: 0.01em;
   text-decoration: none;
-  transition: background-color 0.25s var(--lv-ease), transform 0.25s var(--lv-ease);
+  transition: background-color 0.25s var(--lv-ease);
 }
 
 .lv-btn:hover {
   background: var(--lv-drench);
-  transform: translateY(-1px);
 }
 
 .lv-btn--onred {
@@ -242,7 +268,6 @@
 
 .lv-btn--ghostline:hover {
   background: rgba(244, 243, 241, 0.06);
-  transform: none;
 }
 
 .lv-link {
@@ -430,6 +455,24 @@
   border-width: 0 1px 0 0;
 }
 
+/* Scaffold stroke — the pen-drawn frame outline the browser assembles
+   over. Its END state (dissolved) is the default; only the armed hero
+   timeline ever makes it visible mid-build. */
+.lv-frame-draw {
+  position: absolute;
+  inset: -9px;
+  width: calc(100% + 18px);
+  height: calc(100% + 18px);
+  z-index: 3;
+  opacity: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.lv-frame-draw .lv-tmain {
+  stroke-width: 2;
+}
+
 /* Vitals strip — Geist Mono data voice; hero corner + closing reprise.
    Rests on em-dashes in static mode; JS writes real numbers at 1Hz. */
 .lv-vitals {
@@ -498,6 +541,19 @@
   letter-spacing: -0.012em;
   color: var(--lv-bone);
   padding-block: clamp(14px, 1.8vw, 22px);
+}
+
+/* Station dot — the proof-pass progress cue: fills as its line is
+   checked off. Filled is the static default (≥3:1 non-text red). */
+.lv-station {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: clamp(14px, 1.6vw, 20px);
+  border-radius: 50%;
+  background: var(--lv-thread);
+  vertical-align: 0.12em;
+  transform-origin: center;
 }
 
 .lv-spec-item:nth-child(2) { margin-left: 12%; }
@@ -1209,6 +1265,19 @@
   color: var(--lv-bone);
 }
 
+/* Pipeline station dot — fills as its stage is passed and stays lit
+   (progress made). Filled is the static default. */
+.lv-stage-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 14px;
+  border-radius: 50%;
+  background: var(--lv-thread);
+  vertical-align: 0.16em;
+  transform-origin: center;
+}
+
 .lv-stage-item p {
   margin: 10px 0 0;
   font-size: 15px;
@@ -1247,12 +1316,32 @@
   margin-top: 6px;
 }
 
+/* The sign-off signature — one path, three pressure layers. The tip
+   runs the full stroke; the mid and press layers stop short (CSS
+   dasharray floors on pathLength=1), so the composite line TAPERS as
+   the pen lifts. These floors ARE the finished state: static mode
+   ships the complete tapered signature, and the armed timeline only
+   re-draws to the same lengths. */
 .lv-drench-line path {
   fill: none;
   stroke: var(--lv-bone);
-  stroke-width: 3;
   stroke-linecap: round;
+  stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
+}
+
+.lv-sig--press {
+  stroke-width: 6;
+  stroke-dasharray: 0.72 0.28;
+}
+
+.lv-sig--mid {
+  stroke-width: 3.6;
+  stroke-dasharray: 0.88 0.12;
+}
+
+.lv-sig--tip {
+  stroke-width: 2.2;
 }
 
 .lv-drench-sub {
@@ -1323,6 +1412,14 @@
 
   .lv-hero-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* The hero connector depicts the pen crossing from the copy column
+     into the frame — meaningless once the grid stacks, so it goes.
+     The anchored strokes (H1 underline, frame outline) carry the
+     meaning on mobile. */
+  .lv-thread--hero {
+    display: none;
   }
 
   .lv-vitals {
