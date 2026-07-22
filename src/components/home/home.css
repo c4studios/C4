@@ -641,6 +641,17 @@
    tungsten glow belongs to /Lens itself. */
 .hm-doorface--lens { background: #050505; }
 .hm-doorface--lens .hm-ninegon { position: absolute; inset: 0; z-index: -1; }
+/* The iris focuses on hover — blades turn like a lens being pulled. */
+.hm-doorface--lens .hm-iris-blades {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hm-doorface--lens:hover .hm-iris-blades { transform: rotate(20deg); }
+@media (prefers-reduced-motion: reduce) {
+  .hm-doorface--lens .hm-iris-blades { transition: none; }
+  .hm-doorface--lens:hover .hm-iris-blades { transform: none; }
+}
 .hm-doorface--lens .hm-door-tag { color: rgba(255, 255, 255, 0.72); }
 .hm-doorface--lens .hm-door-word {
   font-family: 'Bebas Neue', 'Archivo', sans-serif;
