@@ -1,66 +1,55 @@
 /* ═══════════════════════════════════════════════════════════════════
-   /ServiceWeb — "The Red Thread"
-   C1 · Web & Applications arm identity (fable pass): a dark cinematic
-   stage (#0e0f12 — a neutral stage, not a lit set) on which the studio
-   performs its own craft. One red line — drawn like a pen stroke, with
-   pressure ghosts and overshoot hooks authored into the geometry —
-   runs hero → spec → reel → rate card → pipeline → close, and every
-   stroke DEPICTS something: the hero rail-and-hand-off journey, the
-   H1 approval underline, the drawn-then-dissolved frame scaffold, the
-   proof-reader's margin pass (station dots fill as lines are checked),
-   the group branches, the Brief/Design/Build/Launch morph, and the
-   closing three-layer pen-pressure signature. Client work supplies
-   all the colour. Two voices only: Archivo Variable (display
-   AND body — the raw→built story is told inside its wght/wdth axes)
-   and Geist Mono strictly for data (prices, client names, one hero
-   kicker, capture captions, vitals).
+   /ServiceWeb — "The White Gallery"
+   C1 · Web & Applications arm identity, rebuilt to the client's brief:
+   a white, high-production page (Apple product-page register) where
+   the work itself is the show. The hero fuses the two components the
+   client supplied — GradientText (blurred colour blobs in a
+   mix-blend-lighten overlay make the word "without" carry a living
+   gradient) and ContainerScroll (the Aceternity scroll-tilt device
+   card straightens out of 3D into a real client-site capture). The
+   red-thread SVG system is retired in full; C4 red remains as the
+   accent for CTAs, links and the closing drench band.
+
+   Rhythm: #ffffff page with #f5f5f7 alternate bands (reel, process),
+   near-black ink, generous section padding, hairline rules. Fonts:
+   Archivo for display and body (no axis choreography); Geist Mono
+   strictly for tiny capture captions, browser URLs, prices and the
+   timeline stamps.
 
    Contrast pairs (computed, WCAG):
-     bone   #F4F3F1 on stage #0E0F12 → 16.9:1
-     body   #A6ABB6 on stage → 8.3:1     on lift #14161B → 8.0:1
-     meta   #8B919D on stage → 5.6:1  (small caps/captions)
-     dim    #7C828E on stage → 5.0:1  (smallest meta only)
-     red    #FF6B5E on stage → 5.6:1  (inline red words — body-legal)
-     thread #D42B2B on stage → 3.8:1  (non-text strokes, ≥3:1)
-     white  #FFFFFF on drench #B32828 → 6.5:1
-     bone   #F4F3F1 on drench → 5.8:1
-   Scoped under .lv-root; nothing leaks. `.wa-on-sheet` is RETIRED —
-   the chrome pin is `.lv-on-stage` (forced dark), at the end of file.
+     ink   #1d1d1f on #ffffff → 16.2:1   on #f5f5f7 → 14.8:1
+     body  #424245 on #ffffff → 10.0:1   on #f5f5f7 →  9.2:1
+     meta  #6e6e73 on #ffffff →  5.1:1   on #f5f5f7 →  4.7:1
+     red   #d42b2b on #ffffff →  5.0:1   (CTA fills, links, tags)
+     white #ffffff on drench #c22424 → 5.9:1
+   Scoped under .lv-root; nothing leaks. The chrome pin is
+   `.lv-on-stage` (now a LIGHT pin), at the end of the file.
    ═══════════════════════════════════════════════════════════════════ */
 
-/* Typed axes so the variable-font choreography interpolates natively.
-   Initial values ARE the built end-state (prerender ships it free). */
-@property --lv-wght {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 800;
-}
-@property --lv-wdth {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 100;
-}
-
 .lv-root {
-  --lv-stage: #0e0f12;
-  --lv-lift: #14161b;
-  --lv-deep: #0b0c0f;
-  --lv-bone: #f4f3f1;
-  --lv-body: #a6abb6;
-  --lv-meta: #8b919d;
-  --lv-dim: #7c828e;
-  --lv-wire: #7a7f88;
-  --lv-thread: #d42b2b;
-  --lv-red-text: #ff6b5e;
-  --lv-drench: #b32828;
-  --lv-hair: rgba(244, 243, 241, 0.13);
-  --lv-hair-soft: rgba(244, 243, 241, 0.07);
+  --lv-page: #ffffff;
+  --lv-band: #f5f5f7;
+  --lv-ink: #1d1d1f;
+  --lv-body: #424245;
+  --lv-meta: #6e6e73;
+  --lv-red: #d42b2b;
+  --lv-red-deep: #b32424;
+  --lv-drench: #c22424;
+  --lv-hair: rgba(0, 0, 0, 0.08);
+  --lv-hair-strong: rgba(0, 0, 0, 0.14);
+
+  /* GradientText palette — exact values from the client's component. */
+  --color-1: 330 100% 40%;
+  --color-2: 140 100% 55%;
+  --color-3: 210 100% 30%;
+  --color-4: 60 100% 70%;
+  --color-5: 295 100% 45%;
 
   --lv-sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --lv-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --lv-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
-  background: var(--lv-stage);
+  background: var(--lv-page);
   color: var(--lv-body);
   font-family: var(--lv-sans);
   font-size: 17px;
@@ -76,13 +65,13 @@
 }
 
 .lv-root ::selection {
-  background: var(--lv-thread);
+  background: var(--lv-red);
   color: #ffffff;
 }
 
 .lv-root a:focus-visible,
 .lv-root button:focus-visible {
-  outline: 2px solid var(--lv-bone);
+  outline: 2px solid var(--lv-ink);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -108,87 +97,76 @@
 /* ── Frame ─────────────────────────────────────────────────────── */
 
 .lv-frame {
-  max-width: 1340px;
+  max-width: 1180px;
   margin-inline: auto;
-  padding-inline: clamp(20px, 4vw, 56px);
+  padding-inline: clamp(20px, 4vw, 48px);
   position: relative;
   z-index: 1;
 }
 
 /* ── Type ──────────────────────────────────────────────────────── */
 
-.lv-h1 {
+/* Display line — visual headline only (a <p>); the document h1 is the
+   SEO sentence styled as the supporting claim beneath it. */
+.lv-display {
+  margin: 18px 0 0;
   font-family: var(--lv-sans);
-  font-weight: 800;
-  font-variation-settings: 'wght' var(--lv-wght, 800), 'wdth' var(--lv-wdth, 100);
-  font-size: clamp(2.35rem, 1.3rem + 4.7vw, 5.5rem);
-  line-height: 1.02;
-  letter-spacing: -0.02em;
-  color: var(--lv-bone);
+  font-weight: 700;
+  font-size: clamp(2.35rem, 1.35rem + 4.6vw, 4.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  color: var(--lv-ink);
   text-wrap: balance;
-  margin: 0;
-  max-width: 14ch;
 }
 
-/* SplitText word slots. Each word carries its own axis vars AND an
-   inline width locked (by JS) to its final built metrics, so the
-   variable-font build animates with zero reflow — glyphs inflate
-   inside fixed slots instead of pushing their neighbours around. */
-.lv-w {
-  font-variation-settings: 'wght' var(--lv-wght, 800), 'wdth' var(--lv-wdth, 100);
-}
-
-/* The pen's approval underline beneath the built H1 — anchored to the
-   copy column so it registers at every viewport. Fully drawn is the
-   static default. */
-.lv-h1-under {
-  display: block;
-  width: min(100%, 30rem);
-  height: clamp(16px, 2.2vw, 26px);
-  margin-top: clamp(12px, 1.6vw, 20px);
-  overflow: visible;
-}
-
-.lv-h1-under .lv-tmain {
-  stroke-width: 2.6;
+.lv-h1 {
+  margin: 24px auto 0;
+  font-family: var(--lv-sans);
+  font-weight: 640;
+  font-size: clamp(1.16rem, 1.05rem + 0.6vw, 1.44rem);
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+  color: var(--lv-ink);
+  text-wrap: balance;
+  max-width: 30ch;
 }
 
 .lv-h2 {
   font-family: var(--lv-sans);
-  font-weight: 750;
-  font-stretch: 108%;
-  font-size: clamp(1.85rem, 1.25rem + 2.6vw, 3.4rem);
-  line-height: 1.06;
-  letter-spacing: -0.02em;
-  color: var(--lv-bone);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 1.3rem + 2.2vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: var(--lv-ink);
   text-wrap: balance;
   margin: 0;
 }
 
 .lv-sub {
   margin: 12px 0 0;
-  font-size: 15.5px;
+  font-size: 16px;
   line-height: 1.6;
   color: var(--lv-body);
   max-width: 56ch;
+  text-wrap: pretty;
 }
 
 .lv-lede {
-  margin: 26px 0 0;
-  font-size: clamp(1.02rem, 0.95rem + 0.5vw, 1.2rem);
+  margin: 14px auto 0;
+  font-size: clamp(1rem, 0.95rem + 0.35vw, 1.12rem);
   line-height: 1.62;
   color: var(--lv-body);
-  max-width: 46ch;
+  max-width: 52ch;
+  text-wrap: pretty;
 }
 
-/* The single hero label — one mono kicker, not a section grammar. */
+/* The single hero label — one quiet line, not a section grammar. */
 .lv-kicker {
-  margin: 0 0 22px;
-  font-family: var(--lv-mono);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  margin: 0;
+  font-family: var(--lv-sans);
+  font-size: 13px;
+  font-weight: 590;
+  letter-spacing: 0.015em;
   color: var(--lv-meta);
 }
 
@@ -203,15 +181,13 @@
   margin: 0;
 }
 
-/* Oversized client name — data voice, Geist Mono. */
 .lv-client {
-  font-family: var(--lv-mono);
-  font-size: clamp(1.35rem, 1rem + 1.7vw, 2.3rem);
+  font-family: var(--lv-sans);
+  font-size: clamp(1.3rem, 1.05rem + 1.1vw, 1.85rem);
   font-weight: 700;
   line-height: 1.12;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-  color: var(--lv-bone);
+  letter-spacing: -0.02em;
+  color: var(--lv-ink);
   margin: 0;
 }
 
@@ -235,39 +211,40 @@
   gap: 10px;
   min-height: 48px;
   padding: 13px 28px;
-  background: var(--lv-thread);
+  background: var(--lv-red);
   color: #ffffff;
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: 980px;
   font-family: var(--lv-sans);
   font-size: 15px;
-  font-weight: 650;
-  letter-spacing: 0.01em;
+  font-weight: 620;
+  letter-spacing: 0.005em;
   text-decoration: none;
   transition: background-color 0.25s var(--lv-ease);
 }
 
 .lv-btn:hover {
-  background: var(--lv-drench);
+  background: var(--lv-red-deep);
 }
 
+/* On the red drench band the primary inverts: white pill, ink label. */
 .lv-btn--onred {
-  background: #131418;
-  color: var(--lv-bone);
+  background: #ffffff;
+  color: var(--lv-ink);
 }
 
 .lv-btn--onred:hover {
-  background: #060709;
+  background: #f5f5f7;
 }
 
 .lv-btn--ghostline {
   background: transparent;
-  border-color: var(--lv-hair);
-  color: var(--lv-bone);
+  border-color: var(--lv-hair-strong);
+  color: var(--lv-ink);
 }
 
 .lv-btn--ghostline:hover {
-  background: rgba(244, 243, 241, 0.06);
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .lv-link {
@@ -276,7 +253,7 @@
   gap: 8px;
   min-height: 44px;
   padding: 10px 2px;
-  color: var(--lv-bone);
+  color: var(--lv-ink);
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;
@@ -285,8 +262,8 @@
 }
 
 .lv-link:hover {
-  border-color: var(--lv-thread);
-  color: #ffffff;
+  border-color: var(--lv-red);
+  color: var(--lv-red);
 }
 
 .lv-link--small {
@@ -294,305 +271,327 @@
   min-height: 44px;
 }
 
-/* ── The thread ────────────────────────────────────────────────── */
-
-.lv-thread {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.lv-tmain {
-  fill: none;
-  stroke: var(--lv-thread);
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-/* Pressure ghost — a wide, faint duplicate a hair off-register, so the
-   stroke reads as ink with weight, not a hairline polyline. */
-.lv-tghost {
-  fill: none;
-  stroke: var(--lv-thread);
-  stroke-width: 5.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-  opacity: 0.11;
-  transform: translate(3px, 2px);
-}
-
-/* ══ Fold 0 — Ignition hero ══════════════════════════════════════ */
+/* ══ Hero — GradientText × ContainerScroll fusion ═════════════════ */
 
 .lv-hero {
   position: relative;
+  background: var(--lv-page);
 }
 
-.lv-stagebox {
+/* ContainerScroll section: tall runway the card straightens across.
+   Top padding clears the 220×160 top-left keep-out (back ribbon). */
+.lv-cs {
   position: relative;
-  min-height: 100vh;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* Clears the 220×160 top-left keep-out (back-ribbon territory). */
-  padding-top: max(178px, 15vh);
-  padding-bottom: 96px;
+  height: 76rem;
+  padding: 8px;
+  padding-top: max(164px, 14svh);
 }
 
-.lv-hero-grid {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: clamp(36px, 5vw, 84px);
-  align-items: center;
+@media (min-width: 768px) {
+  .lv-cs {
+    height: 80rem;
+    padding: 8px 40px;
+    padding-top: max(184px, 15svh);
+  }
+}
+
+.lv-cs-inner {
   width: 100%;
+  max-width: 74rem;
+  margin-inline: auto;
+  position: relative;
+  perspective: 1000px;
+}
+
+.lv-cs-header {
+  max-width: 64rem;
+  margin-inline: auto;
+  text-align: center;
+  will-change: transform;
 }
 
 .lv-hero-cta {
   display: flex;
   align-items: center;
-  gap: 26px;
-  margin-top: 38px;
+  justify-content: center;
+  gap: 14px 26px;
+  margin-top: 30px;
   flex-wrap: wrap;
 }
 
-/* Browser frame — assembles from the wireframe on scrub. */
-.lv-browser {
+/* The device card — bezel kept from the original component:
+   rounded-[30px], 4px #6C6C6C border, #222 body, layered shadow. */
+.lv-cs-card {
   position: relative;
-  border: 1px solid var(--lv-hair);
-  border-radius: 10px;
-  background: #101216;
-  overflow: hidden;
-  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.7);
-}
-
-.lv-browser-bar {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  height: 36px;
-  padding: 0 14px;
-  border-bottom: 1px solid var(--lv-hair-soft);
-}
-
-.lv-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: rgba(244, 243, 241, 0.16);
-}
-
-.lv-browser-url {
-  margin-left: 10px;
-  font-family: var(--lv-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  color: var(--lv-dim);
-}
-
-.lv-browser-view {
-  position: relative;
-  aspect-ratio: 900 / 563;
-  overflow: hidden;
-  background: var(--lv-deep);
-}
-
-.lv-browser-view--tall {
-  aspect-ratio: 900 / 640;
-}
-
-.lv-browser-view img {
+  margin: 2.75rem auto 0;
+  height: 30rem;
+  width: 100%;
+  max-width: 64rem;
+  border: 4px solid #6c6c6c;
+  border-radius: 30px;
+  background: #222222;
+  padding: 8px;
+  box-shadow:
+    0 0 #0000004d,
+    0 9px 20px #0000004a,
+    0 37px 37px #00000042,
+    0 84px 50px #00000026,
+    0 149px 60px #0000000a,
+    0 233px 65px #00000003;
   will-change: transform;
 }
 
-.lv-col {
-  display: block;
+@media (min-width: 768px) {
+  .lv-cs-card {
+    height: 40rem;
+    padding: 24px;
+  }
 }
 
-.lv-hero-fig {
+.lv-cs-surface {
   position: relative;
-  margin: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #131316;
 }
 
-.lv-hero-cap {
-  margin-top: 14px;
-  text-align: right;
+/* Capture pan inside the card: three full-height slots; the strip is
+   translated by scroll past the straighten point. Static default (no
+   transform) shows the first capture full-bleed. */
+.lv-heropan {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
-/* Silver wireframe pieces — the skeleton the frame assembles from.
-   Their END state (assembled, invisible) is the DOM default. */
-.lv-wire-piece {
+.lv-heropan-strip {
+  height: 300%;
+  will-change: transform;
+}
+
+.lv-heropan-slot {
+  height: 33.3333%;
+}
+
+.lv-heropan-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.lv-heropan-cap {
   position: absolute;
-  border: 1px solid var(--lv-wire);
-  opacity: 0;
-  pointer-events: none;
+  left: 16px;
+  bottom: 16px;
   z-index: 2;
-}
-
-.lv-wire-piece--bar {
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 36px;
-  border-radius: 10px 10px 0 0;
-}
-
-.lv-wire-piece--body {
-  inset: 0 0 26px 0;
-  border-radius: 10px;
-}
-
-.lv-wire-piece--side {
-  top: 18%;
-  right: -16px;
-  width: 0;
-  height: 55%;
-  border-width: 0 1px 0 0;
-}
-
-/* Scaffold stroke — the pen-drawn frame outline the browser assembles
-   over. Its END state (dissolved) is the default; only the armed hero
-   timeline ever makes it visible mid-build. */
-.lv-frame-draw {
-  position: absolute;
-  inset: -9px;
-  width: calc(100% + 18px);
-  height: calc(100% + 18px);
-  z-index: 3;
-  opacity: 0;
-  pointer-events: none;
-  overflow: visible;
-}
-
-.lv-frame-draw .lv-tmain {
-  stroke-width: 2;
-}
-
-/* Vitals strip — Geist Mono data voice; hero corner + closing reprise.
-   Rests on em-dashes in static mode; JS writes real numbers at 1Hz. */
-.lv-vitals {
-  position: absolute;
-  left: clamp(20px, 4vw, 56px);
-  bottom: 30px;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 20px;
   margin: 0;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: rgba(15, 15, 18, 0.68);
+  color: #f5f5f7;
   font-family: var(--lv-mono);
   font-size: 11px;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--lv-meta);
+  white-space: nowrap;
+  max-width: calc(100% - 32px);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.lv-vit-label {
-  color: var(--lv-dim);
-  border-right: 1px solid var(--lv-hair);
-  margin-right: 2px;
-  padding-right: 20px;
+@media (max-width: 480px) {
+  .lv-heropan-cap {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
 }
 
-.lv-vit {
-  font-variant-numeric: tabular-nums;
+/* ── GradientText ─────────────────────────────────────────────────
+   Light box, near-black glyphs; a lighten-blend overlay of four huge
+   blurred colour blobs. Over white the blend is invisible; over the
+   dark glyphs the colours pour through — the text carries the
+   gradient. Keyframes + palette per the client's component. */
+
+.lv-gt {
+  position: relative;
+  display: inline-flex;
+  overflow: hidden;
+  background: #ffffff;
+  color: var(--lv-ink);
+  isolation: isolate;
 }
 
-/* ══ Fold 1 — The spec pass ══════════════════════════════════════ */
+.lv-gt-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: lighten;
+}
+
+.lv-gt-blob {
+  position: absolute;
+  width: 30vw;
+  height: 30vw;
+  border-radius: 50%;
+  mix-blend-mode: overlay;
+  filter: blur(1rem);
+}
+
+.lv-gt-blob--1 {
+  top: -50%;
+  right: 0;
+  background: hsl(var(--color-1));
+  animation:
+    lv-gradient-border 6s ease-in-out infinite,
+    lv-gradient-1 12s ease-in-out infinite alternate;
+}
+
+.lv-gt-blob--2 {
+  top: 0;
+  left: 0;
+  background: hsl(var(--color-2));
+  animation:
+    lv-gradient-border 6s ease-in-out infinite,
+    lv-gradient-2 12s ease-in-out infinite alternate;
+}
+
+.lv-gt-blob--3 {
+  bottom: 0;
+  left: 0;
+  background: hsl(var(--color-3));
+  animation:
+    lv-gradient-border 6s ease-in-out infinite,
+    lv-gradient-3 12s ease-in-out infinite alternate;
+}
+
+.lv-gt-blob--4 {
+  bottom: -50%;
+  right: 0;
+  background: hsl(var(--color-4));
+  animation:
+    lv-gradient-border 6s ease-in-out infinite,
+    lv-gradient-4 12s ease-in-out infinite alternate;
+}
+
+@keyframes lv-gradient-border {
+  0%,
+  100% {
+    border-radius: 37% 29% 27% 27% / 28% 25% 41% 37%;
+  }
+  25% {
+    border-radius: 47% 29% 39% 49% / 61% 19% 66% 26%;
+  }
+  50% {
+    border-radius: 57% 23% 47% 72% / 63% 17% 66% 33%;
+  }
+  75% {
+    border-radius: 28% 49% 29% 100% / 93% 20% 64% 25%;
+  }
+}
+
+@keyframes lv-gradient-1 {
+  0%,
+  100% {
+    top: 0;
+    right: 0;
+  }
+  50% {
+    top: 50%;
+    right: 25%;
+  }
+  75% {
+    top: 25%;
+    right: 50%;
+  }
+}
+
+@keyframes lv-gradient-2 {
+  0%,
+  100% {
+    top: 0;
+    left: 0;
+  }
+  60% {
+    top: 75%;
+    left: 25%;
+  }
+  85% {
+    top: 50%;
+    left: 50%;
+  }
+}
+
+@keyframes lv-gradient-3 {
+  0%,
+  100% {
+    bottom: 0;
+    left: 0;
+  }
+  40% {
+    bottom: 50%;
+    left: 25%;
+  }
+  65% {
+    bottom: 25%;
+    left: 50%;
+  }
+}
+
+@keyframes lv-gradient-4 {
+  0%,
+  100% {
+    bottom: 0;
+    right: 0;
+  }
+  50% {
+    bottom: 25%;
+    right: 40%;
+  }
+  90% {
+    bottom: 50%;
+    right: 25%;
+  }
+}
+
+/* ══ Every project includes ══════════════════════════════════════ */
 
 .lv-spec {
   position: relative;
-  padding-block: clamp(110px, 15vw, 210px);
-}
-
-.lv-thread--spec {
-  width: clamp(120px, 22vw, 300px);
-  height: 100%;
-  left: 0;
-  right: auto;
-}
-
-.lv-spec .lv-frame {
-  padding-left: clamp(20px, 4vw, 56px);
+  padding-block: clamp(96px, 12vw, 170px);
 }
 
 .lv-spec .lv-h2 {
-  margin-left: clamp(0px, 16vw, 230px);
-  margin-bottom: clamp(40px, 6vw, 80px);
+  margin-bottom: clamp(36px, 5vw, 64px);
 }
 
 .lv-spec-list {
   list-style: none;
   margin: 0;
-  padding: 0 0 0 clamp(0px, 16vw, 230px);
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 0 clamp(32px, 5vw, 72px);
 }
 
-/* Six lines typeset along the thread — alternating indents, no cards,
-   no icons, no ticks (memo pre-build cut). */
 .lv-spec-item {
-  font-size: clamp(1.25rem, 1rem + 1.5vw, 1.9rem);
-  font-weight: 620;
-  font-stretch: 100%;
-  line-height: 1.28;
-  letter-spacing: -0.012em;
-  color: var(--lv-bone);
-  padding-block: clamp(14px, 1.8vw, 22px);
-}
-
-/* Station dot — the proof-pass progress cue: fills as its line is
-   checked off. Filled is the static default (≥3:1 non-text red). */
-.lv-station {
-  display: inline-block;
-  width: 9px;
-  height: 9px;
-  margin-right: clamp(14px, 1.6vw, 20px);
-  border-radius: 50%;
-  background: var(--lv-thread);
-  vertical-align: 0.12em;
-  transform-origin: center;
-}
-
-.lv-spec-item:nth-child(2) { margin-left: 12%; }
-.lv-spec-item:nth-child(3) { margin-left: 4%; }
-.lv-spec-item:nth-child(4) { margin-left: 18%; }
-.lv-spec-item:nth-child(5) { margin-left: 8%; }
-.lv-spec-item:nth-child(6) { margin-left: 24%; }
-
-/* ══ Divider — velocity rail ═════════════════════════════════════
-   Oversized Archivo-expanded strip; translates/skews only with scroll
-   velocity (Lenis energy), dead still at rest. Real DOM text. */
-
-.lv-rail {
-  overflow: hidden;
-  padding-block: clamp(30px, 4.5vw, 64px);
-  border-block: 1px solid var(--lv-hair-soft);
-}
-
-.lv-rail-track {
-  display: inline-flex;
-  white-space: nowrap;
-  will-change: transform;
-}
-
-.lv-rail-text {
-  font-family: var(--lv-sans);
-  font-weight: 800;
-  font-stretch: 125%;
-  font-size: clamp(2.6rem, 7vw, 6rem);
-  line-height: 1;
+  font-size: clamp(1.06rem, 0.95rem + 0.55vw, 1.3rem);
+  font-weight: 600;
+  line-height: 1.35;
   letter-spacing: -0.01em;
-  text-transform: uppercase;
-  color: var(--lv-wire);
+  color: var(--lv-ink);
+  padding-block: clamp(16px, 2vw, 22px);
+  border-top: 1px solid var(--lv-hair);
 }
 
-/* ══ Fold 2 — The proof reel ═════════════════════════════════════ */
+/* ══ The proof reel ══════════════════════════════════════════════ */
 
 .lv-reel {
-  padding-block: clamp(110px, 14vw, 190px) clamp(90px, 11vw, 150px);
+  background: var(--lv-band);
+  padding-block: clamp(96px, 12vw, 170px) clamp(80px, 10vw, 140px);
 }
 
 .lv-reel-head {
@@ -601,7 +600,7 @@
   justify-content: space-between;
   gap: 32px;
   flex-wrap: wrap;
-  margin-bottom: clamp(56px, 7vw, 100px);
+  margin-bottom: clamp(48px, 6vw, 88px);
 }
 
 /* Drives */
@@ -634,7 +633,7 @@
 }
 
 .lv-drive--gz {
-  margin-top: clamp(90px, 12vw, 170px);
+  margin-top: clamp(80px, 10vw, 150px);
 }
 
 .lv-drive-id .lv-cap {
@@ -645,8 +644,64 @@
   margin-top: 10px;
 }
 
+/* Browser frame — white chrome, hairline, soft product shadow. */
+.lv-browser {
+  position: relative;
+  border: 1px solid var(--lv-hair);
+  border-radius: 14px;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.05),
+    0 32px 64px -32px rgba(0, 0, 0, 0.22);
+}
+
+.lv-browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--lv-hair);
+  background: #ffffff;
+}
+
+.lv-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.lv-browser-url {
+  margin-left: 10px;
+  font-family: var(--lv-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--lv-meta);
+}
+
+.lv-browser-view {
+  position: relative;
+  aspect-ratio: 900 / 563;
+  overflow: hidden;
+  background: #e8e8ed;
+}
+
+.lv-browser-view--tall {
+  aspect-ratio: 900 / 640;
+}
+
+.lv-browser-view img {
+  will-change: transform;
+}
+
+.lv-col {
+  display: block;
+}
+
 /* The phone — pre-positioned in final layout; the scrub only
-   crossfades emphasis to it (clip/transform, never Flip re-parents). */
+   crossfades emphasis to it (clip/transform, never re-parents). */
 .lv-phone {
   position: relative;
   z-index: 2;
@@ -654,11 +709,13 @@
   margin-left: -52px;
   margin-bottom: -20px;
   flex: 0 0 auto;
-  background: var(--lv-deep);
-  border: 1px solid var(--lv-hair);
+  background: #ffffff;
+  border: 1px solid var(--lv-hair-strong);
   border-radius: 26px;
   padding: 9px;
-  box-shadow: 0 34px 70px -30px rgba(0, 0, 0, 0.75);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    0 30px 60px -26px rgba(0, 0, 0, 0.28);
 }
 
 .lv-phone-notch {
@@ -669,7 +726,7 @@
   width: 58px;
   height: 5px;
   border-radius: 3px;
-  background: rgba(244, 243, 241, 0.2);
+  background: rgba(0, 0, 0, 0.22);
   z-index: 2;
 }
 
@@ -678,7 +735,7 @@
   aspect-ratio: 480 / 1040;
   border-radius: 17px;
   overflow: hidden;
-  background: var(--lv-deep);
+  background: #e8e8ed;
 }
 
 /* Sticky drive scene — armed desktop only; static/mobile flows normally. */
@@ -702,7 +759,7 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: clamp(22px, 3vw, 48px);
-  margin-top: clamp(90px, 11vw, 160px);
+  margin-top: clamp(80px, 10vw, 150px);
 }
 
 .lv-case--evidence { grid-column: 1 / span 4; }
@@ -717,11 +774,14 @@
   padding: 0;
   margin: 0;
   border: 1px solid var(--lv-hair);
-  border-radius: 10px;
+  border-radius: 14px;
   overflow: hidden;
-  background: var(--lv-deep);
+  background: #ffffff;
   cursor: pointer;
-  transition: border-color 0.3s var(--lv-ease), transform 0.3s var(--lv-ease);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 24px 48px -28px rgba(0, 0, 0, 0.16);
+  transition: border-color 0.3s var(--lv-ease), box-shadow 0.3s var(--lv-ease), transform 0.3s var(--lv-ease);
 }
 
 .lv-case-fig img {
@@ -730,7 +790,10 @@
 
 @media (hover: hover) and (pointer: fine) {
   .lv-case-fig:hover {
-    border-color: rgba(244, 243, 241, 0.3);
+    border-color: var(--lv-hair-strong);
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.06),
+      0 34px 60px -30px rgba(0, 0, 0, 0.24);
     transform: translateY(-3px);
   }
 }
@@ -759,7 +822,7 @@
   position: fixed;
   inset: 0;
   z-index: 80;
-  background: rgba(6, 7, 9, 0.82);
+  background: rgba(20, 20, 22, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -771,14 +834,15 @@
   width: min(1020px, 96vw);
   max-height: 92vh;
   overflow: auto;
-  background: var(--lv-lift);
+  background: #ffffff;
   border: 1px solid var(--lv-hair);
-  border-radius: 14px;
+  border-radius: 18px;
   padding: clamp(18px, 3vw, 40px);
   display: grid;
   grid-template-columns: 1.4fr 0.8fr;
   gap: clamp(22px, 3vw, 40px);
   align-items: center;
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.35);
 }
 
 .lv-panel-close {
@@ -793,14 +857,14 @@
   justify-content: center;
   border: 1px solid var(--lv-hair);
   border-radius: 999px;
-  background: rgba(244, 243, 241, 0.06);
-  color: var(--lv-bone);
+  background: var(--lv-band);
+  color: var(--lv-ink);
   cursor: pointer;
   transition: background-color 0.25s var(--lv-ease);
 }
 
 .lv-panel-close:hover {
-  background: rgba(244, 243, 241, 0.14);
+  background: #e8e8ed;
 }
 
 .lv-panel-copy .lv-scope {
@@ -815,11 +879,11 @@
   margin-top: 26px;
 }
 
-/* ══ Fold 3 — The rate card ══════════════════════════════════════ */
+/* ══ The rate card ═══════════════════════════════════════════════ */
 
 .lv-rate {
-  padding-block: clamp(110px, 14vw, 190px) clamp(80px, 10vw, 130px);
-  border-top: 1px solid var(--lv-hair-soft);
+  background: var(--lv-page);
+  padding-block: clamp(96px, 12vw, 170px) clamp(72px, 9vw, 120px);
 }
 
 .lv-rate-head {
@@ -837,7 +901,7 @@
   border: 1px solid var(--lv-hair);
   border-radius: 999px;
   padding: 4px;
-  background: var(--lv-lift);
+  background: var(--lv-band);
 }
 
 .lv-switch button {
@@ -867,7 +931,7 @@
   left: 4px;
   width: calc(50% - 4px);
   border-radius: 999px;
-  background: var(--lv-thread);
+  background: var(--lv-red);
   transition: transform 0.35s var(--lv-ease);
 }
 
@@ -890,9 +954,9 @@
 .lv-subnote p {
   margin: 0;
   padding: 16px 20px;
-  border: 1px solid var(--lv-hair-soft);
-  border-radius: 8px;
-  background: var(--lv-lift);
+  border: 1px solid var(--lv-hair);
+  border-radius: 12px;
+  background: var(--lv-band);
   font-size: 14px;
   line-height: 1.65;
   color: var(--lv-body);
@@ -904,24 +968,14 @@
   margin-top: 28px;
 }
 
-/* Groups — the thread splits into three branches. */
+/* Groups */
 .lv-group {
-  margin-top: clamp(64px, 8vw, 110px);
+  margin-top: clamp(56px, 7vw, 96px);
 }
 
-.lv-branch {
-  display: block;
-  width: 120px;
-  height: 30px;
-  margin-bottom: 10px;
-}
-
-.lv-branch path {
-  fill: none;
-  stroke: var(--lv-thread);
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
+.lv-group-head {
+  border-top: 1px solid var(--lv-hair-strong);
+  padding-top: clamp(20px, 2.6vw, 30px);
 }
 
 .lv-group-title {
@@ -933,12 +987,11 @@
 
 .lv-group-title h3 {
   margin: 0;
-  font-size: clamp(1.4rem, 1.1rem + 1.3vw, 2rem);
-  font-weight: 750;
-  font-stretch: 112%;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.35rem, 1.1rem + 1.1vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 1.1;
-  color: var(--lv-bone);
+  color: var(--lv-ink);
 }
 
 .lv-range {
@@ -966,7 +1019,7 @@
 
 /* Rate lines — full-width rows, not cards. */
 .lv-rows {
-  margin-top: clamp(28px, 3.5vw, 44px);
+  margin-top: clamp(24px, 3vw, 40px);
 }
 
 .lv-line {
@@ -975,70 +1028,34 @@
   grid-template-columns: minmax(210px, 1.05fr) 1.5fr minmax(200px, 0.72fr);
   gap: clamp(20px, 3vw, 48px);
   padding-block: clamp(26px, 3vw, 38px);
-  border-top: 1px solid var(--lv-hair-soft);
+  border-top: 1px solid var(--lv-hair);
 }
 
 .lv-rows .lv-line:last-child {
-  border-bottom: 1px solid var(--lv-hair-soft);
-}
-
-/* Hover: the thread hand-pulls an underline beneath the row.
-   Fine pointers only; pure CSS (dashoffset transition). */
-.lv-line-under {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -8px;
-  width: 100%;
-  height: 16px;
-  pointer-events: none;
-}
-
-.lv-line-under path {
-  fill: none;
-  stroke: var(--lv-thread);
-  stroke-width: 2;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .lv-line-under path {
-    transition: stroke-dashoffset 0.5s var(--lv-ease);
-  }
-
-  .lv-line:hover .lv-line-under path {
-    stroke-dashoffset: 0;
-  }
+  border-bottom: 1px solid var(--lv-hair);
 }
 
 .lv-line-name {
   margin: 0;
-  font-size: clamp(1.15rem, 1rem + 0.8vw, 1.45rem);
-  font-weight: 720;
-  font-stretch: 110%;
-  letter-spacing: -0.012em;
+  font-size: clamp(1.12rem, 1rem + 0.6vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
   line-height: 1.15;
-  color: var(--lv-bone);
+  color: var(--lv-ink);
 }
 
-/* "Most specified" chip — Archivo voice at small weight. Mono is
-   rationed to data (prices / client names / kicker / captions /
-   vitals), and a tracked-uppercase-mono label is the one grammar the
-   page bans itself. */
+/* "Most specified" chip — quiet red keyline, Archivo voice. */
 .lv-tag {
   display: inline-block;
   margin-left: 12px;
   padding: 3px 9px 4px;
-  border: 1px solid rgba(255, 107, 94, 0.4);
-  border-radius: 3px;
+  border: 1px solid rgba(212, 43, 43, 0.35);
+  border-radius: 999px;
   font-family: var(--lv-sans);
   font-size: 12.5px;
   font-weight: 600;
   letter-spacing: 0.01em;
-  color: var(--lv-red-text);
+  color: var(--lv-red);
   vertical-align: 0.22em;
   white-space: nowrap;
 }
@@ -1078,10 +1095,10 @@
 .lv-price {
   margin: 0;
   font-family: var(--lv-mono);
-  font-size: clamp(1.45rem, 1.2rem + 1vw, 1.9rem);
+  font-size: clamp(1.4rem, 1.2rem + 0.8vw, 1.8rem);
   font-weight: 700;
   line-height: 1.18;
-  color: var(--lv-bone);
+  color: var(--lv-ink);
   font-variant-numeric: tabular-nums;
   min-width: 8.5ch;
 }
@@ -1143,9 +1160,9 @@
   min-height: 44px;
   margin-top: 16px;
   padding: 10px 20px;
-  border: 1px solid rgba(244, 243, 241, 0.26);
-  border-radius: 3px;
-  color: var(--lv-bone);
+  border: 1px solid var(--lv-hair-strong);
+  border-radius: 980px;
+  color: var(--lv-ink);
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
@@ -1153,23 +1170,23 @@
 }
 
 .lv-row-cta:hover {
-  border-color: var(--lv-thread);
-  color: #ffffff;
+  border-color: var(--lv-red);
+  color: var(--lv-red);
 }
 
 /* Notes & fine print */
 .lv-notes {
-  margin-top: clamp(70px, 9vw, 120px);
-  border-top: 1px solid var(--lv-hair-soft);
+  margin-top: clamp(64px, 8vw, 110px);
+  border-top: 1px solid var(--lv-hair);
   padding-top: clamp(36px, 5vw, 56px);
 }
 
 .lv-notes-h {
   margin: 0 0 26px;
   font-size: 1.25rem;
-  font-weight: 720;
-  font-stretch: 110%;
-  color: var(--lv-bone);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--lv-ink);
 }
 
 .lv-notes-cols {
@@ -1182,7 +1199,7 @@
   margin: 0 0 8px;
   font-size: 14.5px;
   font-weight: 650;
-  color: var(--lv-bone);
+  color: var(--lv-ink);
 }
 
 .lv-note ul {
@@ -1210,72 +1227,34 @@
   max-width: 78ch;
 }
 
-/* ══ Fold 4 — The pipeline ═══════════════════════════════════════ */
+/* ══ The process — a quiet four-step row ═════════════════════════ */
 
 .lv-pipe {
-  padding-block: clamp(110px, 14vw, 190px) clamp(60px, 8vw, 100px);
-  border-top: 1px solid var(--lv-hair-soft);
+  background: var(--lv-band);
+  padding-block: clamp(96px, 12vw, 160px);
 }
 
-.lv-pipe-grid {
+.lv-pipe .lv-h2 {
+  margin-bottom: clamp(40px, 5vw, 64px);
+}
+
+.lv-stages {
   display: grid;
-  grid-template-columns: 0.95fr 1.05fr;
-  gap: clamp(40px, 6vw, 100px);
-  align-items: start;
-}
-
-@media (min-width: 900px) {
-  .lv-armed .lv-pipe-figwrap {
-    position: sticky;
-    top: 14vh;
-  }
-}
-
-.lv-morph {
-  display: block;
-  width: min(340px, 78%);
-  height: auto;
-  margin-top: clamp(30px, 4vw, 54px);
-}
-
-.lv-morph .lv-tghost {
-  stroke-width: 7;
-  transform: translate(4px, 3px);
-}
-
-.lv-morph .lv-tmain {
-  stroke-width: 2.6;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(28px, 4vw, 48px);
 }
 
 .lv-stage-item {
-  padding-block: clamp(26px, 3.4vw, 40px);
-  border-top: 1px solid var(--lv-hair-soft);
-}
-
-.lv-stage-item:last-child {
-  border-bottom: 1px solid var(--lv-hair-soft);
+  border-top: 1px solid var(--lv-hair-strong);
+  padding-top: 20px;
 }
 
 .lv-stage-item h3 {
   margin: 0;
-  font-size: clamp(1.3rem, 1.05rem + 1.1vw, 1.8rem);
-  font-weight: 750;
-  font-stretch: 112%;
-  letter-spacing: -0.015em;
-  color: var(--lv-bone);
-}
-
-/* Pipeline station dot — fills as its stage is passed and stays lit
-   (progress made). Filled is the static default. */
-.lv-stage-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 14px;
-  border-radius: 50%;
-  background: var(--lv-thread);
-  vertical-align: 0.16em;
-  transform-origin: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  color: var(--lv-ink);
 }
 
 .lv-stage-item p {
@@ -1283,25 +1262,14 @@
   font-size: 15px;
   line-height: 1.6;
   color: var(--lv-body);
-  max-width: 46ch;
+  max-width: 40ch;
 }
 
-/* Closing vitals reprise — ink-adjacent, right-aligned. */
-.lv-close-vitals {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: clamp(56px, 8vw, 100px);
-}
-
-.lv-close-vitals .lv-vitals {
-  position: static;
-}
-
-/* ══ Fold 5 — The drench ═════════════════════════════════════════ */
+/* ══ The drench — one committed red block ════════════════════════ */
 
 .lv-drench {
   background: var(--lv-drench);
-  padding-block: clamp(100px, 14vw, 180px);
+  padding-block: clamp(96px, 13vw, 170px);
 }
 
 .lv-drench-h {
@@ -1309,46 +1277,11 @@
   max-width: 17ch;
 }
 
-.lv-drench-line {
-  display: block;
-  width: min(680px, 92%);
-  height: clamp(44px, 6vw, 80px);
-  margin-top: 6px;
-}
-
-/* The sign-off signature — one path, three pressure layers. The tip
-   runs the full stroke; the mid and press layers stop short (CSS
-   dasharray floors on pathLength=1), so the composite line TAPERS as
-   the pen lifts. These floors ARE the finished state: static mode
-   ships the complete tapered signature, and the armed timeline only
-   re-draws to the same lengths. */
-.lv-drench-line path {
-  fill: none;
-  stroke: var(--lv-bone);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-.lv-sig--press {
-  stroke-width: 6;
-  stroke-dasharray: 0.72 0.28;
-}
-
-.lv-sig--mid {
-  stroke-width: 3.6;
-  stroke-dasharray: 0.88 0.12;
-}
-
-.lv-sig--tip {
-  stroke-width: 2.2;
-}
-
 .lv-drench-sub {
-  margin: 26px 0 0;
+  margin: 22px 0 0;
   font-size: 16.5px;
   line-height: 1.6;
-  color: #ffe9e4;
+  color: #ffffff;
   max-width: 52ch;
 }
 
@@ -1356,16 +1289,14 @@
   margin-top: 38px;
 }
 
-/* Focus ring on the red drench: #fff computes 6.5:1 against #b32828
-   (the near-black #131418 only reached 2.85:1 — under the ≥3:1
-   non-text stroke floor). */
+/* Focus ring on the red drench: white computes 5.9:1 against #c22424. */
 .lv-drench a:focus-visible,
 .lv-drench button:focus-visible {
   outline-color: #ffffff;
 }
 
 .lv-drench ::selection {
-  background: #131418;
+  background: #1d1d1f;
   color: #ffffff;
 }
 
@@ -1396,58 +1327,6 @@
 }
 
 @media (max-width: 899.98px) {
-  .lv-stagebox {
-    padding-top: max(132px, 12vh);
-    min-height: 0;
-    padding-bottom: 76px;
-  }
-
-  /* 768–900 still shows the desktop-scale chrome — keep the full
-     220×160 keep-out clearance there. */
-  @media (min-width: 768px) {
-    .lv-stagebox {
-      padding-top: max(178px, 15vh);
-    }
-  }
-
-  .lv-hero-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* The hero connector depicts the pen crossing from the copy column
-     into the frame — meaningless once the grid stacks, so it goes.
-     The anchored strokes (H1 underline, frame outline) carry the
-     meaning on mobile. */
-  .lv-thread--hero {
-    display: none;
-  }
-
-  .lv-vitals {
-    position: static;
-    margin-top: 42px;
-    padding-inline: clamp(20px, 4vw, 56px);
-    flex-wrap: wrap;
-    gap: 14px 18px;
-  }
-
-  .lv-spec .lv-h2,
-  .lv-spec-list {
-    margin-left: 0;
-    padding-left: clamp(56px, 16vw, 120px);
-  }
-
-  .lv-thread--spec {
-    width: clamp(48px, 12vw, 110px);
-  }
-
-  .lv-spec-item:nth-child(n) {
-    margin-left: 0;
-  }
-
-  .lv-spec-item:nth-child(even) {
-    margin-left: 8%;
-  }
-
   .lv-drive-grid,
   .lv-drive-grid--flip {
     grid-template-columns: 1fr;
@@ -1497,36 +1376,15 @@
   .lv-line-desc {
     max-width: 60ch;
   }
-
-  .lv-pipe-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .lv-morph {
-    width: min(260px, 64%);
-  }
-
-  .lv-close-vitals {
-    justify-content: flex-start;
-  }
-
-  .lv-close-vitals .lv-vitals {
-    padding-inline: 0;
-    margin-top: 0;
-  }
 }
 
 @media (max-width: 480px) {
   .lv-hero-cta {
-    gap: 18px;
+    gap: 14px;
   }
 
   .lv-btn {
     width: 100%;
-  }
-
-  .lv-rail-text {
-    font-size: 2.2rem;
   }
 
   .lv-phone {
@@ -1543,8 +1401,9 @@
 }
 
 /* ══ Reduced motion ══════════════════════════════════════════════
-   GSAP never arms under reduced motion (staticMode); this block kills
-   the remaining CSS transitions so every state change is instant. */
+   GSAP never arms and the hero transforms never apply under reduced
+   motion (staticMode); this block kills the remaining CSS transitions
+   and rests the gradient blobs as a static tint. */
 @media (prefers-reduced-motion: reduce) {
   .lv-root *,
   .lv-root *::before,
@@ -1553,47 +1412,45 @@
     animation-duration: 0.01ms !important;
   }
 
-  .lv-line-under path {
-    stroke-dashoffset: 1;
+  .lv-gt-blob {
+    animation: none !important;
   }
 }
 
 /* ══ Chrome pin — .lv-on-stage ═══════════════════════════════════
    While /ServiceWeb is mounted it stamps .lv-on-stage on <html> and
-   the chrome (translucent NavHeader + Footer) reads dark over the
-   stage. ThemeProvider applies its tokens as inline styles on <html>,
-   which outrank classes — hence !important for the life of the page
-   (mirror of cw-on-board / sg-on-board). `.wa-on-sheet` is retired. */
+   the chrome (translucent NavHeader + Footer wrapper) reads LIGHT for
+   the life of the page, whatever the visitor's theme. ThemeProvider
+   applies its tokens as inline styles on <html>, which outrank
+   classes — hence !important (mirror of the retired .wa-on-sheet
+   light pin; the marker class name is unchanged). */
 :root.lv-on-stage {
-  --c4-bg: #0e0f12 !important;
-  --c4-bg-alt: #14161b !important;
-  --c4-card-bg: #14161b !important;
-  --c4-tag-bg: #1a1d23 !important;
-  --c4-nav-idle: rgba(14, 15, 18, 0.6) !important;
-  --c4-nav-idle-border: rgba(244, 243, 241, 0.08) !important;
-  --c4-nav-scrolled: rgba(14, 15, 18, 0.92) !important;
-  --c4-text: #f4f3f1 !important;
-  --c4-text-muted: #a6abb6 !important;
-  --c4-text-subtle: #7c828e !important;
-  --c4-text-faint: #505665 !important;
+  --c4-bg: #ffffff !important;
+  --c4-bg-alt: #f5f5f7 !important;
+  --c4-card-bg: #ffffff !important;
+  --c4-tag-bg: #f5f5f7 !important;
+  --c4-nav-idle: rgba(255, 255, 255, 0.66) !important;
+  --c4-nav-idle-border: rgba(0, 0, 0, 0.07) !important;
+  --c4-nav-scrolled: rgba(255, 255, 255, 0.92) !important;
+  --c4-text: #1d1d1f !important;
+  --c4-text-muted: #424245 !important;
+  --c4-text-subtle: #6e6e73 !important;
+  --c4-text-faint: #a1a1a6 !important;
   --c4-accent: #d42b2b !important;
-  --c4-accent-hover: #b32828 !important;
-  --c4-border: rgba(244, 243, 241, 0.12) !important;
-  --c4-border-light: rgba(244, 243, 241, 0.07) !important;
-  --c4-link-hover: #f4f3f1 !important;
-  --c4-footer-bg: #0a0b0e !important;
-  --c4-footer-text: #7d8290 !important;
-  --c4-footer-text-muted: #606573 !important;
-  --c4-footer-text-dim: #606573 !important;
-  --c4-ring: rgba(244, 243, 241, 0.35) !important;
+  --c4-accent-hover: #b32424 !important;
+  --c4-border: rgba(0, 0, 0, 0.12) !important;
+  --c4-border-light: rgba(0, 0, 0, 0.07) !important;
+  --c4-link-hover: #1d1d1f !important;
+  --c4-footer-bg: #1d1d1f !important;
+  --c4-footer-text: #a1a1a6 !important;
+  --c4-footer-text-muted: #8a8a8f !important;
+  --c4-footer-text-dim: #8a8a8f !important;
+  --c4-ring: rgba(29, 29, 31, 0.4) !important;
 }
 
-/* Back-ribbon dark-chrome elevation/ring for .lv-on-stage lives in
-   NavHeader's NAV_CSS alongside cw/sg — nav owns the ribbon treatment. */
-
-/* Arriving from a light page, the chrome's 300-500ms colour
+/* Arriving from a dark page, the chrome's 300-500ms colour
    transitions can freeze mid-flight in throttled tabs — snap the nav,
-   wrapper and footer straight to the pinned dark tokens. */
+   wrapper and footer straight to the pinned light tokens. */
 :root.lv-on-stage header.fixed.top-0.z-50,
 :root.lv-on-stage header.fixed.top-0.z-50 * {
   transition: none !important;

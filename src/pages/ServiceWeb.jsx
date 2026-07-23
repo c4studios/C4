@@ -1,49 +1,51 @@
 /**
- * /ServiceWeb — C1 · Web & Applications. "The Red Thread."
+ * /ServiceWeb — C1 · Web & Applications. "The White Gallery."
  *
- * Arm identity (fable pass, decision memo §1.1): one red line — drawn
- * like a pen stroke, pressure and overshoot in the geometry — runs the
- * whole page, and the page builds itself along it. Refinement pass:
- * every stroke now DEPICTS something (no decorative wandering) — the
- * hero pen travels the copy rail, underlines the finished headline,
- * draws the browser frame's outline before the chrome assembles, runs
- * a proof-reader's margin pass down the spec list (station dots fill
- * as each line typesets), forks a branch per rate group, morphs
- * Brief (annotated underlines) → Design (wireframe) → Build (truss) →
- * Launch (climb-out arc), and finally SIGNS OFF beneath the closing
- * CTA — a three-layer pen-pressure signature that tapers as the pen
- * lifts. The hero ignites from a silver wireframe skeleton (Archivo
- * wdth 62/wght 300 → 100/800, word-level boxes locked to final built
- * metrics so the axes animate with zero reflow), real client sites
- * browse themselves inside browser frames (DSR desktop→phone handoff,
- * Groverz light set), the rate card rolls its prices on an odometer,
- * and a self-reporting vitals strip (real Performance-API numbers)
- * sits in the hero corner and is reprised before the close.
+ * Rebuilt to the client's brief: a white, high-production page (Apple
+ * product-page register) where the craft itself is the show. The
+ * red-thread SVG system is retired in full — no drawn paths, no
+ * morphs, no signature; C4 red survives as the accent (CTAs, links,
+ * the closing drench band).
  *
- * Motion: GSAP is the engine; every trigger lives inside
- * gsap.matchMedia() and nothing arms under prefers-reduced-motion or
- * the Prerender UA (staticMode). The DOM default IS the finished end
- * state everywhere — timelines only disassemble away from it, so the
- * prerender ships the built page for free. No WebGL (memo §2.2), no
- * continuous motion below the fold except the 1Hz vitals readout while
- * visible (memo §2.3.4). Flip is click-time only (case morphs), never
- * inside a pin. Styles: src/components/web-arm/web-arm.css (.lv-root).
+ * The hero fuses the two components the client supplied:
+ *   · GradientText — "Design without Limits", with "without" carrying
+ *     a living gradient (blurred colour blobs in a mix-blend-lighten
+ *     overlay over near-black glyphs; pure CSS, infinite, the page's
+ *     only continuously-animating element).
+ *   · ContainerScroll — the Aceternity scroll-tilt device card: the
+ *     title drifts up while the tilted bezel (rotateX 20° → 0, scale
+ *     1.05 → 1) straightens INTO a real client capture (DSR), which
+ *     then gently steps through two more frames as the scroll
+ *     continues past the straighten point. framer-motion v11
+ *     useScroll/useTransform drives it; GSAP never touches the hero.
  *
- * Chrome: forced DARK. `.wa-on-sheet` is retired; `.lv-on-stage` pins
- * the full --c4-* token set dark for the life of the page (guarded
- * MutationObserver, cleanup restore — house pattern).
+ * SEO contract: the display line is a <p>; the document h1 remains
+ * "Websites built to convert and scale." verbatim, styled as the
+ * refined supporting claim beneath the display line. One h1 only.
+ *
+ * Below the fold, GSAP (ScrollTrigger + Flip + CustomEase) keeps the
+ * proof drives (DSR desktop→phone handoff, Groverz pan), the case
+ * grid with click-time FLIP morph dialogs, focus-in frame entrances,
+ * subtle capture parallax, the odometer rate card, and the magnetic
+ * primaries. Everything arms inside gsap.matchMedia(); nothing arms
+ * under prefers-reduced-motion or the Prerender UA (staticMode) — the
+ * DOM default IS the finished state everywhere, so the prerender
+ * ships the built page for free.
+ *
+ * Chrome: forced LIGHT. `.lv-on-stage` (same marker class) now pins
+ * the --c4-* token set to the light chrome for the life of the page
+ * (guarded MutationObserver, cleanup restore — house pattern).
+ * Styles: src/components/web-arm/web-arm.css (.lv-root).
  */
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, X } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
-import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
-import { SplitText } from 'gsap/SplitText';
 import { Flip } from 'gsap/Flip';
 import { CustomEase } from 'gsap/CustomEase';
 import Lenis from 'lenis';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
@@ -56,6 +58,8 @@ import {
   GST_NOTE,
   INDUSTRY_SURCHARGE_NOTE,
 } from '@/data/pricing';
+import GradientText from '../components/web-arm/GradientText';
+import ContainerScroll from '../components/web-arm/ContainerScroll';
 import '../components/web-arm/web-arm.css';
 
 /* Derived capture assets — generated from public/captures (read-only)
@@ -81,7 +85,7 @@ import hvnHero from '../components/web-arm/assets/hvn-hero.webp';
 import tidyHero from '../components/web-arm/assets/tidy-hero.webp';
 import jptHero from '../components/web-arm/assets/jpt-hero.webp';
 
-gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin, MorphSVGPlugin, SplitText, Flip, CustomEase);
+gsap.registerPlugin(ScrollTrigger, Flip, CustomEase);
 
 /* One shared house ease for every non-scrub tween on the page. */
 if (!CustomEase.get('c4')) CustomEase.create('c4', 'M0,0 C0.2,0 0.1,1 1,1');
@@ -112,8 +116,8 @@ const INCLUDED = [
   'Full code handover — you own it',
 ];
 
-/* Brief → Design → Build → Launch. The thread IS the sequence, so the
-   stage numbers are gone; the four descriptions are preserved verbatim. */
+/* Brief → Design → Build → Launch — a real sequence; the four
+   descriptions are preserved verbatim. */
 const PROCESS = [
   { label: 'Brief', desc: 'You describe the outcome you need. We ask the right questions.' },
   { label: 'Design', desc: 'Wireframes and visual designs — reviewed and approved before build.' },
@@ -124,9 +128,9 @@ const PROCESS = [
 /* ── The proof reel ────────────────────────────────────────────────
    All six pass-1 clients preserved (scope lines + alt text are SEO
    contract copy), plus DS Racing Karts as the featured live drive
-   (memo graft 1 — its mobile capture set powers the phone handoff).
-   Groverz is the second (light) live set; the rest are static frames
-   with the click-time FLIP case morph. */
+   (its mobile capture set powers the phone handoff, and its desktop
+   set fills the hero device card). Groverz is the second (light) live
+   set; the rest are static frames with the click-time FLIP morph. */
 const DSR = {
   key: 'dsr',
   name: 'DS Racing Karts',
@@ -246,128 +250,42 @@ const WEB_JSONLD = [
   ]),
 ];
 
-/* ── Thread geometry ───────────────────────────────────────────────
-   Refined so every stroke DEPICTS something a visitor can read — no
-   decorative wandering. Hand-weighted curvature, pressure ghosts and
-   overshoot hooks at direction changes; all decorative, aria-hidden;
-   the fully-drawn state is the DOM/CSS default (or, where a stroke is
-   scaffolding, its dissolved end-state is the default). */
+/* The three DSR desktop frames the hero card steps through. */
+const HERO_FRAMES = DSR.desktop.slice(0, 3);
 
-/* Hero connector (desktop only — hidden when the grid stacks): the
-   pen's journey through the fold. Each leg is labelled. */
-const THREAD_HERO_D = [
-  'M 128 176', /* enters at the left rail, below the nav keep-out */
-  'C 116 258, 140 328, 128 402', /* runs the rail beside the copy */
-  'C 122 450, 134 470, 176 486', /* flattens under the headline zone */
-  'C 322 528, 522 540, 668 512', /* crosses the column gap — approved words flow toward the build */
-  'C 706 502, 722 470, 726 436', /* rises to the frame's left edge (hand-off) */
-  'C 728 416, 716 410, 710 424', /* overshoot hook — pen pressure at the turn */
-  'C 758 556, 898 678, 1078 758', /* dives under the frame toward the vitals corner */
-  'C 1148 790, 1206 810, 1252 818', /* terminal flick, settling at the caption line */
-].join(' ');
-
-/* The pen's approval underline beneath the built H1 — drawn only once
-   the letterforms have solidified. Ends in a lift-off hook. */
-const H1_UNDER_D = [
-  'M 6 24', /* pen touches down at the first word */
-  'C 120 28, 300 26, 448 18', /* one confident sweep under the line */
-  'C 492 15, 520 12, 534 10', /* rises as the pen speeds up */
-  'C 545 8, 549 14, 541 18', /* overshoot hook — the pen lifts */
-].join(' ');
-
-/* Scaffold stroke: the pen DRAWS the browser frame's outline (rounded
-   rect, then the chrome divider) before the real frame assembles over
-   it — then dissolves. Its end-state (invisible) is the CSS default. */
-const FRAME_DRAW_D = [
-  'M 46 8', /* pen touches down past the top-left corner */
-  'C 300 4, 620 4, 872 10', /* top edge */
-  'C 906 12, 914 22, 913 52', /* top-right corner */
-  'C 916 200, 914 400, 908 548', /* right edge */
-  'C 906 578, 894 590, 862 589', /* bottom-right corner */
-  'C 620 596, 300 594, 60 588', /* bottom edge */
-  'C 28 586, 16 574, 17 544', /* bottom-left corner */
-  'C 12 400, 14 190, 18 64', /* left edge, back up */
-  'C 19 26, 28 9, 46 8', /* top-left corner — the rectangle closes */
-  'C 62 22, 62 40, 86 47', /* pen turns inward */
-  'C 300 60, 620 58, 886 52', /* rules the browser-bar divider */
-].join(' ');
-
-/* Spec pass: a proof-reader's margin line. Near-vertical rail with a
-   hand waver; at each included line's row the pen LEANS toward the
-   text (uneven amplitudes — never metronomic), then exits bottom-right
-   toward the velocity rail. Station dots on the items themselves fill
-   as each line typesets. */
-const THREAD_SPEC_D = [
-  'M 96 -4', /* enters from the fold above */
-  'C 84 64, 106 128, 94 206', /* passes the heading zone */
-  'C 90 254, 92 296, 96 328', /* settles to reading pace */
-  'C 122 340, 124 366, 100 382', /* lean 1 — toward the first included line */
-  'C 88 396, 90 416, 94 442', /* return to the rail */
-  'C 112 452, 114 476, 96 490', /* lean 2 (shallower) */
-  'C 86 506, 88 528, 94 552', /* return */
-  'C 126 566, 128 596, 102 612', /* lean 3 (deepest — the long line) */
-  'C 90 626, 90 644, 94 664', /* return */
-  'C 110 674, 112 696, 96 710', /* lean 4 (glancing) */
-  'C 86 726, 88 748, 94 772', /* return */
-  'C 120 784, 122 810, 100 826', /* lean 5 */
-  'C 88 840, 90 862, 94 884', /* return */
-  'C 114 894, 116 916, 98 930', /* lean 6 — the last line checked */
-  'C 92 944, 96 958, 108 968', /* the pass is done — pen accelerates */
-  'C 134 984, 176 992, 228 996', /* exits right, toward the velocity rail */
-].join(' ');
-
-/* Rate card: the main thread FORKS a branch off itself for each
-   package group — flat entry (the through-line), then the branch
-   climbs away with a flick. */
-const BRANCH_D = 'M 4 30 C 44 22, 64 34, 96 24 C 120 17, 142 20, 156 12';
-
-/* Row hover: the pen underlines the exact line you're considering
-   (CSS dashoffset pull — fine pointers only). */
-const ROW_LINE_D = 'M 3 10 C 130 14, 330 6, 540 10 C 680 13, 780 8, 836 10';
-
-/* The finale: the thread signs off beneath the closing headline — an
-   underline sweep that rises into a small loop flourish and exits with
-   a pen-lift. Rendered as three layered strokes (press/mid/tip) drawn
-   to different lengths, so the line visibly TAPERS as pressure comes
-   off the nib: a signature on the finished build. */
-const SIG_D = [
-  'M 10 52', /* pen touches down under the first word */
-  'C 150 62, 380 58, 552 44', /* the long sweep beneath the closing line */
-  'C 600 40, 634 32, 648 24', /* rises — the pen accelerates into the flourish */
-  'C 656 18, 648 12, 638 18', /* loop, top half */
-  'C 628 25, 638 34, 658 32', /* loop closes over itself */
-  'C 692 28, 718 18, 738 8', /* exit flick up-right — the pen leaves the page */
-].join(' ');
-
-/* The pipeline morph — one stroke living four lives, each a legible
-   picture of its stage. The DOM default is the final Launch arc;
-   arming rewinds it to the Brief state. */
-const PIPE_STATES = [
-  /* BRIEF — the pen annotates the brief: three connected underline
-     strokes beneath imagined lines of text, ending in a lift hook. */
-  'M 46 118 C 108 110, 182 108, 240 114 C 262 117, 264 128, 240 134 C 180 146, 110 142, 64 150 C 46 153, 44 164, 62 170 C 112 180, 188 176, 246 182 C 270 185, 276 176, 266 168',
-  /* DESIGN — one stroke draws the wireframe: the page rectangle
-     closes, then the pen turns inward and rules the header bar. */
-  'M 76 84 C 140 78, 210 78, 246 84 C 256 110, 256 168, 250 222 C 192 230, 120 230, 78 224 C 70 180, 70 130, 74 94 C 82 100, 92 106, 108 108 C 158 112, 208 112, 244 108',
-  /* BUILD — a structural truss: bottom chord laid first, then the
-     web members triangulate up to the top chord. Scaffolding, not
-     glyph cosplay. */
-  'M 46 224 C 118 219, 196 219, 272 224 C 252 214, 226 182, 214 148 C 166 141, 112 141, 68 148 C 86 166, 118 196, 144 214 C 166 196, 192 170, 208 150',
-  /* LAUNCH — ground roll, rotation, climb-out: the terminal points
-     skyward. This is the state the static page ships. */
-  'M 44 254 C 98 252, 152 242, 196 212 C 244 180, 270 130, 282 74 C 286 56, 288 40, 287 26',
-];
-
-function ThreadPath({ d, ghost = true }) {
+/* ── Hero capture pan ──────────────────────────────────────────────
+   Inside the ContainerScroll card: dsr-d1 full-bleed, then the strip
+   gently steps through d2/d3 once the card has straightened. Runs on
+   the same hero section via a second useScroll whose range extends to
+   "end start", so [0.45 → 0.85] lands after the straighten point at
+   every viewport. Static default (no transform) = d1 visible. */
+function HeroPan({ target, staticMode }) {
+  const { scrollYProgress } = useScroll({ target, offset: ['start start', 'end start'] });
+  const y = useTransform(scrollYProgress, [0.45, 0.85], ['0%', '-66.666%']);
   return (
-    <>
-      {ghost && <path className="lv-tghost" d={d} pathLength="1" />}
-      <path className="lv-tmain" d={d} pathLength="1" />
-    </>
+    <div className="lv-heropan">
+      <motion.div className="lv-heropan-strip" style={staticMode ? undefined : { y }}>
+        {HERO_FRAMES.map((f, i) => (
+          <div className="lv-heropan-slot" key={f.src}>
+            <img
+              src={f.src}
+              width={f.w}
+              height={f.h}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              alt={f.alt}
+            />
+          </div>
+        ))}
+      </motion.div>
+      <p className="lv-heropan-cap">
+        {DSR.url} · shipped {DSR.year}
+      </p>
+    </div>
   );
 }
 
-/* ── Price odometer (memo graft 3) ─────────────────────────────────
+/* ── Price odometer ────────────────────────────────────────────────
    Rolling digits on the Pay once / Monthly toggle. Labels that don't
    decompose into digits fall back to an instant swap; Geist Mono keeps
    every numeral the same width and the price cell is fixed-width, so
@@ -447,43 +365,28 @@ function PriceOdometer({ label, animate }) {
   );
 }
 
-/* ── Vitals strip (memo graft 2) ───────────────────────────────────
-   Real fps / transferred kB / LCP from the Performance APIs, updated
-   at 1Hz only while a strip is on screen and the tab is visible
-   (memo §2.3.4). Prerender/reduced-motion rests on em-dashes. */
-function VitalsStrip({ id }) {
-  return (
-    <p className="lv-vitals" id={id} aria-hidden="true">
-      <span className="lv-vit-label">live vitals</span>
-      <span className="lv-vit" data-vit="fps">— fps</span>
-      <span className="lv-vit" data-vit="kb">— kb</span>
-      <span className="lv-vit" data-vit="lcp">lcp —</span>
-    </p>
-  );
-}
-
-/* ── Chrome pin — forced dark stage ────────────────────────────────
-   `.lv-on-stage` pins the full --c4-* set dark (web-arm.css) for the
-   life of the page. ThemeProvider re-applies its own tokens from a
-   parent effect, so a guarded MutationObserver re-asserts (house
-   pattern: ServiceAI/Foresight). `.wa-on-sheet` is retired. */
-function useForceDark() {
+/* ── Chrome pin — forced light gallery ─────────────────────────────
+   `.lv-on-stage` (marker class unchanged) pins the full --c4-* set
+   LIGHT (web-arm.css) for the life of the page. ThemeProvider
+   re-applies its own tokens from a parent effect, so a guarded
+   MutationObserver re-asserts (house pattern: ServiceAI/Foresight). */
+function useForceLight() {
   useEffect(() => {
     const root = document.documentElement;
     const prev = root.className;
-    const assertDark = () => {
+    const assertLight = () => {
       if (
-        !root.classList.contains('dark-mode') ||
+        !root.classList.contains('light-mode') ||
         !root.classList.contains('lv-on-stage') ||
-        root.classList.contains('light-mode') ||
+        root.classList.contains('dark-mode') ||
         root.classList.contains('vivid')
       ) {
-        root.classList.add('dark-mode', 'lv-on-stage');
-        root.classList.remove('light-mode', 'vivid');
+        root.classList.add('light-mode', 'lv-on-stage');
+        root.classList.remove('dark-mode', 'vivid');
       }
     };
-    assertDark();
-    const observer = new MutationObserver(assertDark);
+    assertLight();
+    const observer = new MutationObserver(assertLight);
     observer.observe(root, { attributes: true, attributeFilter: ['class'] });
     return () => {
       observer.disconnect();
@@ -494,10 +397,9 @@ function useForceDark() {
 }
 
 export default function ServiceWeb() {
-  useForceDark();
+  useForceLight();
   const rootRef = useRef(null);
-  const h1Ref = useRef(null);
-  const ledeRef = useRef(null);
+  const heroScrollRef = useRef(null);
   const lenisRef = useRef(null);
   const openerRef = useRef(null);
   const flipStateRef = useRef(null);
@@ -556,17 +458,17 @@ export default function ServiceWeb() {
     };
   }, [staticMode]);
 
-  /* ── The whole motion system ──────────────────────────────────────
+  /* ── Below-the-fold motion ────────────────────────────────────────
      One matchMedia block; every trigger created inside it. The armed
-     class only marks the root (sticky-stage heights); GSAP owns all
-     pre-animation states via fromTo, so the static DOM stays final. */
+     class only marks the root (DSR sticky-drive height); GSAP owns all
+     pre-animation states via fromTo, so the static DOM stays final.
+     The hero is framer-motion's alone — no GSAP touches it. */
   useLayoutEffect(() => {
     if (staticMode) return undefined;
     const root = rootRef.current;
     if (!root) return undefined;
     root.classList.add('lv-armed');
     const mm = gsap.matchMedia(root);
-    const splits = [];
 
     mm.add(
       {
@@ -577,305 +479,35 @@ export default function ServiceWeb() {
         const { desk } = ctx.conditions;
         const q = gsap.utils.selector(root);
 
-        /* ── Title prep: the raw→built telling, rebuilt for smoothness.
-           SplitText at WORD level (6 targets — cheap enough to
-           re-rasterize continuously, unlike ~35 chars), and every
-           word's box is LOCKED to its final built width. The DOM
-           default IS wght 800/wdth 100, so the measurement is exact:
-           the axes then animate inside fixed slots — skeleton glyphs
-           sit light and narrow in loose tracking, then inflate to
-           fill their line — with zero layout shift, zero rewrap. */
-        let h1Words = null;
-        const lockH1 = () => {
-          if (!h1Words) return;
-          h1Words.forEach((w) => {
-            /* Clearing the vars drops each word to the @property
-               initial values (800/100 — the built state) before
-               measuring, so a mid-scrub refresh still locks to the
-               FINAL metrics, never a half-inflated snapshot. */
-            w.style.removeProperty('--lv-wght');
-            w.style.removeProperty('--lv-wdth');
-            w.style.width = 'auto';
-          });
-          const widths = h1Words.map((w) => w.getBoundingClientRect().width);
-          h1Words.forEach((w, i) => {
-            w.style.width = `${widths[i]}px`;
-          });
-        };
-        if (h1Ref.current) {
-          const split = SplitText.create(h1Ref.current, { type: 'words', wordsClass: 'lv-w' });
-          splits.push(split);
-          h1Words = split.words;
-          lockH1();
-        }
-
-        /* ── Fold 0: ignition. The hero disassembles to raw (skeleton
-           type, scattered wireframe, undrawn thread) and rebuilds as
-           you scrub — performing the job on itself. Desktop pins;
-           mobile plays the same beats once as a 1.2s load pass. */
-        const buildHero = (tl) => {
-          /* The pen's journey (legs labelled in THREAD_HERO_D): left
-             rail → under the headline → across the gap → hand-off at
-             the frame's edge → out to the vitals corner. */
-          tl.fromTo(
-            q('.lv-thread--hero path'),
-            { drawSVG: '0%' },
-            { drawSVG: '100%', ease: 'none', duration: 0.66 },
-            0,
-          );
-          tl.fromTo(
-            q('.lv-kicker'),
-            { y: 14, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.1, ease: 'c4' },
-            0.02,
-          );
-          if (h1Words) {
-            tl.fromTo(
-              h1Words,
-              { '--lv-wght': 300, '--lv-wdth': 62, color: '#8a8f98' },
-              {
-                '--lv-wght': 800,
-                '--lv-wdth': 100,
-                color: '#f4f3f1',
-                duration: 0.38,
-                stagger: { each: 0.045 },
-                ease: 'power2.out',
-              },
-              0.05,
-            );
-          } else {
-            tl.fromTo(
-              q('.lv-h1'),
-              { '--lv-wght': 300, '--lv-wdth': 62, color: '#8a8f98' },
-              { '--lv-wght': 800, '--lv-wdth': 100, color: '#f4f3f1', duration: 0.45, ease: 'power2.out' },
-              0.05,
-            );
-          }
-          /* The pen approves the finished words — the underline draws
-             as the last word settles (word ripple ends ~0.66). */
-          tl.fromTo(
-            q('.lv-h1-under path'),
-            { drawSVG: '0%' },
-            { drawSVG: '100%', duration: 0.16, ease: 'power2.inOut' },
-            0.56,
-          );
-          if (desk && ledeRef.current) {
-            const ledeSplit = SplitText.create(ledeRef.current, { type: 'lines', mask: 'lines' });
-            splits.push(ledeSplit);
-            tl.fromTo(
-              ledeSplit.lines,
-              { yPercent: 115 },
-              { yPercent: 0, duration: 0.2, stagger: 0.05, ease: 'power3.out' },
-              0.18,
-            );
-          } else {
-            tl.fromTo(
-              q('.lv-lede'),
-              { y: 18, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.2, ease: 'c4' },
-              0.18,
-            );
-          }
-          /* autoAlpha on the CONTAINER (not the children): the buttons
-             stay free of y-transforms so the magnetic hover can own
-             them, and visibility:hidden still keeps the invisible CTAs
-             out of clicks and tab order at scrub rest. */
-          tl.fromTo(
-            q('.lv-hero-cta'),
-            { y: 24, autoAlpha: 0 },
-            { y: 0, autoAlpha: 1, duration: 0.2, ease: 'c4' },
-            0.3,
-          );
-          /* Parallax layer: the whole figure rises at its own rate
-             while the copy column sits still — two depths, one scrub. */
-          tl.fromTo(
-            q('.lv-hero-fig'),
-            { y: 34 },
-            { y: 0, duration: 0.3, ease: 'power2.out' },
-            0.3,
-          );
-          /* The pen DRAWS the frame before the frame exists: scaffold
-             outline + chrome divider (FRAME_DRAW_D), which dissolves
-             once the real browser has assembled over it. Its CSS
-             default is opacity 0, so static mode ships the finished
-             frame with no scaffold. */
-          tl.set(q('.lv-frame-draw'), { opacity: 1 }, 0.36);
-          tl.fromTo(
-            q('.lv-frame-draw path'),
-            { drawSVG: '0%' },
-            { drawSVG: '100%', duration: 0.18, ease: 'power2.inOut' },
-            0.38,
-          );
-          /* Browser frame assembles out of the silver wireframe; the
-             capture arrives ALREADY GRADED behind a clip wipe (the
-             mono→colour grade belongs to Home — memo §2.1.3). */
-          tl.fromTo(
-            q('.lv-wire-piece'),
-            {
-              opacity: 1,
-              x: (i) => [-46, 60, -28][i % 3],
-              y: (i) => [38, -30, 52][i % 3],
-              rotation: (i) => [-7, 5, -3][i % 3],
-            },
-            { opacity: 0, x: 0, y: 0, rotation: 0, duration: 0.3, ease: 'power2.inOut' },
-            0.3,
-          );
-          tl.fromTo(
-            q('.lv-hero-browser'),
-            { opacity: 0 },
-            { opacity: 1, duration: 0.18, ease: 'power1.inOut' },
-            0.46,
-          );
-          tl.fromTo(
-            q('.lv-hero-browser .lv-browser-view img'),
-            { clipPath: 'inset(0 0 100% 0)' },
-            { clipPath: 'inset(0% 0 0% 0)', duration: 0.22, ease: 'power2.inOut' },
-            0.56,
-          );
-          /* Scaffold removed — the drawn outline dissolves under the
-             finished build (end-state: invisible, = the CSS default). */
-          tl.to(
-            q('.lv-frame-draw'),
-            { opacity: 0, duration: 0.08, ease: 'power1.out' },
-            0.74,
-          );
-          tl.fromTo(
-            q('.lv-hero-cap'),
-            { opacity: 0 },
-            { opacity: 1, duration: 0.12, ease: 'power1.out' },
-            0.78,
-          );
-          tl.fromTo(
-            q('#lv-vitals-hero'),
-            { opacity: 0 },
-            { opacity: 1, duration: 0.12, ease: 'power1.out' },
-            0.12,
-          );
-        };
-
-        if (desk) {
-          const heroTl = gsap.timeline({
-            scrollTrigger: {
-              trigger: q('.lv-hero')[0],
-              start: 'top top',
-              end: '+=180%',
-              pin: q('.lv-stagebox')[0],
-              scrub: 1,
-              anticipatePin: 1,
-              invalidateOnRefresh: true,
-              /* Re-lock the word boxes at every refresh (resize, font
-                 arrival) so the locked widths always match the final
-                 metrics at the CURRENT viewport. */
-              onRefreshInit: lockH1,
-            },
-          });
-          buildHero(heroTl);
-          /* Final beat: the built capture starts to pan — momentum
-             handed to the page. */
-          heroTl.to(
-            q('.lv-hero-browser .lv-browser-view img'),
-            { yPercent: -7, duration: 0.2, ease: 'none' },
-            0.8,
-          );
-        } else {
-          const loadTl = gsap.timeline({ defaults: { ease: 'c4' } });
-          buildHero(loadTl);
-          loadTl.duration(1.2);
-          /* Once the load pass lands, unlock the word boxes so the
-             built headline reflows naturally on later resizes. */
-          loadTl.eventCallback('onComplete', () => {
-            if (h1Words) {
-              h1Words.forEach((w) => {
-                w.style.width = '';
-              });
-            }
-          });
-        }
-
-        /* ── Fold 1: the spec pass. The margin line runs a proof-
-           reader's pass down the list (leans labelled in
-           THREAD_SPEC_D); each included line typesets with a width-
-           settle and its station dot fills as the pen passes. */
-        gsap.fromTo(
-          q('.lv-thread--spec path'),
-          { drawSVG: '0%' },
-          {
-            drawSVG: '100%',
-            ease: 'none',
-            scrollTrigger: {
-              trigger: q('.lv-spec')[0],
-              start: 'top 78%',
-              end: 'bottom 55%',
-              scrub: 1,
-            },
-          },
-        );
-        q('.lv-spec-item').forEach((li) => {
+        /* Quiet one-shot arrival: a short rise, nothing theatrical. */
+        const rise = (el, vars = {}) => {
           gsap.fromTo(
-            li,
-            { opacity: 0, x: -20, fontStretch: '75%' },
+            el,
+            { y: 24, opacity: 0 },
             {
+              y: 0,
               opacity: 1,
-              x: 0,
-              fontStretch: '100%',
-              duration: 0.7,
+              duration: 0.8,
               ease: 'c4',
-              scrollTrigger: { trigger: li, start: 'top 88%', once: true },
-            },
-          );
-          /* Progress cue: the station fills (scales in) as its line is
-             checked off. Filled is the DOM default — static mode ships
-             every station lit. */
-          const dot = li.querySelector('.lv-station');
-          if (dot) {
-            gsap.fromTo(
-              dot,
-              { scale: 0 },
-              {
-                scale: 1,
-                duration: 0.5,
-                ease: 'c4',
-                scrollTrigger: { trigger: li, start: 'top 88%', once: true },
+              delay: vars.delay || 0,
+              scrollTrigger: {
+                trigger: vars.trigger || el,
+                start: vars.start || 'top 88%',
+                once: true,
               },
-            );
-          }
-        });
-
-        /* ── Velocity rail: moves only with YOUR scroll energy —
-           diagonal shear reveal, then skew/translate fed by scroll
-           velocity, decaying dead-still at rest. */
-        const rail = q('.lv-rail')[0];
-        if (rail) {
-          gsap.fromTo(
-            rail,
-            { clipPath: 'polygon(0 100%, 100% 62%, 100% 100%, 0 100%)' },
-            {
-              clipPath: 'polygon(0 0%, 100% 0%, 100% 100%, 0 100%)',
-              ease: 'none',
-              scrollTrigger: { trigger: rail, start: 'top 96%', end: 'top 55%', scrub: 0.8 },
             },
           );
-          const track = q('.lv-rail-track')[0];
-          const xTo = gsap.quickTo(track, 'xPercent', { duration: 0.6, ease: 'power2.out' });
-          const skewTo = gsap.quickTo(track, 'skewX', { duration: 0.45, ease: 'power2.out' });
-          const settle = gsap.delayedCall(0.15, () => skewTo(0)).pause();
-          ScrollTrigger.create({
-            trigger: rail,
-            start: 'top bottom',
-            end: 'bottom top',
-            onUpdate: (self) => {
-              const v = gsap.utils.clamp(-2600, 2600, self.getVelocity());
-              xTo(-6 - self.progress * 22);
-              skewTo((v / 2600) * 5);
-              settle.restart(true);
-            },
-          });
-        }
+        };
 
-        /* ── Fold 2: proof reel. DSR featured drive — the desktop
-           capture browses itself, then hands off to the pre-positioned
-           phone via clip/transform crossfade on the same scrub (memo
-           amendment: no Flip inside an active scene). */
+        /* Included list — line by line, alternating a beat. */
+        q('.lv-spec-item').forEach((li, i) => rise(li, { delay: (i % 2) * 0.06 }));
+
+        /* Reel head. */
+        q('.lv-reel-head').forEach((el) => rise(el, { start: 'top 82%' }));
+
+        /* ── DSR featured drive — the desktop capture browses itself,
+           then hands off to the pre-positioned phone via clip/transform
+           crossfade on the same scrub (desktop pin only). */
         const dsr = q('.lv-drive--dsr')[0];
         if (dsr && desk) {
           const dCol = dsr.querySelector('.lv-dsr-dcol');
@@ -993,31 +625,10 @@ export default function ServiceWeb() {
           );
         }
 
-        /* Reel head + static case frames: staggered arrivals. */
-        gsap.fromTo(
-          q('.lv-reel-head'),
-          { y: 30, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: 'c4',
-            scrollTrigger: { trigger: q('.lv-reel')[0], start: 'top 80%', once: true },
-          },
-        );
+        /* Static case frames: staggered arrivals, focus-in, and a
+           subtle counter-rate drift inside each cropped frame. */
         q('.lv-case').forEach((el, i) => {
-          gsap.fromTo(
-            el,
-            { y: 44, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.85,
-              delay: (i % 2) * 0.08,
-              ease: 'c4',
-              scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-            },
-          );
+          rise(el, { start: 'top 90%', delay: (i % 2) * 0.08 });
           const fig = el.querySelector('.lv-case-fig');
           if (!fig) return;
           /* Frame focuses in — short soft blur/scale. Transform AND
@@ -1036,9 +647,6 @@ export default function ServiceWeb() {
               scrollTrigger: { trigger: el, start: 'top 90%', once: true },
             },
           );
-          /* Depth: the capture drifts inside its cropped frame at an
-             alternating counter-rate to the scroll — transform-only,
-             scrubbed, dead still at rest. */
           const img = fig.querySelector('img');
           if (img) {
             gsap.fromTo(
@@ -1055,7 +663,7 @@ export default function ServiceWeb() {
         });
 
         /* Decode capture sets just ahead of their entrance so drive
-           swaps never jank (memo §3). */
+           swaps never jank. */
         const decodeIO = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
@@ -1070,144 +678,23 @@ export default function ServiceWeb() {
         );
         q('.lv-drive, .lv-cases').forEach((el) => decodeIO.observe(el));
 
-        /* ── Fold 3: rate card — group branches draw once; rows rise. */
-        q('.lv-branch path').forEach((p) => {
-          gsap.fromTo(
-            p,
-            { drawSVG: '0%' },
-            {
-              drawSVG: '100%',
-              duration: 0.7,
-              ease: 'power2.out',
-              scrollTrigger: { trigger: p.closest('.lv-group'), start: 'top 82%', once: true },
-            },
-          );
-        });
-        q('.lv-line').forEach((row) => {
-          gsap.fromTo(
-            row,
-            { y: 26, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.7,
-              ease: 'c4',
-              scrollTrigger: { trigger: row, start: 'top 92%', once: true },
-            },
-          );
-        });
+        /* Rate card rows rise in. */
+        q('.lv-line').forEach((row) => rise(row, { start: 'top 92%' }));
 
-        /* ── Fold 4: the pipeline morph — the thread's four legible
-           lives (each state labelled in PIPE_STATES):
-             Brief  = annotated underlines on the brief's lines,
-             Design = one stroke draws the wireframe + header bar,
-             Build  = the structural truss triangulates,
-             Launch = ground roll → climb-out arc (the DOM default).
-           Arming rewinds the stroke to Brief; station dots stay lit
-           once their stage has been passed. */
-        const morphPaths = q('.lv-morph path');
-        if (morphPaths.length) {
-          gsap.set(morphPaths, { attr: { d: PIPE_STATES[0] } });
-          /* 0.72 dim floor: the 15px stage <p> (--lv-body over the
-             stage) blends to ~4.8:1 computed — above the 4.5:1 body
-             floor. (0.55 only cleared for the h3, not the body copy.) */
-          gsap.set(q('.lv-stage-item'), { opacity: 0.72 });
-          gsap.set(q('.lv-stage-dot'), { scale: 0.42, opacity: 0.4 });
-          const pipeTl = gsap.timeline({
-            scrollTrigger: {
-              trigger: q('.lv-pipe')[0],
-              start: 'top 62%',
-              end: 'bottom 55%',
-              scrub: 1,
-            },
-          });
-          const stages = q('.lv-stage-item');
-          const dots = q('.lv-stage-dot');
-          /* A stage "goes live": its copy lifts to full ink and its
-             station dot fills — and the dot STAYS filled afterwards
-             (progress already made), while the copy dims back. */
-          const liveStage = (i, at) => {
-            pipeTl.to(stages[i], { opacity: 1, duration: 0.5, ease: 'none' }, at);
-            if (dots[i]) {
-              pipeTl.to(dots[i], { scale: 1, opacity: 1, duration: 0.35, ease: 'none' }, at);
-            }
-          };
-          liveStage(0, 0); /* Brief goes live as the underlines settle */
-          PIPE_STATES.slice(1).forEach((state, i) => {
-            /* i=0: Brief→Design (underlines become the wireframe)
-               i=1: Design→Build (wireframe becomes the truss)
-               i=2: Build→Launch (truss becomes the climb-out) */
-            pipeTl.to(
-              morphPaths,
-              { morphSVG: state, duration: 1, ease: 'power1.inOut' },
-              0.5 + i,
-            );
-            liveStage(i + 1, 1 + i);
-            if (i > 0) pipeTl.to(stages[i - 1], { opacity: 0.72, duration: 0.5, ease: 'none' }, 1 + i);
-          });
-          pipeTl.to(stages[2], { opacity: 0.72, duration: 0.5, ease: 'none' }, 3.4);
+        /* Process — the four steps arrive as one quiet row. */
+        const stages = q('.lv-stage-item');
+        if (stages.length) {
+          stages.forEach((el, i) =>
+            rise(el, { trigger: q('.lv-stages')[0], start: 'top 85%', delay: i * 0.07 }),
+          );
         }
 
-        /* ── Fold 5: the drench wipes up, its content settling at a
-           slower rate (depth under the clip), and the thread SIGNS
-           OFF — the finale. Three layered strokes of one signature
-           (SIG_D) draw with the tip running ahead of the pressure
-           layers, so the line visibly tapers as the pen lifts: the
-           studio's signature on the finished build. The tapered,
-           fully-signed state is the CSS default (dasharray floors),
-           so static mode ships it complete. */
-        gsap.fromTo(
-          q('.lv-drench')[0],
-          { clipPath: 'inset(16% 0% 0% 0%)' },
-          {
-            clipPath: 'inset(0% 0% 0% 0%)',
-            ease: 'none',
-            scrollTrigger: { trigger: q('.lv-drench')[0], start: 'top 95%', end: 'top 55%', scrub: 0.9 },
-          },
-        );
-        gsap.fromTo(
-          q('.lv-drench-in'),
-          { y: 44 },
-          {
-            y: 0,
-            ease: 'none',
-            scrollTrigger: { trigger: q('.lv-drench')[0], start: 'top 95%', end: 'top 45%', scrub: 0.9 },
-          },
-        );
-        const sigTl = gsap.timeline({
-          scrollTrigger: { trigger: q('.lv-drench')[0], start: 'top 60%', once: true },
-        });
-        /* Tip leads (full length), the mid and press layers trail and
-           stop short — composite = a stroke that thins to a point. */
-        sigTl.fromTo(
-          q('.lv-sig--tip'),
-          { drawSVG: '0%' },
-          { drawSVG: '0% 100%', duration: 1.05, ease: 'power2.inOut' },
-          0,
-        );
-        sigTl.fromTo(
-          q('.lv-sig--mid'),
-          { drawSVG: '0%' },
-          { drawSVG: '0% 88%', duration: 1, ease: 'power2.inOut' },
-          0.05,
-        );
-        sigTl.fromTo(
-          q('.lv-sig--press'),
-          { drawSVG: '0%' },
-          { drawSVG: '0% 72%', duration: 0.95, ease: 'power2.inOut' },
-          0.1,
-        );
-        /* Signed → sealed: the CTA settles under the fresh signature. */
-        sigTl.fromTo(
-          q('.lv-drench .lv-btn'),
-          { scale: 0.965 },
-          { scale: 1, duration: 0.45, ease: 'c4' },
-          0.9,
-        );
+        /* Closing band content. */
+        q('.lv-drench-in').forEach((el) => rise(el, { start: 'top 80%' }));
 
-        /* ── Magnetic primaries (fine pointers, desktop): the two red
-           CTAs lean toward the cursor inside their own hitbox and
-           glide back on leave. Transform-only; capped ±12/±8px. */
+        /* ── Magnetic primaries (fine pointers, desktop): the red CTAs
+           lean toward the cursor inside their own hitbox and glide
+           back on leave. Transform-only; capped ±12/±8px. */
         const magnetCleanups = [];
         if (desk && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
           q('.lv-btn').forEach((btn) => {
@@ -1234,17 +721,13 @@ export default function ServiceWeb() {
         return () => {
           magnetCleanups.forEach((fn) => fn());
           magnetCleanups.length = 0;
-          splits.forEach((s) => s.revert());
-          splits.length = 0;
           decodeIO.disconnect();
         };
       },
     );
 
-    /* Cold-load safety: if Archivo lands after arming, the locked
-       word boxes were measured against the fallback face — one
-       refresh re-locks them (onRefreshInit) against the real
-       metrics and re-renders every scrubbed timeline in place. */
+    /* Cold-load safety: if Archivo lands after arming, one refresh
+       re-measures every scrubbed timeline against the real metrics. */
     if (typeof document !== 'undefined' && document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => ScrollTrigger.refresh()).catch(() => {});
     }
@@ -1252,91 +735,6 @@ export default function ServiceWeb() {
     return () => {
       mm.revert();
       root.classList.remove('lv-armed');
-    };
-  }, [staticMode]);
-
-  /* ── Vitals sampling: 1Hz, only while a strip is visible AND the
-     tab is foreground. Writes straight to the DOM (no re-renders). */
-  useEffect(() => {
-    if (staticMode) return undefined;
-    const root = rootRef.current;
-    if (!root) return undefined;
-    let rafId = 0;
-    let frames = 0;
-    let last = performance.now();
-    let running = false;
-    let anyVisible = false;
-    let lcpSec = null;
-    let po = null;
-    try {
-      po = new PerformanceObserver((list) => {
-        const entries = list.getEntries();
-        const latest = entries[entries.length - 1];
-        if (latest) lcpSec = (latest.renderTime || latest.loadTime) / 1000;
-      });
-      po.observe({ type: 'largest-contentful-paint', buffered: true });
-    } catch {
-      po = null;
-    }
-    const count = () => {
-      frames += 1;
-      rafId = requestAnimationFrame(count);
-    };
-    const setRunning = () => {
-      const should = anyVisible && !document.hidden;
-      if (should && !running) {
-        running = true;
-        frames = 0;
-        last = performance.now();
-        rafId = requestAnimationFrame(count);
-      } else if (!should && running) {
-        running = false;
-        cancelAnimationFrame(rafId);
-      }
-    };
-    const tick = window.setInterval(() => {
-      if (!running) return;
-      const now = performance.now();
-      const fps = Math.min(120, Math.round((frames * 1000) / Math.max(1, now - last)));
-      frames = 0;
-      last = now;
-      let bytes = 0;
-      try {
-        const nav = performance.getEntriesByType('navigation')[0];
-        if (nav) bytes += nav.transferSize || 0;
-        performance.getEntriesByType('resource').forEach((r) => {
-          bytes += r.transferSize || 0;
-        });
-      } catch {
-        bytes = 0;
-      }
-      const kb = Math.round(bytes / 1024);
-      root.querySelectorAll('[data-vit="fps"]').forEach((el) => {
-        el.textContent = `${fps} fps`;
-      });
-      root.querySelectorAll('[data-vit="kb"]').forEach((el) => {
-        el.textContent = kb > 0 ? `${kb} kb` : '— kb';
-      });
-      root.querySelectorAll('[data-vit="lcp"]').forEach((el) => {
-        el.textContent = lcpSec ? `lcp ${lcpSec.toFixed(2)}s` : 'lcp —';
-      });
-    }, 1000);
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        entry.target.dataset.vitOn = entry.isIntersecting ? '1' : '';
-      });
-      anyVisible = Array.from(root.querySelectorAll('.lv-vitals')).some((el) => el.dataset.vitOn === '1');
-      setRunning();
-    });
-    root.querySelectorAll('.lv-vitals').forEach((el) => io.observe(el));
-    const onVis = () => setRunning();
-    document.addEventListener('visibilitychange', onVis);
-    return () => {
-      window.clearInterval(tick);
-      cancelAnimationFrame(rafId);
-      io.disconnect();
-      if (po) po.disconnect();
-      document.removeEventListener('visibilitychange', onVis);
     };
   }, [staticMode]);
 
@@ -1428,38 +826,19 @@ export default function ServiceWeb() {
 
   return (
     <div className="lv-root" ref={rootRef}>
-      {/* ══ Fold 0 — IGNITION ═══════════════════════════════════════ */}
+      {/* ══ Hero — "Design without Limits" scrolls into the build ═══ */}
       <section className="lv-hero">
-        <div className="lv-stagebox">
-          <svg
-            className="lv-thread lv-thread--hero"
-            viewBox="0 0 1440 900"
-            preserveAspectRatio="xMidYMid slice"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <ThreadPath d={THREAD_HERO_D} />
-          </svg>
-
-          <div className="lv-frame lv-hero-grid">
-            <div className="lv-hero-copy">
+        <ContainerScroll
+          scrollRef={heroScrollRef}
+          staticMode={staticMode}
+          titleComponent={
+            <>
               <p className="lv-kicker">C1 · Web &amp; Applications — arm of C4 Studios · Perth, WA</p>
-              <h1 className="lv-h1" ref={h1Ref}>
-                Websites built to convert and scale.
-              </h1>
-              {/* The pen's approval underline — anchored to the H1 so
-                  it registers at every viewport. Fully drawn is the
-                  DOM default. */}
-              <svg
-                className="lv-h1-under"
-                viewBox="0 0 560 34"
-                preserveAspectRatio="none"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <ThreadPath d={H1_UNDER_D} />
-              </svg>
-              <p className="lv-lede" ref={ledeRef}>
+              <p className="lv-display">
+                Design <GradientText>without</GradientText> Limits
+              </p>
+              <h1 className="lv-h1">Websites built to convert and scale.</h1>
+              <p className="lv-lede">
                 From a crisp landing page to a full web application — every project is
                 scoped clearly, designed carefully, and delivered on time.
               </p>
@@ -1473,70 +852,20 @@ export default function ServiceWeb() {
                   <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
                 </Link>
               </div>
-            </div>
-
-            <figure className="lv-hero-fig">
-              {/* Scaffold stroke: the pen draws the frame's outline +
-                  chrome divider before the real browser assembles,
-                  then dissolves. Invisible (dissolved) is the DOM
-                  default — static mode ships the finished frame. */}
-              <svg
-                className="lv-frame-draw"
-                viewBox="0 0 920 600"
-                preserveAspectRatio="none"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <ThreadPath d={FRAME_DRAW_D} ghost={false} />
-              </svg>
-              <span className="lv-wire-piece lv-wire-piece--bar" aria-hidden="true" />
-              <span className="lv-wire-piece lv-wire-piece--body" aria-hidden="true" />
-              <span className="lv-wire-piece lv-wire-piece--side" aria-hidden="true" />
-              <div className="lv-browser lv-hero-browser">
-                <div className="lv-browser-bar" aria-hidden="true">
-                  <span className="lv-dot" />
-                  <span className="lv-dot" />
-                  <span className="lv-dot" />
-                  <span className="lv-browser-url">sharpbricklaying.com.au</span>
-                </div>
-                <div className="lv-browser-view">
-                  <img
-                    src={sharpHero}
-                    width={900}
-                    height={563}
-                    loading="eager"
-                    decoding="async"
-                    alt="Sharp Bricklaying home page — a drone aerial of finished brickwork behind the studio wordmark."
-                  />
-                </div>
-              </div>
-              <figcaption className="lv-cap lv-hero-cap">
-                sharp bricklaying · shipped 2026
-              </figcaption>
-            </figure>
-          </div>
-
-          <VitalsStrip id="lv-vitals-hero" />
-        </div>
+            </>
+          }
+        >
+          <HeroPan target={heroScrollRef} staticMode={staticMode} />
+        </ContainerScroll>
       </section>
 
-      {/* ══ Fold 1 — THE SPEC PASS ══════════════════════════════════ */}
+      {/* ══ Every project includes ══════════════════════════════════ */}
       <section className="lv-spec">
-        <svg
-          className="lv-thread lv-thread--spec"
-          viewBox="0 0 320 1000"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <ThreadPath d={THREAD_SPEC_D} />
-        </svg>
         <div className="lv-frame">
           <h2 className="lv-h2">Every project includes</h2>
           <ul className="lv-spec-list">
             {INCLUDED.map((item) => (
               <li className="lv-spec-item" key={item}>
-                <span className="lv-station" aria-hidden="true" />
                 {item}
               </li>
             ))}
@@ -1544,17 +873,7 @@ export default function ServiceWeb() {
         </div>
       </section>
 
-      {/* ══ Divider — the velocity rail ═════════════════════════════ */}
-      <div className="lv-rail">
-        <div className="lv-rail-track">
-          <span className="lv-rail-text">Design · Build · Ship · Perth&ensp;·&ensp;</span>
-          <span className="lv-rail-text" aria-hidden="true">
-            Design · Build · Ship · Perth&ensp;·&ensp;
-          </span>
-        </div>
-      </div>
-
-      {/* ══ Fold 2 — THE PROOF REEL ═════════════════════════════════ */}
+      {/* ══ The proof reel ══════════════════════════════════════════ */}
       <section className="lv-reel">
         <div className="lv-frame">
           <div className="lv-reel-head">
@@ -1759,7 +1078,7 @@ export default function ServiceWeb() {
         </div>
       )}
 
-      {/* ══ Fold 3 — THE RATE CARD ══════════════════════════════════ */}
+      {/* ══ The rate card ═══════════════════════════════════════════ */}
       <section className="lv-rate">
         <div className="lv-frame">
           <div className="lv-rate-head">
@@ -1787,9 +1106,6 @@ export default function ServiceWeb() {
           {SECTIONS.map((section) => (
             <div className="lv-group" key={section.heading}>
               <header className="lv-group-head">
-                <svg className="lv-branch" viewBox="0 0 160 40" aria-hidden="true" focusable="false">
-                  <path d={BRANCH_D} pathLength="1" />
-                </svg>
                 <div className="lv-group-title">
                   <h3>{section.heading}</h3>
                   {section.guide && <span className="lv-range">{section.guide.range}</span>}
@@ -1801,15 +1117,6 @@ export default function ServiceWeb() {
               <div className="lv-rows">
                 {section.packages.map((pkg) => (
                   <article className="lv-line" key={pkg.key}>
-                    <svg
-                      className="lv-line-under"
-                      viewBox="0 0 840 16"
-                      preserveAspectRatio="none"
-                      aria-hidden="true"
-                      focusable="false"
-                    >
-                      <path d={ROW_LINE_D} pathLength="1" />
-                    </svg>
                     <div className="lv-line-id">
                       <h4 className="lv-line-name">
                         {pkg.name}
@@ -1875,53 +1182,25 @@ export default function ServiceWeb() {
         </div>
       </section>
 
-      {/* ══ Fold 4 — THE PIPELINE ═══════════════════════════════════ */}
+      {/* ══ The process — four steps, one quiet row ═════════════════ */}
       <section className="lv-pipe">
-        <div className="lv-frame lv-pipe-grid">
-          <div className="lv-pipe-figwrap">
-            <h2 className="lv-h2">Brief to launch, one pipeline.</h2>
-            <p className="lv-sub">One line carries the job from first call to live site.</p>
-            <svg className="lv-morph" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
-              <path className="lv-tghost" d={PIPE_STATES[3]} />
-              <path className="lv-tmain" d={PIPE_STATES[3]} />
-            </svg>
-          </div>
+        <div className="lv-frame">
+          <h2 className="lv-h2">Brief to launch, one pipeline.</h2>
           <div className="lv-stages">
             {PROCESS.map((stage) => (
               <div className="lv-stage-item" key={stage.label}>
-                <h3>
-                  <span className="lv-stage-dot" aria-hidden="true" />
-                  {stage.label}
-                </h3>
+                <h3>{stage.label}</h3>
                 <p>{stage.desc}</p>
               </div>
             ))}
           </div>
         </div>
-        <div className="lv-frame lv-close-vitals">
-          <VitalsStrip id="lv-vitals-close" />
-        </div>
       </section>
 
-      {/* ══ Fold 5 — THE DRENCH ═════════════════════════════════════ */}
+      {/* ══ The close — one committed red block ═════════════════════ */}
       <section className="lv-drench">
         <div className="lv-frame lv-drench-in">
           <h2 className="lv-h2 lv-drench-h">Ready to build something worth showing?</h2>
-          {/* The sign-off: one signature in three pressure layers.
-              CSS dasharray floors (0.72 / 0.88 / full) are the static
-              default, so the tapered, fully-signed stroke ships in
-              prerender; arming only re-draws it. */}
-          <svg
-            className="lv-drench-line"
-            viewBox="0 0 760 80"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path className="lv-sig lv-sig--press" d={SIG_D} pathLength="1" />
-            <path className="lv-sig lv-sig--mid" d={SIG_D} pathLength="1" />
-            <path className="lv-sig lv-sig--tip" d={SIG_D} pathLength="1" />
-          </svg>
           <p className="lv-drench-sub">
             Send us a brief — we&rsquo;ll scope it, price it, and come back with a clear plan.
           </p>
