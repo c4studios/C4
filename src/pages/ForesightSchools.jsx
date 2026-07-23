@@ -40,6 +40,45 @@ const DATA = {
     'For schools, the data-safety module expands to cover student-facing implications explicitly.',
   disclaimer: null,
   ctaHeading: 'Give your staff AI they can use responsibly.',
+  downloads: {
+    heading: 'Free classroom previews — take a lesson for a test drive',
+    intro:
+      'C4Sight incursions run as five series, one per age group. Each preview is a real, runnable classroom activity you can use tomorrow — no devices, no student data, curriculum-mapped — and a look at what the full incursion adds.',
+    items: [
+      {
+        band: 'Pre-primary – Year 2',
+        name: 'The Computer Puppy',
+        line: 'A computer starts out knowing nothing. We teach it, it gets things wrong, and the class works out who is really in charge.',
+        file: '/downloads/c4sight/Series-1-The-Computer-Puppy-Preview.pdf',
+      },
+      {
+        band: 'Years 3 – 6',
+        name: 'Who Taught the Machine?',
+        line: 'How a machine learns from the examples people give it, why it can be confidently wrong, and why that is on the people, not the machine.',
+        file: '/downloads/c4sight/Series-2-Who-Taught-The-Machine-Preview.pdf',
+      },
+      {
+        band: 'Years 7 – 9',
+        name: 'Can You Trust It?',
+        line: 'Hallucinations, deepfakes, and what counts as evidence now. The half your students will not get in a free how-AI-works hour.',
+        file: '/downloads/c4sight/Series-3-Can-You-Trust-It-Preview.pdf',
+      },
+      {
+        band: 'Years 10 – 12',
+        name: 'Your Move',
+        line: 'Study, integrity and the future of work. Using AI to think, not to cheat — and why detectors do not work.',
+        file: '/downloads/c4sight/Series-4-Your-Move-Preview.pdf',
+      },
+      {
+        band: 'Staff PD',
+        name: 'Monday Morning AI',
+        line: 'Real time-savers your staff can use that week, then the honest conversation about assessment integrity and a whole-school position.',
+        file: '/downloads/c4sight/Series-5-Monday-Morning-AI-Preview.pdf',
+      },
+    ],
+    note:
+      'Every preview opens in your browser to read or save — no sign-up. Each carries a complete activity, its curriculum links, and a plain safety note. The paid incursion adds the live demonstration, two presenters (a practitioner and a registered teacher), the full lesson arc, and a resource pack your teachers keep.',
+  },
 };
 
 export default function ForesightSchools() {
