@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Check, ShieldCheck, Scale } from 'lucide-react';
+import { ArrowRight, Check, ShieldCheck, Scale, Download } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import PageHero from '@/components/c4/PageHero';
 import useDocumentHead from '@/hooks/useDocumentHead';
@@ -198,6 +198,84 @@ export default function SectorPage({ data }) {
           </motion.div>
         </div>
       </section>
+
+      {/* FREE PREVIEW DOWNLOADS — rendered only when a page supplies them
+          (schools). Additive: sectors without `data.downloads` are unchanged.
+          Ungated static PDFs from public/downloads. */}
+      {data.downloads && (
+        <section className="py-16 md:py-24 border-t" style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-bg-alt)' }}>
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, ease }}
+              className="max-w-[680px] mb-10 md:mb-12"
+            >
+              <div className="flex items-center gap-3">
+                <Download size={18} strokeWidth={1.75} style={{ color: 'var(--c4-accent)' }} />
+                <span className={eyebrowClass} style={{ color: 'var(--c4-text-subtle)' }}>
+                  Free for teachers
+                </span>
+              </div>
+              <h2 className="mt-4 text-[clamp(1.4rem,3vw,2rem)] font-semibold tracking-[-0.025em] leading-[1.1]">
+                {data.downloads.heading}
+              </h2>
+              <p className="mt-5 text-[13.5px] leading-[1.75]" style={{ color: 'var(--c4-text-muted)' }}>
+                {data.downloads.intro}
+              </p>
+            </motion.div>
+
+            <ul role="list" className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+              {data.downloads.items.map((d, i) => (
+                <motion.li
+                  key={d.file}
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-20px' }}
+                  transition={{ duration: 0.4, delay: i * 0.05, ease }}
+                >
+                  <a
+                    href={d.file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex h-full items-start gap-4 rounded-[3px] p-5 md:p-6 transition-colors duration-200"
+                    style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-bg)' }}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <span
+                        className="inline-block text-[10px] uppercase tracking-[0.18em] font-semibold"
+                        style={{ color: 'var(--c4-accent)' }}
+                      >
+                        {d.band}
+                      </span>
+                      <h3 className="mt-2 text-[15px] font-semibold tracking-[-0.01em]" style={{ color: 'var(--c4-text)' }}>
+                        {d.name}
+                      </h3>
+                      <p className="mt-1.5 text-[13px] leading-[1.6]" style={{ color: 'var(--c4-text-muted)' }}>
+                        {d.line}
+                      </p>
+                    </div>
+                    <span
+                      className="mt-0.5 inline-flex shrink-0 items-center gap-1.5 text-[11px] uppercase tracking-[0.12em] font-semibold transition-colors duration-200"
+                      style={{ color: 'var(--c4-text-subtle)' }}
+                    >
+                      <Download size={14} strokeWidth={2} className="transition-transform duration-200 group-hover:translate-y-0.5" style={{ color: 'var(--c4-accent)' }} />
+                      PDF
+                    </span>
+                  </a>
+                </motion.li>
+              ))}
+            </ul>
+
+            {data.downloads.note && (
+              <p className="mt-8 max-w-[720px] text-[12px] leading-[1.7]" style={{ color: 'var(--c4-text-faint)' }}>
+                {data.downloads.note}
+              </p>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* CTA */}
       <section className="py-20 md:py-28 border-t" style={{ borderColor: 'var(--c4-border)' }}>
