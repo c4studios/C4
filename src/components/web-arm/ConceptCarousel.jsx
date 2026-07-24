@@ -5,9 +5,11 @@
  *   · Idles at a slow spin (3°/s), pauses under the pointer, and
  *     hands over to drag — pointer velocity carries through release
  *     with inertia, then the idle drift resumes.
- *   · Every face is a real link (three case studies, two live concept
- *     sites). A drag past 6px suppresses the click so spinning never
- *     misfires a navigation.
+ *   · Every face offers TWO links — the live deployment and its place
+ *     in the portfolio (a case study, or the Concepts filter for the
+ *     two without their own entry yet). A drag past 6px suppresses the
+ *     click so spinning never misfires a navigation; a gentle release
+ *     holds the drum still so both links are tappable on a phone.
  *   · Arrow keys rotate one face per press (the wrap is focusable).
  *   · staticMode / prefers-reduced-motion: the five render as a flat
  *     shelf — no cylinder, no rAF, nothing moves.
@@ -24,14 +26,18 @@ import cptJk from './assets/cpt-jk.webp';
 import cptVeer from './assets/cpt-veer.webp';
 import cptIopa from './assets/cpt-iopa.webp';
 
+/* Every concept offers TWO ways in: the live deployment, and its place
+   in the portfolio (a dedicated case study where one exists, otherwise
+   the Concepts filter). VEER + IOPA have no individual case study yet,
+   so they route to the Concepts view. */
 const CONCEPTS = [
   {
     key: 'barrys',
     name: "Barry's Drink",
     line: 'An RTD brand world with a physics-driven hero — grabbable, throwable 3D cans.',
     img: cptBarrys,
-    to: '/CaseStudy?slug=barrys-drink',
-    tag: 'Case study',
+    live: 'https://barrys-drink-concept.vercel.app',
+    portfolio: '/CaseStudy?slug=barrys-drink',
     alt: "Barry's Drink concept site — floating drink cans over the brand hero.",
   },
   {
@@ -39,8 +45,8 @@ const CONCEPTS = [
     name: 'Wooster Core',
     line: 'A storefront whose product 3D-prints itself in front of you, layer by layer.',
     img: cptWooster,
-    to: '/CaseStudy?slug=wooster-core',
-    tag: 'Case study',
+    live: 'https://wooster-henna.vercel.app',
+    portfolio: '/CaseStudy?slug=wooster-core',
     alt: 'Wooster Core concept storefront — WebGL FDM print hero.',
   },
   {
@@ -48,8 +54,8 @@ const CONCEPTS = [
     name: 'JK Plumbing',
     line: 'A lead-gen trade site built before any brief existed — and ready to book jobs.',
     img: cptJk,
-    to: '/CaseStudy?slug=jk-plumbing-solutions',
-    tag: 'Case study',
+    live: 'https://jk-plumbing-tau.vercel.app',
+    portfolio: '/CaseStudy?slug=jk-plumbing-solutions',
     alt: 'JK Plumbing concept site — licensed-trade lead generation hero.',
   },
   {
@@ -57,8 +63,8 @@ const CONCEPTS = [
     name: 'VEER',
     line: 'A bike turn-indicator you demo yourself — grab the 3D handlebar and steer to fire it.',
     img: cptVeer,
-    href: 'https://veer-demo.netlify.app',
-    tag: 'Live concept',
+    live: 'https://veer-demo.netlify.app',
+    portfolio: '/Portfolio?filter=concept',
     alt: 'VEER concept site — "Be seen from the side." over a 3D handlebar.',
   },
   {
@@ -66,8 +72,8 @@ const CONCEPTS = [
     name: 'IOPA Apparel',
     line: 'Streetwear staged as a live broadcast — scroll-tune the whole site like a radio.',
     img: cptIopa,
-    href: 'https://iopa-apparel.vercel.app',
-    tag: 'Live concept',
+    live: 'https://iopa-apparel.vercel.app',
+    portfolio: '/Portfolio?filter=concept',
     alt: 'IOPA Apparel concept site — CHOP LIFE hero over a dithered transmission orb.',
   },
 ];
@@ -75,25 +81,53 @@ const CONCEPTS = [
 const FACES = CONCEPTS.length;
 const STEP = 360 / FACES;
 
+const ExtIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M7 17 17 7M8 7h9v9" />
+  </svg>
+);
+const ArrowIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M5 12h14M13 6l6 6-6 6" />
+  </svg>
+);
+
 function FaceCard({ item }) {
-  const body = (
-    <>
-      <img src={item.img} width={800} height={500} loading="lazy" decoding="async" alt={item.alt} />
+  const caseStudy = item.portfolio.startsWith('/CaseStudy');
+  return (
+    <div className="lv-cpt-card">
+      <span className="lv-cpt-shot">
+        <img src={item.img} width={800} height={500} loading="lazy" decoding="async" alt={item.alt} />
+      </span>
       <span className="lv-cpt-meta">
         <span className="lv-cpt-name">{item.name}</span>
         <span className="lv-cpt-line">{item.line}</span>
-        <span className="lv-cpt-tag">{item.tag} →</span>
+        <span className="lv-cpt-actions">
+          <a
+            className="lv-cpt-act lv-cpt-act--live"
+            href={item.live}
+            target="_blank"
+            rel="noopener noreferrer"
+            draggable="false"
+            data-cpt-link
+            aria-label={`Open the live ${item.name} site in a new tab`}
+          >
+            Live site
+            <ExtIcon />
+          </a>
+          <Link
+            className="lv-cpt-act lv-cpt-act--folio"
+            to={item.portfolio}
+            draggable="false"
+            data-cpt-link
+            aria-label={caseStudy ? `Read the ${item.name} case study` : `See ${item.name} in the portfolio`}
+          >
+            {caseStudy ? 'Case study' : 'Portfolio'}
+            <ArrowIcon />
+          </Link>
+        </span>
       </span>
-    </>
-  );
-  return item.href ? (
-    <a className="lv-cpt-card" href={item.href} target="_blank" rel="noopener noreferrer" draggable="false" data-cpt-link>
-      {body}
-    </a>
-  ) : (
-    <Link className="lv-cpt-card" to={item.to} draggable="false" data-cpt-link>
-      {body}
-    </Link>
+    </div>
   );
 }
 
@@ -131,6 +165,9 @@ export default function ConceptCarousel({ staticMode = false }) {
     let lastT = 0;
     let raf = 0;
     let prev = 0;
+    /* After any touch the drum holds still for a beat, so the two action
+       links are easy to hit on a phone (no hover to pause the drift). */
+    let holdUntil = 0;
 
     const tick = (t) => {
       const dt = prev ? Math.min(0.05, (t - prev) / 1000) : 0.016;
@@ -139,7 +176,7 @@ export default function ConceptCarousel({ staticMode = false }) {
         if (Math.abs(vel) > 0.02) {
           rot += vel;
           vel *= 0.945; /* inertia decay */
-        } else if (!hovering) {
+        } else if (!hovering && t > holdUntil) {
           rot += 3 * dt; /* idle drift, °/s */
         }
       }
@@ -179,6 +216,9 @@ export default function ConceptCarousel({ staticMode = false }) {
     const onUp = () => {
       dragging = false;
       wrap.removeAttribute('data-dragging');
+      /* Hold the drum for a beat so the just-fronted card is tappable;
+         a flung release keeps its inertia (vel) and overrides the hold. */
+      if (Math.abs(vel) < 0.6) holdUntil = performance.now() + 2600;
     };
     /* A real drag must not fire the face link it ended on. */
     const onClickCapture = (e) => {

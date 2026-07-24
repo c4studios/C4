@@ -2584,3 +2584,34 @@
 .lv-cyl-hint.is-done {
   opacity: 0;
 }
+
+/* Concept faces — two ways in (live site + portfolio), not one big link. */
+.lv-cpt-shot { display: block; }
+.lv-cpt-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+.lv-cpt-act {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 10px 8px;
+  border-radius: 10px;
+  font-family: var(--lv-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.004em;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-user-drag: none;
+  transition: background 0.25s var(--lv-ease), color 0.25s var(--lv-ease), border-color 0.25s var(--lv-ease);
+}
+.lv-cpt-act svg { flex-shrink: 0; }
+.lv-cpt-act--live { background: var(--lv-ink); color: #fff; }
+.lv-cpt-act--live:hover { background: var(--lv-red); }
+.lv-cpt-act--folio { background: transparent; color: var(--lv-ink); border: 1px solid var(--lv-hair-strong); }
+.lv-cpt-act--folio:hover { border-color: var(--lv-ink); background: rgba(0, 0, 0, 0.03); }
