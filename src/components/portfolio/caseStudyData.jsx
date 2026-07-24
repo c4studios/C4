@@ -2154,7 +2154,7 @@ export const CASE_STUDIES = {
 
   'rocksstream': {
     slug: 'rocksstream',
-    name: 'RocksStream',
+    name: 'The Rocks: At the Movies Series',
     oneLiner: "A pixel-accurate, streaming-style pre-service experience for The Rocks Church — the weekly announcement reel reimagined as a self-running show the volunteer team updates in minutes, with zero code.",
     client: 'The Rocks Church',
     location: 'Perth, WA',
@@ -2254,6 +2254,26 @@ export function getCaseStudy(slug) {
   return CASE_STUDIES[slug] || null;
 }
 
+/* Build chronology, oldest → newest — the single source of truth for portfolio
+   ordering. Every entry's `year` is 2026, so date sorts can't separate them;
+   this does. Client sites first in the order they were built, then apps/SaaS,
+   then the self-initiated concepts (which came after the client work). */
+export const BUILD_ORDER = [
+  'transform-fremantle', 'jurassic-pt', 'gocc', 'transform-hakea', 'rocksstream',
+  'groverz-tax', 'sharp-bricklaying', 'hvn-gym', 'ds-racing-karts',
+  'tidy-gardens-australia', 'evidence-advisory',
+  // apps / SaaS
+  'people-power', 'quotr', 'returndesk',
+  // concepts (self-initiated, built after the client work)
+  'wooster-core', 'barrys-drink', 'jk-plumbing-solutions',
+];
+
+/* Lower `seq` = built earlier. Unknown slugs sort to the end (treated newest). */
+function buildSeq(slug) {
+  const i = BUILD_ORDER.indexOf(slug);
+  return i === -1 ? BUILD_ORDER.length : i;
+}
+
 export function getAllCaseStudies() {
-  return Object.values(CASE_STUDIES);
+  return Object.values(CASE_STUDIES).map((s) => ({ ...s, seq: buildSeq(s.slug) }));
 }

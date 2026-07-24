@@ -18,9 +18,9 @@ function sortStudies(studies, sortKey) {
 
   switch (sortKey) {
     case 'newest':
-      return sorted.sort((a, b) => (b.year || '0').localeCompare(a.year || '0'));
+      return sorted.sort((a, b) => (b.seq ?? 0) - (a.seq ?? 0));
     case 'oldest':
-      return sorted.sort((a, b) => (a.year || '9999').localeCompare(b.year || '9999'));
+      return sorted.sort((a, b) => (a.seq ?? 0) - (b.seq ?? 0));
     case 'budget_high':
       return sorted.sort((a, b) => (b.budgetOrder || 0) - (a.budgetOrder || 0));
     case 'budget_low':
@@ -29,7 +29,10 @@ function sortStudies(studies, sortKey) {
       return sorted.sort((a, b) => a.name.localeCompare(b.name));
     case 'featured':
     default:
-      return sorted.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+      return sorted.sort(
+        (a, b) =>
+          (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || (b.seq ?? 0) - (a.seq ?? 0),
+      );
   }
 }
 

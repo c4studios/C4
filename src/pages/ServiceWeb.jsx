@@ -45,7 +45,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Flip } from 'gsap/Flip';
 import { CustomEase } from 'gsap/CustomEase';
 import Lenis from 'lenis';
-import { motion, useScroll, useTransform } from 'framer-motion';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
@@ -59,31 +58,29 @@ import {
   INDUSTRY_SURCHARGE_NOTE,
 } from '@/data/pricing';
 import GradientText from '../components/web-arm/GradientText';
-import ContainerScroll from '../components/web-arm/ContainerScroll';
+import HeroFusion from '../components/web-arm/HeroFusion';
+import ConceptCarousel from '../components/web-arm/ConceptCarousel';
 import { reassertStoredTheme } from '../components/c4/ThemeContext';
 import '../components/web-arm/web-arm.css';
 
 /* Derived capture assets — generated from public/captures (read-only)
-   via the memo §3 sharp pipeline; ≤900px desktop / ≤480px mobile WebP,
-   363KB for the entire page's imagery. */
+   via scripts/portfolio-capture/derive-web-arm.mjs; webp throughout.
+   The DSR pair is the REAL full-page home capture (900×7808 desktop,
+   480×14200 mobile) — the device drive scrubs the actual page. */
 import sharpHero from '../components/web-arm/assets/sharp-hero.webp';
-import dsrD1 from '../components/web-arm/assets/dsr-d1.webp';
-import dsrD2 from '../components/web-arm/assets/dsr-d2.webp';
-import dsrD3 from '../components/web-arm/assets/dsr-d3.webp';
-import dsrD4 from '../components/web-arm/assets/dsr-d4.webp';
-import dsrM1 from '../components/web-arm/assets/dsr-m1.webp';
-import dsrM2 from '../components/web-arm/assets/dsr-m2.webp';
-import dsrM3 from '../components/web-arm/assets/dsr-m3.webp';
-import dsrM4 from '../components/web-arm/assets/dsr-m4.webp';
+import dsrHomeD from '../components/web-arm/assets/dsr-home-d.webp';
+import dsrHomeM from '../components/web-arm/assets/dsr-home-m.webp';
 import gzD1 from '../components/web-arm/assets/gz-d1.webp';
-import gzD2 from '../components/web-arm/assets/gz-d2.webp';
-import gzD3 from '../components/web-arm/assets/gz-d3.webp';
-import gzD4 from '../components/web-arm/assets/gz-d4.webp';
-import gzD5 from '../components/web-arm/assets/gz-d5.webp';
-import gzD6 from '../components/web-arm/assets/gz-d6.webp';
+import hvnF1 from '../components/web-arm/assets/hvn-f1.webp';
+import hvnF2 from '../components/web-arm/assets/hvn-f2.webp';
+import hvnF3 from '../components/web-arm/assets/hvn-f3.webp';
+import hvnF4 from '../components/web-arm/assets/hvn-f4.webp';
+import hvnF5 from '../components/web-arm/assets/hvn-f5.webp';
+import hvnF6 from '../components/web-arm/assets/hvn-f6.webp';
 import eaHero from '../components/web-arm/assets/ea-hero.webp';
-import hvnHero from '../components/web-arm/assets/hvn-hero.webp';
 import tidyHero from '../components/web-arm/assets/tidy-hero.webp';
+import tidyF2 from '../components/web-arm/assets/tidy-f2.webp';
+import tidyF3 from '../components/web-arm/assets/tidy-f3.webp';
 import jptHero from '../components/web-arm/assets/jpt-hero.webp';
 
 gsap.registerPlugin(ScrollTrigger, Flip, CustomEase);
@@ -128,10 +125,11 @@ const PROCESS = [
 
 /* ── The proof reel ────────────────────────────────────────────────
    All six pass-1 clients preserved (scope lines + alt text are SEO
-   contract copy), plus DS Racing Karts as the featured live drive
-   (its mobile capture set powers the phone handoff, and its desktop
-   set fills the hero device card). Groverz is the second (light) live
-   set; the rest are static frames with the click-time FLIP morph. */
+   contract copy). DS Racing Karts is the featured drive — now the
+   REAL full-page home capture driven end to end inside drawn devices.
+   HVN, Tidy Gardens and Evidence Advisory each hold their own display;
+   Sharp, Groverz and Jurassic sit in the record grid with the
+   click-time FLIP morph. */
 const DSR = {
   key: 'dsr',
   name: 'DS Racing Karts',
@@ -140,17 +138,66 @@ const DSR = {
   year: '2026',
   scope:
     'Ecommerce platform for a WA karting supplier — full shop and checkout, race results, team pages and a custom admin.',
-  desktop: [
-    { src: dsrD1, w: 900, h: 563, alt: 'DS Racing Karts home page — a dark motorsport hero with the DSR wordmark.' },
-    { src: dsrD2, w: 900, h: 563, alt: 'DS Racing Karts kart category range on a dark grid.' },
-    { src: dsrD3, w: 900, h: 563, alt: 'DS Racing Karts online shop — parts and racewear catalogue.' },
-    { src: dsrD4, w: 900, h: 563, alt: 'DS Racing Karts contact page with workshop details.' },
+  home: {
+    desktop: {
+      src: dsrHomeD,
+      w: 900,
+      h: 7808,
+      alt: 'DS Racing Karts home page, end to end — dark motorsport hero, kart categories, latest products and newsletter.',
+    },
+    mobile: {
+      src: dsrHomeM,
+      w: 480,
+      h: 14200,
+      alt: 'DS Racing Karts mobile home page — the same build, phone-first, hero to footer.',
+    },
+  },
+};
+
+/* The three feature displays — each client staged in its own world. */
+const HVN_SHOW = {
+  key: 'hvn',
+  name: 'HVN CrossFit',
+  place: 'Port Kennedy, WA',
+  year: '2026',
+  scope: 'Cinematic Next.js gym site with live class booking and a scroll-driven mini-game.',
+  frames: [
+    { src: hvnF1, alt: 'HVN CrossFit home page — a dark, cinematic hero for a Port Kennedy gym.' },
+    { src: hvnF2, alt: 'HVN CrossFit — training value props over dark photography.' },
+    { src: hvnF3, alt: 'HVN CrossFit — the scroll-driven chin-up mini-game.' },
+    { src: hvnF4, alt: 'HVN CrossFit — live class timetable.' },
+    { src: hvnF5, alt: 'HVN CrossFit — gym gallery.' },
+    { src: hvnF6, alt: 'HVN CrossFit — pro shop.' },
   ],
-  mobile: [
-    { src: dsrM1, w: 480, h: 1040, alt: 'DS Racing Karts mobile home screen.' },
-    { src: dsrM2, w: 480, h: 1040, alt: 'DS Racing Karts mobile shop view.' },
-    { src: dsrM3, w: 480, h: 1040, alt: 'DS Racing Karts mobile services view.' },
-    { src: dsrM4, w: 480, h: 1040, alt: 'DS Racing Karts mobile contact view.' },
+};
+
+const TIDY_SHOW = {
+  key: 'tidy',
+  name: 'Tidy Gardens Australia',
+  place: 'Perth, WA',
+  year: '2026',
+  scope: 'Motion-led site for a garden & reticulation business, with a living scroll motif.',
+  frames: [
+    { src: tidyHero, w: 900, h: 563, alt: 'Tidy Gardens Australia home page — a green, motion-led hero for a Perth garden-care business.' },
+    { src: tidyF2, w: 900, h: 563, alt: 'Tidy Gardens — the scroll-driven lawnmower motif cutting tall grass into a striped lawn.' },
+    { src: tidyF3, w: 900, h: 563, alt: 'Tidy Gardens — reticulation repairs, installations and controller replacement.' },
+  ],
+};
+
+const EA_SHOW = {
+  key: 'evidence',
+  name: 'Evidence Advisory',
+  place: 'Perth, WA',
+  year: '2026',
+  scope: 'Digital-forensics brand site anchored by a scroll-solved 3D crime-scene reconstruction.',
+  img: eaHero,
+  w: 900,
+  h: 563,
+  alt: 'Evidence Advisory home page — a shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers.',
+  tags: [
+    'The evidence-tagged smartphone, suspended mid-shatter',
+    'Yellow forensic markers pacing the scroll',
+    'A scroll-solved 3D reconstruction as the hero',
   ],
 };
 
@@ -161,28 +208,10 @@ const GROVERZ = {
   place: 'East Cannington, WA',
   year: '2026',
   scope: 'Tax-practice site with an interactive refund estimator and a physics-driven hero.',
-  frames: [
-    { src: gzD1, w: 900, h: 434, alt: 'Groverz Tax & Accounting home page — a professional accounting-practice website hero.' },
-    { src: gzD2, w: 900, h: 465, alt: 'Groverz Tax & Accounting — benefits section.' },
-    { src: gzD3, w: 900, h: 426, alt: 'Groverz Tax & Accounting — client testimonials.' },
-    { src: gzD4, w: 900, h: 509, alt: 'Groverz Tax & Accounting — interactive refund calculator.' },
-    { src: gzD5, w: 900, h: 633, alt: 'Groverz Tax & Accounting — services overview.' },
-    { src: gzD6, w: 900, h: 317, alt: 'Groverz Tax & Accounting — booking call-to-action.' },
-  ],
+  frame: { src: gzD1, w: 900, h: 434, alt: 'Groverz Tax & Accounting home page — a professional accounting-practice website hero.' },
 };
 
 const CASES = [
-  {
-    key: 'evidence',
-    name: 'Evidence Advisory',
-    place: 'Perth, WA',
-    year: '2026',
-    scope: 'Digital-forensics brand site anchored by a scroll-solved 3D crime-scene reconstruction.',
-    img: eaHero,
-    w: 900,
-    h: 563,
-    alt: 'Evidence Advisory home page — a shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers.',
-  },
   {
     key: 'sharp',
     name: 'Sharp Bricklaying',
@@ -195,26 +224,15 @@ const CASES = [
     alt: 'Sharp Bricklaying home page — a drone aerial of finished brickwork behind the studio wordmark.',
   },
   {
-    key: 'hvn',
-    name: 'HVN CrossFit',
-    place: 'Port Kennedy, WA',
-    year: '2026',
-    scope: 'Cinematic Next.js gym site with live class booking and a scroll-driven mini-game.',
-    img: hvnHero,
-    w: 900,
-    h: 563,
-    alt: 'HVN CrossFit home page — a dark, cinematic hero for a Port Kennedy gym.',
-  },
-  {
-    key: 'tidy',
-    name: 'Tidy Gardens Australia',
-    place: 'Perth, WA',
-    year: '2026',
-    scope: 'Motion-led site for a garden & reticulation business, with a living scroll motif.',
-    img: tidyHero,
-    w: 900,
-    h: 563,
-    alt: 'Tidy Gardens Australia home page — a green, motion-led hero for a Perth garden-care business.',
+    key: 'groverz',
+    name: GROVERZ.name,
+    place: GROVERZ.place,
+    year: GROVERZ.year,
+    scope: GROVERZ.scope,
+    img: GROVERZ.frame.src,
+    w: GROVERZ.frame.w,
+    h: GROVERZ.frame.h,
+    alt: GROVERZ.frame.alt,
   },
   {
     key: 'jurassic',
@@ -251,40 +269,9 @@ const WEB_JSONLD = [
   ]),
 ];
 
-/* The three DSR desktop frames the hero card steps through. */
-const HERO_FRAMES = DSR.desktop.slice(0, 3);
-
-/* ── Hero capture pan ──────────────────────────────────────────────
-   Inside the ContainerScroll card: dsr-d1 full-bleed, then the strip
-   gently steps through d2/d3 once the card has straightened. Runs on
-   the same hero section via a second useScroll whose range extends to
-   "end start", so [0.45 → 0.85] lands after the straighten point at
-   every viewport. Static default (no transform) = d1 visible. */
-function HeroPan({ target, staticMode }) {
-  const { scrollYProgress } = useScroll({ target, offset: ['start start', 'end start'] });
-  const y = useTransform(scrollYProgress, [0.45, 0.85], ['0%', '-66.666%']);
-  return (
-    <div className="lv-heropan">
-      <motion.div className="lv-heropan-strip" style={staticMode ? undefined : { y }}>
-        {HERO_FRAMES.map((f, i) => (
-          <div className="lv-heropan-slot" key={f.src}>
-            <img
-              src={f.src}
-              width={f.w}
-              height={f.h}
-              loading={i === 0 ? 'eager' : 'lazy'}
-              decoding="async"
-              alt={f.alt}
-            />
-          </div>
-        ))}
-      </motion.div>
-      <p className="lv-heropan-cap">
-        {DSR.url} · shipped {DSR.year}
-      </p>
-    </div>
-  );
-}
+/* The old HeroPan (three stepped stills inside the tilt card) is
+   retired — HeroFusion's screen is live DOM, so every scroll position
+   is its own frame. */
 
 /* ── Price odometer ────────────────────────────────────────────────
    Rolling digits on the Pay once / Monthly toggle. Labels that don't
@@ -398,7 +385,6 @@ function useForceLight() {
 export default function ServiceWeb() {
   useForceLight();
   const rootRef = useRef(null);
-  const heroScrollRef = useRef(null);
   const lenisRef = useRef(null);
   const openerRef = useRef(null);
   const flipStateRef = useRef(null);
@@ -504,19 +490,20 @@ export default function ServiceWeb() {
         /* Reel head. */
         q('.lv-reel-head').forEach((el) => rise(el, { start: 'top 82%' }));
 
-        /* ── DSR featured drive — the desktop capture browses itself,
-           then hands off to the pre-positioned phone via clip/transform
-           crossfade on the same scrub (desktop pin only). */
-        const dsr = q('.lv-drive--dsr')[0];
-        if (dsr && desk) {
-          const dCol = dsr.querySelector('.lv-dsr-dcol');
-          const dView = dsr.querySelector('.lv-dsr-desktop .lv-browser-view');
-          const mCol = dsr.querySelector('.lv-dsr-mcol');
-          const mView = dsr.querySelector('.lv-phone-view');
+        /* ── DSR featured drive — the REAL home page, driven end to end
+           inside the drawn laptop and phone. Both devices scrub the
+           full-page capture; the phone leads slightly so the two reads
+           feel independent, like a desk with both screens alive. */
+        const real = q('.lv-drive--real')[0];
+        if (real && desk) {
+          const dImg = real.querySelector('.lv-mac-view img');
+          const dView = real.querySelector('.lv-mac-view');
+          const mImg = real.querySelector('.lv-cell-view img');
+          const mView = real.querySelector('.lv-cell-view');
           /* Entrance: the stage focuses in (soft blur + scale) before
              the pin engages — one short pass, filter cleared after. */
           gsap.fromTo(
-            dsr.querySelector('.lv-drive-stage'),
+            real.querySelector('.lv-drive-stage'),
             { scale: 0.975, filter: 'blur(3px)' },
             {
               scale: 1,
@@ -524,66 +511,128 @@ export default function ServiceWeb() {
               duration: 0.8,
               ease: 'power2.out',
               clearProps: 'filter',
-              scrollTrigger: { trigger: dsr, start: 'top 85%', once: true },
+              scrollTrigger: { trigger: real, start: 'top 85%', once: true },
             },
           );
           const driveTl = gsap.timeline({
             scrollTrigger: {
-              trigger: dsr,
+              trigger: real,
               start: 'top top',
               end: 'bottom bottom',
               scrub: 1,
               invalidateOnRefresh: true,
             },
           });
-          /* Counter-rate parallax: the copy column drifts slowly
-             against the browsing captures — two depths in the pin. */
           driveTl.fromTo(
-            dsr.querySelector('.lv-drive-id'),
+            real.querySelector('.lv-drive-id'),
             { y: 30 },
             { y: -30, ease: 'none', duration: 1 },
             0,
           );
-          driveTl.to(dCol, {
-            y: () => -(dCol.scrollHeight - dView.clientHeight),
+          /* The whole page, hero to footer — a genuine walkthrough. */
+          driveTl.to(dImg, {
+            y: () => -Math.max(0, dImg.offsetHeight - dView.clientHeight),
             ease: 'none',
-            duration: 0.45,
+            duration: 0.92,
+          }, 0.04);
+          driveTl.to(mImg, {
+            y: () => -Math.max(0, mImg.offsetHeight - mView.clientHeight),
+            ease: 'none',
+            duration: 0.88,
           }, 0);
-          driveTl.to(
-            dsr.querySelector('.lv-dsr-desktop'),
-            { opacity: 0.35, scale: 0.965, duration: 0.13, ease: 'power1.inOut' },
-            0.47,
-          );
-          driveTl.fromTo(
-            dsr.querySelector('.lv-phone'),
-            { opacity: 0.3, scale: 0.94, clipPath: 'inset(56% 0% 0% 0% round 26px)' },
-            {
-              opacity: 1,
-              scale: 1,
-              clipPath: 'inset(0% 0% 0% 0% round 26px)',
-              duration: 0.15,
-              ease: 'power2.out',
-              immediateRender: true,
-            },
-            0.46,
-          );
-          driveTl.to(mCol, {
-            y: () => -(mCol.scrollHeight - mView.clientHeight),
-            ease: 'none',
-            duration: 0.38,
-          }, 0.62);
+        }
+        /* Mobile: the same walkthrough on the section's own transit —
+           no pin, both devices still drive the real page. */
+        if (real && !desk) {
+          [
+            ['.lv-mac-view', '.lv-mac-view img'],
+            ['.lv-cell-view', '.lv-cell-view img'],
+          ].forEach(([viewSel, imgSel]) => {
+            const view = real.querySelector(viewSel);
+            const img = real.querySelector(imgSel);
+            if (!view || !img) return;
+            gsap.to(img, {
+              y: () => -Math.max(0, img.offsetHeight - view.clientHeight),
+              ease: 'none',
+              scrollTrigger: {
+                trigger: real,
+                start: 'top 80%',
+                end: 'bottom 20%',
+                scrub: 1,
+                invalidateOnRefresh: true,
+              },
+            });
+          });
         }
 
-        /* Groverz — the light set pans through its whole site as the
-           frame crosses the viewport. */
-        const gz = q('.lv-drive--gz')[0];
-        if (gz) {
-          const col = gz.querySelector('.lv-gz-col');
-          const view = gz.querySelector('.lv-browser-view');
-          /* Frame focuses in as it enters (blur ≤3px, short), then the
-             capture pans under a clean filterless frame. */
+        /* ── HVN — the dark cinema strip pans horizontally across its
+           own transit; the film keeps a slow constant burn. */
+        const hvn = q('.lv-show--hvn')[0];
+        if (hvn) {
+          const strip = hvn.querySelector('.lv-hvn-strip');
+          const viewport = hvn.querySelector('.lv-hvn-viewport');
+          if (strip && viewport) {
+            gsap.to(strip, {
+              x: () => -Math.max(0, strip.scrollWidth - viewport.clientWidth),
+              ease: 'none',
+              scrollTrigger: {
+                trigger: hvn,
+                start: 'top 80%',
+                end: 'bottom 12%',
+                scrub: 1,
+                invalidateOnRefresh: true,
+              },
+            });
+          }
+        }
+
+        /* ── Tidy — the vine draws itself as the plot crosses the
+           viewport; leaves unfurl at their nodes. Static default is the
+           fully-drawn vine (GSAP owns the pre-state at arm time). */
+        const tidy = q('.lv-show--tidy')[0];
+        if (tidy) {
+          const stem = tidy.querySelector('.lv-tidy-stem');
+          if (stem && typeof stem.getTotalLength === 'function') {
+            const len = stem.getTotalLength();
+            gsap.fromTo(
+              stem,
+              { strokeDasharray: len, strokeDashoffset: len },
+              {
+                strokeDashoffset: 0,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: tidy,
+                  start: 'top 78%',
+                  end: 'bottom 30%',
+                  scrub: 1,
+                },
+              },
+            );
+          }
+          tidy.querySelectorAll('.lv-tidy-leaf').forEach((leaf, i) => {
+            gsap.fromTo(
+              leaf,
+              { opacity: 0, scale: 0.6, transformOrigin: 'left center' },
+              {
+                opacity: 1,
+                scale: 1,
+                duration: 0.5,
+                ease: 'c4',
+                scrollTrigger: { trigger: tidy, start: `top ${72 - i * 14}%`, once: true },
+              },
+            );
+          });
+          tidy.querySelectorAll('.lv-tidy-frames figure').forEach((fig, i) => {
+            rise(fig, { delay: i * 0.08, start: 'top 88%' });
+          });
+        }
+
+        /* ── Evidence Advisory — the wall assembles: photo focuses in,
+           the three evidence chips land one by one. */
+        const ea = q('.lv-show--ea')[0];
+        if (ea) {
           gsap.fromTo(
-            gz.querySelector('.lv-browser'),
+            ea.querySelector('.lv-ea-fig'),
             { scale: 0.97, filter: 'blur(3px)', opacity: 0.4 },
             {
               scale: 1,
@@ -592,34 +641,19 @@ export default function ServiceWeb() {
               duration: 0.8,
               ease: 'power2.out',
               clearProps: 'filter',
-              scrollTrigger: { trigger: gz, start: 'top 88%', once: true },
+              scrollTrigger: { trigger: ea, start: 'top 82%', once: true },
             },
           );
-          gsap.to(col, {
-            y: () => -(col.scrollHeight - view.clientHeight),
-            ease: 'none',
-            scrollTrigger: {
-              trigger: gz,
-              start: 'top 85%',
-              end: 'bottom 15%',
-              scrub: 1,
-              invalidateOnRefresh: true,
-            },
-          });
-          /* Counter-rate copy drift — same depth grammar as the DSR
-             pin, running on the section's own transit. */
           gsap.fromTo(
-            gz.querySelector('.lv-drive-id'),
-            { y: 26 },
+            ea.querySelectorAll('.lv-ea-tag'),
+            { y: 16, opacity: 0 },
             {
-              y: -26,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: gz,
-                start: 'top 85%',
-                end: 'bottom 15%',
-                scrub: 1,
-              },
+              y: 0,
+              opacity: 1,
+              duration: 0.55,
+              stagger: 0.14,
+              ease: 'c4',
+              scrollTrigger: { trigger: ea, start: 'top 70%', once: true },
             },
           );
         }
@@ -825,38 +859,33 @@ export default function ServiceWeb() {
 
   return (
     <div className="lv-root" ref={rootRef}>
-      {/* ══ Hero — "Design without Limits" scrolls into the build ═══ */}
-      <section className="lv-hero">
-        <ContainerScroll
-          scrollRef={heroScrollRef}
-          staticMode={staticMode}
-          titleComponent={
-            <>
-              <p className="lv-kicker">C1 · Web &amp; Applications — arm of C4 Studios · Perth, WA</p>
-              <p className="lv-display">
-                Design <GradientText>without</GradientText> Limits
-              </p>
-              <h1 className="lv-h1">Websites built to convert and scale.</h1>
-              <p className="lv-lede">
-                From a crisp landing page to a full web application — every project is
-                scoped clearly, designed carefully, and delivered on time.
-              </p>
-              <div className="lv-hero-cta">
-                <Link className="lv-btn" to={`${START}?service=web_design`}>
-                  Start a brief
-                  <ArrowRight size={14} strokeWidth={2.5} aria-hidden="true" />
-                </Link>
-                <Link className="lv-link" to={PORTFOLIO}>
-                  See the work
-                  <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
-                </Link>
-              </div>
-            </>
-          }
-        >
-          <HeroPan target={heroScrollRef} staticMode={staticMode} />
-        </ContainerScroll>
-      </section>
+      {/* ══ Hero — "Design without Limits" dives INTO the portfolio ═ */}
+      <HeroFusion
+        staticMode={staticMode}
+        header={
+          <>
+            <p className="lv-kicker">C1 · Web &amp; Applications — arm of C4 Studios · Perth, WA</p>
+            <p className="lv-display">
+              Design <GradientText>without</GradientText> Limits
+            </p>
+            <h1 className="lv-h1">Websites built to convert and scale.</h1>
+            <p className="lv-lede">
+              From a crisp landing page to a full web application — every project is
+              scoped clearly, designed carefully, and delivered on time.
+            </p>
+            <div className="lv-hero-cta">
+              <Link className="lv-btn" to={`${START}?service=web_design`}>
+                Start a brief
+                <ArrowRight size={14} strokeWidth={2.5} aria-hidden="true" />
+              </Link>
+              <Link className="lv-link" to={PORTFOLIO}>
+                See the work
+                <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
+              </Link>
+            </div>
+          </>
+        }
+      />
 
       {/* ══ Every project includes ══════════════════════════════════ */}
       <section className="lv-spec">
@@ -890,50 +919,41 @@ export default function ServiceWeb() {
           </div>
         </div>
 
-        {/* Featured drive — DSR with the desktop→phone handoff. */}
-        <div className="lv-drive lv-drive--dsr">
+        {/* Featured drive — DSR's REAL home page inside real devices:
+            a laptop and a phone, both driven hero → footer. */}
+        <div className="lv-drive lv-drive--real">
           <div className="lv-drive-sticky">
             <div className="lv-frame lv-drive-grid">
-              <div className="lv-drive-stage">
-                <div className="lv-browser lv-dsr-desktop">
-                  <div className="lv-browser-bar" aria-hidden="true">
-                    <span className="lv-dot" />
-                    <span className="lv-dot" />
-                    <span className="lv-dot" />
-                    <span className="lv-browser-url">{DSR.url}</span>
-                  </div>
-                  <div className="lv-browser-view">
-                    <div className="lv-col lv-dsr-dcol">
-                      {DSR.desktop.map((f) => (
-                        <img
-                          key={f.src}
-                          src={f.src}
-                          width={f.w}
-                          height={f.h}
-                          loading="lazy"
-                          decoding="async"
-                          alt={f.alt}
-                        />
-                      ))}
+              <div className="lv-drive-stage lv-real-stage">
+                <div className="lv-mac">
+                  <div className="lv-mac-lid">
+                    <span className="lv-mac-cam" aria-hidden="true" />
+                    <div className="lv-mac-view">
+                      <img
+                        src={DSR.home.desktop.src}
+                        width={DSR.home.desktop.w}
+                        height={DSR.home.desktop.h}
+                        loading="lazy"
+                        decoding="async"
+                        alt={DSR.home.desktop.alt}
+                      />
                     </div>
+                  </div>
+                  <div className="lv-mac-base" aria-hidden="true">
+                    <span className="lv-mac-notch" />
                   </div>
                 </div>
-                <div className="lv-phone" aria-label="The same site, responsive on mobile">
-                  <span className="lv-phone-notch" aria-hidden="true" />
-                  <div className="lv-phone-view">
-                    <div className="lv-col lv-dsr-mcol">
-                      {DSR.mobile.map((f) => (
-                        <img
-                          key={f.src}
-                          src={f.src}
-                          width={f.w}
-                          height={f.h}
-                          loading="lazy"
-                          decoding="async"
-                          alt={f.alt}
-                        />
-                      ))}
-                    </div>
+                <div className="lv-cell">
+                  <span className="lv-cell-island" aria-hidden="true" />
+                  <div className="lv-cell-view">
+                    <img
+                      src={DSR.home.mobile.src}
+                      width={DSR.home.mobile.w}
+                      height={DSR.home.mobile.h}
+                      loading="lazy"
+                      decoding="async"
+                      alt={DSR.home.mobile.alt}
+                    />
                   </div>
                 </div>
               </div>
@@ -941,7 +961,7 @@ export default function ServiceWeb() {
                 <p className="lv-client">{DSR.name}</p>
                 <p className="lv-scope">{DSR.scope}</p>
                 <p className="lv-cap">
-                  {DSR.place} · {DSR.year} · one build, every screen
+                  {DSR.place} · {DSR.year} · {DSR.url} — the live home page, driven end to end
                 </p>
                 <Link className="lv-link lv-link--small" to={PORTFOLIO}>
                   View in portfolio
@@ -952,44 +972,92 @@ export default function ServiceWeb() {
           </div>
         </div>
 
-        {/* Light drive — Groverz pans its whole site in one frame. */}
-        <div className="lv-drive lv-drive--gz">
-          <div className="lv-frame lv-drive-grid lv-drive-grid--flip">
-            <div className="lv-drive-id">
-              <p className="lv-client">{GROVERZ.name}</p>
-              <p className="lv-scope">{GROVERZ.scope}</p>
+        {/* ── HVN CrossFit — the dark cinema strip. ─────────────────── */}
+        <div className="lv-show lv-show--hvn">
+          <div className="lv-frame">
+            <div className="lv-hvn-head">
+              <div>
+                <div className="lv-hvn-rule" aria-hidden="true" />
+                <p className="lv-client">{HVN_SHOW.name}</p>
+                <p className="lv-scope">{HVN_SHOW.scope}</p>
+                <p className="lv-cap">
+                  {HVN_SHOW.place} · {HVN_SHOW.year}
+                </p>
+              </div>
+              <Link className="lv-link lv-link--small" to={PORTFOLIO}>
+                View in portfolio
+                <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+          <div className="lv-hvn-viewport">
+            <div className="lv-hvn-strip">
+              {HVN_SHOW.frames.map((f) => (
+                <div className="lv-hvn-frame" key={f.src}>
+                  <img src={f.src} width={900} height={563} loading="lazy" decoding="async" alt={f.alt} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Tidy Gardens — its own vine, drawn by the scroll. ─────── */}
+        <div className="lv-show lv-show--tidy">
+          <div className="lv-frame lv-tidy-grid">
+            <div className="lv-tidy-copy">
+              <svg className="lv-tidy-vine" viewBox="0 0 40 600" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+                <path
+                  className="lv-tidy-stem"
+                  d="M20 592 C 13 528, 27 476, 20 408 C 14 350, 26 300, 20 236 C 15 180, 25 122, 19 58 C 17 38, 19 22, 21 8"
+                />
+                <path className="lv-tidy-leaf" d="M20 470 C 8 462, 4 448, 7 438 C 18 442, 22 456, 20 470 Z" fill="#4a7c43" stroke="none" />
+                <path className="lv-tidy-leaf" d="M20 300 C 32 292, 36 278, 33 268 C 22 272, 18 286, 20 300 Z" fill="#4a7c43" stroke="none" />
+                <path className="lv-tidy-leaf" d="M19 130 C 7 122, 3 108, 6 98 C 17 102, 21 116, 19 130 Z" fill="#4a7c43" stroke="none" />
+              </svg>
+              <p className="lv-client">{TIDY_SHOW.name}</p>
+              <p className="lv-scope">{TIDY_SHOW.scope}</p>
               <p className="lv-cap">
-                {GROVERZ.place} · {GROVERZ.year}
+                {TIDY_SHOW.place} · {TIDY_SHOW.year} · the vine is theirs — it grows down their site too
               </p>
               <Link className="lv-link lv-link--small" to={PORTFOLIO}>
                 View in portfolio
                 <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
               </Link>
             </div>
-            <div className="lv-drive-stage">
-              <div className="lv-browser">
-                <div className="lv-browser-bar" aria-hidden="true">
-                  <span className="lv-dot" />
-                  <span className="lv-dot" />
-                  <span className="lv-dot" />
-                  <span className="lv-browser-url">{GROVERZ.url}</span>
-                </div>
-                <div className="lv-browser-view lv-browser-view--tall">
-                  <div className="lv-col lv-gz-col">
-                    {GROVERZ.frames.map((f) => (
-                      <img
-                        key={f.src}
-                        src={f.src}
-                        width={f.w}
-                        height={f.h}
-                        loading="lazy"
-                        decoding="async"
-                        alt={f.alt}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
+            <div className="lv-tidy-frames">
+              {TIDY_SHOW.frames.map((f) => (
+                <figure key={f.src}>
+                  <img src={f.src} width={f.w} height={f.h} loading="lazy" decoding="async" alt={f.alt} />
+                </figure>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Evidence Advisory — the evidence wall. ────────────────── */}
+        <div className="lv-show lv-show--ea">
+          <div className="lv-frame lv-ea-grid">
+            <figure className="lv-ea-fig">
+              <img src={EA_SHOW.img} width={EA_SHOW.w} height={EA_SHOW.h} loading="lazy" decoding="async" alt={EA_SHOW.alt} />
+            </figure>
+            <div>
+              <p className="lv-client">{EA_SHOW.name}</p>
+              <p className="lv-scope">{EA_SHOW.scope}</p>
+              <p className="lv-cap">
+                {EA_SHOW.place} · {EA_SHOW.year}
+              </p>
+              <ul className="lv-ea-tags">
+                {EA_SHOW.tags.map((tag, i) => (
+                  <li className="lv-ea-tag" key={tag}>
+                    <span className="lv-ea-chip" aria-hidden="true">0{i + 1}</span>
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+              <Link className="lv-link lv-link--small" to={PORTFOLIO} style={{ marginTop: 22 }}>
+                View in portfolio
+                <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
+              </Link>
             </div>
           </div>
         </div>
@@ -1076,6 +1144,32 @@ export default function ServiceWeb() {
           </div>
         </div>
       )}
+
+      {/* ══ Concepts — built before any brief existed ═══════════════ */}
+      <section className="lv-concepts" aria-labelledby="lv-concepts-h">
+        <div className="lv-frame">
+          <div className="lv-concepts-head">
+            <div>
+              <h2 className="lv-h2" id="lv-concepts-h">Concepts. Built before any brief existed.</h2>
+              <p className="lv-sub">
+                Five self-initiated builds, fully deployed — what the studio ships when
+                nobody&rsquo;s asking. Drag the shelf; every face opens the real thing.
+              </p>
+            </div>
+            <Link className="lv-link" to="/Portfolio?filter=concept">
+              Browse all concepts
+              <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+        <ConceptCarousel staticMode={staticMode} />
+        <div className="lv-frame lv-concepts-foot">
+          <p className="lv-cap">
+            Barry&rsquo;s Drink · Wooster Core · JK Plumbing · VEER · IOPA Apparel — every one
+            a live deployment, available to license or commission.
+          </p>
+        </div>
+      </section>
 
       {/* ══ The rate card ═══════════════════════════════════════════ */}
       <section className="lv-rate">

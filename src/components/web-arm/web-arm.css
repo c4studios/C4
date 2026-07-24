@@ -740,11 +740,11 @@
 
 /* Sticky drive scene — armed desktop only; static/mobile flows normally. */
 @media (min-width: 900px) {
-  .lv-armed .lv-drive--dsr {
-    height: 240vh;
+  .lv-armed .lv-drive--real {
+    height: 260vh;
   }
 
-  .lv-armed .lv-drive--dsr .lv-drive-sticky {
+  .lv-armed .lv-drive--real .lv-drive-sticky {
     position: sticky;
     top: 0;
     min-height: 100vh;
@@ -762,10 +762,8 @@
   margin-top: clamp(80px, 10vw, 150px);
 }
 
-.lv-case--evidence { grid-column: 1 / span 4; }
-.lv-case--sharp { grid-column: 5 / span 2; align-self: end; }
-.lv-case--hvn { grid-column: 1 / span 3; margin-top: clamp(8px, 2vw, 36px); }
-.lv-case--tidy { grid-column: 4 / span 3; margin-top: clamp(48px, 6vw, 110px); }
+.lv-case--sharp { grid-column: 1 / span 4; }
+.lv-case--groverz { grid-column: 5 / span 2; align-self: end; }
 .lv-case--jurassic { grid-column: 2 / span 4; margin-top: clamp(8px, 2vw, 36px); }
 
 .lv-case-fig {
@@ -1460,4 +1458,755 @@
 :root.lv-on-stage footer,
 :root.lv-on-stage footer * {
   transition: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   HERO FUSION — the iPad that holds the whole portfolio, then the
+   POV dives through the glass into the full-bleed parallax rows.
+   Motion is framer-motion's; this file owns geometry + both layout
+   regimes (armed vs [data-static] end-state).
+   ═══════════════════════════════════════════════════════════════════ */
+.lv-fusion {
+  background: var(--lv-page);
+}
+
+.lv-fusion-head {
+  padding-top: clamp(88px, 13vh, 148px);
+  padding-bottom: clamp(28px, 4.5vh, 52px);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lv-fusion-pin {
+  position: relative;
+  height: 360vh;
+}
+
+.lv-fusion-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+  perspective: 1300px;
+}
+
+.lv-fusion-stage {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* The screen — a dark stage the rows live on. Clip-registered layer:
+   never transformed (clip applies before transform). */
+.lv-fusion-view {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 8%, rgba(255, 255, 255, 0.05), transparent 52%),
+    #0b0b0c;
+  will-change: clip-path;
+}
+
+.lv-fusion-rows {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(16px, 3vh, 34px);
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+.lv-plx-row {
+  display: flex;
+  gap: clamp(14px, 1.8vw, 28px);
+  justify-content: center;
+}
+
+.lv-plx-row--rev {
+  flex-direction: row-reverse;
+}
+
+.lv-plx-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(150px, 19vw, 330px);
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #17171a;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.38);
+  transition: transform 0.45s var(--lv-ease), box-shadow 0.45s var(--lv-ease);
+}
+
+.lv-plx-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.lv-plx-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 46%);
+  opacity: 0;
+  transition: opacity 0.35s var(--lv-ease);
+}
+
+.lv-plx-name {
+  position: absolute;
+  left: 12px;
+  bottom: 9px;
+  z-index: 1;
+  font-family: var(--lv-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.35s var(--lv-ease), transform 0.35s var(--lv-ease);
+}
+
+.lv-plx-card:hover,
+.lv-plx-card:focus-visible {
+  transform: translateY(-10px);
+  box-shadow: 0 24px 54px rgba(0, 0, 0, 0.45);
+}
+
+.lv-plx-card:hover::after,
+.lv-plx-card:focus-visible::after {
+  opacity: 1;
+}
+
+.lv-plx-card:hover .lv-plx-name,
+.lv-plx-card:focus-visible .lv-plx-name {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* The chassis — border ring only, so the live screen shows through.
+   Content box IS the measured screen rect. */
+.lv-fusion-bezel {
+  --lvb: clamp(12px, 1.5vw, 20px);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  /* Sized against BOTH axes — the chassis must always sit inside the
+     sticky viewport (4:3 → height = 0.75 × width ≤ ~81svh). */
+  width: min(80vw, 1120px, 108svh);
+  aspect-ratio: 4 / 3;
+  border: var(--lvb) solid #1c1c1f;
+  border-radius: clamp(28px, 3vw, 42px);
+  box-shadow:
+    0 0 0 1.5px rgba(255, 255, 255, 0.07),
+    0 1px 0 1.5px rgba(0, 0, 0, 0.3),
+    0 42px 110px rgba(0, 0, 0, 0.34);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.lv-fusion-bezel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: clamp(14px, 1.6vw, 24px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.lv-fusion-cam {
+  position: absolute;
+  top: calc(var(--lvb) * -0.5 - 2.5px);
+  left: 50%;
+  translate: -50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #0a0a0b;
+  box-shadow: inset 0 0 1.5px 0.5px rgba(90, 120, 190, 0.55);
+}
+
+.lv-fusion-homebar {
+  position: absolute;
+  bottom: calc(var(--lvb) * -0.5 - 1.5px);
+  left: 50%;
+  translate: -50%;
+  width: clamp(64px, 8vw, 110px);
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.lv-fusion-cap {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(18px, 3.5vh, 34px);
+  translate: -50%;
+  margin: 0;
+  font-family: var(--lv-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: #a1a1a6;
+  white-space: nowrap;
+}
+
+/* ── Static end-state (prerender / reduced motion): the dive already
+   happened — full-bleed rows, no chassis, caption resting. ────────── */
+.lv-fusion[data-static] .lv-fusion-pin {
+  height: auto;
+}
+
+.lv-fusion[data-static] .lv-fusion-sticky {
+  position: relative;
+  height: auto;
+  perspective: none;
+}
+
+.lv-fusion[data-static] .lv-fusion-stage {
+  position: relative;
+  inset: auto;
+}
+
+.lv-fusion[data-static] .lv-fusion-view {
+  position: relative;
+  inset: auto;
+}
+
+.lv-fusion[data-static] .lv-fusion-rows {
+  position: relative;
+  inset: auto;
+  padding-block: clamp(30px, 5vh, 60px) clamp(52px, 8vh, 84px);
+}
+
+.lv-fusion[data-static] .lv-fusion-bezel {
+  display: none;
+}
+
+.lv-fusion[data-static] .lv-fusion-cap {
+  position: relative;
+  left: auto;
+  bottom: auto;
+  translate: none;
+  text-align: center;
+  padding-bottom: 26px;
+  background: #0b0b0c;
+  margin-top: -1px;
+}
+
+@media (max-width: 899.98px) {
+  .lv-fusion-pin {
+    height: 300vh;
+  }
+
+  .lv-fusion-bezel {
+    /* Portrait (3:4 → height = 1.333 × width ≤ ~78svh). */
+    width: min(92vw, 58svh);
+    aspect-ratio: 3 / 4;
+  }
+
+  .lv-plx-card {
+    width: clamp(118px, 26vw, 190px);
+  }
+
+  .lv-fusion-cap {
+    white-space: normal;
+    text-align: center;
+    width: min(88vw, 420px);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   THE REAL-DEVICE DRIVE — DSR's actual home page, driven end to end
+   inside a drawn laptop and phone. Chassis is CSS; the page inside is
+   the genuine full-page capture, scrubbed top → bottom on the pin.
+   ═══════════════════════════════════════════════════════════════════ */
+.lv-real-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+/* Laptop — lid, aluminium deck, foot shadow. */
+.lv-mac {
+  position: relative;
+  width: min(100%, 780px);
+}
+
+.lv-mac-lid {
+  position: relative;
+  background: #101013;
+  border: 1px solid #2c2c30;
+  border-radius: 18px 18px 0 0;
+  padding: clamp(8px, 1vw, 13px) clamp(8px, 1vw, 13px) 0;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+}
+
+.lv-mac-cam {
+  position: absolute;
+  top: clamp(3px, 0.4vw, 5px);
+  left: 50%;
+  translate: -50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #060607;
+  box-shadow: inset 0 0 1px 0.5px rgba(90, 120, 190, 0.5);
+}
+
+.lv-mac-view {
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  border-radius: 6px 6px 0 0;
+  background: #0b0b0c;
+}
+
+.lv-mac-view img,
+.lv-cell-view img {
+  display: block;
+  width: 100%;
+  height: auto;
+  will-change: transform;
+}
+
+.lv-mac-base {
+  position: relative;
+  height: clamp(11px, 1.3vw, 16px);
+  background: linear-gradient(#e6e6e9, #b9b9bf 62%, #86868c);
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22), 0 26px 60px rgba(0, 0, 0, 0.14);
+}
+
+.lv-mac-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  translate: -50%;
+  width: clamp(84px, 10vw, 132px);
+  height: 45%;
+  background: linear-gradient(#a9a9af, #cfcfd4);
+  border-radius: 0 0 10px 10px;
+}
+
+/* Phone — overlapping the laptop's right edge, front of shot. */
+.lv-cell {
+  position: absolute;
+  right: max(-14px, -1.5vw);
+  bottom: -6%;
+  width: clamp(150px, 15.5vw, 212px);
+  border: clamp(5px, 0.55vw, 8px) solid #17171a;
+  border-radius: clamp(28px, 3vw, 38px);
+  background: #17171a;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 24px 60px rgba(0, 0, 0, 0.34);
+  z-index: 2;
+}
+
+.lv-cell::before {
+  content: '';
+  position: absolute;
+  right: calc(clamp(5px, 0.55vw, 8px) * -1 - 2px);
+  top: 22%;
+  width: 2.5px;
+  height: 13%;
+  border-radius: 2px;
+  background: #2c2c30;
+}
+
+.lv-cell-island {
+  position: absolute;
+  top: clamp(7px, 0.8vw, 11px);
+  left: 50%;
+  translate: -50%;
+  width: 32%;
+  height: clamp(9px, 1vw, 13px);
+  border-radius: 99px;
+  background: #060607;
+  z-index: 2;
+}
+
+.lv-cell-view {
+  overflow: hidden;
+  aspect-ratio: 430 / 932;
+  border-radius: clamp(21px, 2.4vw, 30px);
+  background: #0b0b0c;
+}
+
+@media (max-width: 899.98px) {
+  .lv-real-stage {
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .lv-cell {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: min(58vw, 230px);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   FEATURE DISPLAYS — three clients, three worlds, one voice.
+   HVN: a dark cinema strip. Tidy: its own vine, drawn by scroll.
+   EA: the evidence wall. Scope lines are contract copy — verbatim.
+   ═══════════════════════════════════════════════════════════════════ */
+.lv-show {
+  padding-block: clamp(64px, 9vh, 120px);
+}
+
+.lv-show .lv-client {
+  font-size: clamp(1.3rem, 1.05rem + 1.1vw, 1.85rem);
+}
+
+/* ── HVN — dark, cinematic, its own red. ─────────────────────────── */
+.lv-show--hvn {
+  background: #0e0e10;
+}
+
+.lv-show--hvn .lv-client {
+  color: #f5f5f7;
+}
+
+.lv-show--hvn .lv-scope {
+  color: #a1a1a6;
+}
+
+.lv-show--hvn .lv-cap {
+  color: #6e6e73;
+}
+
+.lv-hvn-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px 40px;
+  margin-bottom: clamp(26px, 4vh, 44px);
+}
+
+.lv-hvn-head .lv-link {
+  color: #f5f5f7;
+}
+
+.lv-hvn-rule {
+  width: 44px;
+  height: 3px;
+  background: #e01e26;
+  margin-bottom: 14px;
+}
+
+.lv-hvn-viewport {
+  overflow: hidden;
+}
+
+.lv-hvn-strip {
+  display: flex;
+  gap: clamp(14px, 1.6vw, 24px);
+  width: max-content;
+  will-change: transform;
+}
+
+.lv-hvn-frame {
+  flex: 0 0 auto;
+  width: clamp(400px, 44vw, 620px);
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #17171a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lv-hvn-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Tidy — a light green plot; the vine draws as you pass. ──────── */
+.lv-show--tidy {
+  background: #f2f6ef;
+}
+
+.lv-tidy-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.35fr);
+  gap: clamp(28px, 4.5vw, 72px);
+  align-items: center;
+}
+
+.lv-tidy-copy {
+  position: relative;
+  padding-left: clamp(34px, 3.4vw, 52px);
+}
+
+.lv-tidy-vine {
+  position: absolute;
+  left: 0;
+  top: -6%;
+  height: 112%;
+  width: clamp(26px, 2.6vw, 40px);
+  overflow: visible;
+}
+
+.lv-tidy-vine path {
+  fill: none;
+  stroke: #4a7c43;
+  stroke-width: 2.1;
+  stroke-linecap: round;
+}
+
+.lv-tidy-frames {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 1.6vw, 22px);
+}
+
+.lv-tidy-frames figure {
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--lv-hair);
+  box-shadow: 0 16px 40px rgba(38, 66, 33, 0.12);
+}
+
+.lv-tidy-frames figure:first-child {
+  grid-column: 1 / -1;
+}
+
+.lv-tidy-frames img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Evidence Advisory — the evidence wall. ──────────────────────── */
+.lv-show--ea {
+  background: #0b0b0d;
+}
+
+.lv-ea-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(28px, 4.5vw, 72px);
+  align-items: center;
+}
+
+.lv-ea-fig {
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #17171a;
+}
+
+.lv-ea-fig img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.lv-show--ea .lv-client {
+  color: #f5f5f7;
+}
+
+.lv-show--ea .lv-scope {
+  color: #a1a1a6;
+}
+
+.lv-show--ea .lv-cap {
+  color: #6e6e73;
+}
+
+.lv-show--ea .lv-link {
+  color: #f5f5f7;
+}
+
+.lv-ea-tags {
+  list-style: none;
+  margin: clamp(22px, 3vh, 34px) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lv-ea-tag {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #d5d5da;
+  font-size: 14.5px;
+}
+
+.lv-ea-chip {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 26px;
+  background: #e8c23a;
+  color: #1d1a08;
+  font-family: var(--lv-mono);
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 3px;
+  transform: rotate(-2.5deg);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.lv-ea-tag:nth-child(2) .lv-ea-chip {
+  transform: rotate(1.8deg);
+}
+
+.lv-ea-tag:nth-child(3) .lv-ea-chip {
+  transform: rotate(-1.2deg);
+}
+
+@media (max-width: 899.98px) {
+  .lv-tidy-grid,
+  .lv-ea-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lv-hvn-frame {
+    width: min(78vw, 480px);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CONCEPTS — the self-initiated shelf, staged on a turning cylinder.
+   Drag to spin; it idles slowly on its own. Static mode lays the five
+   flat. All five are real, deployed builds.
+   ═══════════════════════════════════════════════════════════════════ */
+.lv-concepts {
+  background: var(--lv-band);
+  padding-block: clamp(72px, 10vh, 132px);
+  overflow: clip;
+}
+
+.lv-concepts-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px 40px;
+  margin-bottom: clamp(10px, 2vh, 22px);
+}
+
+.lv-cyl-wrap {
+  position: relative;
+  height: clamp(360px, 52vh, 470px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1150px;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.lv-cyl-wrap[data-dragging] {
+  cursor: grabbing;
+}
+
+.lv-cyl {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.lv-cyl-face {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.lv-cpt-card {
+  display: block;
+  width: clamp(240px, 24vw, 330px);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--lv-hair);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.14);
+  transition: box-shadow 0.4s var(--lv-ease), translate 0.4s var(--lv-ease);
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.lv-cpt-card:hover {
+  translate: 0 -8px;
+  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.2);
+}
+
+.lv-cpt-card img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  pointer-events: none;
+}
+
+.lv-cpt-meta {
+  padding: 13px 15px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lv-cpt-name {
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  color: var(--lv-ink);
+}
+
+.lv-cpt-line {
+  font-size: 12.5px;
+  color: var(--lv-meta);
+}
+
+.lv-cpt-tag {
+  margin-top: 7px;
+  font-family: var(--lv-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--lv-red);
+}
+
+/* Static / reduced-motion: the shelf, flat. */
+.lv-cyl-flat {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: clamp(14px, 1.8vw, 24px);
+  padding-block: 18px;
+}
+
+.lv-cyl-flat .lv-cpt-card {
+  width: auto;
+}
+
+.lv-concepts-foot {
+  margin-top: clamp(14px, 2.5vh, 26px);
+  text-align: center;
 }
