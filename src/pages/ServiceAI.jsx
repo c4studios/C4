@@ -9,6 +9,7 @@ import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
 import { automationPackages, GST_NOTE } from '@/data/pricing';
 import C4iWordmark from '@/components/c4/C4iWordmark';
+import { reassertStoredTheme } from '../components/c4/ThemeContext';
 import '../components/ai-arm/ai-arm.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -89,7 +90,6 @@ const AI_JSONLD = [
 function useForceDark() {
   useEffect(() => {
     const root = document.documentElement;
-    const prev = root.className;
     const assertDark = () => {
       if (
         !root.classList.contains('dark-mode') ||
@@ -106,8 +106,7 @@ function useForceDark() {
     observer.observe(root, { attributes: true, attributeFilter: ['class'] });
     return () => {
       observer.disconnect();
-      root.className = prev;
-      root.classList.remove('cw-on-board');
+      reassertStoredTheme();
     };
   }, []);
 }
