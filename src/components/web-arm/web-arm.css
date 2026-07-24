@@ -2615,3 +2615,184 @@
 .lv-cpt-act--live:hover { background: var(--lv-red); }
 .lv-cpt-act--folio { background: transparent; color: var(--lv-ink); border: 1px solid var(--lv-hair-strong); }
 .lv-cpt-act--folio:hover { border-color: var(--lv-ink); background: rgba(0, 0, 0, 0.03); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE RESCUE — the page rebuilt for thumbs. Appended last, so every
+   rule here wins its earlier counterpart at equal specificity.
+   · devices sit SIDE BY SIDE (a desk, not a pile)
+   · the concepts drum is a native scroll-snap rail
+   · hover-only reveals become always-on
+   · the dead vertical space between entries is closed up
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Touch: tile names are permanently legible — no hover to find them. */
+@media (hover: none) {
+  .lv-plx-card::after {
+    opacity: 1;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.62), transparent 42%);
+  }
+
+  .lv-plx-name {
+    opacity: 1;
+    transform: none;
+    font-size: 12.5px;
+  }
+}
+
+/* Concepts — the snap rail (mobile render path). */
+.lv-rail {
+  padding-block: 8px 4px;
+}
+
+.lv-rail-track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 10px max(5vw, 18px) 22px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.lv-rail-track::-webkit-scrollbar {
+  display: none;
+}
+
+.lv-rail-slide {
+  flex: 0 0 min(78vw, 340px);
+  scroll-snap-align: center;
+}
+
+.lv-rail-slide .lv-cpt-card {
+  width: 100%;
+  -webkit-box-reflect: none;
+}
+
+.lv-rail-hint {
+  margin: 0;
+  text-align: center;
+  font-family: var(--lv-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lv-meta);
+}
+
+@media (max-width: 899.98px) {
+  /* ── The pin: shorter journey, less dead scroll. ─────────────────── */
+  .lv-fusion-pin {
+    height: 260vh;
+  }
+
+  .lv-fusion-head {
+    padding-top: clamp(72px, 10vh, 104px);
+    padding-bottom: 20px;
+  }
+
+  /* Rows breathe tighter — the gaps were reading as blank page. */
+  .lv-plx-group {
+    gap: 16px;
+  }
+
+  .lv-plx-row {
+    gap: 12px;
+  }
+
+  .lv-fusion[data-static] .lv-plx-group {
+    padding-block: 20px 36px;
+  }
+
+  /* ── The drive: laptop AND phone on one desk, side by side. ──────── */
+  .lv-real-stage {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 3vw;
+  }
+
+  .lv-mac {
+    width: 0;
+    flex: 1 1 62%;
+    min-width: 0;
+  }
+
+  .lv-cell {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    flex: 0 0 auto;
+    width: clamp(96px, 27vw, 140px);
+    border-width: 4px;
+    border-radius: 22px;
+  }
+
+  .lv-cell-view {
+    border-radius: 17px;
+  }
+
+  .lv-cell-island {
+    height: 8px;
+    top: 6px;
+  }
+
+  .lv-armed .lv-drive--real {
+    height: auto;
+  }
+
+  .lv-drive-grid {
+    gap: 26px;
+  }
+
+  /* ── Close the dead space between entries. ───────────────────────── */
+  .lv-show {
+    padding-block: clamp(40px, 6vh, 56px);
+  }
+
+  .lv-hvn-head {
+    margin-bottom: 20px;
+  }
+
+  .lv-tidy-grid,
+  .lv-ea-grid {
+    gap: 24px;
+  }
+
+  .lv-cases {
+    margin-top: 48px;
+    gap: 18px;
+  }
+
+  .lv-drive--gz,
+  .lv-reel .lv-frame + .lv-drive {
+    margin-top: 48px;
+  }
+
+  .lv-concepts {
+    padding-block: 52px 44px;
+  }
+
+  .lv-concepts-head {
+    margin-bottom: 6px;
+  }
+
+  .lv-concepts-foot {
+    margin-top: 10px;
+  }
+
+  .lv-rate {
+    scroll-margin-top: 8px;
+  }
+
+  .lv-paywise {
+    margin: 16px 0 28px;
+  }
+
+  /* Spec list + reel head: tighter rhythm. */
+  .lv-spec {
+    padding-block: 44px;
+  }
+
+  .lv-reel-head {
+    margin-bottom: 8px;
+  }
+}

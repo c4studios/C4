@@ -101,8 +101,18 @@ const clamp01 = (v) => Math.min(1, Math.max(0, v));
 const seg = (v, a, b) => clamp01((v - a) / (b - a));
 const smooth = (t) => t * t * (3 - 2 * t);
 
-/* The reference component's spring, verbatim. */
-const SPRING = { stiffness: 300, damping: 30 };
+/* The reference component's spring, verbatim — on fine pointers. Touch
+   scrolling has no inertia gap to play in: the same springs read as
+   rubber-band lag on a phone, so coarse pointers get a much stiffer
+   set that tracks the thumb nearly 1:1. */
+const COARSE =
+  typeof window !== 'undefined' &&
+  window.matchMedia &&
+  window.matchMedia('(pointer: coarse)').matches;
+const SPRING = COARSE ? { stiffness: 700, damping: 60 } : { stiffness: 300, damping: 30 };
+const P_SPRING = COARSE
+  ? { stiffness: 400, damping: 50, mass: 0.2 }
+  : { stiffness: 150, damping: 30, mass: 0.35 };
 
 export default function HeroFusion({ header, staticMode = false }) {
   const sectionRef = useRef(null);
@@ -113,7 +123,7 @@ export default function HeroFusion({ header, staticMode = false }) {
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] });
   /* Device + dive run on a smoothed progress; the SCENE springs feed on
      the raw progress so the reference's catch-up wobble survives. */
-  const p = useSpring(scrollYProgress, { stiffness: 150, damping: 30, mass: 0.35 });
+  const p = useSpring(scrollYProgress, P_SPRING);
   const measured = useMotionValue(0);
 
   useLayoutEffect(() => {
