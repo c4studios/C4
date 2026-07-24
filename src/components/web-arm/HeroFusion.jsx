@@ -183,8 +183,17 @@ export default function HeroFusion({ header, staticMode = false }) {
     const d = smooth(seg(v, 0.62, 0.9));
     return `${(r0.cx + (50 - r0.cx) * d).toFixed(2)}% ${(r0.cy + (50 - r0.cy) * d).toFixed(2)}%`;
   });
-  const bezelOpacity = useTransform(p, (v) => 1 - smooth(seg(v, 0.7, 0.92)));
-  const bezelScale = useTransform(p, (v) => 1 + 0.22 * smooth(seg(v, 0.62, 0.94)));
+  /* The chassis does NOT fade away — the camera passes THROUGH it. Its
+     scale tracks the opening mask exactly (the ring hugs the expanding
+     screen edge), then overshoots so the frame flies past the viewport
+     edges. Only a terminal fade clears the last corner arcs. */
+  const bezelScale = useTransform([p, measured], ([v]) => {
+    const r0 = rectRef.current;
+    const d = smooth(seg(v, 0.62, 0.9));
+    const track = (50 - r0.l * (1 - d)) / (50 - r0.l);
+    return track * (1 + 0.55 * d * d);
+  });
+  const bezelOpacity = useTransform(p, (v) => 1 - smooth(seg(v, 0.9, 0.985)));
   const groundOpacity = useTransform(p, (v) => (0.5 + 0.5 * smooth(seg(v, 0, 0.5))) * (1 - smooth(seg(v, 0.62, 0.84))));
   const glareX = useTransform(p, (v) => `${-130 + 260 * smooth(seg(v, 0.6, 0.9))}%`);
   const glareOpacity = useTransform(p, (v) => {
@@ -198,6 +207,10 @@ export default function HeroFusion({ header, staticMode = false }) {
      0.2→1) over the opening stretch; row X runs the WHOLE scroll. */
   const sceneP = useTransform(scrollYProgress, (v) => seg(v, 0.04, 0.62));
   const flat = useTransform(sceneP, (v) => seg(v, 0, 0.34));
+  /* The scene title steps aside BEFORE the rows arrive — a quiet rise
+     and dissolve, never a collision. */
+  const headOpacity = useTransform(flat, (v) => 1 - seg(v, 0.32, 0.68));
+  const headY = useTransform(flat, (v) => `${-24 * smooth(seg(v, 0.32, 0.75))}%`);
   const groupRotateX = useSpring(useTransform(flat, [0, 1], [15, 0]), SPRING);
   const groupRotateZ = useSpring(useTransform(flat, [0, 1], [20, 0]), SPRING);
   const groupY = useSpring(useTransform(flat, (v) => `${-48 + 62 * v}%`), SPRING);
@@ -228,11 +241,16 @@ export default function HeroFusion({ header, staticMode = false }) {
                 className="lv-fusion-scene"
                 style={staticMode ? undefined : { scale: sceneScale, transformOrigin: sceneOrigin }}
               >
-                {/* The scene header — the rows swoop over it. */}
-                <div className="lv-scene-head" aria-hidden="true">
+                {/* The scene header — rises and dissolves as the rows
+                    sweep in (never simply run over). */}
+                <motion.div
+                  className="lv-scene-head"
+                  aria-hidden="true"
+                  style={staticMode ? undefined : { opacity: headOpacity, y: headY }}
+                >
                   <p className="lv-scene-kick">The shipped record</p>
                   <p className="lv-scene-line">Every build below is live, and yours to open.</p>
-                </div>
+                </motion.div>
                 <motion.div
                   className="lv-plx-group"
                   style={
