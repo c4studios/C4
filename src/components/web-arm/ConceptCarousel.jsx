@@ -133,9 +133,22 @@ export default function ConceptCarousel({ staticMode = false }) {
   const wrapRef = useRef(null);
   const cylRef = useRef(null);
   const [hinted, setHinted] = useState(false);
+  /* On phones the drum can't work — five 78vw faces on a ~110px radius
+     intersect each other. Mobile gets a native scroll-snap rail instead:
+     one card per swipe, momentum and snapping owned by the OS. */
+  const [mobile, setMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 899.98px)').matches,
+  );
 
   useEffect(() => {
-    if (staticMode) return undefined;
+    const mq = window.matchMedia('(max-width: 899.98px)');
+    const onChange = () => setMobile(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  useEffect(() => {
+    if (staticMode || mobile) return undefined;
     const wrap = wrapRef.current;
     const cyl = cylRef.current;
     if (!wrap || !cyl) return undefined;
@@ -265,7 +278,7 @@ export default function ConceptCarousel({ staticMode = false }) {
       wrap.removeEventListener('keydown', onKey);
       window.removeEventListener('resize', measure);
     };
-  }, [staticMode]);
+  }, [staticMode, mobile]);
 
   if (staticMode) {
     return (
@@ -273,6 +286,21 @@ export default function ConceptCarousel({ staticMode = false }) {
         {CONCEPTS.map((item) => (
           <FaceCard item={item} key={item.key} />
         ))}
+      </div>
+    );
+  }
+
+  if (mobile) {
+    return (
+      <div className="lv-rail" role="group" aria-label="Concept builds — swipe through the shelf">
+        <div className="lv-rail-track">
+          {CONCEPTS.map((item) => (
+            <div className="lv-rail-slide" key={item.key}>
+              <FaceCard item={item} />
+            </div>
+          ))}
+        </div>
+        <p className="lv-rail-hint" aria-hidden="true">swipe · {CONCEPTS.length} concepts</p>
       </div>
     );
   }

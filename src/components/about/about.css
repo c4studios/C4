@@ -1029,3 +1029,43 @@
     transition: none !important;
   }
 }
+
+/* ═══ Garnish pass — the exhibit tilts in the hand, the seal turns.
+   Info untouched; transform-only; reduced-motion sees none of it. ═══ */
+.ab-armed .ab-exhibit-plate {
+  transform: perspective(700px) rotateX(var(--ab-rx, 0deg)) rotateY(var(--ab-ry, 0deg));
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.ab-armed .ab-exhibit-plate:hover .ab-corner {
+  opacity: 1;
+}
+
+.ab-armed .ab-exhibit-plate:hover .ab-exhibit-photo img {
+  filter: saturate(1.04) contrast(1.02);
+}
+
+.ab-exhibit-photo img {
+  transition: filter 0.4s ease;
+}
+
+/* The See Four seal turns when touched — a notary pressing the stamp. */
+.ab-cap-seal svg,
+.ab-seal svg {
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ab-cap-seal:hover svg,
+.ab-seal:hover svg {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ab-armed .ab-exhibit-plate,
+  .ab-cap-seal svg,
+  .ab-seal svg {
+    transition: none;
+    transform: none;
+  }
+}

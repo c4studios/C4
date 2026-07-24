@@ -347,6 +347,34 @@ export default function About() {
     };
   }, [staticMode]);
 
+  /* Exhibit A tilts in the hand — the founder photo leans a few degrees
+     toward the cursor like a plate being picked up (fine pointers only;
+     transform-only, cleared on leave). */
+  useEffect(() => {
+    if (staticMode) return undefined;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return undefined;
+    const root = rootRef.current;
+    const plate = root?.querySelector('.ab-exhibit-plate');
+    if (!plate) return undefined;
+    const onMove = (e) => {
+      const r = plate.getBoundingClientRect();
+      const dx = (e.clientX - r.left) / r.width - 0.5;
+      const dy = (e.clientY - r.top) / r.height - 0.5;
+      plate.style.setProperty('--ab-rx', `${(-dy * 5).toFixed(2)}deg`);
+      plate.style.setProperty('--ab-ry', `${(dx * 6).toFixed(2)}deg`);
+    };
+    const onLeave = () => {
+      plate.style.setProperty('--ab-rx', '0deg');
+      plate.style.setProperty('--ab-ry', '0deg');
+    };
+    plate.addEventListener('pointermove', onMove);
+    plate.addEventListener('pointerleave', onLeave);
+    return () => {
+      plate.removeEventListener('pointermove', onMove);
+      plate.removeEventListener('pointerleave', onLeave);
+    };
+  }, [staticMode]);
+
   useEffect(() => {
     if (staticMode) return undefined;
     const bound = boundRef.current;
