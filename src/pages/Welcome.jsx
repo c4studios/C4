@@ -22,6 +22,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { recordScan } from '@/api/submissions';
 import { createPageUrl } from '@/utils';
+import C4iWordmark from '@/components/c4/C4iWordmark';
 import '../components/hero/welcome-dark.css';
 
 const HelixCanvas = lazy(() => import('@/components/hero/HelixCanvas'));
@@ -40,11 +41,71 @@ const HEADLINE = {
 };
 /* built per-device: "finger" on touch, "cursor" with a mouse */
 const makeLines = (coarse) => ({
-  idle: `Perth web design & development — run your ${coarse ? 'finger' : 'cursor'} through the helix.`,
+  idle: `Perth studio — web, AI, brand & training. Run your ${coarse ? 'finger' : 'cursor'} through the helix.`,
   book: 'Sounds good — let’s find a time that works.',
   save: 'Saved straight to your phone — no typing.',
   folio: 'Opening the work →',
 });
+
+/* The four arms, each a button through to its own page. The mark carries
+   a hint of that arm's identity (window / chip / iris / chalk tick), tinted
+   in the arm's accent via --arm. Names + destinations match the site. */
+const ARMS = [
+  {
+    to: '/ServiceWeb',
+    name: 'Web & Applications',
+    line: 'Sites, apps and platforms — built to convert, yours to keep.',
+    color: '#e8e6e0',
+    mark: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="16" rx="2" />
+        <path d="M3 8.5h18" />
+        <circle cx="6" cy="6.25" r="0.7" fill="currentColor" stroke="none" />
+        <circle cx="8.4" cy="6.25" r="0.7" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    to: '/c4i',
+    name: (
+      <>
+        <C4iWordmark /> · AI
+      </>
+    ),
+    line: 'Private AI on your own hardware, or automations in the cloud.',
+    color: '#5a9bd8',
+    mark: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <rect x="7" y="7" width="10" height="10" rx="1.4" />
+        <path d="M10 7V4M14 7V4M10 20v-3M14 20v-3M7 10H4M7 14H4M20 10h-3M20 14h-3" />
+      </svg>
+    ),
+  },
+  {
+    to: '/Lens',
+    name: 'C4 Lens',
+    line: 'Photography, short-form video and brand identity.',
+    color: '#e0a23a',
+    mark: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <circle cx="12" cy="12" r="8.4" />
+        <circle cx="12" cy="12" r="3.1" />
+        <path d="M12 3.6v3.3M12 17.1v3.3M3.6 12h3.3M17.1 12h3.3" strokeWidth="1.3" />
+      </svg>
+    ),
+  },
+  {
+    to: '/Foresight',
+    name: 'C4Sight',
+    line: 'Hands-on AI training that leaves your team genuinely capable.',
+    color: '#54b06a',
+    mark: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M4 12.5l5 5L20 6.5" />
+      </svg>
+    ),
+  },
+];
 
 function hasWebGL() {
   try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'))); } catch { return false; }
@@ -325,18 +386,26 @@ export default function Welcome() {
           </div>
         </section>
 
-        {/* What this is */}
+        {/* What C4 does now — the four arms, each a button through */}
         <section className="sec">
           <div className="inner">
-            <div className="kick">what this is</div>
-            <h2>Websites and the systems behind them</h2>
-            <p className="body">{`C4 is a Perth web studio. I build websites, and the automations that handle the repetitive work behind them. A site on its own only does part of the job. Most of the difference comes from looking at how your business actually runs, then building to fit it.`}</p>
-            <div className="tags">
-              <span className="tag">Web &amp; Applications</span>
-              <span className="tag">Brand &amp; Growth</span>
-              <span className="tag">AI &amp; Software</span>
-              <span className="tag">C4 Lens</span>
-            </div>
+            <div className="kick">what c4 does now</div>
+            <h2>One studio, four arms.</h2>
+            <p className="body">{`It began with websites and grew. Today each side of C4 is its own craft — all built and run by me, here in Perth. Tap through to whichever fits, or book a call and I’ll point you the right way.`}</p>
+            <nav className="arms" aria-label="The four arms of C4 Studios">
+              {ARMS.map((arm) => (
+                <Link className="arm" key={arm.to} to={arm.to} style={{ '--arm': arm.color }}>
+                  <span className="arm-mark">{arm.mark}</span>
+                  <span className="arm-txt">
+                    <b>{arm.name}</b>
+                    <span>{arm.line}</span>
+                  </span>
+                  <svg className="arm-go" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </Link>
+              ))}
+            </nav>
           </div>
         </section>
 

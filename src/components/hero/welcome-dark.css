@@ -112,6 +112,38 @@
 
 .cwd .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 .cwd .tag { font-size: 12.5px; padding: 7px 14px; border-radius: 999px; border: 0.5px solid rgba(255, 255, 255, 0.16); color: rgba(243, 242, 239, 0.8); transition: border-color 0.3s, color 0.3s; }
+
+/* The four arms — a nav, not a card grid; each row carries its arm's
+   accent via --arm, on a hairline-separated list. */
+.cwd .arms { display: flex; flex-direction: column; margin-top: 22px; }
+.cwd .arm {
+  position: relative; display: flex; align-items: center; gap: 15px;
+  padding: 15px 6px 15px 2px; text-decoration: none; color: inherit;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+  transition: padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s;
+  -webkit-tap-highlight-color: transparent;
+}
+.cwd .arm:last-child { border-bottom: 0.5px solid rgba(255, 255, 255, 0.1); }
+.cwd .arm-mark {
+  flex-shrink: 0; display: grid; place-items: center; width: 42px; height: 42px;
+  border-radius: 11px; color: var(--arm);
+  background: color-mix(in srgb, var(--arm) 11%, transparent);
+  border: 0.5px solid color-mix(in srgb, var(--arm) 38%, transparent);
+  transition: box-shadow 0.35s, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background 0.35s;
+}
+.cwd .arm-mark svg { width: 21px; height: 21px; }
+.cwd .arm-txt { flex: 1; min-width: 0; }
+.cwd .arm-txt b { display: block; font-weight: 500; font-size: 15.5px; color: #f4f2ef; letter-spacing: -0.01em; transition: color 0.3s; }
+.cwd .arm-txt > span { display: block; margin-top: 3px; font-size: 13px; line-height: 1.5; color: rgba(243, 242, 239, 0.6); }
+.cwd .arm-go { flex-shrink: 0; color: rgba(243, 242, 239, 0.28); transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s; }
+@media (hover: hover) {
+  .cwd .arm:hover { padding-left: 9px; border-color: color-mix(in srgb, var(--arm) 42%, rgba(255, 255, 255, 0.1)); }
+  .cwd .arm:hover .arm-mark { transform: translateY(-1px); background: color-mix(in srgb, var(--arm) 18%, transparent); box-shadow: 0 0 20px -3px color-mix(in srgb, var(--arm) 60%, transparent); }
+  .cwd .arm:hover .arm-txt b { color: #fff; }
+  .cwd .arm:hover .arm-go { color: var(--arm); transform: translateX(4px); }
+}
+.cwd .arm:active .arm-mark { transform: scale(0.95); }
+.cwd .arm:focus-visible { outline: 2px solid rgba(244, 242, 239, 0.75); outline-offset: 2px; border-radius: 8px; }
 .cwd .rows { margin-top: 8px; display: flex; flex-direction: column; }
 .cwd .row { position: relative; display: block; padding: 18px 30px 18px 0; text-decoration: none; color: inherit; cursor: pointer; border-top: 0.5px solid rgba(255, 255, 255, 0.1); transition: padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s; }
 .cwd .row::after { content: '→'; position: absolute; top: 18px; right: 2px; font-size: 15px; color: rgba(243, 242, 239, 0.3); transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s; }

@@ -58,7 +58,7 @@ export default function FinalCTA() {
                 to={createPageUrl('Contact')}
                 className="hm-textlink group"
               >
-                Or send a general brief
+                Or just send a message
                 <ArrowRight size={12} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
               </Link>
             </div>

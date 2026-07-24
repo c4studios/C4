@@ -2,7 +2,7 @@
   "version": 2,
   "sourceUrl": "https://www.dsracingkarts.com.au",
   "slug": "dsracingkarts-com-au",
-  "timestamp": "2026-04-18T11:55:27.921Z",
+  "timestamp": "2026-07-24T10:47:25.454Z",
   "curated": true,
   "devices": {
     "desktop": {
@@ -10,7 +10,7 @@
         "width": 1440,
         "height": 900
       },
-      "captureCount": 26,
+      "captureCount": 30,
       "captures": [
         {
           "id": "01-hero",
@@ -23,12 +23,31 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 61147,
+          "bytes": 830417,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
           "filePath": "desktop/01-hero.png",
+          "manualNote": null
+        },
+        {
+          "id": "02-trust-banner",
+          "label": "trust-banner",
+          "caption": "Trust banner — Race-Ready Parts, Expert Service, Australia-Wide shipping",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 880,
+            "w": 1440,
+            "h": 200
+          },
+          "bytes": 95061,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-trust-banner.png",
           "manualNote": null
         },
         {
@@ -42,13 +61,32 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 83675,
+          "bytes": 80859,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
           "filePath": "desktop/03-game-teaser.png",
           "manualNote": null
+        },
+        {
+          "id": "04-game-racing",
+          "label": "game-racing",
+          "caption": "DSR Grand Prix in action — two karts racing head-to-head on The Circuit",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 1050,
+            "w": 1440,
+            "h": 900
+          },
+          "bytes": 86924,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-game-racing.png",
+          "manualNote": "Capture while game is actively running mid-race"
         },
         {
           "id": "05-categories",
@@ -61,7 +99,7 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 222373,
+          "bytes": 335959,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -80,7 +118,7 @@
             "w": 1440,
             "h": 1000
           },
-          "bytes": 480995,
+          "bytes": 631838,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -99,7 +137,7 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 434666,
+          "bytes": 554441,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -118,7 +156,7 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 424371,
+          "bytes": 603778,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -137,7 +175,7 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 565034,
+          "bytes": 539749,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -156,7 +194,7 @@
             "w": 1440,
             "h": 600
           },
-          "bytes": 93936,
+          "bytes": 484412,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -175,7 +213,7 @@
             "w": 1440,
             "h": 1100
           },
-          "bytes": 150591,
+          "bytes": 112100,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -194,7 +232,7 @@
             "w": 1440,
             "h": 1000
           },
-          "bytes": 155895,
+          "bytes": 77703,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -213,7 +251,7 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 43449,
+          "bytes": 36229,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -232,7 +270,7 @@
             "w": 1440,
             "h": 1000
           },
-          "bytes": 38267,
+          "bytes": 31685,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -251,7 +289,7 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 68155,
+          "bytes": 112100,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -270,7 +308,7 @@
             "w": 1440,
             "h": 1100
           },
-          "bytes": 544551,
+          "bytes": 565455,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -289,7 +327,7 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 301671,
+          "bytes": 311521,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -308,7 +346,7 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 745933,
+          "bytes": 417306,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -327,7 +365,7 @@
             "w": 1440,
             "h": 1000
           },
-          "bytes": 154166,
+          "bytes": 133605,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -346,7 +384,7 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 104963,
+          "bytes": 153823,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -365,7 +403,7 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 318379,
+          "bytes": 116475,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -384,7 +422,7 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 111044,
+          "bytes": 321800,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -403,7 +441,7 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 88768,
+          "bytes": 73514,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -422,7 +460,7 @@
             "w": 1440,
             "h": 1000
           },
-          "bytes": 92623,
+          "bytes": 85108,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -441,7 +479,7 @@
             "w": 1040,
             "h": 700
           },
-          "bytes": 50097,
+          "bytes": 64649,
           "dimensions": {
             "width": 1040,
             "height": 700
@@ -460,10 +498,10 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 44699,
+          "bytes": 543883,
           "dimensions": {
             "width": 1440,
-            "height": 500
+            "height": 900
           },
           "filePath": "desktop/26-scroll-video.png",
           "manualNote": null
@@ -479,13 +517,51 @@
             "w": 1440,
             "h": 1000
           },
-          "bytes": 51310,
+          "bytes": 202987,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
           "filePath": "desktop/27-admin-dashboard.png",
           "manualNote": "Requires admin auth — will capture login redirect or whatever is visible"
+        },
+        {
+          "id": "28-admin-products",
+          "label": "admin-products",
+          "caption": "Admin product management — search, status filter, stock colour coding, pagination",
+          "page": "/admin/products",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 1000
+          },
+          "bytes": 193455,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/28-admin-products.png",
+          "manualNote": "Requires admin auth"
+        },
+        {
+          "id": "29-admin-editor",
+          "label": "admin-editor",
+          "caption": "Admin product editor — images, variations, inventory, categories, SEO fields",
+          "page": "/admin/products",
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1440,
+            "h": 1000
+          },
+          "bytes": 485388,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/29-admin-editor.png",
+          "manualNote": "Requires admin auth + specific product open"
         },
         {
           "id": "30-404",
@@ -498,7 +574,7 @@
             "w": 1440,
             "h": 900
           },
-          "bytes": 46617,
+          "bytes": 40458,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -513,7 +589,7 @@
         "width": 430,
         "height": 932
       },
-      "captureCount": 8,
+      "captureCount": 9,
       "captures": [
         {
           "id": "01-hero",
@@ -526,12 +602,31 @@
             "w": 430,
             "h": 932
           },
-          "bytes": 99694,
+          "bytes": 1640509,
           "dimensions": {
             "width": 860,
             "height": 1864
           },
           "filePath": "mobile/01-hero.png",
+          "manualNote": null
+        },
+        {
+          "id": "02-game",
+          "label": "game",
+          "caption": "Mobile game with touch controls",
+          "page": "/",
+          "crop": {
+            "x": 0,
+            "y": 900,
+            "w": 430,
+            "h": 932
+          },
+          "bytes": 182509,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-game.png",
           "manualNote": null
         },
         {
@@ -545,7 +640,7 @@
             "w": 430,
             "h": 1200
           },
-          "bytes": 194007,
+          "bytes": 268913,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -564,7 +659,7 @@
             "w": 430,
             "h": 1000
           },
-          "bytes": 202413,
+          "bytes": 268913,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -583,7 +678,7 @@
             "w": 430,
             "h": 932
           },
-          "bytes": 67992,
+          "bytes": 54298,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -602,7 +697,7 @@
             "w": 430,
             "h": 932
           },
-          "bytes": 59944,
+          "bytes": 44129,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -621,7 +716,7 @@
             "w": 430,
             "h": 932
           },
-          "bytes": 86599,
+          "bytes": 928623,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -640,7 +735,7 @@
             "w": 430,
             "h": 1200
           },
-          "bytes": 581440,
+          "bytes": 643681,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -659,7 +754,7 @@
             "w": 430,
             "h": 1200
           },
-          "bytes": 140396,
+          "bytes": 137964,
           "dimensions": {
             "width": 860,
             "height": 1864

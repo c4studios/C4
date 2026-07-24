@@ -14,7 +14,7 @@
    ───────────────────────────────────────────────────────────────── */
 import React, { useLayoutEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import C4iWordmark from '@/components/c4/C4iWordmark';
 import { gsap, EASE, revealHeading, useStaticMode } from './homeMotion';
 
@@ -174,8 +174,8 @@ const DOORS = [
       'Custom marketing sites, web apps and SaaS platforms — fast, refined, and built to convert. You own the codebase end-to-end.',
     fromPrice: 'From $500',
     timeframe: '2–3 weeks',
-    primary: { label: 'Start a website brief', to: '/start?service=web_design' },
-    secondary: { label: 'See web packages', to: '/ServiceWeb' },
+    primary: { label: 'See the web work', to: '/ServiceWeb' },
+    secondary: { label: 'or start a web brief', to: '/start?service=web_design' },
   },
   {
     key: 'c4i',
@@ -200,7 +200,7 @@ const DOORS = [
       ),
       to: '/c4i',
     },
-    secondary: { label: 'Private AI', to: '/private-ai' },
+    secondary: { label: 'or scope an AI build', to: '/start?service=automation' },
   },
   {
     key: 'lens',
@@ -213,8 +213,8 @@ const DOORS = [
       'Photography, short-form video and brand identity — a coherent visual system for Perth businesses ready to retire stock.',
     fromPrice: 'From $200',
     timeframe: 'Half / full-day shoots',
-    primary: { label: 'Book a shoot', to: '/start?service=lens' },
-    secondary: { label: 'Visit C4 Lens', to: '/Lens' },
+    primary: { label: 'Visit C4 Lens', to: '/Lens' },
+    secondary: { label: 'or book a shoot', to: '/start?service=lens' },
   },
   {
     key: 'sight',
@@ -227,8 +227,8 @@ const DOORS = [
       'Practical, hands-on AI workshops that leave your team genuinely capable, using their own tools on their own work.',
     fromPrice: 'From $800',
     timeframe: 'Half / full-day',
-    primary: { label: 'Enquire about training', to: '/ai-training-enquiry' },
-    secondary: { label: 'Visit C4Sight', to: '/Foresight' },
+    primary: { label: 'Visit C4Sight', to: '/Foresight' },
+    secondary: { label: 'or enquire about training', to: '/ai-training-enquiry' },
   },
 ];
 
@@ -348,7 +348,7 @@ export default function FourDoors() {
                   </Link>
                   <Link to={door.secondary.to} className="hm-door-sec group">
                     {door.secondary.label}
-                    <ArrowUpRight size={11} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <ArrowRight size={11} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
                   </Link>
                 </div>
               </div>

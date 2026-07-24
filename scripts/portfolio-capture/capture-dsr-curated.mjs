@@ -731,6 +731,9 @@ async function main() {
   console.log(`Output: ${OUT_ROOT}\n`);
 
   const browser = await chromium.launch({
+    // Real Chrome ships the h.264 codecs the bundled Chromium lacks — without
+    // this the DSR autoplay-video hero captures as a black frame.
+    channel: 'chrome',
     headless: true,
     args: [
       '--autoplay-policy=no-user-gesture-required',
