@@ -15,7 +15,7 @@
  * Plain rAF drives the rotation (one transform write per frame on one
  * element) — no motion library needed at this size.
  */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import cptBarrys from './assets/cpt-barrys.webp';
@@ -100,12 +100,14 @@ function FaceCard({ item }) {
 export default function ConceptCarousel({ staticMode = false }) {
   const wrapRef = useRef(null);
   const cylRef = useRef(null);
+  const [hinted, setHinted] = useState(false);
 
   useEffect(() => {
     if (staticMode) return undefined;
     const wrap = wrapRef.current;
     const cyl = cylRef.current;
     if (!wrap || !cyl) return undefined;
+    const faces = [...cyl.querySelectorAll('.lv-cyl-face')];
 
     /* Geometry: faces sit on a drum whose radius comes from the wrap
        width, re-measured on resize. */
@@ -114,7 +116,7 @@ export default function ConceptCarousel({ staticMode = false }) {
       const w = wrap.clientWidth || 1200;
       const circumference = Math.min(w * 1.85, 1780);
       radius = circumference / (2 * Math.PI);
-      cyl.querySelectorAll('.lv-cyl-face').forEach((face, i) => {
+      faces.forEach((face, i) => {
         face.style.transform = `translate(-50%, -50%) rotateY(${i * STEP}deg) translateZ(${radius}px)`;
       });
     };
@@ -142,6 +144,12 @@ export default function ConceptCarousel({ staticMode = false }) {
         }
       }
       cyl.style.transform = `rotate3d(0, 1, 0, ${rot}deg)`;
+      /* Depth grading: the face turned toward the camera brightens and
+         steps forward; the ones turning away dim — 5 style writes/frame. */
+      faces.forEach((face, i) => {
+        const facing = Math.cos(((rot + i * STEP) * Math.PI) / 180);
+        face.style.setProperty('--facing', ((facing + 1) / 2).toFixed(3));
+      });
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -154,6 +162,7 @@ export default function ConceptCarousel({ staticMode = false }) {
       vel = 0;
       wrap.setAttribute('data-dragging', '');
       wrap.setPointerCapture?.(e.pointerId);
+      setHinted(true); /* first touch retires the drag hint */
     };
     const onMove = (e) => {
       if (!dragging) return;
@@ -246,6 +255,9 @@ export default function ConceptCarousel({ staticMode = false }) {
           </div>
         ))}
       </div>
+      <span className={`lv-cyl-hint${hinted ? ' is-done' : ''}`} aria-hidden="true">
+        ↔ drag to spin
+      </span>
     </div>
   );
 }
