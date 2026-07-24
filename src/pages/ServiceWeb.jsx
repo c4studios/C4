@@ -463,6 +463,8 @@ export default function ServiceWeb() {
       (ctx) => {
         const { desk } = ctx.conditions;
         const q = gsap.utils.selector(root);
+        /* Pointer-listener cleanups (magnetic CTAs, the EA torch). */
+        const magnetCleanups = [];
 
         /* Quiet one-shot arrival: a short rise, nothing theatrical. */
         const rise = (el, vars = {}) => {
@@ -583,6 +585,15 @@ export default function ServiceWeb() {
                 invalidateOnRefresh: true,
               },
             });
+            /* The playhead tracks the reel on the same transit. */
+            const scrub = hvn.querySelector('.lv-hvn-scrub i');
+            if (scrub) {
+              gsap.fromTo(scrub, { scaleX: 0 }, {
+                scaleX: 1,
+                ease: 'none',
+                scrollTrigger: { trigger: hvn, start: 'top 80%', end: 'bottom 12%', scrub: 1 },
+              });
+            }
           }
         }
 
@@ -656,6 +667,24 @@ export default function ServiceWeb() {
               scrollTrigger: { trigger: ea, start: 'top 70%', once: true },
             },
           );
+          /* The UV torch — a forensic light that follows the cursor
+             over the evidence photo (fine pointers only). */
+          const fig = ea.querySelector('.lv-ea-fig');
+          if (fig && desk && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+            const torchMove = (e) => {
+              const r = fig.getBoundingClientRect();
+              fig.style.setProperty('--tx', `${(((e.clientX - r.left) / r.width) * 100).toFixed(2)}%`);
+              fig.style.setProperty('--ty', `${(((e.clientY - r.top) / r.height) * 100).toFixed(2)}%`);
+              fig.setAttribute('data-torch', '');
+            };
+            const torchLeave = () => fig.removeAttribute('data-torch');
+            fig.addEventListener('pointermove', torchMove);
+            fig.addEventListener('pointerleave', torchLeave);
+            magnetCleanups.push(() => {
+              fig.removeEventListener('pointermove', torchMove);
+              fig.removeEventListener('pointerleave', torchLeave);
+            });
+          }
         }
 
         /* Static case frames: staggered arrivals, focus-in, and a
@@ -728,7 +757,6 @@ export default function ServiceWeb() {
         /* ── Magnetic primaries (fine pointers, desktop): the red CTAs
            lean toward the cursor inside their own hitbox and glide
            back on leave. Transform-only; capped ±12/±8px. */
-        const magnetCleanups = [];
         if (desk && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
           q('.lv-btn').forEach((btn) => {
             const xTo = gsap.quickTo(btn, 'x', { duration: 0.4, ease: 'power3.out' });
@@ -855,7 +883,14 @@ export default function ServiceWeb() {
     };
   }, [openCase, staticMode]);
 
-  const monthlyNote = `${subscriptionInfo.howItWorks} ${subscriptionInfo.whatsIncluded} ${subscriptionInfo.ownership} ${subscriptionInfo.cancellation}`;
+  /* Smooth-jump to the rate card (Lenis owns scroll when armed). */
+  const skipToPricing = () => {
+    const target = document.getElementById('lv-pricing');
+    if (!target) return;
+    const lenis = lenisRef.current;
+    if (lenis) lenis.scrollTo(target, { offset: -12 });
+    else target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
     <div className="lv-root" ref={rootRef}>
@@ -883,6 +918,10 @@ export default function ServiceWeb() {
                 <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
               </Link>
             </div>
+            <button type="button" className="lv-skip" onClick={skipToPricing}>
+              Skip to pricing &amp; packages
+              <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" style={{ transform: 'rotate(90deg)' }} />
+            </button>
           </>
         }
       />
@@ -999,6 +1038,13 @@ export default function ServiceWeb() {
               ))}
             </div>
           </div>
+          {/* The playhead — scroll scrubs the reel; this is its timecode. */}
+          <div className="lv-frame">
+            <div className="lv-hvn-scrub" aria-hidden="true">
+              <i />
+            </div>
+            <p className="lv-cap lv-hvn-count">6 frames · scroll to scrub</p>
+          </div>
         </div>
 
         {/* ── Tidy Gardens — its own vine, drawn by the scroll. ─────── */}
@@ -1039,6 +1085,7 @@ export default function ServiceWeb() {
           <div className="lv-frame lv-ea-grid">
             <figure className="lv-ea-fig">
               <img src={EA_SHOW.img} width={EA_SHOW.w} height={EA_SHOW.h} loading="lazy" decoding="async" alt={EA_SHOW.alt} />
+              <span className="lv-ea-torch" aria-hidden="true" />
             </figure>
             <div>
               <p className="lv-client">{EA_SHOW.name}</p>
@@ -1172,7 +1219,7 @@ export default function ServiceWeb() {
       </section>
 
       {/* ══ The rate card ═══════════════════════════════════════════ */}
-      <section className="lv-rate">
+      <section className="lv-rate" id="lv-pricing">
         <div className="lv-frame">
           <div className="lv-rate-head">
             <div>
@@ -1190,10 +1237,42 @@ export default function ServiceWeb() {
             </div>
           </div>
 
-          <div className={`lv-subnote${isMonthly ? ' is-open' : ''}`} aria-hidden={!isMonthly}>
-            <div>
-              <p>{monthlyNote}</p>
-            </div>
+          {/* The two ways to pay — always visible, honestly compared.
+              The switch and these cards mirror each other. */}
+          <div className="lv-paywise" data-mode={isMonthly ? 'monthly' : 'once'}>
+            <button
+              type="button"
+              className="lv-payway lv-payway--once"
+              aria-pressed={!isMonthly}
+              onClick={() => setBilling('once')}
+            >
+              <span className="lv-payway-head">
+                <b>Pay once</b>
+                <span className="lv-payway-badge" aria-hidden="true">{isMonthly ? '' : 'Selected'}</span>
+              </span>
+              <ul>
+                <li>One payment — the lowest total cost of the two.</li>
+                <li>Full code and account handover at launch. You own it all from day one.</li>
+                <li>No ongoing commitment — hosting and support plans are optional add-ons.</li>
+              </ul>
+            </button>
+            <button
+              type="button"
+              className="lv-payway lv-payway--monthly"
+              aria-pressed={isMonthly}
+              onClick={() => setBilling('monthly')}
+            >
+              <span className="lv-payway-head">
+                <b>Monthly</b>
+                <span className="lv-payway-badge" aria-hidden="true">{isMonthly ? 'Selected' : ''}</span>
+              </span>
+              <ul>
+                <li>{subscriptionInfo.howItWorks}</li>
+                <li>Included while you pay: {subscriptionInfo.whatsIncluded}</li>
+                <li>{subscriptionInfo.ownership}</li>
+                <li>{subscriptionInfo.cancellation}</li>
+              </ul>
+            </button>
           </div>
 
           {SECTIONS.map((section) => (

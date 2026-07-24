@@ -770,3 +770,137 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   .lens-flare { display: none; }
   .site-back::after { transition: none; }
 }
+
+/* ═══════════ § 00 — THE WIDEST SHOT (LensCosmos interlude) ═══════════
+   A scroll passage seen through a rear lens element: worlds drift, the
+   camera commits to one, it turns out to be Earth — marker on Perth.
+   Self-contained; nothing here touches the hero's iris system. */
+.cosmos {
+  position: relative;
+  height: 260vh;
+  background: #040507;
+}
+
+.cosmos-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+  display: grid;
+  place-items: center;
+}
+
+.cosmos-head {
+  position: absolute;
+  top: clamp(26px, 6vh, 64px);
+  left: clamp(20px, 6vw, 72px);
+  right: clamp(20px, 6vw, 72px);
+  z-index: 2;
+}
+
+.cosmos-title {
+  margin: 14px 0 0;
+  font-size: clamp(1.7rem, 4.2vw, 3.4rem);
+  line-height: 1.02;
+  letter-spacing: 0.01em;
+  color: #f4f1ea;
+  text-transform: uppercase;
+}
+
+.cosmos-title em {
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.cosmos-sub {
+  margin: 12px 0 0;
+  font-size: 13.5px;
+  letter-spacing: 0.04em;
+  color: rgba(244, 241, 234, 0.55);
+}
+
+/* The rear element — barrel ring, f-ticks, glass. */
+.cosmos-ring {
+  position: relative;
+  width: min(72vh, 88vw, 720px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.03),
+    0 0 0 7px rgba(255, 255, 255, 0.07),
+    inset 0 0 60px rgba(0, 0, 0, 0.65),
+    0 30px 90px rgba(0, 0, 0, 0.5);
+  background: #06070a;
+}
+
+.cosmos-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* f-stop ticks orbiting the element. */
+.cosmos-ticks {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: repeating-conic-gradient(
+    rgba(255, 255, 255, 0.3) 0deg 0.5deg,
+    transparent 0.5deg 12deg
+  );
+  -webkit-mask: radial-gradient(closest-side, transparent 95.4%, #000 95.6%, #000 98.6%, transparent 98.9%);
+  mask: radial-gradient(closest-side, transparent 95.4%, #000 95.6%, #000 98.6%, transparent 98.9%);
+  opacity: 0.7;
+}
+
+.cosmos-cap {
+  position: absolute;
+  bottom: clamp(24px, 5.5vh, 56px);
+  left: 50%;
+  translate: -50%;
+  margin: 0;
+  z-index: 2;
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #cfd6df;
+  white-space: nowrap;
+  opacity: 0; /* the canvas sequence hands this in at the end */
+}
+
+@media (max-width: 760px) {
+  .cosmos {
+    height: 220vh;
+  }
+
+  .cosmos-ring {
+    width: min(88vw, 58vh);
+  }
+
+  .cosmos-cap {
+    white-space: normal;
+    text-align: center;
+    width: 88vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cosmos {
+    height: auto;
+  }
+
+  .cosmos-sticky {
+    position: relative;
+    height: 100svh;
+  }
+
+  .cosmos-cap {
+    opacity: 1 !important;
+  }
+}

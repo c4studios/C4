@@ -23,6 +23,7 @@ import { c4LensPackages } from '@/data/pricing';
 import gsap from 'gsap';
 
 import { reassertStoredTheme } from '../components/c4/ThemeContext';
+import LensCosmos from '../components/lens/LensCosmos';
 import '../components/lens/lens.css';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema, videoObjectSchema } from '@/lib/schema';
@@ -1701,6 +1702,9 @@ export default function Lens() {
           </div>
         </div>
       </div>
+
+      {/* ════ § 00 — THE WIDEST SHOT (the cosmos interlude) ════ */}
+      <LensCosmos />
 
       {/* â•â•â•â•â•â•â•â• WHAT WE CAPTURE — full-viewport paint canvas â•â•â•â•â•â•â•â• */}
       <section className="capture" id="capture">
