@@ -50,6 +50,7 @@ import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
 import { c4SightPackages, C4SIGHT_PRICING_NOTE } from '@/data/pricing';
+import { reassertStoredTheme } from '../components/c4/ThemeContext';
 import '../components/sight-arm/sight-arm.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -394,7 +395,6 @@ function SmearBand({ variant, streaks, excludeId }) {
 function useForceDark() {
   useEffect(() => {
     const root = document.documentElement;
-    const prev = root.className;
     const apply = () => {
       root.classList.add('dark-mode', 'sg-on-board');
       root.classList.remove('light-mode', 'vivid');
@@ -409,8 +409,7 @@ function useForceDark() {
     const id = window.setTimeout(apply, 0);
     return () => {
       window.clearTimeout(id);
-      root.className = prev;
-      root.classList.remove('sg-on-board');
+      reassertStoredTheme();
     };
   }, []);
 }
@@ -1038,10 +1037,7 @@ export default function Foresight() {
                       ) : (
                         <>
                           {item.slice(0, at)}
-                          <em className="sg-corrected" data-sg-late="">
-                            “{marked}”
-                            <MarkSquiggle />
-                          </em>
+                          <em>“{marked}”</em>
                           {item.slice(at + marked.length)}
                         </>
                       )}
@@ -1091,12 +1087,12 @@ export default function Foresight() {
             <h2 className="sg-h2">Indicative pricing.</h2>
             {priceSum && (
               <p className="sg-hand sg-price-hand" data-sg-hand="" aria-hidden="true">
-                from {priceSum.full} − from {priceSum.half} ={' '}
+                only{' '}
                 <span className="sg-hand-em">
                   {priceSum.diff}
                   <MarkUnderline />
                 </span>{' '}
-                → the whole afternoon
+                more → the whole afternoon
               </p>
             )}
           </div>

@@ -22,6 +22,7 @@ import { createPageUrl } from '@/utils';
 import { c4LensPackages } from '@/data/pricing';
 import gsap from 'gsap';
 
+import { reassertStoredTheme } from '../components/c4/ThemeContext';
 import '../components/lens/lens.css';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema, videoObjectSchema } from '@/lib/schema';
@@ -72,10 +73,9 @@ const LENS_JSONLD = [
 function useForceDark() {
   useEffect(() => {
     const root = document.documentElement;
-    const prev = root.className;
     root.classList.add('dark-mode');
     root.classList.remove('light-mode', 'vivid');
-    return () => { root.className = prev; };
+    return () => { reassertStoredTheme(); };
   }, []);
 }
 

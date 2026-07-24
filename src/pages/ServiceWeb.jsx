@@ -60,6 +60,7 @@ import {
 } from '@/data/pricing';
 import GradientText from '../components/web-arm/GradientText';
 import ContainerScroll from '../components/web-arm/ContainerScroll';
+import { reassertStoredTheme } from '../components/c4/ThemeContext';
 import '../components/web-arm/web-arm.css';
 
 /* Derived capture assets — generated from public/captures (read-only)
@@ -373,7 +374,6 @@ function PriceOdometer({ label, animate }) {
 function useForceLight() {
   useEffect(() => {
     const root = document.documentElement;
-    const prev = root.className;
     const assertLight = () => {
       if (
         !root.classList.contains('light-mode') ||
@@ -390,8 +390,7 @@ function useForceLight() {
     observer.observe(root, { attributes: true, attributeFilter: ['class'] });
     return () => {
       observer.disconnect();
-      root.className = prev;
-      root.classList.remove('lv-on-stage');
+      reassertStoredTheme();
     };
   }, []);
 }

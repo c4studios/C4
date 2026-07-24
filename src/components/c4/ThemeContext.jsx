@@ -154,6 +154,24 @@ function applyTokens(tokens) {
   });
 }
 
+/* Re-apply the visitor's stored theme after a forced-chrome arm page unmounts.
+   Arm pages (Foresight/Lens/ServiceAI/ServiceWeb) skew the theme CLASS and add a
+   marker that CSS-pins the chrome tokens. They used to restore a stale className
+   snapshot on unmount, which — because a child page's effect can run before
+   ThemeProvider's — could strand the site with no theme class (the black-home
+   bug). This restores the class from the stored preference and strips every arm
+   marker. Inline --c4-* tokens belong to ThemeProvider and are left untouched;
+   they already reflect the visitor's theme. */
+export function reassertStoredTheme() {
+  const root = document.documentElement;
+  root.classList.remove('sg-on-board', 'cw-on-board', 'lv-on-stage', 'wa-on-sheet', 'vivid');
+  let pref = 'system';
+  try { pref = localStorage.getItem('c4-theme-pref') || 'system'; } catch {}
+  const dark = pref === 'dark' || (pref === 'system' && getSystemPreference() === 'dark');
+  root.classList.toggle('dark-mode', dark);
+  root.classList.toggle('light-mode', !dark);
+}
+
 export function ThemeProvider({ children }) {
   const [preference, setPreference] = useState(() => {
     try {
