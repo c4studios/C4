@@ -117,6 +117,10 @@ function CanvasHeatmap() {
     const rect = parentRef.current
       ? parentRef.current.getBoundingClientRect()
       : parent.getBoundingClientRect();
+    /* The hero may not be laid out yet (Firefox/Opera are slower than a
+       single rAF). Sizing the canvas to 0 here left it permanently blank
+       — bail and let the ResizeObserver rebuild once the size is real. */
+    if (rect.width < 1 || rect.height < 1) return;
     stateRef.current.width = rect.width;
     stateRef.current.height = rect.height;
     canvas.width = Math.round(rect.width * dpr);
@@ -358,6 +362,19 @@ function CanvasHeatmap() {
     });
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
+    /* Cross-browser robustness: rebuild whenever the hero gains or changes
+       its real size. The single deferred rAF above is enough on Chromium/
+       Safari, but Firefox and Opera can still be 0-height then, which left
+       the canvas blank until an unrelated window resize. The observer
+       catches the late layout on every engine. */
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(rafRef.current);
+      stateRef.current.last = 0;
+      setupCanvas();
+      rafRef.current = requestAnimationFrame(loop);
+    });
+    if (parentRef.current) ro.observe(parentRef.current);
+
     return () => {
       window.removeEventListener('resize', onResize);
       window.removeEventListener('pointermove', onPointerMove);
@@ -365,6 +382,7 @@ function CanvasHeatmap() {
       cancelAnimationFrame(setupId);
       cancelAnimationFrame(rafRef.current);
       observer.disconnect();
+      ro.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -699,6 +717,15 @@ function FirefoxHeatmap() {
       attributeFilter: ['class'],
     });
 
+    /* Same cross-browser guard as the canvas path: build() bails when the
+       container is 0×0 (line ~416), and on Firefox/Opera it often is after
+       one rAF — leaving the tiles empty. Rebuild the moment the hero gets
+       a real size. */
+    const ro = new ResizeObserver(() => {
+      gridState = build();
+    });
+    ro.observe(container);
+
     return () => {
       cancelAnimationFrame(setupId);
       cancelAnimationFrame(currentRaf);
@@ -706,6 +733,7 @@ function FirefoxHeatmap() {
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerdown', onPointerDown);
       observer.disconnect();
+      ro.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

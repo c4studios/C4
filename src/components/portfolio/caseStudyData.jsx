@@ -2248,6 +2248,188 @@ export const CASE_STUDIES = {
       'Optional cloud sync so both campuses can share content updates from one place',
     ],
   },
+  'veer': {
+    slug: 'veer',
+    name: 'VEER',
+    oneLiner: 'A concept site for a wireless handlebar-end bike turn indicator — grab the 3D handlebar on the hero, steer past the detent, and the real amber signal fires.',
+    client: 'Concept — VEER, a wireless handlebar-end bicycle turn indicator',
+    location: 'Australia',
+    timeline: '',
+    budget: '',
+    role: 'Solo (concept, design, development, deployment)',
+    liveUrl: 'https://veer-demo.netlify.app',
+    year: '2026',
+    category: 'web_design',
+    tags: ['Website', 'Concept', 'Product / Hardware', '3D / WebGL', 'Motion Design', 'Brand'],
+    featured: false,
+    concept: true,
+    budgetOrder: 0,
+
+    cover: null,
+    brandColor: '#F5A623',
+    backdropStyle: { backgroundColor: '#0b0b0c' },
+    thumbnail: '/captures/veer-demo-netlify-app/desktop/01-hero.png',
+
+    overview: "VEER is a self-initiated concept site for a wireless, handlebar-end bicycle turn indicator — the kind of product page C4 ships to prove what a hardware brand's launch could feel like. Its entire pitch is a single interaction: on the home hero a real 3D handlebar sits at the bottom of the fold, and you grab and steer it — pull past a detent and the corresponding amber lamp arms and fires the genuine turn-signal cadence. From there the site reads as four art-directed places, each with its own hero and a signature 'veer' page transition: an AirPods-style pinned product tour, a firmware 'thumb-switch bench' you can actually drive, and a brand story. It's a complete, deployable product-marketing site built to be felt, not just read — capture-safe, pointer- and reduced-motion-aware, and honest about the physics of the device it's selling. Available to license or commission as the foundation for a real hardware launch.",
+
+    screenshots: [
+      { url: '/captures/veer-demo-netlify-app/desktop/01-hero.png', caption: 'Home hero — "Be seen from the side." over the grab-and-steer 3D handlebar; steering past the detent fires the amber turn signal.' },
+      { url: '/captures/veer-demo-netlify-app/desktop/02-product.png', caption: 'Product — an AirPods-style pinned, scroll-driven tour that walks the device feature by feature.' },
+      { url: '/captures/veer-demo-netlify-app/desktop/03-tech.png', caption: 'Tech — a firmware thumb-switch bench: hold a paddle to drive the signal HUD, with auto-cancel, hazard and a live tick readout.' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/veer-demo-netlify-app/desktop/01-hero.png', caption: 'Home hero with the grab-and-steer 3D handlebar.' },
+      { url: '/captures/veer-demo-netlify-app/desktop/02-product.png', caption: 'AirPods-style pinned product tour.' },
+      { url: '/captures/veer-demo-netlify-app/desktop/03-tech.png', caption: 'Firmware thumb-switch bench.' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/veer-demo-netlify-app/mobile/01-hero.png', caption: 'Mobile hero — the same grab-and-steer handlebar with a "Drag the bar to steer" hint.' },
+    ],
+
+    delivered: [
+      'Art-directed, multi-route product-marketing site (home, product, tech, story) with a signature "veer" page transition between sections.',
+      'Interactive 3D hero — a real handlebar model you grab and steer; pulling past a detent arms and fires the amber turn signal.',
+      'A live signalling model: lamps pre-glow on proximity and flash at the true turn-signal cadence, with arbitration so navigation always wins.',
+      'A pinned, scroll-driven "AirPods-style" product tour.',
+      'A firmware thumb-switch bench — hold a paddle (pointer, Space or arrow keys) to drive a signal HUD with auto-cancel, hazard and a live tick readout.',
+      'A deterministic, capture-safe hero (finished on first paint, no content-gating entrance) with a primary CTA into the product page.',
+      'Pointer- and reduced-motion-aware throughout; the 3D canvas takes no pointer events so the copy and CTA above it stay live.',
+    ],
+
+    features: [
+      'Grab-and-steer 3D handlebar hero — drag past the detent to fire the amber signal.',
+      'Live signalling: proximity pre-glow + true turn-signal flash cadence, navigation-priority arbitration.',
+      'Pinned, scroll-driven product tour.',
+      'Playable firmware thumb-switch bench (pointer / Space / arrow keys) with auto-cancel and hazard.',
+      'Per-route art direction with a signature page transition.',
+      'Deterministic, capture-safe hero; reduced-motion and keyboard safe.',
+    ],
+
+    stack: [
+      'Next.js (App Router), statically served on Netlify.',
+      'React Three Fiber / Three.js — the grab-and-steer 3D handlebar and lamp model.',
+      'Window-driven 3D interaction, so the canvas can be pointer-events:none and never block the hero CTA.',
+      'CSS-driven signalling plus a keyframed accent "ignite"; Inter for UI type.',
+      'Hosting: Netlify.',
+    ],
+
+    integrations: [
+      'Netlify — hosting and deploy.',
+    ],
+
+    performance: [
+      'Lazy-mounted R3F hero under a static dark stage and poster silhouette, so an early screenshot is never a black canvas.',
+      'Deterministic first view — the hero renders finished on first paint, so every load and capture is identical.',
+      'No layout shift (the 3D stage reserves its space); reduced-motion and pointer safe.',
+    ],
+
+    challenges: [
+      'Making one interaction — grab, steer, fire — read as the entire product pitch while keeping it discoverable and forgiving.',
+      'Driving the 3D from window listeners so the canvas can stay pointer-events:none and never intercept the hero CTA.',
+      'A capture-safe hero: finished on first paint, deterministic, never a blank or black flash.',
+    ],
+
+    improvements: [
+      'Wire a real enquiry / pre-order form to a backend.',
+      'Add a fuller spec sheet and a comparison section.',
+      'Progressive-enhance the 3D with a lower-LOD path for low-end devices.',
+    ],
+  },
+
+  'iopa': {
+    slug: 'iopa',
+    name: 'IOPA Apparel',
+    oneLiner: 'A concept site for a premium Perth streetwear label staged as a live broadcast — a tuner along the bottom edge scrubs the whole site like a radio dial.',
+    client: 'Concept — IOPA, a premium Perth streetwear label',
+    location: 'Perth, WA',
+    timeline: '',
+    budget: '',
+    role: 'Solo (concept, design, development, deployment)',
+    liveUrl: 'https://iopa-apparel.vercel.app',
+    year: '2026',
+    category: 'web_design',
+    tags: ['Website', 'Concept', 'Fashion / Streetwear', 'WebGL / Canvas', 'Motion Design', 'Brand'],
+    featured: false,
+    concept: true,
+    budgetOrder: 0,
+
+    cover: null,
+    brandColor: '#C8A24A',
+    backdropStyle: { backgroundColor: '#0a0a0b' },
+    thumbnail: '/captures/iopa-apparel-vercel-app/desktop/01-hero.png',
+
+    overview: "IOPA is a self-initiated concept for a premium Perth streetwear label, staged as a live radio broadcast. Its signature is THE TUNER — a hairline brass-needle band fixed along the very bottom of the screen: drag or thumb-scrub it and the entire page scrubs 1:1 like tuning a radio, the nav becomes a live channel and frequency readout, and the needle detents into each 'station' (section) on release. Around it the broadcast metaphor holds: a next-drop countdown that resolves out of animated ASCII static, a 3D story corridor receding to a vanishing point, a 1-bit dithered 'transmission orb' hero reacting to the cursor under kinetic Anton type, and a formalised shop — 'THE ASCEND FILE' — with a live featured piece and open/closed channel rails. It's a complete, deployable brand site built to prove a Perth label can carry a genuinely distinctive interaction system end to end. Available to license or commission.",
+
+    screenshots: [
+      { url: '/captures/iopa-apparel-vercel-app/desktop/01-hero.png', caption: 'Hero — "CHOP / LIFE." in bone Anton over a 1-bit dithered transmission orb; THE TUNER band fixed along the bottom edge.' },
+      { url: '/captures/iopa-apparel-vercel-app/desktop/02-decode.png', caption: 'Scroll-decode — the next-drop readout resolving out of animated ASCII static.' },
+      { url: '/captures/iopa-apparel-vercel-app/desktop/03-corridor.png', caption: 'The 3D story corridor — the brand origin scrolling in perspective toward a vanishing point.' },
+      { url: '/captures/iopa-apparel-vercel-app/desktop/04-shop.png', caption: '"THE ASCEND FILE" — a formalised shop with a live featured piece and open / closed channel rails.' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/iopa-apparel-vercel-app/desktop/01-hero.png', caption: 'Dithered transmission-orb hero with THE TUNER band.' },
+      { url: '/captures/iopa-apparel-vercel-app/desktop/02-decode.png', caption: 'Scroll-decode next-drop readout.' },
+      { url: '/captures/iopa-apparel-vercel-app/desktop/03-corridor.png', caption: '3D story corridor in receding perspective.' },
+      { url: '/captures/iopa-apparel-vercel-app/desktop/04-shop.png', caption: '"THE ASCEND FILE" shop.' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/iopa-apparel-vercel-app/mobile/01-hero.png', caption: 'Mobile hero — the dithered orb and Anton type; THE TUNER is most powerful here as a thumb-scrub.' },
+    ],
+
+    delivered: [
+      'A complete, art-directed brand site staged as a live broadcast, with per-section entrances (stamp / rack-slide / teletype) replacing uniform fades.',
+      'THE TUNER — a fixed bottom-edge tuning band that scrubs the whole site 1:1 like a radio; the nav reads the live channel and it detents into the nearest section on release.',
+      'A scroll-decode "next drop" readout that resolves out of animated ASCII static, locks, then re-scrambles.',
+      'A 3D story corridor receding to a vanishing point.',
+      'An interactive 1-bit Bayer dither "transmission orb" hero reacting to the cursor, under kinetic Anton type and a spotlight word-morph CTA.',
+      'A formalised shop — "THE ASCEND FILE" — with a live featured piece and OPEN CHANNEL / CLOSED SIGNAL archive rails.',
+      'A deterministic, capture-safe reduced-motion path (preloader skips, orb frozen at a seeded frame).',
+    ],
+
+    features: [
+      'THE TUNER — drag / thumb-scrub the whole site like a radio dial; live channel readout; detents into each station.',
+      'Scroll-decode signal — the next-drop countdown resolves from ASCII static.',
+      '3D story corridor in receding perspective.',
+      'Interactive 1-bit dither transmission-orb hero reacting to the cursor.',
+      'Spotlight word-morph CTA (ASCEND to ELEVATE).',
+      'Formalised shop with a live featured piece and open / closed channel rails.',
+    ],
+
+    stack: [
+      'Next.js (App Router, Turbopack), served on Vercel.',
+      'Lenis — the smooth-scroll engine THE TUNER scrubs 1:1.',
+      'Canvas — the 1-bit Bayer dither transmission orb.',
+      'Anton (display) and Inter (UI) type.',
+      'A prefers-reduced-motion path that freezes the hero at a seeded frame for determinism.',
+      'Hosting: Vercel.',
+    ],
+
+    integrations: [
+      'Vercel — hosting and deploy.',
+    ],
+
+    performance: [
+      'Reduced-motion is a first-class deterministic capture state — the preloader skips, there is no entrance, and the dither orb freezes at its seeded frame.',
+      'Boot and entrance timings tightened so the finished hero arrives fast; no black or blank flash, no layout shift.',
+      'Verified clean across desktop and mobile and both motion paths.',
+    ],
+
+    challenges: [
+      'Building THE TUNER — a fixed band that scrubs the entire Lenis timeline 1:1, reads a live channel, and detents into sections — without it fighting normal scroll.',
+      'A 1-bit Bayer dither orb that reads as a premium instrument rather than a gimmick, and stays cheap enough to run smoothly.',
+      'A deterministic reduced-motion path good enough to be the canonical capture state.',
+    ],
+
+    improvements: [
+      'Wire the shop to real commerce (cart and checkout).',
+      'Connect the drop countdown and newsletter to a backend.',
+      'Add product detail pages behind the channel rails.',
+    ],
+  },
 };
 
 export function getCaseStudy(slug) {
@@ -2265,7 +2447,7 @@ export const BUILD_ORDER = [
   // apps / SaaS
   'people-power', 'quotr', 'returndesk',
   // concepts (self-initiated, built after the client work)
-  'wooster-core', 'barrys-drink', 'jk-plumbing-solutions',
+  'wooster-core', 'barrys-drink', 'jk-plumbing-solutions', 'veer', 'iopa',
 ];
 
 /* Lower `seq` = built earlier. Unknown slugs sort to the end (treated newest). */

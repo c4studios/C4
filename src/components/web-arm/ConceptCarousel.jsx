@@ -26,10 +26,8 @@ import cptJk from './assets/cpt-jk.webp';
 import cptVeer from './assets/cpt-veer.webp';
 import cptIopa from './assets/cpt-iopa.webp';
 
-/* Every concept offers TWO ways in: the live deployment, and its place
-   in the portfolio (a dedicated case study where one exists, otherwise
-   the Concepts filter). VEER + IOPA have no individual case study yet,
-   so they route to the Concepts view. */
+/* Every concept offers TWO ways in: the live deployment, and its own
+   case study in the portfolio. */
 const CONCEPTS = [
   {
     key: 'barrys',
@@ -64,7 +62,7 @@ const CONCEPTS = [
     line: 'A bike turn-indicator you demo yourself — grab the 3D handlebar and steer to fire it.',
     img: cptVeer,
     live: 'https://veer-demo.netlify.app',
-    portfolio: '/Portfolio?filter=concept',
+    portfolio: '/CaseStudy?slug=veer',
     alt: 'VEER concept site — "Be seen from the side." over a 3D handlebar.',
   },
   {
@@ -73,7 +71,7 @@ const CONCEPTS = [
     line: 'Streetwear staged as a live broadcast — scroll-tune the whole site like a radio.',
     img: cptIopa,
     live: 'https://iopa-apparel.vercel.app',
-    portfolio: '/Portfolio?filter=concept',
+    portfolio: '/CaseStudy?slug=iopa',
     alt: 'IOPA Apparel concept site — CHOP LIFE hero over a dithered transmission orb.',
   },
 ];
