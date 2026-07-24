@@ -294,10 +294,11 @@ export default function PrivateAI() {
           <div data-pa-rise-item>
             <PaLabel>The problem</PaLabel>
             <p className="pa-col-copy">
-              Most AI tools work by sending your information to someone else&rsquo;s servers. For a
-              practice holding client files, financial records or patient information, that sits
-              awkwardly against confidentiality and privacy obligations. So most practices that
-              would benefit simply hold back.
+              Most AI tools work by sending your information to someone else&rsquo;s servers. For an
+              accounting, legal or financial practice — insolvency and investment firms included —
+              holding confidential client files and records, that sits awkwardly against
+              confidentiality and privacy obligations. So most practices that would benefit simply
+              hold back.
             </p>
           </div>
           <div data-pa-rise-item>
@@ -384,7 +385,8 @@ export default function PrivateAI() {
             <PaLabel>Who is behind it</PaLabel>
             <p className="pa-col-copy" style={{ maxWidth: '58ch' }}>
               Caleb Scott, founder of C4 Studios, a Perth software studio, and a current JD
-              candidate at UWA. Every system is built and supported locally in Perth. The first
+              candidate at UWA — so confidentiality, careful data handling and a clear record are treated as
+              first principles, not add-ons. Every system is built and supported locally in Perth. The first
               system is being built now for a Perth accounting practice with a 400-client book,
               running on the practice's own hardware.
             </p>
@@ -397,7 +399,7 @@ export default function PrivateAI() {
         <div className="pa-container">
           <div data-pa-rise-item>
             <h2 className="pa-band-h2">The next step is a 15-minute conversation.</h2>
-            <p className="pa-band-sub">No obligation, and a straight answer either way.</p>
+            <p className="pa-band-sub">No obligation, and a straight answer either way. Bring whoever you trust to weigh it up — your IT provider included.</p>
             <div style={{ marginTop: 34 }}>
               <a
                 className="pa-btn pa-btn-outline"
