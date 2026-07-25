@@ -23,6 +23,9 @@ const HelixLab = lazy(() => import('./pages/HelixLab'));
 // code stays out of the main bundle.
 const PrivateAI = lazy(() => import('./pages/PrivateAI'));
 
+// C4Sight previews — the tracked lead-magnet download page (flat slug).
+const C4SightPreviews = lazy(() => import('./pages/C4SightPreviews'));
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : () => <></>;
@@ -133,6 +136,14 @@ function App() {
             <LayoutWrapper currentPageName="PrivateAI">
               <Suspense fallback={null}>
                 <PrivateAI />
+              </Suspense>
+            </LayoutWrapper>
+          } />
+          {/* C4Sight previews — tracked lead-magnet download page (flat slug) */}
+          <Route path="/c4sight-previews" element={
+            <LayoutWrapper currentPageName="C4SightPreviews">
+              <Suspense fallback={null}>
+                <C4SightPreviews />
               </Suspense>
             </LayoutWrapper>
           } />

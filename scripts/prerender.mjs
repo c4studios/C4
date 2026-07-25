@@ -46,6 +46,7 @@ const STATIC_ROUTES = [
   { path: '/start', priority: 0.7, changefreq: 'monthly' },
   { path: '/lead-engine', priority: 0.7, changefreq: 'monthly' },
   { path: '/private-ai', priority: 0.85, changefreq: 'monthly' },
+  { path: '/c4sight-previews', priority: 0.7, changefreq: 'monthly' },
   { path: '/Support', priority: 0.4, changefreq: 'yearly' },
   { path: '/privacy-policy', priority: 0.3, changefreq: 'yearly' },
   { path: '/terms-of-service', priority: 0.3, changefreq: 'yearly' },
