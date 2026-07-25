@@ -9,6 +9,7 @@ const PAGE_URLS = {
     ForesightSchools: '/ai-training-for-schools',
     ForesightLaw: '/ai-training-for-law-firms',
     TrainingEnquiry: '/ai-training-enquiry',
+    C4SightPreviews: '/c4sight-previews',
 };
 
 export function createPageUrl(pageName) {

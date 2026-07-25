@@ -66,6 +66,22 @@ export async function submitTrainingEnquiry(data) {
 }
 
 /**
+ * Record a C4Sight preview-pack download (the tracked previews page).
+ * The pack PDFs are public static files delivered client-side; this only
+ * captures the downloader for the follow-up lane and notifies the studio.
+ * @param {Object} data - { first_name, school_name, email, series: string[], source, _gotcha, _loaded }
+ * @returns {Promise<{ success: boolean, errors?: string[] }>}
+ */
+export async function submitPreviewDownload(data) {
+  const res = await fetch(`${API_BASE}/api/preview-download`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  return handleResponse(res);
+}
+
+/**
  * Submit a support request (Support page).
  * @param {Object} data - { name, email, category, priority, order_number, subject, message, _gotcha, _loaded }
  * @returns {Promise<{ success: boolean, errors?: string[] }>}
