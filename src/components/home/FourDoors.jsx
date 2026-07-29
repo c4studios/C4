@@ -171,9 +171,9 @@ const DOORS = [
     tag: 'Web design & development',
     word: 'Build a website',
     outcome:
-      'Custom marketing sites, web apps and SaaS platforms — fast, refined, and built to convert. You own the codebase end-to-end.',
+      'Custom marketing sites, web apps and SaaS platforms that are fast, refined and built to convert. You own the codebase end-to-end.',
     fromPrice: 'From $500',
-    timeframe: '2–3 weeks',
+    timeframe: '2 to 3 weeks',
     primary: { label: 'See the web work', to: '/ServiceWeb' },
     secondary: { label: 'or start a web brief', to: '/start?service=web_design' },
   },
@@ -210,7 +210,7 @@ const DOORS = [
     tag: 'C4 Lens',
     word: 'Brand & visual',
     outcome:
-      'Photography, short-form video and brand identity — a coherent visual system for Perth businesses ready to retire stock.',
+      'Photography, short-form video and brand identity, a coherent visual system for Perth businesses ready to retire stock.',
     fromPrice: 'From $200',
     timeframe: 'Half / full-day shoots',
     primary: { label: 'Visit C4 Lens', to: '/Lens' },
@@ -297,7 +297,7 @@ export default function FourDoors() {
             Four services. One studio. Pick a starting point.
           </h2>
           <p className="hm-sub max-w-[36ch] text-[13.5px]">
-            Most clients start with one of these. Each card opens a short brief — fixed scope, transparent pricing, founder reply within a business day.
+            Most clients start with one of these. Each card opens a short brief: fixed scope, transparent pricing, founder reply within a business day.
           </p>
         </div>
       </div>

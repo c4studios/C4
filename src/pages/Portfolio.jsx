@@ -9,9 +9,25 @@ import { getAllCaseStudies } from '../components/portfolio/caseStudyData';
 import { FeaturedCardSkeleton } from '../components/portfolio/PortfolioCardSkeleton';
 import PortfolioMedia from '../components/portfolio/PortfolioMedia';
 import useDocumentHead from '@/hooks/useDocumentHead';
+import useStaticMode from '@/hooks/useStaticMode';
 import { breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
+
+/* Scroll reveal for a card, which DISAPPEARS under staticMode rather than
+   swapping to a different animation. Every one of these cards is a real case
+   study, so a hidden initial state meant the shop window prerendered its
+   entries at opacity 0. Returning no motion props at all leaves clean markup
+   with no inline opacity for crawlers that skip JavaScript. */
+function cardReveal(staticMode, { y, delay, margin }) {
+  if (staticMode) return {};
+  return {
+    initial: { opacity: 0, y },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin },
+    transition: { duration: y > 24 ? 0.6 : 0.5, delay, ease },
+  };
+}
 
 function sortStudies(studies, sortKey) {
   const sorted = [...studies];
@@ -41,13 +57,11 @@ function FeaturedCard({ study, index }) {
   // hero — so start previews at the next shot to avoid showing it twice.
   const previewStart = study.cover ? 0 : 1;
   const previews = (study.screenshots || []).slice(previewStart, previewStart + 3);
+  const staticMode = useStaticMode();
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, delay: index * 0.08, ease }}
+      {...cardReveal(staticMode, { y: 30, delay: index * 0.08, margin: '-60px' })}
     >
       <Link to={createPageUrl(`CaseStudy?slug=${study.slug}`)} className="group block">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-3 md:gap-4">
@@ -142,12 +156,10 @@ function FeaturedCard({ study, index }) {
 }
 
 function ProjectCard({ study, index }) {
+  const staticMode = useStaticMode();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay: index * 0.06, ease }}
+      {...cardReveal(staticMode, { y: 24, delay: index * 0.06, margin: '-40px' })}
     >
       <Link to={createPageUrl(`CaseStudy?slug=${study.slug}`)} className="group block">
         <div
@@ -212,12 +224,10 @@ function softwareStatusColor(status) {
 
 function SoftwareCard({ study, index }) {
   const color = softwareStatusColor(study.status);
+  const staticMode = useStaticMode();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay: index * 0.06, ease }}
+      {...cardReveal(staticMode, { y: 24, delay: index * 0.06, margin: '-40px' })}
     >
       <div className="group relative block">
         <div
