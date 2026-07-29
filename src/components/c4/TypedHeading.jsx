@@ -6,20 +6,26 @@ const DEFAULT_HOLD_TIME = 1850;
 const DEFAULT_PAUSE_TIME = 420;
 const DEFAULT_START_DELAY = 0;
 
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
+/* staticMode — the house pattern (see homeMotion.js, ServiceWeb.jsx): the
+   Prerender UA or an OS reduced-motion preference, resolved SYNCHRONOUSLY in a
+   useMemo so it is correct on the very first render.
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReduced(mediaQuery.matches);
-
-    const handleChange = (event) => setReduced(event.matches);
-    mediaQuery.addEventListener('change', handleChange);
-
-    return () => mediaQuery.removeEventListener('change', handleChange);
+   This must not be an effect-based hook. An effect returns false on first
+   render, so the prerenderer captured this heading mid-animation and the
+   homepage shipped its <h1> as a partially typed string with a trailing cursor
+   glyph, followed by all six measure phrases. That string was the indexed
+   heading of the site's priority-1.0 page. Resolving it synchronously means the
+   static HTML now carries one complete phrase and nothing else. */
+function useStaticMode() {
+  return useMemo(() => {
+    if (typeof window === 'undefined') return true;
+    const prerender =
+      typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent);
+    const reduced =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return prerender || reduced;
   }, []);
-
-  return reduced;
 }
 
 export default function TypedHeading({
@@ -36,10 +42,13 @@ export default function TypedHeading({
 }) {
   const safeLines = useMemo(() => lines.filter(Boolean), [lines]);
   const firstLine = safeLines[0] || '';
-  const reducedMotion = usePrefersReducedMotion();
+  const reducedMotion = useStaticMode();
   const measureRef = useRef(null);
   const [lineIndex, setLineIndex] = useState(0);
-  const [displayed, setDisplayed] = useState('');
+  /* Seed with the complete first line so the very first paint (and therefore
+     the prerendered HTML) is a whole, readable phrase rather than an empty
+     string that fills in later. */
+  const [displayed, setDisplayed] = useState(firstLine);
   const [phase, setPhase] = useState('typing');
   const [reservedHeight, setReservedHeight] = useState(null);
   const animateTyping = !reducedMotion && safeLines.length > 0;
@@ -161,38 +170,44 @@ export default function TypedHeading({
     ) : null
   );
 
+  /* The measure block exists only to reserve height so the cycling text cannot
+     reflow the page. Under staticMode nothing cycles, so rendering it would add
+     every phrase to the heading's text for no layout benefit. Omitting it is
+     what leaves the prerendered <h1> as one clean line. */
   return (
     <span
       className="relative block w-full"
-      style={reservedHeight ? { minHeight: `${reservedHeight}px` } : undefined}
+      style={reservedHeight && !reducedMotion ? { minHeight: `${reservedHeight}px` } : undefined}
     >
       <span className={`${className}`.trim()}>
         {displayed || '\u00A0'}
         {renderCursor()}
       </span>
 
-      <span
-        ref={measureRef}
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          visibility: 'hidden',
-          pointerEvents: 'none',
-          zIndex: -1,
-        }}
-      >
-        {safeLines.map((line) => (
-          <span
-            key={line}
-            data-c4-typed-measure
-            className={`${className} block w-full`.trim()}
-          >
-            {line}
-            {renderCursor()}
-          </span>
-        ))}
-      </span>
+      {!reducedMotion && (
+        <span
+          ref={measureRef}
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            visibility: 'hidden',
+            pointerEvents: 'none',
+            zIndex: -1,
+          }}
+        >
+          {safeLines.map((line) => (
+            <span
+              key={line}
+              data-c4-typed-measure
+              className={`${className} block w-full`.trim()}
+            >
+              {line}
+              {renderCursor()}
+            </span>
+          ))}
+        </span>
+      )}
     </span>
   );
 }
