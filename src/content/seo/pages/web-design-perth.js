@@ -54,9 +54,9 @@ export default {
       label: 'Proof',
       heading: 'Recent builds',
       cases: [
-        { name: 'Jurassic PT', summary: 'A conversion-focused site for a Cannington fitness studio — memberships, classes, timetable and direct booking, live now.', href: '/CaseStudy?slug=jurassic-pt', tag: 'Fitness' },
-        { name: 'DS Racing Karts', summary: 'A full ecommerce rebuild for a WA karting supplier — 499-plus parts imported from Square, plus a custom racing mini-game in the header.', href: '/CaseStudy?slug=ds-racing-karts', tag: 'Ecommerce' },
-        { name: 'Transform Fremantle', summary: 'A purpose-built community platform coordinating churches across Fremantle — events, prayer points and shared resources in one place.', href: '/CaseStudy?slug=transform-fremantle', tag: 'Community' },
+        { name: 'Jurassic PT', summary: 'A conversion-focused site for a Cannington fitness studio — memberships, classes, timetable and direct booking, live now.', href: '/CaseStudy/jurassic-pt', tag: 'Fitness' },
+        { name: 'DS Racing Karts', summary: 'A full ecommerce rebuild for a WA karting supplier — 499-plus parts imported from Square, plus a custom racing mini-game in the header.', href: '/CaseStudy/ds-racing-karts', tag: 'Ecommerce' },
+        { name: 'Transform Fremantle', summary: 'A purpose-built community platform coordinating churches across Fremantle — events, prayer points and shared resources in one place.', href: '/CaseStudy/transform-fremantle', tag: 'Community' },
       ],
     },
     {

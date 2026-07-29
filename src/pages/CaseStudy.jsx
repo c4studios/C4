@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { getCaseStudy } from '../components/portfolio/caseStudyData';
 import { getTestimonialForCaseStudy } from '../components/testimonials/testimonialData';
 import CaseStudyHero from '../components/portfolio/CaseStudyHero';
@@ -12,8 +12,19 @@ import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema, caseStudyArticleSchema } from '@/lib/schema';
 
 export default function CaseStudy() {
+  /* /CaseStudy/<slug> is the real, canonical, prerendered URL. The legacy
+     ?slug= form is kept only as an alias and redirects here.
+
+     It used to be the other way around, which split every case study's signals:
+     the sitemap listed the pretty path, the page then declared the ?slug= form
+     as canonical, and ?slug= has no static file, so the _redirects catch-all
+     served the HOMEPAGE to any crawler that does not run JavaScript. Nineteen
+     pieces of client proof were effectively declaring themselves duplicates of
+     the front page. Do not invert this again. */
+  const { slug: pathSlug } = useParams();
   const [searchParams] = useSearchParams();
-  const slug = searchParams.get('slug');
+  const querySlug = searchParams.get('slug');
+  const slug = pathSlug || querySlug;
   const study = getCaseStudy(slug);
 
   const studyJsonLd = useMemo(() => {
@@ -22,7 +33,7 @@ export default function CaseStudy() {
       breadcrumbSchema([
         { name: 'Home', path: '/' },
         { name: 'Portfolio', path: '/Portfolio' },
-        { name: study.name, path: `/CaseStudy?slug=${study.slug}` },
+        { name: study.name, path: `/CaseStudy/${study.slug}` },
       ]),
       caseStudyArticleSchema(study, getTestimonialForCaseStudy(study.slug)),
     ];
@@ -33,7 +44,7 @@ export default function CaseStudy() {
       ? {
           title: `${study.name} — ${study.tags?.[0] || 'Case Study'} Case Study`,
           description: study.oneLiner,
-          path: `/CaseStudy?slug=${study.slug}`,
+          path: `/CaseStudy/${study.slug}`,
           image: study.cover,
           type: 'article',
           jsonLd: studyJsonLd,
@@ -45,6 +56,12 @@ export default function CaseStudy() {
           noIndex: true,
         }
   );
+
+  /* Legacy ?slug= arrivals move to the canonical path. Rendered after the head
+     hook so hook order stays stable between renders. */
+  if (!pathSlug && querySlug && study) {
+    return <Navigate to={`/CaseStudy/${encodeURIComponent(querySlug)}`} replace />;
+  }
 
   if (!study) {
     return (

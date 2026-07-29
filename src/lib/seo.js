@@ -21,6 +21,8 @@ export const ORG_INFO = {
   founder: 'Caleb Scott',
   foundingDate: '2022',
   email: 'caleb@c4studios.com.au',
+  // Already public: it is on the email signature and the /welcome booking sheet.
+  telephone: '+61479000404',
   region: 'Perth, Western Australia',
   country: 'AU',
   areaServed: ['Perth', 'Fremantle', 'Western Australia', 'Australia'],

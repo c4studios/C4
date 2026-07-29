@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Plus } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { getProduct, PRODUCTS } from '../components/software/productData';
@@ -37,8 +37,13 @@ const DEMO_META = {
 };
 
 export default function SoftwareProduct() {
+  /* /SoftwareProduct/<slug> is the real, canonical, prerendered URL; the ?slug=
+     form is a legacy alias that redirects here. See CaseStudy.jsx for why this
+     was inverted. */
+  const { slug: pathSlug } = useParams();
   const [searchParams] = useSearchParams();
-  const slug = searchParams.get('slug');
+  const querySlug = searchParams.get('slug');
+  const slug = pathSlug || querySlug;
   const product = getProduct(slug);
   const rootRef = useRegisterMotion(slug || 'not-found');
 
@@ -47,7 +52,7 @@ export default function SoftwareProduct() {
     const crumbs = breadcrumbSchema([
       { name: 'Home', path: '/' },
       { name: 'C4 Originals', path: '/software' },
-      { name: product.name, path: `/SoftwareProduct?slug=${product.slug}` },
+      { name: product.name, path: `/SoftwareProduct/${product.slug}` },
     ]);
     return product.faqs?.length ? [crumbs, faqSchema(product.faqs)] : crumbs;
   }, [product]);
@@ -57,7 +62,7 @@ export default function SoftwareProduct() {
       ? {
           title: `${product.name} — ${product.oneLiner}`,
           description: product.summary,
-          path: `/SoftwareProduct?slug=${product.slug}`,
+          path: `/SoftwareProduct/${product.slug}`,
           jsonLd,
         }
       : {
@@ -67,6 +72,11 @@ export default function SoftwareProduct() {
           noIndex: true,
         }
   );
+
+  /* Legacy ?slug= arrivals move to the canonical path. */
+  if (!pathSlug && querySlug && product) {
+    return <Navigate to={`/SoftwareProduct/${encodeURIComponent(querySlug)}`} replace />;
+  }
 
   if (!product) {
     return (
@@ -321,7 +331,7 @@ export default function SoftwareProduct() {
             {others.map((p) => (
               <Link
                 key={p.slug}
-                to={`${createPageUrl('SoftwareProduct')}?slug=${p.slug}`}
+                to={`${createPageUrl('SoftwareProduct')}/${p.slug}`}
                 className="sw-other"
               >
                 <LogoChip product={p} className="sw-other-chip" />

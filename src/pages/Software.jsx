@@ -22,7 +22,7 @@ function priceFrom(product) {
 // motion) reveals the feature spec and the lifetime line.
 function RegisterRow({ product }) {
   const [open, setOpen] = useState(false);
-  const detailHref = `${createPageUrl('SoftwareProduct')}?slug=${product.slug}`;
+  const detailHref = `${createPageUrl('SoftwareProduct')}/${product.slug}`;
   const from = priceFrom(product);
   const CtaIcon = product.ctaExternal ? ArrowUpRight : ArrowRight;
 
@@ -228,7 +228,7 @@ export default function Software() {
         {/* C4 Command — studio-internal, kept crawlable and honest */}
         {studio && (
           <Link
-            to={`${createPageUrl('SoftwareProduct')}?slug=${studio.slug}`}
+            to={`${createPageUrl('SoftwareProduct')}/${studio.slug}`}
             className="sw-footnote"
           >
             <span className="sw-fn-model">{modelFor(studio.slug)}</span>

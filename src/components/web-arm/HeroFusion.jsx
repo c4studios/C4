@@ -283,7 +283,7 @@ export default function HeroFusion({ header, staticMode = false }) {
                         <Link
                           className="lv-plx-card"
                           key={card.slug}
-                          to={`/CaseStudy?slug=${card.slug}`}
+                          to={`/CaseStudy/${card.slug}`}
                           aria-label={`${card.name} — open the case study`}
                         >
                           <img

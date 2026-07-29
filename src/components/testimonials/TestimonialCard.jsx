@@ -6,7 +6,7 @@ export default function TestimonialCard({ testimonial, variant = 'light' }) {
   const proof = variant === 'proof';
   const dark = variant === 'dark';
   const caseStudyPath = testimonial.caseStudySlug
-    ? createPageUrl(`CaseStudy?slug=${testimonial.caseStudySlug}`)
+    ? createPageUrl(`CaseStudy/${testimonial.caseStudySlug}`)
     : null;
   const websiteUrl = caseStudyPath ? null : testimonial.websiteUrl;
   const CardTag = caseStudyPath ? Link : 'div';

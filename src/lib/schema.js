@@ -52,6 +52,7 @@ export function localBusinessSchema() {
     image: ORG_INFO.logo,
     url: SITE_URL,
     email: ORG_INFO.email,
+    telephone: ORG_INFO.telephone,
     sameAs: ORG_INFO.sameAs,
     priceRange: '$$',
     address: {
@@ -144,7 +145,7 @@ export function caseStudyArticleSchema(study, testimonial) {
     datePublished: study.year ? `${study.year}-01-01` : undefined,
     about: study.client,
     keywords: (study.tags || []).join(', '),
-    mainEntityOfPage: absoluteUrl(`/CaseStudy?slug=${study.slug}`),
+    mainEntityOfPage: absoluteUrl(`/CaseStudy/${study.slug}`),
   };
 
   // Attach the matching client testimonial as a Review of the delivered work.

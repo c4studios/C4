@@ -41,7 +41,7 @@ export default {
       heading: 'Stores and product work we can point to',
       cases: [
         { name: 'Arty Design', summary: 'Ecommerce work for a maker and engraving studio — personalised products with the variant and customisation handling that makers actually need.', tag: 'Maker store' },
-        { name: 'DS Racing Karts', summary: 'A 499-product store migrated from a Square catalogue with full checkout — proof the data-heavy version is a solved problem here.', href: '/CaseStudy?slug=ds-racing-karts', tag: 'Catalogue migration' },
+        { name: 'DS Racing Karts', summary: 'A 499-product store migrated from a Square catalogue with full checkout — proof the data-heavy version is a solved problem here.', href: '/CaseStudy/ds-racing-karts', tag: 'Catalogue migration' },
       ],
     },
     {

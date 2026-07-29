@@ -42,8 +42,8 @@ export default {
       heading: 'Ministry work we can point to',
       cases: [
         { name: 'The Rocks', summary: 'A two-campus media system: services captured, edited and published as a repeatable weekly pipeline — run as ongoing work, not a one-off favour.', tag: 'Media system' },
-        { name: 'Transform Fremantle', summary: 'A purpose-built platform uniting churches across Fremantle — coordinated prayer, shared resources and events for a movement, not just one congregation.', href: '/CaseStudy?slug=transform-fremantle', tag: 'Community platform' },
-        { name: 'Transform Hakea', summary: 'A polished site for a prayer movement focused on Hakea Prison — quiet, purposeful design for a ministry that needed to be taken seriously.', href: '/CaseStudy?slug=transform-hakea', tag: 'Ministry site' },
+        { name: 'Transform Fremantle', summary: 'A purpose-built platform uniting churches across Fremantle — coordinated prayer, shared resources and events for a movement, not just one congregation.', href: '/CaseStudy/transform-fremantle', tag: 'Community platform' },
+        { name: 'Transform Hakea', summary: 'A polished site for a prayer movement focused on Hakea Prison — quiet, purposeful design for a ministry that needed to be taken seriously.', href: '/CaseStudy/transform-hakea', tag: 'Ministry site' },
       ],
     },
     {

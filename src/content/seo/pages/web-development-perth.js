@@ -40,8 +40,8 @@ export default {
       label: 'Shipped',
       heading: 'Built, launched, still running',
       cases: [
-        { name: 'DS Racing Karts', summary: '499-plus go-kart parts imported from a Square catalogue, full checkout, and a custom Canvas mini-game in the header. Ecommerce with personality.', href: '/CaseStudy?slug=ds-racing-karts', tag: 'Ecommerce' },
-        { name: 'People Power', summary: 'A full-stack social platform built from the ground up — real-time messaging, moderation infrastructure and governance tooling. One of our own.', href: '/CaseStudy?slug=people-power', tag: 'Web app' },
+        { name: 'DS Racing Karts', summary: '499-plus go-kart parts imported from a Square catalogue, full checkout, and a custom Canvas mini-game in the header. Ecommerce with personality.', href: '/CaseStudy/ds-racing-karts', tag: 'Ecommerce' },
+        { name: 'People Power', summary: 'A full-stack social platform built from the ground up — real-time messaging, moderation infrastructure and governance tooling. One of our own.', href: '/CaseStudy/people-power', tag: 'Web app' },
         { name: 'C4 Originals', summary: 'Quotr, ReviewLoop, Complia and the rest of the C4 software suite — products we build, run and support ourselves, in production right now.', href: '/software', tag: 'SaaS suite' },
       ],
     },

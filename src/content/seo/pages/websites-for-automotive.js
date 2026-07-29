@@ -37,8 +37,8 @@ export default {
       label: 'Proof',
       heading: 'The build we point everyone to',
       cases: [
-        { name: 'DS Racing Karts', summary: 'A full redesign and rebuild for a WA karting supplier: 499-plus parts imported from their Square catalogue, proper checkout, content managed in-house — and a custom-coded racing mini-game in the header, because motorsport sites should be fun.', href: '/CaseStudy?slug=ds-racing-karts', tag: 'Redesign + store' },
-        { name: 'Motorsport content', summary: 'The DSR header film and ongoing motorsport content through C4 Lens — shot to match a brand built around speed, not stock-photo chrome.', href: '/CaseStudy?slug=ds-racing-karts', tag: 'C4 Lens' },
+        { name: 'DS Racing Karts', summary: 'A full redesign and rebuild for a WA karting supplier: 499-plus parts imported from their Square catalogue, proper checkout, content managed in-house — and a custom-coded racing mini-game in the header, because motorsport sites should be fun.', href: '/CaseStudy/ds-racing-karts', tag: 'Redesign + store' },
+        { name: 'Motorsport content', summary: 'The DSR header film and ongoing motorsport content through C4 Lens — shot to match a brand built around speed, not stock-photo chrome.', href: '/CaseStudy/ds-racing-karts', tag: 'C4 Lens' },
       ],
     },
     {

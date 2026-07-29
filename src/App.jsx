@@ -40,19 +40,16 @@ function LegacyStartProjectRedirect() {
   return <Navigate to={`${createPageUrl('StartProject')}${location.search}${location.hash}`} replace />;
 }
 
-/* Path-style aliases for the URLs the sitemap/llms.txt publish
-   (/CaseStudy/<slug>, /SoftwareProduct/<slug>). The prerenderer writes real
-   HTML at those paths for crawlers, but the SPA only routes the ?slug= form —
-   without these, hydration replaced the content with a 404. */
-function CaseStudyPathAlias() {
-  const { slug } = useParams();
-  return <Navigate to={`/CaseStudy?slug=${encodeURIComponent(slug)}`} replace />;
-}
+/* /CaseStudy/<slug> and /SoftwareProduct/<slug> are the REAL routes: they are
+   what the sitemap lists, what the prerenderer writes real HTML to, and what
+   each page now declares as its canonical.
 
-function SoftwareProductPathAlias() {
-  const { slug } = useParams();
-  return <Navigate to={`/SoftwareProduct?slug=${encodeURIComponent(slug)}`} replace />;
-}
+   These used to be aliases that redirected to the ?slug= query form, which
+   inverted the whole thing: the sitemap advertised the pretty path while the
+   page declared ?slug= canonical, and ?slug= has no static file, so the
+   _redirects catch-all served the homepage to any crawler that does not run
+   JavaScript. The pages themselves now handle a legacy ?slug= arrival by
+   redirecting up to the canonical path. */
 
 function App() {
   return (
@@ -147,9 +144,17 @@ function App() {
               </Suspense>
             </LayoutWrapper>
           } />
-          {/* Path-style deep links from the sitemap/llms.txt */}
-          <Route path="/CaseStudy/:slug" element={<CaseStudyPathAlias />} />
-          <Route path="/SoftwareProduct/:slug" element={<SoftwareProductPathAlias />} />
+          {/* The canonical, prerendered, sitemap-listed detail URLs */}
+          <Route path="/CaseStudy/:slug" element={
+            <LayoutWrapper currentPageName="CaseStudy">
+              <Pages.CaseStudy />
+            </LayoutWrapper>
+          } />
+          <Route path="/SoftwareProduct/:slug" element={
+            <LayoutWrapper currentPageName="SoftwareProduct">
+              <Pages.SoftwareProduct />
+            </LayoutWrapper>
+          } />
           <Route path="/StartProject" element={<LegacyStartProjectRedirect />} />
           {/* /Services retired: the services live as individual pages reached
               via the nav dropdown. Old links land on home. */}

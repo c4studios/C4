@@ -112,10 +112,10 @@ function ReadOdometer({ seconds, on }) {
    ═══════════════════════════════════════════════════════════════════════ */
 export default function Contact() {
   useDocumentHead({
-    title: 'Contact — C4 Studios',
-    description: 'Contact C4 Studios. Redirecting to support and project enquiries.',
+    title: 'Contact C4 Studios — Web Design & AI in Perth',
+    description:
+      'Talk to C4 Studios in Perth about a website, an AI automation, private on-premise AI, staff AI training or photography. Founder-led, and you get a reply within a business day.',
     path: '/Contact',
-    noIndex: true,
   });
 
   /* staticMode — house pattern: prerenderer UA or reduced motion means the
