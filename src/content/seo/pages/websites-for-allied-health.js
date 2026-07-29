@@ -49,8 +49,8 @@ export default {
       label: 'Proof',
       heading: 'Health-adjacent work we can point to',
       cases: [
-        { name: 'GoCC — Coaching & Counselling', summary: 'Performance consultancy for a counselling practice: faster load times, smoother interactions and wider reach through technical optimisation and SEO strategy.', href: '/CaseStudy?slug=gocc', tag: 'Consultancy' },
-        { name: 'Jurassic PT', summary: 'A Cannington studio site spanning fitness and remedial massage — memberships, timetables and direct booking for an allied-adjacent business.', href: '/CaseStudy?slug=jurassic-pt', tag: 'Build' },
+        { name: 'GoCC — Coaching & Counselling', summary: 'Performance consultancy for a counselling practice: faster load times, smoother interactions and wider reach through technical optimisation and SEO strategy.', href: '/CaseStudy/gocc', tag: 'Consultancy' },
+        { name: 'Jurassic PT', summary: 'A Cannington studio site spanning fitness and remedial massage — memberships, timetables and direct booking for an allied-adjacent business.', href: '/CaseStudy/jurassic-pt', tag: 'Build' },
       ],
     },
     {

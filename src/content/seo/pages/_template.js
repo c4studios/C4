@@ -50,7 +50,7 @@ export default {
 
     // Real client proof — never fabricate. href can point at a case study.
     { kind: 'proof', label: 'Proof', heading: 'Work that backs this up', cases: [
-      { name: 'Client / project', summary: 'What was built and what it did.', href: '/CaseStudy?slug=…', tag: 'Full build' },
+      { name: 'Client / project', summary: 'What was built and what it did.', href: '/CaseStudy/…', tag: 'Full build' },
     ] },
 
     // Pricing block. mode 'anchor' = the $1,500 business-site anchor with a

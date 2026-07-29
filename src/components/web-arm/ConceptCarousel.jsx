@@ -35,7 +35,7 @@ const CONCEPTS = [
     line: 'An RTD brand world with a physics-driven hero — grabbable, throwable 3D cans.',
     img: cptBarrys,
     live: 'https://barrys-drink-concept.vercel.app',
-    portfolio: '/CaseStudy?slug=barrys-drink',
+    portfolio: '/CaseStudy/barrys-drink',
     alt: "Barry's Drink concept site — floating drink cans over the brand hero.",
   },
   {
@@ -44,7 +44,7 @@ const CONCEPTS = [
     line: 'A storefront whose product 3D-prints itself in front of you, layer by layer.',
     img: cptWooster,
     live: 'https://wooster-henna.vercel.app',
-    portfolio: '/CaseStudy?slug=wooster-core',
+    portfolio: '/CaseStudy/wooster-core',
     alt: 'Wooster Core concept storefront — WebGL FDM print hero.',
   },
   {
@@ -53,7 +53,7 @@ const CONCEPTS = [
     line: 'A lead-gen trade site built before any brief existed — and ready to book jobs.',
     img: cptJk,
     live: 'https://jk-plumbing-tau.vercel.app',
-    portfolio: '/CaseStudy?slug=jk-plumbing-solutions',
+    portfolio: '/CaseStudy/jk-plumbing-solutions',
     alt: 'JK Plumbing concept site — licensed-trade lead generation hero.',
   },
   {
@@ -62,7 +62,7 @@ const CONCEPTS = [
     line: 'A bike turn-indicator you demo yourself — grab the 3D handlebar and steer to fire it.',
     img: cptVeer,
     live: 'https://veer-demo.netlify.app',
-    portfolio: '/CaseStudy?slug=veer',
+    portfolio: '/CaseStudy/veer',
     alt: 'VEER concept site — "Be seen from the side." over a 3D handlebar.',
   },
   {
@@ -71,7 +71,7 @@ const CONCEPTS = [
     line: 'Streetwear staged as a live broadcast — scroll-tune the whole site like a radio.',
     img: cptIopa,
     live: 'https://iopa-apparel.vercel.app',
-    portfolio: '/CaseStudy?slug=iopa',
+    portfolio: '/CaseStudy/iopa',
     alt: 'IOPA Apparel concept site — CHOP LIFE hero over a dithered transmission orb.',
   },
 ];

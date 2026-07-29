@@ -118,7 +118,7 @@ export default function TestimonialReel({ testimonials = [] }) {
 
   if (total === 0 || !active) return null;
 
-  const casePath = active.caseStudySlug ? createPageUrl(`CaseStudy?slug=${active.caseStudySlug}`) : null;
+  const casePath = active.caseStudySlug ? createPageUrl(`CaseStudy/${active.caseStudySlug}`) : null;
 
   return (
     <section

@@ -22,7 +22,7 @@ person building it.
 - [About](https://c4studios.com.au/About): The studio, its founder and how it works.
 - [Web design & development](https://c4studios.com.au/ServiceWeb): Custom websites and web apps built for speed, SEO and conversion.
 - [C4i — AI systems & automation](https://c4studios.com.au/c4i): AI automations, agents and private/cloud AI systems.
-- [Private AI systems](https://c4studios.com.au/private-ai): AI installed on your own hardware — nothing leaves the building. Tiers from $4,900.
+- [Private AI systems](https://c4studios.com.au/private-ai): AI installed on your own hardware — nothing leaves the building. Tiers from $1,600.
 - [AI services](https://c4studios.com.au/ServiceAI): How C4 applies AI to real business workflows.
 - [C4 Lens — photography & video](https://c4studios.com.au/Lens): Brand photography, videography, drone work and motion graphics.
 - [C4Sight — AI training](https://c4studios.com.au/Foresight): Practical AI workshops for workplaces and schools.

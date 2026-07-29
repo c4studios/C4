@@ -424,9 +424,9 @@ export default function Welcome() {
             <div className="kick">recent work</div>
             <h2>A few recent builds</h2>
             <div className="rows">
-              <Link className="row" to={createPageUrl('CaseStudy?slug=ds-racing-karts')}><b>DS Racing Karts</b><span>{`Moved 499+ products off Square, wrote the product descriptions with AI, set up a PCI-compliant checkout, and built them a custom Canvas racing mini-game.`}</span></Link>
-              <Link className="row" to={createPageUrl('CaseStudy?slug=evidence-advisory')}><b>Evidence Advisory</b><span>{`Brand site for a Perth digital-forensics firm, built around a 3D WebGL hero — a shattered, evidence-tagged phone that reassembles as you scroll — over a full, SEO-ready multi-page platform.`}</span></Link>
-              <Link className="row" to={createPageUrl('CaseStudy?slug=tidy-gardens-australia')}><b>Tidy Gardens</b><span>{`A motion-led site for a Perth garden & reticulation business — a vine that grows, a poly-pipe that fills, and a mower that lays down stripes as you scroll. Four service pages, a before/after gallery, and a quote form straight to the owner.`}</span></Link>
+              <Link className="row" to={createPageUrl('CaseStudy/ds-racing-karts')}><b>DS Racing Karts</b><span>{`Moved 499+ products off Square, wrote the product descriptions with AI, set up a PCI-compliant checkout, and built them a custom Canvas racing mini-game.`}</span></Link>
+              <Link className="row" to={createPageUrl('CaseStudy/evidence-advisory')}><b>Evidence Advisory</b><span>{`Brand site for a Perth digital-forensics firm, built around a 3D WebGL hero — a shattered, evidence-tagged phone that reassembles as you scroll — over a full, SEO-ready multi-page platform.`}</span></Link>
+              <Link className="row" to={createPageUrl('CaseStudy/tidy-gardens-australia')}><b>Tidy Gardens</b><span>{`A motion-led site for a Perth garden & reticulation business — a vine that grows, a poly-pipe that fills, and a mower that lays down stripes as you scroll. Four service pages, a before/after gallery, and a quote form straight to the owner.`}</span></Link>
             </div>
             <Link className="folio" to={createPageUrl('Portfolio')}>See the full portfolio →</Link>
           </div>

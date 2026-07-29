@@ -63,7 +63,7 @@ function FeaturedCard({ study, index }) {
     <motion.div
       {...cardReveal(staticMode, { y: 30, delay: index * 0.08, margin: '-60px' })}
     >
-      <Link to={createPageUrl(`CaseStudy?slug=${study.slug}`)} className="group block">
+      <Link to={createPageUrl(`CaseStudy/${study.slug}`)} className="group block">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-3 md:gap-4">
           {/* Cover — logo wallpaper */}
           <div
@@ -161,7 +161,7 @@ function ProjectCard({ study, index }) {
     <motion.div
       {...cardReveal(staticMode, { y: 24, delay: index * 0.06, margin: '-40px' })}
     >
-      <Link to={createPageUrl(`CaseStudy?slug=${study.slug}`)} className="group block">
+      <Link to={createPageUrl(`CaseStudy/${study.slug}`)} className="group block">
         <div
           className={`relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center ${study.backdropClassName || ''}`}
           style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}

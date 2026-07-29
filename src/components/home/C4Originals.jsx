@@ -26,7 +26,7 @@ export default function C4Originals() {
   const featured = publicProducts[0];
   const rows = publicProducts.slice(1);
   const featuredFrom = priceFrom(featured);
-  const detailFor = (p) => `${createPageUrl('SoftwareProduct')}?slug=${p.slug}`;
+  const detailFor = (p) => `${createPageUrl('SoftwareProduct')}/${p.slug}`;
 
   return (
     <section ref={rootRef} className="sw-root sw-home">

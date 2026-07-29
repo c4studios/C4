@@ -26,7 +26,7 @@ export default {
       label: 'Local proof',
       heading: 'We’ve built for this town',
       cases: [
-        { name: 'Transform Fremantle', summary: 'A purpose-built community platform uniting churches across Fremantle — coordinated prayer, shared resources and events for a movement rooted in this specific town.', href: '/CaseStudy?slug=transform-fremantle', tag: 'Fremantle build' },
+        { name: 'Transform Fremantle', summary: 'A purpose-built community platform uniting churches across Fremantle — coordinated prayer, shared resources and events for a movement rooted in this specific town.', href: '/CaseStudy/transform-fremantle', tag: 'Fremantle build' },
       ],
     },
     {

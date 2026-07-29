@@ -64,9 +64,9 @@ export default {
       label: 'In production',
       heading: 'We use this stuff daily',
       cases: [
-        { name: 'ReviewLoop', summary: 'Our own product: turns finished jobs into Google reviews automatically, with an AI reply writer for the reviews that come back.', href: '/SoftwareProduct?slug=reviewloop', tag: 'C4 Original' },
+        { name: 'ReviewLoop', summary: 'Our own product: turns finished jobs into Google reviews automatically, with an AI reply writer for the reviews that come back.', href: '/SoftwareProduct/reviewloop', tag: 'C4 Original' },
         { name: 'Nudge', summary: 'Automated payment chasing and rate-rise nudges for service businesses — running in production, chasing real invoices.', href: '/software', tag: 'C4 Original' },
-        { name: 'Quotr', summary: 'Instant quote calculators that turn “can you give me a ballpark?” emails into qualified, priced leads while you sleep.', href: '/CaseStudy?slug=quotr', tag: 'C4 Original' },
+        { name: 'Quotr', summary: 'Instant quote calculators that turn “can you give me a ballpark?” emails into qualified, priced leads while you sleep.', href: '/CaseStudy/quotr', tag: 'C4 Original' },
       ],
     },
     {

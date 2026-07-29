@@ -59,9 +59,9 @@ const RIBBON_SOFTWARE_PARENT = { to: '/software', label: 'Software' };
 const RIBBON_DEFAULT = { to: '/', label: 'C4' };
 
 /* Resolve the ribbon's hierarchical parent from the lowercased pathname.
-   SoftwareProduct ships in two URL shapes: the SPA settles on the ?slug=
-   query form (/softwareproduct), but the sitemap + prerenderer publish the
-   path form (/SoftwareProduct/<slug>). Match the /softwareproduct PREFIX so
+   SoftwareProduct's canonical URL is the path form (/SoftwareProduct/<slug>),
+   which the sitemap and prerenderer publish; the legacy ?slug= query form
+   (/softwareproduct) still redirects in. Match the /softwareproduct PREFIX so
    the crawlable back-link resolves to /software in BOTH shapes — per memo §3,
    "SoftwareProduct (any slug/param) → /software" — instead of falling through
    to the home default under the crawler / on a no-JS deep link. */

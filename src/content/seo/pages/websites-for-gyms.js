@@ -41,7 +41,7 @@ export default {
       heading: 'Fitness work we can point to',
       cases: [
         { name: 'HVN Gym', summary: 'A full website build, plus drone and full-show event coverage through C4 Lens — site and content from the same studio, so they match.', tag: 'Build + content' },
-        { name: 'Jurassic PT', summary: 'A Cannington fitness studio site covering memberships, classes, personal training and remedial massage — with direct booking and a dual-format timetable.', href: '/CaseStudy?slug=jurassic-pt', tag: 'Live build' },
+        { name: 'Jurassic PT', summary: 'A Cannington fitness studio site covering memberships, classes, personal training and remedial massage — with direct booking and a dual-format timetable.', href: '/CaseStudy/jurassic-pt', tag: 'Live build' },
       ],
     },
     {

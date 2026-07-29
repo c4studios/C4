@@ -55,7 +55,7 @@ export default {
       cases: [
         { name: 'HVN', summary: 'Full-show coverage and drone work — the kind of footage a phone on a tripod can’t get, edited into something worth replaying.', tag: 'Event & drone' },
         { name: 'The Rocks', summary: 'A two-campus media system for a Perth church: services captured, edited and published as a repeatable weekly pipeline, not a one-off favour.', tag: 'Media system' },
-        { name: 'DS Racing Karts', summary: 'Motorsport content shot to match a brand built around speed — including the film running in the site’s header.', href: '/CaseStudy?slug=ds-racing-karts', tag: 'Motorsport' },
+        { name: 'DS Racing Karts', summary: 'Motorsport content shot to match a brand built around speed — including the film running in the site’s header.', href: '/CaseStudy/ds-racing-karts', tag: 'Motorsport' },
       ],
     },
     {

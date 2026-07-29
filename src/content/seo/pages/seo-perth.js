@@ -61,7 +61,7 @@ export default {
       label: 'Receipts',
       heading: 'Our own cooking',
       cases: [
-        { name: 'GoCC — Coaching & Counselling', summary: 'Performance and SEO consultancy for a counselling practice: faster load times, smoother interactions, wider reach through technical optimisation.', href: '/CaseStudy?slug=gocc', tag: 'Consultancy' },
+        { name: 'GoCC — Coaching & Counselling', summary: 'Performance and SEO consultancy for a counselling practice: faster load times, smoother interactions, wider reach through technical optimisation.', href: '/CaseStudy/gocc', tag: 'Consultancy' },
         { name: 'This page you’re reading', summary: 'It’s one of a 58-page SEO build we ran on our own site — structured data, prerendered HTML, honest content. We’re our own case study, and the rankings are the report card.', tag: 'Live experiment' },
       ],
     },

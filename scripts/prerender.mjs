@@ -50,11 +50,11 @@ const STATIC_ROUTES = [
   { path: '/Support', priority: 0.4, changefreq: 'yearly' },
   { path: '/privacy-policy', priority: 0.3, changefreq: 'yearly' },
   { path: '/terms-of-service', priority: 0.3, changefreq: 'yearly' },
-  // Contact 301-redirects to Support, exclude from sitemap
-  { path: '/Contact', priority: 0, changefreq: null, includeInSitemap: false },
+  // Contact is a real, indexable page again (see dist/_redirects note).
+  { path: '/Contact', priority: 0.6, changefreq: 'yearly' },
 ];
 
-// Case-study pages (query-param based: /CaseStudy?slug=xxx)
+// Case-study pages at their canonical path form (/CaseStudy/<slug>).
 // Derived from the top-level entry keys in caseStudyData.jsx so this list can
 // NEVER drift when entries are added or removed. Every entry in CASE_STUDIES
 // is a real case study with a CaseStudy page (saas products like Quotr /
@@ -94,7 +94,7 @@ function seoRoutes() {
 }
 const SEO_ROUTES = seoRoutes();
 
-// C4 Originals product pages (query-param based: /SoftwareProduct?slug=xxx)
+// C4 Originals product pages at their canonical path form.
 // PRODUCT_SLUGS is imported from productData.js (the single source of truth
 // the /software page renders from) so prerender + sitemap never drift.
 
@@ -240,7 +240,7 @@ async function main() {
 
   // Prerender case study pages
   for (const slug of CASE_STUDY_SLUGS) {
-    const route = `/CaseStudy?slug=${slug}`;
+    const route = `/CaseStudy/${slug}`;
     const outFile = path.join(DIST, 'CaseStudy', slug, 'index.html');
 
     console.log(`  ⏳ ${route}`);
@@ -251,7 +251,7 @@ async function main() {
 
   // Prerender C4 Originals product pages
   for (const slug of PRODUCT_SLUGS) {
-    const route = `/SoftwareProduct?slug=${slug}`;
+    const route = `/SoftwareProduct/${slug}`;
     const outFile = path.join(DIST, 'SoftwareProduct', slug, 'index.html');
 
     console.log(`  ⏳ ${route}`);
