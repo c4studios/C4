@@ -37,10 +37,7 @@ export const ORG_INFO = {
     // maps.app.goo.gl links are redirects that can change, which would poison
     // the entity signal. CID 13008624145149649483 = 0xb487eabcc436e24b.
     'https://maps.google.com/?cid=13008624145149649483',
-    // Facebook Page. The numeric profile.php?id= form is permanent, so it is
-    // safe here; swap to facebook.com/<username> once a username is claimed
-    // (both keep working, the vanity one just reads better).
-    'https://www.facebook.com/profile.php?id=61592401961213',
+    'https://www.facebook.com/c4studiosperth',
   ],
 };
 
