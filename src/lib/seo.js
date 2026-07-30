@@ -32,6 +32,7 @@ export const ORG_INFO = {
   // Add LinkedIn, YouTube, Facebook, TikTok, etc. as those profiles are confirmed.
   sameAs: [
     'https://www.instagram.com/c4.studio/',
+    'https://www.linkedin.com/in/caleb-scott-525a7a3b9/',
   ],
 };
 
