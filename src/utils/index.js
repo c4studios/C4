@@ -10,6 +10,7 @@ const PAGE_URLS = {
     ForesightLaw: '/ai-training-for-law-firms',
     TrainingEnquiry: '/ai-training-enquiry',
     C4SightPreviews: '/c4sight-previews',
+    HowWeUseAI: '/how-we-use-ai',
 };
 
 export function createPageUrl(pageName) {
