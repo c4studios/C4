@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { liveSeoPages } from '@/content/seo/registry';
+import { PROFILES } from '@/lib/seo';
 import { PRODUCTS } from '../software/productData';
 import C4Logo from './C4Logo';
 import C4iWordmark from './C4iWordmark';
@@ -33,7 +34,11 @@ const groups = [
     links: [
       { label: 'Start a Project', page: 'StartProject' },
       { label: 'Support', page: 'Support' },
-      { label: 'Instagram', href: 'https://www.instagram.com/c4.studio/' },
+      // Sourced from PROFILES so the visible links and the sameAs entity
+      // anchors can never point at different accounts.
+      { label: 'Instagram', href: PROFILES.instagram },
+      { label: 'LinkedIn', href: PROFILES.linkedinCompany },
+      { label: 'GitHub', href: PROFILES.github },
     ]
   }
 ];

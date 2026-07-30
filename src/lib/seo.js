@@ -9,6 +9,28 @@ export const SITE_URL = 'https://c4studios.com.au';
 export const SITE_NAME = 'C4 Studios';
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 
+/**
+ * The canonical, C4-owned public profiles. SINGLE SOURCE OF TRUTH: schema's
+ * sameAs, the footer, and the portfolio hero all read from here.
+ *
+ * They used to be hardcoded in three places, which is exactly how the Instagram
+ * handle silently drifted when the account was renamed to c4studiosperth: the
+ * footer and the structured data ended up pointing at two different accounts,
+ * which splits the entity signal that sameAs exists to consolidate. Add or
+ * change a profile HERE and nowhere else.
+ */
+export const PROFILES = {
+  instagram: 'https://www.instagram.com/c4studiosperth/',
+  linkedinCompany: 'https://www.linkedin.com/company/c4studios',
+  linkedinPersonal: 'https://www.linkedin.com/in/caleb-scott-525a7a3b9/',
+  github: 'https://github.com/c4studios',
+  // Google Business Profile, by CID. The stable form: share.google and
+  // maps.app.goo.gl links are redirects that can change, which would poison
+  // the entity signal. CID 13008624145149649483 = 0xb487eabcc436e24b.
+  googleBusiness: 'https://maps.google.com/?cid=13008624145149649483',
+  facebook: 'https://www.facebook.com/c4studiosperth',
+};
+
 export const ORG_INFO = {
   name: 'C4 Studios',
   legalName: 'C4 Studios',
@@ -29,19 +51,16 @@ export const ORG_INFO = {
   // Entity anchors for Google's Knowledge Graph and AI-search resolution. Every
   // URL here must be a real, live, C4-owned profile — this is how a search/AI
   // engine confirms "C4 Studios" is one consistent entity across the web.
-  // Add LinkedIn, YouTube, Facebook, TikTok, etc. as those profiles are confirmed.
+  // Sourced from PROFILES so these can never drift from the visible links.
+  // The two LinkedIn entries both stay: one anchors the founder, the other the
+  // business, and Google resolves them as related rather than duplicate.
   sameAs: [
-    'https://www.instagram.com/c4.studio/',
-    'https://www.linkedin.com/in/caleb-scott-525a7a3b9/',
-    // The C4 Studios LinkedIn Page. The personal profile above stays too: one
-    // anchors the founder, the other anchors the business, and Google resolves
-    // the two as related rather than duplicate.
-    'https://www.linkedin.com/company/c4studios',
-    // Google Business Profile, by CID. The stable form: share.google and
-    // maps.app.goo.gl links are redirects that can change, which would poison
-    // the entity signal. CID 13008624145149649483 = 0xb487eabcc436e24b.
-    'https://maps.google.com/?cid=13008624145149649483',
-    'https://www.facebook.com/c4studiosperth',
+    PROFILES.instagram,
+    PROFILES.linkedinPersonal,
+    PROFILES.linkedinCompany,
+    PROFILES.googleBusiness,
+    PROFILES.facebook,
+    PROFILES.github,
   ],
 };
 
