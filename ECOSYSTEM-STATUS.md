@@ -13,7 +13,10 @@
 | FirmFlow | firmflow.c4studios.com.au | app.firmflow.c4studios.com.au | `firmflow-app` | `firmflow-site` | violet `#5b46c9` |
 | Quotr | quotr.us | (same app) | `quotr` | — | blue `#2563eb` |
 
-All GitHub repos are under `calebscott1892-bot` (apps/sites are private).
+All GitHub repos are under `c4studios` (apps/sites are private). Renamed from
+`calebscott1892-bot` on 2026-07-30; GitHub redirects the old paths, but that
+redirect dies the moment anyone else registers the old name, so every local
+remote was rewritten rather than left to rely on it.
 
 ## Architecture & hosting
 
