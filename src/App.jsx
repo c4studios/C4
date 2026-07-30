@@ -26,6 +26,9 @@ const PrivateAI = lazy(() => import('./pages/PrivateAI'));
 // C4Sight previews — the tracked lead-magnet download page (flat slug).
 const C4SightPreviews = lazy(() => import('./pages/C4SightPreviews'));
 
+// How we use AI — the published position statement (flat slug).
+const HowWeUseAI = lazy(() => import('./pages/HowWeUseAI'));
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : () => <></>;
@@ -141,6 +144,14 @@ function App() {
             <LayoutWrapper currentPageName="C4SightPreviews">
               <Suspense fallback={null}>
                 <C4SightPreviews />
+              </Suspense>
+            </LayoutWrapper>
+          } />
+          {/* How we use AI — the published position statement (flat slug) */}
+          <Route path="/how-we-use-ai" element={
+            <LayoutWrapper currentPageName="HowWeUseAI">
+              <Suspense fallback={null}>
+                <HowWeUseAI />
               </Suspense>
             </LayoutWrapper>
           } />
