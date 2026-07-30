@@ -33,6 +33,10 @@ export const ORG_INFO = {
   sameAs: [
     'https://www.instagram.com/c4.studio/',
     'https://www.linkedin.com/in/caleb-scott-525a7a3b9/',
+    // Google Business Profile, by CID. The stable form: share.google and
+    // maps.app.goo.gl links are redirects that can change, which would poison
+    // the entity signal. CID 13008624145149649483 = 0xb487eabcc436e24b.
+    'https://maps.google.com/?cid=13008624145149649483',
   ],
 };
 
