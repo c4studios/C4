@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowUpRight, Instagram } from 'lucide-react';
 import PageHero from '../c4/PageHero';
+import { PROFILES } from '@/lib/seo';
 
 export default function PortfolioHero() {
   return (
@@ -10,7 +11,7 @@ export default function PortfolioHero() {
       description="Case studies with the thinking, structure, and craft behind each project."
     >
       <a
-        href="https://www.instagram.com/c4.studio/"
+        href={PROFILES.instagram}
         target="_blank"
         rel="noopener noreferrer"
         className="group inline-flex max-w-[560px] overflow-hidden rounded-[3px]"

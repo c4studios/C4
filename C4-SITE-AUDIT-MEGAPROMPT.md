@@ -334,7 +334,7 @@ Disallow: /api/
   "name": "C4 Studios",
   "url": "https://c4studios.com",
   "description": "Design & development studio building premium digital products.",
-  "sameAs": ["https://www.instagram.com/c4.studio/"],
+  "sameAs": ["https://www.instagram.com/c4studiosperth/"],
   "serviceType": ["Web Design", "Web Development", "Branding", "Photography", "SEO"]
 }
 </script>
