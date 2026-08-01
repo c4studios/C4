@@ -15,6 +15,10 @@ const groups = [
       { label: 'About', page: 'About' },
       { label: 'Portfolio', page: 'Portfolio' },
       { label: 'C4 Originals', page: 'Software' },
+      // The pledge had ZERO inbound internal links after launch (routing audit,
+      // 2026-08-01) — a published position statement nobody could click to.
+      // The footer link puts it one click from every page.
+      { label: 'How we use AI', to: '/how-we-use-ai' },
     ]
   },
   {
