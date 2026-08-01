@@ -4,7 +4,8 @@ import { queryClientInstance } from '@/lib/query-client'
 import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import { MotionConfig } from 'framer-motion';
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
+import { trackEvent } from './lib/track';
 import PageNotFound from './lib/PageNotFound';
 import SeoPage from './pages/SeoPage';
 import LeadEngine from './pages/LeadEngine';
@@ -43,6 +44,22 @@ function LegacyStartProjectRedirect() {
   return <Navigate to={`${createPageUrl('StartProject')}${location.search}${location.hash}`} replace />;
 }
 
+/* First-party page_view on every SPA route change (and the landing render).
+   trackEvent itself refuses to fire under the prerender UA, so the 113
+   prerendered pages don't log a deploy's worth of phantom views. */
+function PageViewTracker() {
+  const location = useLocation();
+
+  useEffect(() => {
+    trackEvent('page_view', {
+      path: location.pathname,
+      referrer: document.referrer || null,
+    });
+  }, [location.pathname]);
+
+  return null;
+}
+
 /* /CaseStudy/<slug> and /SoftwareProduct/<slug> are the REAL routes: they are
    what the sitemap lists, what the prerenderer writes real HTML to, and what
    each page now declares as its canonical.
@@ -60,6 +77,7 @@ function App() {
       {/* Honour prefers-reduced-motion for every framer-motion animation. */}
       <MotionConfig reducedMotion="user">
       <Router>
+        <PageViewTracker />
         <Routes>
           {/* Networking-card landing — no Layout chrome, lazy-loaded */}
           <Route

@@ -6,6 +6,7 @@ import { ArrowRight, X } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import TypedHeading from '../c4/TypedHeading';
 import CraftHeatmap from './CraftHeatmap';
+import { trackEvent } from '@/lib/track';
 import { useTheme } from '../c4/ThemeContext';
 import { buildQuotrSrc, postQuotrTheme, preconnectQuotr } from './quotrTheme';
 
@@ -916,6 +917,7 @@ export default function HeroSection() {
               >
                 <Link
                   to={START_PROJECT_PATH}
+                  onClick={() => trackEvent('hero_cta_click', { target: 'start' })}
                   className="c4-cta-primary group inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[11px] font-medium uppercase tracking-[0.14em] rounded-full"
                   style={{ backgroundColor: 'var(--c4-accent)', color: '#fff' }}
                 >
@@ -924,6 +926,7 @@ export default function HeroSection() {
                 </Link>
                 <Link
                   to={createPageUrl('Portfolio')}
+                  onClick={() => trackEvent('hero_cta_click', { target: 'portfolio' })}
                   className="c4-cta-ghost group inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[11px] font-medium uppercase tracking-[0.14em] rounded-full"
                   style={{
                     color: 'var(--c4-text)',
@@ -939,7 +942,7 @@ export default function HeroSection() {
               {/* Mobile-only Quotr launcher — desktop uses the side panel */}
               <motion.button
                 type="button"
-                onClick={() => setQuotrModalOpen(true)}
+                onClick={() => { trackEvent('hero_cta_click', { target: 'quotr' }); setQuotrModalOpen(true); }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.55, delay: 1.3 }}
