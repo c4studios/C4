@@ -537,7 +537,7 @@
   gap: clamp(14px, 1.6vw, 22px);
 }
 @media (max-width: 1023px) { .hm-doors { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 639px)  { .hm-doors { grid-template-columns: 1fr; } }
+@media (max-width: 639px)  { .hm-doors { grid-template-columns: 1fr; gap: 10px; } }
 
 .hm-door { display: flex; flex-direction: column; min-width: 0; }
 
@@ -553,6 +553,13 @@
   padding: 20px;
   text-decoration: none;
   isolation: isolate;
+}
+
+/* Phones: compact faces so all four doors land within ~2 screens instead of
+   burying C4Sight 3.3 screens deep (hero audit). Placed AFTER the base rule —
+   equal specificity, so source order decides. */
+@media (max-width: 639px) {
+  .hm-doorface { min-height: 172px; }
 }
 .hm-doorface::after {
   /* door-open sheen — clip-path swings open on hover */
