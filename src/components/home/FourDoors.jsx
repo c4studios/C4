@@ -16,6 +16,7 @@ import React, { useLayoutEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import C4iWordmark from '@/components/c4/C4iWordmark';
+import { trackEvent } from '@/lib/track';
 import { gsap, EASE, revealHeading, useStaticMode } from './homeMotion';
 
 import weaveGocc from './assets/weave-gocc.webp';
@@ -323,6 +324,7 @@ export default function FourDoors() {
             <article key={door.key} className="hm-door" data-proof>
               <Link
                 to={door.faceTo}
+                onClick={() => trackEvent('door_click', { target: door.key, detail: 'face' })}
                 className={`hm-doorface hm-doorface--${door.face}`}
                 aria-label={door.faceAria}
               >
@@ -342,11 +344,11 @@ export default function FourDoors() {
                   <span>{door.timeframe}</span>
                 </div>
                 <div className="hm-door-ctas">
-                  <Link to={door.primary.to} className="hm-door-cta group">
+                  <Link to={door.primary.to} onClick={() => trackEvent('door_click', { target: door.key, detail: 'primary' })} className="hm-door-cta group">
                     {door.primary.label}
                     <ArrowRight size={12} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
                   </Link>
-                  <Link to={door.secondary.to} className="hm-door-sec group">
+                  <Link to={door.secondary.to} onClick={() => trackEvent('door_click', { target: door.key, detail: 'secondary' })} className="hm-door-sec group">
                     {door.secondary.label}
                     <ArrowRight size={11} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
                   </Link>

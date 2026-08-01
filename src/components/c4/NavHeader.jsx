@@ -6,6 +6,7 @@ import { createPageUrl } from '@/utils';
 import C4Logo from './C4Logo';
 import C4iWordmark from './C4iWordmark';
 import ThemeToggle from './ThemeToggle';
+import { trackEvent } from '@/lib/track';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -376,6 +377,8 @@ export default function NavHeader() {
 
   const handleDropdownEnter = () => {
     clearTimeout(closeTimer.current);
+    // Track only the closed->open transition, not every hover re-entry.
+    if (!servicesOpen) trackEvent('nav_services_open', {});
     setServicesOpen(true);
   };
 
