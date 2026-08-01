@@ -28,7 +28,16 @@
  *   -- service-role inserts bypass RLS; no anon policy needed.
  */
 
-const ALLOWED_EVENTS = ['pa_view', 'pa_tier_select', 'pa_cta_click', 'pa_scroll_pricing'];
+// pa_supply_select and pa_hw_select were always fired by Explorer.tsx but
+// missing here, so the server 204'd and silently dropped them.
+const ALLOWED_EVENTS = [
+  'pa_view',
+  'pa_tier_select',
+  'pa_cta_click',
+  'pa_scroll_pricing',
+  'pa_supply_select',
+  'pa_hw_select',
+];
 
 function corsHeaders(env) {
   return {
@@ -64,6 +73,8 @@ export async function onRequestPost(context) {
       ref: sanitise(body.ref, 80) || null,
       tier: sanitise(body.tier, 40) || null,
       location: sanitise(body.location, 40) || null,
+      supply: sanitise(body.supply, 40) || null,
+      hardware: sanitise(body.hardware, 40) || null,
       user_agent: sanitise(body.user_agent || request.headers.get('User-Agent') || '', 400),
       country: request.headers.get('CF-IPCountry') || null,
       ts: new Date().toISOString(),
