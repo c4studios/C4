@@ -188,7 +188,7 @@ const DOORS = [
         <C4iWordmark /> · AI
       </>
     ),
-    word: 'Put AI to work',
+    word: 'Private AI & automations',
     outcome:
       'A private AI system on your own hardware, or cloud-based automations, agents and custom tools. Choose the setup that fits.',
     fromPrice: 'Local or cloud',
@@ -209,7 +209,7 @@ const DOORS = [
     faceTo: '/Lens',
     faceAria: 'Enter C4 Lens',
     tag: 'C4 Lens',
-    word: 'Brand & visual',
+    word: 'Photography, video & brand',
     outcome:
       'Photography, short-form video and brand identity, a coherent visual system for Perth businesses ready to retire stock.',
     fromPrice: 'From $200',
@@ -223,9 +223,9 @@ const DOORS = [
     faceTo: '/Foresight',
     faceAria: 'Enter C4Sight',
     tag: 'C4Sight',
-    word: 'Train your team',
+    word: 'AI training',
     outcome:
-      'Practical, hands-on AI workshops that leave your team genuinely capable, using their own tools on their own work.',
+      'Hands-on AI workshops for businesses, schools and law firms, run on your own tools and your own real work.',
     fromPrice: 'From $800',
     timeframe: 'Half / full-day',
     primary: { label: 'Visit C4Sight', to: '/Foresight' },

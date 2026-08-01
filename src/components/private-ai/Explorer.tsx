@@ -460,13 +460,22 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
 
         <p className="pa-fineprint">{finePrint}</p>
 
-        <div style={{ marginTop: 36 }}>
+        <div style={{ marginTop: 36, display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
           <a
             className="pa-btn"
             href={MAILTO}
             onClick={() => recordPrivateAiEvent('pa_cta_click', { location: 'explorer' })}
           >
             Talk through the right fit
+          </a>
+          {/* The page's only action used to be this mailto — a conversion
+              dead-end (routing audit). Every other money page routes to /start. */}
+          <a
+            href="/start?service=automation"
+            onClick={() => recordPrivateAiEvent('pa_cta_click', { location: 'explorer_start' })}
+            style={{ fontSize: 13, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'underline', textUnderlineOffset: 4, opacity: 0.75 }}
+          >
+            or start a project brief
           </a>
         </div>
       </div>

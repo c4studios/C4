@@ -939,6 +939,20 @@ export default function HeroSection() {
                 </Link>
               </motion.div>
 
+              {/* The thesis line: the ONLY place the first fold names all four
+                  trades (hero audit: no arm vocabulary was visible before
+                  scrolling). Quiet on purpose — the doors below do the selling. */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.55, delay: 1.42 }}
+                className="mt-6 text-[13px] leading-relaxed md:mt-7"
+                style={{ color: 'var(--c4-text-subtle)' }}
+              >
+                Websites and apps, private AI, photography, and hands-on AI training.
+                Perth-built, all four doors below.
+              </motion.p>
+
               {/* Mobile-only Quotr launcher — desktop uses the side panel */}
               <motion.button
                 type="button"
