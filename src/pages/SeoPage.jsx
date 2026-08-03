@@ -84,6 +84,10 @@ export default function SeoPage({ slug }) {
     // og:type 'article' is what makes a share render as a piece of writing
     // rather than a generic page, and it is the hook for article:* meta.
     type: entry && entry.type === 'article' ? 'article' : 'website',
+    // Articles carry their own share image. Without this every article
+    // shares the site-wide og-image.png, so a link posted to LinkedIn or
+    // Facebook previews with a generic card unrelated to the piece.
+    image: entry && entry.image ? entry.image : undefined,
     jsonLd,
   });
 
