@@ -48,6 +48,7 @@ const STATIC_ROUTES = [
   { path: '/private-ai', priority: 0.85, changefreq: 'monthly' },
   { path: '/c4sight-previews', priority: 0.7, changefreq: 'monthly' },
   { path: '/how-we-use-ai', priority: 0.75, changefreq: 'yearly' },
+  { path: '/insights', priority: 0.75, changefreq: 'weekly' },
   { path: '/Support', priority: 0.4, changefreq: 'yearly' },
   { path: '/privacy-policy', priority: 0.3, changefreq: 'yearly' },
   { path: '/terms-of-service', priority: 0.3, changefreq: 'yearly' },
@@ -260,6 +261,23 @@ async function main() {
     count++;
     console.log(`  ✅ ${route}`);
   }
+
+  // 404.html — Cloudflare serves this with a real 404 status via _redirects.
+  // Rendered from a deliberately non-existent path so the app's catch-all
+  // route produces its PageNotFound state, then marked noindex so the error
+  // page itself can never turn up in results.
+  console.log('  ⏳ 404.html');
+  {
+    const outFile = path.join(DIST, '404.html');
+    await prerenderRoute(page, baseUrl, '/__not-found__', outFile);
+    let html = await readFile(outFile, 'utf-8');
+    html = html.replace('</head>', '<meta name="robots" content="noindex,follow" /></head>');
+    // Canonical/og:url would otherwise point at the fake path.
+    html = html.replace(/<link rel="canonical"[^>]*>/, '');
+    html = html.replace(/<meta property="og:url"[^>]*>/, '');
+    await writeFile(outFile, html, 'utf-8');
+  }
+  console.log('  ✅ 404.html');
 
   // Generate the OG image (1200×630)
   console.log('  ⏳ og-image.png');

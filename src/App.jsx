@@ -30,6 +30,10 @@ const C4SightPreviews = lazy(() => import('./pages/C4SightPreviews'));
 // How we use AI — the published position statement (flat slug).
 const HowWeUseAI = lazy(() => import('./pages/HowWeUseAI'));
 
+// Insights — index for the editorial articles. The articles themselves are
+// registry-driven and live at flat root slugs; this is their hub.
+const Insights = lazy(() => import('./pages/Insights'));
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : () => <></>;
@@ -170,6 +174,14 @@ function App() {
             <LayoutWrapper currentPageName="HowWeUseAI">
               <Suspense fallback={null}>
                 <HowWeUseAI />
+              </Suspense>
+            </LayoutWrapper>
+          } />
+          {/* Insights — article index (flat slug) */}
+          <Route path="/insights" element={
+            <LayoutWrapper currentPageName="Insights">
+              <Suspense fallback={null}>
+                <Insights />
               </Suspense>
             </LayoutWrapper>
           } />

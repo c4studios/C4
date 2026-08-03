@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import SectionLabel from '@/components/c4/SectionLabel';
 import { webPricingGuides, ASTERISK_CLAUSE } from '@/data/pricing';
 import { resolveLiveSlugs } from '@/content/seo/registry';
+import useStaticMode from '@/hooks/useStaticMode';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -18,15 +19,26 @@ function SectionShell({ children }) {
   );
 }
 
+/**
+ * Scroll reveal that ENHANCES rather than gates.
+ *
+ * Without the staticMode guard the prerenderer captures every section in its
+ * `initial` state, so the static HTML shipped 26 blocks of body copy per page
+ * as `style="opacity: 0"` — invisible to any crawler that does not run JS, on
+ * the pages whose whole job is being read by crawlers. staticMode must resolve
+ * synchronously (see useStaticMode); an effect or useReducedMotion() is false
+ * on first render and reintroduces the bug.
+ */
 function Reveal({ children, className = '' }) {
+  const staticMode = useStaticMode();
+  const motionProps = staticMode ? {} : {
+    initial: { opacity: 0, y: 14 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: '-60px' },
+    transition: { duration: 0.6, ease },
+  };
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, ease }}
-      className={className}
-    >
+    <motion.div {...motionProps} className={className}>
       {children}
     </motion.div>
   );

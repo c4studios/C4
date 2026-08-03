@@ -168,6 +168,34 @@ export function caseStudyArticleSchema(study, testimonial) {
   return schema;
 }
 
+/**
+ * Editorial articles (the /insights set).
+ *
+ * `author` is the Person, not the Organization: these are opinion pieces
+ * written by one identifiable human, and E-E-A-T rewards a named author with
+ * a real profile over a faceless brand byline. `publisher` still points at the
+ * LocalBusiness node so the entity graph stays joined up.
+ *
+ * No `image` is emitted unless the entry actually has one — a broken or
+ * invented image URL is worse than the field being absent.
+ */
+export function articleSchema(entry) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: entry.name,
+    description: entry.description,
+    image: entry.image ? absoluteUrl(entry.image) : undefined,
+    author: { '@id': `${SITE_URL}/#founder` },
+    publisher: { '@id': `${SITE_URL}/#localbusiness` },
+    datePublished: entry.published,
+    dateModified: entry.updated || entry.published,
+    inLanguage: 'en-AU',
+    isAccessibleForFree: true,
+    mainEntityOfPage: absoluteUrl(`/${entry.slug}`),
+  };
+}
+
 export function videoObjectSchema({
   name,
   description,
