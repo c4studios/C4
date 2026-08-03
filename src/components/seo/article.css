@@ -1,0 +1,347 @@
+/* ═══════════════════════════════════════════════════════════════
+   ARTICLE — the long-form reading surface for /insights
+   ═══════════════════════════════════════════════════════════════
+
+   Why this exists as real CSS rather than Tailwind brackets: prose is
+   a cascade problem. Paragraph rhythm, heading spacing and the space
+   between a list and the paragraph above it are relationships, not
+   per-element values, and expressing them as utility classes on every
+   node is how the site ended up with 23 uncoordinated font sizes.
+
+   TYPE. One family — Archivo — across the whole article, using its
+   variable weight and width axes for hierarchy instead of introducing
+   a second face. The two sans already loaded (Geist, Instrument Sans)
+   would pair as two similar grotesques, which reads as indecision.
+   B612 Mono appears only where the content is genuinely machine-ish:
+   byline, source numbers. Not as a decorative eyebrow.
+
+   MOTION. Deliberately almost none. Scroll-reveals on every block of
+   an article fight the reader — they hide the next paragraph until
+   you have scrolled to it, which is the opposite of what a reading
+   surface wants. The hero animates once on load and the prose is
+   simply there. This also means nothing can ship at opacity:0 to a
+   crawler, which matters on pages whose entire job is being read.
+   ═══════════════════════════════════════════════════════════════ */
+
+.article {
+  --link: var(--c4-accent);
+  font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-optical-sizing: auto;
+  font-kerning: normal;
+  color: var(--prose);
+}
+
+/* Dark-mode accent is 3.22:1 — fine for a rule or a large numeral,
+   not for inline links in running text. Links there take the prose
+   colour and lean on the underline instead. */
+:root.dark-mode .article { --link: var(--prose); }
+
+/* ── the measure column ───────────────────────────────────────── */
+.article__col {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+/* Pull quotes and tables earn a little more room. Everything else
+   stays on the measure so the eye never has to re-find the left edge. */
+.article__col--wide { max-width: var(--measure-wide); }
+
+/* ── masthead ─────────────────────────────────────────────────── */
+.article__head { padding-block: clamp(6rem, 12vw, 9rem) 0; }
+
+.article__title {
+  font-size: var(--t-h1);
+  font-weight: 700;
+  font-stretch: 92%;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: var(--c4-text);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.article__dek {
+  margin-top: 1.35rem;
+  font-size: var(--t-lead);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.014em;
+  color: var(--prose-soft);
+  text-wrap: pretty;
+}
+
+.article__byline {
+  margin-top: 2.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--prose-rule);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.9rem;
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  letter-spacing: 0.04em;
+  color: var(--prose-meta);
+}
+.article__byline .sep { opacity: 0.5; }
+
+/* ── body ─────────────────────────────────────────────────────── */
+.article__body { padding-block: clamp(2.6rem, 5vw, 3.6rem) clamp(4rem, 8vw, 6rem); }
+
+.article__body p {
+  font-size: var(--t-body);
+  line-height: 1.7;
+  letter-spacing: -0.006em;
+  color: var(--prose);
+  text-wrap: pretty;
+  margin: 0;
+}
+/* Paragraph rhythm: space between, never indent. Picking both is the
+   classic error; digital wants space. */
+.article__body p + p { margin-top: 1.5em; }   /* ≈0.88 of a line box */
+
+.article__body h2 {
+  font-size: var(--t-h2);
+  font-weight: 680;
+  font-stretch: 94%;
+  line-height: 1.18;
+  letter-spacing: -0.028em;
+  color: var(--c4-text);
+  text-wrap: balance;
+  /* Asymmetric: a heading belongs to what follows it, so it sits far
+     from the paragraph above and close to the one below. */
+  margin: calc(var(--rhythm) * 1.85) 0 0.75rem;
+}
+.article__body > *:first-child h2,
+.article__body > *:first-child { margin-top: 0; }
+
+.article__body h3 {
+  font-size: var(--t-lead);
+  font-weight: 640;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+  color: var(--c4-text);
+  margin: calc(var(--rhythm) * 1.1) 0 0.5rem;
+}
+
+.article__body a {
+  color: var(--link);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--link) 45%, transparent);
+  transition: text-decoration-color 0.2s ease;
+}
+.article__body a:hover { text-decoration-color: var(--link); }
+
+.article__body strong { font-weight: 640; color: var(--c4-text); }
+
+/* ── the standfirst answer ────────────────────────────────────── */
+/* Not a card, not a side-striped callout. A short passage set larger,
+   which is what a standfirst is. */
+.article__answer {
+  margin-bottom: calc(var(--rhythm) * 1.4);
+  padding-bottom: calc(var(--rhythm) * 0.9);
+  border-bottom: 1px solid var(--prose-rule);
+}
+/* Has to out-specify `.article__body p`, which is (0,2,0). */
+.article__body .article__answer p {
+  font-size: var(--t-lead);
+  line-height: 1.52;
+  letter-spacing: -0.014em;
+  color: var(--c4-text);
+  font-weight: 450;
+}
+
+/* ── lists ────────────────────────────────────────────────────── */
+/* Inside an article a list is a list. The card grid the service-page
+   renderer uses breaks reading flow completely — three columns means
+   the eye stops going down the page. */
+.article__list { margin: 1.4rem 0 0; padding: 0; list-style: none; }
+.article__list > div + div { margin-top: 1.25rem; }
+
+.article__list dt {
+  font-size: var(--t-body);
+  font-weight: 640;
+  line-height: 1.45;
+  letter-spacing: -0.014em;
+  color: var(--c4-text);
+}
+.article__list dd {
+  margin: 0.3rem 0 0;
+  font-size: var(--t-body);
+  line-height: 1.7;
+  color: var(--prose);
+}
+
+/* ── numbered steps ───────────────────────────────────────────── */
+/* Numerals here are real ordinals — the steps are a sequence and the
+   order carries meaning. Not decorative 01/02/03 scaffolding. */
+.article__steps { margin: 1.5rem 0 0; padding: 0; list-style: none; counter-reset: step; }
+.article__steps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 2.1rem 1fr;
+  gap: 0 0.9rem;
+  padding-top: 1.35rem;
+  margin-top: 1.35rem;
+  border-top: 1px solid var(--prose-rule);
+}
+.article__steps li:first-child { margin-top: 0; }
+.article__steps li::before {
+  content: counter(step, decimal-leading-zero);
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  line-height: 1.9;
+  color: var(--c4-accent);
+  font-variant-numeric: tabular-nums;
+}
+.article__steps b {
+  font-size: var(--t-body);
+  font-weight: 640;
+  line-height: 1.45;
+  letter-spacing: -0.014em;
+  color: var(--c4-text);
+}
+.article__steps span {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: var(--t-body);
+  line-height: 1.7;
+  color: var(--prose);
+}
+
+/* ── pull quote ───────────────────────────────────────────────── */
+/* The one place the article breaks its measure. No side stripe, no
+   quotation-mark ornament — size and colour do the work. */
+.article__quote {
+  margin: calc(var(--rhythm) * 1.6) 0;
+  font-size: clamp(1.75rem, 1.3rem + 2.1vw, 2.5rem);   /* 28 → 40px, above the 35px h2 ceiling */
+  font-weight: 500;
+  font-stretch: 96%;
+  line-height: 1.32;
+  letter-spacing: -0.024em;
+  color: var(--c4-text);
+  text-wrap: balance;
+}
+.article__quotefig { margin: 0; }
+.article__quotefig figcaption {
+  margin-top: 0.9rem;
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  letter-spacing: 0.04em;
+  color: var(--prose-meta);
+}
+
+.article__quote::before {
+  content: '';
+  display: block;
+  width: 2.6rem;
+  height: 2px;
+  margin-bottom: 1.1rem;
+  background: var(--c4-accent);
+}
+
+/* ── table ────────────────────────────────────────────────────── */
+.article__tablewrap { margin-top: 1.5rem; overflow-x: auto; }
+.article__table { width: 100%; border-collapse: collapse; }
+.article__table th {
+  text-align: left;
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--prose-meta);
+  padding: 0 1.2rem 0.7rem 0;
+  border-bottom: 2px solid var(--c4-text);
+  white-space: nowrap;
+}
+.article__table td {
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--prose);
+  padding: 0.85rem 1.2rem 0.85rem 0;
+  border-bottom: 1px solid var(--prose-rule);
+  vertical-align: top;
+}
+.article__table td:first-child { font-weight: 560; color: var(--c4-text); }
+.article__table .num { font-variant-numeric: tabular-nums; }
+
+/* ── sources ──────────────────────────────────────────────────── */
+.article__sources { margin: 0; padding: 0; list-style: none; counter-reset: src; }
+.article__sources li {
+  counter-increment: src;
+  display: grid;
+  grid-template-columns: 1.9rem 1fr;
+  gap: 0 0.6rem;
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--prose-soft);
+  margin-top: 0.85rem;
+}
+.article__sources li:first-child { margin-top: 0; }
+.article__sources li::before {
+  content: counter(src) '.';
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  color: var(--prose-meta);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── section heading for the closing blocks ───────────────────── */
+.article__blockhead {
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--prose-meta);
+  margin: 0 0 1.2rem;
+}
+
+/* ── closing furniture ────────────────────────────────────────── */
+.article__foot {
+  border-top: 1px solid var(--prose-rule);
+  padding-block: calc(var(--rhythm) * 1.4);
+}
+.article__next { display: grid; gap: 0.9rem; }
+.article__next a {
+  font-size: var(--t-body);
+  font-weight: 560;
+  letter-spacing: -0.014em;
+  color: var(--c4-text);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.article__next a::before { content: '→'; color: var(--c4-accent); }
+.article__next a:hover { color: var(--c4-accent); }
+
+/* ── FAQ ──────────────────────────────────────────────────────── */
+/* Open by default. A collapsed accordion on an article is a reading
+   obstacle, and the answers are short enough not to need hiding. */
+.article__faq { margin: 0; }
+.article__faq dt {
+  font-size: var(--t-body);
+  font-weight: 640;
+  line-height: 1.45;
+  letter-spacing: -0.014em;
+  color: var(--c4-text);
+  padding-top: 1.4rem;
+  margin-top: 1.4rem;
+  border-top: 1px solid var(--prose-rule);
+}
+.article__faq dt:first-of-type { margin-top: 0; border-top: 0; padding-top: 0; }
+.article__faq dd {
+  margin: 0.45rem 0 0;
+  font-size: var(--t-body);
+  line-height: 1.7;
+  color: var(--prose);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article *,
+  .article *::before { animation: none !important; transition: none !important; }
+}

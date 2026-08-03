@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import useStaticMode from '@/hooks/useStaticMode';
 
 /**
  * Closing CTA band for SEO pages, visually in line with ServicesCTA.
@@ -10,15 +11,19 @@ import { createPageUrl } from '@/utils';
  * and where C4 Studios is, for both Google and AI-assistant search.
  */
 export default function SeoCta({ cta = {} }) {
+  // Same gating bug as SeoSections' Reveal — the CTA shipped hidden too.
+  const staticMode = useStaticMode();
   return (
     <section className="pt-10 pb-24">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12">
         <div className="h-px mb-12" style={{ backgroundColor: 'var(--c4-border)' }} />
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          {...(staticMode ? {} : {
+            initial: { opacity: 0, y: 12 },
+            whileInView: { opacity: 1, y: 0 },
+            viewport: { once: true },
+            transition: { duration: 0.6 },
+          })}
           className="max-w-[560px]"
         >
           <h2 className="text-[1.6rem] md:text-[2rem] font-semibold tracking-[-0.025em] leading-[1.1]" style={{ color: 'var(--c4-text)' }}>

@@ -24,4 +24,16 @@
 /Terms  /terms-of-service  301
 # /Contact is a real page again (fable pass — "The Direct Line").
 
-/*  /index.html  200
+# SPA routes that are NOT prerendered — they need index.html served at 200.
+# Everything else on the site has its own static file (115 of them), which is
+# what makes the real 404 below safe.
+/welcome     /index.html  200
+/hero-lab    /index.html  200
+/helix-lab   /index.html  200
+
+# Real 404s. This used to be `/*  /index.html  200`, which returned HTTP 200
+# with the homepage for every wrong URL — so any typo, dead backlink or
+# crawler probe produced another copy of the front page at a new address.
+# Google reads that as a soft 404 and, at worst, as duplicate content across
+# unlimited URLs. Serving 404.html with a 404 status ends it.
+/*  /404.html  404

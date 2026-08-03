@@ -482,11 +482,75 @@ const SUBURB_PAGES = SUBURB_SERVICES.flatMap((service) =>
   })
 );
 
+/* ── Articles ──────────────────────────────────────────────────────── */
+// Editorial pages. Deliberately the same FLAT slug shape as every other
+// programmatic page, so they inherit routing, prerender, sitemap coverage
+// and code-splitting for free. A nested /insights/<slug> form would need
+// the content-module glob in SeoPage.jsx made recursive, and any route
+// without a matching static file falls through the `_redirects` catch-all
+// and serves crawlers the homepage — the exact failure that made 32 detail
+// pages declare themselves duplicates of the front page. Index lives at
+// /insights and links out to these; the articles themselves sit at root.
+//
+// Extra fields beyond the standard entry:
+//   published / updated  ISO dates, required for Article JSON-LD
+//   readMinutes          shown on the index card
+//   dek                  one-line standfirst for the index card
+const ARTICLES = [
+  {
+    slug: 'why-web-designers-hide-their-prices', type: 'article', status: 'live', phase: 7,
+    name: 'Why Web Designers Hide Their Prices',
+    title: 'Why Web Designers Hide Their Prices | C4 Studios',
+    description: 'The three real reasons agencies quote on request, what "it depends" is actually protecting, and how to compare quotes when one is hiding the number.',
+    dek: 'Naming the reasons from inside the industry, then publishing ours anyway.',
+    published: '2026-08-03', updated: '2026-08-03', readMinutes: 6,
+    priority: 0.65, changefreq: 'yearly',
+    links: { pillars: ['how-much-does-a-website-cost-perth', 'web-design-perth', 'diy-website-vs-hiring-a-designer'] },
+  },
+  {
+    slug: 'ai-detectors-dont-work', type: 'article', status: 'draft', phase: 7,
+    name: 'AI Detectors Don’t Work',
+    title: 'AI Detectors Don’t Work | C4 Studios',
+    description: 'What independent testing found, who gets falsely flagged, the universities that switched detection off, and what schools should do instead.',
+    dek: 'What we tell schools in paid sessions, published with the receipts.',
+    published: '2026-08-03', updated: '2026-08-03', readMinutes: 8,
+    priority: 0.65, changefreq: 'yearly',
+    links: { pillars: ['ai-automation-perth'] },
+  },
+  {
+    slug: 'private-ai-vs-chatgpt-subscriptions', type: 'article', status: 'draft', phase: 7,
+    name: 'Private AI vs ChatGPT Subscriptions',
+    title: 'Private AI vs ChatGPT Subscriptions | C4 Studios',
+    description: 'The honest cost comparison: what a per-seat subscription stack really costs a small team, what on-premise costs, and where each one wins.',
+    dek: 'The per-seat maths, run properly, including where subscriptions win.',
+    published: '2026-08-03', updated: '2026-08-03', readMinutes: 7,
+    priority: 0.65, changefreq: 'yearly',
+    links: { pillars: ['ai-automation-perth'] },
+  },
+  {
+    slug: 'one-page-ai-policy', type: 'article', status: 'draft', phase: 7,
+    name: 'The One-Page AI Policy',
+    title: 'The One-Page AI Policy Your Business Needs | C4 Studios',
+    description: 'Most AI policies are unread PDFs. Here is the one-page version, what each line is for, and how to adapt it — free to copy.',
+    dek: 'A policy people will actually read, free to take and adapt.',
+    published: '2026-08-03', updated: '2026-08-03', readMinutes: 5,
+    priority: 0.65, changefreq: 'yearly',
+    links: { pillars: ['ai-automation-perth'] },
+  },
+];
+
 /* ── Combined registry ─────────────────────────────────────────────── */
-export const SEO_PAGES = [...PILLARS, ...INDUSTRIES, ...COMPARISONS, ...SUBURB_PAGES];
+export const SEO_PAGES = [...PILLARS, ...INDUSTRIES, ...COMPARISONS, ...SUBURB_PAGES, ...ARTICLES];
 
 export function liveSeoPages() {
   return SEO_PAGES.filter((p) => p.status === 'live');
+}
+
+/** Live articles, newest first — drives the /insights index. */
+export function liveArticles() {
+  return SEO_PAGES
+    .filter((p) => p.type === 'article' && p.status === 'live')
+    .sort((a, b) => (b.published || '').localeCompare(a.published || ''));
 }
 
 export function seoPageBySlug(slug) {
@@ -517,5 +581,16 @@ export function validateSeoEntry(entry) {
   if (!entry.description) problems.push('missing description');
   if (entry.title && entry.title.length > 60) problems.push(`title is ${entry.title.length} chars (max 60)`);
   if (entry.description && entry.description.length > 155) problems.push(`description is ${entry.description.length} chars (max 155)`);
+  // Article JSON-LD needs real dates; a live article without them would ship
+  // structured data Google rejects, so fail the build instead.
+  if (entry.type === 'article') {
+    if (!entry.published) problems.push('missing published date');
+    if (!entry.dek) problems.push('missing dek');
+    for (const field of ['published', 'updated']) {
+      if (entry[field] && !/^\d{4}-\d{2}-\d{2}$/.test(entry[field])) {
+        problems.push(`${field} is not an ISO date (YYYY-MM-DD)`);
+      }
+    }
+  }
   return problems;
 }

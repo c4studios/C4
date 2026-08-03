@@ -600,3 +600,48 @@ header a, header button {
 .skip-link:focus {
   top: 16px;
 }
+
+/* ═══════════════════════════════════════════
+   LONG-FORM READING — type scale + prose colour
+   ═══════════════════════════════════════════
+   Added for /insights articles. The site had 23 discrete font sizes with a
+   median adjacent ratio of 1.057 and no type token of any kind — a continuum,
+   not a hierarchy. These are additive: only the article components consume
+   them, so the 58 service pages are untouched.
+
+   Scale is 1.25-ish (major third) off an 18px prose body. Every step is at
+   least 1.15 from its neighbour so the levels actually read as levels.
+   Sizes are rem, never px, so browser font-size preference scales the prose
+   (site-wide, headings use rem and body uses px, so today only headings
+   respond to that preference). */
+:root {
+  --t-meta:  0.8125rem;                                   /* 13px */
+  --t-small: 0.9375rem;                                   /* 15px */
+  --t-body:  1.125rem;                                    /* 18px */
+  --t-lead:  clamp(1.25rem, 1.13rem + 0.5vw, 1.375rem);   /* 20 → 22px */
+  --t-h2:    clamp(1.75rem, 1.35rem + 1.7vw, 2.1875rem);  /* 28 → 35px */
+  --t-h1:    clamp(2.5rem, 1.9rem + 2.9vw, 3.75rem);      /* 40 → 60px */
+
+  /* Vertical rhythm derived from the body line box: 18px × 1.7 ≈ 30.6px. */
+  --rhythm: 1.9rem;
+
+  /* Measure. 34rem at 18px Archivo lands around 63ch, inside the 45–75 band. */
+  --measure: 34rem;
+  --measure-wide: 42rem;
+
+  /* Prose ink. --c4-text-muted is 4.99:1 on --c4-bg — a pass, but the floor,
+     and the floor is the wrong target for 1,500 words of continuous reading.
+     --c4-text-subtle (3.01:1) fails outright at body size and must never
+     carry prose. Verified ratios in the comments. */
+  --prose:      #3D3C38;  /* 10.15:1 on --c4-bg */
+  --prose-soft: #575650;  /*  6.77:1 */
+  --prose-meta: #6B6A64;  /*  4.99:1 — metadata only, never running text */
+  --prose-rule: #DDDBD7;
+}
+
+:root.dark-mode {
+  --prose:      #DAD5CB;  /* 12.92:1 on dark --c4-bg */
+  --prose-soft: #ADB2BC;  /*  8.88:1 */
+  --prose-meta: #8F94A0;  /*  6.22:1 */
+  --prose-rule: rgba(236, 231, 222, 0.14);
+}

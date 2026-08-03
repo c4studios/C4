@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { seoPageBySlug } from '@/content/seo/registry';
 import useDocumentHead from '@/hooks/useDocumentHead';
-import { localBusinessSchema, serviceSchema, faqSchema, breadcrumbSchema } from '@/lib/schema';
+import { localBusinessSchema, serviceSchema, faqSchema, breadcrumbSchema, articleSchema, personSchema } from '@/lib/schema';
 import PageNotFound from '@/lib/PageNotFound';
 import PillarTemplate from '@/components/seo/templates/PillarTemplate';
 import SuburbTemplate from '@/components/seo/templates/SuburbTemplate';
 import IndustryTemplate from '@/components/seo/templates/IndustryTemplate';
 import ComparisonTemplate from '@/components/seo/templates/ComparisonTemplate';
+import ArticleTemplate from '@/components/seo/templates/ArticleTemplate';
 
 // Lazy map of every content module, code-split per page so the 58-page
 // rollout adds nothing to the main bundle. Underscore files (the authoring
@@ -18,6 +19,7 @@ const TEMPLATES = {
   suburb: SuburbTemplate,
   industry: IndustryTemplate,
   comparison: ComparisonTemplate,
+  article: ArticleTemplate,
 };
 
 /**
@@ -53,6 +55,11 @@ export default function SeoPage({ slug }) {
     crumbs.push({ name: entry.name, path: `/${entry.slug}` });
 
     const blocks = [localBusinessSchema(), breadcrumbSchema(crumbs)];
+    if (entry.type === 'article') {
+      // personSchema() has to ship alongside it — articleSchema references the
+      // founder by @id, and a dangling @id means Google drops the author.
+      blocks.push(personSchema(), articleSchema(entry));
+    }
     if (entry.type === 'pillar' || entry.type === 'suburb') {
       blocks.push(serviceSchema({
         name: entry.name,
@@ -74,6 +81,9 @@ export default function SeoPage({ slug }) {
     title: entry && isLive ? entry.title : undefined,
     description: entry && isLive ? entry.description : undefined,
     path: entry ? `/${entry.slug}` : undefined,
+    // og:type 'article' is what makes a share render as a piece of writing
+    // rather than a generic page, and it is the hook for article:* meta.
+    type: entry && entry.type === 'article' ? 'article' : 'website',
     jsonLd,
   });
 
