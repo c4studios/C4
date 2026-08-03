@@ -31,6 +31,13 @@
 /hero-lab    /index.html  200
 /helix-lab   /index.html  200
 
+# Legacy alias bases. Old inbound links use /CaseStudy?slug=x and
+# /SoftwareProduct?slug=x; the path itself has no static file, so without
+# these the SPA never loads to perform its redirect up to the path form and
+# every one of those links would 404.
+/CaseStudy        /index.html  200
+/SoftwareProduct  /index.html  200
+
 # Real 404s. This used to be `/*  /index.html  200`, which returned HTTP 200
 # with the homepage for every wrong URL — so any typo, dead backlink or
 # crawler probe produced another copy of the front page at a new address.
