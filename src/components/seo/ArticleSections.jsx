@@ -120,6 +120,26 @@ function Process({ section }) {
   );
 }
 
+/* Figures. width/height are always emitted so the browser reserves the box
+   and the page does not shift when the image decodes — CLS is one of the few
+   things on this page Google measures directly. Lazy + async decode because
+   a lede image below the masthead is never the LCP element. */
+function Figure({ section }) {
+  return (
+    <figure className="article__figure">
+      <img
+        src={section.src}
+        alt={section.alt}
+        width={section.width}
+        height={section.height}
+        loading="lazy"
+        decoding="async"
+      />
+      {section.caption && <figcaption>{section.caption}</figcaption>}
+    </figure>
+  );
+}
+
 function Quote({ section }) {
   return (
     <figure className="article__quotefig">
@@ -183,6 +203,7 @@ const KINDS = {
   list: List,
   process: Process,
   quote: Quote,
+  image: Figure,
   table: Table,
   sources: Sources,
 };
@@ -192,7 +213,7 @@ export default function ArticleSections({ sections = [] }) {
     const Kind = KINDS[section.kind];
     if (!Kind) return null;
     // Quotes break the measure; everything else stays in the reading column.
-    const wide = section.kind === 'quote' || section.kind === 'table';
+    const wide = section.kind === 'quote' || section.kind === 'table' || section.kind === 'image';
     return (
       <div key={i} className={wide ? 'article__col article__col--wide' : 'article__col'}>
         <Kind section={section} />

@@ -503,6 +503,7 @@ const ARTICLES = [
     title: 'Why Web Designers Hide Their Prices | C4 Studios',
     description: 'The three real reasons agencies quote on request, what "it depends" is actually protecting, and how to compare quotes when one is hiding the number.',
     dek: 'Naming the reasons from inside the industry, then publishing ours anyway.',
+    image: '/insights/why-web-designers-hide-their-prices-og.jpg',
     published: '2026-08-03', updated: '2026-08-03', readMinutes: 6,
     priority: 0.65, changefreq: 'yearly',
     links: { pillars: ['how-much-does-a-website-cost-perth', 'web-design-perth', 'diy-website-vs-hiring-a-designer'] },
