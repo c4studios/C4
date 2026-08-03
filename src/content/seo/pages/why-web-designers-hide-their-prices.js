@@ -29,6 +29,15 @@ export default {
     },
 
     {
+      kind: 'image',
+      src: '/insights/why-web-designers-hide-their-prices.jpg',
+      width: 1360,
+      height: 1688,
+      alt: 'A printed quotation on a desk with the entire amounts column struck out in black marker. Only the word TOTAL is still readable.',
+      caption: 'Every number on it, gone. The word TOTAL survives, which is roughly how a quote-on-request conversation feels.',
+    },
+
+    {
       kind: 'list',
       label: 'The reasons',
       heading: 'Three reasons the number is missing',

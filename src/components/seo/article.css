@@ -345,3 +345,21 @@
   .article *,
   .article *::before { animation: none !important; transition: none !important; }
 }
+
+/* ── figures ──────────────────────────────────────────────────── */
+.article__figure { margin: calc(var(--rhythm) * 1.5) 0; }
+.article__figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
+.article__figure figcaption {
+  margin-top: 0.85rem;
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  color: var(--prose-meta);
+  max-width: var(--measure);
+}
