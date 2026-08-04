@@ -33,8 +33,8 @@ export default {
       src: '/insights/why-web-designers-hide-their-prices.jpg',
       width: 1360,
       height: 1700,
-      alt: 'A hand holding down a printed quotation on a scratched desk. The price column is empty and the bottom of the page has been torn away.',
-      caption: 'The column where the numbers go, and the part of the page they were on.',
+      alt: 'A printed invoice on a desk with every figure in the amount column scribbled out in blue biro. The pen is lying across the page.',
+      caption: 'Every line, and the total. This is the version of the conversation most people get.',
     },
 
     {
