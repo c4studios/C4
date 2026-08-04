@@ -514,6 +514,7 @@ const ARTICLES = [
     title: 'AI Detectors Don’t Work | C4 Studios',
     description: 'What independent testing found, who gets falsely flagged, the universities that switched detection off, and what schools should do instead.',
     dek: 'What we tell schools in paid sessions, published with the receipts.',
+    image: '/insights/ai-detectors-dont-work-og.jpg',
     published: '2026-08-03', updated: '2026-08-03', readMinutes: 8,
     priority: 0.7, changefreq: 'yearly',
     links: { pillars: ['ai-automation-perth'] },
