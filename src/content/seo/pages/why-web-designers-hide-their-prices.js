@@ -32,7 +32,7 @@ export default {
       kind: 'image',
       src: '/insights/why-web-designers-hide-their-prices.jpg',
       width: 1360,
-      height: 1699,
+      height: 1700,
       alt: 'A printed invoice on an office desk. Every line item is readable but every figure in the amount column, and the total, has been scribbled out in blue biro.',
       caption: 'You can read every line. Just not what any of it costs.'
     },
