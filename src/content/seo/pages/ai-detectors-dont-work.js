@@ -57,6 +57,15 @@ export default {
     },
 
     {
+      kind: 'image',
+      src: '/insights/ai-detectors-dont-work.jpg',
+      width: 1360,
+      height: 1700,
+      alt: 'A pile of handwritten student essays on lined paper, sitting on a staffroom table in afternoon light. One line has been scribbled out in biro and there is an ink blot near the margin.',
+      caption: 'Handwritten, and still the kind of writing a detector calls machine-made.'
+    },
+
+    {
       kind: 'quote',
       quote: 'At the false-positive rate Turnitin publishes for itself, a university submitting 75,000 papers a year is wrongly accusing about 750 students.',
       attribution: 'The arithmetic Vanderbilt published when it turned the tool off.',
