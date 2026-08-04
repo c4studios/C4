@@ -61,8 +61,8 @@ export default {
       src: '/insights/ai-detectors-dont-work.jpg',
       width: 1360,
       height: 1700,
-      alt: 'A pile of handwritten student essays on lined paper, sitting on a staffroom table in afternoon light. One line has been scribbled out in biro and there is an ink blot near the margin.',
-      caption: 'Handwritten, and still the kind of writing a detector calls machine-made.'
+      alt: 'A thick stack of ruled A4 paper on a staffroom table, lit from the side by late afternoon sun so each sheet in the stack reads as a separate bright line. Blue biro ink has bled to the edge of a few pages.',
+      caption: 'Ninety-one essays, seven detectors, and most of the pile came back marked as machine-written.'
     },
 
     {
