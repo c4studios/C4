@@ -58,7 +58,6 @@ import plxReturndesk from './assets/plx-returndesk.webp';
 import plxBarrys from './assets/plx-barrys.webp';
 import plxWooster from './assets/plx-wooster.webp';
 import plxJk from './assets/plx-jk.webp';
-import plxVeer from './assets/plx-veer.webp';
 import plxIopa from './assets/plx-iopa.webp';
 
 /* slug → derived 1200w webp. One line per portfolio entry. */
@@ -80,7 +79,6 @@ const PLX_IMG = {
   'barrys-drink': plxBarrys,
   'wooster-core': plxWooster,
   'jk-plumbing-solutions': plxJk,
-  veer: plxVeer,
   iopa: plxIopa,
 };
 

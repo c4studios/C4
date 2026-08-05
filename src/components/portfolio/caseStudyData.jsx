@@ -2248,95 +2248,6 @@ export const CASE_STUDIES = {
       'Optional cloud sync so both campuses can share content updates from one place',
     ],
   },
-  'veer': {
-    slug: 'veer',
-    name: 'VEER',
-    oneLiner: 'A concept site for a wireless handlebar-end bike turn indicator — grab the 3D handlebar on the hero, steer past the detent, and the real amber signal fires.',
-    client: 'Concept — VEER, a wireless handlebar-end bicycle turn indicator',
-    location: 'Australia',
-    timeline: '',
-    budget: '',
-    role: 'Solo (concept, design, development, deployment)',
-    liveUrl: 'https://veer-demo.netlify.app',
-    year: '2026',
-    category: 'web_design',
-    tags: ['Website', 'Concept', 'Product / Hardware', '3D / WebGL', 'Motion Design', 'Brand'],
-    featured: false,
-    concept: true,
-    budgetOrder: 0,
-
-    cover: null,
-    brandColor: '#F5A623',
-    backdropStyle: { backgroundColor: '#0b0b0c' },
-    thumbnail: '/captures/veer-demo-netlify-app/desktop/01-hero.png',
-
-    overview: "VEER is a self-initiated concept site for a wireless, handlebar-end bicycle turn indicator — the kind of product page C4 ships to prove what a hardware brand's launch could feel like. Its entire pitch is a single interaction: on the home hero a real 3D handlebar sits at the bottom of the fold, and you grab and steer it — pull past a detent and the corresponding amber lamp arms and fires the genuine turn-signal cadence. From there the site reads as four art-directed places, each with its own hero and a signature 'veer' page transition: an AirPods-style pinned product tour, a firmware 'thumb-switch bench' you can actually drive, and a brand story. It's a complete, deployable product-marketing site built to be felt, not just read — capture-safe, pointer- and reduced-motion-aware, and honest about the physics of the device it's selling. Available to license or commission as the foundation for a real hardware launch.",
-
-    screenshots: [
-      { url: '/captures/veer-demo-netlify-app/desktop/01-hero.png', caption: 'Home hero — "Be seen from the side." over the grab-and-steer 3D handlebar; steering past the detent fires the amber turn signal.' },
-      { url: '/captures/veer-demo-netlify-app/desktop/02-product.png', caption: 'Product — an AirPods-style pinned, scroll-driven tour that walks the device feature by feature.' },
-      { url: '/captures/veer-demo-netlify-app/desktop/03-tech.png', caption: 'Tech — a firmware thumb-switch bench: hold a paddle to drive the signal HUD, with auto-cancel, hazard and a live tick readout.' },
-    ],
-
-    desktopScreenshots: [
-      { url: '/captures/veer-demo-netlify-app/desktop/01-hero.png', caption: 'Home hero with the grab-and-steer 3D handlebar.' },
-      { url: '/captures/veer-demo-netlify-app/desktop/02-product.png', caption: 'AirPods-style pinned product tour.' },
-      { url: '/captures/veer-demo-netlify-app/desktop/03-tech.png', caption: 'Firmware thumb-switch bench.' },
-    ],
-
-    mobileScreenshots: [
-      { url: '/captures/veer-demo-netlify-app/mobile/01-hero.png', caption: 'Mobile hero — the same grab-and-steer handlebar with a "Drag the bar to steer" hint.' },
-    ],
-
-    delivered: [
-      'Art-directed, multi-route product-marketing site (home, product, tech, story) with a signature "veer" page transition between sections.',
-      'Interactive 3D hero — a real handlebar model you grab and steer; pulling past a detent arms and fires the amber turn signal.',
-      'A live signalling model: lamps pre-glow on proximity and flash at the true turn-signal cadence, with arbitration so navigation always wins.',
-      'A pinned, scroll-driven "AirPods-style" product tour.',
-      'A firmware thumb-switch bench — hold a paddle (pointer, Space or arrow keys) to drive a signal HUD with auto-cancel, hazard and a live tick readout.',
-      'A deterministic, capture-safe hero (finished on first paint, no content-gating entrance) with a primary CTA into the product page.',
-      'Pointer- and reduced-motion-aware throughout; the 3D canvas takes no pointer events so the copy and CTA above it stay live.',
-    ],
-
-    features: [
-      'Grab-and-steer 3D handlebar hero — drag past the detent to fire the amber signal.',
-      'Live signalling: proximity pre-glow + true turn-signal flash cadence, navigation-priority arbitration.',
-      'Pinned, scroll-driven product tour.',
-      'Playable firmware thumb-switch bench (pointer / Space / arrow keys) with auto-cancel and hazard.',
-      'Per-route art direction with a signature page transition.',
-      'Deterministic, capture-safe hero; reduced-motion and keyboard safe.',
-    ],
-
-    stack: [
-      'Next.js (App Router), statically served on Netlify.',
-      'React Three Fiber / Three.js — the grab-and-steer 3D handlebar and lamp model.',
-      'Window-driven 3D interaction, so the canvas can be pointer-events:none and never block the hero CTA.',
-      'CSS-driven signalling plus a keyframed accent "ignite"; Inter for UI type.',
-      'Hosting: Netlify.',
-    ],
-
-    integrations: [
-      'Netlify — hosting and deploy.',
-    ],
-
-    performance: [
-      'Lazy-mounted R3F hero under a static dark stage and poster silhouette, so an early screenshot is never a black canvas.',
-      'Deterministic first view — the hero renders finished on first paint, so every load and capture is identical.',
-      'No layout shift (the 3D stage reserves its space); reduced-motion and pointer safe.',
-    ],
-
-    challenges: [
-      'Making one interaction — grab, steer, fire — read as the entire product pitch while keeping it discoverable and forgiving.',
-      'Driving the 3D from window listeners so the canvas can stay pointer-events:none and never intercept the hero CTA.',
-      'A capture-safe hero: finished on first paint, deterministic, never a blank or black flash.',
-    ],
-
-    improvements: [
-      'Wire a real enquiry / pre-order form to a backend.',
-      'Add a fuller spec sheet and a comparison section.',
-      'Progressive-enhance the 3D with a lower-LOD path for low-end devices.',
-    ],
-  },
 
   'iopa': {
     slug: 'iopa',
@@ -2447,7 +2358,7 @@ export const BUILD_ORDER = [
   // apps / SaaS
   'people-power', 'quotr', 'returndesk',
   // concepts (self-initiated, built after the client work)
-  'wooster-core', 'barrys-drink', 'jk-plumbing-solutions', 'veer', 'iopa',
+  'wooster-core', 'barrys-drink', 'jk-plumbing-solutions', 'iopa',
 ];
 
 /* Lower `seq` = built earlier. Unknown slugs sort to the end (treated newest). */

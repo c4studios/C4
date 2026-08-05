@@ -23,7 +23,6 @@ import { Link } from 'react-router-dom';
 import cptBarrys from './assets/cpt-barrys.webp';
 import cptWooster from './assets/cpt-wooster.webp';
 import cptJk from './assets/cpt-jk.webp';
-import cptVeer from './assets/cpt-veer.webp';
 import cptIopa from './assets/cpt-iopa.webp';
 
 /* Every concept offers TWO ways in: the live deployment, and its own
@@ -55,15 +54,6 @@ const CONCEPTS = [
     live: 'https://jk-plumbing-tau.vercel.app',
     portfolio: '/CaseStudy/jk-plumbing-solutions',
     alt: 'JK Plumbing concept site — licensed-trade lead generation hero.',
-  },
-  {
-    key: 'veer',
-    name: 'VEER',
-    line: 'A bike turn-indicator you demo yourself — grab the 3D handlebar and steer to fire it.',
-    img: cptVeer,
-    live: 'https://veer-demo.netlify.app',
-    portfolio: '/CaseStudy/veer',
-    alt: 'VEER concept site — "Be seen from the side." over a 3D handlebar.',
   },
   {
     key: 'iopa',
@@ -133,7 +123,7 @@ export default function ConceptCarousel({ staticMode = false }) {
   const wrapRef = useRef(null);
   const cylRef = useRef(null);
   const [hinted, setHinted] = useState(false);
-  /* On phones the drum can't work — five 78vw faces on a ~110px radius
+  /* On phones the drum can't work — 78vw faces on a ~110px radius
      intersect each other. Mobile gets a native scroll-snap rail instead:
      one card per swipe, momentum and snapping owned by the OS. */
   const [mobile, setMobile] = useState(
