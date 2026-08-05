@@ -535,6 +535,7 @@ const ARTICLES = [
     title: 'The One-Page AI Policy Your Business Needs | C4 Studios',
     description: 'Most AI policies are unread PDFs. Here is the one-page version, what each line is for, and whether the 10 December 2026 privacy change applies to you.',
     dek: 'A policy people will actually read, free to take and adapt.',
+    image: '/insights/one-page-ai-policy-og.jpg',
     published: '2026-08-04', updated: '2026-08-04', readMinutes: 6,
     priority: 0.65, changefreq: 'yearly',
     links: { pillars: ['ai-automation-perth'] },
