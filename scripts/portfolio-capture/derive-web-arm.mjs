@@ -7,7 +7,7 @@
  *   dsr-home-*   DSR real full-page home (desktop + mobile) — device drive
  *   hvn-f*       HVN cinematic film-strip frames
  *   tidy-f*      Tidy Gardens display frames (+ tidy-hero refresh)
- *   cpt-*        Concept carousel faces (Barry's, Wooster, JK, VEER, IOPA)
+ *   cpt-*        Concept carousel faces (Barry's, Wooster, JK, IOPA)
  */
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -38,7 +38,6 @@ const JOBS = [
   ['plx-barrys', 'barrys-drink-concept-vercel-app/desktop/01-hero.png', 1200, 74],
   ['plx-wooster', 'wooster-core-vercel-app/desktop/01.png', 1200, 74],
   ['plx-jk', 'jk-plumbing-tau-vercel-app/desktop/01.png', 1200, 74],
-  ['plx-veer', 'veer-demo-netlify-app/desktop/01-hero.png', 1200, 74],
   ['plx-iopa', 'iopa-apparel-vercel-app/desktop/01-hero.png', 1200, 74],
   /* ── DSR real homepage, full page (device drive) ────────────────── */
   ['dsr-home-d', 'dsracingkarts-com-au/desktop/00-fullpage.png', 900, 66],
@@ -58,7 +57,6 @@ const JOBS = [
   ['cpt-barrys', 'barrys-drink-concept-vercel-app/desktop/01-hero.png', 800, 72],
   ['cpt-wooster', 'wooster-core-vercel-app/desktop/01.png', 800, 72],
   ['cpt-jk', 'jk-plumbing-tau-vercel-app/desktop/01.png', 800, 72],
-  ['cpt-veer', 'veer-demo-netlify-app/desktop/01-hero.png', 800, 72],
   ['cpt-iopa', 'iopa-apparel-vercel-app/desktop/01-hero.png', 800, 72],
 ];
 

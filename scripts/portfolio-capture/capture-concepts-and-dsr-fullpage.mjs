@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 /**
  * One-shot capture for the ServiceWeb rebuild:
- *   1. VEER concept cover      — 1600×1000, ~2.5s settle (its hero is
- *      deterministic + capture-safe by design; recipe from its build agent).
- *   2. IOPA concept cover      — 1600×1000 under prefers-reduced-motion
+ *   1. IOPA concept cover      — 1600×1000 under prefers-reduced-motion
  *      (freezes the finished hero: no preloader, orb at seeded t=0).
- *   3. DSR full-page home      — desktop 1440 + mobile 430, fullPage:true,
+ *   2. DSR full-page home      — desktop 1440 + mobile 430, fullPage:true,
  *      Chrome channel (h.264 hero video) + 7.5s settle past the ~5s hero load.
  *
  * Outputs land in public/captures/<slug>/desktop|mobile/ so the normal
@@ -39,18 +37,7 @@ async function save(page, file, opts = {}) {
 
 const browser = await launch();
 
-/* 1 · VEER — deterministic hero, ~2.5s settle. */
-{
-  console.log('VEER cover…');
-  const ctx = await browser.newContext({ viewport: { width: 1600, height: 1000 }, deviceScaleFactor: 1 });
-  const page = await ctx.newPage();
-  await page.goto('https://veer-demo.netlify.app/', { waitUntil: 'networkidle', timeout: 60000 }).catch((e) => console.warn('  nav:', e.message));
-  await page.waitForTimeout(2500);
-  await save(page, path.join(CAPS, 'veer-demo-netlify-app', 'desktop', '01-hero.png'));
-  await ctx.close();
-}
-
-/* 2 · IOPA — reduced-motion freeze (the key: preloader skips, orb frozen). */
+/* 1 · IOPA — reduced-motion freeze (the key: preloader skips, orb frozen). */
 {
   console.log('IOPA cover…');
   const ctx = await browser.newContext({
@@ -65,7 +52,7 @@ const browser = await launch();
   await ctx.close();
 }
 
-/* 3 · DSR full-page home — desktop + mobile, past the hero video load. */
+/* 2 · DSR full-page home — desktop + mobile, past the hero video load. */
 {
   console.log('DSR full-page (desktop)…');
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });

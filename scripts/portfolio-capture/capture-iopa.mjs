@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 /**
- * Gallery captures for the VEER + IOPA concept case studies.
- *   VEER  — real routes (/, /product, /tech); hero settles ~2.5s, capture-safe.
+ * Gallery captures for the IOPA concept case study.
  *   IOPA  — single scroll-tuned page; captured under prefers-reduced-motion
  *           (the build's deterministic path: preloader skips, orb frozen at
  *           its seeded frame) at a few scroll depths.
@@ -32,25 +31,6 @@ async function shot(page, file, { scrollTo = 0, settle = 2500 } = {}) {
 }
 
 const browser = await launch();
-
-/* ── VEER ──────────────────────────────────────────────────────────── */
-{
-  const dir = path.join(CAPS, 'veer-demo-netlify-app', 'desktop');
-  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
-  const page = await ctx.newPage();
-  console.log('VEER…');
-  for (const [route, name] of [['/', '01-hero'], ['/product', '02-product'], ['/tech', '03-tech']]) {
-    await page.goto('https://veer-demo.netlify.app' + route, { waitUntil: 'networkidle', timeout: 60000 }).catch((e) => console.warn('  nav', route, e.message));
-    await shot(page, path.join(dir, `${name}.png`), { settle: 3000 });
-  }
-  await ctx.close();
-  // mobile hero
-  const mctx = await browser.newContext({ viewport: { width: 430, height: 932 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
-  const mpage = await mctx.newPage();
-  await mpage.goto('https://veer-demo.netlify.app/', { waitUntil: 'networkidle', timeout: 60000 }).catch(() => {});
-  await shot(mpage, path.join(CAPS, 'veer-demo-netlify-app', 'mobile', '01-hero.png'), { settle: 3000 });
-  await mctx.close();
-}
 
 /* ── IOPA ──────────────────────────────────────────────────────────── */
 {
