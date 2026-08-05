@@ -42,6 +42,15 @@ export default {
     },
 
     {
+      kind: 'image',
+      src: '/insights/one-page-ai-policy.jpg',
+      width: 1360,
+      height: 1700,
+      alt: 'A single printed page titled "AI use at [business name]" listing five numbered clauses, lying on a desk. One clause is circled in blue biro and a line in the last clause is underlined twice.',
+      caption: 'The whole policy. The circled clause is the one that prevents the incident.'
+    },
+
+    {
       kind: 'prose',
       heading: 'Why the enterprise template does not fit you',
       body: [
