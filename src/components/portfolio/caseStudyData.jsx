@@ -258,9 +258,9 @@ export const CASE_STUDIES = {
     oneLiner: 'A maintenance plumbing and gas fitting business given a site built around how people actually search for a plumber — by problem, and by suburb.',
     client: 'Aqua-Safe Plumbing & Maintenance',
     location: 'Perth, WA',
-    timeline: '[CALEB TO CONFIRM]',
-    budget: '[CALEB TO CONFIRM]',
-    role: '[CALEB TO CONFIRM]',
+    timeline: '2 weeks',
+    budget: '$1.5k – $2.5k',
+    role: 'Solo (design, development, deployment)',
     liveUrl: 'https://aquasafeplumbing.com.au/',
     year: '2026',
     category: 'web_design',
@@ -302,7 +302,17 @@ export const CASE_STUDIES = {
     ],
 
     delivered: [
-      '[CALEB TO CONFIRM]',
+      'Complete website — design, build, content structuring and deployment',
+      'Eighteen service pages, nine residential and nine commercial, from a single content model',
+      'Thirty-seven service-area pages plus an index covering 167 Perth suburbs',
+      'Three-panel rotating hero that yields to the visitor once they choose a panel',
+      'Interactive whole-home filtration walkthrough across all three filter stages',
+      'Hot water comparison covering gas instantaneous, heat pump and storage',
+      'Enquiry form with server-side validation, per-field errors and spam honeypot',
+      'Service pages deep-linked to the contact form with the service preselected',
+      'Google reviews carousel wired to the real business listing',
+      'Persistent mobile call-and-book bar',
+      'Local SEO structure — metadata, sitemap and structured data',
     ],
 
     features: [
@@ -2464,16 +2474,15 @@ export const CASE_STUDIES = {
     oneLiner: 'A site for a Perth electrician built around a live single-line diagram of the metro — feeders energise out from the depot and each suburb powers on as the page loads.',
     client: 'Brady Electrical Services',
     location: 'Neerabup, Perth WA',
-    timeline: '[CALEB TO CONFIRM]',
-    budget: '[CALEB TO CONFIRM]',
-    role: '[CALEB TO CONFIRM]',
+    timeline: '2 weeks',
+    budget: '$500 – $1.25k',
+    role: 'Solo (design, development, deployment)',
     liveUrl: 'https://bradyelectrical.com.au',
     year: '2026',
     category: 'web_design',
     tags: ['Website', 'Trades & Services', 'Local SEO', 'Next.js', 'Perth', 'Local Business'],
     featured: false,
-    /* Sorts alongside `budget` — set both together once terms are confirmed. */
-    budgetOrder: 0,
+    budgetOrder: 1,
 
     cover: null,
     brandColor: '#547C2A',
@@ -2509,7 +2518,18 @@ export const CASE_STUDIES = {
     ],
 
     delivered: [
-      '[CALEB TO CONFIRM]',
+      'Complete website — design, build, content structuring and deployment',
+      'Animated single-line diagram of the Perth metro, energising outward from the Neerabup depot, doubling as the service-area map',
+      'Four service lines, each with its own capability list and enquiry path',
+      'Workmanship standard presented as a signed commissioning certificate',
+      'Job-photography gallery in a uniform grid, tagged by job type',
+      'Four-step process explainer from first call to final test',
+      'Dedicated air-conditioning landing page with brand line-up and specials',
+      'Room-size calculator returning a capacity and indicative install price',
+      'Careers page with vacancies and an application path',
+      'Quote form with field-level validation and server-side delivery',
+      'FAQ marked up as FAQPage structured data',
+      'Legacy WordPress URL redirects preserved (/our-services, /our-story, /contact-us, /air-conditioning-specials)',
     ],
 
     features: [
