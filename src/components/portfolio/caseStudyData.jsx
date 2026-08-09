@@ -252,6 +252,122 @@ export const CASE_STUDIES = {
     ],
   },
 
+  'aqua-safe-plumbing': {
+    slug: 'aqua-safe-plumbing',
+    name: 'Aqua-Safe Plumbing & Maintenance',
+    oneLiner: 'A maintenance plumbing and gas fitting business given a site built around how people actually search for a plumber — by problem, and by suburb.',
+    client: 'Aqua-Safe Plumbing & Maintenance',
+    location: 'Perth, WA',
+    timeline: '[CALEB TO CONFIRM]',
+    budget: '[CALEB TO CONFIRM]',
+    role: '[CALEB TO CONFIRM]',
+    liveUrl: 'https://aquasafeplumbing.com.au/',
+    year: '2026',
+    category: 'web_design',
+    tags: ['Website', 'Trades & Services', 'Local SEO', 'Next.js', 'Perth', 'Local Business'],
+    featured: false,
+    budgetOrder: 2,
+
+    cover: null,
+    brandColor: '#0f5c7a',
+    thumbnail: '/captures/aquasafeplumbing-com-au/desktop/01-hero.png',
+
+    overview: 'Aqua-Safe are a family-owned team of licensed plumbers and gas fitters covering the Perth metro — blocked drains, hot water, gas fitting, water filtration and commercial maintenance. Nobody browses a plumber\'s website; they arrive mid-problem, usually on a phone, wanting to know that someone competent will turn up. So the site is organised around the two things people actually search for: the problem they have, and the suburb they\'re in. Eighteen individual service pages cover the work, and thirty-seven service-area pages cover the ground, each written around the plumbing that area genuinely throws up rather than the same page with the suburb name swapped in. A three-panel hero, an interactive walkthrough of the whole-home filtration system, and the company\'s real Google reviews carry the credibility, while every route keeps a call button and an online booking link within reach.',
+
+    screenshots: [
+      { url: '/captures/aquasafeplumbing-com-au/desktop/01-hero.png', caption: 'Hero — the company\'s own fleet at a Perth beach, behind a rotating three-panel headline and a service ticker' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/02-services.png', caption: 'Services — nine residential trades with a Residential / Commercial toggle, each card linking to its own booking page' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/03-filtration.png', caption: 'Whole-home filtration — a click-through diagram stepping the visitor through all three filter stages' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/04-reviews.png', caption: 'Reviews — the business\'s real Google reviews, with a direct link to leave one' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/05-areas.png', caption: 'Service areas — five Perth regions expanding to 167 suburbs, feeding the individual area pages' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/06-contact.png', caption: 'Book — call, online booking and enquiry side by side, with the call-out fee stated plainly' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/aquasafeplumbing-com-au/desktop/01-hero.png', caption: 'Hero — the company\'s own fleet at a Perth beach, behind a rotating three-panel headline and a service ticker' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/02-services.png', caption: 'Services — nine residential trades with a Residential / Commercial toggle, each card linking to its own booking page' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/03-filtration.png', caption: 'Whole-home filtration — a click-through diagram stepping the visitor through all three filter stages' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/04-reviews.png', caption: 'Reviews — the business\'s real Google reviews, with a direct link to leave one' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/05-areas.png', caption: 'Service areas — five Perth regions expanding to 167 suburbs, feeding the individual area pages' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/06-contact.png', caption: 'Book — call, online booking and enquiry side by side, with the call-out fee stated plainly' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/aquasafeplumbing-com-au/mobile/01-hero.png', caption: 'Mobile — hero with a persistent call and book bar fixed to the bottom of the screen' },
+      { url: '/captures/aquasafeplumbing-com-au/mobile/02-services.png', caption: 'Mobile — services stacked to a single column, tap targets sized for one-handed use' },
+      { url: '/captures/aquasafeplumbing-com-au/mobile/03-filtration.png', caption: 'Mobile — the filtration walkthrough, stage selector reflowed below the diagram' },
+      { url: '/captures/aquasafeplumbing-com-au/mobile/04-reviews.png', caption: 'Mobile — Google reviews carousel' },
+      { url: '/captures/aquasafeplumbing-com-au/mobile/05-areas.png', caption: 'Mobile — service regions as tap-to-expand accordions' },
+      { url: '/captures/aquasafeplumbing-com-au/mobile/06-contact.png', caption: 'Mobile — booking section with call, book and enquiry actions' },
+    ],
+
+    delivered: [
+      '[CALEB TO CONFIRM]',
+    ],
+
+    features: [
+      'Three-panel rotating hero that pauses on hover and stops once the visitor picks a panel themselves',
+      'Eighteen individual service pages — nine residential, nine commercial — generated from a single content model',
+      'Thirty-seven service-area pages, each combining that region\'s real plumbing characteristics with its own set of neighbouring-suburb links',
+      'Service-area index covering 167 Perth suburbs across five expandable regions',
+      'Interactive whole-home filtration walkthrough stepping through all three filter stages',
+      'Enquiry form with server-side validation, per-field error messaging and a spam honeypot',
+      'Service pages deep-link to the contact form with the relevant service preselected',
+      'Google reviews carousel drawing on the company\'s real listing',
+      'Persistent mobile call-and-book bar fixed to the bottom of the viewport',
+      'Hot water comparison covering gas instantaneous, heat pump and storage options',
+      'Expandable FAQ covering charging structure, licensing, warranty and coverage',
+    ],
+
+    stack: [
+      'Next.js 14 (App Router)',
+      'React 18',
+      'TypeScript 5.5',
+      'Hand-written CSS in cascade layers (Tailwind configured but design system is custom)',
+      'next/font with self-hosted Clash Display + Hanken Grotesk',
+      'Vercel Serverless Functions',
+      'Resend (transactional email)',
+      'GSAP (footer credit animation only)',
+      'Vercel (hosting)',
+    ],
+
+    integrations: [
+      'ServiceM8 online booking as the primary booking route',
+      'Resend transactional email delivering enquiries to the business inbox, with reply-to set to the customer',
+      'Google Business Profile review link for collecting new reviews',
+      'Facebook and Instagram profile links',
+      'Click-to-call and click-to-email throughout, phone number in E.164 format for reliable dialling',
+    ],
+
+    performance: [
+      'Server-rendered static HTML across all 64 routes — no client-side data fetching on first paint',
+      'Measured on the live site: 47ms server response, DOM ready at 270ms, fully loaded at 383ms',
+      'Self-hosted fonts via next/font, removing third-party font requests entirely',
+      'One crawlable H1 per page, with the rotating hero panels rendered as headings rather than competing H1s',
+      'Breadcrumb and Service structured data across every page, all referencing a single business entity',
+      'Sitemap and robots.txt generated from the same launch flag so they cannot drift apart',
+      'Per-page canonical URLs and trailing-slash consistency',
+      'Scroll-reveal animations with a failsafe so content can never be left invisible',
+    ],
+
+    challenges: [
+      'Building service-area pages that are genuinely different from one another — a page per suburb that only swaps the name is a doorway page, and Google penalises the whole domain for it',
+      'Finding real local differentiation at scale: the hills run bore water and septic systems, the older eastern and Fremantle suburbs have clay sewer under mature trees, the northern corridor is new-estate construction',
+      'Explaining a three-stage filtration system to a homeowner without turning it into a spec sheet',
+      'Presenting a charging structure honestly on a site that deliberately carries no pricing',
+      'Migrating hosting and DNS off a platform that blocked nameserver changes and subdomain MX records',
+      'Keeping every route within one tap of a phone number, since most visitors arrive mid-problem on a phone',
+    ],
+
+    improvements: [
+      'Expand the per-suburb notes with the client\'s own local knowledge — the areas he genuinely gets called to most',
+      'Move email sending onto a verified domain so enquiries send from a branded address',
+      'Add a headless CMS so the team can publish service updates without a deploy',
+      'Add privacy-respecting analytics to see which service and suburb pages actually convert',
+      'Extend the service-area pages beyond the current curated tier as they earn traffic',
+    ],
+  },
+
   'transform-hakea': {
     slug: 'transform-hakea',
     name: 'Transform Hakea',
