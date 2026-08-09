@@ -2457,6 +2457,124 @@ export const CASE_STUDIES = {
       'Add product detail pages behind the channel rails.',
     ],
   },
+
+  'brady-electrical': {
+    slug: 'brady-electrical',
+    name: 'Brady Electrical',
+    oneLiner: 'A site for a Perth electrician built around a live single-line diagram of the metro — feeders energise out from the depot and each suburb powers on as the page loads.',
+    client: 'Brady Electrical Services',
+    location: 'Neerabup, Perth WA',
+    timeline: '[CALEB TO CONFIRM]',
+    budget: '[CALEB TO CONFIRM]',
+    role: '[CALEB TO CONFIRM]',
+    liveUrl: 'https://bradyelectrical.com.au',
+    year: '2026',
+    category: 'web_design',
+    tags: ['Website', 'Trades & Services', 'Local SEO', 'Next.js', 'Perth', 'Local Business'],
+    featured: false,
+    /* Sorts alongside `budget` — set both together once terms are confirmed. */
+    budgetOrder: 0,
+
+    cover: null,
+    brandColor: '#547C2A',
+    thumbnail: '/captures/bradyelectrical-com-au/desktop/01-hero.png',
+
+    overview: 'Brady Electrical Services is a licensed electrical contractor (EC15752) working out of Neerabup and covering the Perth metro: domestic and commercial work, split-system air conditioning, property maintenance for landlords and agents, and heavy industrial work. The firm positions itself on "15+ years on the tools" and a "mining-grade standard", and that range — an underground control panel and a living-room split system on the same page — is the thing the site had to carry. The build replaced an ageing WordPress presence on the same domain, so the old URL set was mapped to permanent redirects before the cutover rather than left to 404. Rather than reach for stock imagery, the homepage opens on a hand-built single-line diagram of the Perth metro: real coastline, river and lake geometry projected from OpenStreetMap data, with copper feeders running from the Neerabup depot out to each suburb Brady actually services. On load the network energises — feeders draw in sequence, and each town label powers on as the current reaches it, with a haptic tick on supporting devices. It doubles as the service-area map, so the most decorative element on the page is also the most informative. Around it sits a conventional, conversion-focused local-trade site done carefully: four service lines, the brand values rendered as a signed commissioning certificate instead of an icon row, a gallery of Brady\'s own job photography, a four-step process, reviews, an FAQ marked up for search, a dedicated air-conditioning landing page with a room-size calculator, a careers page, and a quote form that delivers straight to the business inbox. Every page is statically rendered with its own metadata and structured data.',
+
+    screenshots: [
+      { url: '/captures/bradyelectrical-com-au/desktop/01-hero.png', caption: 'Hero — the headline sits beside a live single-line diagram of the Perth metro that energises on load, tracing feeders from the Neerabup depot out to each serviced suburb' },
+      { url: '/captures/bradyelectrical-com-au/desktop/02-services.png', caption: 'Services — the four lines of work (domestic & commercial, air conditioning, real estate maintenance, mining & industrial), each card carrying its own capability list and enquiry link' },
+      { url: '/captures/bradyelectrical-com-au/desktop/03-standard.png', caption: 'Workmanship standard — the brand values presented as a signed-off commissioning certificate with a licence number and pass column, instead of a row of icons' },
+      { url: '/captures/bradyelectrical-com-au/desktop/04-recent-work.png', caption: 'Recent work — Brady\'s own job photography in a uniform square grid, each frame tagged by job type from mine site to domestic switchboard' },
+      { url: '/captures/bradyelectrical-com-au/desktop/05-air-conditioning.png', caption: 'Air conditioning — a dedicated landing page for split-system supply and install, with its own hero, licence credentials and fixed-quote call to action' },
+      { url: '/captures/bradyelectrical-com-au/desktop/06-contact.png', caption: 'Contact — the quote request form with field-level validation, beside a call-direct card and the same-business-day response commitment' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/bradyelectrical-com-au/desktop/01-hero.png', caption: 'Hero — the headline sits beside a live single-line diagram of the Perth metro that energises on load, tracing feeders from the Neerabup depot out to each serviced suburb' },
+      { url: '/captures/bradyelectrical-com-au/desktop/02-services.png', caption: 'Services — the four lines of work (domestic & commercial, air conditioning, real estate maintenance, mining & industrial), each card carrying its own capability list and enquiry link' },
+      { url: '/captures/bradyelectrical-com-au/desktop/03-standard.png', caption: 'Workmanship standard — the brand values presented as a signed-off commissioning certificate with a licence number and pass column, instead of a row of icons' },
+      { url: '/captures/bradyelectrical-com-au/desktop/04-recent-work.png', caption: 'Recent work — Brady\'s own job photography in a uniform square grid, each frame tagged by job type from mine site to domestic switchboard' },
+      { url: '/captures/bradyelectrical-com-au/desktop/05-air-conditioning.png', caption: 'Air conditioning — a dedicated landing page for split-system supply and install, with its own hero, licence credentials and fixed-quote call to action' },
+      { url: '/captures/bradyelectrical-com-au/desktop/06-contact.png', caption: 'Contact — the quote request form with field-level validation, beside a call-direct card and the same-business-day response commitment' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/bradyelectrical-com-au/mobile/01-hero.png', caption: 'Mobile — the hero reflows to a single column with a call/quote bar pinned to the bottom of the viewport' },
+      { url: '/captures/bradyelectrical-com-au/mobile/02-services.png', caption: 'Mobile — service cards stack to one column, each keeping its full capability list' },
+      { url: '/captures/bradyelectrical-com-au/mobile/03-standard.png', caption: 'Mobile — the workmanship certificate narrows to a single column while keeping the item / result reading' },
+      { url: '/captures/bradyelectrical-com-au/mobile/04-recent-work.png', caption: 'Mobile — the job gallery in single-column square frames with the job-type tag under each photo' },
+      { url: '/captures/bradyelectrical-com-au/mobile/05-air-conditioning.png', caption: 'Mobile — the air-conditioning landing page with credentials wrapped to two columns' },
+      { url: '/captures/bradyelectrical-com-au/mobile/06-contact.png', caption: 'Mobile — the quote form stacked beneath the call-direct card' },
+    ],
+
+    delivered: [
+      '[CALEB TO CONFIRM]',
+    ],
+
+    features: [
+      'Animated single-line diagram of the Perth metro — feeders energise outward from the Neerabup depot on page load and each suburb label powers on as the current reaches it',
+      'The map doubles as the service-area map: every node is a suburb the business actually covers, with a spur out to the Goldfields for mine work',
+      'Haptic feedback on supporting devices as each node energises, and a master switch to replay the sequence',
+      'Four service lines, each with its own capability list and enquiry link',
+      'Workmanship standard rendered as a signed commissioning certificate — licence number, item/result rows and a certifying name',
+      'Real job-photography gallery in a uniform square grid, tagged by job type',
+      'Four-step "first call to final test" process explainer',
+      'Dedicated air-conditioning landing page with brand line-up and a specials table',
+      'Room-size calculator on the AC page that recommends a capacity from floor area and returns an indicative install price',
+      'Careers page with current vacancies and an application path',
+      'Quote request form with field-level validation and server-side delivery',
+      'FAQ accordion marked up as FAQPage structured data for search',
+      'Sticky call / quote bar on mobile, aware of which page it is on',
+      'Branded 404 page',
+      'Reduced-motion support throughout — the map resolves straight to its energised end state',
+    ],
+
+    stack: [
+      'Next.js 15 (App Router)',
+      'React 19',
+      'TypeScript',
+      'Tailwind CSS 3.4 (CSS-variable design tokens)',
+      'GSAP + ScrollTrigger',
+      'Lenis (smooth scroll)',
+      'Resend (transactional email)',
+      'Vercel (hosting, edge network)',
+    ],
+
+    integrations: [
+      'Resend for transactional email — quote enquiries post to a server-side route and land in the business inbox',
+      'OpenStreetMap coastline, river and lake geometry, projected and simplified to draw the hero map (credited on the map itself)',
+      'Electrician / LocalBusiness and FAQPage JSON-LD, plus an XML sitemap and robots.txt',
+      'Click-to-call and mailto links wired through the header, mobile bar and footer',
+      'Permanent redirects from the previous WordPress URL set to their new equivalents',
+    ],
+
+    performance: [
+      'Measured on the live site from Perth (headless Chromium, desktop 1440x900, Vercel syd1 edge): 47 ms time to first byte, largest contentful paint around 0.55 s, DOM content loaded around 0.5 s',
+      'Homepage loads in roughly 30 requests for about 540 kB total',
+      'Job photography served as AVIF through the Next.js image pipeline and sized per breakpoint',
+      'Fonts self-hosted and subset at build time — no third-party font requests',
+      'All three pages statically rendered with their own metadata and structured data',
+      'The hero map is inline SVG rather than an image, so it stays sharp at any size and costs no extra request',
+    ],
+
+    challenges: [
+      'Replacing a live WordPress site on the same domain without losing its search footprint — the old URL set was mapped to permanent redirects before the cutover',
+      'Finding a device that makes a trade site memorable without tipping into gimmick: the single-line diagram is drawn from real geography and earns its place by doubling as the service-area map',
+      'Drawing a recognisable Perth metro at hero scale — coastline, river and lakes had to be simplified enough to stay legible beside feeder lines and suburb labels',
+      'Making the load-time animation read as "power arriving" rather than decoration, and having it resolve instantly for anyone who has asked for reduced motion',
+      'Turning a mixed set of on-site phone photographs, mostly portrait, into a gallery that reads as a considered set rather than a camera roll',
+      'Structuring the air-conditioning specials so pricing can be withheld and reinstated from content alone, so the page never shows figures that have aged out',
+    ],
+
+    improvements: [
+      'Settle www against the apex domain — hosting currently serves www as primary while the canonical tags and sitemap point at the apex',
+      'Reinstate air-conditioning pricing once a current list is supplied; the table already supports it behind a single content flag',
+      'Pull live Google Business Profile reviews in place of hand-entered testimonials',
+      'Give the client an admin or CMS for the job gallery, reviews and vacancies',
+      'Extend the map into a per-suburb view surfacing recent jobs in each area',
+    ],
+  },
 };
 
 export function getCaseStudy(slug) {
@@ -2470,7 +2588,7 @@ export function getCaseStudy(slug) {
 export const BUILD_ORDER = [
   'transform-fremantle', 'jurassic-pt', 'gocc', 'transform-hakea', 'rocksstream',
   'groverz-tax', 'sharp-bricklaying', 'hvn-gym', 'ds-racing-karts',
-  'tidy-gardens-australia', 'evidence-advisory',
+  'tidy-gardens-australia', 'evidence-advisory', 'brady-electrical',
   // apps / SaaS
   'people-power', 'quotr', 'returndesk',
   // concepts (self-initiated, built after the client work)
