@@ -30,7 +30,7 @@ const C4SightPreviews = lazy(() => import('./pages/C4SightPreviews'));
 // How we use AI — the published position statement (flat slug).
 const HowWeUseAI = lazy(() => import('./pages/HowWeUseAI'));
 const Unsubscribed = lazy(() => import('./pages/Unsubscribed'));
-const Unsubscribe = lazy(() => import('./pages/Unsubscribe'));
+const OptOut = lazy(() => import('./pages/OptOut'));
 
 // Insights — index for the editorial articles. The articles themselves are
 // registry-driven and live at flat root slugs; this is their hub.
@@ -179,11 +179,13 @@ function App() {
               </Suspense>
             </LayoutWrapper>
           } />
-          {/* Generic opt-out form, for the link in Caleb's email signature. */}
-          <Route path="/unsubscribe" element={
-            <LayoutWrapper currentPageName="Unsubscribe">
+          {/* Generic opt-out form, for the link in Caleb's email signature.
+              NOT at /unsubscribe — that path is consumed by the _redirects rule
+              carrying the tokenised links. */}
+          <Route path="/opt-out" element={
+            <LayoutWrapper currentPageName="OptOut">
               <Suspense fallback={null}>
-                <Unsubscribe />
+                <OptOut />
               </Suspense>
             </LayoutWrapper>
           } />
