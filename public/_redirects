@@ -10,10 +10,13 @@
 
 # Unsubscribe links in outreach email point at c4studios.com.au rather than a
 # supabase.co URL: recipients (and school mail filters) trust the known domain.
-# The token rides in the path so this does not depend on query-string
-# forwarding. The function opts them out, then redirects to /unsubscribed,
-# which IS prerendered — hence the trailing-less path here, not /unsubscribed/*.
-/unsubscribe/*  https://hauwhplevypinplfbbgh.supabase.co/functions/v1/unsubscribe?u=:splat  302
+# The function opts them out, then redirects to /unsubscribed, which IS
+# prerendered — hence the path here is /unsubscribe/*, not /unsubscribed/*.
+#
+# The token MUST stay in the destination path. Cloudflare Pages does not
+# substitute :splat inside a destination query string: `?u=:splat` forwarded the
+# literal "%3Asplat" and every emailed link died on badlink. Verified 12 Aug.
+/unsubscribe/*  https://hauwhplevypinplfbbgh.supabase.co/functions/v1/unsubscribe/:splat  302
 
 /StartProject  /start  301
 
