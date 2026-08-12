@@ -49,6 +49,9 @@ const STATIC_ROUTES = [
   { path: '/c4sight-previews', priority: 0.7, changefreq: 'monthly' },
   { path: '/how-we-use-ai', priority: 0.75, changefreq: 'yearly' },
   { path: '/insights', priority: 0.75, changefreq: 'weekly' },
+  // Prerendered so the URL resolves as a static file, but kept out of the
+  // sitemap: it is the landing page for the unsubscribe link, not content.
+  { path: '/unsubscribed', includeInSitemap: false },
   { path: '/Support', priority: 0.4, changefreq: 'yearly' },
   { path: '/privacy-policy', priority: 0.3, changefreq: 'yearly' },
   { path: '/terms-of-service', priority: 0.3, changefreq: 'yearly' },

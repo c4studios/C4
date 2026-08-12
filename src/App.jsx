@@ -29,6 +29,7 @@ const C4SightPreviews = lazy(() => import('./pages/C4SightPreviews'));
 
 // How we use AI — the published position statement (flat slug).
 const HowWeUseAI = lazy(() => import('./pages/HowWeUseAI'));
+const Unsubscribed = lazy(() => import('./pages/Unsubscribed'));
 
 // Insights — index for the editorial articles. The articles themselves are
 // registry-driven and live at flat root slugs; this is their hub.
@@ -174,6 +175,14 @@ function App() {
             <LayoutWrapper currentPageName="HowWeUseAI">
               <Suspense fallback={null}>
                 <HowWeUseAI />
+              </Suspense>
+            </LayoutWrapper>
+          } />
+          {/* Where the unsubscribe link in outreach emails lands. noindex. */}
+          <Route path="/unsubscribed" element={
+            <LayoutWrapper currentPageName="Unsubscribed">
+              <Suspense fallback={null}>
+                <Unsubscribed />
               </Suspense>
             </LayoutWrapper>
           } />
