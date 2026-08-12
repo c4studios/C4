@@ -8,6 +8,13 @@
 # /SoftwareProduct/:slug, and every route in scripts/prerender.mjs) — the rule
 # would shadow the static file. Only retired legacy paths belong here.
 
+# Unsubscribe links in outreach email point at c4studios.com.au rather than a
+# supabase.co URL: recipients (and school mail filters) trust the known domain.
+# The token rides in the path so this does not depend on query-string
+# forwarding. The function opts them out, then redirects to /unsubscribed,
+# which IS prerendered — hence the trailing-less path here, not /unsubscribed/*.
+/unsubscribe/*  https://hauwhplevypinplfbbgh.supabase.co/functions/v1/unsubscribe?u=:splat  302
+
 /StartProject  /start  301
 
 # /Services retired — individual service pages live under the nav dropdown.
