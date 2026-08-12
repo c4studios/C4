@@ -284,11 +284,20 @@ export default function HeroFusion({ header, staticMode = false }) {
                           to={`/CaseStudy/${card.slug}`}
                           aria-label={`${card.name} — open the case study`}
                         >
+                          {/* All three rows load eagerly. Lazy-loading rows 2
+                              and 3 saved nothing (the whole set is ~690KB) and
+                              cost the one thing that matters: they only began
+                              fetching as they intersected, which is mid-dive,
+                              so a slow connection showed blank tiles at the
+                              exact moment the camera passes through the screen.
+                              fetchpriority keeps them behind row 1 in the queue
+                              so the LCP tile still lands first. */}
                           <img
                             src={card.img}
                             width={1200}
                             height={750}
-                            loading={ri === 0 ? 'eager' : 'lazy'}
+                            loading="eager"
+                            fetchPriority={ri === 0 ? 'high' : 'low'}
                             decoding="async"
                             alt={`${card.name} — a C4 Studios build`}
                           />
