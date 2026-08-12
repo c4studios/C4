@@ -12,15 +12,21 @@ import useDocumentHead from '@/hooks/useDocumentHead';
  * outreach_emails and schools_outreach read before any draft is allowed.
  *
  * Plain form POST, no JS required, so it works from any mail client's browser.
- * noindex and out of the sitemap. */
+ * noindex and out of the sitemap.
+ *
+ * Lives at /opt-out, NOT /unsubscribe: the `/unsubscribe/*` redirect rule that
+ * carries the tokenised links also matches the bare `/unsubscribe` path with an
+ * empty splat, and redirect rules run before static assets — so a page there is
+ * unreachable. Moving the page was the cheaper fix than reissuing the links
+ * already sitting in drafts. */
 
 const FN = 'https://hauwhplevypinplfbbgh.supabase.co/functions/v1/unsubscribe';
 
-export default function Unsubscribe() {
+export default function OptOut() {
   useDocumentHead({
     title: 'Unsubscribe — C4 Studios',
     description: 'Remove your address from C4 Studios email.',
-    path: '/unsubscribe',
+    path: '/opt-out',
     noIndex: true,
   });
 
