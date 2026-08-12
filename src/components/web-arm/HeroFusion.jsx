@@ -212,7 +212,12 @@ export default function HeroFusion({ header, staticMode = false }) {
     const d = seg(v, 0.6, 0.9);
     return d <= 0 || d >= 1 ? 0 : 0.4 * Math.sin(d * Math.PI);
   });
-  const capOpacity = useTransform(p, (v) => smooth(seg(v, 0.9, 0.99)));
+  /* There was a caption here that faded in at the end of the dive:
+     "You're inside the portfolio now, every frame is a shipped build."
+     Removed. It was absolutely positioned over the stage, and by the time
+     it appeared the scene was full-bleed, so it sat on top of the tiles
+     with nowhere else to go. It also said what lv-scene-head already says
+     and what the moving rows demonstrate on their own. */
 
   /* ── The HeroParallax scene — the prompt's physics, raw-scroll fed ─
      Flatten (rotateX 15→0, rotateZ 20→0, translateY sweep, opacity
@@ -338,10 +343,6 @@ export default function HeroFusion({ header, staticMode = false }) {
               style={staticMode ? undefined : { opacity: groundOpacity }}
             />
           </motion.div>
-
-          <motion.p className="lv-fusion-cap" style={staticMode ? undefined : { opacity: capOpacity }}>
-            You&rsquo;re inside the portfolio now — every frame is a shipped build. Keep scrolling.
-          </motion.p>
         </div>
       </div>
     </section>
