@@ -52,6 +52,7 @@ const STATIC_ROUTES = [
   // Prerendered so the URL resolves as a static file, but kept out of the
   // sitemap: it is the landing page for the unsubscribe link, not content.
   { path: '/unsubscribed', includeInSitemap: false },
+  { path: '/unsubscribe', includeInSitemap: false },
   { path: '/Support', priority: 0.4, changefreq: 'yearly' },
   { path: '/privacy-policy', priority: 0.3, changefreq: 'yearly' },
   { path: '/terms-of-service', priority: 0.3, changefreq: 'yearly' },

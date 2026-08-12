@@ -40,7 +40,11 @@ const COPY = {
   },
   badlink: {
     title: 'That link didn’t work.',
-    body: 'It may have expired or been cut in half by an email client. Reply to any email from me with the word STOP and I’ll take you off manually, same result.',
+    body: 'It may have expired or been cut in half by an email client. Use the form at c4studios.com.au/unsubscribe instead, or reply to any email from me with the word STOP. Same result either way.',
+  },
+  bademail: {
+    title: 'That address didn’t look right.',
+    body: 'Head back to c4studios.com.au/unsubscribe and try again, or reply to any email from me with the word STOP.',
   },
   error: {
     title: 'Something went wrong at my end.',
