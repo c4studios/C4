@@ -45,8 +45,19 @@ export default function OptOut() {
               className="mt-5 text-[15.5px] leading-[1.8] max-w-[52ch]"
               style={{ color: 'var(--c4-text-muted)' }}
             >
-              Type the address you want removed and it comes off for good. No
-              account, no confirmation email, no follow-up asking why.
+              Use the address the email arrived at, and it comes off for good.
+              No account, no confirmation email, no follow-up asking why.
+            </p>
+            {/* The one failure mode a form-based opt-out has that a tokenised
+                link does not: they type a different address to the one being
+                mailed, so the one still receiving mail is never suppressed.
+                Naming it here is the only fix available. */}
+            <p
+              className="mt-3 text-[13.5px] leading-[1.75] max-w-[52ch]"
+              style={{ color: 'var(--c4-text-subtle)' }}
+            >
+              If it reached a shared inbox, that&rsquo;s the one to enter, not
+              your personal address.
             </p>
 
             <form method="POST" action={FN} className="mt-9">
