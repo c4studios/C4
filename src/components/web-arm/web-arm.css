@@ -1759,19 +1759,6 @@
   pointer-events: none;
 }
 
-.lv-fusion-cap {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(18px, 3.5vh, 34px);
-  translate: -50%;
-  margin: 0;
-  font-family: var(--lv-mono);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: var(--lv-meta);
-  white-space: nowrap;
-}
-
 /* ── Static end-state (prerender / reduced motion): the dive already
    happened — flat white scene, no chassis, caption resting. ───────── */
 .lv-fusion[data-static] .lv-fusion-pin {
@@ -1820,17 +1807,6 @@
   display: none;
 }
 
-.lv-fusion[data-static] .lv-fusion-cap {
-  position: relative;
-  left: auto;
-  bottom: auto;
-  translate: none;
-  text-align: center;
-  padding-bottom: 26px;
-  background: #ffffff;
-  margin-top: -1px;
-}
-
 @media (max-width: 899.98px) {
   .lv-fusion-pin {
     height: 340vh;
@@ -1855,11 +1831,6 @@
     width: 82vw;
   }
 
-  .lv-fusion-cap {
-    white-space: normal;
-    text-align: center;
-    width: min(88vw, 420px);
-  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════
