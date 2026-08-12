@@ -20,12 +20,16 @@ import useDocumentHead from '@/hooks/useDocumentHead';
 const FN = 'https://hauwhplevypinplfbbgh.supabase.co/functions/v1/unsubscribe';
 
 function readState() {
-  if (typeof window === 'undefined') return { s: 'pending', u: '' };
+  if (typeof window === 'undefined') return { s: 'pending', u: '', e: '' };
   const q = new URLSearchParams(window.location.search);
-  return { s: q.get('s') || 'pending', u: q.get('u') || '' };
+  return { s: q.get('s') || 'pending', u: q.get('u') || '', e: q.get('e') || '' };
 }
 
 const COPY = {
+  confirm: {
+    title: 'Take you off the list?',
+    body: 'One press and you’re off. Nothing has changed yet.',
+  },
   done: {
     title: 'Done. You’re off the list.',
     body: 'You won’t get any more emails from me about the C4Sight schools programme. Nothing else needed from you.',
@@ -49,7 +53,7 @@ const COPY = {
 };
 
 export default function Unsubscribed() {
-  const [{ s, u }] = React.useState(readState);
+  const [{ s, u, e }] = React.useState(readState);
   const copy = COPY[s] || COPY.badlink;
 
   useDocumentHead({
@@ -77,18 +81,43 @@ export default function Unsubscribed() {
               {copy.body}
             </p>
 
-            {s === 'done' && u && (
-              <p className="mt-4 text-[14px] leading-[1.7]" style={{ color: 'var(--c4-text-muted)' }}>
-                Didn’t mean to click that?{' '}
-                <a
-                  href={`${FN}?u=${encodeURIComponent(u)}&undo=1`}
-                  className="font-semibold underline underline-offset-4 transition-opacity hover:opacity-70"
-                  style={{ color: 'var(--c4-accent)' }}
+            {/* The opt-out happens on POST, never on GET. A link scanner
+                following the URL in the email lands here and changes nothing;
+                only a real form submission writes. */}
+            {s === 'confirm' && u && (
+              <form method="POST" action={FN} className="mt-8">
+                <input type="hidden" name="u" value={u} />
+                {e && (
+                  <p className="mb-6 font-mono text-[13px]" style={{ color: 'var(--c4-text-subtle)' }}>
+                    {e}
+                  </p>
+                )}
+                <button
+                  type="submit"
+                  className="inline-flex items-center rounded-full px-7 py-3.5 text-[11px] uppercase tracking-[0.14em] font-semibold transition-opacity duration-200 hover:opacity-75"
+                  style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
                 >
-                  Put me back on
-                </a>
-                .
-              </p>
+                  Unsubscribe me
+                </button>
+              </form>
+            )}
+
+            {s === 'done' && u && (
+              <form method="POST" action={FN} className="mt-4">
+                <input type="hidden" name="u" value={u} />
+                <input type="hidden" name="undo" value="1" />
+                <p className="text-[14px] leading-[1.7]" style={{ color: 'var(--c4-text-muted)' }}>
+                  Didn’t mean to do that?{' '}
+                  <button
+                    type="submit"
+                    className="font-semibold underline underline-offset-4 transition-opacity hover:opacity-70"
+                    style={{ color: 'var(--c4-accent)' }}
+                  >
+                    Put me back on
+                  </button>
+                  .
+                </p>
+              </form>
             )}
 
             {/* Two free things, no pitch attached. Anyone who unsubscribed has
