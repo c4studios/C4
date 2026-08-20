@@ -275,30 +275,39 @@ export const CASE_STUDIES = {
     overview: 'Aqua-Safe are a family-owned team of licensed plumbers and gas fitters covering the Perth metro — blocked drains, hot water, gas fitting, water filtration and commercial maintenance. Nobody browses a plumber\'s website; they arrive mid-problem, usually on a phone, wanting to know that someone competent will turn up. So the site is organised around the two things people actually search for: the problem they have, and the suburb they\'re in. Eighteen individual service pages cover the work, and thirty-seven service-area pages cover the ground, each written around the plumbing that area genuinely throws up rather than the same page with the suburb name swapped in. A three-panel hero, an interactive walkthrough of the whole-home filtration system, and the company\'s real Google reviews carry the credibility, while every route keeps a call button and an online booking link within reach.',
 
     screenshots: [
-      { url: '/captures/aquasafeplumbing-com-au/desktop/01-hero.png', caption: 'Hero — the company\'s own fleet at a Perth beach, behind a rotating three-panel headline and a service ticker' },
-      { url: '/captures/aquasafeplumbing-com-au/desktop/02-services.png', caption: 'Services — nine residential trades with a Residential / Commercial toggle, each card linking to its own booking page' },
-      { url: '/captures/aquasafeplumbing-com-au/desktop/03-filtration.png', caption: 'Whole-home filtration — a click-through diagram stepping the visitor through all three filter stages' },
-      { url: '/captures/aquasafeplumbing-com-au/desktop/04-reviews.png', caption: 'Reviews — the business\'s real Google reviews, with a direct link to leave one' },
-      { url: '/captures/aquasafeplumbing-com-au/desktop/05-areas.png', caption: 'Service areas — five Perth regions expanding to 167 suburbs, feeding the individual area pages' },
-      { url: '/captures/aquasafeplumbing-com-au/desktop/06-contact.png', caption: 'Book — call, online booking and enquiry side by side, with the call-out fee stated plainly' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/01-hero.png', caption: 'Hero — the company’s own fleet at a Perth beach, behind a rotating three-panel headline and a service ticker' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/02-services.png', caption: 'Services — every trade covered, with a Residential / Commercial toggle and each card linking to its own booking page' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/03-hot-water.png', caption: 'Hot water — a chooser that walks a customer to the right replacement system instead of listing brands' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/04-filtration.png', caption: 'Whole-home filtration — a click-through diagram stepping the visitor through all three filter stages' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/05-why.png', caption: 'Why Aqua-Safe — the promises that matter to someone letting a tradesperson into the house' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/06-reviews.png', caption: 'Reviews — the business’s real Google reviews, with a direct link to leave one' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/07-areas.png', caption: 'Service areas — five Perth regions expanding to the suburbs, feeding the individual area pages' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/08-faq.png', caption: 'FAQ — the questions people actually ring to ask, answered before they have to' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/09-book.png', caption: 'Book — call, online booking and enquiry side by side, with the call-out fee stated plainly' },
     ],
 
     desktopScreenshots: [
-      { url: '/captures/aquasafeplumbing-com-au/desktop/01-hero.png', caption: 'Hero — the company\'s own fleet at a Perth beach, behind a rotating three-panel headline and a service ticker' },
-      { url: '/captures/aquasafeplumbing-com-au/desktop/02-services.png', caption: 'Services — nine residential trades with a Residential / Commercial toggle, each card linking to its own booking page' },
-      { url: '/captures/aquasafeplumbing-com-au/desktop/03-filtration.png', caption: 'Whole-home filtration — a click-through diagram stepping the visitor through all three filter stages' },
-      { url: '/captures/aquasafeplumbing-com-au/desktop/04-reviews.png', caption: 'Reviews — the business\'s real Google reviews, with a direct link to leave one' },
-      { url: '/captures/aquasafeplumbing-com-au/desktop/05-areas.png', caption: 'Service areas — five Perth regions expanding to 167 suburbs, feeding the individual area pages' },
-      { url: '/captures/aquasafeplumbing-com-au/desktop/06-contact.png', caption: 'Book — call, online booking and enquiry side by side, with the call-out fee stated plainly' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/01-hero.png', caption: 'Hero — the company’s own fleet at a Perth beach, behind a rotating three-panel headline and a service ticker' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/02-services.png', caption: 'Services — every trade covered, with a Residential / Commercial toggle and each card linking to its own booking page' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/03-hot-water.png', caption: 'Hot water — a chooser that walks a customer to the right replacement system instead of listing brands' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/04-filtration.png', caption: 'Whole-home filtration — a click-through diagram stepping the visitor through all three filter stages' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/05-why.png', caption: 'Why Aqua-Safe — the promises that matter to someone letting a tradesperson into the house' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/06-reviews.png', caption: 'Reviews — the business’s real Google reviews, with a direct link to leave one' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/07-areas.png', caption: 'Service areas — five Perth regions expanding to the suburbs, feeding the individual area pages' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/08-faq.png', caption: 'FAQ — the questions people actually ring to ask, answered before they have to' },
+      { url: '/captures/aquasafeplumbing-com-au/desktop/09-book.png', caption: 'Book — call, online booking and enquiry side by side, with the call-out fee stated plainly' },
     ],
 
     mobileScreenshots: [
       { url: '/captures/aquasafeplumbing-com-au/mobile/01-hero.png', caption: 'Mobile — hero with a persistent call and book bar fixed to the bottom of the screen' },
       { url: '/captures/aquasafeplumbing-com-au/mobile/02-services.png', caption: 'Mobile — services stacked to a single column, tap targets sized for one-handed use' },
-      { url: '/captures/aquasafeplumbing-com-au/mobile/03-filtration.png', caption: 'Mobile — the filtration walkthrough, stage selector reflowed below the diagram' },
-      { url: '/captures/aquasafeplumbing-com-au/mobile/04-reviews.png', caption: 'Mobile — Google reviews carousel' },
-      { url: '/captures/aquasafeplumbing-com-au/mobile/05-areas.png', caption: 'Mobile — service regions as tap-to-expand accordions' },
-      { url: '/captures/aquasafeplumbing-com-au/mobile/06-contact.png', caption: 'Mobile — booking section with call, book and enquiry actions' },
+      { url: '/captures/aquasafeplumbing-com-au/mobile/03-hot-water.png', caption: 'Mobile — the hot water chooser reflowed to stacked cards' },
+      { url: '/captures/aquasafeplumbing-com-au/mobile/04-filtration.png', caption: 'Mobile — the filtration walkthrough, stage selector reflowed below the diagram' },
+      { url: '/captures/aquasafeplumbing-com-au/mobile/05-why.png', caption: 'Mobile — the trust points as a single scrolling column' },
+      { url: '/captures/aquasafeplumbing-com-au/mobile/06-reviews.png', caption: 'Mobile — Google reviews carousel' },
+      { url: '/captures/aquasafeplumbing-com-au/mobile/07-areas.png', caption: 'Mobile — service regions as tap-to-expand accordions' },
+      { url: '/captures/aquasafeplumbing-com-au/mobile/08-faq.png', caption: 'Mobile — FAQ accordions, one answer open at a time' },
+      { url: '/captures/aquasafeplumbing-com-au/mobile/09-book.png', caption: 'Mobile — booking section with call, book and enquiry actions' },
     ],
 
     delivered: [
@@ -2608,7 +2617,7 @@ export function getCaseStudy(slug) {
 export const BUILD_ORDER = [
   'transform-fremantle', 'jurassic-pt', 'gocc', 'transform-hakea', 'rocksstream',
   'groverz-tax', 'sharp-bricklaying', 'hvn-gym', 'ds-racing-karts',
-  'tidy-gardens-australia', 'evidence-advisory', 'brady-electrical',
+  'tidy-gardens-australia', 'evidence-advisory', 'brady-electrical', 'aqua-safe-plumbing',
   // apps / SaaS
   'people-power', 'quotr', 'returndesk',
   // concepts (self-initiated, built after the client work)
