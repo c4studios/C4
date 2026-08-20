@@ -96,6 +96,24 @@ async function anchorScroll(page, text) {
   }, text);
 }
 
+/**
+ * Scroll a section into view by CSS selector.
+ *
+ * Preferred over `anchor` wherever a section has a real id. Text anchors take
+ * the FIRST element containing the phrase, which on a long single-page site is
+ * usually a nav link or a line in the hero, so the shot silently comes back as
+ * the top of the page. That produced duplicate frames on the Aqua-Safe recapture.
+ */
+async function selectorScroll(page, selector) {
+  return page.evaluate((sel) => {
+    const el = document.querySelector(sel);
+    if (!el) return false;
+    const y = window.scrollY + el.getBoundingClientRect().top - 80;
+    window.scrollTo(0, Math.max(0, y));
+    return true;
+  }, selector);
+}
+
 async function runDevice(browser, kind, vp) {
   console.log(`\n=== ${kind.toUpperCase()} (${vp.width}x${vp.height}) ===`);
   const context = await browser.newContext({
@@ -131,7 +149,10 @@ async function runDevice(browser, kind, vp) {
       // Position
       await page.evaluate(() => scrollTo(0, 0));
       await page.waitForTimeout(300);
-      if (t.anchor) {
+      if (t.selector) {
+        const ok = await selectorScroll(page, t.selector);
+        if (!ok) throw new Error(`selector not found: ${t.selector}`);
+      } else if (t.anchor) {
         const ok = await anchorScroll(page, t.anchor);
         if (!ok && t.scrollTo != null) await page.evaluate((y) => scrollTo(0, y), t.scrollTo);
       } else if (t.scrollTo != null) {

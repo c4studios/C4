@@ -59,6 +59,8 @@ import plxBarrys from './assets/plx-barrys.webp';
 import plxWooster from './assets/plx-wooster.webp';
 import plxJk from './assets/plx-jk.webp';
 import plxIopa from './assets/plx-iopa.webp';
+import plxAquasafe from './assets/plx-aquasafe.webp';
+import plxBrady from './assets/plx-brady.webp';
 
 /* slug → derived 1200w webp. One line per portfolio entry. */
 const PLX_IMG = {
@@ -80,6 +82,8 @@ const PLX_IMG = {
   'wooster-core': plxWooster,
   'jk-plumbing-solutions': plxJk,
   iopa: plxIopa,
+  'aqua-safe-plumbing': plxAquasafe,
+  'brady-electrical': plxBrady,
 };
 
 /* Every portfolio entry, newest build first, split into three rows.

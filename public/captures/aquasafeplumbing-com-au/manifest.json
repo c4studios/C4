@@ -1,0 +1,224 @@
+{
+  "version": 3,
+  "sourceUrl": "https://aquasafeplumbing.com.au",
+  "slug": "aquasafeplumbing-com-au",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 9,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "Hero — the company’s own fleet at a Perth beach, behind a rotating three-panel headline and a service ticker",
+          "route": "/",
+          "bytes": 1212203,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-hero.png"
+        },
+        {
+          "id": "02-services",
+          "caption": "Services — every trade covered, with a Residential / Commercial toggle and each card linking to its own booking page",
+          "route": "/",
+          "bytes": 460739,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-services.png"
+        },
+        {
+          "id": "03-hot-water",
+          "caption": "Hot water — a chooser that walks a customer to the right replacement system instead of listing brands",
+          "route": "/",
+          "bytes": 177883,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-hot-water.png"
+        },
+        {
+          "id": "04-filtration",
+          "caption": "Whole-home filtration — a click-through diagram stepping the visitor through all three filter stages",
+          "route": "/",
+          "bytes": 156671,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-filtration.png"
+        },
+        {
+          "id": "05-why",
+          "caption": "Why Aqua-Safe — the promises that matter to someone letting a tradesperson into the house",
+          "route": "/",
+          "bytes": 495680,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-why.png"
+        },
+        {
+          "id": "06-reviews",
+          "caption": "Reviews — the business’s real Google reviews, with a direct link to leave one",
+          "route": "/",
+          "bytes": 99673,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-reviews.png"
+        },
+        {
+          "id": "07-areas",
+          "caption": "Service areas — five Perth regions expanding to the suburbs, feeding the individual area pages",
+          "route": "/",
+          "bytes": 98067,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/07-areas.png"
+        },
+        {
+          "id": "08-faq",
+          "caption": "FAQ — the questions people actually ring to ask, answered before they have to",
+          "route": "/",
+          "bytes": 90071,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/08-faq.png"
+        },
+        {
+          "id": "09-book",
+          "caption": "Book — call, online booking and enquiry side by side, with the call-out fee stated plainly",
+          "route": "/",
+          "bytes": 333580,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/09-book.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 9,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "Hero — the company’s own fleet at a Perth beach, behind a rotating three-panel headline and a service ticker",
+          "route": "/",
+          "bytes": 1331683,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-hero.png"
+        },
+        {
+          "id": "02-services",
+          "caption": "Services — every trade covered, with a Residential / Commercial toggle and each card linking to its own booking page",
+          "route": "/",
+          "bytes": 200251,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-services.png"
+        },
+        {
+          "id": "03-hot-water",
+          "caption": "Hot water — a chooser that walks a customer to the right replacement system instead of listing brands",
+          "route": "/",
+          "bytes": 221083,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-hot-water.png"
+        },
+        {
+          "id": "04-filtration",
+          "caption": "Whole-home filtration — a click-through diagram stepping the visitor through all three filter stages",
+          "route": "/",
+          "bytes": 184644,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-filtration.png"
+        },
+        {
+          "id": "05-why",
+          "caption": "Why Aqua-Safe — the promises that matter to someone letting a tradesperson into the house",
+          "route": "/",
+          "bytes": 560294,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/05-why.png"
+        },
+        {
+          "id": "06-reviews",
+          "caption": "Reviews — the business’s real Google reviews, with a direct link to leave one",
+          "route": "/",
+          "bytes": 184402,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-reviews.png"
+        },
+        {
+          "id": "07-areas",
+          "caption": "Service areas — five Perth regions expanding to the suburbs, feeding the individual area pages",
+          "route": "/",
+          "bytes": 177266,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/07-areas.png"
+        },
+        {
+          "id": "08-faq",
+          "caption": "FAQ — the questions people actually ring to ask, answered before they have to",
+          "route": "/",
+          "bytes": 163082,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/08-faq.png"
+        },
+        {
+          "id": "09-book",
+          "caption": "Book — call, online booking and enquiry side by side, with the call-out fee stated plainly",
+          "route": "/",
+          "bytes": 423617,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/09-book.png"
+        }
+      ]
+    }
+  }
+}
