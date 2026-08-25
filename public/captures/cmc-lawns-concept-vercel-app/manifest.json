@@ -1,0 +1,158 @@
+{
+  "version": 3,
+  "sourceUrl": "https://cmc-lawns-concept.vercel.app",
+  "slug": "cmc-lawns-concept-vercel-app",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 6,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "Home — the concept strip sits above everything, then the offer and the one action that matters",
+          "route": "/",
+          "bytes": 1646084,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-hero.png"
+        },
+        {
+          "id": "02-program",
+          "caption": "The program — what a maintained lawn actually involves, month by month",
+          "route": "/lawn-care",
+          "bytes": 243494,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-program.png"
+        },
+        {
+          "id": "03-services",
+          "caption": "What we do — every service written in the owner’s own words, nothing invented",
+          "route": "/services",
+          "bytes": 425641,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-services.png"
+        },
+        {
+          "id": "04-work",
+          "caption": "Before and after — a draggable comparison slider over the owner’s own job photos",
+          "route": "/work",
+          "bytes": 903155,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-work.png"
+        },
+        {
+          "id": "05-about",
+          "caption": "Chris — the operator, rather than a stock photo of a generic tradesperson",
+          "route": "/about",
+          "bytes": 563143,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-about.png"
+        },
+        {
+          "id": "06-contact",
+          "caption": "Get a quote — the form keeps every keystroke in localStorage, so a reload never costs the customer their typing",
+          "route": "/contact",
+          "bytes": 252853,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-contact.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 6,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "Home — the concept strip sits above everything, then the offer and the one action that matters",
+          "route": "/",
+          "bytes": 1289946,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-hero.png"
+        },
+        {
+          "id": "02-program",
+          "caption": "The program — what a maintained lawn actually involves, month by month",
+          "route": "/lawn-care",
+          "bytes": 504888,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-program.png"
+        },
+        {
+          "id": "03-services",
+          "caption": "What we do — every service written in the owner’s own words, nothing invented",
+          "route": "/services",
+          "bytes": 804347,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-services.png"
+        },
+        {
+          "id": "04-work",
+          "caption": "Before and after — a draggable comparison slider over the owner’s own job photos",
+          "route": "/work",
+          "bytes": 1302895,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-work.png"
+        },
+        {
+          "id": "05-about",
+          "caption": "Chris — the operator, rather than a stock photo of a generic tradesperson",
+          "route": "/about",
+          "bytes": 1208831,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/05-about.png"
+        },
+        {
+          "id": "06-contact",
+          "caption": "Get a quote — the form keeps every keystroke in localStorage, so a reload never costs the customer their typing",
+          "route": "/contact",
+          "bytes": 539454,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-contact.png"
+        }
+      ]
+    }
+  }
+}

@@ -61,6 +61,9 @@ import plxJk from './assets/plx-jk.webp';
 import plxIopa from './assets/plx-iopa.webp';
 import plxAquasafe from './assets/plx-aquasafe.webp';
 import plxBrady from './assets/plx-brady.webp';
+import plxSgr from './assets/plx-sgr.webp';
+import plxEurochem from './assets/plx-eurochem.webp';
+import plxCmc from './assets/plx-cmc.webp';
 
 /* slug → derived 1200w webp. One line per portfolio entry. */
 const PLX_IMG = {
@@ -84,6 +87,9 @@ const PLX_IMG = {
   iopa: plxIopa,
   'aqua-safe-plumbing': plxAquasafe,
   'brady-electrical': plxBrady,
+  'sgr-prestige': plxSgr,
+  eurochem: plxEurochem,
+  'cmc-lawns': plxCmc,
 };
 
 /* Every portfolio entry, newest build first, split into three rows.

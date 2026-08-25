@@ -1,0 +1,180 @@
+{
+  "version": 3,
+  "sourceUrl": "https://sgr-prestige-concept.vercel.app",
+  "slug": "sgr-prestige-concept-vercel-app",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 7,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "Opening a scroll-scrubbed night sequence: the trailer, the doors, the car coming down the ramp",
+          "route": "/",
+          "bytes": 645581,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-hero.png"
+        },
+        {
+          "id": "02-how-it-works",
+          "caption": "How it works, written as the steps a customer actually goes through",
+          "route": "/",
+          "bytes": 148986,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-how-it-works.png"
+        },
+        {
+          "id": "03-condition",
+          "caption": "The condition report, the document that settles arguments, shown rather than described",
+          "route": "/",
+          "bytes": 216430,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-condition.png"
+        },
+        {
+          "id": "04-insurance",
+          "caption": "Insurance stated as facts, with visible ruled blanks where the owner still has to supply one",
+          "route": "/",
+          "bytes": 97256,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-insurance.png"
+        },
+        {
+          "id": "05-gallery",
+          "caption": "Gallery, every photograph the owner’s own, re-encoded rather than replaced with stock",
+          "route": "/",
+          "bytes": 809331,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-gallery.png"
+        },
+        {
+          "id": "06-quote",
+          "caption": "Quote, protected by a honeypot and a time-to-submit check instead of the 804 KB of reCAPTCHA the current site ships",
+          "route": "/",
+          "bytes": 63924,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-quote.png"
+        },
+        {
+          "id": "07-transport",
+          "caption": "Enclosed car transport, one of six service pages, each written rather than templated",
+          "route": "/transport/enclosed-car-transport",
+          "bytes": 274283,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/07-transport.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 7,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "Opening a scroll-scrubbed night sequence: the trailer, the doors, the car coming down the ramp",
+          "route": "/",
+          "bytes": 607405,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-hero.png"
+        },
+        {
+          "id": "02-how-it-works",
+          "caption": "How it works, written as the steps a customer actually goes through",
+          "route": "/",
+          "bytes": 167287,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-how-it-works.png"
+        },
+        {
+          "id": "03-condition",
+          "caption": "The condition report, the document that settles arguments, shown rather than described",
+          "route": "/",
+          "bytes": 480575,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-condition.png"
+        },
+        {
+          "id": "04-insurance",
+          "caption": "Insurance stated as facts, with visible ruled blanks where the owner still has to supply one",
+          "route": "/",
+          "bytes": 150332,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-insurance.png"
+        },
+        {
+          "id": "05-gallery",
+          "caption": "Gallery, every photograph the owner’s own, re-encoded rather than replaced with stock",
+          "route": "/",
+          "bytes": 1009755,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/05-gallery.png"
+        },
+        {
+          "id": "06-quote",
+          "caption": "Quote, protected by a honeypot and a time-to-submit check instead of the 804 KB of reCAPTCHA the current site ships",
+          "route": "/",
+          "bytes": 103378,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-quote.png"
+        },
+        {
+          "id": "07-transport",
+          "caption": "Enclosed car transport, one of six service pages, each written rather than templated",
+          "route": "/transport/enclosed-car-transport",
+          "bytes": 585968,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/07-transport.png"
+        }
+      ]
+    }
+  }
+}

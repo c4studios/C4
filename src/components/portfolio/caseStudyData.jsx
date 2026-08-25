@@ -2604,6 +2604,318 @@ export const CASE_STUDIES = {
       'Extend the map into a per-suburb view surfacing recent jobs in each area',
     ],
   },
+
+  'cmc-lawns': {
+    slug: 'cmc-lawns',
+    name: 'CMC Lawns',
+    oneLiner: 'A speculative rebuild for a Perth lawn-care business where every word traces back to the owner and every unknown stays visibly blank.',
+    client: 'Concept. Perth lawn care and maintenance',
+    location: 'Perth, WA',
+    timeline: '',
+    budget: '',
+    role: 'Solo (audit, design, development, deployment)',
+    liveUrl: 'https://cmc-lawns-concept.vercel.app',
+    year: '2026',
+    category: 'web_design',
+    tags: ['Website', 'Concept', 'Lawn Care', 'Trades', 'Accessibility', 'React'],
+    featured: false,
+    concept: true,
+    budgetOrder: 0,
+
+    brandColor: '#7fbc2a',
+    backdropStyle: { backgroundColor: '#083218' },
+    thumbnail: '/captures/cmc-lawns-concept-vercel-app/desktop/01-hero.png',
+
+    overview: 'An unaffiliated rebuild of cmclawns.com.au, built as a pitch after auditing the live Wix site on 10 August 2026. The owner did not commission it and has not paid for it. Six pages cover the program, the services, the before-and-after work, the operator and the quote form. The rule the whole build runs on is that nothing is invented: every line of copy sits in one data file tagged as the owner’s own words, a placeholder the owner still has to supply, or a claim carried across from the old site but never independently checked. Placeholders render visibly on the page instead of quietly reading as fact, so no price, date, ABN or review count appears that nobody has verified, and there are no testimonials because none could be sourced. Four measures stop it being mistaken for the real site or competing with it in search: a permanent banner above the masthead, a robots meta tag, a blocking robots.txt and an X-Robots-Tag on every response, with canonical URLs still pointing at cmclawns.com.au. They only work as a set, so the handover checklist removes them together in one commit. Available to license or commission.',
+
+    screenshots: [
+      { url: '/captures/cmc-lawns-concept-vercel-app/desktop/01-hero.png', caption: 'Home. The concept strip sits above everything, then the offer and the one action that matters' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/desktop/02-program.png', caption: 'The program. What a maintained lawn actually involves, month by month' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/desktop/03-services.png', caption: 'What we do. Every service in the owner’s own words, nothing invented' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/desktop/04-work.png', caption: 'Before and after. A draggable comparison slider over the owner’s own job photos' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/desktop/05-about.png', caption: 'Chris. The operator, rather than a stock photo of a generic tradesperson' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/desktop/06-contact.png', caption: 'Get a quote. Every keystroke mirrors to localStorage, so a reload never costs the customer their typing' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/cmc-lawns-concept-vercel-app/desktop/01-hero.png', caption: 'Home. The concept strip sits above everything, then the offer and the one action that matters' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/desktop/02-program.png', caption: 'The program. What a maintained lawn actually involves, month by month' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/desktop/03-services.png', caption: 'What we do. Every service in the owner’s own words, nothing invented' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/desktop/04-work.png', caption: 'Before and after. A draggable comparison slider over the owner’s own job photos' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/desktop/05-about.png', caption: 'Chris. The operator, rather than a stock photo of a generic tradesperson' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/desktop/06-contact.png', caption: 'Get a quote. Every keystroke mirrors to localStorage, so a reload never costs the customer their typing' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/cmc-lawns-concept-vercel-app/mobile/01-hero.png', caption: 'Home. The concept strip sits above everything, then the offer and the one action that matters' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/mobile/02-program.png', caption: 'The program. What a maintained lawn actually involves, month by month' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/mobile/03-services.png', caption: 'What we do. Every service in the owner’s own words, nothing invented' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/mobile/04-work.png', caption: 'Before and after. A draggable comparison slider over the owner’s own job photos' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/mobile/05-about.png', caption: 'Chris. The operator, rather than a stock photo of a generic tradesperson' },
+      { url: '/captures/cmc-lawns-concept-vercel-app/mobile/06-contact.png', caption: 'Get a quote. Every keystroke mirrors to localStorage, so a reload never costs the customer their typing' },
+    ],
+
+    delivered: [
+      'Six-page React site: home, the program, services, before-and-after work, the operator profile and a quote form.',
+      'A browser-measured audit of the existing Wix site, published as AUDIT.md alongside the build.',
+      'A written design direction, produced before any code, covering voice, reference and palette.',
+      'An owner-facing pitch document in plain language, deliberately unpriced.',
+      'A handover checklist that sequences every step needed to take the concept live.',
+    ],
+
+    features: [
+      'Draggable before-and-after comparison slider over the owner’s own job photography.',
+      'Quote form that mirrors every keystroke to localStorage, so a reload cannot cost a customer their typing.',
+      'Send-failure fallback: with no endpoint, or on a failed request, the form offers a pre-filled mailto and the phone number rather than dropping the enquiry.',
+      'Content tagging system marking each string as owner-supplied, placeholder or unverified, with placeholders visible on the page.',
+      'Four-part concept marking: banner, robots meta, robots.txt and X-Robots-Tag, with canonical URLs pointing at the real site.',
+    ],
+
+    stack: [
+      'React 18 with Vite 6 and react-router-dom.',
+      'Tailwind CSS 3 with an OKLCH token palette.',
+      'lucide-react for iconography.',
+      'sharp for the image build step, re-encoding source photography to sized WebP.',
+      'playwright-core driving the verification and interaction test scripts.',
+      'Vercel hosting.',
+    ],
+
+    integrations: [
+      'Configurable form endpoint via VITE_FORM_ENDPOINT, with a mailto fallback when it is absent or fails.',
+      'No analytics, no third-party embeds and no tracking in the concept build.',
+    ],
+
+    performance: [
+      'Contrast gate runs before every production build and fails the build on a WCAG 2.2 AA violation.',
+      'Verification re-measures every piece of live text against its real composited background, rasterising a pixel to resolve colour because getComputedStyle returns oklch() verbatim and string-parsing it produces nonsense.',
+      'Photography re-encoded to sized WebP through a scripted build step.',
+      'The C4 footer badge and its animation library load only as the footer approaches the viewport, so they stay out of the initial payload.',
+    ],
+
+    challenges: [
+      'Rebuilding a business site with no access to the business. Everything had to come from the public site or be marked as missing, which shaped the content model more than the design did.',
+      'Resolving OKLCH colours for contrast checking. getComputedStyle hands back the oklch() string unchanged, so the checker rasterises a pixel and reads it back rather than parsing text.',
+      'Keeping the four concept markings coherent. Any one of them removed on its own leaves the build worse off than having none, so they are documented and removed as a set.',
+    ],
+
+    improvements: [
+      'Fill every value currently rendering as a placeholder: pricing, service area, opening hours, ABN, insurer and the Google Business Profile link.',
+      'Point the quote form at a live handler and test both the success and the failure path end to end.',
+      'Replace the type-set wordmark with the owner’s real logo artwork.',
+      'Re-read the competitor and service-area claims and refresh their read dates before anything goes live.',
+    ],
+  },
+
+  'sgr-prestige': {
+    slug: 'sgr-prestige',
+    name: 'SGR Prestige Car Transport',
+    oneLiner: 'A speculative rebuild for an enclosed car transporter, where the facts nobody could verify are left as ruled blanks on the page.',
+    client: 'Concept. Enclosed prestige vehicle transport',
+    location: 'Australia',
+    timeline: '',
+    budget: '',
+    role: 'Solo (audit, design, development, generated hero sequence, deployment)',
+    liveUrl: 'https://sgr-prestige-concept.vercel.app',
+    year: '2026',
+    category: 'web_design',
+    tags: ['Website', 'Concept', 'Logistics', 'Automotive', 'Motion Design', 'React'],
+    featured: false,
+    concept: true,
+    budgetOrder: 0,
+
+    brandColor: '#f07810',
+    backdropStyle: { backgroundColor: '#080d11' },
+    thumbnail: '/captures/sgr-prestige-concept-vercel-app/desktop/01-hero.png',
+
+    overview: 'An unaffiliated rebuild of enclosedtransport.com.au, built as a pitch and deliberately reachable so it could be sent to the owner, while being blocked from search three separate ways so it can never compete with their real site. Nothing on it is invented. Every fact traces to SGR’s own site, Instagram or Facebook, and anything unknown renders as a visible ruled blank rather than a plausible-looking number, which is why the insurance and trailer sections read as half-finished on purpose. There is no testimonials section, because the business has no reviews anywhere and none will be fabricated to fill the gap. The current site displays six manufacturer logos; this build names the cars in words instead, since those marks imply a relationship that does not exist. Every photograph is the owner’s own, re-encoded to WebP. The one exception is the opening sequence, which is generated video, because no footage exists of their rig loading at night. The trailer carries no livery and the car no badge or plate, so nothing in it claims to be a vehicle they own, and the disclosure travels with the footage in both the pitch and the outreach email. Available to license or commission.',
+
+    screenshots: [
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/01-hero.png', caption: 'Opening. A scroll-scrubbed night sequence: the trailer, the doors, the car coming down the ramp' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/02-how-it-works.png', caption: 'How it works, written as the steps a customer actually goes through' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/03-condition.png', caption: 'The condition report. The document that settles arguments, shown rather than described' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/04-insurance.png', caption: 'Insurance stated as facts, with visible ruled blanks where the owner still has to supply one' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/05-gallery.png', caption: 'Gallery. Every photograph is the owner’s own, re-encoded rather than replaced with stock' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/06-quote.png', caption: 'Quote. A honeypot and a time-to-submit check instead of the 804 KB of reCAPTCHA the current site ships' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/07-transport.png', caption: 'Enclosed car transport, one of six service pages, each written rather than templated' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/01-hero.png', caption: 'Opening. A scroll-scrubbed night sequence: the trailer, the doors, the car coming down the ramp' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/02-how-it-works.png', caption: 'How it works, written as the steps a customer actually goes through' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/03-condition.png', caption: 'The condition report. The document that settles arguments, shown rather than described' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/04-insurance.png', caption: 'Insurance stated as facts, with visible ruled blanks where the owner still has to supply one' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/05-gallery.png', caption: 'Gallery. Every photograph is the owner’s own, re-encoded rather than replaced with stock' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/06-quote.png', caption: 'Quote. A honeypot and a time-to-submit check instead of the 804 KB of reCAPTCHA the current site ships' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/desktop/07-transport.png', caption: 'Enclosed car transport, one of six service pages, each written rather than templated' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/sgr-prestige-concept-vercel-app/mobile/01-hero.png', caption: 'Opening. A scroll-scrubbed night sequence: the trailer, the doors, the car coming down the ramp' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/mobile/02-how-it-works.png', caption: 'How it works, written as the steps a customer actually goes through' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/mobile/03-condition.png', caption: 'The condition report. The document that settles arguments, shown rather than described' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/mobile/04-insurance.png', caption: 'Insurance stated as facts, with visible ruled blanks where the owner still has to supply one' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/mobile/05-gallery.png', caption: 'Gallery. Every photograph is the owner’s own, re-encoded rather than replaced with stock' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/mobile/06-quote.png', caption: 'Quote. A honeypot and a time-to-submit check instead of the 804 KB of reCAPTCHA the current site ships' },
+      { url: '/captures/sgr-prestige-concept-vercel-app/mobile/07-transport.png', caption: 'Enclosed car transport, one of six service pages, each written rather than templated' },
+    ],
+
+    delivered: [
+      'A single-page site plus six written service pages, one per transport type.',
+      'A scroll-scrubbed opening sequence built from generated night footage, with the generation disclosed to the owner.',
+      'A browser-measured audit of the existing site, published as AUDIT.md.',
+      'A written design direction produced before any code.',
+      'An outreach email, an owner-facing pitch, and a build log recording every generated asset with its verdict.',
+      'A handover checklist covering the facts still missing, the indexing reversal and the concept markings to remove.',
+    ],
+
+    features: [
+      'Scroll-scrubbed cinematic opening: the trailer at night, the doors opening, the car coming down the ramp.',
+      'Condition report section that shows the document itself rather than describing it.',
+      'Ruled-blank rendering for unknown facts, so a missing insurance limit reads as missing instead of being quietly omitted.',
+      'Quote form with sessionStorage draft persistence and an honest failure state that keeps every answer on screen.',
+      'Spam handling by honeypot and a minimum time-to-submit, against the 804 KB of reCAPTCHA the current site ships on every visit.',
+      'Third-party manufacturer marks deliberately left out, with the cars named in words.',
+    ],
+
+    stack: [
+      'React 18 with Vite 6 and react-router-dom.',
+      'Tailwind CSS 3 with tailwind-merge and an OKLCH token palette.',
+      'lucide-react for iconography.',
+      'CSS-only motion. No animation library in the page itself.',
+      'Chivo and Sometype Mono, self-hosted variable woff2, 48 KB for both and no request to Google.',
+      'Playwright driving screenshots, verification and the before-and-after comparison builds.',
+      'Vercel hosting.',
+    ],
+
+    integrations: [
+      'Configurable quote endpoint via VITE_QUOTE_ENDPOINT, with a pre-filled email fallback when it is absent or the POST fails.',
+      'No reCAPTCHA, no analytics and no third-party embeds in the concept build.',
+    ],
+
+    performance: [
+      'Fonts self-hosted as variable woff2, 48 KB for the pair, removing the Google Fonts round trip.',
+      'Photography re-encoded to WebP through a scripted build step.',
+      'Hero sequence encoded with every frame a keyframe so scroll scrubbing stays smooth, with a still fallback when motion is reduced.',
+      'The C4 footer badge and its animation library load only as the footer approaches the viewport, so they stay out of the initial payload.',
+    ],
+
+    challenges: [
+      'Building trust pages for a business with no verifiable numbers. The answer was to render the gaps as ruled blanks, which makes the missing facts the owner’s first job rather than the designer’s invention.',
+      'Producing a night loading sequence with no source footage, without implying it shows their rig. The trailer carries no livery and the car no badge, and the disclosure is attached wherever the footage appears.',
+      'Replacing six manufacturer logos that carried real visual weight on the current site, using type and written names instead.',
+    ],
+
+    improvements: [
+      'Collect the facts currently rendering as blanks: operating base, routes run, ABN, insurer and cover limits, and the trailer’s internal dimensions.',
+      'Reshoot the opening with the real rig, which is roughly twenty minutes of phone footage on a tripod, and drop the clips into the existing pipeline.',
+      'Wire the quote form to a live endpoint and confirm a real submission lands in an inbox someone reads.',
+      'Reverse the three indexing blocks and remove the concept markings if it ever becomes the live site.',
+    ],
+  },
+
+  'eurochem': {
+    slug: 'eurochem',
+    name: 'EuroChem',
+    oneLiner: 'A speculative rebuild of an agricultural chemical catalogue, where every efficacy claim is lifted verbatim from the approved label.',
+    client: 'Concept. Australian agricultural chemical supplier',
+    location: 'Australia',
+    timeline: '',
+    budget: '',
+    role: 'Solo (audit, data extraction, design, development, deployment)',
+    liveUrl: 'https://eurochem-concept.vercel.app',
+    year: '2026',
+    category: 'web_design',
+    tags: ['Website', 'Concept', 'Agriculture', 'Catalogue', 'Compliance', 'React'],
+    featured: false,
+    concept: true,
+    budgetOrder: 0,
+
+    brandColor: '#7ea248',
+    backdropStyle: { backgroundColor: '#150d0c' },
+    thumbnail: '/captures/eurochem-concept-vercel-app/desktop/01-hero.png',
+
+    overview: 'An unaffiliated rebuild of eurochem.com.au, crawled 10 August 2026 and built as a pitch. The product catalogue is generated rather than written: every product name, active constituent, use statement, pack size and PDF link is EuroChem’s own published wording, unedited. Two things are layered on top and both are visible in the source. Crop navigation is derived by matching crop names inside EuroChem’s own use statements, and the site says plainly that it is a navigation aid rather than a registration claim. CPPU 10 carries verified regulatory data because it is the only product whose technical brochure has readable text. That restraint is a legal requirement as much as an editorial one: advertising a registered agvet chemical inconsistently with its approved label is an offence under the Agvet Codes, so there are no invented APVMA numbers, rates, withholding periods or pack sizes, and no testimonials at all. One correction is applied in code rather than baked into the generated data, so it stays reviewable: EuroChem’s product page reads Srobilurin where their own listing page reads Strobilurin. Measured against the current site on a throttled mid-range Android, this build loads in 0.9 s against 20.1 s, at 93 KB against 2.7 MB, over 6 requests against 79. Available to license or commission.',
+
+    screenshots: [
+      { url: '/captures/eurochem-concept-vercel-app/desktop/01-hero.png', caption: 'Home. A chemical catalogue that opens with the questions a grower actually arrives with' },
+      { url: '/captures/eurochem-concept-vercel-app/desktop/02-products.png', caption: 'Products. The full range, filterable, every word taken verbatim from EuroChem’s own labels' },
+      { url: '/captures/eurochem-concept-vercel-app/desktop/03-fungicide.png', caption: 'Fungicides. One category, with active constituent and pack size on every card' },
+      { url: '/captures/eurochem-concept-vercel-app/desktop/04-crops.png', caption: 'By crop. A navigation aid derived from EuroChem’s own use statements, and labelled as one' },
+      { url: '/captures/eurochem-concept-vercel-app/desktop/05-product.png', caption: 'CPPU 10. The only product carrying verified APVMA data, because it is the only brochure with readable text' },
+      { url: '/captures/eurochem-concept-vercel-app/desktop/06-contact.png', caption: 'Contact. The real representatives and districts, each sourced and dated in the config' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/eurochem-concept-vercel-app/desktop/01-hero.png', caption: 'Home. A chemical catalogue that opens with the questions a grower actually arrives with' },
+      { url: '/captures/eurochem-concept-vercel-app/desktop/02-products.png', caption: 'Products. The full range, filterable, every word taken verbatim from EuroChem’s own labels' },
+      { url: '/captures/eurochem-concept-vercel-app/desktop/03-fungicide.png', caption: 'Fungicides. One category, with active constituent and pack size on every card' },
+      { url: '/captures/eurochem-concept-vercel-app/desktop/04-crops.png', caption: 'By crop. A navigation aid derived from EuroChem’s own use statements, and labelled as one' },
+      { url: '/captures/eurochem-concept-vercel-app/desktop/05-product.png', caption: 'CPPU 10. The only product carrying verified APVMA data, because it is the only brochure with readable text' },
+      { url: '/captures/eurochem-concept-vercel-app/desktop/06-contact.png', caption: 'Contact. The real representatives and districts, each sourced and dated in the config' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/eurochem-concept-vercel-app/mobile/01-hero.png', caption: 'Home. A chemical catalogue that opens with the questions a grower actually arrives with' },
+      { url: '/captures/eurochem-concept-vercel-app/mobile/02-products.png', caption: 'Products. The full range, filterable, every word taken verbatim from EuroChem’s own labels' },
+      { url: '/captures/eurochem-concept-vercel-app/mobile/03-fungicide.png', caption: 'Fungicides. One category, with active constituent and pack size on every card' },
+      { url: '/captures/eurochem-concept-vercel-app/mobile/04-crops.png', caption: 'By crop. A navigation aid derived from EuroChem’s own use statements, and labelled as one' },
+      { url: '/captures/eurochem-concept-vercel-app/mobile/05-product.png', caption: 'CPPU 10. The only product carrying verified APVMA data, because it is the only brochure with readable text' },
+      { url: '/captures/eurochem-concept-vercel-app/mobile/06-contact.png', caption: 'Contact. The real representatives and districts, each sourced and dated in the config' },
+    ],
+
+    delivered: [
+      'A product catalogue of 112 routes generated from the supplier’s own published data.',
+      'Category and crop browsing, product detail pages, downloads, about and contact.',
+      'A browser-measured audit of the existing site, published as AUDIT.md with evidence.',
+      'A written design direction produced before any code.',
+      'Before-and-after screenshot pairs and full-page captures of both sites.',
+      'A generated sitemap and a robots file that blocks indexing until a real launch is approved.',
+    ],
+
+    features: [
+      'Generated catalogue where every product string is the supplier’s own published wording, unedited.',
+      'Crop-based navigation derived from the use statements themselves, and labelled on the page as a navigation aid.',
+      'Verified regulatory block on the single product whose brochure text could actually be read.',
+      'Label-faithful product pages carrying directions for use, restraints and general instructions as separate components.',
+      'Placeholder rendering for anything unverified, so no rate or withholding period is ever implied.',
+      'A single reviewable correction applied in code rather than in the generated data.',
+    ],
+
+    stack: [
+      'React 18 with Vite 6 and react-router-dom.',
+      'Tailwind CSS 3 with tailwind-merge and an OKLCH token palette.',
+      'lucide-react for iconography.',
+      'No UI kit and no animation library in the page itself.',
+      'A scripted SEO step generating sitemap.xml and robots.txt at build time.',
+      'Vercel hosting.',
+    ],
+
+    integrations: [
+      'Product data generated from a crawl of the live site, with the crawl date recorded in the source.',
+      'Direct links to the supplier’s own label and brochure PDFs.',
+      'No analytics and no third-party embeds in the concept build.',
+    ],
+
+    performance: [
+      'Lighthouse mobile: 99 performance, 100 accessibility, 100 best practices, 100 SEO, with SEO measured under a crawlable build.',
+      'Throttled mid-range Android: 0.9 s load, 93 KB and 6 requests, against the current site at 20.1 s, 2.7 MB and 79 requests.',
+      'Contrast checked on every text node across 13 pages at three widths, resolved through canvas pixels because the tokens are OKLCH. Zero failures.',
+      'The C4 footer badge and its animation library load only as the footer approaches the viewport, keeping the measured page weight intact.',
+    ],
+
+    challenges: [
+      'Advertising a registered agvet chemical inconsistently with its approved label is an offence, so the build could carry no invented figure anywhere. Every claim had to be traceable to a label or brochure, which set the content model before any design work started.',
+      'Only one product brochure had machine-readable text, so verified regulatory data exists for exactly one product and the rest had to visibly say so.',
+      'Deriving crop navigation from use statements without turning it into an implied registration claim, which is handled by labelling it on the page.',
+    ],
+
+    improvements: [
+      'Transcribe the remaining technical brochures so more than one product can carry verified regulatory data.',
+      'Confirm the derived crop mapping with someone who holds the registrations.',
+      'Wire the contact form to a live endpoint.',
+      'Flip the build to a crawlable robots file only if the supplier approves a real launch.',
+    ],
+  },
 };
 
 export function getCaseStudy(slug) {
@@ -2622,6 +2934,7 @@ export const BUILD_ORDER = [
   'people-power', 'quotr', 'returndesk',
   // concepts (self-initiated, built after the client work)
   'wooster-core', 'barrys-drink', 'jk-plumbing-solutions', 'iopa',
+  'sgr-prestige', 'eurochem', 'cmc-lawns',
 ];
 
 /* Lower `seq` = built earlier. Unknown slugs sort to the end (treated newest). */
