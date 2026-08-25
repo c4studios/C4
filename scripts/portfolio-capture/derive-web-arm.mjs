@@ -40,6 +40,14 @@ export const DERIVE = {
   iopa: 'iopa-apparel-vercel-app/desktop/01-hero.png',
   'aqua-safe-plumbing': 'aquasafeplumbing-com-au/desktop/01-hero.png',
   'brady-electrical': 'bradyelectrical-com-au/desktop/01-hero.png',
+  // concepts
+  'sgr-prestige': 'sgr-prestige-concept-vercel-app/desktop/01-hero.png',
+  eurochem: 'eurochem-concept-vercel-app/desktop/01-hero.png',
+  // Not 01-hero: that frame is a full-bleed lawn photo, and grass is
+  // high-frequency noise that WebP cannot compress. It lands at 142KB even
+  // at the q=60 floor, against a 72KB budget every other tile meets. The
+  // before/after frame is more representative anyway and fits at q=82.
+  'cmc-lawns': 'cmc-lawns-concept-vercel-app/desktop/04-work.png',
 };
 
 /** slug -> the import name used in HeroFusion.jsx (file is plx-<key>.webp). */
@@ -64,6 +72,9 @@ export const KEY = {
   iopa: 'iopa',
   'aqua-safe-plumbing': 'aquasafe',
   'brady-electrical': 'brady',
+  'sgr-prestige': 'sgr',
+  eurochem: 'eurochem',
+  'cmc-lawns': 'cmc',
 };
 
 const CAPTURES = path.resolve('public/captures');

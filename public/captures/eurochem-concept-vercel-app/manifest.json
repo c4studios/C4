@@ -1,0 +1,158 @@
+{
+  "version": 3,
+  "sourceUrl": "https://eurochem-concept.vercel.app",
+  "slug": "eurochem-concept-vercel-app",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 6,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "Home — a chemical catalogue that opens with the two questions a grower actually arrives with",
+          "route": "/",
+          "bytes": 268807,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-hero.png"
+        },
+        {
+          "id": "02-products",
+          "caption": "Products — the full range, filterable, with every word taken verbatim from EuroChem’s own labels",
+          "route": "/products",
+          "bytes": 102087,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-products.png"
+        },
+        {
+          "id": "03-fungicide",
+          "caption": "Fungicides — one category, with active constituent and pack size on every card",
+          "route": "/products/fungicide",
+          "bytes": 124629,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-fungicide.png"
+        },
+        {
+          "id": "04-crops",
+          "caption": "By crop — a navigation aid derived from EuroChem’s own use statements, and labelled as one",
+          "route": "/crops",
+          "bytes": 88619,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-crops.png"
+        },
+        {
+          "id": "05-product",
+          "caption": "CPPU 10 — the only product with verified APVMA data, because it is the only brochure with readable text",
+          "route": "/product/cppu10-pgr",
+          "bytes": 130796,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-product.png"
+        },
+        {
+          "id": "06-contact",
+          "caption": "Contact — the real representatives and districts, sourced and dated in the config",
+          "route": "/contact",
+          "bytes": 64510,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-contact.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 6,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "Home — a chemical catalogue that opens with the two questions a grower actually arrives with",
+          "route": "/",
+          "bytes": 168736,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-hero.png"
+        },
+        {
+          "id": "02-products",
+          "caption": "Products — the full range, filterable, with every word taken verbatim from EuroChem’s own labels",
+          "route": "/products",
+          "bytes": 141567,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-products.png"
+        },
+        {
+          "id": "03-fungicide",
+          "caption": "Fungicides — one category, with active constituent and pack size on every card",
+          "route": "/products/fungicide",
+          "bytes": 170618,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-fungicide.png"
+        },
+        {
+          "id": "04-crops",
+          "caption": "By crop — a navigation aid derived from EuroChem’s own use statements, and labelled as one",
+          "route": "/crops",
+          "bytes": 104975,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-crops.png"
+        },
+        {
+          "id": "05-product",
+          "caption": "CPPU 10 — the only product with verified APVMA data, because it is the only brochure with readable text",
+          "route": "/product/cppu10-pgr",
+          "bytes": 190378,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/05-product.png"
+        },
+        {
+          "id": "06-contact",
+          "caption": "Contact — the real representatives and districts, sourced and dated in the config",
+          "route": "/contact",
+          "bytes": 100041,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-contact.png"
+        }
+      ]
+    }
+  }
+}
