@@ -133,7 +133,7 @@ POST /api/inquiries (JSON)
 
 | Protection | Implementation | Scope |
 |-----------|---------------|-------|
-| CORS | `ALLOWED_ORIGIN` env var (defaults to `https://c4studios.com`) | All endpoints |
+| CORS | `ALLOWED_ORIGIN` env var (defaults to `https://c4studios.com.au`) | All endpoints |
 | Content-Type | Validates `application/json` or `multipart/form-data` | All endpoints |
 | API key guard | Rejects requests if `RESEND_API_KEY` is not configured | inquiries, ventures |
 | Honeypot | Hidden `_gotcha` field — silent reject if filled | All forms |

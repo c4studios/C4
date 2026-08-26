@@ -153,8 +153,8 @@ async function sendStudioNotice(env, clean) {
     method: 'POST',
     headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      from: env.FROM_EMAIL || 'C4 Studios <noreply@c4studios.com>',
-      to: [env.CONTACT_EMAIL || 'hello@c4studios.com'],
+      from: env.FROM_EMAIL || 'C4 Studios <noreply@c4studios.com.au>',
+      to: [env.CONTACT_EMAIL || 'hello@c4studios.com.au'],
       reply_to: clean.email,
       subject: `C4Sight preview download — ${clean.school_name || clean.email}`,
       html,

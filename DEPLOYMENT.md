@@ -23,7 +23,7 @@ C4 Studios deploys as a **Cloudflare Pages** project with **Pages Functions** fo
 You need a working Resend API key before forms can send email.
 
 1. Sign up at [resend.com](https://resend.com)
-2. Go to **Domains → Add Domain** and verify your sending domain (e.g. `c4studios.com`). Resend will give you DNS records (SPF, DKIM) to add — this proves domain ownership and authorises sending.
+2. Go to **Domains → Add Domain** and verify your sending domain (e.g. `c4studios.com.au`). Resend will give you DNS records (SPF, DKIM) to add — this proves domain ownership and authorises sending.
 3. Go to **API Keys → Create API Key**. Copy the key (it starts with `re_`).
 
 ### 2. Connect repository to Cloudflare Pages
@@ -44,9 +44,9 @@ In the Pages project, go to **Settings → Environment variables** and add:
 | Variable | Required | Value |
 |----------|----------|-------|
 | `RESEND_API_KEY` | ✅ Yes | Your Resend API key (`re_...`) |
-| `CONTACT_EMAIL` | ✅ Yes | Email address that receives form submissions (e.g. `hello@c4studios.com`) |
-| `FROM_EMAIL` | ✅ Yes | Verified sender address in Resend (e.g. `C4 Studios <noreply@c4studios.com>`) — must match a verified domain |
-| `ALLOWED_ORIGIN` | ✅ For production | Your site's exact origin including scheme (e.g. `https://c4studios.com`). No trailing slash. If omitted, defaults to `https://c4studios.com`. |
+| `CONTACT_EMAIL` | ✅ Yes | Email address that receives form submissions (e.g. `hello@c4studios.com.au`) |
+| `FROM_EMAIL` | ✅ Yes | Verified sender address in Resend (e.g. `C4 Studios <noreply@c4studios.com.au>`) — must match a verified domain |
+| `ALLOWED_ORIGIN` | ✅ For production | Your site's exact origin including scheme (e.g. `https://c4studios.com.au`). No trailing slash. If omitted, defaults to `https://c4studios.com.au`. |
 | `NODE_VERSION` | Recommended | `18` — Cloudflare's default Node version may be older; this ensures compatibility |
 
 > **Important:** Cloudflare Pages has separate env var slots for **Production** and **Preview**. Set variables in both. For Preview, set `ALLOWED_ORIGIN` to your `*.pages.dev` URL so forms work on preview deployments.
@@ -54,9 +54,9 @@ In the Pages project, go to **Settings → Environment variables** and add:
 ### 4. Configure custom domain (optional)
 
 1. Go to **Custom domains** in your Pages project settings
-2. Add your domain (e.g. `c4studios.com`)
+2. Add your domain (e.g. `c4studios.com.au`)
 3. Cloudflare will show DNS instructions — add the required CNAME record
-4. Ensure `ALLOWED_ORIGIN` in Production env vars matches the custom domain exactly (e.g. `https://c4studios.com`)
+4. Ensure `ALLOWED_ORIGIN` in Production env vars matches the custom domain exactly (e.g. `https://c4studios.com.au`)
 
 ### 5. Set up R2 for file uploads (optional)
 
@@ -72,11 +72,11 @@ File uploads (attachments on the Start Project and Ventures forms) require Cloud
    - ⚠️ This is a **binding**, not a text environment variable — it appears in a different section of the dashboard than the env vars above
 
 3. **Enable public access** so uploaded files are downloadable via URL:
-   - In R2 bucket settings, connect a **custom domain** (e.g. `uploads.c4studios.com`)
+   - In R2 bucket settings, connect a **custom domain** (e.g. `uploads.c4studios.com.au`)
    - Or enable the **R2.dev subdomain** for testing (not recommended for production)
 
 4. **Set the public URL prefix** as a text environment variable:
-   - `PUBLIC_BUCKET_URL` = `https://uploads.c4studios.com` (no trailing slash)
+   - `PUBLIC_BUCKET_URL` = `https://uploads.c4studios.com.au` (no trailing slash)
 
 ---
 
@@ -128,7 +128,7 @@ No additional configuration is needed — Pages handles routing automatically.
 
 ### CORS
 
-All API endpoints return an `Access-Control-Allow-Origin` header set to the `ALLOWED_ORIGIN` environment variable (defaulting to `https://c4studios.com`). This means:
+All API endpoints return an `Access-Control-Allow-Origin` header set to the `ALLOWED_ORIGIN` environment variable (defaulting to `https://c4studios.com.au`). This means:
 - Forms work on your production domain automatically
 - **Preview deployments need their own `ALLOWED_ORIGIN`** set in the Preview environment, or forms will fail with CORS errors
 - Local dev uses `http://localhost:8788` (set via `.dev.vars`)
@@ -157,8 +157,8 @@ wrangler is installed as a devDependency — `npm install` handles this.
 Create a `.dev.vars` file in the project root for local secrets:
 ```
 RESEND_API_KEY=re_your_key_here
-CONTACT_EMAIL=hello@c4studios.com
-FROM_EMAIL=C4 Studios <noreply@c4studios.com>
+CONTACT_EMAIL=hello@c4studios.com.au
+FROM_EMAIL=C4 Studios <noreply@c4studios.com.au>
 ALLOWED_ORIGIN=http://localhost:8788
 ```
 This file is in `.gitignore` and will never be committed. Without it, form submissions will fail with a 500 error (missing API key).
