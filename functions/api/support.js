@@ -6,7 +6,7 @@
  *
  * Required env vars (set in Cloudflare dashboard):
  *   RESEND_API_KEY  – API key from resend.com
- *   CONTACT_EMAIL   – Studio inbox email (e.g. hello@c4studios.com.au)
+ *   CONTACT_EMAIL   – Studio inbox email (e.g. caleb@c4studios.com.au)
  *
  * Optional env vars:
  *   ALLOWED_ORIGIN  – CORS origin (defaults to https://c4studios.com.au)
@@ -116,7 +116,7 @@ export async function onRequestPost(context) {
 
     // --- Send via Resend ---
     await sendEmail(env, {
-      to: env.CONTACT_EMAIL || 'hello@c4studios.com.au',
+      to: env.CONTACT_EMAIL || 'caleb@c4studios.com.au',
       subject: emailSubject,
       html,
       replyTo: clean.email,
