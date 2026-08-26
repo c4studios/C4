@@ -11,7 +11,7 @@ These must be set in Cloudflare Pages **Settings → Environment variables** bef
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `RESEND_API_KEY` | API key from [resend.com](https://resend.com). Starts with `re_`. | `re_abc123def456...` |
-| `CONTACT_EMAIL` | Inbox address where form submissions are delivered. Can be any email. | `hello@c4studios.com.au` |
+| `CONTACT_EMAIL` | Inbox address where form submissions are delivered. Can be any email. | `caleb@c4studios.com.au` |
 | `FROM_EMAIL` | Sender address shown on notification emails. **Must match a domain verified in Resend** — if your verified domain is `c4studios.com.au`, this must be `...@c4studios.com.au`. | `C4 Studios <noreply@c4studios.com.au>` |
 
 ---
@@ -74,7 +74,7 @@ For local development with `npm run dev:full`, create a `.dev.vars` file in the 
 
 ```
 RESEND_API_KEY=re_your_key_here
-CONTACT_EMAIL=hello@c4studios.com.au
+CONTACT_EMAIL=caleb@c4studios.com.au
 FROM_EMAIL=C4 Studios <noreply@c4studios.com.au>
 ALLOWED_ORIGIN=http://localhost:8788
 ```
@@ -92,4 +92,4 @@ Key points:
 - **No `VITE_` prefix:** None of these variables use Vite's `VITE_` prefix, so they are never included in the client-side JS bundle. They exist only inside Cloudflare Functions at runtime.
 - **Separate environments:** Cloudflare Pages lets you set different variables for Production and Preview. Always configure both.
 - **Key rotation:** If `RESEND_API_KEY` is compromised, rotate it in the Cloudflare dashboard. The change takes effect on the next request — no redeployment needed.
-- **Fallback values:** `CONTACT_EMAIL` and `FROM_EMAIL` have hardcoded fallbacks in the function code (`hello@c4studios.com.au`, `C4 Studios <noreply@c4studios.com.au>`). These are convenience defaults — always set the env vars explicitly in production.
+- **Fallback values:** `CONTACT_EMAIL` and `FROM_EMAIL` have hardcoded fallbacks in the function code (`caleb@c4studios.com.au`, `C4 Studios <noreply@c4studios.com.au>`). These are convenience defaults — always set the env vars explicitly in production.

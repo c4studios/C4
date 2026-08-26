@@ -568,7 +568,7 @@ Then progressively migrate components from inline styles to these utilities.
 **File:** `src/components/c4/Footer.jsx`  
 **Issue:** The footer only has one external link (Instagram). For a professional studio, this is sparse. No email, no phone, no additional social links, no address.  
 **Fix:** Add at minimum:
-- Email link: hello@c4studios.com.au
+- Email link: caleb@c4studios.com.au
 - More social platforms if applicable
 - A brief "Available worldwide · Based in [location]" line
 - Consider adding a mini-newsletter signup or "Stay in the loop" CTA

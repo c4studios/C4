@@ -44,7 +44,7 @@ In the Pages project, go to **Settings → Environment variables** and add:
 | Variable | Required | Value |
 |----------|----------|-------|
 | `RESEND_API_KEY` | ✅ Yes | Your Resend API key (`re_...`) |
-| `CONTACT_EMAIL` | ✅ Yes | Email address that receives form submissions (e.g. `hello@c4studios.com.au`) |
+| `CONTACT_EMAIL` | ✅ Yes | Email address that receives form submissions (e.g. `caleb@c4studios.com.au`) |
 | `FROM_EMAIL` | ✅ Yes | Verified sender address in Resend (e.g. `C4 Studios <noreply@c4studios.com.au>`) — must match a verified domain |
 | `ALLOWED_ORIGIN` | ✅ For production | Your site's exact origin including scheme (e.g. `https://c4studios.com.au`). No trailing slash. If omitted, defaults to `https://c4studios.com.au`. |
 | `NODE_VERSION` | Recommended | `18` — Cloudflare's default Node version may be older; this ensures compatibility |
@@ -157,7 +157,7 @@ wrangler is installed as a devDependency — `npm install` handles this.
 Create a `.dev.vars` file in the project root for local secrets:
 ```
 RESEND_API_KEY=re_your_key_here
-CONTACT_EMAIL=hello@c4studios.com.au
+CONTACT_EMAIL=caleb@c4studios.com.au
 FROM_EMAIL=C4 Studios <noreply@c4studios.com.au>
 ALLOWED_ORIGIN=http://localhost:8788
 ```
