@@ -7,17 +7,17 @@
  *
  * Required env vars (set in Cloudflare dashboard):
  *   RESEND_API_KEY  – API key from resend.com
- *   CONTACT_EMAIL   – Studio inbox email (e.g. hello@c4studios.com)
+ *   CONTACT_EMAIL   – Studio inbox email (e.g. hello@c4studios.com.au)
  *
  * Optional env vars:
- *   ALLOWED_ORIGIN       – CORS origin (defaults to https://c4studios.com)
+ *   ALLOWED_ORIGIN       – CORS origin (defaults to https://c4studios.com.au)
  *   FROM_EMAIL           – Verified sender address in Resend
  *   TURNSTILE_SECRET_KEY – Cloudflare Turnstile secret (skipped in local dev)
  */
 
 function corsHeaders(env) {
   return {
-    'Access-Control-Allow-Origin': env?.ALLOWED_ORIGIN || 'https://c4studios.com',
+    'Access-Control-Allow-Origin': env?.ALLOWED_ORIGIN || 'https://c4studios.com.au',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
@@ -114,7 +114,7 @@ export async function onRequestPost(context) {
 
     // --- Send via Resend ---
     await sendEmail(env, {
-      to: env.CONTACT_EMAIL || 'hello@c4studios.com',
+      to: env.CONTACT_EMAIL || 'hello@c4studios.com.au',
       subject,
       html,
       replyTo: clean.email,
@@ -187,7 +187,7 @@ async function sendEmail(env, { to, subject, html, replyTo }) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: env.FROM_EMAIL || 'C4 Studios <noreply@c4studios.com>',
+      from: env.FROM_EMAIL || 'C4 Studios <noreply@c4studios.com.au>',
       to: [to],
       reply_to: replyTo,
       subject,
@@ -224,7 +224,7 @@ function buildEnquiryEmail(data) {
         <p style="margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#999;">Message</p>
         <p style="margin:0;font-size:14px;line-height:1.6;color:#333;white-space:pre-wrap;">${e(data.message)}</p>
       </div>
-      <p style="margin-top:24px;font-size:11px;color:#aaa;">Sent from the C4Sight enquiry form on c4studios.com</p>
+      <p style="margin-top:24px;font-size:11px;color:#aaa;">Sent from the C4Sight enquiry form on c4studios.com.au</p>
     </div>
   `;
 }

@@ -8,15 +8,15 @@
  * Required env vars / bindings:
  *   UPLOADS_BUCKET   – R2 bucket binding (configured in Pages dashboard)
  *   PUBLIC_BUCKET_URL – Public URL prefix for the R2 bucket
- *                       (e.g. https://uploads.c4studios.com)
+ *                       (e.g. https://uploads.c4studios.com.au)
  *
  * Optional env vars:
- *   ALLOWED_ORIGIN   – CORS origin (defaults to https://c4studios.com)
+ *   ALLOWED_ORIGIN   – CORS origin (defaults to https://c4studios.com.au)
  */
 
 function corsHeaders(env) {
   return {
-    'Access-Control-Allow-Origin': env?.ALLOWED_ORIGIN || 'https://c4studios.com',
+    'Access-Control-Allow-Origin': env?.ALLOWED_ORIGIN || 'https://c4studios.com.au',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };

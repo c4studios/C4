@@ -20,8 +20,8 @@ pages_build_output_dir = "dist"
 # Create a .dev.vars file for secrets (never committed to git):
 #
 #   RESEND_API_KEY=re_your_api_key_here
-#   CONTACT_EMAIL=hello@c4studios.com
-#   FROM_EMAIL=C4 Studios <noreply@c4studios.com>
+#   CONTACT_EMAIL=hello@c4studios.com.au
+#   FROM_EMAIL=C4 Studios <noreply@c4studios.com.au>
 #   ALLOWED_ORIGIN=http://localhost:8788
 #
 # See ENVIRONMENT.md for the full list.

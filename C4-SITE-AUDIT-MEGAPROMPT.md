@@ -3,7 +3,7 @@
 > **Target:** Claude Code (or equivalent agent)  
 > **Project root:** `C4-main/C4-main/` (nested repo structure)  
 > **Stack:** React 18 + Vite 6 SPA, Tailwind CSS 4 + shadcn/ui, Framer Motion, GSAP, Cloudflare Pages + Functions, Resend email, R2 uploads  
-> **Live URL:** https://c4studios.com
+> **Live URL:** https://c4studios.com.au
 
 ---
 
@@ -29,13 +29,13 @@ Also add `preload` to the HSTS header:
 
 ### 1B. CORS origin validation is too permissive in dev
 **Files:** `functions/api/inquiries.js`, `functions/api/ventures.js`, `functions/api/support.js`, `functions/api/upload.js`, `functions/api/contact.js`  
-**Issue:** All functions fall back to `https://c4studios.com` when `ALLOWED_ORIGIN` is unset, which is fine for production. However, the CORS implementation only supports a single origin string — if you ever need to support `www.c4studios.com` as well, it will fail. Also, the `contact.js` legacy endpoint has the same CORS pattern but no Turnstile/honeypot/rate-limit protections.  
+**Issue:** All functions fall back to `https://c4studios.com.au` when `ALLOWED_ORIGIN` is unset, which is fine for production. However, the CORS implementation only supports a single origin string — if you ever need to support `www.c4studios.com.au` as well, it will fail. Also, the `contact.js` legacy endpoint has the same CORS pattern but no Turnstile/honeypot/rate-limit protections.  
 **Fix:**
 - Delete or gut `functions/api/contact.js` — it's a legacy endpoint with no spam protection. If it must stay, add honeypot + Turnstile + rate limit to match the other endpoints.
 - Validate the `Origin` header against an allowlist instead of blindly reflecting `ALLOWED_ORIGIN`:
 ```javascript
 function corsHeaders(env, request) {
-  const allowed = (env?.ALLOWED_ORIGIN || 'https://c4studios.com').split(',').map(s => s.trim());
+  const allowed = (env?.ALLOWED_ORIGIN || 'https://c4studios.com.au').split(',').map(s => s.trim());
   const origin = request?.headers?.get('Origin') || '';
   const matched = allowed.includes(origin) ? origin : allowed[0];
   return {
@@ -276,7 +276,7 @@ export default function useDocumentMeta({ title, description, ogImage }) {
       document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', description);
     }
     document.querySelector('meta[property="og:title"]')?.setAttribute('content', fullTitle);
-    document.querySelector('meta[property="og:url"]')?.setAttribute('content', `https://c4studios.com${pathname}`);
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', `https://c4studios.com.au${pathname}`);
     document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', fullTitle);
     if (ogImage) {
       document.querySelector('meta[property="og:image"]')?.setAttribute('content', ogImage);
@@ -305,10 +305,10 @@ export default function useDocumentMeta({ title, description, ogImage }) {
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://c4studios.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://c4studios.com/About</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://c4studios.com/Services</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://c4studios.com/Portfolio</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://c4studios.com.au/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://c4studios.com.au/About</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://c4studios.com.au/Services</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://c4studios.com.au/Portfolio</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <!-- ... all pages -->
 </urlset>
 ```
@@ -318,7 +318,7 @@ export default function useDocumentMeta({ title, description, ogImage }) {
 ```
 User-agent: *
 Allow: /
-Sitemap: https://c4studios.com/sitemap.xml
+Sitemap: https://c4studios.com.au/sitemap.xml
 
 User-agent: *
 Disallow: /api/
@@ -332,7 +332,7 @@ Disallow: /api/
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   "name": "C4 Studios",
-  "url": "https://c4studios.com",
+  "url": "https://c4studios.com.au",
   "description": "Design & development studio building premium digital products.",
   "sameAs": ["https://www.instagram.com/c4studiosperth/"],
   "serviceType": ["Web Design", "Web Development", "Branding", "Photography", "SEO"]
@@ -341,7 +341,7 @@ Disallow: /api/
 ```
 
 ### 4E. No canonical URL per page
-**Issue:** The canonical tag in `index.html` is hardcoded to `https://c4studios.com` for all pages.  
+**Issue:** The canonical tag in `index.html` is hardcoded to `https://c4studios.com.au` for all pages.  
 **Fix:** Dynamically update the canonical URL in the `useDocumentMeta` hook based on `pathname`.
 
 ---
@@ -568,7 +568,7 @@ Then progressively migrate components from inline styles to these utilities.
 **File:** `src/components/c4/Footer.jsx`  
 **Issue:** The footer only has one external link (Instagram). For a professional studio, this is sparse. No email, no phone, no additional social links, no address.  
 **Fix:** Add at minimum:
-- Email link: hello@c4studios.com
+- Email link: hello@c4studios.com.au
 - More social platforms if applicable
 - A brief "Available worldwide · Based in [location]" line
 - Consider adding a mini-newsletter signup or "Stay in the loop" CTA
