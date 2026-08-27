@@ -1,17 +1,16 @@
 /**
  * ConceptCarousel — the client-supplied 21st.dev 3D photo cylinder,
- * rebuilt for the gallery: five concept builds on a turning drum.
+ * rebuilt for the gallery: seven concept builds on a turning drum.
  *
  *   · Idles at a slow spin (3°/s), pauses under the pointer, and
  *     hands over to drag — pointer velocity carries through release
  *     with inertia, then the idle drift resumes.
  *   · Every face offers TWO links — the live deployment and its place
- *     in the portfolio (a case study, or the Concepts filter for the
- *     two without their own entry yet). A drag past 6px suppresses the
+ *     in the portfolio (every one now has its own case study). A drag past 6px suppresses the
  *     click so spinning never misfires a navigation; a gentle release
  *     holds the drum still so both links are tappable on a phone.
  *   · Arrow keys rotate one face per press (the wrap is focusable).
- *   · staticMode / prefers-reduced-motion: the five render as a flat
+ *   · staticMode / prefers-reduced-motion: they render as a flat
  *     shelf — no cylinder, no rAF, nothing moves.
  *
  * Plain rAF drives the rotation (one transform write per frame on one
@@ -24,6 +23,9 @@ import cptBarrys from './assets/cpt-barrys.webp';
 import cptWooster from './assets/cpt-wooster.webp';
 import cptJk from './assets/cpt-jk.webp';
 import cptIopa from './assets/cpt-iopa.webp';
+import cptSgr from './assets/cpt-sgr.webp';
+import cptEurochem from './assets/cpt-eurochem.webp';
+import cptCmc from './assets/cpt-cmc.webp';
 
 /* Every concept offers TWO ways in: the live deployment, and its own
    case study in the portfolio. */
@@ -63,6 +65,34 @@ const CONCEPTS = [
     live: 'https://iopa-apparel.vercel.app',
     portfolio: '/CaseStudy/iopa',
     alt: 'IOPA Apparel concept site — CHOP LIFE hero over a dithered transmission orb.',
+  },
+
+  {
+    key: 'sgr',
+    name: 'SGR Prestige',
+    line: 'An enclosed car transporter, where every fact nobody could verify stays a ruled blank on the page.',
+    img: cptSgr,
+    live: 'https://sgr-prestige-concept.vercel.app',
+    portfolio: '/CaseStudy/sgr-prestige',
+    alt: 'SGR Prestige concept site — a night loading sequence at the rear of an enclosed trailer.',
+  },
+  {
+    key: 'eurochem',
+    name: 'EuroChem',
+    line: 'An agricultural chemical catalogue where every efficacy claim is lifted verbatim from the approved label.',
+    img: cptEurochem,
+    live: 'https://eurochem-concept.vercel.app',
+    portfolio: '/CaseStudy/eurochem',
+    alt: 'EuroChem concept site — crop protection catalogue hero.',
+  },
+  {
+    key: 'cmc',
+    name: 'CMC Lawns',
+    line: 'A Perth lawn-care rebuild where every word traces back to the owner and every unknown stays visible.',
+    img: cptCmc,
+    live: 'https://cmc-lawns-concept.vercel.app',
+    portfolio: '/CaseStudy/cmc-lawns',
+    alt: 'CMC Lawns concept site — draggable before and after comparison of a finished lawn.',
   },
 ];
 
