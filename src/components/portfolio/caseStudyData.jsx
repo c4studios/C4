@@ -265,7 +265,7 @@ export const CASE_STUDIES = {
     year: '2026',
     category: 'web_design',
     tags: ['Website', 'Trades & Services', 'Local SEO', 'Next.js', 'Perth', 'Local Business'],
-    featured: false,
+    featured: true,
     budgetOrder: 2,
 
     cover: null,
@@ -2490,7 +2490,7 @@ export const CASE_STUDIES = {
     year: '2026',
     category: 'web_design',
     tags: ['Website', 'Trades & Services', 'Local SEO', 'Next.js', 'Perth', 'Local Business'],
-    featured: false,
+    featured: true,
     budgetOrder: 1,
 
     cover: null,

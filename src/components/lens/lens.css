@@ -56,7 +56,7 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 
 /* ── HERO ── (200vh = 100vh of scroll-driven animation — slower, more deliberate) */
 .hero-scroll { position: relative; height: 200vh; contain: layout style paint; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-.hero-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #000; transform: translateZ(0); contain: strict; -webkit-backface-visibility: hidden; backface-visibility: hidden; isolation: isolate; }
+.hero-sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #000; transform: translateZ(0); contain: strict; -webkit-backface-visibility: hidden; backface-visibility: hidden; isolation: isolate; }
 .hero-stage { position: absolute; inset: 0; display: grid; place-items: center; transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden; }
 .studio-light {
   position: absolute; inset: 0; pointer-events: none; z-index: 1;
@@ -378,7 +378,7 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 
 /* ── PORTFOLIO ── */
 .portfolio-outer { position: relative; background: #000; height: calc(100vh + var(--pf-travel, 100vh)); }
-.portfolio-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; }
+.portfolio-sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: flex; align-items: center; }
 .pf-track { display: flex; gap: 28px; padding: 0 10vw; will-change: transform; }
 .pf-card { flex: 0 0 auto; position: relative; background: #111; overflow: hidden; height: 68vh; align-self: center; }
 .pf-card.tall { width: 22vw; aspect-ratio: 3/4; }
