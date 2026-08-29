@@ -320,6 +320,16 @@ function gitLastmod(relPath, fallback) {
   }
 }
 
+/** Sitemap locs must match the URL that actually returns 200. Cloudflare Pages
+ *  serves prerendered routes from a directory, so the un-slashed form
+ *  308-redirects. See withTrailingSlash in src/lib/seo.js. */
+function sitemapPath(p) {
+  if (!p || p === '/') return '/';
+  if (/[?#]/.test(p)) return p;
+  if (/\.[a-zA-Z0-9]+$/.test(p)) return p;
+  return p.endsWith('/') ? p : `${p}/`;
+}
+
 async function writeSitemap(outputPath) {
   const today = new Date().toISOString().slice(0, 10);
   // Case studies and products share one data module each, so they resolve to a
@@ -336,7 +346,7 @@ async function writeSitemap(outputPath) {
       ? gitLastmod(seoModule, today)
       : today;
     urls.push({
-      loc: `${SITE_ORIGIN}${r.path === '/' ? '/' : r.path}`,
+      loc: `${SITE_ORIGIN}${r.path === '/' ? '/' : sitemapPath(r.path)}`,
       lastmod,
       changefreq: r.changefreq,
       priority: r.priority,
@@ -344,7 +354,7 @@ async function writeSitemap(outputPath) {
   }
   for (const slug of CASE_STUDY_SLUGS) {
     urls.push({
-      loc: `${SITE_ORIGIN}/CaseStudy/${slug}`,
+      loc: `${SITE_ORIGIN}/CaseStudy/${slug}/`,
       lastmod: caseStudyLastmod,
       changefreq: 'monthly',
       priority: 0.7,
@@ -352,7 +362,7 @@ async function writeSitemap(outputPath) {
   }
   for (const slug of PRODUCT_SLUGS) {
     urls.push({
-      loc: `${SITE_ORIGIN}/SoftwareProduct/${slug}`,
+      loc: `${SITE_ORIGIN}/SoftwareProduct/${slug}/`,
       lastmod: productLastmod,
       changefreq: 'monthly',
       priority: 0.6,

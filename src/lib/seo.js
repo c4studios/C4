@@ -67,7 +67,26 @@ export const ORG_INFO = {
 export function absoluteUrl(path = '/') {
   if (!path || path === '/') return SITE_URL;
   if (path.startsWith('http')) return path;
-  return `${SITE_URL}${path.startsWith('/') ? path : `/${path}`}`;
+  const clean = path.startsWith('/') ? path : `/${path}`;
+  return `${SITE_URL}${withTrailingSlash(clean)}`;
+}
+
+/**
+ * Cloudflare Pages serves prerendered routes from a directory, so /Portfolio
+ * 308-redirects to /Portfolio/. Canonicals, og:url and the sitemap were all
+ * emitting the un-slashed form, which meant every URL we handed Google pointed
+ * at a redirect rather than the 200. Google resolved it, and said so: the URL
+ * inspection for /Portfolio reported "Page availability ... with redirect".
+ *
+ * Left alone it costs two requests per URL of crawl budget and puts a
+ * self-referential canonical on a non-200 address. Anything carrying a file
+ * extension or a query/hash is left untouched.
+ */
+export function withTrailingSlash(pathname) {
+  if (!pathname || pathname === '/') return '/';
+  if (/[?#]/.test(pathname)) return pathname;
+  if (/\.[a-zA-Z0-9]+$/.test(pathname)) return pathname;
+  return pathname.endsWith('/') ? pathname : `${pathname}/`;
 }
 
 // 180 keeps this a safety net against runaway strings while allowing
