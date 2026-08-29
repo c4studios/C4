@@ -575,6 +575,18 @@ const ARTICLES = [
     priority: 0.65, changefreq: 'yearly',
     links: { pillars: ['ai-automation-perth'] },
   },
+  {
+    // Draft until the two /insights images exist and Caleb has read it.
+    // Flip status to 'live' and add image: '/insights/open-weight-is-not-open-source-og.jpg'.
+    slug: 'open-weight-is-not-open-source', type: 'article', status: 'draft', phase: 7,
+    name: 'Open Weight Is Not Open Source',
+    title: 'Open Weight Is Not Open Source | C4 Studios',
+    description: 'The licences on downloadable AI models differ enormously. One reserves the right to restrict your use remotely, on weights running on your own hardware.',
+    dek: 'What you actually agree to when the model runs on your own hardware.',
+    published: '2026-08-29', updated: '2026-08-29', readMinutes: 8,
+    priority: 0.65, changefreq: 'yearly',
+    links: { pillars: ['ai-automation-perth'] },
+  },
 ];
 
 /* ── Combined registry ─────────────────────────────────────────────── */
