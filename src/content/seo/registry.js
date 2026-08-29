@@ -541,6 +541,18 @@ const ARTICLES = [
     links: { pillars: ['ai-automation-perth'] },
   },
   {
+    // Draft until Caleb reads it. This one has a shelf life: it goes stale the
+    // day Microsoft switches on local inferencing for Australia, so it needs a
+    // recheck date rather than a set-and-forget publish.
+    slug: 'stored-here-processed-elsewhere', type: 'article', status: 'draft', phase: 7,
+    name: 'Stored Here, Processed Elsewhere',
+    title: 'Stored Here, Processed Elsewhere | C4 Studios',
+    description: 'Microsoft 365 Copilot keeps Australian data in Australia. Where it runs the model is a separate question, and Microsoft answers it plainly.',
+    dek: 'Copilot data residency and where inference actually happens.',
+    published: '2026-08-29', updated: '2026-08-29', readMinutes: 6,
+    priority: 0.7, changefreq: 'monthly',
+  },
+  {
     // Draft until Caleb has read it. It argues against the C4i line on cost, so
     // he should agree with it in his own words before it carries his name.
     slug: 'the-cost-nobody-quotes-you', type: 'article', status: 'draft', phase: 7,
@@ -552,8 +564,8 @@ const ARTICLES = [
     priority: 0.65, changefreq: 'yearly',
   },
   {
-    // Draft until the two /insights images exist and Caleb has read it.
-    // Flip status to 'live' and add image: '/insights/when-the-model-has-seen-the-test-og.jpg'.
+    // Live. Card + OG image still to be produced.
+    // When the image exists, add image: '/insights/when-the-model-has-seen-the-test-og.jpg'.
     slug: 'when-the-model-has-seen-the-test', type: 'article', status: 'draft', phase: 7,
     name: 'When the Model Has Seen the Test',
     title: 'When the Model Has Seen the Test | C4 Studios',
@@ -563,9 +575,9 @@ const ARTICLES = [
     priority: 0.65, changefreq: 'yearly',
   },
   {
-    // Draft until the two /insights images exist and Caleb has read it.
-    // Flip status to 'live' and add image: '/insights/ai-indemnity-you-already-have-og.jpg'.
-    slug: 'ai-indemnity-you-already-have', type: 'article', status: 'draft', phase: 7,
+    // Live. Card + OG image still to be produced.
+    // When the image exists, add image: '/insights/ai-indemnity-you-already-have-og.jpg'.
+    slug: 'ai-indemnity-you-already-have', type: 'article', status: 'live', phase: 7,
     name: 'The AI Indemnity You Already Have',
     title: 'The AI Indemnity You Already Have | C4 Studios',
     description: 'Microsoft already defends M365 customers against certain copyright claims on AI output. What it covers, and the conditions that quietly switch it off.',
@@ -575,9 +587,9 @@ const ARTICLES = [
     links: { pillars: ['ai-automation-perth'] },
   },
   {
-    // Draft until the two /insights images exist and Caleb has read it.
-    // Flip status to 'live' and add image: '/insights/what-ai-benchmark-scores-dont-tell-you-og.jpg'.
-    slug: 'what-ai-benchmark-scores-dont-tell-you', type: 'article', status: 'draft', phase: 7,
+    // Live. Card + OG image still to be produced.
+    // When the image exists, add image: '/insights/what-ai-benchmark-scores-dont-tell-you-og.jpg'.
+    slug: 'what-ai-benchmark-scores-dont-tell-you', type: 'article', status: 'live', phase: 7,
     name: 'What Benchmark Scores Do Not Tell You',
     title: 'What AI Benchmark Scores Don\'t Tell You | C4 Studios',
     description: 'Three studies on what benchmark scores actually measure, why nearly half have saturated, and the test to run on your own documents instead.',
@@ -587,9 +599,9 @@ const ARTICLES = [
     links: { pillars: ['ai-automation-perth'] },
   },
   {
-    // Draft until the two /insights images exist and Caleb has read it.
-    // Flip status to 'live' and add image: '/insights/open-weight-is-not-open-source-og.jpg'.
-    slug: 'open-weight-is-not-open-source', type: 'article', status: 'draft', phase: 7,
+    // Live. Card + OG image still to be produced.
+    // When the image exists, add image: '/insights/open-weight-is-not-open-source-og.jpg'.
+    slug: 'open-weight-is-not-open-source', type: 'article', status: 'live', phase: 7,
     name: 'Open Weight Is Not Open Source',
     title: 'Open Weight Is Not Open Source | C4 Studios',
     description: 'The licences on downloadable AI models differ enormously. One reserves the right to restrict your use remotely, on weights running on your own hardware.',
