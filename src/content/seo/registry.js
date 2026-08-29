@@ -541,6 +541,17 @@ const ARTICLES = [
     links: { pillars: ['ai-automation-perth'] },
   },
   {
+    // Draft until Caleb reads it. It calls out a named MIT report and corrects a
+    // widely-misreported figure about a Big Four firm, so it wants his sign-off.
+    slug: 'ninety-five-per-cent-of-what', type: 'article', status: 'draft', phase: 7,
+    name: 'Ninety-Five Per Cent of What?',
+    title: 'Ninety-Five Per Cent of What? | C4 Studios',
+    description: 'The most repeated statistic in AI is not a failure rate, and a Wharton professor could not work out how it was calculated. Here is the number that survives.',
+    dek: 'Tracing the AI failure statistics everyone quotes.',
+    published: '2026-08-29', updated: '2026-08-29', readMinutes: 8,
+    priority: 0.7, changefreq: 'yearly',
+  },
+  {
     // Draft until Caleb reads it. It names two vendors' products and quotes a
     // regulator's action against a named-in-public solicitor, so it should
     // carry his agreement rather than only his name.
