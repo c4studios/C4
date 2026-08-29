@@ -541,6 +541,17 @@ const ARTICLES = [
     links: { pillars: ['ai-automation-perth'] },
   },
   {
+    // Draft until Caleb has read it. It argues against the C4i line on cost, so
+    // he should agree with it in his own words before it carries his name.
+    slug: 'the-cost-nobody-quotes-you', type: 'article', status: 'draft', phase: 7,
+    name: 'The Cost Nobody Quotes You',
+    title: 'The Cost Nobody Quotes You | C4 Studios',
+    description: 'On-premise AI is usually sold as the cheaper option. The hardware and the power bill are the small numbers. Here is the one that decides it.',
+    dek: 'What running AI on your own hardware actually costs a small firm.',
+    published: '2026-08-29', updated: '2026-08-29', readMinutes: 7,
+    priority: 0.65, changefreq: 'yearly',
+  },
+  {
     // Draft until the two /insights images exist and Caleb has read it.
     // Flip status to 'live' and add image: '/insights/when-the-model-has-seen-the-test-og.jpg'.
     slug: 'when-the-model-has-seen-the-test', type: 'article', status: 'draft', phase: 7,
