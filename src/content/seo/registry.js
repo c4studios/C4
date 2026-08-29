@@ -540,6 +540,41 @@ const ARTICLES = [
     priority: 0.65, changefreq: 'yearly',
     links: { pillars: ['ai-automation-perth'] },
   },
+  {
+    // Draft until the two /insights images exist and Caleb has read it.
+    // Flip status to 'live' and add image: '/insights/when-the-model-has-seen-the-test-og.jpg'.
+    slug: 'when-the-model-has-seen-the-test', type: 'article', status: 'draft', phase: 7,
+    name: 'When the Model Has Seen the Test',
+    title: 'When the Model Has Seen the Test | C4 Studios',
+    description: 'AI vendors lead with benchmark scores. A published paper shows those scores can be inflated by memorisation. What to ask for instead.',
+    dek: 'Why a benchmark score tells you almost nothing about your documents.',
+    published: '2026-08-29', updated: '2026-08-29', readMinutes: 6,
+    priority: 0.65, changefreq: 'yearly',
+  },
+  {
+    // Draft until the two /insights images exist and Caleb has read it.
+    // Flip status to 'live' and add image: '/insights/ai-indemnity-you-already-have-og.jpg'.
+    slug: 'ai-indemnity-you-already-have', type: 'article', status: 'draft', phase: 7,
+    name: 'The AI Indemnity You Already Have',
+    title: 'The AI Indemnity You Already Have | C4 Studios',
+    description: 'Microsoft already defends M365 customers against certain copyright claims on AI output. What it covers, and the conditions that quietly switch it off.',
+    dek: 'What Microsoft already covers, and the condition most custom builds fail.',
+    published: '2026-08-29', updated: '2026-08-29', readMinutes: 7,
+    priority: 0.65, changefreq: 'yearly',
+    links: { pillars: ['ai-automation-perth'] },
+  },
+  {
+    // Draft until the two /insights images exist and Caleb has read it.
+    // Flip status to 'live' and add image: '/insights/what-ai-benchmark-scores-dont-tell-you-og.jpg'.
+    slug: 'what-ai-benchmark-scores-dont-tell-you', type: 'article', status: 'draft', phase: 7,
+    name: 'What Benchmark Scores Do Not Tell You',
+    title: 'What AI Benchmark Scores Don\'t Tell You | C4 Studios',
+    description: 'Three studies on what benchmark scores actually measure, why nearly half have saturated, and the test to run on your own documents instead.',
+    dek: 'Six in seven published comparisons report no statistical test at all.',
+    published: '2026-08-29', updated: '2026-08-29', readMinutes: 7,
+    priority: 0.65, changefreq: 'yearly',
+    links: { pillars: ['ai-automation-perth'] },
+  },
 ];
 
 /* ── Combined registry ─────────────────────────────────────────────── */
