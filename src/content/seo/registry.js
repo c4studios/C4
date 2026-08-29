@@ -541,6 +541,18 @@ const ARTICLES = [
     links: { pillars: ['ai-automation-perth'] },
   },
   {
+    // Draft until Caleb reads it. It names two vendors' products and quotes a
+    // regulator's action against a named-in-public solicitor, so it should
+    // carry his agreement rather than only his name.
+    slug: 'the-citation-that-checks-out', type: 'article', status: 'draft', phase: 7,
+    name: 'The Citation That Checks Out',
+    title: 'The Citation That Checks Out | C4 Studios',
+    description: 'The dangerous AI failure is not the invented source. It is the real one, correctly cited, that does not support the claim. Measured at 17 to 33 per cent.',
+    dek: 'Why a working citation is not the same as a checked one.',
+    published: '2026-08-29', updated: '2026-08-29', readMinutes: 7,
+    priority: 0.7, changefreq: 'yearly',
+  },
+  {
     // Draft until Caleb reads it. This one has a shelf life: it goes stale the
     // day Microsoft switches on local inferencing for Australia, so it needs a
     // recheck date rather than a set-and-forget publish.
