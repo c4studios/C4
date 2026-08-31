@@ -541,6 +541,17 @@ const ARTICLES = [
     links: { pillars: ['ai-automation-perth'] },
   },
   {
+    // Draft. First article assembled from a delegated research pack; every
+    // figure was re-verified against the primary source before assembly.
+    slug: 'what-the-window-actually-holds', type: 'article', status: 'draft', phase: 7,
+    name: 'What the Window Actually Holds',
+    title: 'What the Window Actually Holds | C4 Studios',
+    description: 'Vendors advertise million-token context windows. Published benchmarks measure what models can reliably find in a long document, and the gap is large.',
+    dek: 'Advertised context window against usable context window.',
+    published: '2026-08-31', updated: '2026-08-31', readMinutes: 8,
+    priority: 0.7, changefreq: 'yearly',
+  },
+  {
     // Draft until Caleb reads it. It calls out a named MIT report and corrects a
     // widely-misreported figure about a Big Four firm, so it wants his sign-off.
     slug: 'ninety-five-per-cent-of-what', type: 'article', status: 'draft', phase: 7,
