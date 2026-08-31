@@ -189,10 +189,29 @@ Paste the relevant one verbatim at the top of every brief in Part 3.
 > You are producing imagery for one article on c4studios.com.au. Read
 > `~/.claude/CLAUDE.md` before generating anything.
 >
-> **Deliverables:** `public/insights/<slug>.jpg` (card image, landscape) and
-> `public/insights/<slug>-og.jpg` (social card, 1200×630). Plus any in-article
-> figure named in the design brief. Where an article has no image, the site
-> falls back to the site-wide OG card, so a weak image is worse than none.
+> **Deliverables, at these exact dimensions** — measured off the three images
+> already in `public/insights/`, not guessed:
+>
+> - `public/insights/<slug>.jpg` — card image, **1360×1700, portrait**
+> - `public/insights/<slug>-og.jpg` — social card, **1200×630, landscape**
+>
+> Plus any in-article figure named in the design brief. Where an article has no
+> image the site falls back to the site-wide OG card, so a weak image is worse
+> than none.
+>
+> **Generator.** Use the connected image MCP: `generate_image` for a single
+> scene, `generate_image_batch` for up to twelve independent prompts. Call
+> `models_explore` first to see the available models, their aspect ratios and
+> their parameters. For photographic editorial scenes the realistic-portrait and
+> general models are the right family; the marketing/product model is not.
+>
+> **Spend nothing without preflighting.** These generations cost Caleb credits.
+> Run `get_cost: true` on one representative prompt and report the figure before
+> generating a set. Do not pass `use_unlim` on your own initiative — that spends
+> a different balance of his and it is his call, not yours.
+>
+> Crop and resize with the Adobe `image_crop_and_resize` tool or with Pillow.
+> Composite any legible type in HTML and screenshot it in the browser.
 >
 > **The rule that is never bent: image models make the scene, never the words.**
 > Any text that must be legible is composited in HTML and screenshotted. Never
