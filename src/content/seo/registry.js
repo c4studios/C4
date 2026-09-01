@@ -541,6 +541,18 @@ const ARTICLES = [
     links: { pillars: ['ai-automation-perth'] },
   },
   {
+    // Draft. The "at this time" qualifier is the article. Never let an edit
+    // change it to abandoned, scrapped or paused; those are commentary words
+    // and the government did not use them.
+    slug: 'not-proceeding-at-this-time', type: 'article', status: 'draft', phase: 7,
+    name: 'Not Proceeding, At This Time',
+    title: 'Not Proceeding, At This Time | C4 Studios',
+    description: 'Australian AI advice still tells firms to prepare for incoming AI legislation. The government published its position in one sentence, qualifier included.',
+    dek: 'What the government actually said about mandatory AI guardrails.',
+    published: '2026-09-01', updated: '2026-09-01', readMinutes: 7,
+    priority: 0.75, changefreq: 'monthly',
+  },
+  {
     // Draft. Quotes Anthropic at length, and Anthropic is the vendor we build
     // on. The section explaining WHY they are quoted most is load-bearing for
     // fairness. Read the file header before editing.
