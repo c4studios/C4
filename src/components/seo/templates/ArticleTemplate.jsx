@@ -51,6 +51,8 @@ export default function ArticleTemplate({ entry, content }) {
   const updated = entry.updated && entry.updated !== entry.published
     ? formatDate(entry.updated) : null;
 
+  const verified = entry.verified ? formatDate(entry.verified) : null;
+
   const title = Array.isArray(hero.title) ? hero.title.join(' ') : hero.title;
   const dek = hero.intro && hero.intro.length ? hero.intro[0] : entry.dek;
 
@@ -87,6 +89,19 @@ export default function ArticleTemplate({ entry, content }) {
                 <span className="sep" aria-hidden="true">·</span>
                 <span>{entry.readMinutes} min read</span>
               </>
+            )}
+            {/* Opt-in per article. Only renders where the registry carries a
+                `verified` date, so the stamp can never appear on a page whose
+                figures nobody has actually re-checked at the source. That
+                restraint is the only thing that makes it worth printing. */}
+            {verified && (
+              <span className="article__verified">
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="currentColor" strokeWidth="2.2"
+                    strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>Figures verified <b>{verified}</b></span>
+              </span>
             )}
           </div>
         </motion.div>

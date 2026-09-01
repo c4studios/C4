@@ -549,7 +549,7 @@ const ARTICLES = [
     title: 'Not Proceeding, At This Time | C4 Studios',
     description: 'Australian AI advice still tells firms to prepare for incoming AI legislation. The government published its position in one sentence, qualifier included.',
     dek: 'What the government actually said about mandatory AI guardrails.',
-    published: '2026-09-01', updated: '2026-09-01', readMinutes: 7,
+    published: '2026-09-01', updated: '2026-09-01', verified: '2026-09-01', readMinutes: 7,
     priority: 0.75, changefreq: 'monthly',
   },
   {
@@ -561,7 +561,7 @@ const ARTICLES = [
     title: 'What Zero Retention Keeps | C4 Studios',
     description: 'Zero data retention is sold as nothing being kept. Read the clauses and something is always kept. What one vendor retains, in its own words.',
     dek: 'The gap between nothing stored and nothing kept.',
-    published: '2026-09-01', updated: '2026-09-01', readMinutes: 7,
+    published: '2026-09-01', updated: '2026-09-01', verified: '2026-09-01', readMinutes: 7,
     priority: 0.7, changefreq: 'monthly',
   },
   {
@@ -573,7 +573,7 @@ const ARTICLES = [
     title: 'Who APRA Actually Regulates | C4 Studios',
     description: 'Licensed firms are routinely sold compliance products built on APRA prudential standards. APRA publishes what it regulates, and the standards publish who they bind.',
     dek: 'The published perimeter, and the CPS 230 version most commentary gets wrong.',
-    published: '2026-09-01', updated: '2026-09-01', readMinutes: 7,
+    published: '2026-09-01', updated: '2026-09-01', verified: '2026-09-01', readMinutes: 7,
     priority: 0.7, changefreq: 'monthly',
   },
   {
@@ -584,7 +584,7 @@ const ARTICLES = [
     title: 'Twenty Steps at Ninety-Five Per Cent | C4 Studios',
     description: 'An agent that gets each step right 95% of the time finishes a twenty-step job about a third of the time. The measured evidence says the real number is worse.',
     dek: 'Why multi-step AI agents fail more than people expect.',
-    published: '2026-09-01', updated: '2026-09-01', readMinutes: 7,
+    published: '2026-09-01', updated: '2026-09-01', verified: '2026-09-01', readMinutes: 7,
     priority: 0.7, changefreq: 'yearly',
   },
   {
@@ -595,7 +595,7 @@ const ARTICLES = [
     title: 'What the Window Actually Holds | C4 Studios',
     description: 'Vendors advertise million-token context windows. Published benchmarks measure what models can reliably find in a long document, and the gap is large.',
     dek: 'Advertised context window against usable context window.',
-    published: '2026-08-31', updated: '2026-08-31', readMinutes: 8,
+    published: '2026-08-31', updated: '2026-08-31', verified: '2026-08-31', readMinutes: 8,
     priority: 0.7, changefreq: 'yearly',
   },
   {
@@ -606,7 +606,7 @@ const ARTICLES = [
     title: 'Ninety-Five Per Cent of What? | C4 Studios',
     description: 'The most repeated statistic in AI is not a failure rate, and a Wharton professor could not work out how it was calculated. Here is the number that survives.',
     dek: 'Tracing the AI failure statistics everyone quotes.',
-    published: '2026-08-29', updated: '2026-08-29', readMinutes: 8,
+    published: '2026-08-29', updated: '2026-08-29', verified: '2026-08-29', readMinutes: 8,
     priority: 0.7, changefreq: 'yearly',
   },
   {
@@ -618,7 +618,7 @@ const ARTICLES = [
     title: 'The Citation That Checks Out | C4 Studios',
     description: 'The dangerous AI failure is not the invented source. It is the real one, correctly cited, that does not support the claim. Measured at 17 to 33 per cent.',
     dek: 'Why a working citation is not the same as a checked one.',
-    published: '2026-08-29', updated: '2026-08-29', readMinutes: 7,
+    published: '2026-08-29', updated: '2026-08-29', verified: '2026-08-29', readMinutes: 7,
     priority: 0.7, changefreq: 'yearly',
   },
   {
@@ -630,7 +630,7 @@ const ARTICLES = [
     title: 'Stored Here, Processed Elsewhere | C4 Studios',
     description: 'Microsoft 365 Copilot keeps Australian data in Australia. Where it runs the model is a separate question, and Microsoft answers it plainly.',
     dek: 'Copilot data residency and where inference actually happens.',
-    published: '2026-08-29', updated: '2026-08-29', readMinutes: 6,
+    published: '2026-08-29', updated: '2026-08-29', verified: '2026-08-29', readMinutes: 6,
     priority: 0.7, changefreq: 'monthly',
   },
   {
@@ -641,7 +641,7 @@ const ARTICLES = [
     title: 'The Cost Nobody Quotes You | C4 Studios',
     description: 'On-premise AI is usually sold as the cheaper option. The hardware and the power bill are the small numbers. Here is the one that decides it.',
     dek: 'What running AI on your own hardware actually costs a small firm.',
-    published: '2026-08-29', updated: '2026-08-29', readMinutes: 7,
+    published: '2026-08-29', updated: '2026-08-29', verified: '2026-08-29', readMinutes: 7,
     priority: 0.65, changefreq: 'yearly',
   },
   {
@@ -652,7 +652,7 @@ const ARTICLES = [
     title: 'When the Model Has Seen the Test | C4 Studios',
     description: 'AI vendors lead with benchmark scores. A published paper shows those scores can be inflated by memorisation. What to ask for instead.',
     dek: 'Why a benchmark score tells you almost nothing about your documents.',
-    published: '2026-08-29', updated: '2026-08-29', readMinutes: 6,
+    published: '2026-08-29', updated: '2026-08-29', verified: '2026-08-29', readMinutes: 6,
     priority: 0.65, changefreq: 'yearly',
   },
   {
