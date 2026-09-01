@@ -363,3 +363,168 @@
   color: var(--prose-meta);
   max-width: var(--measure);
 }
+
+
+/* ── EVIDENCE — proof stock ───────────────────────────────────────
+   Added 1 September 2026.
+
+   The library's whole claim is that every figure traces to a document
+   you can open. The sourced material should therefore be the most
+   designed thing on the page rather than the least. Before this, a
+   verbatim quote from a Federal Court judgment and a passing aside
+   were set identically, and the sources list — the proof of the
+   entire position — read as housekeeping at the bottom.
+
+   The system already ships --c4-proof-*: a warmer stock with its own
+   border, ink and accent, built for Lens. A proof is evidence, so the
+   token name was already doing the work. Nothing new was added to the
+   palette for any of this, and every value below is a theme token, so
+   both themes resolve without a second definition.
+
+   WHAT WAS DRAFTED AND DROPPED. An inverted slab for the answer
+   block. --c4-inverted-bg is #1A1A1A against a #F7F5F2 page in light,
+   which is a real ground change, but #0A0C10 against #0F1115 in dark,
+   which is invisible. No token in the system lifts against the page
+   in both directions, and inventing one would put a colour outside
+   ThemeContext. Proof surfaces survive both themes because their edge
+   is a border rather than a contrast step. The answer keeps the
+   standfirst treatment the original author argued for.
+   TOKEN CHOICE, corrected during the verification pass. These panels
+   first used --c4-proof-bg. That token is a recessed section GROUND:
+   in dark it is #0B0E12 against a #0F1115 page, which measured 1.02:1
+   and made the panels invisible. --c4-proof-surface is the raised
+   panel token and it lifts in both themes. The lesson generalises:
+   a token named `bg` and a token named `surface` are not
+   interchangeable in a palette that ships two themes.
+   ────────────────────────────────────────────────────────────── */
+
+.article__quotefig {
+  margin: calc(var(--rhythm) * 1.5) 0;
+  padding: clamp(1.6rem, 3.4vw, 2.4rem) clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--c4-proof-surface);
+  border: 1px solid var(--c4-proof-border);
+  border-radius: 2px;
+}
+.article__quotefig .article__quote {
+  margin: 0;
+  font-size: clamp(1.4rem, 1.1rem + 1.5vw, 2rem);
+  color: var(--c4-proof-text);
+}
+/* The ornamental open-quote is redundant once the block has its own
+   ground and edge. Two devices doing one job is one too many. */
+.article__quotefig .article__quote::before { content: none; }
+.article__quotefig figcaption {
+  margin-top: 1.1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--c4-proof-border);
+  color: var(--c4-proof-muted);
+  line-height: 1.55;
+}
+/* The marker is a short rule above the label rather than a coloured
+   border down the left edge. The side-stripe was drafted, flagged by the
+   detector as the side-tab antipattern, and removed — it is on the house
+   ban list and the first draft only kept it by calling it a quotation
+   convention. A horizontal mark is a typographic device; a coloured tab
+   on the edge of a card is furniture. */
+.article__evlabel::before {
+  content: '';
+  display: block;
+  width: 2rem;
+  height: 2px;
+  margin-bottom: 0.8rem;
+  background: var(--c4-proof-accent);
+}
+.article__evlabel {
+  margin: 0 0 0.9rem;
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c4-proof-muted);
+}
+
+/* The sources ledger. Same stock as the quotes, because it is the
+   same kind of material. */
+.article__ledger {
+  margin-top: calc(var(--rhythm) * 1.6);
+  padding: clamp(1.6rem, 3.4vw, 2.2rem);
+  background: var(--c4-proof-surface);
+  border: 1px solid var(--c4-proof-border);
+  border-radius: 2px;
+}
+.article__ledger > h2 { margin-top: 0; color: var(--c4-proof-text); }
+.article__ledger > h2::after { display: none; }
+.article__ledgernote {
+  margin: 0.4rem 0 0;
+  font-size: var(--t-small);
+  color: var(--c4-proof-muted);
+}
+.article__ledger .article__sources { margin-top: 1.4rem; }
+.article__ledger .article__sources li {
+  margin-top: 0;
+  padding: 0.95rem 0;
+  border-top: 1px solid var(--c4-proof-border);
+  color: var(--c4-proof-muted);
+}
+.article__ledger .article__sources li::before { color: var(--c4-proof-accent); }
+.article__srctitle {
+  display: block;
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--c4-proof-text);
+}
+.article__srcmeta {
+  display: block;
+  margin-top: 0.4rem;
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  line-height: 1.55;
+  color: var(--c4-proof-muted);
+}
+
+/* Section rhythm. A hairline under each h2 gives the reader a visible
+   structure to scroll past. It replaces nothing and adds no colour. */
+.article__body h2::after {
+  content: '';
+  display: block;
+  height: 1px;
+  margin-top: 0.7rem;
+  background: var(--prose-rule);
+}
+
+/* The verification stamp. Opt-in per article: it only renders where
+   the registry carries a `verified` date, so it can never appear on
+   a page nobody has actually checked. */
+.article__verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.6rem;
+  background: var(--c4-proof-surface);
+  border: 1px solid var(--c4-proof-border);
+  border-radius: 2px;
+  color: var(--c4-proof-muted);
+  letter-spacing: 0.08em;
+}
+.article__verified svg { width: 11px; height: 11px; flex: none; }
+.article__verified b {
+  /* Not the accent. Measured 4.47:1 in dark against a 4.5 floor for text
+     this size, so the emphasis is carried by weight and ink instead. A
+     figure that fails contrast is a poor advertisement for a stamp whose
+     whole job is to say we checked. */
+  color: var(--c4-proof-text);
+  font-weight: 700;
+}
+@media (min-width: 46rem) { .article__verified { margin-left: auto; } }
+
+/* Focus. The links in the ledger are the most important on the page —
+   they are the proof — and they were inheriting the browser's default
+   0.67px ring, which is thin on a dark panel. This is the same accent
+   the block already uses, at a weight you can actually see. */
+.article__ledger a:focus-visible,
+.article__quotefig a:focus-visible {
+  outline: 2px solid var(--c4-proof-accent);
+  outline-offset: 3px;
+  border-radius: 1px;
+}

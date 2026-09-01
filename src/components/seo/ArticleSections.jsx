@@ -140,9 +140,15 @@ function Figure({ section }) {
   );
 }
 
+/* Quotes in this library are verbatim primary source, which makes them
+   the most valuable thing on the page. They sit on the proof stock the
+   system already owns so a reader can tell a quoted document from an
+   aside at a glance. The label is information rather than decoration:
+   it tells you the words are lifted, not paraphrased. */
 function Quote({ section }) {
   return (
     <figure className="article__quotefig">
+      {section.attribution && <p className="article__evlabel">Primary source, verbatim</p>}
       <blockquote className="article__quote">{section.quote}</blockquote>
       {section.attribution && <figcaption>{section.attribution}</figcaption>}
     </figure>
@@ -178,22 +184,32 @@ function Sources({ section }) {
   const items = section.items || [];
   if (!items.length) return null;
   return (
-    <>
+    <div className="article__ledger">
       <Heading>{section.heading || 'Sources'}</Heading>
+      <p className="article__ledgernote">
+        Every figure in this article was read at the document itself.
+      </p>
       <ol className="article__sources">
         {items.map((s, i) => (
           <li key={i}>
             <span>
-              {s.url
-                ? <a href={s.url} target="_blank" rel="noopener">{s.title}</a>
-                : s.title}
-              {s.publisher && <> — {s.publisher}</>}
-              {s.year && <> ({s.year})</>}
+              <span className="article__srctitle">
+                {s.url
+                  ? <a href={s.url} target="_blank" rel="noopener">{s.title}</a>
+                  : s.title}
+              </span>
+              {(s.publisher || s.year) && (
+                <span className="article__srcmeta">
+                  {s.publisher}
+                  {s.publisher && s.year && ' · '}
+                  {s.year}
+                </span>
+              )}
             </span>
           </li>
         ))}
       </ol>
-    </>
+    </div>
   );
 }
 
@@ -213,7 +229,8 @@ export default function ArticleSections({ sections = [] }) {
     const Kind = KINDS[section.kind];
     if (!Kind) return null;
     // Quotes break the measure; everything else stays in the reading column.
-    const wide = section.kind === 'quote' || section.kind === 'table' || section.kind === 'image';
+    const wide = section.kind === 'quote' || section.kind === 'table'
+      || section.kind === 'image' || section.kind === 'sources';
     return (
       <div key={i} className={wide ? 'article__col article__col--wide' : 'article__col'}>
         <Kind section={section} />
