@@ -148,7 +148,7 @@ function drawCameraLens(ctx, cx, cy, r, alpha, lite = false) {
   ctx.fill();
 
   // Barrel text
-  ctx.font = `500 ${Math.max(9, r * 0.04)}px "Inter", sans-serif`;
+  ctx.font = `500 ${Math.max(9, r * 0.04)}px "Archivo", sans-serif`;
   ctx.textAlign = 'center';
   ctx.fillStyle = `rgba(160,162,168,0.35)`;
   ctx.fillText('C4 LENS  50mm  ƒ/1.4', cx, cy + r * 1.15);
@@ -509,7 +509,7 @@ function drawFrame(ctx, w, h, progress, lite = false) {
   }
 
   ctx.globalAlpha = clamp(labelAlpha, 0, 1) * 0.5;
-  ctx.font = `300 ${Math.max(11, w * 0.011)}px "Inter", sans-serif`;
+  ctx.font = `300 ${Math.max(11, w * 0.011)}px "Archivo", sans-serif`;
   ctx.textAlign = 'center';
   ctx.letterSpacing = '0.3em';
   ctx.fillStyle = '#ECE7DE';

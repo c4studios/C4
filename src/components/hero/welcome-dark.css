@@ -11,7 +11,7 @@
   min-height: 100svh;
   background: #07080a;
   color: #f4f2ef;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   touch-action: pan-y;            /* vertical scroll only — no horizontal drag / edge-swipe-back */
