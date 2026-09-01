@@ -38,9 +38,21 @@ export default {
       head: ['Package', 'Price', 'What’s in it'],
       rows: [
         ['Core', '$250', 'Two initial concepts, one revision round, final files in PNG and SVG with a primary brand colour.'],
+        ['Logo Rebuild', '$450', 'You already have the logo. We redraw it as true vector and build the colour, one-colour and embroidery-ready versions, with the full file set.'],
         ['Logo Only', '$500', 'Three concepts, two revision rounds, full file set in colour and mono, plus a three-to-five colour palette.'],
         ['Brand Essentials', '$1,200', 'Logo with three concepts and three revisions, palette and typography, business card, social templates, and a short guidelines PDF.'],
         ['Full Brand Identity', '$2,500+', 'Five concepts, complete colour and type system, stationery and email signature, social suite, 10-plus page guidelines, presentation template, signage mockups.'],
+      ],
+    },
+    {
+      kind: 'prose',
+      label: 'Existing artwork',
+      heading: 'You’ve got a logo, and the signwriter said no',
+      body: [
+        'It happens a lot now. Someone makes a logo in an AI tool, likes it, sends it to the signwriter, and gets told it can’t be used. The tool gave them a flat image. Signage and embroidery both need vector.',
+        'So we redraw it. Same mark, rebuilt properly, plus the versions each trade needs: full colour, one colour for the vehicle, and a simplified version that still reads stitched at chest size.',
+        'There’s an ownership question underneath it too. Australian copyright needs a human author, and there’s case law that computer-generated work with no human author doesn’t attract copyright at all. A mark that came straight out of a tool may not be something you can stop a competitor using. Redrawing it puts real design decisions into it. If you want the name itself protected that’s a trade mark, and that’s a question for an IP lawyer rather than for us.',
+        'Not every file is worth rebuilding. Send it through and we’ll tell you before you pay.',
       ],
     },
     {
@@ -97,7 +109,11 @@ export default {
   faqs: [
     {
       q: 'How much does a logo cost in Perth?',
-      a: 'With us: $250 for a starter logo, $500 for a full logo package with palette and complete file set, $1,200 for brand essentials including business cards and social templates, and from $2,500 for a complete identity system. All fixed-price with defined revisions.',
+      a: 'With us: $250 for a starter logo, $450 to rebuild a logo you already have, $500 for a full logo package with palette and complete file set, $1,200 for brand essentials including business cards and social templates, and from $2,500 for a complete identity system. All fixed-price with defined revisions.',
+    },
+    {
+      q: 'Can you fix a logo I made with AI?',
+      a: 'Usually. The problem is nearly always the file itself. AI tools output flat images, and both signage and embroidery need vector. We redraw it as true vector and build the colour, one-colour and small-size versions, for $450. Some files aren’t worth rebuilding and we’ll say so before you pay.',
     },
     {
       q: 'How many concepts and revisions do I get?',
