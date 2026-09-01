@@ -28,9 +28,17 @@
  *      second is a stronger claim than the authors made.
  *
  * Do NOT add:
- *   - The "16% of benchmark papers used statistical tests" figure. The paper it
- *     comes from is real (arXiv:2511.04703, 3 Nov 2025) but the statistic could
- *     not be extracted from the PDF and is not in the abstract.
+ *   - CORRECTED 31 Aug 2026. This note previously said the "16% used statistical
+ *     tests" figure could not be extracted. It can. arXiv:2511.04703 is
+ *     "Measuring what Matters: Construct Validity in Large Language Model
+ *     Benchmarks", 3 Nov 2025, 445 benchmarks, 29 expert reviewers, and the
+ *     full text carries it verbatim in the Metric section: "Once the responses
+ *     were scored, 16.0% used uncertainty estimates or statistical tests to
+ *     compare the results", restated in the Discussion as "only 16.0% of
+ *     reviewed benchmarks conducted any statistical testing". It belongs to
+ *     what-ai-benchmark-scores-dont-tell-you, which already carries it
+ *     correctly, so it stays out of THIS article to avoid duplication rather
+ *     than because it is unverified.
  *   - Any claim that OpenAI stopped reporting SWE-bench Verified. Reported
  *     second-hand only, not confirmed against an OpenAI source.
  *   - Any current model's benchmark score, price or uptime figure. Those decay
