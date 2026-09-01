@@ -541,6 +541,17 @@ const ARTICLES = [
     links: { pillars: ['ai-automation-perth'] },
   },
   {
+    // Draft. Second article from a delegated pack. The Sinha paper is
+    // optimistic in its headline and the article says so; do not cut that.
+    slug: 'twenty-steps-at-ninety-five-per-cent', type: 'article', status: 'draft', phase: 7,
+    name: 'Twenty Steps at Ninety-Five Per Cent',
+    title: 'Twenty Steps at Ninety-Five Per Cent | C4 Studios',
+    description: 'An agent that gets each step right 95% of the time finishes a twenty-step job about a third of the time. The measured evidence says the real number is worse.',
+    dek: 'Why multi-step AI agents fail more than people expect.',
+    published: '2026-09-01', updated: '2026-09-01', readMinutes: 7,
+    priority: 0.7, changefreq: 'yearly',
+  },
+  {
     // Draft. First article assembled from a delegated research pack; every
     // figure was re-verified against the primary source before assembly.
     slug: 'what-the-window-actually-holds', type: 'article', status: 'draft', phase: 7,
