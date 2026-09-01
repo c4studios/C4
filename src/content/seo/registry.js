@@ -541,6 +541,18 @@ const ARTICLES = [
     links: { pillars: ['ai-automation-perth'] },
   },
   {
+    // Draft. Quotes Anthropic at length, and Anthropic is the vendor we build
+    // on. The section explaining WHY they are quoted most is load-bearing for
+    // fairness. Read the file header before editing.
+    slug: 'what-zero-retention-keeps', type: 'article', status: 'draft', phase: 7,
+    name: 'What Zero Retention Keeps',
+    title: 'What Zero Retention Keeps | C4 Studios',
+    description: 'Zero data retention is sold as nothing being kept. Read the clauses and something is always kept. What one vendor retains, in its own words.',
+    dek: 'The gap between nothing stored and nothing kept.',
+    published: '2026-09-01', updated: '2026-09-01', readMinutes: 7,
+    priority: 0.7, changefreq: 'monthly',
+  },
+  {
     // Draft. Highest legal-boundary risk in the library: it reports the
     // regulatory perimeter and must never tell a reader which regulator covers
     // them. Read the file header before editing.
