@@ -324,6 +324,20 @@ export const brandingPackages = [
     ],
   },
   {
+    key: 'logo-rebuild',
+    name: 'Logo Rebuild',
+    price: 450,
+    priceLabel: '$450',
+    popular: false,
+    description: 'You already have the logo. We make it printable.',
+    features: [
+      'Your existing artwork redrawn as true vector',
+      'Colour, one-colour and mono versions',
+      'Simplified variant that holds at embroidery and small sizes',
+      'Final files: SVG, PNG, PDF',
+    ],
+  },
+  {
     key: 'logo-only',
     name: 'Logo Only',
     price: 500,
