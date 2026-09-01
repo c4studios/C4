@@ -19,13 +19,20 @@ const HOLD_TIME = 20000;
 const PAUSE_TIME = 700;
 const DELETE_SPEED = 32;
 
+/* PHRASES[0] is the indexed <h1>. TypedHeading resolves static mode
+   synchronously, so whatever sits first here is what the prerenderer writes
+   into the priority-1.0 page and what a crawler reads. It has to describe the
+   business, not greet the visitor.
+
+   'Your team spends 14h a week being a database.' was removed on 2 Sep: the
+   14h figure has no traceable source, and an unsourced number on the homepage
+   breaches the studio's own rule. Restore it only with a citation. */
 const PHRASES = [
-  'Welcome to C4',
+  'Websites and AI systems, built in Perth.',
   'Your website is 30% of the job.',
   'Loud websites. Quiet systems.',
   'Engineering, not decoration.',
   'Stop renting your operations.',
-  'Your team spends 14h a week being a database.',
 ];
 
 /* ─────────────────────────────────────────────────────────────

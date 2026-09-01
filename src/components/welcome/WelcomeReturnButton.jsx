@@ -52,7 +52,7 @@ export default function WelcomeReturnButton() {
         padding: '10px 16px 10px 13px', borderRadius: 999,
         border: '1px solid rgba(255,255,255,0.14)',
         background: 'rgba(16,18,22,0.92)', color: '#ECE7DE',
-        fontWeight: 600, fontSize: 13.5, fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        fontWeight: 600, fontSize: 13.5, fontFamily: "'Archivo', 'Helvetica Neue', Helvetica, sans-serif",
         letterSpacing: '0.01em', cursor: 'pointer', boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
         WebkitBackdropFilter: 'blur(8px)', backdropFilter: 'blur(8px)',
         opacity: shown ? 1 : 0, transform: shown ? 'none' : 'translateY(8px)',
