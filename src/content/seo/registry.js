@@ -541,6 +541,18 @@ const ARTICLES = [
     links: { pillars: ['ai-automation-perth'] },
   },
   {
+    // Draft. Highest legal-boundary risk in the library: it reports the
+    // regulatory perimeter and must never tell a reader which regulator covers
+    // them. Read the file header before editing.
+    slug: 'who-apra-actually-regulates', type: 'article', status: 'draft', phase: 7,
+    name: 'Who APRA Actually Regulates',
+    title: 'Who APRA Actually Regulates | C4 Studios',
+    description: 'Licensed firms are routinely sold compliance products built on APRA prudential standards. APRA publishes what it regulates, and the standards publish who they bind.',
+    dek: 'The published perimeter, and the CPS 230 version most commentary gets wrong.',
+    published: '2026-09-01', updated: '2026-09-01', readMinutes: 7,
+    priority: 0.7, changefreq: 'monthly',
+  },
+  {
     // Draft. Second article from a delegated pack. The Sinha paper is
     // optimistic in its headline and the article says so; do not cut that.
     slug: 'twenty-steps-at-ninety-five-per-cent', type: 'article', status: 'draft', phase: 7,
