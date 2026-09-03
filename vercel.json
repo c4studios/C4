@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "_comment": [
+    "Production for c4studios.com.au is Cloudflare Pages, which reads public/_headers",
+    "and ignores this file entirely. This project exists on Vercel as the preview",
+    "environment only, so everything here applies to c4-main.vercel.app and nothing",
+    "else. On 3 Sep 2026 that host was found serving a complete, publicly indexable",
+    "copy of the live site with 'index, follow' in the markup - a second version of",
+    "every page competing with the real domain. The markup is shared between hosts,",
+    "so the fix has to be a header, and headers are the one thing each host sets",
+    "for itself."
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }
+      ]
+    }
+  ]
+}
