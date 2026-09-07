@@ -691,6 +691,18 @@ const ARTICLES = [
     priority: 0.65, changefreq: 'yearly',
     links: { pillars: ['ai-automation-perth'] },
   },
+  {
+    // Live. Card + OG image still to be produced.
+    // When the image exists, add image: '/insights/ai-writes-more-code-and-ships-less-og.jpg'.
+    slug: 'ai-writes-more-code-and-ships-less', type: 'article', status: 'live', phase: 7,
+    name: 'AI Writes More Code And Ships Less',
+    title: 'AI Writes More Code And Ships Less | C4 Studios',
+    description: 'A randomised trial and 8.1 million pull requests, no connection to each other, pointing the same way: the bottleneck moved from writing to reviewing.',
+    dek: 'They felt 20% faster. Measurement said 19% slower.',
+    published: '2026-09-02', updated: '2026-09-02', readMinutes: 7,
+    priority: 0.65, changefreq: 'yearly',
+    links: { pillars: ['ai-automation-perth', 'web-development-perth'] },
+  },
 ];
 
 /* ── Combined registry ─────────────────────────────────────────────── */
