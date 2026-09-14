@@ -292,24 +292,6 @@ export default function Support() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease }}
         >
-          <div className="flex items-center gap-3 mb-8 md:mb-10">
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 0.8, delay: 0.2, ease }}
-              className="w-8 h-px origin-left"
-              style={{ backgroundColor: 'var(--c4-accent)' }}
-            />
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="text-[10px] uppercase tracking-[0.25em] font-medium"
-              style={{ color: 'var(--c4-text-subtle)' }}
-            >
-              Support Centre
-            </motion.span>
-          </div>
 
           <h1
             className="text-[clamp(1.8rem,4.5vw,2.8rem)] font-semibold tracking-[-0.035em] leading-[1.08]"
@@ -354,20 +336,16 @@ export default function Support() {
             },
             {
               icon: Headphones,
-              title: 'Live Assistance',
-              desc: 'Priority support for active projects.',
-              soon: true,
-              action: () =>
-                document
-                  .getElementById('support-form')
-                  ?.scrollIntoView({ behavior: 'smooth' }),
+              title: 'Live support',
+              desc: 'A short request that goes straight to Caleb.',
+              action: () => window.dispatchEvent(new CustomEvent('c4:live-support')),
             },
           ].map((card) => (
             <button
               key={card.title}
               type="button"
               onClick={card.action}
-              className="relative text-left p-5 rounded-sm border transition-all duration-300 hover:translate-y-[-2px] group"
+              className="relative text-left p-5 rounded-sm border transition-[transform,box-shadow,border-color] duration-300 hover:translate-y-[-2px] group"
               style={{
                 backgroundColor: 'var(--c4-card-bg)',
                 borderColor: 'var(--c4-border)',
@@ -431,7 +409,7 @@ export default function Support() {
           {/* Liquid glass search */}
           <div className="relative mb-10">
             <div
-              className="c4-support-rail rounded-sm overflow-hidden transition-all duration-300"
+              className="c4-support-rail rounded-sm overflow-hidden transition-[background-color,border-color,box-shadow] duration-300"
               style={{
                 boxShadow: searchFocused
                   ? '0 12px 40px rgba(42, 32, 28, 0.16)'
@@ -638,7 +616,7 @@ export default function Support() {
                       key={opt.key}
                       type="button"
                       onClick={() => update('priority', opt.key)}
-                      className="px-4 py-2 text-[12.5px] font-medium border rounded-sm transition-all duration-300"
+                      className="px-4 py-2 text-[12.5px] font-medium border rounded-sm transition-[background-color,border-color,color] duration-300"
                       style={
                         form.priority === opt.key
                           ? {
@@ -737,12 +715,12 @@ export default function Support() {
             {/* Honeypot */}
             <div
               aria-hidden="true"
-              tabIndex={-1}
               style={{ position: 'absolute', left: '-9999px' }}
             >
               <input
                 type="text"
                 name="_gotcha"
+                tabIndex={-1}
                 value={form._gotcha}
                 onChange={(e) => update('_gotcha', e.target.value)}
                 autoComplete="off"

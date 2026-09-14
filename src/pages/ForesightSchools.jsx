@@ -43,7 +43,7 @@ const DATA = {
   downloads: {
     heading: 'Free classroom previews — take a lesson for a test drive',
     intro:
-      'C4Sight incursions run as five series, one per age group. Each preview is a real, runnable classroom activity you can use tomorrow — no devices, no student data, curriculum-mapped — and a look at what the full incursion adds.',
+      'C4Site incursions run as five series, one per age group. Each preview is a real, runnable classroom activity you can use tomorrow — no devices, no student data, curriculum-mapped — and a look at what the full incursion adds.',
     items: [
       {
         band: 'Pre-primary – Year 2',

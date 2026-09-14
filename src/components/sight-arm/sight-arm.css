@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════
-   /Foresight — "The Good Room". C4Sight's training-arm identity.
+   /Foresight — "The Good Room". C4Site's training-arm identity.
    Chalkboard-green drench (Exploratorium Tinkering Studio energy,
    School of Life colour commitment): the page is the board, headings
    are the writing, marker-yellow is the teacher's emphasis, and the
@@ -429,7 +429,7 @@
     radial-gradient(520px 200px at 82% 72%, rgb(242 240 233 / calc(0.035 * var(--sg-age))), transparent 70%);
   /* Top pad clears the fixed back-ribbon keep-out zone (220×160 desktop):
      content starts below 160px so the hero chip never sits under it. */
-  padding-top: clamp(168px, 19vh, 200px);
+  padding-top: clamp(184px, 21vh, 220px);
   padding-bottom: clamp(56px, 9vw, 104px);
 }
 
@@ -1179,10 +1179,9 @@
 }
 
 .sg-paper-brand {
-  font-size: 12px;
+  font-size: 13.5px;
   font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  letter-spacing: -0.005em;
   color: var(--sg-red);
 }
 

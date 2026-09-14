@@ -2,7 +2,7 @@
  * Pillar — AI & Automation Perth.
  * Unique detail: the proof section names C4's own automation products
  * (ReviewLoop's AI reply writer, Nudge's rate-rise nudges, Quotr) running
- * in production, plus the C4Sight workshop tie-in.
+ * in production, plus the C4Site workshop tie-in.
  */
 export default {
   hero: {
@@ -60,16 +60,6 @@ export default {
       ],
     },
     {
-      kind: 'proof',
-      label: 'In production',
-      heading: 'We use this stuff daily',
-      cases: [
-        { name: 'ReviewLoop', summary: 'Our own product: turns finished jobs into Google reviews automatically, with an AI reply writer for the reviews that come back.', href: '/SoftwareProduct/reviewloop', tag: 'C4 Original' },
-        { name: 'Nudge', summary: 'Automated payment chasing and rate-rise nudges for service businesses — running in production, chasing real invoices.', href: '/software', tag: 'C4 Original' },
-        { name: 'Quotr', summary: 'Instant quote calculators that turn “can you give me a ballpark?” emails into qualified, priced leads while you sleep.', href: '/CaseStudy/quotr', tag: 'C4 Original' },
-      ],
-    },
-    {
       kind: 'prose',
       label: 'Access & trust',
       heading: 'What do you need from us to build this?',
@@ -89,10 +79,10 @@ export default {
     },
     {
       kind: 'prose',
-      label: 'C4Sight',
+      label: 'C4Site',
       heading: 'Want your team trained, not just tooled?',
       body: [
-        'Automation sticks when the team understands it. C4Sight is our workplace AI training arm: half-day workshops from $800 and full-day programs from $1,400, run on-site with your actual workflows. The full-day version ends with an automation readiness map — a prioritised list of what to automate next and what it would cost.',
+        'Automation sticks when the team understands it. C4Site is our workplace AI training arm: half-day workshops from $800 and full-day programs from $1,400, run on-site with your actual workflows. The full-day version ends with an automation readiness map — a prioritised list of what to automate next and what it would cost.',
       ],
     },
   ],

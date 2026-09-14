@@ -32,7 +32,7 @@ const COPY = {
   },
   done: {
     title: 'Done. You’re off the list.',
-    body: 'You won’t get any more emails from me about the C4Sight schools programme. Nothing else needed from you.',
+    body: 'You won’t get any more emails from me about the C4Site schools programme. Nothing else needed from you.',
   },
   undone: {
     title: 'You’re back on the list.',

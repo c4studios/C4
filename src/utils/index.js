@@ -1,6 +1,5 @@
 const PAGE_URLS = {
     StartProject: '/start',
-    Software: '/software',
     PrivateAI: '/private-ai',
     C4i: '/c4i',
     PrivacyPolicy: '/privacy-policy',
@@ -9,7 +8,7 @@ const PAGE_URLS = {
     ForesightSchools: '/ai-training-for-schools',
     ForesightLaw: '/ai-training-for-law-firms',
     TrainingEnquiry: '/ai-training-enquiry',
-    C4SightPreviews: '/c4sight-previews',
+    C4SitePreviews: '/c4sight-previews',
     HowWeUseAI: '/how-we-use-ai',
 };
 

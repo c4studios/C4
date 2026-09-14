@@ -2,6 +2,7 @@ import React from 'react';
 import { AnimatePresence } from 'framer-motion';
 import NavHeader from './components/c4/NavHeader';
 import Footer from './components/c4/Footer';
+import LiveSupport from './components/c4/LiveSupport';
 import PageTransition from './components/c4/PageTransition';
 import { ThemeProvider } from './components/c4/ThemeContext';
 
@@ -19,6 +20,7 @@ export default function Layout({ children, currentPageName }) {
           </AnimatePresence>
         </main>
         <Footer />
+        <LiveSupport />
       </div>
     </ThemeProvider>
   );

@@ -30,7 +30,7 @@ const serviceDropdown = [
     brief: 'Photography, video & brand identity',
   },
   {
-    label: 'C4Sight',
+    label: 'C4Site',
     code: 'C4',
     page: 'Foresight',
     brief: 'Workplace AI training & workshops',
@@ -42,8 +42,9 @@ const navLinks = [
   { label: 'Home', page: 'Home', to: '/' },
   { label: 'About', page: 'About' },
   { label: 'Services', page: 'Services', hasDropdown: true },
-  { label: 'Software', page: 'Software' },
+  { label: 'Articles', page: 'Insights', to: '/insights' },
   { label: 'Portfolio', page: 'Portfolio' },
+  { label: 'Contact', page: 'Contact' },
 ];
 
 /* ── The back ribbon: hierarchical parent map ─────────────────────────
@@ -52,23 +53,16 @@ const navLinks = [
    about where the ribbon leads. Everything unlisted falls through to the
    home fallback — the "ALWAYS-back, never a dead end" guarantee. */
 const RIBBON_PARENTS = {
-  '/ai-training-for-business': { to: '/Foresight', label: 'C4Sight' },
-  '/ai-training-for-schools': { to: '/Foresight', label: 'C4Sight' },
-  '/ai-training-for-law-firms': { to: '/Foresight', label: 'C4Sight' },
+  '/ai-training-for-business': { to: '/Foresight', label: 'C4Site' },
+  '/ai-training-for-schools': { to: '/Foresight', label: 'C4Site' },
+  '/ai-training-for-law-firms': { to: '/Foresight', label: 'C4Site' },
 };
-const RIBBON_SOFTWARE_PARENT = { to: '/software', label: 'Software' };
 const RIBBON_DEFAULT = { to: '/', label: 'C4' };
 
 /* Resolve the ribbon's hierarchical parent from the lowercased pathname.
-   SoftwareProduct's canonical URL is the path form (/SoftwareProduct/<slug>),
-   which the sitemap and prerenderer publish; the legacy ?slug= query form
-   (/softwareproduct) still redirects in. Match the /softwareproduct PREFIX so
-   the crawlable back-link resolves to /software in BOTH shapes — per memo §3,
-   "SoftwareProduct (any slug/param) → /software" — instead of falling through
-   to the home default under the crawler / on a no-JS deep link. */
+   Everything unlisted falls through to the home default. */
 function resolveBackParent(pathLower) {
   if (RIBBON_PARENTS[pathLower]) return RIBBON_PARENTS[pathLower];
-  if (pathLower.startsWith('/softwareproduct')) return RIBBON_SOFTWARE_PARENT;
   return RIBBON_DEFAULT;
 }
 
@@ -79,6 +73,22 @@ function resolveBackParent(pathLower) {
    chrome mode is nav's to own. Computed red/white pair: #C23030 on
    #F7F5F2 → 5.13:1 (label legibility is internal to the ribbon). */
 const NAV_CSS = `
+/* The bar is ink in both themes (14 Sep 2026): re-point the text and surface
+   tokens inside it so everything it contains reads on dark. */
+header[data-c4-chrome="header"] {
+  --c4-bg: #141518;
+  --c4-bg-alt: #1b1d21;
+  --c4-card-bg: #1b1d21;
+  --c4-tag-bg: #202329;
+  --c4-text: #ECE7DE;
+  --c4-text-muted: #B9BCC3;
+  --c4-text-subtle: #8f93a0;
+  --c4-border: rgba(236, 231, 222, 0.14);
+  --c4-border-light: rgba(236, 231, 222, 0.08);
+  --c4-link-hover: #ffffff;
+  --c4-ring: rgba(236, 231, 222, 0.4);
+  color-scheme: dark;
+}
 :root {
   --c4-back-surface: #C23030;
   --c4-back-ink: #F7F5F2;
@@ -231,6 +241,17 @@ const NAV_CSS = `
               opacity 0.2s ease,
               visibility 0s linear 0.34s;
 }
+/* The bridge: while the sheet is open, the 14px gap between the trigger
+   and the panel is part of the hover area, so the pointer can cross it
+   at any speed without the sheet folding away. */
+.c4-svc-wrap.is-open::after {
+  content: '';
+  position: absolute;
+  left: -24px;
+  right: -24px;
+  top: 100%;
+  height: 18px;
+}
 .c4-svc-wrap.is-open .c4-svc-panel {
   clip-path: inset(0 0 0 0);
   opacity: 1;
@@ -263,9 +284,15 @@ const NAV_CSS = `
   .c4-svc-item { transition: none !important; }
 }
 
-/* Start-a-Project header CTA — the one red object on the right edge. */
+/* Start-a-Project header CTA — the one red object on the right edge.
+   No display here: the header instance is hidden below md by its
+   Tailwind classes, and this injected sheet sits later in the document
+   at equal specificity, so a display value here used to win and show
+   the CTA on phones, pushing the menu button past the right edge on
+   every page that carries the back ribbon (measured 8 Sep 2026: button
+   at x 373 to 402 on a 375px viewport). The mobile-menu instance sets
+   its own display class. */
 .c4-nav-cta {
-  display: inline-flex;
   align-items: center;
   min-height: 44px;
   padding: 0 18px;
@@ -319,7 +346,9 @@ export default function NavHeader() {
   const closeTimer = useRef(null);
   const prevPathRef = useRef(null);
 
-  const pathLower = location.pathname.toLowerCase();
+  /* Cloudflare 308-normalises prerendered paths to their slash form (/Lens
+     becomes /Lens/), so every route test here compares without it. */
+  const pathLower = (location.pathname.replace(/\/+$/, '') || '/').toLowerCase();
   const isLens = pathLower === '/lens';
   const isHome = location.pathname === '/';
   const backParent = resolveBackParent(pathLower);
@@ -383,7 +412,9 @@ export default function NavHeader() {
   };
 
   const handleDropdownLeave = () => {
-    closeTimer.current = setTimeout(() => setServicesOpen(false), 120);
+    // Long enough to cross the bridge below the trigger or drift off the
+    // panel's edge and back; short enough that the sheet still folds away.
+    closeTimer.current = setTimeout(() => setServicesOpen(false), 260);
   };
 
   // History shortcut: if the visitor arrived from the mapped parent, go back
@@ -690,7 +721,7 @@ export default function NavHeader() {
               <Link
                 to={createPageUrl('StartProject')}
                 onClick={() => setMobileOpen(false)}
-                className="c4-nav-cta"
+                className="c4-nav-cta inline-flex"
               >
                 Start a Project
               </Link>

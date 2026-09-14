@@ -243,7 +243,10 @@ function formatServiceType(key) {
     web_design: 'Website Design',
     web_app: 'Web Application',
     ecommerce: 'E-Commerce',
-    brand_platform: 'Brand Platform',
+    brand_platform: 'Branding & Identity',
+    automation: 'AI & Software',
+    lens: 'C4 Lens',
+    training: 'AI training',
     rebuild: 'Software Rebuild',
     other: 'Other',
   };

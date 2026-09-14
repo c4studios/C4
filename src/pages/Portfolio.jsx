@@ -127,14 +127,14 @@ function FeaturedCard({ study, index }) {
           </div>
           <div className="flex shrink-0 items-center gap-2.5">
             {study.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="text-[10px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-text-faint)' }}>
+              <span key={tag} className="text-[10px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
                 {tag}
               </span>
             ))}
             {study.year && (
               <>
                 <span className="h-2.5 w-px" style={{ backgroundColor: 'var(--c4-border)' }} />
-                <span className="text-[10px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-text-faint)' }}>
+                <span className="text-[10px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
                   {study.year}
                 </span>
               </>
@@ -199,7 +199,7 @@ function ProjectCard({ study, index }) {
         <div className="mt-4">
           <div className="mb-1.5 flex items-center gap-2">
             {study.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="text-[9.5px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-text-faint)' }}>
+              <span key={tag} className="text-[9.5px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
                 {tag}
               </span>
             ))}
@@ -212,74 +212,6 @@ function ProjectCard({ study, index }) {
           </p>
         </div>
       </Link>
-    </motion.div>
-  );
-}
-
-function softwareStatusColor(status) {
-  if (status === 'Live') return 'var(--c4-brand-success, #22c55e)';
-  if (status === 'Beta') return 'var(--c4-accent)';
-  return 'var(--c4-text-faint)';
-}
-
-function SoftwareCard({ study, index }) {
-  const color = softwareStatusColor(study.status);
-  const staticMode = useStaticMode();
-  return (
-    <motion.div
-      {...cardReveal(staticMode, { y: 24, delay: index * 0.06, margin: '-40px' })}
-    >
-      <div className="group relative block">
-        <div
-          className="relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center"
-          style={{ backgroundColor: 'var(--c4-bg-alt)' }}
-        >
-          <span
-            className="text-[4.5rem] font-black tracking-[-0.06em] select-none leading-none"
-            style={{ color: 'var(--c4-border)' }}
-          >
-            {study.name[0]}
-          </span>
-          <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ border: `1px solid ${color}` }}>
-            <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
-            <span className="text-[9px] uppercase tracking-[0.12em] font-medium" style={{ color }}>{study.status}</span>
-          </div>
-          {study.liveUrl && (
-            <a
-              href={study.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="absolute top-3 right-3 z-20 flex items-center gap-1 text-[9px] uppercase tracking-[0.1em] font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              style={{ color: 'var(--c4-text-faint)' }}
-            >
-              Live site <ArrowUpRight size={10} strokeWidth={2} />
-            </a>
-          )}
-        </div>
-        <div className="mt-4">
-          <div className="mb-1.5 flex items-center gap-2">
-            {study.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="text-[9.5px] uppercase tracking-[0.14em] font-medium" style={{ color: 'var(--c4-text-faint)' }}>
-                {tag}
-              </span>
-            ))}
-          </div>
-          <h3 className="text-[15px] font-semibold tracking-[-0.01em] transition-colors duration-300" style={{ color: 'var(--c4-text)' }}>
-            {study.name}
-          </h3>
-          <p className="mt-1 line-clamp-2 text-[12.5px] leading-[1.5]" style={{ color: 'var(--c4-text-subtle)' }}>
-            {study.oneLiner}
-          </p>
-          <div className="mt-3 flex items-center gap-4">
-            <span className="text-[10.5px] font-medium opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ color: 'var(--c4-accent)' }}>
-              View & Purchase {'->'}
-            </span>
-          </div>
-        </div>
-        {/* Card-wide click target — kept as a sibling overlay so the live-site
-            link is not nested inside another anchor (invalid DOM nesting). */}
-        <Link to="/software" aria-label={`View ${study.name}`} className="absolute inset-0 z-10" />
-      </div>
     </motion.div>
   );
 }
@@ -300,7 +232,7 @@ const SECTION_META = {
   },
   software: {
     label: 'Software',
-    blurb: 'C4 Originals — live SaaS products we design, build, and sell.',
+    blurb: 'Products the studio built and runs itself.',
     accent: false,
   },
   concept: {
@@ -312,7 +244,7 @@ const SECTION_META = {
 
 function matchCategory(study, key) {
   if (key === 'concept') return Boolean(study.concept);
-  if (key === 'software') return study.category === 'saas' && !study.concept;
+  if (key === 'software') return study.category === 'saas';
   if (key === 'web') return !study.concept && study.category !== 'saas';
   return true;
 }
@@ -382,9 +314,7 @@ function CategoryGroup({ groupKey, studies, showHeader }) {
       {rest.length > 0 && (
         <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 md:gap-y-16">
           {rest.map((study, index) => (
-            study.category === 'saas' && !(study.screenshots?.length)
-              ? <SoftwareCard key={study.slug} study={study} index={index} />
-              : <ProjectCard key={study.slug} study={study} index={index} />
+            <ProjectCard key={study.slug} study={study} index={index} />
           ))}
         </div>
       )}
@@ -395,9 +325,7 @@ function CategoryGroup({ groupKey, studies, showHeader }) {
 export default function Portfolio() {
   const [searchParams] = useSearchParams();
   const rawFilter = searchParams.get('filter') || 'all';
-  const initialFilter = rawFilter === 'ai'
-    ? 'software'
-    : (['all', 'web', 'software', 'concept'].includes(rawFilter) ? rawFilter : 'all');
+  const initialFilter = ['all', 'web', 'concept'].includes(rawFilter) ? rawFilter : 'all';
   const [filter, setFilter] = useState(initialFilter);
   const [sort, setSort] = useState('featured');
   const [loading, setLoading] = useState(true);

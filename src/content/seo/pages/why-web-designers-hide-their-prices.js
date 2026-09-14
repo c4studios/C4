@@ -8,7 +8,7 @@
  *
  * Every figure quoted is a real published tier from src/data/pricing.js
  * (Landing $500, Brochure $800, Business $1,500, ecommerce from $3,500,
- * automation Core $750, C4Sight half day from $800, Private AI from $1,600).
+ * automation Core $750, C4Site half day from $800, Private AI from $1,600).
  * No industry averages, no invented benchmarks.
  */
 export default {

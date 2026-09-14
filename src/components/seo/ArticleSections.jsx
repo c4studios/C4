@@ -180,35 +180,43 @@ function Table({ section }) {
 /* Citations are a first-class section, not a footnote. Outbound links are
    rel="noopener" but deliberately NOT nofollow — citing real research is
    exactly the outbound linking search engines want to see. */
+/* The numbered list itself, shared by the foot ledger and the "show
+   working" rail so the two can never disagree about a source. */
+export function SourceList({ items = [], compact = false }) {
+  return (
+    <ol className={compact ? 'article__sources article__sources--compact' : 'article__sources'}>
+      {items.map((s, i) => (
+        <li key={i}>
+          <span>
+            <span className="article__srctitle">
+              {s.url
+                ? <a href={s.url} target="_blank" rel="noopener">{s.title}</a>
+                : s.title}
+            </span>
+            {(s.publisher || s.year) && (
+              <span className="article__srcmeta">
+                {s.publisher}
+                {s.publisher && s.year && ' · '}
+                {s.year}
+              </span>
+            )}
+          </span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 function Sources({ section }) {
   const items = section.items || [];
   if (!items.length) return null;
   return (
-    <div className="article__ledger">
+    <div className="article__ledger" id="article-sources">
       <Heading>{section.heading || 'Sources'}</Heading>
       <p className="article__ledgernote">
         Every figure in this article was read at the document itself.
       </p>
-      <ol className="article__sources">
-        {items.map((s, i) => (
-          <li key={i}>
-            <span>
-              <span className="article__srctitle">
-                {s.url
-                  ? <a href={s.url} target="_blank" rel="noopener">{s.title}</a>
-                  : s.title}
-              </span>
-              {(s.publisher || s.year) && (
-                <span className="article__srcmeta">
-                  {s.publisher}
-                  {s.publisher && s.year && ' · '}
-                  {s.year}
-                </span>
-              )}
-            </span>
-          </li>
-        ))}
-      </ol>
+      <SourceList items={items} />
     </div>
   );
 }

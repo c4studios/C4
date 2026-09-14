@@ -18,7 +18,6 @@ import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { liveSeoPages, validateSeoEntry } from '../src/content/seo/registry.js';
-import { PRODUCT_SLUGS } from '../src/components/software/productData.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(__dirname, '..', 'dist');
@@ -42,7 +41,6 @@ const STATIC_ROUTES = [
   { path: '/ai-training-for-law-firms', priority: 0.75, changefreq: 'monthly' },
   { path: '/ai-training-enquiry', priority: 0.5, changefreq: 'yearly' },
   { path: '/Portfolio', priority: 0.85, changefreq: 'weekly' },
-  { path: '/software', priority: 0.7, changefreq: 'monthly' },
   { path: '/start', priority: 0.7, changefreq: 'monthly' },
   { path: '/lead-engine', priority: 0.7, changefreq: 'monthly' },
   { path: '/private-ai', priority: 0.85, changefreq: 'monthly' },
@@ -63,8 +61,7 @@ const STATIC_ROUTES = [
 // Case-study pages at their canonical path form (/CaseStudy/<slug>).
 // Derived from the top-level entry keys in caseStudyData.jsx so this list can
 // NEVER drift when entries are added or removed. Every entry in CASE_STUDIES
-// is a real case study with a CaseStudy page (saas products like Quotr /
-// ReturnDesk now render full case studies too).
+// is a real case study with a CaseStudy page.
 const CASE_STUDY_SRC = await readFile(
   path.resolve(__dirname, '..', 'src', 'components', 'portfolio', 'caseStudyData.jsx'),
   'utf8',
@@ -100,9 +97,6 @@ function seoRoutes() {
 }
 const SEO_ROUTES = seoRoutes();
 
-// C4 Originals product pages at their canonical path form.
-// PRODUCT_SLUGS is imported from productData.js (the single source of truth
-// the /software page renders from) so prerender + sitemap never drift.
 
 // ── Tiny static file server ─────────────────────────────────────────
 function createStaticServer(dir) {
@@ -255,16 +249,6 @@ async function main() {
     console.log(`  ✅ ${route}`);
   }
 
-  // Prerender C4 Originals product pages
-  for (const slug of PRODUCT_SLUGS) {
-    const route = `/SoftwareProduct/${slug}`;
-    const outFile = path.join(DIST, 'SoftwareProduct', slug, 'index.html');
-
-    console.log(`  ⏳ ${route}`);
-    await prerenderRoute(page, baseUrl, route, outFile);
-    count++;
-    console.log(`  ✅ ${route}`);
-  }
 
   // 404.html — Cloudflare serves this with a real 404 status via _redirects.
   // Rendered from a deliberately non-existent path so the app's catch-all
@@ -335,7 +319,6 @@ async function writeSitemap(outputPath) {
   // Case studies and products share one data module each, so they resolve to a
   // single accurate "last edited" date rather than a per-build timestamp.
   const caseStudyLastmod = gitLastmod('src/components/portfolio/caseStudyData.jsx', today);
-  const productLastmod = gitLastmod('src/components/software/productData.js', today);
   const urls = [];
 
   for (const r of [...STATIC_ROUTES, ...SEO_ROUTES]) {
@@ -358,14 +341,6 @@ async function writeSitemap(outputPath) {
       lastmod: caseStudyLastmod,
       changefreq: 'monthly',
       priority: 0.7,
-    });
-  }
-  for (const slug of PRODUCT_SLUGS) {
-    urls.push({
-      loc: `${SITE_ORIGIN}/SoftwareProduct/${slug}/`,
-      lastmod: productLastmod,
-      changefreq: 'monthly',
-      priority: 0.6,
     });
   }
 

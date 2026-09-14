@@ -50,8 +50,6 @@
 import About from './pages/About';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
-import Software from './pages/Software';
-import SoftwareProduct from './pages/SoftwareProduct';
 import CaseStudy from './pages/CaseStudy';
 import Contact from './pages/Contact';
 import Support from './pages/Support';
@@ -89,8 +87,6 @@ export const PAGES = {
     "StartProject": StartProject,
     "PrivacyPolicy": PrivacyPolicy,
     "TermsOfService": TermsOfService,
-    "Software": Software,
-    "SoftwareProduct": SoftwareProduct,
 }
 
 export const pagesConfig = {

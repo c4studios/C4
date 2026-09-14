@@ -221,14 +221,14 @@ const DOORS = [
     key: 'sight',
     face: 'sight',
     faceTo: '/Foresight',
-    faceAria: 'Enter C4Sight',
-    tag: 'C4Sight',
+    faceAria: 'Enter C4Site',
+    tag: 'C4Site',
     word: 'AI training',
     outcome:
       'Hands-on AI workshops for businesses, schools and law firms, run on your own tools and your own real work.',
     fromPrice: 'From $800',
     timeframe: 'Half / full-day',
-    primary: { label: 'Visit C4Sight', to: '/Foresight' },
+    primary: { label: 'Visit C4Site', to: '/Foresight' },
     secondary: { label: 'or enquire about training', to: '/ai-training-enquiry' },
   },
 ];

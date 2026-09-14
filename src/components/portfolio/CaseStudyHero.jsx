@@ -58,7 +58,7 @@ export default function CaseStudyHero({ study }) {
             </span>
           ))}
           {study.year && (
-            <span className="px-2.5 py-[3px] text-[9.5px] uppercase tracking-[0.16em] font-medium rounded-[2px]" style={{ color: 'var(--c4-text-faint)', borderWidth: 1, borderStyle: 'solid', borderColor: 'var(--c4-border)' }}>
+            <span className="px-2.5 py-[3px] text-[9.5px] uppercase tracking-[0.16em] font-medium rounded-[2px]" style={{ color: 'var(--c4-text-subtle)', borderWidth: 1, borderStyle: 'solid', borderColor: 'var(--c4-border)' }}>
               {study.year}
             </span>
           )}
@@ -167,7 +167,7 @@ export default function CaseStudyHero({ study }) {
             >
               {items.map((item) => (
                 <div key={item.label}>
-                  <span className="block text-[9px] uppercase tracking-[0.2em] font-medium mb-1" style={{ color: 'var(--c4-text-faint)' }}>
+                  <span className="block text-[9px] uppercase tracking-[0.2em] font-medium mb-1" style={{ color: 'var(--c4-text-subtle)' }}>
                     {item.label}
                   </span>
                   <span className="text-[13px] font-medium leading-[1.4]" style={{ color: 'var(--c4-text)' }}>

@@ -1,0 +1,177 @@
+/* ═══════════════════════════════════════════════════════════════
+   INSIGHTS — the articles index
+   ═══════════════════════════════════════════════════════════════
+   Redrawn 9 September 2026 when the articles became the whole of
+   the section. The index is a wall of claims: every piece in this
+   library is written to make one checkable statement, and the dek
+   carries it, so the dek is what the index sets large. The newest
+   piece leads at display size; the rest sit as a two-column ledger
+   of statements on hairlines. No cards, no reveals, no eyebrows.
+   Sizes come from the reading ramp in globals.css and the inks from
+   the prose ramp, so the index and the articles read as one system.
+   ═══════════════════════════════════════════════════════════════ */
+.ins { --link: var(--c4-accent); }
+:root.dark-mode .ins { --link: var(--prose); }
+
+.ins__col {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+.ins__col--wide { max-width: 64rem; }
+
+/* ── masthead ─────────────────────────────────────────────────── */
+.ins__head { padding-block: clamp(7rem, 12vw, 9.5rem) 0; }
+.ins__title {
+  margin: 0;
+  font-size: var(--t-h1);
+  font-weight: 700;
+  font-stretch: 92%;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: var(--c4-text);
+  text-wrap: balance;
+}
+.ins__intro {
+  margin: 1.35rem 0 0;
+  font-size: var(--t-lead);
+  line-height: 1.5;
+  letter-spacing: -0.014em;
+  color: var(--prose-soft);
+  text-wrap: pretty;
+}
+.ins__key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.9rem;
+  margin: 2.2rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--prose-rule);
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  letter-spacing: 0.04em;
+  color: var(--prose-meta);
+}
+.ins__key .sep { opacity: 0.5; }
+
+/* ── the lead: the newest claim at display size ──────────────── */
+.ins__lead { padding-block: clamp(3rem, 6vw, 4.5rem) 0; }
+.ins__lead-dek {
+  margin: 0;
+  font-size: clamp(1.9rem, 1.1rem + 3.2vw, 3.4rem);
+  font-weight: 660;
+  font-stretch: 96%;
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  color: var(--c4-text);
+  text-wrap: balance;
+  max-width: 22ch;
+}
+/* The evidence rule: the same short red mark the article stylesheet puts
+   above a verbatim source. The lead is the library's newest claim, so it
+   takes the mark. */
+.ins__lead-dek::before {
+  content: '';
+  display: block;
+  width: 2.6rem;
+  height: 2px;
+  margin-bottom: 1.2rem;
+  background: var(--c4-accent);
+}
+.ins__lead-title {
+  margin: 1.4rem 0 0;
+  font-size: var(--t-lead);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.016em;
+  color: var(--c4-text);
+}
+
+/* ── the ledger of claims ─────────────────────────────────────── */
+.ins__list-wrap { padding-block: clamp(3rem, 6vw, 4.5rem) clamp(5rem, 9vw, 7rem); }
+.ins__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 3rem;
+}
+@media (min-width: 60rem) {
+  .ins__list { grid-template-columns: 1fr 1fr; }
+}
+.ins__item {
+  padding: 1.5rem 0 1.9rem;
+  border-top: 1px solid var(--prose-rule);
+}
+.ins__dek {
+  margin: 0;
+  font-size: clamp(1.25rem, 1rem + 1.1vw, 1.65rem);
+  font-weight: 640;
+  font-stretch: 94%;
+  line-height: 1.22;
+  letter-spacing: -0.022em;
+  color: var(--c4-text);
+  text-wrap: pretty;
+}
+.ins__name {
+  margin: 0.8rem 0 0;
+  font-size: var(--t-small);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--c4-text);
+}
+
+/* Links: the title is the link, underlined from the font, the underline
+   takes the accent on hover. The dek is a statement, not a link. */
+.ins__lead-title a,
+.ins__name a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  text-decoration-color: color-mix(in srgb, var(--link) 45%, transparent);
+  transition: text-decoration-color 0.2s ease;
+}
+.ins__lead-title a:hover,
+.ins__name a:hover { text-decoration-color: var(--link); }
+
+/* ── the ledger line under each piece ─────────────────────────── */
+.ins-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.8rem;
+  margin: 0.7rem 0 0;
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  letter-spacing: 0.04em;
+  color: var(--prose-meta);
+  font-variant-numeric: tabular-nums;
+}
+.ins-meta .sep { opacity: 0.5; }
+
+/* The verification stamp, as on the article page: renders only where the
+   registry carries a verified date. */
+.ins-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.18rem 0.5rem;
+  background: var(--c4-proof-surface);
+  border: 1px solid var(--c4-proof-border);
+  border-radius: 2px;
+  color: var(--c4-proof-muted);
+  letter-spacing: 0.06em;
+}
+.ins-stamp svg { width: 10px; height: 10px; flex: none; }
+.ins-stamp b { color: var(--c4-proof-text); font-weight: 700; }
+
+.ins__empty { font-size: var(--t-small); color: var(--prose-meta); }
+
+/* The masthead shares the wide column's left edge with the lead below it;
+   its text keeps the reading measure. */
+.ins__head .ins__title,
+.ins__head .ins__intro,
+.ins__head .ins__key { max-width: var(--measure); }

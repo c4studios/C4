@@ -1,5 +1,5 @@
 /*
- * /Foresight — C4Sight, the training arm. "The Good Room."
+ * /Foresight — C4Site, the training arm. "The Good Room."
  *
  * Identity: chalkboard-green drench (Exploratorium Tinkering Studio ×
  * School of Life colour-block covers). The page is the board, headings
@@ -116,12 +116,12 @@ const SECTORS = [
   {
     page: 'ForesightBusiness',
     title: 'Office and business',
-    body: 'Practical productivity. Emails, documents, summaries, spreadsheets, and the repetitive parts of the week, done faster. With company and client information kept safe.',
+    body: 'Emails, documents, summaries, spreadsheets and the repetitive parts of the week, done faster, with company and client information kept safe.',
   },
   {
     page: 'ForesightSchools',
     title: 'Schools and teachers',
-    body: 'Lesson planning, differentiated materials, feedback, and time back on the weekend. Careful and ethics-forward, with student privacy and academic integrity front and centre.',
+    body: 'Lesson planning, differentiated materials, feedback, and time back on the weekend. Careful about student privacy and academic integrity.',
   },
   {
     page: 'ForesightLaw',
@@ -440,17 +440,17 @@ export default function Foresight() {
   const staticMode = reduced || prerender;
 
   useDocumentHead({
-    title: 'C4Sight: workplace AI training for Perth teams',
+    title: 'C4Site: workplace AI training for Perth teams',
     description:
       'In-person AI training for Perth workplaces. Your team learns to use AI on real work, safely, in half a day. Office, schools and law firm formats.',
     path: '/Foresight',
     jsonLd: [
       breadcrumbSchema([
         { name: 'Home', path: '/' },
-        { name: 'C4Sight', path: '/Foresight' },
+        { name: 'C4Site', path: '/Foresight' },
       ]),
       serviceSchema({
-        name: 'C4Sight workplace AI training',
+        name: 'C4Site workplace AI training',
         description:
           'In-person AI literacy workshops for Australian workplaces. Half-day and full-day formats with a data-safety module in every session.',
         url: '/Foresight',
@@ -841,20 +841,16 @@ export default function Foresight() {
           </div>
         )}
         <div className="sg-wrap">
-          <p className="sg-chip" data-sg-hero="">
-            <span className="sg-chip-code">C4</span>
-            <span>C4Sight — the training arm</span>
-          </p>
           <h1 className="sg-chalk-edge" data-sg-hero="">
-            The fourth C stands for{' '}
+            We train your team{' '}
             <span className="sg-underlined">
-              foresight.
+              on site.
               <MarkUnderline />
               <PuffDots />
             </span>
           </h1>
           <p className="sg-lede" data-sg-hero="">
-            C4Sight runs hands-on AI workshops in the rooms where your team already works. They
+            C4Site runs hands-on AI workshops in the rooms where your team already works. They
             learn to use AI tools on their real work, safely, in about half a day. On-site across
             Perth, remote on request.
           </p>
@@ -989,11 +985,11 @@ export default function Foresight() {
             </svg>
             <div className="sg-rules-grid">
               <div>
-                <p className="sg-rules-lead">Written in the corner of the board, never rubbed out —</p>
+                <p className="sg-rules-lead">In the corner of the board, where it never gets rubbed out.</p>
                 <h2 className="sg-h2">Every session includes a data-safety module.</h2>
                 <p className="sg-rules-copy">
-                  Safe and responsible use is part of the curriculum, not the fine print. We treat
-                  it as the standard C4Sight stands behind.
+                  Safe use is taught in the room, on the day, as part of the course. It is the
+                  standard C4Site stands behind.
                 </p>
               </div>
               <div>
@@ -1020,7 +1016,7 @@ export default function Foresight() {
         <div className="sg-wrap">
           <div className="sg-paper" data-sg-item="">
             <div className="sg-paper-head">
-              <span className="sg-paper-brand">C4Sight — take-home</span>
+              <span className="sg-paper-brand">Take-home sheet</span>
               <span className="sg-paper-note">Kept by every attendee</span>
             </div>
             <h2 className="sg-h2">Nobody leaves with just notes.</h2>
@@ -1056,7 +1052,7 @@ export default function Foresight() {
           <div className="sg-sectors-head" data-sg-item="">
             <h2 className="sg-h2">Framed for your sector.</h2>
             <p className="sg-sub">
-              The core is constant. The examples, the risks, and the wins change to fit the room.
+              The core stays the same. The examples and the risks change to fit the room.
             </p>
           </div>
           <div>

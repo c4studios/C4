@@ -52,7 +52,7 @@ export async function submitProjectInquiry(data) {
 }
 
 /**
- * Submit a C4Sight workshop enquiry (training enquiry form).
+ * Submit a C4Site workshop enquiry (training enquiry form).
  * @param {Object} data - { name, email, organisation, sector, format, group_size, message, _gotcha, _loaded, turnstileToken }
  * @returns {Promise<{ success: boolean, errors?: string[] }>}
  */
@@ -66,7 +66,7 @@ export async function submitTrainingEnquiry(data) {
 }
 
 /**
- * Record a C4Sight preview-pack download (the tracked previews page).
+ * Record a C4Site preview-pack download (the tracked previews page).
  * The pack PDFs are public static files delivered client-side; this only
  * captures the downloader for the follow-up lane and notifies the studio.
  * @param {Object} data - { first_name, school_name, email, series: string[], source, _gotcha, _loaded }

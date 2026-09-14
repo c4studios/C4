@@ -30,8 +30,143 @@
 
     <!-- Preconnects -->
     <link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin />
+
+    <!-- The theme class, before first paint. ThemeProvider sets the same
+         class once React mounts; setting it here means a dark-theme visitor
+         never sees a light frame first. -->
+    <script>
+      (function () {
+        try {
+          var p = localStorage.getItem('c4-theme-pref') || 'system';
+          var d = p === 'dark' || (p === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var root = document.documentElement;
+          /* The prerendered HTML carries the class the prerenderer ran with,
+             so swap rather than add: one class, the visitor's, before paint. */
+          root.classList.remove(d ? 'light-mode' : 'dark-mode');
+          root.classList.add(d ? 'dark-mode' : 'light-mode');
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- The boot: a plain overlay that holds the page until the bundle has
+         mounted and the fonts are in, then hands over. It covers the moment
+         where a prerendered page used to flash, vanish and re-enter as the
+         app hydrated. A red shape in motion (red means start on this site)
+         settles into the C4 mark, then the whole sheet lifts. Inline so it
+         exists before any stylesheet arrives. -->
+    <style>
+      #c4-boot {
+        position: fixed; inset: 0; z-index: 1000;
+        display: grid; place-items: center;
+        background: #F7F5F2;
+        --boot-blob: #C23030; --boot-c: #b7b5b2; --boot-body: #414243; --boot-arm: #6c6d6d;
+      }
+      html.dark-mode #c4-boot {
+        background: #0F1115;
+        --boot-blob: #B33A3A; --boot-c: #d0cecc; --boot-body: #9a9b9c; --boot-arm: #8a8b8c;
+      }
+      /* Three layers so nothing ever stalls: the spin is one linear turn,
+         the shape is a slow smooth cycle of corner radii on its own clock,
+         and a soft halo breathes underneath. No keyframe holds a pose. */
+      #c4-boot .c4-boot__stage { position: relative; width: 72px; height: 72px; will-change: transform, opacity; }
+      #c4-boot .c4-boot__halo {
+        position: absolute; inset: 4px; border-radius: 50%;
+        background: var(--boot-blob); opacity: 0.16; filter: blur(14px);
+        animation: c4-boot-breathe 2.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+      }
+      #c4-boot .c4-boot__settle { position: absolute; inset: 14px; }
+      #c4-boot .c4-boot__spin {
+        position: absolute; inset: 0;
+        animation: c4-boot-spin 2.8s linear infinite;
+      }
+      #c4-boot .c4-boot__blob {
+        position: absolute; inset: 0; background: var(--boot-blob);
+        border-radius: 64% 36% 58% 42% / 58% 46% 54% 42%;
+        animation: c4-boot-shape 1.9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+      }
+      #c4-boot .c4-boot__mark {
+        position: absolute; inset: 0; display: block; width: 100%; height: 100%;
+        opacity: 0; transform: scale(0.86);
+      }
+      @keyframes c4-boot-spin { to { transform: rotate(360deg); } }
+      @keyframes c4-boot-breathe {
+        0%, 100% { transform: scale(0.9); opacity: 0.12; }
+        50%      { transform: scale(1.18); opacity: 0.22; }
+      }
+      @keyframes c4-boot-shape {
+        0%   { border-radius: 64% 36% 58% 42% / 58% 46% 54% 42%; transform: scale(1); }
+        33%  { border-radius: 34% 66% 40% 60% / 42% 32% 68% 58%; transform: scale(0.91); }
+        66%  { border-radius: 56% 44% 28% 72% / 72% 60% 40% 28%; transform: scale(1.08); }
+        100% { border-radius: 64% 36% 58% 42% / 58% 46% 54% 42%; transform: scale(1); }
+      }
+      /* The settle: the shape rounds off and gives its mass to the mark,
+         which comes up through it. One crossfade, no pop. */
+      @keyframes c4-boot-blob-settle {
+        0%   { transform: scale(1); opacity: 1; filter: blur(0); }
+        100% { transform: scale(0.4); opacity: 0; filter: blur(3px); }
+      }
+      @keyframes c4-boot-mark-in {
+        0%   { opacity: 0; transform: scale(0.86); filter: blur(2px); }
+        100% { opacity: 1; transform: scale(1); filter: blur(0); }
+      }
+      @keyframes c4-boot-halo-out { to { opacity: 0; transform: scale(1.5); } }
+      #c4-boot.is-ready .c4-boot__spin, #c4-boot.is-ready .c4-boot__blob { animation-play-state: paused; }
+      #c4-boot.is-ready .c4-boot__settle { animation: c4-boot-blob-settle 0.62s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+      #c4-boot.is-ready .c4-boot__halo { animation: c4-boot-halo-out 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+      #c4-boot.is-ready .c4-boot__mark { animation: c4-boot-mark-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards; }
+      #c4-boot.is-done { opacity: 0; transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
+      #c4-boot.is-done .c4-boot__stage { transform: scale(1.06); transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1); }
+      @media (prefers-reduced-motion: reduce) {
+        #c4-boot .c4-boot__spin, #c4-boot .c4-boot__blob, #c4-boot .c4-boot__halo { animation: none; }
+        #c4-boot .c4-boot__blob { border-radius: 50%; }
+        #c4-boot.is-ready .c4-boot__settle, #c4-boot.is-ready .c4-boot__halo { animation: none; opacity: 0; }
+        #c4-boot.is-ready .c4-boot__mark { animation: none; opacity: 1; transform: none; filter: none; }
+        #c4-boot.is-done { transition-duration: 0.15s; }
+        #c4-boot.is-done .c4-boot__stage { transform: none; transition: none; }
+      }
+    </style>
   </head>
   <body>
+    <div id="c4-boot" aria-hidden="true">
+      <div class="c4-boot__stage">
+        <div class="c4-boot__halo"></div>
+        <div class="c4-boot__settle"><div class="c4-boot__spin"><div class="c4-boot__blob"></div></div></div>
+        <svg class="c4-boot__mark" viewBox="265 55 395 420" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+          <defs><filter id="c4-boot-shadow" x="-15%" y="-15%" width="130%" height="130%"><feDropShadow dx="0" dy="1" stdDeviation="4" flood-color="#000000" flood-opacity="0.34" /></filter></defs>
+          <path filter="url(#c4-boot-shadow)" d="M393.33,381.58l46.14.22c-37.51,42.67-88.07,71.58-143.72,82.18-89.37,18.53-180.59-21.95-227.2-100.84-38.21-64.03-30.59-145.6,18.81-201.36,33.03-37.88,79.33-61.47,129.25-65.83,54.95-7.69,110.91-3.19,163.94,13.2l-37.35,52.04c-31.06-6.51-62.95-8.01-94.47-4.41-43.91,2.38-84.08,25.62-108.21,62.59-14,27.78-16.89,59.9-8.08,89.75,13.18,47.07,49.8,83.83,96.63,97.01,55.92,11.27,114.01,2.59,164.26-24.56Z" fill="var(--boot-c)" />
+          <polygon points="554.78 94.43 554.76 300.21 485.93 300.21 485.93 177.58 395.65 308.72 485.93 308.72 453.55 357.3 304.78 357.3 304.78 323.95 470.27 94.43 554.78 94.43" fill="var(--boot-body)" />
+          <polygon points="639.36 308.72 606.98 357.3 554.78 357.3 554.78 469.58 503.71 469.58 503.71 357.3 472.55 357.3 504.93 308.72 639.36 308.72" fill="var(--boot-arm)" />
+        </svg>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var boot = document.getElementById('c4-boot');
+        if (!boot) return;
+        /* The prerenderer must capture the boot in its resting state so that
+           every static page carries it; nothing here runs under that UA. */
+        var prerender = /Prerender/i.test(navigator.userAgent);
+        var t0 = Date.now();
+        var finished = false;
+        function finish() {
+          if (finished) return;
+          finished = true;
+          boot.classList.add('is-ready');
+          var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          setTimeout(function () {
+            boot.classList.add('is-done');
+            setTimeout(function () { if (boot.parentNode) boot.parentNode.removeChild(boot); }, 600);
+          }, reduce ? 60 : 640);
+        }
+        window.__c4BootReady = function () {
+          if (prerender) return;
+          var minShow = 450;
+          var left = minShow - (Date.now() - t0);
+          setTimeout(finish, left > 0 ? left : 0);
+        };
+        if (!prerender) setTimeout(finish, 5000);
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>

@@ -11,10 +11,10 @@ const ease = [0.22, 1, 0.36, 1];
 const eyebrowClass = 'text-[10px] uppercase tracking-[0.22em] font-medium';
 
 /*
- * Shared renderer for the three C4Sight sector pages (office, schools, law).
+ * Shared renderer for the three C4Site sector pages (office, schools, law).
  * Each page passes a `data` object; the per-sector copy lives in the page
  * file so it stays bespoke, while layout, schema and CTAs stay consistent
- * with the C4Sight hub.
+ * with the C4Site hub.
  */
 export default function SectorPage({ data }) {
   const enquiryUrl = createPageUrl('TrainingEnquiry') + (data.sectorKey ? `?sector=${data.sectorKey}` : '');
@@ -27,7 +27,7 @@ export default function SectorPage({ data }) {
     jsonLd: [
       breadcrumbSchema([
         { name: 'Home', path: '/' },
-        { name: 'C4Sight', path: '/Foresight' },
+        { name: 'C4Site', path: '/Foresight' },
         { name: data.sector, path: data.path },
       ]),
       serviceSchema({
@@ -42,7 +42,7 @@ export default function SectorPage({ data }) {
   return (
     <div style={{ backgroundColor: 'var(--c4-bg)', color: 'var(--c4-text)' }}>
       <PageHero
-        label={`C4Sight · ${data.sector}`}
+        label={`C4Site · ${data.sector}`}
         titleLines={data.heroLines}
         description={data.heroIntro}
       >
@@ -60,7 +60,7 @@ export default function SectorPage({ data }) {
             className="text-[11px] uppercase tracking-[0.14em] font-medium"
             style={{ color: 'var(--c4-text-subtle)' }}
           >
-            C4Sight overview
+            C4Site overview
           </Link>
         </div>
       </PageHero>
@@ -191,7 +191,7 @@ export default function SectorPage({ data }) {
             <p className="mt-6 text-[13.5px] leading-[1.7]" style={{ color: 'var(--c4-text-muted)' }}>
               {data.governanceNote} See the{' '}
               <Link to={hubUrl} className="underline underline-offset-2" style={{ color: 'var(--c4-text)' }}>
-                C4Sight overview
+                C4Site overview
               </Link>{' '}
               for the half-day and full-day formats, what your team keeps, and indicative pricing.
             </p>

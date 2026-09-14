@@ -4,9 +4,9 @@
 # Docs: https://developers.cloudflare.com/pages/configuration/redirects/
 #
 # CAUTION: redirect rules run BEFORE static assets are served, so never add a
-# rule for a path the prerenderer writes real HTML to (/CaseStudy/:slug,
-# /SoftwareProduct/:slug, and every route in scripts/prerender.mjs) — the rule
-# would shadow the static file. Only retired legacy paths belong here.
+# rule for a path the prerenderer writes real HTML to (/CaseStudy/:slug and
+# every route in scripts/prerender.mjs) — the rule would shadow the static
+# file. Only retired legacy paths belong here.
 
 # Unsubscribe links in outreach email point at c4studios.com.au rather than a
 # supabase.co URL: recipients (and school mail filters) trust the known domain.
@@ -32,21 +32,20 @@
 /Rebuild  /  301
 # The Ventures-specific Terms are gone; old links go to the ToS.
 /Terms  /terms-of-service  301
+# The software section (C4 Originals) was retired on 9 September 2026.
+/software  /  301
+/SoftwareProduct/*  /  301
 # /Contact is a real page again (fable pass — "The Direct Line").
 
 # SPA routes that are NOT prerendered — they need index.html served at 200.
 # Everything else on the site has its own static file (115 of them), which is
 # what makes the real 404 below safe.
 /welcome     /index.html  200
-/hero-lab    /index.html  200
-/helix-lab   /index.html  200
 
-# Legacy alias bases. Old inbound links use /CaseStudy?slug=x and
-# /SoftwareProduct?slug=x; the path itself has no static file, so without
-# these the SPA never loads to perform its redirect up to the path form and
-# every one of those links would 404.
+# Legacy alias base. Old inbound links use /CaseStudy?slug=x; the path
+# itself has no static file, so without this the SPA never loads to perform
+# its redirect up to the path form and every one of those links would 404.
 /CaseStudy        /index.html  200
-/SoftwareProduct  /index.html  200
 
 # Real 404s. This used to be `/*  /index.html  200`, which returned HTTP 200
 # with the homepage for every wrong URL — so any typo, dead backlink or

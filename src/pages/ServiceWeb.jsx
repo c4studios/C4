@@ -1211,9 +1211,9 @@ export default function ServiceWeb() {
         </div>
         <ConceptCarousel staticMode={staticMode} />
         <div className="lv-frame lv-concepts-foot">
-          <p className="lv-cap">
-            Barry&rsquo;s Drink · Wooster Core · JK Plumbing · IOPA Apparel — every one
-            a live deployment, available to license or commission.
+          <p className="lv-concepts-note">
+            Barry&rsquo;s Drink, Wooster Core, JK Plumbing and IOPA Apparel are each a live
+            deployment, available to license or commission.
           </p>
         </div>
       </section>
