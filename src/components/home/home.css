@@ -21,8 +21,8 @@
 
 .hm-root {
   --hm-disp: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
-  --hm-body: 'Geist', system-ui, -apple-system, sans-serif;
-  --hm-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --hm-body: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --hm-mono: 'B612 Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --hm-ease: cubic-bezier(0.22, 1, 0.36, 1);
   /* Secondary ink, pulled toward the text end of the ramp so it holds
      ≥4.5:1 on every surface this page uses (the raw muted token sits
@@ -556,7 +556,7 @@
 }
 
 /* Phones: compact faces so all four doors land within ~2 screens instead of
-   burying C4Sight 3.3 screens deep (hero audit). Placed AFTER the base rule —
+   burying C4Site 3.3 screens deep (hero audit). Placed AFTER the base rule —
    equal specificity, so source order decides. */
 @media (max-width: 639px) {
   .hm-doorface { min-height: 172px; }

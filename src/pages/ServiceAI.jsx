@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Workflow, Zap, GitBranch, Table2, FileText, MessageSquare, Users, CreditCard, Sparkles, Mail } from 'lucide-react';
+import { Integration, IntegrationCard } from '@/components/ui/integration-card';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
@@ -22,7 +23,7 @@ gsap.registerPlugin(ScrollTrigger);
  * the whole board. Business processes are nets routed through one C4i
  * core; packages are the BOM; the process is the assembly line.
  * Reference: Ben Eater's breadboard bring-up × KiCad's routed nets.
- * (Blue, not green, so the board and C4Sight's chalkboard stay
+ * (Blue, not green, so the board and C4Site's chalkboard stay
  * unmistakably different worlds.)
  */
 
@@ -56,6 +57,20 @@ const STEPS = [
 ];
 
 const TOOLS = ['Make', 'Zapier', 'n8n', 'Airtable', 'Notion', 'Slack', 'HubSpot', 'Stripe', 'OpenAI', 'Google Workspace'];
+/* The same ten, as nodes on the integration board. Icons are category
+   marks (lucide), not vendor logos. */
+const TOOL_NODES = [
+  { id: 'make', label: 'Make', icon: Workflow },
+  { id: 'zapier', label: 'Zapier', icon: Zap },
+  { id: 'n8n', label: 'n8n', icon: GitBranch },
+  { id: 'airtable', label: 'Airtable', icon: Table2 },
+  { id: 'notion', label: 'Notion', icon: FileText },
+  { id: 'slack', label: 'Slack', icon: MessageSquare },
+  { id: 'hubspot', label: 'HubSpot', icon: Users },
+  { id: 'stripe', label: 'Stripe', icon: CreditCard },
+  { id: 'openai', label: 'OpenAI', icon: Sparkles },
+  { id: 'gws', label: 'Google Workspace', icon: Mail },
+];
 
 const PROC_VIAS = [
   { left: 0 },
@@ -242,13 +257,10 @@ function NetChannel({ i, staticMode }) {
 
 export default function ServiceAI() {
   useForceDark();
-  const [beltPaused, setBeltPaused] = useState(false);
-  const [beltOffscreen, setBeltOffscreen] = useState(false);
 
   const rootRef = useRef(null);
   const busRef = useRef(null);
   const pulseRef = useRef(null);
-  const beltRef = useRef(null);
 
   useDocumentHead({
     title: 'AI & Software — C4 Studios Perth',
@@ -315,19 +327,6 @@ export default function ServiceAI() {
     };
   }, [staticMode]);
 
-  /* Perf whitelist (memo §5): the tools belt is the site's one marquee —
-     it must stop when it scrolls out of view, not just on hover. */
-  useEffect(() => {
-    if (staticMode) return undefined;
-    const el = beltRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') return undefined;
-    const io = new IntersectionObserver(
-      ([entry]) => setBeltOffscreen(!entry.isIntersecting),
-      { rootMargin: '120px' },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [staticMode]);
 
   /* Entrance helpers — no-ops in static mode so the final state renders
      immediately for the prerenderer and reduced-motion visitors. */
@@ -501,49 +500,16 @@ export default function ServiceAI() {
         <div className="cw-container">
           <motion.div {...inView()}>
             <h2 className="cw-h2">Plays nicely with what you already run.</h2>
-            <p className="cw-tools-note">
-              …and most things with an API. If a tool can talk, we can wire it in.
-            </p>
           </motion.div>
-
-          {staticMode ? (
-            <ul className="cw-toolgrid">
-              {TOOLS.map((tool) => (
-                <li key={tool} className="cw-toolchip">{tool}</li>
-              ))}
-            </ul>
-          ) : (
-            <>
-              <motion.div
-                className="cw-belt"
-                data-paused={beltPaused || beltOffscreen || undefined}
-                ref={beltRef}
-                {...inView(1)}
-              >
-                <div className="cw-belt-track">
-                  <ul>
-                    {TOOLS.map((tool) => (
-                      <li key={tool} className="cw-toolchip">{tool}</li>
-                    ))}
-                  </ul>
-                  <ul aria-hidden="true">
-                    {TOOLS.map((tool) => (
-                      <li key={tool} className="cw-toolchip">{tool}</li>
-                    ))}
-                  </ul>
-                </div>
-              </motion.div>
-              {/* WCAG 2.2.2 — a real mechanism to stop the moving ticker. */}
-              <button
-                type="button"
-                className="cw-belt-pause"
-                aria-pressed={beltPaused}
-                onClick={() => setBeltPaused((p) => !p)}
-              >
-                {beltPaused ? '▶ run ticker' : '❚❚ pause ticker'}
-              </button>
-            </>
-          )}
+          <motion.div {...inView(1)}>
+            <IntegrationCard
+              visual={<Integration items={TOOL_NODES} staticMode={staticMode} />}
+              toolNames={TOOLS}
+              title="Wired to what you already run."
+              description="The ten tools we connect most often, and most things with an API. If a tool can talk, we can wire it in."
+              cta={{ label: 'Start a project', to: startUrl }}
+            />
+          </motion.div>
         </div>
       </section>
 

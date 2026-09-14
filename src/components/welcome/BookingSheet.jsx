@@ -16,13 +16,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, MessageSquare, Mail, Calendar, Calculator, X, ArrowLeft } from 'lucide-react';
 import { submitProjectInquiry } from '@/api/submissions';
-import { buildQuotrSrc, postQuotrTheme, preconnectQuotr } from '@/components/home/quotrTheme';
+import Quotr from '@/components/home/Quotr';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
 import SubmitButton from '@/components/c4/SubmitButton';
 import SubmissionSuccess from '@/components/c4/SubmissionSuccess';
 
 const ease = [0.22, 1, 0.36, 1];
-const QUOTR_SLUG = 'fixm4qeq';
 const CALEB_TEL = '+61479000404'; // direct line — the instant path for a tapped/scanned card
 const CALEB_EMAIL = 'caleb@c4studios.com.au';
 const CAL_LINK = 'c4studios/intro'; // Cal.com 15-min Intro Call
@@ -232,8 +231,6 @@ function CallForm({ onBack }) {
 }
 
 function QuoteView({ onBack }) {
-  const iframeRef = useRef(null);
-  const [src] = useState(() => buildQuotrSrc(QUOTR_SLUG, false));
 
   return (
     <div className="flex flex-col h-full">
@@ -245,18 +242,8 @@ function QuoteView({ onBack }) {
       >
         <ArrowLeft size={14} /> Back
       </button>
-      <div
-        className="flex-1 min-h-[60vh] overflow-hidden rounded-lg"
-        style={{ border: `1px solid ${LINE}`, backgroundColor: '#FFFFFF' }}
-      >
-        <iframe
-          ref={iframeRef}
-          title="C4 instant quote — Quotr"
-          src={src}
-          className="w-full h-full"
-          style={{ border: 0, minHeight: '60vh' }}
-          onLoad={() => postQuotrTheme(iframeRef.current, false)}
-        />
+      <div className="flex-1 overflow-y-auto" style={{ backgroundColor: '#FFFFFF' }}>
+        <Quotr compact heading="Lock in a starting price." />
       </div>
     </div>
   );
@@ -316,7 +303,6 @@ export default function BookingSheet({ open, onClose }) {
   const quickBuzz = () => { try { if (navigator.vibrate) navigator.vibrate(12); } catch { /* */ } };
 
   // Reset to the chooser each time the sheet is opened, and warm the
-  // connection to quotr.us so the calculator view loads fast if chosen.
   useEffect(() => {
     if (open) {
       setView('choose');

@@ -108,13 +108,15 @@ const SERVICE_ADDONS = {
     'Same-day delivery',
     'Location scouting',
   ],
+  training: [],
 };
 
 const SERVICES = [
   { key: 'web_design', label: 'Web & Apps' },
-  { key: 'brand_platform', label: 'Brand & Growth' },
+  { key: 'brand_platform', label: 'Branding & Identity' },
   { key: 'automation', label: 'AI & Software' },
   { key: 'lens', label: 'C4 Lens' },
+  { key: 'training', label: 'AI training' },
   { key: 'other', label: 'Something Else' },
 ];
 
@@ -260,35 +262,6 @@ export default function StartProject() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease }}
         >
-          <div className="flex items-center gap-3 mb-8 md:mb-10">
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 0.8, delay: 0.2, ease }}
-              className="w-8 h-px origin-left"
-              style={{ backgroundColor: 'var(--c4-accent)' }}
-            />
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="text-[10px] uppercase tracking-[0.25em] font-medium"
-              style={{ color: 'var(--c4-text-subtle)' }}
-            >
-              Project Brief
-            </motion.span>
-          </div>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.58, ease }}
-            className="mb-5"
-            style={{ color: 'var(--c4-accent)' }}
-          >
-            <span className="block max-w-[30rem] text-[13px] font-medium leading-[1.45] tracking-[-0.01em] md:text-[15px]">
-              Let&apos;s build something worth launching.
-            </span>
-          </motion.div>
           <h1 className="text-[clamp(1.8rem,4.5vw,2.8rem)] font-semibold tracking-[-0.035em] leading-[1.08]" style={{ color: 'var(--c4-text)' }}>
             Send the brief.
           </h1>
@@ -310,8 +283,9 @@ export default function StartProject() {
             className="grid grid-cols-1 sm:grid-cols-2 gap-5"
           >
             <div>
-              <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Name *</label>
+              <label htmlFor="sp-name" className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Name *</label>
               <input
+                id="sp-name"
                 className={fieldClass}
                 style={{ backgroundColor: 'var(--c4-card-bg)', border: '1px solid var(--c4-border)', color: 'var(--c4-text)' }}
                 required
@@ -321,8 +295,9 @@ export default function StartProject() {
               />
             </div>
             <div>
-              <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Email *</label>
+              <label htmlFor="sp-email" className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Email *</label>
               <input
+                id="sp-email"
                 className={fieldClass}
                 style={{ backgroundColor: 'var(--c4-card-bg)', border: '1px solid var(--c4-border)', color: 'var(--c4-text)' }}
                 type="email"
@@ -340,8 +315,9 @@ export default function StartProject() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.28, ease }}
           >
-            <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Company / Brand</label>
+            <label htmlFor="sp-company" className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Company / Brand</label>
             <input
+              id="sp-company"
               className={fieldClass}
               style={{ backgroundColor: 'var(--c4-card-bg)', border: '1px solid var(--c4-border)', color: 'var(--c4-text)' }}
               value={form.company}
@@ -372,7 +348,7 @@ export default function StartProject() {
               >
                 <div className="pb-1">
                   <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Interested in any add-ons?</label>
-                  <p className="text-[12px] mb-3 leading-[1.5]" style={{ color: 'var(--c4-text-faint)' }}>
+                  <p className="text-[12px] mb-3 leading-[1.5]" style={{ color: 'var(--c4-text-subtle)' }}>
                     Optional — helps us understand your scope.
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -430,8 +406,9 @@ export default function StartProject() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.60, ease }}
           >
-            <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Project details *</label>
+            <label htmlFor="sp-details" className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Project details *</label>
             <textarea
+              id="sp-details"
               className={fieldClass + ' resize-none'}
               style={{
                 backgroundColor: 'var(--c4-card-bg)',
@@ -461,10 +438,11 @@ export default function StartProject() {
           </motion.div>
 
           {/* Honeypot – hidden from real users */}
-          <div aria-hidden="true" tabIndex={-1} style={{ position: 'absolute', left: '-9999px' }}>
+          <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px' }}>
             <input
               type="text"
               name="_gotcha"
+              tabIndex={-1}
               value={form._gotcha}
               onChange={(e) => update('_gotcha', e.target.value)}
               autoComplete="off"

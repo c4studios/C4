@@ -174,13 +174,24 @@ export default function ConceptCarousel({ staticMode = false }) {
     if (!wrap || !cyl) return undefined;
     const faces = [...cyl.querySelectorAll('.lv-cyl-face')];
 
-    /* Geometry: faces sit on a drum whose radius comes from the wrap
-       width, re-measured on resize. */
+    /* Geometry, from the cards outward. The drum's radius is whatever
+       keeps neighbouring faces a gap apart at the rim, so faces never
+       intersect; the stage height is the tallest face at its front-facing
+       perspective scale plus the floor reflection, so the drum never rises
+       into the heading or drops onto the note. Re-measured on resize. */
+    const PERSPECTIVE = 1600;
+    const GAP = 44;
     let radius = 300;
+    let shift = 0;
     const measure = () => {
-      const w = wrap.clientWidth || 1200;
-      const circumference = Math.min(w * 1.85, 1780);
-      radius = circumference / (2 * Math.PI);
+      const card = faces[0]?.querySelector('.lv-cpt-card');
+      const cw = card?.offsetWidth || 300;
+      radius = (cw + GAP) / (2 * Math.sin(Math.PI / FACES));
+      const fh = Math.max(...faces.map((f) => f.offsetHeight || 0), 320);
+      const frontScale = PERSPECTIVE / (PERSPECTIVE - radius);
+      const reflection = 14 + fh * 0.32;
+      shift = -Math.round((reflection * frontScale) / 2);
+      wrap.style.height = `${Math.round((fh + reflection) * frontScale + 28)}px`;
       faces.forEach((face, i) => {
         face.style.transform = `translate(-50%, -50%) rotateY(${i * STEP}deg) translateZ(${radius}px)`;
       });
@@ -211,7 +222,7 @@ export default function ConceptCarousel({ staticMode = false }) {
           rot += 3 * dt; /* idle drift, °/s */
         }
       }
-      cyl.style.transform = `rotate3d(0, 1, 0, ${rot}deg)`;
+      cyl.style.transform = `translateY(${shift}px) rotate3d(0, 1, 0, ${rot}deg)`;
       /* Depth grading: the face turned toward the camera brightens and
          steps forward; the ones turning away dim — 5 style writes/frame. */
       faces.forEach((face, i) => {
@@ -320,7 +331,7 @@ export default function ConceptCarousel({ staticMode = false }) {
             </div>
           ))}
         </div>
-        <p className="lv-rail-hint" aria-hidden="true">swipe · {CONCEPTS.length} concepts</p>
+        <p className="lv-rail-hint" aria-hidden="true">Swipe · {CONCEPTS.length} concepts</p>
       </div>
     );
   }
@@ -342,7 +353,7 @@ export default function ConceptCarousel({ staticMode = false }) {
         ))}
       </div>
       <span className={`lv-cyl-hint${hinted ? ' is-done' : ''}`} aria-hidden="true">
-        ↔ drag to spin
+        Drag to turn the shelf
       </span>
     </div>
   );

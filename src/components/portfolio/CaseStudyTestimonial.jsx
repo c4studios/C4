@@ -74,7 +74,7 @@ export default function CaseStudyTestimonial({ testimonial, className = '' }) {
       <div className="mb-4 flex items-center gap-2.5">
         <span
           className="text-[9px] font-medium uppercase tracking-[0.22em]"
-          style={{ color: 'var(--c4-text-faint)' }}
+          style={{ color: 'var(--c4-text-subtle)' }}
         >
           Client note
         </span>

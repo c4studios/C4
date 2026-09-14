@@ -35,12 +35,12 @@ const DATA = {
     ],
   },
   credibility: {
-    heading: 'Why a firm picks C4Sight',
-    body: 'C4Sight is led by Caleb Scott, a JD student. The training speaks the language of practice and takes the conduct obligations seriously, which is the difference between a generic AI course and one built for a firm.',
+    heading: 'Why a firm picks C4Site',
+    body: 'C4Site is led by Caleb Scott, a JD student. The training speaks the language of practice and takes the conduct obligations seriously, which is the difference between a generic AI course and one built for a firm.',
   },
   win: 'A drafting or summarising task sped up, with a verification routine the team actually trusts.',
   governanceNote:
-    'The data-safety and verification module runs every session and is the standard C4Sight stands behind.',
+    'The data-safety and verification module runs every session and is the standard C4Site stands behind.',
   disclaimer:
     'Nothing taught is legal advice. Practitioners remain bound by their professional conduct rules, and no AI output should be filed or relied on unverified.',
   ctaHeading: 'Bring AI into the firm without the risk.',

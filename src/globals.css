@@ -10,14 +10,14 @@
   --c4-bg-alt: #F0EDE8;
   --c4-card-bg: #FFFFFF;
   --c4-tag-bg: #F4F2EF;
-  --c4-nav-idle: rgba(247, 245, 242, 0.64);
-  --c4-nav-idle-border: rgba(221, 219, 215, 0.45);
-  --c4-nav-scrolled: rgba(247, 245, 242, 0.92);
+  --c4-nav-idle: rgba(20, 21, 24, 0.9);        /* the bar is ink in both themes (14 Sep 2026) */
+  --c4-nav-idle-border: rgba(255, 255, 255, 0.08);
+  --c4-nav-scrolled: rgba(20, 21, 24, 0.97);
 
   /* Text */
   --c4-text: #1A1A1A;
   --c4-text-muted: #6B6A64;
-  --c4-text-subtle: #908E88;
+  --c4-text-subtle: #72706A;   /* was #908E88, 3.01:1; now 4.55:1 on the ground. Size and weight carry the step below muted, not a lighter grey. */
   --c4-text-faint: #B0ADA8;
 
   /* Accents */
@@ -38,8 +38,8 @@
   /* Footer (always dark in light mode) */
   --c4-footer-bg: #1A1A1A;
   --c4-footer-text: #9C9A94;
-  --c4-footer-text-muted: #6B6963;
-  --c4-footer-text-dim: #78766F;
+  --c4-footer-text-muted: #8E8C85;   /* was #6B6963, 3.17:1 on the footer; now 5.17:1 */
+  --c4-footer-text-dim: #9A988F;     /* was #78766F, 3.83:1; now 6.02:1 */
 
   /* Inverted sections (trust, testimonials — always dark tones) */
   --c4-inverted-bg: #1A1A1A;
@@ -83,16 +83,16 @@
   --c4-bg-alt: #F0EDE8;
   --c4-text: #1A1A1A;
   --c4-text-muted: #6B6A64;
-  --c4-text-subtle: #908E88;
+  --c4-text-subtle: #72706A;   /* was #908E88, 3.01:1; now 4.55:1 on the ground. Size and weight carry the step below muted, not a lighter grey. */
   --c4-text-faint: #B0ADA8;
   --c4-accent: #D42B2B;
   --c4-accent-hover: #B82222;
   --c4-border: #DDDBD7;
   --c4-border-light: #ECEAE6;
   --c4-card-bg: #FFFFFF;
-  --c4-nav-idle: rgba(247, 245, 242, 0.64);
-  --c4-nav-idle-border: rgba(221, 219, 215, 0.45);
-  --c4-nav-scrolled: rgba(247, 245, 242, 0.92);
+  --c4-nav-idle: rgba(20, 21, 24, 0.9);        /* the bar is ink in both themes (14 Sep 2026) */
+  --c4-nav-idle-border: rgba(255, 255, 255, 0.08);
+  --c4-nav-scrolled: rgba(20, 21, 24, 0.97);
   --c4-footer-bg: #1A1A1A;
   --c4-tag-bg: #F4F2EF;
   --c4-accent-secondary: #2D8A4E;
@@ -119,31 +119,11 @@ textarea::placeholder {
   opacity: 1;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--c4-ring);
-}
+/* Field focus, selection and the scrollbar are drawn once for the whole
+   site in styles/marks.css (loaded after this file). */
 
 select option {
   background-color: var(--c4-card-bg);
-  color: var(--c4-text);
-}
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--c4-bg); }
-::-webkit-scrollbar-thumb { background: var(--c4-border); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--c4-text-faint); }
-
-/* Selection */
-::selection {
-  background: rgba(26, 26, 26, 0.08);
-  color: var(--c4-text);
-}
-:root.dark-mode ::selection {
-  background: rgba(236, 231, 222, 0.14);
   color: var(--c4-text);
 }
 
@@ -373,9 +353,9 @@ header a, header button {
   --c4-bg-alt: #161A21;
   --c4-card-bg: #161A21;
   --c4-tag-bg: #1C2029;
-  --c4-nav-idle: rgba(15, 17, 21, 0.58);
+  --c4-nav-idle: rgba(12, 13, 16, 0.9);
   --c4-nav-idle-border: rgba(236, 231, 222, 0.08);
-  --c4-nav-scrolled: rgba(15, 17, 21, 0.92);
+  --c4-nav-scrolled: rgba(12, 13, 16, 0.97);
 
   /* Text — warm off-whites */
   --c4-text: #ECE7DE;
@@ -401,8 +381,8 @@ header a, header button {
   /* Footer — deeper surface */
   --c4-footer-bg: #0A0C10;
   --c4-footer-text: #7D8290;
-  --c4-footer-text-muted: #505665;
-  --c4-footer-text-dim: #606573;
+  --c4-footer-text-muted: #777B85;   /* was #505665, 2.67:1 on the dark footer; now 4.62:1 */
+  --c4-footer-text-dim: #8A8F9C;     /* was #606573, 3.36:1; now 6.05:1 */
 
   /* Inverted sections (still distinct in dark) */
   --c4-inverted-bg: #0A0C10;
@@ -484,8 +464,8 @@ header a, header button {
     --c4-hover-intensity: 1;
     --c4-footer-bg: #0A0C10;
     --c4-footer-text: #7D8290;
-    --c4-footer-text-muted: #505665;
-    --c4-footer-text-dim: #606573;
+    --c4-footer-text-muted: #777B85;   /* was #505665, 2.67:1 on the dark footer; now 4.62:1 */
+    --c4-footer-text-dim: #8A8F9C;     /* was #606573, 3.36:1; now 6.05:1 */
     --c4-inverted-bg: #0A0C10;
     --c4-inverted-text: #ECE7DE;
     --c4-inverted-text-muted: #A7ABB4;
@@ -565,22 +545,11 @@ header a, header button {
 }
 .c4-cta-ghost:active { transform: translateY(0) scale(0.98); }
 
-/* Reduced motion */
+/* Reduced motion: the site-wide policy lives in styles/marks.css
+   (movement removed, state feedback kept at 120ms). Only the typed
+   cursor's own stop remains here. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-  }
-
-  html {
-    scroll-behavior: auto !important;
-  }
-
-  .c4-typed-cursor {
-    animation: none;
-  }
+  .c4-typed-cursor { animation: none; }
 }
 
 /* ── Skip link (a11y) — hidden until keyboard-focused ── */

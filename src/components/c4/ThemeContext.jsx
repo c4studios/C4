@@ -7,152 +7,12 @@ function getSystemPreference() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
-const DARK_TOKENS = {
-  '--c4-bg': '#0F1115',
-  '--c4-bg-alt': '#161A21',
-  '--c4-card-bg': '#161A21',
-  '--c4-tag-bg': '#1C2029',
-  '--c4-nav-scrolled': 'rgba(15, 17, 21, 0.92)',
-  '--c4-text': '#ECE7DE',
-  '--c4-text-muted': '#A7ABB4',
-  '--c4-text-subtle': '#7D8290',
-  '--c4-text-faint': '#505665',
-  '--c4-accent': '#B33A3A',
-  '--c4-accent-hover': '#9E3232',
-  '--c4-accent-secondary': 'transparent',
-  '--c4-brand-accent': '#B33A3A',
-  '--c4-brand-success': '#2C7A55',
-  '--c4-border': 'rgba(236, 231, 222, 0.12)',
-  '--c4-border-light': 'rgba(236, 231, 222, 0.07)',
-  '--c4-link-hover': '#ECE7DE',
-  '--c4-hover-intensity': '1',
-  '--c4-footer-bg': '#0A0C10',
-  '--c4-footer-text': '#7D8290',
-  '--c4-footer-text-muted': '#505665',
-  '--c4-footer-text-dim': '#606573',
-  '--c4-inverted-bg': '#0A0C10',
-  '--c4-inverted-text': '#ECE7DE',
-  '--c4-inverted-text-muted': '#A7ABB4',
-  '--c4-inverted-text-faint': '#505665',
-  '--c4-inverted-border': 'rgba(236, 231, 222, 0.08)',
-  '--c4-proof-bg': '#0B0E12',
-  '--c4-proof-surface': 'rgba(236, 231, 222, 0.05)',
-  '--c4-proof-border': 'rgba(236, 231, 222, 0.10)',
-  '--c4-proof-text': '#ECE7DE',
-  '--c4-proof-muted': '#A7ABB4',
-  '--c4-proof-faint': '#6F7684',
-  '--c4-proof-accent': '#C7665F',
-  '--c4-ring': 'rgba(236, 231, 222, 0.35)',
-  '--c4-lightbox-bg': 'rgba(10, 12, 16, 0.95)',
-  '--c4-lightbox-control': 'rgba(236, 231, 222, 0.08)',
-  '--c4-lightbox-control-hover': 'rgba(236, 231, 222, 0.15)',
-  '--c4-lightbox-text': 'rgba(236, 231, 222, 0.8)',
-  '--c4-lightbox-text-dim': '#7D8290',
-  '--c4-lightbox-text-accent': '#A7ABB4',
-  '--c4-lightbox-placeholder-bg': '#161A21',
-  '--c4-lightbox-placeholder-icon': '#505665',
-  '--c4-lightbox-placeholder-text': '#606573',
-  '--c4-caption-from': 'rgba(15, 17, 21, 0.6)',
-  '--c4-caption-via': 'rgba(15, 17, 21, 0.25)',
-  '--c4-caption-text': 'rgba(236, 231, 222, 0.9)',
-  // Shadcn token sync
-  '--background': '225 20% 5%',
-  '--foreground': '36 28% 90%',
-  '--card': '222 18% 11%',
-  '--card-foreground': '36 28% 90%',
-  '--popover': '222 18% 11%',
-  '--popover-foreground': '36 28% 90%',
-  '--primary': '36 28% 90%',
-  '--primary-foreground': '225 20% 5%',
-  '--secondary': '222 18% 11%',
-  '--secondary-foreground': '36 28% 90%',
-  '--muted': '225 17% 10%',
-  '--muted-foreground': '222 10% 57%',
-  '--accent': '222 18% 11%',
-  '--accent-foreground': '36 28% 90%',
-  '--destructive': '0 50% 46%',
-  '--destructive-foreground': '36 28% 90%',
-  '--border': '36 28% 90% / 0.12',
-  '--input': '36 28% 90% / 0.14',
-  '--ring': '36 28% 90% / 0.35',
-};
-
-const LIGHT_TOKENS = {
-  '--c4-bg': '#F7F5F2',
-  '--c4-bg-alt': '#F0EDE8',
-  '--c4-card-bg': '#FFFFFF',
-  '--c4-tag-bg': '#F4F2EF',
-  '--c4-nav-scrolled': 'rgba(247, 245, 242, 0.92)',
-  '--c4-text': '#1A1A1A',
-  '--c4-text-muted': '#76756F',
-  '--c4-text-subtle': '#908E88',
-  '--c4-text-faint': '#B0ADA8',
-  '--c4-accent': '#C23030',
-  '--c4-accent-hover': '#A82828',
-  '--c4-accent-secondary': 'transparent',
-  '--c4-brand-accent': '#B33A3A',
-  '--c4-brand-success': '#2C7A55',
-  '--c4-border': '#DDDBD7',
-  '--c4-border-light': '#ECEAE6',
-  '--c4-link-hover': '#1A1A1A',
-  '--c4-hover-intensity': '1',
-  '--c4-footer-bg': '#1A1A1A',
-  '--c4-footer-text': '#9C9A94',
-  '--c4-footer-text-muted': '#6B6963',
-  '--c4-footer-text-dim': '#78766F',
-  '--c4-inverted-bg': '#1A1A1A',
-  '--c4-inverted-text': '#E5E3DE',
-  '--c4-inverted-text-muted': '#A5A39E',
-  '--c4-inverted-text-faint': '#5A5955',
-  '--c4-inverted-border': 'rgba(255,255,255,0.06)',
-  '--c4-proof-bg': '#F5EEE7',
-  '--c4-proof-surface': '#FFF9F4',
-  '--c4-proof-border': '#E8D9CC',
-  '--c4-proof-text': '#211A17',
-  '--c4-proof-muted': '#78675F',
-  '--c4-proof-faint': '#A08C82',
-  '--c4-proof-accent': '#B33A3A',
-  '--c4-ring': 'rgba(26, 26, 26, 0.4)',
-  '--c4-lightbox-bg': 'rgba(10, 10, 10, 0.92)',
-  '--c4-lightbox-control': 'rgba(255, 255, 255, 0.07)',
-  '--c4-lightbox-control-hover': 'rgba(255, 255, 255, 0.14)',
-  '--c4-lightbox-text': 'rgba(255, 255, 255, 0.8)',
-  '--c4-lightbox-text-dim': '#777',
-  '--c4-lightbox-text-accent': '#999',
-  '--c4-lightbox-placeholder-bg': '#1E1E1E',
-  '--c4-lightbox-placeholder-icon': '#444',
-  '--c4-lightbox-placeholder-text': '#555',
-  '--c4-caption-from': 'rgba(26, 26, 26, 0.5)',
-  '--c4-caption-via': 'rgba(26, 26, 26, 0.2)',
-  '--c4-caption-text': 'rgba(255, 255, 255, 0.9)',
-  // Shadcn token sync
-  '--background': '40 20% 96.5%',
-  '--foreground': '0 0% 10%',
-  '--card': '40 15% 95%',
-  '--card-foreground': '0 0% 10%',
-  '--popover': '40 15% 95%',
-  '--popover-foreground': '0 0% 10%',
-  '--primary': '0 0% 10%',
-  '--primary-foreground': '40 20% 97%',
-  '--secondary': '40 10% 92%',
-  '--secondary-foreground': '0 0% 10%',
-  '--muted': '40 10% 92%',
-  '--muted-foreground': '0 0% 45%',
-  '--accent': '40 10% 92%',
-  '--accent-foreground': '0 0% 10%',
-  '--destructive': '0 66% 50%',
-  '--destructive-foreground': '0 0% 100%',
-  '--border': '0 0% 88%',
-  '--input': '0 0% 88%',
-  '--ring': '0 0% 10%',
-};
-
-function applyTokens(tokens) {
-  const root = document.documentElement;
-  Object.entries(tokens).forEach(([key, value]) => {
-    root.style.setProperty(key, value);
-  });
-}
+/* The palette lives in globals.css only: light on :root, dark on
+   :root.dark-mode and on the OS-preference block. Until 9 September 2026 this
+   file also wrote 66 tokens per theme inline on <html>, and the two copies had
+   drifted in twelve values; the inline --c4-text-muted (#76756F, 4.25:1 on the
+   page ground) was what production rendered while the stylesheet documented
+   #6B6A64 (4.99:1). The class toggle below is the whole mechanism now. */
 
 /* Re-apply the visitor's stored theme after a forced-chrome arm page unmounts.
    Arm pages (Foresight/Lens/ServiceAI/ServiceWeb) skew the theme CLASS and add a
@@ -160,8 +20,8 @@ function applyTokens(tokens) {
    snapshot on unmount, which — because a child page's effect can run before
    ThemeProvider's — could strand the site with no theme class (the black-home
    bug). This restores the class from the stored preference and strips every arm
-   marker. Inline --c4-* tokens belong to ThemeProvider and are left untouched;
-   they already reflect the visitor's theme. */
+   marker. The --c4-* tokens come from globals.css by class, so nothing else
+   needs re-applying. */
 export function reassertStoredTheme() {
   const root = document.documentElement;
   root.classList.remove('sg-on-board', 'cw-on-board', 'lv-on-stage', 'wa-on-sheet', 'vivid');
@@ -214,11 +74,9 @@ export function ThemeProvider({ children }) {
     if (resolvedMode === 'dark') {
       root.classList.add('dark-mode');
       root.classList.remove('light-mode');
-      applyTokens(DARK_TOKENS);
     } else {
       root.classList.add('light-mode');
       root.classList.remove('dark-mode');
-      applyTokens(LIGHT_TOKENS);
     }
   }, [resolvedMode]);
 

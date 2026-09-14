@@ -1,0 +1,160 @@
+/* ═══════════════════════════════════════════════════════════════
+   MARKS — the parts nobody draws
+   ═══════════════════════════════════════════════════════════════
+
+   Text selection, the caret, scrollbars, focus rings, underline
+   offset, list markers, native form controls and the numerals in
+   data all ship with browser defaults that belong to no design
+   system. This sheet gives each one a home in the C4 palette, in
+   both themes, at zero specificity (:where) so any page-level rule
+   still wins.
+
+   Meanings, so the choices are decisions and not defaults:
+     · the caret is C4 red because on this site RED = START
+       (home.css); the caret is where you start.
+     · selection is the proof stock. Picking up text is picking up
+       evidence, so it lifts onto the warmer sheet.
+     · focus is ink, 2px, offset 3px: the same mark on every page.
+     · the scrollbar is a hairline instrument on the page ground,
+       wide enough to grab (10px), never a 4px thread.
+     · figures in data are tabular. Prose keeps proportional
+       figures; anything set as a value, date or count lines up.
+
+   Loaded after globals.css. Owns the reduced-motion policy for the
+   whole site (the previous global 0.01ms kill lived in globals.css
+   and is retired there).
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --c4-sel: #E9DACB;                              /* proof stock, one step warmer than --c4-proof-bg so it reads as a highlight */
+  --c4-sel-ink: #1A1A1A;
+  --c4-scroll-thumb: #C9C5BF;                      /* between --c4-border and --c4-text-faint */
+  --c4-scroll-thumb-hover: #908E88;                /* --c4-text-subtle */
+  --c4-caret: #C23030;                             /* --c4-accent, light */
+  --c4-focus: #1A1A1A;
+  color-scheme: light;
+}
+:root.dark-mode {
+  --c4-sel: rgba(236, 231, 222, 0.18);
+  --c4-sel-ink: #ECE7DE;
+  --c4-scroll-thumb: #3A404C;
+  --c4-scroll-thumb-hover: #7D8290;
+  --c4-caret: #E06A5F;                             /* lifted red: 5.76:1 on the dark ground, the value contact.css already uses for the same reason */
+  --c4-focus: #ECE7DE;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not(.light-mode):not(.dark-mode) {
+    --c4-sel: rgba(236, 231, 222, 0.18);
+    --c4-sel-ink: #ECE7DE;
+    --c4-scroll-thumb: #3A404C;
+    --c4-scroll-thumb-hover: #7D8290;
+    --c4-caret: #E06A5F;
+    --c4-focus: #ECE7DE;
+    color-scheme: dark;
+  }
+}
+/* Arm pages that pin a dark chrome over a light preference (the
+   board, the good room, the stage) resolve their own focus ink. */
+:root.cw-on-board, :root.sg-on-board { --c4-focus: #ECE7DE; --c4-caret: #E06A5F; }
+
+/* ── selection ──────────────────────────────────────────────── */
+::selection { background: var(--c4-sel); color: var(--c4-sel-ink); }
+::-moz-selection { background: var(--c4-sel); color: var(--c4-sel-ink); }
+/* On inverted and proof surfaces the ink is already the page's own. */
+:where(img, video, svg, canvas)::selection { background: var(--c4-sel); }
+
+/* ── caret + native controls ────────────────────────────────── */
+:where(input, textarea, [contenteditable="true"]) { caret-color: var(--c4-caret); }
+:where(input[type="checkbox"], input[type="radio"], input[type="range"], progress, meter) { accent-color: var(--c4-accent); }
+:where(html) { -webkit-tap-highlight-color: color-mix(in srgb, var(--c4-accent) 14%, transparent); }
+
+/* ── scrollbar ──────────────────────────────────────────────── */
+:where(html) { scrollbar-color: var(--c4-scroll-thumb) var(--c4-bg); scrollbar-gutter: auto; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--c4-bg); }
+::-webkit-scrollbar-thumb {
+  background: var(--c4-scroll-thumb);
+  border: 2px solid var(--c4-bg);   /* the 2px reveal of ground makes it a bar on paper, not a stripe */
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--c4-scroll-thumb-hover); }
+::-webkit-scrollbar-corner { background: var(--c4-bg); }
+/* Inner scrollers (rails, code, tables) take the same thumb on their own ground. */
+:where(.overflow-auto, .overflow-x-auto, .overflow-y-auto, [data-scroll]) { scrollbar-color: var(--c4-scroll-thumb) transparent; }
+
+/* ── focus ──────────────────────────────────────────────────── */
+/* One mark, everywhere, at zero specificity. Pages that already
+   draw their own (home, about, contact, the arms) keep theirs. */
+:where(a, button, [role="button"], input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--c4-focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+:where(a, button, [role="button"], input, select, textarea, summary, [tabindex]):focus:not(:focus-visible) { outline: none; }
+/* Fields: the ring sits on the border instead of floating outside it.
+   Declared with weight because Tailwind's outline-none utility
+   (outline: 2px solid transparent) otherwise wins on any field that
+   carries it, which is how /start lost its ring when the old globals
+   box-shadow was retired. A field's focus must not be removable by a
+   utility class. */
+html :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea):focus-visible {
+  outline: 2px solid var(--c4-focus) !important;
+  outline-offset: 0 !important;
+  border-color: var(--c4-focus);
+}
+/* Controls that carry Tailwind's outline-none / outline-0 utilities
+   (62 occurrences in src, 34 with no ring in their place; /Support's
+   search field and FAQ buttons among them) render outline: 2px solid
+   transparent, which no zero-specificity rule can reach. Give exactly
+   those elements the ring back. A page that draws its own ring by
+   box-shadow simply gets both, which beats none. */
+html :is([class*="outline-none"], [class*="outline-0"]):focus-visible {
+  outline: 2px solid var(--c4-focus) !important;
+  outline-offset: 2px;
+}
+@media (forced-colors: active) {
+  :where(a, button, [role="button"], input, select, textarea, summary, [tabindex]):focus-visible { outline-color: Highlight; }
+}
+
+/* ── underlines ─────────────────────────────────────────────── */
+/* Wherever a link is underlined, the line clears the descenders and
+   is drawn from the font's own metrics, not the 1px default. */
+:where(a) { text-underline-offset: 0.16em; text-decoration-thickness: from-font; text-decoration-skip-ink: auto; }
+:where(abbr[title]) { text-decoration: underline dotted; text-underline-offset: 0.16em; }
+
+/* ── markers, rules, placeholders ───────────────────────────── */
+::marker { color: var(--c4-text-subtle); font-variant-numeric: tabular-nums; }
+:where(hr) { border: 0; border-top: 1px solid var(--c4-border); }
+::placeholder { color: var(--c4-text-faint); opacity: 1; }
+
+/* ── figures ────────────────────────────────────────────────── */
+/* Tabular where the number is a value; prose keeps proportional
+   figures. `time` is always a value. Archivo and B612 Mono both
+   carry the tnum feature, so this costs nothing to honour. */
+:where(time, table, .c4-fig, [data-fig], output, input[type="number"], input[type="tel"]) {
+  font-variant-numeric: tabular-nums;
+}
+/* Slashed zero in the instrument face so 0 and O never confuse a
+   phone number or a price. B612 carries it; other faces ignore it. */
+:where(.c4-fig, [data-fig]) { font-feature-settings: "tnum", "zero"; }
+
+/* ── reduced motion ─────────────────────────────────────────── */
+/* Not a blanket kill. Movement is removed; state feedback stays.
+   Colour, opacity, shadow and outline transitions keep a short
+   duration so hover, focus and open/closed remain legible, while
+   transforms and positional changes snap. Animations that carry no
+   state (spins, drifts, scrolls) are stopped by their own owners
+   under this same query. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-property: color, background-color, border-color, outline-color, box-shadow, opacity, fill, stroke, text-decoration-color !important;
+    transition-duration: 120ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  html { scroll-behavior: auto !important; }
+}

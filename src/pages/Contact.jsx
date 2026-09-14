@@ -482,8 +482,7 @@ export default function Contact() {
             </Link>
             <Link className="ct-reroute" to="/Support">
               <span className="ct-reroute-q">
-                Existing client, or here about ReBook, CrewCheck, SafeDraft or
-                Nudge?
+                Existing client?
               </span>
               <span className="ct-reroute-d">
                 Support desk <span className="ct-arrow" aria-hidden="true">→</span>

@@ -42,7 +42,7 @@ export default function PortfolioMedia({
                   key={item}
                   className={`rounded-[2px] px-2.5 py-[3px] ${compact ? 'text-[8.5px]' : 'text-[9px]'} uppercase tracking-[0.14em] font-medium`}
                   style={{
-                    color: 'var(--c4-text-faint)',
+                    color: 'var(--c4-text-subtle)',
                     backgroundColor: 'var(--c4-card-bg)',
                     border: '1px solid var(--c4-border-light)',
                   }}

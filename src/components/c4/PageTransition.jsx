@@ -36,6 +36,10 @@ export default function PageTransition({ children, pageKey }) {
   }, []);
 
   useLayoutEffect(() => {
+    /* The mobile menu locks body overflow while open; a link tapped inside
+       it changes the route before that lock lifts, and a locked viewport
+       ignores scrollTo. Lift it here, then scroll. */
+    document.body.style.overflow = '';
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, [pathname, search]);
 
@@ -43,9 +47,13 @@ export default function PageTransition({ children, pageKey }) {
     const frameId = window.requestAnimationFrame(() => {
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     });
+    const late = window.setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }, 90);
 
     return () => {
       window.cancelAnimationFrame(frameId);
+      window.clearTimeout(late);
     };
   }, [pathname, search]);
 

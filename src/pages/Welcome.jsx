@@ -96,7 +96,7 @@ const ARMS = [
   },
   {
     to: '/Foresight',
-    name: 'C4Sight',
+    name: 'C4Site',
     line: 'Hands-on AI training that leaves your team genuinely capable.',
     color: '#54b06a',
     mark: (

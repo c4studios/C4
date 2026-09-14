@@ -41,7 +41,7 @@ export default {
       label: 'The quiet win',
       heading: 'Where does automation fit in a law practice?',
       body: [
-        'In the routine work nobody bills honestly: intake acknowledgments, appointment reminders, document collection chasing, file-opening checklists, the third email asking a client for their ID. We’ve done automation work for IPSI, and we build and run FirmFlow — our own AI content engine for professional services — so this isn’t theory bolted onto web design.',
+        'In the routine work nobody bills honestly: intake acknowledgments, appointment reminders, document collection chasing, file-opening checklists, the third email asking a client for their ID. We’ve done automation work for IPSI, so this isn’t theory bolted onto web design.',
         'The pattern for legal work is strict: AI and automation draft, route and remind; a human signs everything that matters. Nothing leaves the building unsupervised, and your professional obligations stay exactly where they belong — with the practitioners.',
       ],
     },
@@ -77,7 +77,7 @@ export default {
     },
     {
       q: 'Can AI write our practice-area content?',
-      a: 'It can draft; it shouldn’t publish. We run FirmFlow, our own AI content engine for professional services, so we know exactly where the line sits: AI accelerates structure and first drafts, a human with legal literacy tightens them, and your practitioners approve anything that touches advice territory.',
+      a: 'It can draft; it shouldn’t publish. AI accelerates structure and first drafts, a human with legal literacy tightens them, and your practitioners approve anything that touches advice territory.',
     },
     {
       q: 'How do you handle confidentiality?',

@@ -1,15 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
-import PageHero from '@/components/c4/PageHero';
 import useDocumentHead from '@/hooks/useDocumentHead';
-import useStaticMode from '@/hooks/useStaticMode';
 import { breadcrumbSchema, localBusinessSchema } from '@/lib/schema';
 import { liveArticles } from '@/content/seo/registry';
 import { SITE_URL } from '@/lib/seo';
-
-const ease = [0.22, 1, 0.36, 1];
+import '@/components/seo/insights.css';
 
 function formatDate(iso) {
   if (!iso) return null;
@@ -19,20 +14,47 @@ function formatDate(iso) {
   return `${d} ${months[m - 1]} ${y}`;
 }
 
+/* The ledger line: date, length and, where the registry carries one, the
+   verification stamp. The instrument face, sentence case, tabular. */
+function Meta({ a }) {
+  return (
+    <p className="ins-meta">
+      <time dateTime={a.published}>{formatDate(a.published)}</time>
+      {a.readMinutes && (
+        <>
+          <span className="sep" aria-hidden="true">·</span>
+          <span>{a.readMinutes} min read</span>
+        </>
+      )}
+      {a.verified && (
+        <span className="ins-stamp">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="currentColor" strokeWidth="2.2"
+              strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span>Figures verified <b>{formatDate(a.verified)}</b></span>
+        </span>
+      )}
+    </p>
+  );
+}
+
 /**
- * /insights — the index for editorial articles.
+ * /insights — the articles index.
  *
  * Reads straight from the SEO registry, so an article appearing here and an
- * article having a route, a prerendered file and a sitemap entry are the same
- * fact. There is no second list to fall out of sync.
+ * article having a route, a prerendered file and a sitemap entry are the
+ * same fact. The articles live at flat root slugs, not under /insights/, so
+ * this page is a hub rather than a path segment.
  *
- * The articles themselves live at flat root slugs, not under /insights/, so
- * this page is a hub rather than a path segment. See the ARTICLES block in
- * registry.js for why.
+ * Redrawn 9 September 2026 as a wall of claims: each piece's dek is its one
+ * checkable statement, so the dek is what the index sets large. The newest
+ * piece leads. A Read surface: no reveals, no cards, nothing that gates the
+ * text behind scrolling or hydration.
  */
 export default function Insights() {
-  const staticMode = useStaticMode();
   const articles = liveArticles();
+  const [lead, ...rest] = articles;
 
   useDocumentHead({
     title: 'Insights — Writing on AI, Web and Design | C4 Studios',
@@ -56,78 +78,60 @@ export default function Insights() {
   });
 
   return (
-    <div style={{ backgroundColor: 'var(--c4-bg)', color: 'var(--c4-text)' }}>
-      <PageHero
-        label="Insights"
-        titleLines={[<span key="a">Things worth</span>, <span key="b">writing down.</span>]}
-      >
-        <div className="max-w-[620px]">
-          <p className="text-[15px] md:text-[16px] leading-[1.75]" style={{ color: 'var(--c4-text-muted)' }}>
+    <div className="ins" style={{ backgroundColor: 'var(--c4-bg)', color: 'var(--c4-text)' }}>
+      <header className="ins__head">
+        <div className="ins__col ins__col--wide">
+          <h1 className="ins__title">Things worth writing down.</h1>
+          <p className="ins__intro">
             What we end up explaining to clients often enough that it may as well
             be written down. Mostly about AI, websites and what things actually
             cost. Everything here is free to read and free to disagree with.
           </p>
+          <p className="ins__key">
+            <span>{articles.length} {articles.length === 1 ? 'article' : 'articles'}</span>
+            <span className="sep" aria-hidden="true">·</span>
+            <span>Newest first</span>
+            <span className="sep" aria-hidden="true">·</span>
+            <span>Free to read</span>
+          </p>
         </div>
-      </PageHero>
+      </header>
 
-      <section className="pb-24">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          {articles.length === 0 ? (
-            <p className="text-[14px]" style={{ color: 'var(--c4-text-muted)' }}>
-              First pieces are being written. Check back shortly.
-            </p>
-          ) : (
-            <ul className="max-w-[840px]">
-              {articles.map((a, i) => (
-                <motion.li
-                  key={a.slug}
-                  {...(staticMode ? {} : {
-                    initial: { opacity: 0, y: 12 },
-                    whileInView: { opacity: 1, y: 0 },
-                    viewport: { once: true, margin: '-60px' },
-                    transition: { duration: 0.55, delay: i * 0.04, ease },
-                  })}
-                >
-                  <Link
-                    to={`/${a.slug}`}
-                    className="group block py-8 border-t transition-colors duration-300"
-                    style={{ borderColor: 'var(--c4-border)' }}
-                  >
-                    <div
-                      className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-3 text-[11px] uppercase tracking-[0.16em]"
-                      style={{ color: 'var(--c4-text-subtle)' }}
-                    >
-                      <time dateTime={a.published}>{formatDate(a.published)}</time>
-                      {a.readMinutes && (
-                        <>
-                          <span aria-hidden="true">·</span>
-                          <span>{a.readMinutes} min read</span>
-                        </>
-                      )}
-                    </div>
+      {!lead && (
+        <div className="ins__col" style={{ paddingBlock: '3rem 6rem' }}>
+          <p className="ins__empty">First pieces are being written. Check back shortly.</p>
+        </div>
+      )}
 
-                    <h2
-                      className="text-[1.35rem] md:text-[1.7rem] font-semibold tracking-[-0.025em] leading-[1.2] mb-2 inline-flex items-start gap-2"
-                      style={{ color: 'var(--c4-text)' }}
-                    >
-                      {a.name}
-                      <ArrowUpRight
-                        size={18}
-                        strokeWidth={2}
-                        className="mt-1.5 shrink-0 opacity-0 -translate-x-1 group-hover:opacity-70 group-hover:translate-x-0 transition-all duration-300"
-                      />
-                    </h2>
+      {lead && (
+        <section className="ins__lead" aria-labelledby="ins-lead-title">
+          <div className="ins__col ins__col--wide">
+            <p className="ins__lead-dek">{lead.dek}</p>
+            <h2 id="ins-lead-title" className="ins__lead-title">
+              <Link to={`/${lead.slug}`}>{lead.name}</Link>
+            </h2>
+            <Meta a={lead} />
+          </div>
+        </section>
+      )}
 
-                    <p className="text-[14px] leading-[1.7] max-w-[620px]" style={{ color: 'var(--c4-text-muted)' }}>
-                      {a.dek}
-                    </p>
-                  </Link>
-                </motion.li>
+      {rest.length > 0 && (
+        <section className="ins__list-wrap" aria-label="Earlier articles">
+          <div className="ins__col ins__col--wide">
+            <ol className="ins__list">
+              {rest.map((a) => (
+                <li key={a.slug} className="ins__item">
+                  <p className="ins__dek">{a.dek}</p>
+                  <h2 className="ins__name">
+                    <Link to={`/${a.slug}`}>{a.name}</Link>
+                  </h2>
+                  <Meta a={a} />
+                </li>
               ))}
-            </ul>
-          )}
-        </div>
-      </section>
+            </ol>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

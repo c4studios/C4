@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import IntroSequence from '../components/c4/IntroSequence';
+import React, { useMemo } from 'react';
 import HeroSection from '../components/home/HeroSection';
 import FourDoors from '../components/home/FourDoors';
-import C4Originals from '../components/home/C4Originals';
+import Quotr from '../components/home/Quotr';
 import TestimonialsProof from '../components/home/TestimonialsProof';
 import FinalCTA from '../components/home/FinalCTA';
 import useDocumentHead from '@/hooks/useDocumentHead';
@@ -24,35 +22,19 @@ export default function Home() {
     path: '/',
     jsonLd,
   });
-  const [showIntro, setShowIntro] = useState(false);
-  const [introComplete, setIntroComplete] = useState(true);
-
-  useEffect(() => {
-    const seen = localStorage.getItem('c4_intro_seen');
-    if (!seen) {
-      setShowIntro(true);
-      setIntroComplete(false);
-    }
-  }, []);
-
-  const handleIntroComplete = () => {
-    setShowIntro(false);
-    setIntroComplete(true);
-  };
-
+  /* The first-visit intro overlay (2.9s, no skip) retired on 9 September
+     2026. index.html now carries a boot sheet that holds every page until
+     the app has mounted and the fonts are in, then hands over; the home
+     page gets nothing extra. */
   return (
     <>
-      <AnimatePresence>
-        {showIntro && <IntroSequence onComplete={handleIntroComplete} />}
-      </AnimatePresence>
-
-      {introComplete && (
+      {(
         <div className="hm-root" style={{ backgroundColor: 'var(--c4-bg)' }}>
           {/* Hero carries the live CraftHeatmap work-proof surface. */}
           <HeroSection />
           <FourDoors />
-          {/* Software surface — untouched by law; clean air only. */}
-          <C4Originals />
+          {/* Quotr: the studio's own estimator, every figure from pricing.js. */}
+          <Quotr />
           <TestimonialsProof />
           <FinalCTA />
         </div>

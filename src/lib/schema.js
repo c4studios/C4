@@ -79,7 +79,7 @@ export function localBusinessSchema() {
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Web design and development' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'C4i: private and cloud AI systems, automations and agents' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'C4 Lens: photography, videography and brand identity' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'C4Sight: workplace AI training and workshops' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'C4Site: workplace AI training and workshops' } },
     ],
   };
 }

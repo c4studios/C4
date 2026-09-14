@@ -341,9 +341,12 @@
   color: var(--prose);
 }
 
+/* Reduced motion: stop the masthead animation here; transitions follow
+   the site policy in styles/marks.css (movement removed, feedback kept),
+   so the stamp's press stays legible. */
 @media (prefers-reduced-motion: reduce) {
   .article *,
-  .article *::before { animation: none !important; transition: none !important; }
+  .article *::before { animation: none !important; }
 }
 
 /* ── figures ──────────────────────────────────────────────────── */
@@ -527,4 +530,147 @@
   outline: 2px solid var(--c4-proof-accent);
   outline-offset: 3px;
   border-radius: 1px;
+}
+
+
+/* ── SHOW WORKING — the stamp lifts the ledger ───────────────────
+   Draft, 8 September 2026.
+
+   The stamp already says the figures were checked; the sources that
+   prove it sit at the foot as a ledger. Pressed, the stamp inks and
+   the ledger is lifted beside the prose so a reader can check a figure
+   as they pass it. From 1280px it is a sticky rail in the outer
+   margin, placed clear of the 42rem quote and table blocks; below that
+   it is a proof-sheet panel directly under the byline. The foot ledger
+   never moves, so the prerendered page is unchanged and the control is
+   enhancement only. Under reduced motion the rail appears without the
+   slide (site policy in styles/marks.css) and the stamp still changes
+   colour, so the press is legible either way.
+   ────────────────────────────────────────────────────────────── */
+.article__sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.article__verified--btn {
+  appearance: none;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.16s ease;
+}
+.article__verified--btn:hover { border-color: var(--c4-proof-accent); }
+.article__verified--btn:active { transform: scale(0.97); }
+.article__verified--btn[aria-pressed="true"] {
+  background: var(--c4-proof-text);
+  border-color: var(--c4-proof-text);
+  color: var(--c4-bg);
+}
+.article__verified--btn[aria-pressed="true"] b { color: inherit; }
+.article__verified-act {
+  margin-left: 0.15rem;
+  padding-left: 0.55rem;
+  border-left: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+
+.article__body { position: relative; }
+
+/* Below 1280px: a panel in the reading flow, directly under the byline. */
+.article__working {
+  display: none;
+  max-width: var(--measure-wide);
+  margin: 0 auto calc(var(--rhythm) * 1.4);
+  padding-inline: 1.5rem;
+}
+[data-working] .article__working { display: block; }
+
+.article__working-in {
+  padding: clamp(1.1rem, 2.4vw, 1.5rem);
+  background: var(--c4-proof-surface);
+  border: 1px solid var(--c4-proof-border);
+  border-radius: 2px;
+  animation: article-working-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes article-working-in {
+  from { opacity: 0; transform: translateX(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.article__working-head {
+  margin: 0;
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--c4-proof-text);
+}
+.article__working-head::after {
+  content: '';
+  display: block;
+  width: 2rem;
+  height: 2px;
+  margin-top: 0.6rem;
+  background: var(--c4-proof-accent);
+}
+.article__working-note {
+  margin: 0.8rem 0 0;
+  font-size: var(--t-small);
+  line-height: 1.5;
+  color: var(--c4-proof-muted);
+}
+.article__working .article__sources { margin-top: 1rem; }
+.article__sources--compact li {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--c4-proof-border);
+  font-size: var(--t-meta);
+  line-height: 1.5;
+}
+.article__sources--compact li:first-child { border-top: 0; padding-top: 0; }
+.article__sources--compact li::before { color: var(--c4-proof-accent); }
+.article__sources--compact .article__srctitle {
+  font-size: var(--t-small);
+  line-height: 1.35;
+  color: var(--c4-proof-text);
+}
+.article__sources--compact .article__srcmeta { margin-top: 0.2rem; }
+.article__working-jump {
+  display: inline-block;
+  margin-top: 1rem;
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  color: var(--c4-proof-muted);
+}
+.article__working-jump:hover { color: var(--c4-proof-text); }
+
+/* From 1280px: a sticky rail in the outer margin, clear of the 42rem blocks. */
+@media (min-width: 80rem) {
+  .article__working {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(50% + var(--measure-wide) / 2 + 2rem);
+    width: min(16rem, calc(50% - var(--measure-wide) / 2 - 3.5rem));
+    max-width: none;
+    margin: 0;
+    padding-inline: 0;
+  }
+  .article__working-in { position: sticky; top: 6.5rem; }
+}
+
+/* Ledger numerals in dark. --c4-proof-accent (#C7665F) measures 4.48:1 on
+   the raised proof surface, a hair under the floor for 13px text, in the
+   foot ledger as much as in the rail. One step lighter clears it. */
+:root.dark-mode .article__sources li::before { color: #D8837B; }
+
+/* Narrow: the control becomes a full-width bar under the byline so its
+   two halves never centre-wrap into three lines. */
+@media (max-width: 45.99rem) {
+  .article__verified--btn {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    text-align: left;
+  }
+  .article__verified--btn > span:first-of-type { flex: 1 1 auto; }
+  .article__verified-act { flex: none; margin-left: 0.6rem; }
 }

@@ -53,8 +53,6 @@ import plxGocc from './assets/plx-gocc.webp';
 import plxFreo from './assets/plx-freo.webp';
 import plxHakea from './assets/plx-hakea.webp';
 import plxPeople from './assets/plx-people.webp';
-import plxQuotr from './assets/plx-quotr.webp';
-import plxReturndesk from './assets/plx-returndesk.webp';
 import plxBarrys from './assets/plx-barrys.webp';
 import plxWooster from './assets/plx-wooster.webp';
 import plxJk from './assets/plx-jk.webp';
@@ -79,8 +77,6 @@ const PLX_IMG = {
   'transform-fremantle': plxFreo,
   'transform-hakea': plxHakea,
   'people-power': plxPeople,
-  quotr: plxQuotr,
-  returndesk: plxReturndesk,
   'barrys-drink': plxBarrys,
   'wooster-core': plxWooster,
   'jk-plumbing-solutions': plxJk,

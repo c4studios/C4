@@ -791,7 +791,7 @@ export const INDUSTRY_SURCHARGE_NOTE = 'Professional services industries (legal,
 export const CTA_TEXT = 'Book a Free Discovery Call';
 export const CTA_ROUTE = '/start';
 
-/* ── C4Sight — workplace AI training & workshops ── */
+/* ── C4Site — workplace AI training & workshops ── */
 export const c4SightPackages = [
   {
     key: 'sight-half-day',
@@ -837,5 +837,5 @@ export const c4SightPackages = [
   },
 ];
 
-// Indicative-pricing note for C4Sight surfaces (Foresight page).
+// Indicative-pricing note for C4Site surfaces (Foresight page).
 export const C4SIGHT_PRICING_NOTE = 'Prices are indicative starting points. You get a fixed quote after a short scoping call, based on group size, location and format. All prices in AUD, excluding GST.';

@@ -1184,3 +1184,69 @@
 :root.cw-on-board footer * {
   transition: none !important;
 }
+
+/* ═══ Integration board — the tools section's module (integration-card.jsx) ═══
+   Two rails of tool nodes, orthogonal copper traces into the C4i core, a
+   pulse on each net. A module on the board, not a card on a page: hairline
+   frame, silkscreen corner marks, the deep solder mask behind the traces. */
+.cw-integ {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 28px;
+  border: 1px solid var(--cw-hair);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--cw-deepest);
+}
+@media (min-width: 900px) {
+  .cw-integ { grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr); }
+}
+.cw-integ-visual {
+  position: relative;
+  padding: clamp(14px, 3vw, 28px);
+  background-color: var(--cw-deepest);
+  background-image: radial-gradient(rgba(221, 158, 99, 0.09) 1px, transparent 1.4px);
+  background-size: 14px 14px;
+}
+.cw-integ-corner {
+  position: absolute; width: 14px; height: 14px; pointer-events: none;
+  border-color: var(--cw-copper-dim); border-style: solid; border-width: 0;
+}
+.cw-integ-corner--tl { top: 8px; left: 8px; border-top-width: 1px; border-left-width: 1px; }
+.cw-integ-corner--br { bottom: 8px; right: 8px; border-bottom-width: 1px; border-right-width: 1px; }
+.cw-integ-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.cw-integ-trace { fill: none; stroke: var(--cw-copper-faint); stroke-width: 1.4; }
+.cw-integ-pulse { fill: none; stroke: url(#cw-integ-pulse); stroke-width: 2; stroke-linecap: round; }
+.cw-integ-via { fill: var(--cw-deepest); stroke: var(--cw-copper-dim); stroke-width: 1; }
+.cw-integ-pin { stroke: var(--cw-copper-dim); stroke-width: 1.4; }
+.cw-integ-chip { fill: var(--cw-deep); stroke: var(--cw-copper-dim); stroke-width: 1; }
+.cw-integ-chip-inner { fill: none; stroke: var(--cw-hair-soft); stroke-width: 1; }
+.cw-integ-chip-name { font-family: var(--cw-disp); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; fill: var(--cw-ink); }
+.cw-integ-chip-sub { font-family: var(--cw-mono); font-size: 7px; letter-spacing: 0.14em; fill: var(--cw-mute); }
+.cw-integ-led { fill: var(--cw-led); }
+.cw-integ-node-box { fill: var(--cw-deep); stroke: var(--cw-hair); stroke-width: 1; }
+.cw-integ-icon { color: var(--cw-copper); }
+.cw-integ-label { font-family: var(--cw-mono); font-size: 9.5px; fill: var(--cw-body-ink); }
+.cw-integ-body {
+  display: grid; align-content: center; gap: 12px;
+  padding: clamp(22px, 3.4vw, 40px);
+  border-top: 1px solid var(--cw-hair);
+}
+@media (min-width: 900px) {
+  .cw-integ-body { border-top: 0; border-left: 1px solid var(--cw-hair); }
+}
+.cw-integ-title {
+  margin: 0;
+  font-family: var(--cw-disp);
+  font-size: clamp(1.25rem, 1.9vw, 1.55rem);
+  font-weight: 680;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--cw-ink);
+  text-wrap: balance;
+}
+.cw-integ-desc { margin: 0; font-size: 15px; line-height: 1.6; color: var(--cw-body-ink); max-width: 38ch; text-wrap: pretty; }
+.cw-integ-cta { justify-self: start; margin-top: 6px; }
+@media (max-width: 640px) {
+  .cw-integ-label { font-size: 11px; }
+}

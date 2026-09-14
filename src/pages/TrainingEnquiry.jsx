@@ -63,13 +63,13 @@ export default function TrainingEnquiry() {
   const turnstileToken = useRef(null);
 
   useDocumentHead({
-    title: 'Request a C4Sight workshop',
+    title: 'Request a C4Site workshop',
     description:
-      'Enquire about a C4Sight workplace AI workshop. Tell us your sector, preferred format and rough group size, and the studio replies directly.',
+      'Enquire about a C4Site workplace AI workshop. Tell us your sector, preferred format and rough group size, and the studio replies directly.',
     path: '/ai-training-enquiry',
     jsonLd: breadcrumbSchema([
       { name: 'Home', path: '/' },
-      { name: 'C4Sight', path: '/Foresight' },
+      { name: 'C4Site', path: '/Foresight' },
       { name: 'Request a workshop', path: '/ai-training-enquiry' },
     ]),
   });
@@ -126,7 +126,7 @@ export default function TrainingEnquiry() {
           error={formError}
           onRetry={() => setFormError(null)}
           retryLabel="Back to form"
-          accentLabel="C4Sight enquiry"
+          accentLabel="C4Site enquiry"
           headline="Enquiry received"
           message="We will reply within one business day with options for your team."
         />
@@ -148,7 +148,7 @@ export default function TrainingEnquiry() {
               style={{ backgroundColor: 'var(--c4-accent)' }}
             />
             <span className="text-[10px] uppercase tracking-[0.25em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
-              C4Sight enquiry
+              C4Site enquiry
             </span>
           </div>
           <h1 className="text-[clamp(1.8rem,4.5vw,2.8rem)] font-semibold tracking-[-0.035em] leading-[1.08]" style={{ color: 'var(--c4-text)' }}>

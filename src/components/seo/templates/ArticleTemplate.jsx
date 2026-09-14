@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { resolveLiveSlugs } from '@/content/seo/registry';
 import useStaticMode from '@/hooks/useStaticMode';
-import ArticleSections from '@/components/seo/ArticleSections';
+import ArticleSections, { SourceList } from '@/components/seo/ArticleSections';
 import SeoBreadcrumbs from '@/components/seo/SeoBreadcrumbs';
 import '@/components/seo/article.css';
 
@@ -53,6 +53,33 @@ export default function ArticleTemplate({ entry, content }) {
 
   const verified = entry.verified ? formatDate(entry.verified) : null;
 
+  /* "Show working". Any article with a sources ledger gets a control in
+     the byline; where the registry also carries a verified date, the
+     verification stamp IS that control. Pressed, it lifts the ledger beside
+     the prose (a sticky rail from 1280px, a panel under the byline below
+     that) so a reader can check a figure as they pass it instead of
+     scrolling to the foot and back. The default state is unpressed, which
+     is what the prerenderer captures, and the ledger at the foot never
+     moves: the control is enhancement, never a gate. */
+  const sourceItems = (sections.find((s) => s.kind === 'sources') || {}).items || [];
+  const canWork = sourceItems.length > 0;
+  const sourceCount = sourceItems.length === 1 ? 'One source' : `${sourceItems.length} sources`;
+  const [working, setWorking] = useState(false);
+  const stampRef = useRef(null);
+
+  useEffect(() => {
+    if (!working) return undefined;
+    const onKey = (event) => {
+      if (event.key !== 'Escape') return;
+      setWorking(false);
+      stampRef.current?.focus();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [working]);
+
+  useEffect(() => { setWorking(false); }, [entry.slug]);
+
   const title = Array.isArray(hero.title) ? hero.title.join(' ') : hero.title;
   const dek = hero.intro && hero.intro.length ? hero.intro[0] : entry.dek;
 
@@ -63,7 +90,7 @@ export default function ArticleTemplate({ entry, content }) {
   };
 
   return (
-    <article className="article" style={{ backgroundColor: 'var(--c4-bg)' }}>
+    <article className="article" data-working={working ? '' : undefined} style={{ backgroundColor: 'var(--c4-bg)' }}>
       <header className="article__head">
         <motion.div className="article__col" {...enter}>
           <SeoBreadcrumbs crumbs={crumbs} />
@@ -94,7 +121,39 @@ export default function ArticleTemplate({ entry, content }) {
                 `verified` date, so the stamp can never appear on a page whose
                 figures nobody has actually re-checked at the source. That
                 restraint is the only thing that makes it worth printing. */}
-            {verified && (
+            {canWork ? (
+              <button
+                type="button"
+                ref={stampRef}
+                className={verified
+                  ? 'article__verified article__verified--btn'
+                  : 'article__verified article__verified--btn article__verified--plain'}
+                aria-pressed={working}
+                aria-controls={working ? 'article-working' : undefined}
+                aria-describedby="article-working-hint"
+                onClick={() => setWorking((w) => !w)}
+              >
+                {verified ? (
+                  <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="currentColor" strokeWidth="2.2"
+                      strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M2.5 3.5h11M2.5 8h11M2.5 12.5h7" stroke="currentColor" strokeWidth="2"
+                      strokeLinecap="round" />
+                  </svg>
+                )}
+                <span>
+                  {verified
+                    ? <>Figures verified <b>{verified}</b></>
+                    : <>{sourceCount}, <b>read at the document</b></>}
+                </span>
+                <span className="article__verified-act" aria-hidden="true">
+                  {working ? 'Hide working' : 'Show working'}
+                </span>
+              </button>
+            ) : verified ? (
               <span className="article__verified">
                 <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="currentColor" strokeWidth="2.2"
@@ -102,12 +161,38 @@ export default function ArticleTemplate({ entry, content }) {
                 </svg>
                 <span>Figures verified <b>{verified}</b></span>
               </span>
+            ) : null}
+            {canWork && (
+              <span id="article-working-hint" className="article__sr">
+                Shows the sources this article was checked against, beside the text.
+              </span>
             )}
           </div>
         </motion.div>
       </header>
 
       <div className="article__body">
+        {/* Rendered only while open, so the prerendered HTML carries the
+            ledger once (at the foot) and the rail is never hidden markup. */}
+        {canWork && working && (
+          <aside
+            id="article-working"
+            className="article__working"
+            aria-label="The working: sources for this article"
+          >
+            <div className="article__working-in">
+              <p className="article__working-head">The working</p>
+              <p className="article__working-note">
+                {sourceCount}, each read at the document.
+                {verified ? ` Figures verified ${verified}.` : ''}
+              </p>
+              <SourceList items={sourceItems} compact />
+              <a className="article__working-jump" href="#article-sources">
+                The full ledger sits at the foot of the article
+              </a>
+            </div>
+          </aside>
+        )}
         <ArticleSections sections={sections} />
 
         {faqs.length > 0 && (

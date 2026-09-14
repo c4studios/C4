@@ -42,7 +42,7 @@
 
   background: var(--c4-bg);
   color: var(--c4-text);
-  font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
 }
 
 :root.dark-mode .ct-page {
@@ -91,7 +91,7 @@
 
 /* ── Left column: promise ────────────────────────────────────────────── */
 .ct-h1 {
-  font-family: 'Archivo', 'Geist', sans-serif;
+  font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 750;
   font-stretch: 120%;
   font-size: clamp(2.75rem, 6vw, 5.25rem);
@@ -114,7 +114,7 @@
 /* Telemetry — Geist Mono, tabular, states timezone fact + the standing
    promise. Never fakes presence. */
 .ct-telemetry {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', ui-monospace, monospace;
   font-size: 0.8125rem;
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
@@ -264,14 +264,14 @@
 }
 
 .ct-node-label {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', ui-monospace, monospace;
   font-size: 0.75rem;
   letter-spacing: 0.14em;
   color: var(--ct-muted);
 }
 
 .ct-node-mail {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', ui-monospace, monospace;
   font-size: 0.8125rem;
   letter-spacing: 0.02em;
   color: var(--c4-text);
@@ -286,7 +286,7 @@
 }
 
 .ct-copy {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', ui-monospace, monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.14em;
   color: var(--ct-muted);
@@ -437,7 +437,7 @@ textarea.ct-input {
 .ct-odo {
   display: inline-flex;
   align-items: baseline;
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', ui-monospace, monospace;
   font-size: 0.8125rem;
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
@@ -549,7 +549,7 @@ textarea.ct-input {
 }
 
 .ct-receipt-stamp {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', ui-monospace, monospace;
   font-size: 1rem;
   letter-spacing: 0.1em;
   font-variant-numeric: tabular-nums;
@@ -558,7 +558,7 @@ textarea.ct-input {
 }
 
 .ct-receipt-line {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', ui-monospace, monospace;
   font-size: 0.8125rem;
   line-height: 1.7;
   letter-spacing: 0.02em;

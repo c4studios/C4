@@ -32,7 +32,7 @@
   /* Board sample (quotes /ServiceAI) — solder-mask BLUE, matched to the
      retuned /ServiceAI board (--cw-board / --cw-deep) so the swatch and
      its destination are literally the same material. Memo §6: this
-     releases chalk-green to C4Sight as its exclusive world. */
+     releases chalk-green to C4Site as its exclusive world. */
   --fk-board: #0e2f4e;
   --fk-board-deep: #0a2440;
   --fk-silk: #edf5ee;
@@ -44,7 +44,7 @@
   /* The one constant carried into both worlds */
   --fk-red: var(--c4-accent, #c23030);
 
-  --fk-mono-pa: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --fk-mono-pa: 'B612 Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --fk-mono-cw: 'B612 Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 

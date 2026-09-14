@@ -205,7 +205,7 @@ function useLogoColours(context) {
     const mono = { ...COLOURS.mono };
 
     /* Dark / footer overrides */
-    if (isDark || context === 'footer') {
+    if (isDark || context === 'footer' || context === 'header') {
       dormant.fourBody = '#606264';
       dormant.fourArm = '#707274';
       dormant.cArc = '#d0cecc';
@@ -220,11 +220,11 @@ function useLogoColours(context) {
      * Light mode gets a more pronounced bubble so the pale C is legible;
      * dark mode keeps the existing subtle treatment.
      */
-    const backdrop = (isDark || context === 'footer')
+    const backdrop = (isDark || context === 'footer' || context === 'header')
       ? { fill: '#555', opacity: 0.15 }
       : { fill: '#3a3a3c', opacity: 0.28 };
 
-    const cShadow = (isDark || context === 'footer')
+    const cShadow = (isDark || context === 'footer' || context === 'header')
       ? { floodOpacity: 0.22 }
       : { floodOpacity: 0.34 };
 
@@ -467,9 +467,12 @@ export default function C4Logo({
     colourTl.set(diagonalGrowthRef.current, { opacity: 1, scaleY: 0 }, FOUR_BUILD.diagonal.at);
     colourTl.set(crossArmRef.current, { opacity: 1, scaleX: 0 }, FOUR_BUILD.crossArm.at);
 
-    colourTl.to(stemLowerRef.current, { scaleY: 1, duration: FOUR_BUILD.stemLower.duration, ease: 'none' }, FOUR_BUILD.stemLower.at);
-    colourTl.to(stemUpperRef.current, { scaleY: 1, duration: FOUR_BUILD.stemUpper.duration, ease: 'none' }, FOUR_BUILD.stemUpper.at);
-    colourTl.to(diagonalGrowthRef.current, { scaleY: 1, duration: FOUR_BUILD.diagonal.duration, ease: 'none' }, FOUR_BUILD.diagonal.at);
+    /* Each stroke of the 4 is drawn, not extruded: fast off the mark and
+       decelerating into its end, the way a pen stroke lands. The three
+       strokes overlap slightly so the eye reads one continuous hand. */
+    colourTl.to(stemLowerRef.current, { scaleY: 1, duration: FOUR_BUILD.stemLower.duration + 0.06, ease: 'power3.out' }, FOUR_BUILD.stemLower.at);
+    colourTl.to(stemUpperRef.current, { scaleY: 1, duration: FOUR_BUILD.stemUpper.duration + 0.06, ease: 'power3.out' }, FOUR_BUILD.stemUpper.at - 0.04);
+    colourTl.to(diagonalGrowthRef.current, { scaleY: 1, duration: FOUR_BUILD.diagonal.duration + 0.04, ease: 'power2.inOut' }, FOUR_BUILD.diagonal.at - 0.06);
 
     /* Body cross-dissolve: colour seal in, mono ghost out, construction
        strokes out — all on the same 0.20s window so it reads as one motion. */
@@ -481,52 +484,45 @@ export default function C4Logo({
     colourTl.to(stemUpperRef.current, { opacity: 0, duration: BODY_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.bodySealAt - 0.04);
     colourTl.to(diagonalGrowthRef.current, { opacity: 0, duration: BODY_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.bodySealAt - 0.04);
 
-    colourTl.to(crossArmRef.current, { scaleX: 1, duration: FOUR_BUILD.crossArm.duration, ease: 'power2.in' }, FOUR_BUILD.crossArm.at);
+    /* The cross arm is the one stroke that strikes: it lands with a small
+       overshoot, which is what knocks the first letter over. */
+    colourTl.to(crossArmRef.current, { scaleX: 1, duration: FOUR_BUILD.crossArm.duration + 0.07, ease: 'back.out(1.7)' }, FOUR_BUILD.crossArm.at);
 
     colourTl.to(armSealRef.current, { opacity: 1, duration: ARM_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.armSealAt - 0.04);
     colourTl.to(armBaseRef.current, { opacity: 0, duration: ARM_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.armSealAt - 0.04);
     colourTl.to(stemLowerRef.current, { opacity: 0, duration: ARM_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.armSealAt - 0.04);
     colourTl.to(crossArmRef.current, { opacity: 0, duration: ARM_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.armSealAt - 0.04);
 
-    /* -- Per-letter spring domino chain -- */
-
+    /* -- Per-letter domino chain --
+       Rebuilt 9 September 2026. The old chain sampled a spring into sixty
+       linear keyframes per letter, which read as jitter. Each letter now
+       has three continuous tweens: a hair of tension as the push arrives,
+       the knock over to its peak angle on a decelerating fall, and one
+       elastic recovery back to upright whose period lengthens down the
+       word, so the wobble softens as the energy runs out. The italic morph
+       rides the swing. The timing of each impact still comes from the
+       spring model, so the chain keeps its cadence. */
+    const KNOCK = 0.16;
     LETTER_SPRINGS.forEach((spring, index) => {
       const letter = wordLetters[index];
       const pair = C4_WORDMARK_MORPH_PAIRS[index];
       if (!letter || !pair.normalized.normalizedPaths) return;
 
       const impactAt = impactTimes[index];
-      const letterBox = letter.getBBox();
-      const hingeHeight = letterBox.height;
-      const { keyframes, stepDur, numKeyframes, tPeak, resolveDuration } = computeSpringTrajectory(spring);
+      const hingeHeight = letter.getBBox().height;
+      const swing = Math.abs(spring.peakAngle);
+      const fall = KNOCK + swing * 0.004;
+      const dip = hingeTranslationY(spring.peakAngle, hingeHeight);
+      const period = (0.34 + index * 0.05).toFixed(2);
 
-      for (let ki = 0; ki <= numKeyframes; ki++) {
-        const kf = keyframes[ki];
-        const kfTime = impactAt + ki * stepDur;
-        if (ki === 0) {
-          colourTl.set(letter, { rotation: kf.rotation, y: hingeTranslationY(kf.rotation, hingeHeight) }, kfTime);
-        } else {
-          colourTl.to(letter, {
-            rotation: kf.rotation, y: hingeTranslationY(kf.rotation, hingeHeight),
-            duration: stepDur, ease: 'none',
-          }, kfTime);
-        }
-      }
-
-      const springToPeak = tPeak - TENSION_DURATION;
-      const morphStart = impactAt + TENSION_DURATION + springToPeak * 0.25;
-      const morphDuration = Math.max(0.05, springToPeak * 0.60);
-      colourTl.to(letter, { attr: { d: pair.normalized.normalizedPaths.italicPath }, duration: morphDuration, ease: 'sine.inOut' }, morphStart);
-
-      const settleStart = impactAt + resolveDuration;
-      colourTl.to(letter, { rotation: 0, y: 0, duration: 0.08, ease: 'power2.out' }, settleStart);
+      colourTl.to(letter, { rotation: spring.tensionAngle, duration: 0.05, ease: 'power1.in' }, impactAt);
+      colourTl.to(letter, { rotation: -swing, y: dip, duration: fall, ease: 'power2.out' }, impactAt + 0.05);
+      colourTl.to(letter, { rotation: 0, y: 0, duration: spring.totalDuration, ease: `elastic.out(1, ${period})` }, impactAt + 0.05 + fall);
+      colourTl.to(letter, { attr: { d: pair.normalized.normalizedPaths.italicPath }, duration: 0.3, ease: 'sine.inOut' }, impactAt + 0.06);
     });
 
     const lockTime = Math.max(
-      ...LETTER_SPRINGS.map((sp, i) => {
-        const { resolveDuration: rd } = computeSpringTrajectory(sp);
-        return impactTimes[i] + rd + 0.08;
-      })
+      ...LETTER_SPRINGS.map((sp, i) => impactTimes[i] + 0.05 + KNOCK + Math.abs(sp.peakAngle) * 0.004 + sp.totalDuration)
     );
     wordLetters.forEach((letter) => {
       if (letter) colourTl.set(letter, { rotation: 0, y: 0, x: 0 }, lockTime);
@@ -544,61 +540,43 @@ export default function C4Logo({
       onReverseComplete: () => { stageRef.current = 2; },
     });
 
+    /* The reset, rebuilt 9 September 2026. The word straightens back to
+       upright letter by letter, then lifts off the baseline and fades, the
+       way type is picked up off a bench; it no longer crushes to zero
+       height. The 4 and the C do not un-draw themselves stroke by stroke:
+       the colour cross-dissolves back to the dormant greys while the C's
+       iris closes, so the whole mark settles in one motion. */
     wordLetters.forEach((letter, i) => {
       const pair = C4_WORDMARK_MORPH_PAIRS[i];
       if (!pair.normalized.normalizedPaths) return;
       const uprightPath = pair.normalized.normalizedPaths.uprightPath || pair.raw.uprightPath;
-      const delay = i * 0.025;
-      dormantTl.to(letter, { attr: { d: uprightPath }, duration: 0.28, ease: 'power2.inOut' }, delay);
+      dormantTl.to(letter, { attr: { d: uprightPath }, duration: 0.26, ease: 'power2.inOut' }, i * 0.02);
     });
-
     wordLetters.forEach((letter, i) => {
-      const delay = 0.26 + i * 0.02;
-      dormantTl.to(letter, { opacity: 0.5, duration: 0.16, ease: 'power2.in' }, delay);
+      dormantTl.to(letter, { y: -7, opacity: 0, duration: 0.3, ease: 'power2.in' }, 0.16 + i * 0.03);
     });
 
-    wordLetters.forEach((letter, i) => {
-      const delay = 0.38 + i * 0.035;
-      dormantTl.to(letter, { scaleY: 0, y: 1.5, opacity: 0, duration: 0.34, ease: 'power3.in' }, delay);
-    });
+    dormantTl.to([bodySealRef.current, armSealRef.current], { opacity: 0, duration: 0.42, ease: 'power2.inOut' }, 0.3);
+    dormantTl.to([bodyDormantRef.current, armDormantRef.current], { opacity: 1, duration: 0.42, ease: 'power2.inOut' }, 0.3);
+    dormantTl.set([stemLowerRef.current, stemUpperRef.current, diagonalGrowthRef.current, crossArmRef.current], { opacity: 0 }, 0.3);
+    dormantTl.to([bodyBaseRef.current, armBaseRef.current], { opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 0.3);
 
-    dormantTl.set(stemLowerRef.current, { opacity: 1 }, 0.4);
-    dormantTl.set(crossArmRef.current, { opacity: 1 }, 0.4);
-    dormantTl.to(armSealRef.current, { opacity: 0, duration: 0.06, ease: 'none' }, 0.4);
-
-    dormantTl.to(crossArmRef.current, { scaleX: 0, duration: 0.18, ease: 'power2.out' }, 0.44);
-
-    dormantTl.set(stemUpperRef.current, { opacity: 1 }, 0.5);
-    dormantTl.set(diagonalGrowthRef.current, { opacity: 1 }, 0.5);
-    dormantTl.to(bodySealRef.current, { opacity: 0, duration: 0.06, ease: 'none' }, 0.5);
-
-    dormantTl.to(diagonalGrowthRef.current, { scaleY: 0, duration: 0.28, ease: 'power2.inOut' }, 0.54);
-    dormantTl.to(stemUpperRef.current, { scaleY: 0, duration: 0.24, ease: 'power2.inOut' }, 0.62);
-    dormantTl.to(stemLowerRef.current, { scaleY: 0, duration: 0.22, ease: 'power2.inOut' }, 0.72);
-
-    dormantTl.to(stemUpperRef.current, { opacity: 0, duration: 0.08 }, 0.84);
-    dormantTl.to(diagonalGrowthRef.current, { opacity: 0, duration: 0.08 }, 0.80);
-    dormantTl.to(stemLowerRef.current, { opacity: 0, duration: 0.08 }, 0.92);
-    dormantTl.to(crossArmRef.current, { opacity: 0, duration: 0.08 }, 0.60);
-
-    dormantTl.to(cClipRectRef.current, { attr: { r: 0 }, duration: 0.58, ease: 'power2.inOut' }, 0.48);
-    dormantTl.to(cColourRef.current, { opacity: 0, duration: 0.05 }, 1.04);
-
-    dormantTl.to(cBaseRef.current, { opacity: 1, duration: 0.35, ease: 'power2.inOut' }, 0.65);
-    dormantTl.to(bodyDormantRef.current, { opacity: 1, duration: 0.35, ease: 'power2.inOut' }, 0.70);
-    dormantTl.to(armDormantRef.current, { opacity: 1, duration: 0.35, ease: 'power2.inOut' }, 0.70);
-
-    dormantTl.to(bodyBaseRef.current, { opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 0.70);
-    dormantTl.to(armBaseRef.current, { opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 0.70);
+    dormantTl.to(cClipRectRef.current, { attr: { r: 0 }, duration: 0.56, ease: 'power3.inOut' }, 0.3);
+    dormantTl.to(cBaseRef.current, { opacity: 1, duration: 0.36, ease: 'power2.inOut' }, 0.42);
+    dormantTl.to(cColourRef.current, { opacity: 0, duration: 0.06 }, 0.86);
 
     if (showBackdrop && backdropRef.current) {
       dormantTl.to(backdropRef.current, {
         attr: { cx: 206, cy: 389, rx: 165, ry: 120 },
         duration: 0.45, ease: 'power2.inOut',
-      }, 0.80);
+      }, 0.5);
     }
 
-    dormantTl.set(wordLetters, { y: 0, rotation: 0, x: 0, scaleY: 1, opacity: 0 }, 1.30);
+    dormantTl.set(stemLowerRef.current, { scaleY: 0 }, 0.9);
+    dormantTl.set(stemUpperRef.current, { scaleY: 0 }, 0.9);
+    dormantTl.set(diagonalGrowthRef.current, { scaleY: 0 }, 0.9);
+    dormantTl.set(crossArmRef.current, { scaleX: 0 }, 0.9);
+    dormantTl.set(wordLetters, { y: 0, rotation: 0, x: 0, scaleY: 1, opacity: 0 }, 0.95);
 
     dormantTlRef.current = dormantTl;
 

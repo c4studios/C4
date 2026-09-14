@@ -14,8 +14,8 @@
   --pa-white: #ffffff;
   --pa-footer-mono: #9aa0a7;
 
-  --pa-sans: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --pa-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --pa-sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --pa-mono: 'B612 Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   background: var(--pa-bg);
   color: var(--pa-body);

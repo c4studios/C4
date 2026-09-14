@@ -10,7 +10,7 @@ import { submitPreviewDownload } from '@/api/submissions';
 
 const ease = [0.22, 1, 0.36, 1];
 
-/* The five C4Sight series, in age order — the copy mirrors the ungated section
+/* The five C4Site series, in age order — the copy mirrors the ungated section
    on /ai-training-for-schools so the two surfaces never drift. `group` maps the
    email deep-links (#primary → S1+S2, #secondary → S3+S4, #staff → S5) onto a
    pre-selection, so a principal who clicks "download both" in a cold email lands
@@ -52,7 +52,7 @@ function deliverPack(file) {
   a.remove();
 }
 
-export default function C4SightPreviews() {
+export default function C4SitePreviews() {
   const [selected, setSelected] = useState(() => new Set());
   const [form, setForm] = useState({ first_name: '', school_name: '', email: '', _gotcha: '' });
   const [status, setStatus] = useState('idle'); // idle | submitting | done
@@ -61,14 +61,14 @@ export default function C4SightPreviews() {
   const sourceRef = useRef('website-organic');
 
   useDocumentHead({
-    title: 'Free C4Sight classroom AI previews | C4 Studios',
+    title: 'Free C4Site classroom AI previews | C4 Studios',
     description:
-      'Download the free C4Sight preview packs — a real, runnable AI lesson for every age group, from Pre-primary to Staff PD. No devices, no student data, curriculum-mapped.',
+      'Download the free C4Site preview packs — a real, runnable AI lesson for every age group, from Pre-primary to Staff PD. No devices, no student data, curriculum-mapped.',
     path: '/c4sight-previews',
     jsonLd: [
       breadcrumbSchema([
         { name: 'Home', path: '/' },
-        { name: 'C4Sight', path: '/Foresight' },
+        { name: 'C4Site', path: '/Foresight' },
         { name: 'Free previews', path: '/c4sight-previews' },
       ]),
     ],
@@ -138,9 +138,9 @@ export default function C4SightPreviews() {
   return (
     <div style={{ backgroundColor: 'var(--c4-bg)', color: 'var(--c4-text)' }}>
       <PageHero
-        label="C4Sight · Free previews"
+        label="C4Site · Free previews"
         titleLines={['Take a real lesson', 'for a test drive.']}
-        description="Every C4Sight incursion runs as five series, one per age group. Each preview is a complete, runnable classroom activity — no devices, no student data, curriculum-mapped — plus a look at what the live incursion adds. Choose what fits your school and they download on the spot."
+        description="Every C4Site incursion runs as five series, one per age group. Each preview is a complete, runnable classroom activity — no devices, no student data, curriculum-mapped — plus a look at what the live incursion adds. Choose what fits your school and they download on the spot."
       />
 
       <section className="pb-20 md:pb-28" style={{ backgroundColor: 'var(--c4-bg)' }}>
@@ -402,7 +402,7 @@ export default function C4SightPreviews() {
               className="inline-flex shrink-0 items-center gap-2 rounded-full px-7 py-3.5 text-[11px] uppercase tracking-[0.14em] font-semibold transition-opacity duration-200 hover:opacity-75"
               style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
             >
-              The C4Sight overview
+              The C4Site overview
               <ArrowRight size={13} strokeWidth={2} />
             </Link>
           </motion.div>

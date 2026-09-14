@@ -46,7 +46,7 @@
   --color-5: 295 100% 45%;
 
   --lv-sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
-  --lv-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --lv-mono: 'B612 Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --lv-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   background: var(--lv-page);
@@ -2215,19 +2215,41 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 18px 40px;
-  margin-bottom: clamp(10px, 2vh, 22px);
+  /* Clear air above the drum: the front face leans toward the camera and
+     used to rise into this heading. */
+  margin-bottom: clamp(28px, 4.5vh, 52px);
 }
+.lv-concepts-head > div { flex: 1 1 520px; min-width: 0; }
+.lv-concepts-head .lv-link { flex: none; white-space: nowrap; }
 
+/* The stage. Its height is set from the tallest card, the front-face
+   perspective scale and the floor reflection (ConceptCarousel measure()),
+   so the drum can never spill into the heading above or the note below.
+   The clamp is only the pre-measure fallback. The horizontal mask lets
+   the drum's far faces dissolve at the edges instead of hard-clipping
+   against the band. */
 .lv-cyl-wrap {
   position: relative;
-  height: clamp(360px, 52vh, 470px);
+  height: clamp(420px, 56vh, 560px);
   display: flex;
   align-items: center;
   justify-content: center;
-  perspective: 1150px;
+  perspective: 1600px;
   cursor: grab;
   touch-action: pan-y;
 }
+.lv-cyl-wrap::before,
+.lv-cyl-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 12%;
+  z-index: 3;
+  pointer-events: none;
+}
+.lv-cyl-wrap::before { left: 0; background: linear-gradient(90deg, var(--lv-band), transparent); }
+.lv-cyl-wrap::after { right: 0; background: linear-gradient(270deg, var(--lv-band), transparent); }
 
 .lv-cyl-wrap[data-dragging] {
   cursor: grabbing;
@@ -2251,7 +2273,7 @@
 
 .lv-cpt-card {
   display: block;
-  width: clamp(240px, 24vw, 330px);
+  width: clamp(236px, 21vw, 300px);
   border-radius: 14px;
   overflow: hidden;
   background: #fff;
@@ -2317,8 +2339,17 @@
 }
 
 .lv-concepts-foot {
-  margin-top: clamp(14px, 2.5vh, 26px);
+  margin-top: clamp(22px, 3.5vh, 40px);
   text-align: center;
+}
+/* The note under the drum: a sentence, not a tracked strip. */
+.lv-concepts-note {
+  margin: 0 auto;
+  max-width: 62ch;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--lv-meta);
+  text-wrap: pretty;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -2542,10 +2573,9 @@
   bottom: clamp(4px, 1.2vh, 14px);
   left: 50%;
   translate: -50%;
-  font-family: var(--lv-mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: var(--lv-sans);
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
   color: var(--lv-meta);
   opacity: 1;
   transition: opacity 0.5s var(--lv-ease);
@@ -2642,10 +2672,9 @@
 .lv-rail-hint {
   margin: 0;
   text-align: center;
-  font-family: var(--lv-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-family: var(--lv-sans);
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
   color: var(--lv-meta);
 }
 

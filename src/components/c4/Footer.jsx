@@ -4,7 +4,6 @@ import { ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { liveSeoPages } from '@/content/seo/registry';
 import { PROFILES } from '@/lib/seo';
-import { PRODUCTS } from '../software/productData';
 import C4Logo from './C4Logo';
 import C4iWordmark from './C4iWordmark';
 
@@ -14,12 +13,11 @@ const groups = [
     links: [
       { label: 'About', page: 'About' },
       { label: 'Portfolio', page: 'Portfolio' },
-      { label: 'C4 Originals', page: 'Software' },
       // The pledge had ZERO inbound internal links after launch (routing audit,
       // 2026-08-01) — a published position statement nobody could click to.
       // The footer link puts it one click from every page.
       { label: 'How we use AI', to: '/how-we-use-ai' },
-      { label: 'Insights', to: '/insights' },
+      { label: 'Articles', to: '/insights' },
     ]
   },
   {
@@ -28,7 +26,7 @@ const groups = [
       { label: 'Web & Applications', page: 'ServiceWeb' },
       { key: 'C4i', label: <C4iWordmark />, page: 'C4i' },
       { label: 'C4 Lens', page: 'Lens' },
-      { label: 'C4Sight', page: 'Foresight' },
+      { label: 'C4Site', page: 'Foresight' },
       // The orphaned Private AI offering now has a crawlable home here.
       { label: 'Private AI', to: '/private-ai' },
       { label: 'Lead Engine', to: '/lead-engine' },
@@ -37,6 +35,7 @@ const groups = [
   {
     title: 'Connect',
     links: [
+      { label: 'Contact', page: 'Contact' },
       { label: 'Start a Project', page: 'StartProject' },
       { label: 'Support', page: 'Support' },
       // Sourced from PROFILES so the visible links and the sameAs entity
@@ -59,14 +58,9 @@ export default function Footer() {
     .filter((p) => p.type === 'pillar' || p.slug === 'how-much-does-a-website-cost-perth')
     .map((p) => ({ label: p.name, to: `/${p.slug}` }));
 
-  // Dedicated product sites (each on its own domain/subdomain), sourced from productData.
-  const productLinks = PRODUCTS.filter((p) => p.siteUrl).map((p) => ({ label: p.name, href: p.siteUrl }));
-  const withProducts = productLinks.length
-    ? [...groups, { title: 'Product sites', links: productLinks }]
-    : groups;
   const footerGroups = seoLinks.length
-    ? [...withProducts, { title: 'Perth & WA', links: seoLinks }]
-    : withProducts;
+    ? [...groups, { title: 'Perth & WA', links: seoLinks }]
+    : groups;
 
   // Index columns adapt to the live group count. Literal classes so the
   // Tailwind JIT keeps them.
@@ -144,7 +138,7 @@ export default function Footer() {
               className="text-[10.5px] uppercase tracking-[0.24em]"
               style={{ color: 'var(--c4-footer-text-dim)' }}
             >
-              Studio &amp; Software
+              Web · AI · Photography · Training
             </span>
           </div>
         </div>

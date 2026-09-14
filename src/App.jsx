@@ -17,15 +17,13 @@ import WelcomeReturnButton from './components/welcome/WelcomeReturnButton';
 // so the post-scan experience stays focused and fast. Lazy so it stays out of
 // the main bundle.
 const Welcome = lazy(() => import('./pages/Welcome'));
-const HeroLab = lazy(() => import('./pages/HeroLab'));
-const HelixLab = lazy(() => import('./pages/HelixLab'));
 
 // Private AI — offering landing page (flat slug). Lazy so GSAP-heavy page
 // code stays out of the main bundle.
 const PrivateAI = lazy(() => import('./pages/PrivateAI'));
 
-// C4Sight previews — the tracked lead-magnet download page (flat slug).
-const C4SightPreviews = lazy(() => import('./pages/C4SightPreviews'));
+// C4Site previews — the tracked lead-magnet download page (flat slug).
+const C4SitePreviews = lazy(() => import('./pages/C4SitePreviews'));
 
 // How we use AI — the published position statement (flat slug).
 const HowWeUseAI = lazy(() => import('./pages/HowWeUseAI'));
@@ -66,7 +64,7 @@ function PageViewTracker() {
   return null;
 }
 
-/* /CaseStudy/<slug> and /SoftwareProduct/<slug> are the REAL routes: they are
+/* /CaseStudy/<slug> is the REAL route: it is
    what the sitemap lists, what the prerenderer writes real HTML to, and what
    each page now declares as its canonical.
 
@@ -94,28 +92,6 @@ function App() {
               </Suspense>
             }
           />
-          {/* Internal design-lab experiments — dev-only, never shipped to
-              production (unlinked, absent from the sitemap; no back chrome). */}
-          {import.meta.env.DEV && (
-            <>
-              <Route
-                path="/hero-lab"
-                element={
-                  <Suspense fallback={null}>
-                    <HeroLab />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/helix-lab"
-                element={
-                  <Suspense fallback={null}>
-                    <HelixLab />
-                  </Suspense>
-                }
-              />
-            </>
-          )}
           <Route path="/" element={
             <LayoutWrapper currentPageName={mainPageKey}>
               <MainPage />
@@ -163,11 +139,11 @@ function App() {
               </Suspense>
             </LayoutWrapper>
           } />
-          {/* C4Sight previews — tracked lead-magnet download page (flat slug) */}
+          {/* C4Site previews — tracked lead-magnet download page (flat slug) */}
           <Route path="/c4sight-previews" element={
-            <LayoutWrapper currentPageName="C4SightPreviews">
+            <LayoutWrapper currentPageName="C4SitePreviews">
               <Suspense fallback={null}>
-                <C4SightPreviews />
+                <C4SitePreviews />
               </Suspense>
             </LayoutWrapper>
           } />
@@ -209,11 +185,6 @@ function App() {
           <Route path="/CaseStudy/:slug" element={
             <LayoutWrapper currentPageName="CaseStudy">
               <Pages.CaseStudy />
-            </LayoutWrapper>
-          } />
-          <Route path="/SoftwareProduct/:slug" element={
-            <LayoutWrapper currentPageName="SoftwareProduct">
-              <Pages.SoftwareProduct />
             </LayoutWrapper>
           } />
           <Route path="/StartProject" element={<LegacyStartProjectRedirect />} />
