@@ -63,6 +63,24 @@ export const TESTIMONIALS = [
     caseStudySlug: 'sharp-bricklaying',
     featured: true,
   },
+  /* Google reviews, relayed by Caleb on 15 Sep 2026. Verbatim, including the
+     paragraph breaks in Aaron's (the renderers keep them). */
+  {
+    id: 9,
+    quote: "Caleb created our new webpage for us, the experience was an absolute breeze and the final product was outstanding. He takes the hassle out of everything to do with our webpage including updates and staying present on google etc.",
+    name: 'Tom Brady',
+    role: 'Brady Electrical',
+    caseStudySlug: 'brady-electrical',
+    featured: true,
+  },
+  {
+    id: 10,
+    quote: "Caleb did an awesome job building our new website for Aqua-Safe Plumbing & Maintenance. From start to finish, he was easy to deal with, responsive and took the time to understand our business and what we wanted to achieve.\n\nHe made the whole process straightforward, communicated well throughout and was always happy to make changes and offer advice when needed. The finished website looks professional, is easy to navigate and represents our business exactly how we wanted.\n\nReally happy with the end result and would definitely recommend Caleb to anyone looking for a reliable and professional website designer.",
+    name: 'Aaron Williams',
+    role: 'Aqua-Safe Plumbing & Maintenance',
+    caseStudySlug: 'aqua-safe-plumbing',
+    featured: true,
+  },
 ];
 
 export function getFeaturedTestimonials() {

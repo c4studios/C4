@@ -10,7 +10,7 @@ C4 Studios operates across four arms under one roof:
 - **Web** — custom websites and web apps, redesigns, e-commerce, landing pages, SEO and ongoing support.
 - **C4i (AI)** — AI automations, agents, workflow automation, and private AI systems that run on your own hardware or in the cloud.
 - **C4 Lens** — brand photography, videography, drone/aerial work and motion graphics.
-- **C4Sight** — practical AI training, workshops and incursions for workplaces and schools.
+- **C4Site** — practical AI training, workshops and incursions for workplaces and schools.
 
 Founded 2022 by Caleb Scott. Serving Perth, Fremantle and Western Australia
 (and remote clients Australia-wide). Every project is delivered directly by the
@@ -25,10 +25,9 @@ person building it.
 - [Private AI systems](https://c4studios.com.au/private-ai): AI installed on your own hardware — nothing leaves the building. Tiers from $1,600.
 - [AI services](https://c4studios.com.au/ServiceAI): How C4 applies AI to real business workflows.
 - [C4 Lens — photography & video](https://c4studios.com.au/Lens): Brand photography, videography, drone work and motion graphics.
-- [C4Sight — AI training](https://c4studios.com.au/Foresight): Practical AI workshops for workplaces and schools.
+- [C4Site — AI training](https://c4studios.com.au/Foresight): Practical AI workshops for workplaces and schools.
 - [Lead Engine](https://c4studios.com.au/lead-engine): Done-for-you lead generation system.
 - [Portfolio](https://c4studios.com.au/Portfolio): Selected client work and case studies.
-- [C4 Originals (software)](https://c4studios.com.au/software): In-house SaaS products built by C4 Studios.
 - [Start a project](https://c4studios.com.au/start): Begin a new engagement with C4 Studios.
 - [Support & contact](https://c4studios.com.au/Support): Get in touch or request help.
 
@@ -58,6 +57,9 @@ person building it.
 - [Tidy Gardens Australia](https://c4studios.com.au/CaseStudy/tidy-gardens-australia): Website for a Perth gardening and landscaping business.
 - [RocksStream — The Rocks Church](https://c4studios.com.au/CaseStudy/rocksstream): Motion graphics and interactive content for a church media series.
 - [GoCC](https://c4studios.com.au/CaseStudy/gocc): Website performance and functionality overhaul.
+- [Sharp Bricklaying](https://c4studios.com.au/CaseStudy/sharp-bricklaying): Website for a Perth bricklayer, with drone aerials and a multi-job gallery.
+- [Brady Electrical](https://c4studios.com.au/CaseStudy/brady-electrical): Website for a Neerabup electrician, built around a live single-line diagram of the Perth metro.
+- [Aqua-Safe Plumbing & Maintenance](https://c4studios.com.au/CaseStudy/aqua-safe-plumbing): Website for a Perth plumbing and gas fitting business, organised by problem and by suburb.
 
 ## Contact
 

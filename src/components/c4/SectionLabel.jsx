@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import useStaticMode from '@/hooks/useStaticMode';
 
 export default function SectionLabel({ text, color = "neutral" }) {
+  const staticMode = useStaticMode();
   const colorMap = {
     neutral: 'var(--c4-text-subtle)',
     red: 'var(--c4-accent)',
@@ -10,9 +12,7 @@ export default function SectionLabel({ text, color = "neutral" }) {
 
   return (
     <motion.span
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: "-100px" }}
+      {...(staticMode ? {} : { initial: { opacity: 0 }, whileInView: { opacity: 1 }, viewport: { once: true, margin: "-100px" } })}
       transition={{ duration: 0.6 }}
       className="inline-block text-[11px] uppercase tracking-[0.2em] font-medium"
       style={{ color: colorMap[color] || colorMap.neutral }}

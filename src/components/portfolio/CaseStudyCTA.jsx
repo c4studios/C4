@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import useStaticMode from '@/hooks/useStaticMode';
 
 const ease = [0.22, 1, 0.36, 1];
 
 export default function CaseStudyCTA() {
+  const staticMode = useStaticMode();
   return (
     <motion.section
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
+      {...(staticMode ? {} : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-60px' } })}
       transition={{ duration: 0.55, ease }}
       className="py-20 md:py-28"
     >

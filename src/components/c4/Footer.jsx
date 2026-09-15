@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { liveSeoPages } from '@/content/seo/registry';
-import { PROFILES } from '@/lib/seo';
+import { PROFILES, PHONE } from '@/lib/seo';
 import C4Logo from './C4Logo';
 import C4iWordmark from './C4iWordmark';
 
@@ -134,6 +134,13 @@ export default function Footer() {
             >
               Perth · Western Australia
             </span>
+            <a
+              href={`tel:${PHONE.e164}`}
+              className="text-[13px] tabular-nums tracking-[0.02em] py-1 hover:underline underline-offset-4"
+              style={{ color: 'var(--c4-footer-text)' }}
+            >
+              {PHONE.display}
+            </a>
             <span
               className="text-[10.5px] uppercase tracking-[0.24em]"
               style={{ color: 'var(--c4-footer-text-dim)' }}

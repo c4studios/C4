@@ -98,7 +98,7 @@ export default function ArticleTemplate({ entry, content }) {
           {dek && <p className="article__dek">{dek}</p>}
 
           <div className="article__byline">
-            <span>C4 Studios</span>
+            <span>Caleb Scott</span>
             {published && (
               <>
                 <span className="sep" aria-hidden="true">·</span>

@@ -3,15 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Monitor, Smartphone } from 'lucide-react';
 import GallerySkeleton from './GallerySkeleton';
 import PortfolioMedia from './PortfolioMedia';
+import useStaticMode from '@/hooks/useStaticMode';
 
 const ease = [0.22, 1, 0.36, 1];
 
 function GalleryTile({ shot, index, onClick }) {
+  const staticMode = useStaticMode();
   return (
     <motion.button
-      initial={{ opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      {...(staticMode ? {} : { initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true } })}
       transition={{ duration: 0.4, delay: index * 0.04, ease }}
       onClick={onClick}
       className="group relative aspect-[16/10] overflow-hidden rounded-[3px]"

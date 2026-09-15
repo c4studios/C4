@@ -5,6 +5,7 @@ import { ArrowRight, Check, ShieldCheck, Scale, Download } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import PageHero from '@/components/c4/PageHero';
 import useDocumentHead from '@/hooks/useDocumentHead';
+import useStaticMode from '@/hooks/useStaticMode';
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
@@ -17,6 +18,9 @@ const eyebrowClass = 'text-[10px] uppercase tracking-[0.22em] font-medium';
  * with the C4Site hub.
  */
 export default function SectorPage({ data }) {
+  /* Reveals enhance, never gate: under the prerenderer these drop their hidden
+     initial state, or the sector pages ship half their copy at opacity 0. */
+  const staticMode = useStaticMode();
   const enquiryUrl = createPageUrl('TrainingEnquiry') + (data.sectorKey ? `?sector=${data.sectorKey}` : '');
   const hubUrl = createPageUrl('Foresight');
 
@@ -69,9 +73,7 @@ export default function SectorPage({ data }) {
       <section className="py-16 md:py-24 border-t" style={{ borderColor: 'var(--c4-border)' }}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
+            {...(staticMode ? {} : { initial: { opacity: 0, y: 10 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-40px' } })}
             transition={{ duration: 0.5, ease }}
             className="mb-10 md:mb-12"
           >
@@ -87,9 +89,7 @@ export default function SectorPage({ data }) {
             {data.tasks.items.map((item, i) => (
               <motion.div
                 key={item}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-20px' }}
+                {...(staticMode ? {} : { initial: { opacity: 0, y: 12 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-20px' } })}
                 transition={{ duration: 0.4, delay: i * 0.05, ease }}
                 className="flex items-start gap-3 rounded-[3px] p-5"
                 style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
@@ -107,9 +107,7 @@ export default function SectorPage({ data }) {
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
+              {...(staticMode ? {} : { initial: { opacity: 0, y: 10 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-40px' } })}
               transition={{ duration: 0.5, ease }}
             >
               <div className="flex items-center gap-3">
@@ -130,9 +128,7 @@ export default function SectorPage({ data }) {
               {data.risk.points.map((point, i) => (
                 <motion.div
                   key={point}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-20px' }}
+                  {...(staticMode ? {} : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-20px' } })}
                   transition={{ duration: 0.4, delay: i * 0.07, ease }}
                   className="flex items-start gap-4 rounded-[3px] p-5 md:p-6"
                   style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-bg)' }}
@@ -151,9 +147,7 @@ export default function SectorPage({ data }) {
         <section className="py-16 md:py-20 border-t" style={{ borderColor: 'var(--c4-border)' }}>
           <div className="max-w-[1400px] mx-auto px-6 md:px-12">
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-30px' }}
+              {...(staticMode ? {} : { initial: { opacity: 0, y: 12 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-30px' } })}
               transition={{ duration: 0.5, ease }}
               className="max-w-[760px] rounded-[3px] p-7 md:p-9"
               style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
@@ -176,9 +170,7 @@ export default function SectorPage({ data }) {
       <section className="py-16 md:py-20 border-t" style={{ borderColor: 'var(--c4-border)' }}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-30px' }}
+            {...(staticMode ? {} : { initial: { opacity: 0, y: 10 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-30px' } })}
             transition={{ duration: 0.5, ease }}
             className="max-w-[680px]"
           >
@@ -206,9 +198,7 @@ export default function SectorPage({ data }) {
         <section className="py-16 md:py-24 border-t" style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-bg-alt)' }}>
           <div className="max-w-[1400px] mx-auto px-6 md:px-12">
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
+              {...(staticMode ? {} : { initial: { opacity: 0, y: 10 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-40px' } })}
               transition={{ duration: 0.5, ease }}
               className="max-w-[680px] mb-10 md:mb-12"
             >
@@ -230,9 +220,7 @@ export default function SectorPage({ data }) {
               {data.downloads.items.map((d, i) => (
                 <motion.li
                   key={d.file}
-                  initial={{ opacity: 0, y: 14 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-20px' }}
+                  {...(staticMode ? {} : { initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-20px' } })}
                   transition={{ duration: 0.4, delay: i * 0.05, ease }}
                 >
                   <a
@@ -281,9 +269,7 @@ export default function SectorPage({ data }) {
       <section className="py-20 md:py-28 border-t" style={{ borderColor: 'var(--c4-border)' }}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            {...(staticMode ? {} : { initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true } })}
             transition={{ duration: 0.5, ease }}
             className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between"
           >
