@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import useStaticMode from '@/hooks/useStaticMode';
 import { ArrowRight, Check, ShieldCheck, Download, Loader2 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import PageHero from '@/components/c4/PageHero';
@@ -53,6 +54,7 @@ function deliverPack(file) {
 }
 
 export default function C4SitePreviews() {
+  const staticMode = useStaticMode();
   const [selected, setSelected] = useState(() => new Set());
   const [form, setForm] = useState({ first_name: '', school_name: '', email: '', _gotcha: '' });
   const [status, setStatus] = useState('idle'); // idle | submitting | done
@@ -168,9 +170,7 @@ export default function C4SitePreviews() {
                   return (
                     <motion.li
                       key={s.key}
-                      initial={{ opacity: 0, y: 12 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: '-20px' }}
+                      {...(staticMode ? {} : { initial: { opacity: 0, y: 12 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-20px' } })}
                       transition={{ duration: 0.4, delay: i * 0.05, ease }}
                     >
                       <button
@@ -349,9 +349,7 @@ export default function C4SitePreviews() {
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
+              {...(staticMode ? {} : { initial: { opacity: 0, y: 10 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-40px' } })}
               transition={{ duration: 0.5, ease }}
             >
               <div className="flex items-center gap-3">
@@ -368,9 +366,7 @@ export default function C4SitePreviews() {
               {SAFETY.map((point, i) => (
                 <motion.div
                   key={point}
-                  initial={{ opacity: 0, y: 14 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-20px' }}
+                  {...(staticMode ? {} : { initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-20px' } })}
                   transition={{ duration: 0.4, delay: i * 0.07, ease }}
                   className="flex items-start gap-4 rounded-[3px] p-5"
                   style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-bg)' }}
@@ -388,9 +384,7 @@ export default function C4SitePreviews() {
       <section className="py-20 md:py-28 border-t" style={{ borderColor: 'var(--c4-border)' }}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            {...(staticMode ? {} : { initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true } })}
             transition={{ duration: 0.5, ease }}
             className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between"
           >

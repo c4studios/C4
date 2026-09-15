@@ -246,7 +246,7 @@ export default function TestimonialReel({ testimonials = [] }) {
 
                 <blockquote
                   className="text-[16px] font-medium leading-[1.72] tracking-[-0.01em] md:text-[18.5px]"
-                  style={{ color: 'var(--c4-proof-text)' }}
+                  style={{ color: 'var(--c4-proof-text)', whiteSpace: 'pre-line' }}
                 >
                   &ldquo;{active.quote}&rdquo;
                 </blockquote>

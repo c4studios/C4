@@ -26,10 +26,13 @@ function usePrefersReducedMotion() {
 export default function CaseStudyTestimonial({ testimonial, className = '' }) {
   const reduced = usePrefersReducedMotion();
 
-  const words = useMemo(
-    () => (testimonial?.quote || '').trim().split(/\s+/).filter(Boolean),
+  /* Paragraphs as the client wrote them (a blank line between), each split into
+     words for the draw-in. */
+  const paragraphs = useMemo(
+    () => (testimonial?.quote || '').trim().split(/\n\s*\n/).map((p) => p.split(/\s+/).filter(Boolean)).filter((p) => p.length),
     [testimonial]
   );
+  const words = paragraphs.flat();
 
   if (!testimonial || words.length === 0) return null;
 
@@ -92,12 +95,17 @@ export default function CaseStudyTestimonial({ testimonial, className = '' }) {
           style={{ color: 'var(--c4-text)' }}
         >
           <span aria-hidden="true" style={{ color: 'var(--c4-accent)' }}>&ldquo;</span>
-          {words.map((word, i) => (
-            <React.Fragment key={`${word}-${i}`}>
-              <motion.span variants={wordVariant} className="inline-block">
-                {word}
-              </motion.span>
-              {' '}
+          {paragraphs.map((para, pi) => (
+            <React.Fragment key={`p-${pi}`}>
+              {pi > 0 && <><br /><span aria-hidden="true" className="block h-2" /></>}
+              {para.map((word, i) => (
+                <React.Fragment key={`${word}-${pi}-${i}`}>
+                  <motion.span variants={wordVariant} className="inline-block">
+                    {word}
+                  </motion.span>
+                  {' '}
+                </React.Fragment>
+              ))}
             </React.Fragment>
           ))}
           <span aria-hidden="true" style={{ color: 'var(--c4-accent)' }}>&rdquo;</span>

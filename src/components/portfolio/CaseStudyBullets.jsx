@@ -1,17 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import useStaticMode from '@/hooks/useStaticMode';
 
 const ease = [0.22, 1, 0.36, 1];
 
 export default function CaseStudyBullets({ items, columns = 2 }) {
+  const staticMode = useStaticMode();
   return (
     <ul className={`grid grid-cols-1 ${columns === 2 ? 'md:grid-cols-2 gap-x-12' : ''} gap-y-3`}>
       {items.map((item, i) => (
         <motion.li
           key={i}
-          initial={{ opacity: 0, x: -4 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          {...(staticMode ? {} : { initial: { opacity: 0, x: -4 }, whileInView: { opacity: 1, x: 0 }, viewport: { once: true } })}
           transition={{ duration: 0.3, delay: i * 0.025, ease }}
           className="flex items-start gap-3"
         >

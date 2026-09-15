@@ -31,6 +31,12 @@ export const PROFILES = {
   facebook: 'https://www.facebook.com/c4studiosperth',
 };
 
+/**
+ * The studio phone, shown on the site since 15 Sep 2026 at Caleb's say-so so the
+ * site, the schema and the Google Business Profile carry the same number.
+ */
+export const PHONE = { e164: '+61479000404', display: '0479 000 404' };
+
 export const ORG_INFO = {
   name: 'C4 Studios',
   legalName: 'C4 Studios',
@@ -43,8 +49,7 @@ export const ORG_INFO = {
   founder: 'Caleb Scott',
   foundingDate: '2022',
   email: 'caleb@c4studios.com.au',
-  // Already public: it is on the email signature and the /welcome booking sheet.
-  telephone: '+61479000404',
+  telephone: PHONE.e164,
   region: 'Perth, Western Australia',
   country: 'AU',
   areaServed: ['Perth', 'Fremantle', 'Western Australia', 'Australia'],

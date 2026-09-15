@@ -62,10 +62,15 @@ export default function PageHero({ pretitle, titleLines = [], description, child
             pass is accepted and ignored. */}
         {/* Title — cinematic line-by-line reveal */}
         <h1 className="text-[clamp(2rem,5.5vw,3.8rem)] font-semibold tracking-[-0.035em] leading-[1.08] max-w-[800px]" style={{ color: 'var(--c4-text)' }}>
+          {/* The space between lines matters: the lines are block spans, and a
+              text extractor that ignores layout otherwise reads "Perththat". */}
           {titleLines.map((line, i) => (
-            <RevealLine key={i} delay={0.25 + i * 0.12}>
-              {typeof line === 'string' ? line : line}
-            </RevealLine>
+            <React.Fragment key={i}>
+              {i > 0 && ' '}
+              <RevealLine delay={0.25 + i * 0.12}>
+                {typeof line === 'string' ? line : line}
+              </RevealLine>
+            </React.Fragment>
           ))}
         </h1>
 

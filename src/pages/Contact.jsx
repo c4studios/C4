@@ -37,6 +37,7 @@ import gsap from 'gsap';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { submitSupportRequest, SubmissionError } from '@/api/submissions';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
+import { PHONE } from '@/lib/seo';
 import '../components/contact/contact.css';
 
 const EMAIL = 'caleb@c4studios.com.au';
@@ -721,6 +722,9 @@ export default function Contact() {
             >
               {copied ? 'COPIED' : 'COPY'}
             </button>
+            <a className="ct-node-mail ct-node-tel" href={`tel:${PHONE.e164}`}>
+              {PHONE.display}
+            </a>
           </div>
         </div>
       </section>

@@ -1,15 +1,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import useStaticMode from '@/hooks/useStaticMode';
 
 const ease = [0.22, 1, 0.36, 1];
 
 export default function CaseStudySection({ id, title, number, children, className = '' }) {
+  /* Reveals enhance, never gate: the prerenderer never scrolls, so a
+     whileInView reveal shipped every case study body as opacity 0 to any
+     crawler that does not run JavaScript. */
+  const staticMode = useStaticMode();
   return (
     <motion.section
       id={id}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
+      {...(staticMode ? {} : { initial: { opacity: 0, y: 20 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-80px' } })}
       transition={{ duration: 0.6, ease }}
       // scroll-mt clears the fixed header when the TOC anchors to a section.
       className={`py-14 md:py-20 scroll-mt-28 ${className}`}

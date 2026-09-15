@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import useStaticMode from '@/hooks/useStaticMode';
 import { ArrowRight, MoonStar, Inbox, Check, ShieldCheck } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import PageHero from '@/components/c4/PageHero';
@@ -118,11 +119,10 @@ const FAQS = [
 /* ── Building blocks ───────────────────────────────────────────────── */
 
 function Reveal({ children, className = '', delay = 0 }) {
+  const staticMode = useStaticMode();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
+      {...(staticMode ? {} : { initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-60px' } })}
       transition={{ duration: 0.6, ease, delay }}
       className={className}
     >

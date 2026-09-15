@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import useStaticMode from '@/hooks/useStaticMode';
 
 /**
  * LegalDocument — shared layout for policy pages (Privacy Policy, Terms of
@@ -26,11 +27,10 @@ function Paragraphs({ value }) {
 }
 
 function SectionBlock({ section, index }) {
+  const staticMode = useStaticMode();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
+      {...(staticMode ? {} : { initial: { opacity: 0, y: 8 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-40px' } })}
       transition={{ duration: 0.5, delay: 0.02 * index, ease }}
     >
       <h2 className="text-[14px] font-semibold tracking-[-0.01em] mb-3" style={{ color: 'var(--c4-text)' }}>

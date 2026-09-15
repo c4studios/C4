@@ -234,6 +234,12 @@
 
 .ct-node--caleb {
   margin-top: 2.1rem;
+  flex-wrap: wrap;
+  column-gap: 0.75rem;
+}
+
+.ct-node-tel {
+  margin-left: 0.5rem;
 }
 
 .ct-node-dot {
@@ -626,6 +632,13 @@ textarea.ct-input {
   .ct-node--caleb {
     flex-wrap: wrap;
     row-gap: 0;
+  }
+
+  /* On a phone the number takes its own line, so the COPY button beside the
+     email never reads as belonging to it. */
+  .ct-node-tel {
+    flex-basis: 100%;
+    margin-left: 0;
   }
 
   .ct-input {
