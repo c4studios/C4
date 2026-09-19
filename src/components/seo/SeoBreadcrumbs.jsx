@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 
 /**
  * Visual breadcrumb trail for SEO pages. The matching BreadcrumbList

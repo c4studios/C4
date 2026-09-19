@@ -18,7 +18,8 @@
  * the vCard or booking links) all carry over.
  */
 import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { recordScan } from '@/api/submissions';
 import { createPageUrl } from '@/utils';

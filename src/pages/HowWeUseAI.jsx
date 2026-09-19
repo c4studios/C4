@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
@@ -80,7 +80,7 @@ export default function HowWeUseAI() {
         author: { '@type': 'Person', name: ORG_INFO.founder, url: SITE_URL },
         publisher: { '@id': `${SITE_URL}/#localbusiness` },
         dateModified: '2026-08-12',
-        mainEntityOfPage: `${SITE_URL}/how-we-use-ai`,
+        mainEntityOfPage: `${SITE_URL}/how-we-use-ai/`,
         about: ['Responsible AI', 'AI ethics', 'AI transparency', 'Private AI'],
       },
     ],

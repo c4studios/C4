@@ -43,7 +43,7 @@
  * — which is the finished end state.
  */
 import { Fragment, useEffect, useId, useLayoutEffect, useMemo, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createPageUrl } from '@/utils';
@@ -51,6 +51,7 @@ import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
 import { c4SightPackages, C4SIGHT_PRICING_NOTE } from '@/data/pricing';
 import { reassertStoredTheme } from '../components/c4/ThemeContext';
+import SiteMosaic from '../components/sight-arm/SiteMosaic';
 import '../components/sight-arm/sight-arm.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -419,11 +420,6 @@ function useForceDark() {
 export default function Foresight() {
   useForceDark();
   const rootRef = useRef(null);
-  /* The felt eraser's walk-in is a load-time beat that plays at most
-     once per visit. The ref survives the matchMedia wrapper re-running
-     its setup (OS reduced-motion toggled off and back on mid-session),
-     so the sweep can never replay — "appears exactly once" holds. */
-  const walkinPlayed = useRef(false);
   const enquiryUrl = createPageUrl('TrainingEnquiry');
 
   const prerender = useMemo(
@@ -582,64 +578,6 @@ export default function Foresight() {
             '-=0.28',
           );
         drawIn(Array.from(root.querySelectorAll('.sg-hero [data-sg-draw]')), null, 0.85);
-
-        /* The walk-in: the felt eraser's single appearance. It wipes the
-           last class's notes off the hero display region, then settles on
-           the chalk tray for the life of the page. A load-time beat, so
-           it plays at most ONCE per visit: desktop with motion allowed
-           plays it; anything else — a later resize, or the matchMedia
-           setup re-running after a reduced-motion round-trip — parks the
-           residue hidden so unwiped notes never show and the sweep never
-           replays. (Below 1024px the residue field would sit behind
-           running text — same rule as the palimpsest hides.) */
-        {
-          const eraser = root.querySelector('.sg-eraser');
-          const residue = root.querySelector('.sg-walkin-residue');
-          if (eraser && residue) {
-            const eb = eraser.getBoundingClientRect();
-            const rb = residue.getBoundingClientRect();
-            const desktop =
-              window.matchMedia('(min-width: 1024px)').matches && eb.width > 0 && rb.width > 0;
-            if (desktop && !walkinPlayed.current) {
-              walkinPlayed.current = true;
-              /* The prop must never be glimpsed at its destination before
-                 the sweep: the timeline leads in with a 0.2s delay, and
-                 until it plays the eraser would render at its CSS rest
-                 pose on the tray. Hide it synchronously (we are pre-paint,
-                 inside useLayoutEffect) so its first visible frame is the
-                 walk-in itself. */
-              gsap.set(eraser, { autoAlpha: 0 });
-              gsap
-                .timeline({ delay: 0.2 })
-                .set(eraser, {
-                  x: rb.left - eb.left - 14,
-                  y: rb.top - eb.top + rb.height * 0.32,
-                  rotate: -5,
-                  autoAlpha: 0,
-                })
-                .to(eraser, { autoAlpha: 1, duration: 0.18, ease: 'power1.out' })
-                .to(
-                  eraser,
-                  {
-                    x: rb.right - eb.left - eb.width + 30,
-                    rotate: 3,
-                    duration: 0.85,
-                    ease: 'power2.inOut',
-                  },
-                  0.06,
-                )
-                .fromTo(
-                  residue,
-                  { clipPath: 'inset(0% 0% 0% 0%)' },
-                  { clipPath: 'inset(0% 0% 0% 101%)', duration: 0.85, ease: 'power2.inOut' },
-                  0.06,
-                )
-                .to(eraser, { x: 0, y: 0, rotate: 0, duration: 0.55, ease: 'power2.in' }, '>-0.02');
-            } else {
-              gsap.set(residue, { autoAlpha: 0 });
-            }
-          }
-        }
 
         /* The two scrubbed smear passes (governance + pricing) — the only
            scroll-scrubbed motion on the page. Bound to the user's hand,
@@ -822,24 +760,13 @@ export default function Foresight() {
         </filter>
       </svg>
 
-      {/* ── Hero: the arm statement. The C-code appears here, once. ── */}
-      <header className="sg-hero">
-        {/* Last class's notes, about to be wiped. Decorative, desktop
-            only, never mounted for prerender/reduced-motion. The
-            fainter palimpsest tally underneath (CSS ::before) is what
-            the eraser can never fully remove. */}
-        {!staticMode && (
-          <div className="sg-walkin" aria-hidden="true">
-            <div className="sg-walkin-residue">
-              <span className="sg-walkin-note sg-walkin-note--a">verify it</span>
-              <span className="sg-walkin-note sg-walkin-note--b">…not sure? ask.</span>
-              <svg className="sg-walkin-scribble" viewBox="0 0 220 120" aria-hidden="true">
-                <path d="M12 96 C 60 60, 120 44, 204 30" />
-                <path d="M180 18 C 188 24, 198 28, 208 31 C 197 37, 188 44, 181 52" />
-              </svg>
-            </div>
-          </div>
-        )}
+      {/* ── Hero: the stage, then the arm statement. ── */}
+      <header className="sg-hero sg-hero--stage">
+        {/* The stage: a camera journey across a board of chalk letters, from
+            FORESIGHT to the name (mosaicEngine.js). Decorative; the H1 below
+            is the page's heading. It replaced the eraser walk-in as the
+            page's one authored moment. */}
+        <SiteMosaic reduced={reduced} prerender={prerender} />
         <div className="sg-wrap">
           <h1 className="sg-chalk-edge" data-sg-hero="">
             We train your team{' '}
@@ -864,7 +791,6 @@ export default function Foresight() {
             <span className="sg-tray-ledge" data-sg-tray="" />
             <span className="sg-tray-chalk" />
             <span className="sg-tray-marker" />
-            {!staticMode && <span className="sg-eraser" />}
           </div>
         </div>
       </header>

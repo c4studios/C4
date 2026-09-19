@@ -32,12 +32,13 @@
  * honeypot + _loaded + Turnstile — identical field contract to /Support.
  */
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import gsap from 'gsap';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { submitSupportRequest, SubmissionError } from '@/api/submissions';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
-import { PHONE } from '@/lib/seo';
+import { PHONE, SITE_URL, absoluteUrl } from '@/lib/seo';
+import { breadcrumbSchema } from '@/lib/schema';
 import '../components/contact/contact.css';
 
 const EMAIL = 'caleb@c4studios.com.au';
@@ -115,8 +116,24 @@ export default function Contact() {
   useDocumentHead({
     title: 'Contact C4 Studios — Web Design & AI in Perth',
     description:
-      'Talk to C4 Studios in Perth about a website, an AI automation, private on-premise AI, staff AI training or photography. Founder-led, and you get a reply within a business day.',
+      'Talk to C4 Studios in Perth about a website, AI automation, private AI, staff AI training or photography. A reply within one business day.',
     path: '/Contact',
+    /* The page is about the business entity defined site-wide as
+       #localbusiness (address, phone, email live there, not here). */
+    jsonLd: [
+      breadcrumbSchema([
+        { name: 'Home', path: '/' },
+        { name: 'Contact', path: '/Contact' },
+      ]),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ContactPage',
+        name: 'Contact C4 Studios',
+        url: absoluteUrl('/Contact/'),
+        about: { '@id': `${SITE_URL}/#localbusiness` },
+        mainEntity: { '@id': `${SITE_URL}/#localbusiness` },
+      },
+    ],
   });
 
   /* staticMode — house pattern: prerenderer UA or reduced motion means the

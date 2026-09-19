@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { ArrowRight } from 'lucide-react';
 import SectionLabel from '@/components/c4/SectionLabel';
 import { webPricingGuides, ASTERISK_CLAUSE } from '@/data/pricing';

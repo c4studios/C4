@@ -18,7 +18,7 @@
  * state; hover feedback keeps non-motion equivalents.
  */
 import React, { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';

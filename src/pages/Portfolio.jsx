@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
@@ -7,7 +8,7 @@ import PortfolioHero from '../components/portfolio/PortfolioHero';
 import PortfolioSortMenu from '../components/portfolio/PortfolioSortMenu';
 import { getAllCaseStudies } from '../components/portfolio/caseStudyData';
 import { FeaturedCardSkeleton } from '../components/portfolio/PortfolioCardSkeleton';
-import PortfolioMedia from '../components/portfolio/PortfolioMedia';
+import PortfolioMedia, { WebpImg } from '../components/portfolio/PortfolioMedia';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import useStaticMode from '@/hooks/useStaticMode';
 import { breadcrumbSchema } from '@/lib/schema';
@@ -71,7 +72,7 @@ function FeaturedCard({ study, index }) {
             style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
           >
             {study.cover ? (
-              <img
+              <WebpImg
                 src={study.cover}
                 alt={`${study.name} logo`}
                 className={study.backdropStyle
@@ -105,8 +106,9 @@ function FeaturedCard({ study, index }) {
             <div className="hidden md:flex flex-col gap-3">
               {previews.map((shot, i) => (
                 <div key={i} className="flex-1 overflow-hidden rounded-[2px]" style={{ backgroundColor: 'var(--c4-bg-alt)' }}>
-                  <img
+                  <WebpImg
                     src={shot.url}
+                    sizes="(min-width: 1024px) 16vw, 33vw"
                     alt={shot.caption || `${study.name} preview ${i + 1}`}
                     className="h-full w-full object-cover object-top"
                   />
@@ -167,7 +169,7 @@ function ProjectCard({ study, index }) {
           style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
         >
           {study.cover ? (
-            <img
+            <WebpImg
               src={study.cover}
               alt={`${study.name} logo`}
               className={study.backdropStyle
@@ -342,7 +344,7 @@ export default function Portfolio() {
       name: 'C4 Studios Portfolio — Selected Work',
       description:
         'Selected case studies from C4 Studios — Perth-based web design, AI and software, brand and photography projects.',
-      url: 'https://c4studios.com.au/Portfolio',
+      url: 'https://c4studios.com.au/Portfolio/',
     },
   ], []);
 

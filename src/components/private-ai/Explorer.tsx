@@ -471,7 +471,7 @@ export default function Explorer({ staticMode }: { staticMode: boolean }) {
           {/* The page's only action used to be this mailto — a conversion
               dead-end (routing audit). Every other money page routes to /start. */}
           <a
-            href="/start?service=automation"
+            href="/start/?service=automation"
             onClick={() => recordPrivateAiEvent('pa_cta_click', { location: 'explorer_start' })}
             style={{ fontSize: 13, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'underline', textUnderlineOffset: 4, opacity: 0.75 }}
           >

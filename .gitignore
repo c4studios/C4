@@ -59,3 +59,6 @@ files.zip
 
 # Throwaway probe scripts from browser/verification sessions
 _*.mjs
+
+# output of scripts/hero-video/record.mjs
+hero-video-out/

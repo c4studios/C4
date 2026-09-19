@@ -18,38 +18,76 @@
 # literal "%3Asplat" and every emailed link died on badlink. Verified 12 Aug.
 /unsubscribe/*  https://hauwhplevypinplfbbgh.supabase.co/functions/v1/unsubscribe/:splat  302
 
-/StartProject  /start  301
+/StartProject   /start/  301
+/StartProject/  /start/  301
 
 # /Services retired — individual service pages live under the nav dropdown.
-/Services  /  301
+/Services   /  301
+/Services/  /  301
 
 # Retired legacy paths — server-side mirrors of the client redirects in
 # src/App.jsx, so old links 301 without booting the SPA first.
 # Brand & Growth folded into C4 Lens.
-/ServiceBrand  /Lens  301
+/ServiceBrand   /Lens/  301
+/ServiceBrand/  /Lens/  301
 # Ventures and Rebuild initiatives are no longer offered.
-/Ventures  /  301
-/Rebuild  /  301
+/Ventures   /  301
+/Ventures/  /  301
+/Rebuild    /  301
+/Rebuild/   /  301
 # The Ventures-specific Terms are gone; old links go to the ToS.
-/Terms  /terms-of-service  301
+/Terms   /terms-of-service/  301
+/Terms/  /terms-of-service/  301
 # The software section (C4 Originals) was retired on 9 September 2026.
-/software  /  301
+/software   /  301
+/software/  /  301
+/Software   /  301
+/Software/  /  301
 /SoftwareProduct/*  /  301
 # /Contact is a real page again (fable pass — "The Direct Line").
+
+# Lower-case spellings of the capitalised routes, and the arm's own name.
+# Safe beside the real pages because rule matching is case-sensitive: these
+# never match /About/ itself (checked 19 Sep 2026: /Software 404'd while
+# /software 301'd).
+/about         /About/       301
+/about/        /About/       301
+/portfolio     /Portfolio/   301
+/portfolio/    /Portfolio/   301
+/contact       /Contact/     301
+/contact/      /Contact/     301
+/lens          /Lens/        301
+/lens/         /Lens/        301
+/support       /Support/     301
+/support/      /Support/     301
+/foresight     /Foresight/   301
+/foresight/    /Foresight/   301
+/c4site        /Foresight/   301
+/c4site/       /Foresight/   301
+/C4Site        /Foresight/   301
+/C4Site/       /Foresight/   301
+/serviceweb    /ServiceWeb/  301
+/serviceweb/   /ServiceWeb/  301
+/serviceai     /ServiceAI/   301
+/serviceai/    /ServiceAI/   301
 
 # SPA routes that are NOT prerendered — they need index.html served at 200.
 # Everything else on the site has its own static file (115 of them), which is
 # what makes the real 404 below safe.
-/welcome     /index.html  200
+/welcome     /  200
+/welcome/    /  200
 
 # Legacy alias base. Old inbound links use /CaseStudy?slug=x; the path
 # itself has no static file, so without this the SPA never loads to perform
 # its redirect up to the path form and every one of those links would 404.
-/CaseStudy        /index.html  200
+/CaseStudy        /  200
+/CaseStudy/       /  200
 
 # Real 404s. This used to be `/*  /index.html  200`, which returned HTTP 200
 # with the homepage for every wrong URL — so any typo, dead backlink or
 # crawler probe produced another copy of the front page at a new address.
 # Google reads that as a soft 404 and, at worst, as duplicate content across
 # unlimited URLs. Serving 404.html with a 404 status ends it.
+/404       /404.html  404
+/404/      /404.html  404
 /*  /404.html  404

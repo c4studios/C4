@@ -1,4 +1,5 @@
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 
 export default function PageNotFound() {
     const location = useLocation();

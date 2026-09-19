@@ -463,85 +463,59 @@
   }
 }
 
-/* Last class's notes (walk-in residue) + the felt eraser. Mounted only
-   when motion is allowed; the eraser wipes the notes on load and then
-   rests on the chalk tray — its single appearance on the page. */
-.sg-walkin {
-  position: absolute;
-  top: clamp(150px, 15vh, 220px);
-  right: 24px;
-  width: min(36vw, 430px);
-  height: 300px;
-  z-index: 0;
-  pointer-events: none;
+/* The stage: the chalk-letter board the hero's camera travels across
+   (SiteMosaic.jsx / mosaicEngine.js). It sits under the fixed nav and above
+   the arm statement, full bleed, on the same deep board as the hero, so the
+   canvas edge never shows. The stage replaced the eraser walk-in. */
+.sg-hero--stage {
+  padding-top: clamp(60px, 7vw, 72px);
 }
-
-.sg-walkin-residue {
+.sg-hero--stage::before {
+  display: none;
+}
+.sg-hero--stage .sg-wrap {
+  padding-top: clamp(26px, 4vw, 44px);
+}
+.sg-mosaic {
+  position: relative;
+  height: clamp(420px, 62svh, 700px);
+  background: var(--sg-board-deep);
+  overflow: hidden;
+  isolation: isolate;
+}
+.sg-mosaic-canvas {
   position: absolute;
   inset: 0;
-  color: var(--sg-chalk);
-  opacity: 0.12;
+  display: block;
 }
-
-.sg-walkin-note {
+/* Soft edges into the rest of the board, top and bottom. */
+.sg-mosaic::after {
+  content: '';
   position: absolute;
-  font-family: var(--sg-hand-font);
-  font-size: 27px;
-  font-weight: 500;
-  white-space: nowrap;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, var(--sg-board-deep) 0, transparent 9%, transparent 84%, var(--sg-board-deep) 100%);
 }
-
-.sg-walkin-note--a {
-  top: 16%;
-  left: 12%;
-  transform: rotate(-3deg);
-}
-
-.sg-walkin-note--b {
-  bottom: 10%;
-  right: 14%;
-  transform: rotate(2deg);
-}
-
-.sg-walkin-scribble {
+.sg-mosaic-replay {
   position: absolute;
-  top: 32%;
-  left: 8%;
-  width: 62%;
-  height: auto;
-}
-
-.sg-walkin-scribble path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* The felt eraser: wood back, felt edge dusted with chalk. Rests on
-   the tray (its CSS position IS the end state; GSAP plays the sweep
-   as a .from journey). Desktop-only, like the residue it erases. */
-.sg-eraser {
-  position: absolute;
-  right: clamp(20px, 6vw, 96px);
-  bottom: 7px;
-  width: 92px;
-  height: 30px;
-  border-radius: 5px 5px 3px 3px;
-  background: linear-gradient(to bottom, #8a6c4e 0%, #6f5640 50%, #333730 50%, #262a24 100%);
-  box-shadow:
-    inset 0 2px 2px rgba(255, 255, 255, 0.14),
-    inset 0 -2px 3px rgba(242, 240, 233, 0.18),
-    0 8px 16px -8px rgba(0, 0, 0, 0.7);
   z-index: 2;
+  right: clamp(16px, 3vw, 32px);
+  bottom: clamp(16px, 2.6vw, 26px);
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1.5px solid var(--sg-line-strong);
+  border-radius: 999px;
+  background: rgb(14 42 34 / 0.72);
+  color: var(--sg-chalk);
+  font: 600 0.9rem/1 var(--sg-font);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
-
-@media (max-width: 1023px) {
-  .sg-walkin,
-  .sg-eraser {
-    display: none;
-  }
+.sg-mosaic-replay:hover {
+  border-color: var(--sg-chalk);
+  background: rgb(14 42 34 / 0.9);
 }
 
 .sg-chip {
@@ -1544,8 +1518,6 @@
 
   /* Motion-only furniture. These are conditionally unmounted in
      staticMode; this covers the OS setting flipping mid-session. */
-  .sg-walkin,
-  .sg-eraser,
   .sg-smear {
     display: none !important;
   }

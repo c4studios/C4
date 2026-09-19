@@ -117,6 +117,8 @@ function Lightbox({ screenshots, activeIndex, onClose, onPrev, onNext }) {
             title={`Screenshot ${String(activeIndex + 1).padStart(2, '0')}`}
             message="Screenshot pending upload"
             className="aspect-[16/10] rounded-[3px]"
+            priority
+            sizes="(min-width: 1024px) 80vw, 100vw"
           />
         </motion.div>
         <p className="mt-3 text-center text-[11px]" style={{ color: 'var(--c4-lightbox-text-dim)' }}>

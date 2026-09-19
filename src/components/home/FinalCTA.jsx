@@ -8,7 +8,7 @@
    from the baseline. Static end-state: the verdict rests full red.
    ───────────────────────────────────────────────────────────────── */
 import React, { useLayoutEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { ArrowRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { revealHeading, useStaticMode } from './homeMotion';

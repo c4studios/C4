@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { createPageUrl } from '@/utils';
 
 const ease = [0.22, 1, 0.36, 1];

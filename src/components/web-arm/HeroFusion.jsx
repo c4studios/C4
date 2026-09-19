@@ -37,7 +37,7 @@
  * CSS [data-static] lays the scene flat and full-bleed.
  */
 import React, { useLayoutEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
 import { BUILD_ORDER, getCaseStudy } from '../portfolio/caseStudyData';
 
