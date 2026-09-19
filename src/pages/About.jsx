@@ -15,7 +15,7 @@
  * every highlight is down, the pen is fully drawn and every box is open.
  */
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createPageUrl } from '@/utils';
@@ -314,7 +314,7 @@ export default function About() {
             </p>
           </div>
           <figure className="ab2-photo" data-reveal>
-            <img src="/founder-headshot.png" alt="Founder of C4 Studios" width="300" height="375" loading="eager" decoding="async" />
+            <picture><source type="image/webp" srcSet="/founder-headshot-800.webp 800w, /founder-headshot.webp 1024w" sizes="300px" /><img src="/founder-headshot.png" alt="Founder of C4 Studios" width="300" height="375" loading="eager" decoding="async" /></picture>
             <figcaption>Founder &amp; Web Solutions Architect · Perth, Australia</figcaption>
           </figure>
         </div>

@@ -13,7 +13,7 @@
    rest. The proof-strip stats are letterpressed into the lintel.
    ───────────────────────────────────────────────────────────────── */
 import React, { useLayoutEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { ArrowRight } from 'lucide-react';
 import C4iWordmark from '@/components/c4/C4iWordmark';
 import { trackEvent } from '@/lib/track';

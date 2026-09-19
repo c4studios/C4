@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { ArrowRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import useStaticMode from '@/hooks/useStaticMode';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { motion } from 'framer-motion';
 import useStaticMode from '@/hooks/useStaticMode';
 

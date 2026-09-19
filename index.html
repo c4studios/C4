@@ -167,7 +167,14 @@
         if (!prerender) setTimeout(finish, 5000);
       })();
     </script>
+    <!-- Cloudflare's Email Address Obfuscation rewrites every address in the
+         served HTML to "[email protected]" plus a decode script, so a crawler
+         that does not run JavaScript cannot read the contact email. These two
+         comments are Cloudflare's documented switch for leaving a region
+         alone. They sit outside #root so React never sees them. -->
+    <!--email_off-->
     <div id="root"></div>
+    <!--/email_off-->
     <script type="module" src="/src/main.jsx"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
   </body>

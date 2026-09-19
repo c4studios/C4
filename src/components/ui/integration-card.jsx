@@ -9,7 +9,7 @@
  * connect. Under `staticMode` nothing moves (prerender and reduced motion).
  */
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { ArrowRight } from 'lucide-react';
 
 const W = 564, H = 410, CX = 282, CY = 205;

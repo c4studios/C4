@@ -15,7 +15,7 @@
  * rolling (transform only; instant under reduced motion).
  */
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import {
   webDesignPackages, webDesignAddOns, brandingPackages, c4LensPackages, seoPackages,
   automationPackages, socialMediaPackages, supportPlans, c4SightPackages, subscriptionInfo,

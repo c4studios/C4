@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { motion } from 'framer-motion';
 import { resolveLiveSlugs } from '@/content/seo/registry';
 import useStaticMode from '@/hooks/useStaticMode';

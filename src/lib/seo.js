@@ -89,9 +89,12 @@ export function absoluteUrl(path = '/') {
  */
 export function withTrailingSlash(pathname) {
   if (!pathname || pathname === '/') return '/';
-  if (/[?#]/.test(pathname)) return pathname;
-  if (/\.[a-zA-Z0-9]+$/.test(pathname)) return pathname;
-  return pathname.endsWith('/') ? pathname : `${pathname}/`;
+  const m = pathname.match(/^([^?#]*)(.*)$/);
+  const base = m[1];
+  const rest = m[2];
+  if (!base || base.endsWith('/')) return pathname;
+  if (/\.[a-zA-Z0-9]+$/.test(base)) return pathname;
+  return `${base}/${rest}`;
 }
 
 // 180 keeps this a safety net against runaway strings while allowing

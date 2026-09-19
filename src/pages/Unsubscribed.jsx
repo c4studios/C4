@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { ArrowUpRight } from 'lucide-react';
 import useDocumentHead from '@/hooks/useDocumentHead';
 

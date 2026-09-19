@@ -28,6 +28,9 @@ person building it.
 - [C4Site — AI training](https://c4studios.com.au/Foresight): Practical AI workshops for workplaces and schools.
 - [Lead Engine](https://c4studios.com.au/lead-engine): Done-for-you lead generation system.
 - [Portfolio](https://c4studios.com.au/Portfolio): Selected client work and case studies.
+- [Insights](https://c4studios.com.au/insights): Articles on AI, websites and search, each with its sources listed.
+- [How we use AI](https://c4studios.com.au/how-we-use-ai): Where AI is and is not used in C4 Studios' own work.
+- [Contact](https://c4studios.com.au/Contact): Email, phone and a direct message form.
 - [Start a project](https://c4studios.com.au/start): Begin a new engagement with C4 Studios.
 - [Support & contact](https://c4studios.com.au/Support): Get in touch or request help.
 
@@ -40,13 +43,14 @@ person building it.
 - [AI & automation Perth](https://c4studios.com.au/ai-automation-perth): Workflows from $750 to custom AI agents.
 - [Branding Perth](https://c4studios.com.au/branding-perth): Logos from $250 to full identity systems.
 - [Photo & video Perth](https://c4studios.com.au/photo-video-perth): Headshots, brand shoots, drone and short-form content.
-- [How much does a website cost in Perth?](https://c4studios.com.au/how-much-does-a-website-cost-perth): Honest 2026 price bands.
 
 ## AI training
 
 - [AI training for business](https://c4studios.com.au/ai-training-for-business): Practical AI workshops for teams and organisations.
 - [AI training for schools](https://c4studios.com.au/ai-training-for-schools): AI education programs for schools and educators.
 - [AI training for law firms](https://c4studios.com.au/ai-training-for-law-firms): AI adoption and workshops tailored to legal practices.
+
+<!-- The build inserts Guides, Articles, Industries and Suburbs here from the SEO registry, and rewrites every link to the address the server serves. -->
 
 ## Case studies
 
@@ -64,6 +68,7 @@ person building it.
 ## Contact
 
 - Email: caleb@c4studios.com.au
+- Phone: 0479 000 404 (+61 479 000 404)
 - Location: Perth, Western Australia
 - Website: https://c4studios.com.au
 

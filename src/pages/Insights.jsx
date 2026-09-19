@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema, localBusinessSchema } from '@/lib/schema';
 import { liveArticles } from '@/content/seo/registry';
@@ -71,7 +71,7 @@ export default function Insights() {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
         name: 'Insights',
-        url: `${SITE_URL}/insights`,
+        url: `${SITE_URL}/insights/`,
         description: 'Articles from C4 Studios on AI, web and design.',
       },
     ],

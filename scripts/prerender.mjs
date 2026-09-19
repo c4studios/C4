@@ -18,6 +18,8 @@ import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { liveSeoPages, validateSeoEntry } from '../src/content/seo/registry.js';
+import { STATIC_ROUTES } from '../src/lib/prerenderRoutes.js';
+import { sitePath } from '../src/lib/sitePath.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(__dirname, '..', 'dist');
@@ -27,36 +29,7 @@ const SITE_ORIGIN = 'https://c4studios.com.au';
 
 // ── Routes to prerender ─────────────────────────────────────────────
 // Each entry can carry sitemap hints (priority, changefreq).
-// Static pages (from pages.config.js)
-const STATIC_ROUTES = [
-  { path: '/', priority: 1.0, changefreq: 'weekly' },
-  { path: '/About', priority: 0.7, changefreq: 'monthly' },
-  { path: '/ServiceWeb', priority: 0.85, changefreq: 'monthly' },
-  { path: '/c4i', priority: 0.85, changefreq: 'monthly' },
-  { path: '/ServiceAI', priority: 0.8, changefreq: 'monthly' },
-  { path: '/Lens', priority: 0.9, changefreq: 'monthly' },
-  { path: '/Foresight', priority: 0.85, changefreq: 'monthly' },
-  { path: '/ai-training-for-business', priority: 0.75, changefreq: 'monthly' },
-  { path: '/ai-training-for-schools', priority: 0.75, changefreq: 'monthly' },
-  { path: '/ai-training-for-law-firms', priority: 0.75, changefreq: 'monthly' },
-  { path: '/ai-training-enquiry', priority: 0.5, changefreq: 'yearly' },
-  { path: '/Portfolio', priority: 0.85, changefreq: 'weekly' },
-  { path: '/start', priority: 0.7, changefreq: 'monthly' },
-  { path: '/lead-engine', priority: 0.7, changefreq: 'monthly' },
-  { path: '/private-ai', priority: 0.85, changefreq: 'monthly' },
-  { path: '/c4sight-previews', priority: 0.7, changefreq: 'monthly' },
-  { path: '/how-we-use-ai', priority: 0.75, changefreq: 'yearly' },
-  { path: '/insights', priority: 0.75, changefreq: 'weekly' },
-  // Prerendered so the URL resolves as a static file, but kept out of the
-  // sitemap: it is the landing page for the unsubscribe link, not content.
-  { path: '/unsubscribed', includeInSitemap: false },
-  { path: '/opt-out', includeInSitemap: false },
-  { path: '/Support', priority: 0.4, changefreq: 'yearly' },
-  { path: '/privacy-policy', priority: 0.3, changefreq: 'yearly' },
-  { path: '/terms-of-service', priority: 0.3, changefreq: 'yearly' },
-  // Contact is a real, indexable page again (see dist/_redirects note).
-  { path: '/Contact', priority: 0.6, changefreq: 'yearly' },
-];
+// Static pages: the shared list in src/lib/prerenderRoutes.js.
 
 // Case-study pages at their canonical path form (/CaseStudy/<slug>).
 // Derived from the top-level entry keys in caseStudyData.jsx so this list can
@@ -259,13 +232,37 @@ async function main() {
     const outFile = path.join(DIST, '404.html');
     await prerenderRoute(page, baseUrl, '/__not-found__', outFile);
     let html = await readFile(outFile, 'utf-8');
-    html = html.replace('</head>', '<meta name="robots" content="noindex,follow" /></head>');
+    const robots = /<meta name="robots"[^>]*>/g;
+    html = robots.test(html)
+      ? html.replace(robots, '<meta name="robots" content="noindex, follow" />')
+      : html.replace('</head>', '<meta name="robots" content="noindex, follow" /></head>');
     // Canonical/og:url would otherwise point at the fake path.
     html = html.replace(/<link rel="canonical"[^>]*>/, '');
     html = html.replace(/<meta property="og:url"[^>]*>/, '');
     await writeFile(outFile, html, 'utf-8');
   }
   console.log('  ✅ 404.html');
+
+  // llms.txt: the hand-written file from public/, plus the registry's guides,
+  // articles, industry and suburb pages, and every link in its served form
+  // (the slash form; the un-slashed one is a 308).
+  {
+    const file = path.join(DIST, 'llms.txt');
+    if (existsSync(file)) {
+      let txt = await readFile(file, 'utf-8');
+      const live = liveSeoPages();
+      const section = (title, type) => {
+        const items = live.filter((e) => e.type === type);
+        if (!items.length) return '';
+        return `## ${title}\n\n${items.map((e) => `- [${e.name}](${SITE_ORIGIN}/${e.slug}/): ${String(e.description || '').replace(/\s+/g, ' ').trim()}`).join('\n')}\n\n`;
+      };
+      const generated = section('Guides', 'comparison') + section('Articles', 'article') + section('Industries', 'industry') + section('Suburbs', 'suburb');
+      txt = txt.replace(/<!-- The build inserts[^>]*-->\r?\n\r?\n/, generated);
+      txt = txt.replace(/\((https:\/\/c4studios\.com\.au)(\/[^)\s]*)\)/g, (m, origin, p) => `(${origin}${sitePath(p)})`);
+      await writeFile(file, txt, 'utf-8');
+      console.log(`  ✅ llms.txt (${(txt.match(/^- \[/gm) || []).length} links)`);
+    }
+  }
 
   // Generate the OG image (1200×630)
   console.log('  ⏳ og-image.png');

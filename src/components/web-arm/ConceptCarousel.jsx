@@ -17,7 +17,7 @@
  * element) — no motion library needed at this size.
  */
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 
 import cptBarrys from './assets/cpt-barrys.webp';
 import cptWooster from './assets/cpt-wooster.webp';

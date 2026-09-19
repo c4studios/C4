@@ -17,7 +17,7 @@
  *   - Premium interactivity preserved
  */
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/components/c4/SiteLink';
 import { createPageUrl } from '@/utils';
 import { c4LensPackages } from '@/data/pricing';
 import { createPaintStage } from '../components/lens/paintWord';

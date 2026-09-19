@@ -137,12 +137,11 @@ export function caseStudyArticleSchema(study, testimonial) {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: `${study.name} — ${study.tags?.[0] || 'Case Study'} | C4 Studios`,
+    headline: `${study.name}: ${study.tags?.[0] || 'case study'}`,
     description: study.oneLiner,
     image: study.cover ? absoluteUrl(study.cover) : undefined,
     author: { '@type': 'Organization', name: ORG_INFO.name, url: SITE_URL },
     publisher: { '@id': `${SITE_URL}/#localbusiness` },
-    datePublished: study.year ? `${study.year}-01-01` : undefined,
     about: study.client,
     keywords: (study.tags || []).join(', '),
     mainEntityOfPage: absoluteUrl(`/CaseStudy/${study.slug}`),
