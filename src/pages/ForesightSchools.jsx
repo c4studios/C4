@@ -1,5 +1,6 @@
 import React from 'react';
 import SectorPage from '@/components/sight/SectorPage';
+import { c4SiteIncursion, C4SIGHT_PRICING_NOTE } from '@/data/pricing';
 
 const DATA = {
   sector: 'Schools and teachers',
@@ -40,6 +41,18 @@ const DATA = {
     'For schools, the data-safety module expands to cover student-facing implications explicitly.',
   disclaimer: null,
   ctaHeading: 'Give your staff AI they can use responsibly.',
+  /* The one published training price. Facts come from the incursion run
+     sheet via pricing.js. It is a one-presenter session by design. */
+  offer: {
+    heading: 'The 90-minute incursion',
+    priceLabel: c4SiteIncursion.priceLabel,
+    unit: `for ${c4SiteIncursion.minutes} minutes`,
+    priceNote: C4SIGHT_PRICING_NOTE,
+    body:
+      'At about the half-hour mark the machine gets something confidently wrong in front of everyone, and the rest of the session is the class working out why. It is presenter-led and projected, so students need no devices. We need a projector and some clear floor.',
+    facts: c4SiteIncursion.facts,
+    cta: 'Ask about a date',
+  },
   downloads: {
     heading: 'Free classroom previews — take a lesson for a test drive',
     intro:
@@ -77,7 +90,7 @@ const DATA = {
       },
     ],
     note:
-      'Every preview opens in your browser to read or save — no sign-up. Each carries a complete activity, its curriculum links, and a plain safety note. The paid incursion adds the live demonstration, two presenters (a practitioner and a registered teacher), the full lesson arc, and a resource pack your teachers keep.',
+      'Every preview opens in your browser to read or save, with no sign-up. Each carries a complete activity, its curriculum links and a plain safety note. The incursion adds the live demonstration and the full lesson arc. Longer formats are run by two presenters, one of them a registered teacher.',
   },
 };
 

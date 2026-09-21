@@ -791,13 +791,18 @@ export const INDUSTRY_SURCHARGE_NOTE = 'Professional services industries (legal,
 export const CTA_TEXT = 'Book a Free Discovery Call';
 export const CTA_ROUTE = '/start';
 
-/* ── C4Site — workplace AI training & workshops ── */
+/* ── C4Site — AI training and workshops ──
+   Decided by Caleb, 19 Sep 2026: workplace sessions carry no published price
+   and are quoted per team, because the right number for six people down the
+   road is not the right number for forty across two sites. The one published
+   training price is the 90-minute school incursion, below. `price: 0` keeps
+   these out of the Service schema's offers and out of any price list. */
 export const c4SightPackages = [
   {
     key: 'sight-half-day',
     name: 'Half-Day Workshop',
-    price: 800,
-    priceLabel: 'From $800',
+    price: 0,
+    priceLabel: 'Quoted per team',
     popular: false,
     description: 'A focused half day, about 3.5 hours, for one team with a single sector focus.',
     features: [
@@ -810,8 +815,8 @@ export const c4SightPackages = [
   {
     key: 'sight-full-day',
     name: 'Full-Day Workshop',
-    price: 1400,
-    priceLabel: 'From $1,400',
+    price: 0,
+    priceLabel: 'Quoted per team',
     popular: true,
     description: 'The half-day morning plus a role-specific afternoon of deep work on your team\'s real tasks.',
     features: [
@@ -837,5 +842,28 @@ export const c4SightPackages = [
   },
 ];
 
-// Indicative-pricing note for C4Site surfaces (Foresight page).
-export const C4SIGHT_PRICING_NOTE = 'Prices are indicative starting points. You get a fixed quote after a short scoping call, based on group size, location and format. All prices in AUD, excluding GST.';
+/* The 90-minute school incursion. Format facts are from the incursion run
+   sheet (c4sight-schools, deliverables/lessons/90-minute-incursion-run-sheet.md):
+   one presenter, one class or year group, up to 60 students, the school's own
+   teacher stays in the room. */
+export const c4SiteIncursion = {
+  key: 'site-incursion-90',
+  name: '90-minute school incursion',
+  price: 650,
+  priceLabel: '$650',
+  minutes: 90,
+  maxStudents: 60,
+  facts: [
+    'One class or year group, up to 60 students',
+    'Your own teacher stays in the room',
+    'No student devices and no student data',
+  ],
+};
+
+/* What sets a workplace quote. The same three things the old pricing note
+   named: group size, format and location. */
+export const C4SITE_QUOTE_FACTORS = ['people in the room', 'half day or full', 'where you are'];
+
+/* C4 Studios is not registered for GST, so nothing here is "plus GST". The
+   wording matches the line on every C4 invoice. */
+export const C4SIGHT_PRICING_NOTE = 'All prices are in AUD. GST is not applicable as C4 Studios is not currently registered for GST.';

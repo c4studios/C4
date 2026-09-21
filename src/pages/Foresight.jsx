@@ -31,8 +31,15 @@
  *    tally accrues per row and the ring closes around "Five" last;
  *    worksheet ticks draw before the red-pen correction.
  *  - The margin hand does only arithmetic the page already states:
- *    clock and hour sums derived from FORMATS, the price difference
- *    derived from c4SightPackages at render. Nothing is hardcoded.
+ *    clock and hour sums derived from FORMATS, and the quote sum built
+ *    from C4SITE_QUOTE_FACTORS. Nothing is hardcoded.
+ *  - Each format lists its own blocks, in order, with minutes (19 Sep
+ *    2026), from c4sight-workshop-curriculum.md. A to-scale track with
+ *    brackets was tried first and Caleb found it confusing: a plain
+ *    list is the honest form of a run sheet.
+ *  - Workplace prices came off the page the same day (quoted per team);
+ *    "What it costs" states the one published price, the school
+ *    incursion, and how a quote is set.
  *
  * All pricing facts render from src/data/pricing.js. Reveals are GSAP
  * and enhancement-only: content is visible by default, staticMode
@@ -49,7 +56,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
-import { c4SightPackages, C4SIGHT_PRICING_NOTE } from '@/data/pricing';
+import { c4SightPackages, c4SiteIncursion, C4SITE_QUOTE_FACTORS, C4SIGHT_PRICING_NOTE } from '@/data/pricing';
 import { reassertStoredTheme } from '../components/c4/ThemeContext';
 import SiteMosaic from '../components/sight-arm/SiteMosaic';
 import '../components/sight-arm/sight-arm.css';
@@ -90,6 +97,25 @@ const FORMATS = [
     popular: true,
     body: 'The half-day morning, plus an afternoon where attendees bring their own recurring tasks and build repeatable workflows they keep. The deeper option, and it closes with a short automation-readiness map.',
   },
+];
+
+/* The run of a day, block by block, in minutes. Verbatim from the delivery
+   document (c4sight-workshop-curriculum.md): blocks 0 to 5 are the half day,
+   6 to 8 and the close are the full-day afternoon. `rest` blocks are breaks.
+   Lunch has no stated length there, so it is not listed. */
+const RUN_OF_DAY = [
+  { part: 'am', label: 'Setup', min: 15 },
+  { part: 'am', label: 'What these tools are', min: 30 },
+  { part: 'am', label: 'First hands-on', min: 45 },
+  { part: 'am', label: 'Break', min: 15, rest: true },
+  { part: 'am', label: 'Prompting that works', min: 45 },
+  { part: 'am', label: 'Data safety', min: 30 },
+  { part: 'am', label: 'Making it stick', min: 20 },
+  { part: 'pm', label: 'Your own tasks', min: 60 },
+  { part: 'pm', label: 'Break', min: 15, rest: true },
+  { part: 'pm', label: 'Build a workflow you keep', min: 45 },
+  { part: 'pm', label: 'Your questions', min: 30 },
+  { part: 'pm', label: 'The pack', min: 15 },
 ];
 
 const OUTCOMES = [
@@ -481,14 +507,6 @@ export default function Foresight() {
     };
   }, []);
 
-  const priceSum = useMemo(() => {
-    const half = c4SightPackages.find((p) => p.key === 'sight-half-day');
-    const full = c4SightPackages.find((p) => p.key === 'sight-full-day');
-    if (!half || !full || half.price <= 0 || full.price <= half.price) return null;
-    const money = (n) => `$${n.toLocaleString('en-AU')}`;
-    return { full: money(full.price), half: money(half.price), diff: money(full.price - half.price) };
-  }, []);
-
   /* Entrances. Everything renders visible first; GSAP animates FROM.
      Teaching order lives in delays appended to the existing reveal
      system — the section infra itself is unchanged (memo §1.4.3).
@@ -768,24 +786,31 @@ export default function Foresight() {
             page's one authored moment. */}
         <SiteMosaic reduced={reduced} prerender={prerender} />
         <div className="sg-wrap">
-          <h1 className="sg-chalk-edge" data-sg-hero="">
-            We train your team{' '}
-            <span className="sg-underlined">
-              on site.
-              <MarkUnderline />
-              <PuffDots />
-            </span>
-          </h1>
-          <p className="sg-lede" data-sg-hero="">
-            C4Site runs hands-on AI workshops in the rooms where your team already works. They
-            learn to use AI tools on their real work, safely, in about half a day. On-site across
-            Perth, remote on request.
-          </p>
-          <div className="sg-hero-cta" data-sg-hero="">
-            <Link to={enquiryUrl} className="sg-btn">
-              Request a workshop
-              <MarkArrow />
-            </Link>
+          <div className="sg-hero-grid">
+            <h1 className="sg-chalk-edge" data-sg-hero="">
+              We train your team{' '}
+              <span className="sg-underlined">
+                on site.
+                <MarkUnderline />
+                <PuffDots />
+              </span>
+            </h1>
+            <div className="sg-hero-do">
+              <p className="sg-lede" data-sg-hero="">
+                C4Site runs hands-on AI workshops in the rooms where your team already works. They
+                learn to use AI tools on their real work, safely, in about half a day. On-site
+                across Perth, remote on request.
+              </p>
+              <div className="sg-hero-cta" data-sg-hero="">
+                <Link to={enquiryUrl} className="sg-btn">
+                  Request a workshop
+                  <MarkArrow />
+                </Link>
+              </div>
+              <p className="sg-hero-by" data-sg-hero="">
+                C4Site is the training arm of <Link to="/">C4 Studios</Link>, Perth.
+              </p>
+            </div>
           </div>
           <div className="sg-tray" aria-hidden="true">
             <span className="sg-tray-ledge" data-sg-tray="" />
@@ -822,16 +847,6 @@ export default function Foresight() {
                       </span>
                     </div>
                   )}
-                  <div className="sg-sched" aria-hidden="true">
-                    <span className="sg-sched-block sg-sched-block--am" data-sg-bar="">
-                      am
-                    </span>
-                    {fmt.popular && (
-                      <span className="sg-sched-block sg-sched-block--pm" data-sg-bar="">
-                        pm
-                      </span>
-                    )}
-                  </div>
                   {handNotes && (
                     <p className="sg-hand sg-format-hand" data-sg-hand="" aria-hidden="true">
                       {i === 0 ? (
@@ -846,6 +861,17 @@ export default function Foresight() {
                     </p>
                   )}
                   <p className="sg-format-body">{fmt.body}</p>
+                  <p className="sg-plan-lead">
+                    {i === 0 ? 'The morning, in order' : 'The same morning, then after lunch'}
+                  </p>
+                  <ol className={i === 0 ? 'sg-plan' : 'sg-plan sg-plan--pm'}>
+                    {RUN_OF_DAY.filter((b) => b.part === (i === 0 ? 'am' : 'pm')).map((b, k) => (
+                      <li key={`${b.label}-${k}`} className={b.rest ? 'sg-plan-row sg-plan-row--rest' : 'sg-plan-row'}>
+                        <span className="sg-plan-name">{b.label}</span>
+                        <span className="sg-plan-min">{b.min} min</span>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
                 {i === 0 && <VRule />}
               </Fragment>
@@ -1006,44 +1032,63 @@ export default function Foresight() {
         {!staticMode && <SmearBand variant="price" streaks={PRICE_STREAKS} />}
         <div className="sg-wrap">
           <div className="sg-pricing-head" data-sg-item="">
-            <h2 className="sg-h2">Indicative pricing.</h2>
-            {priceSum && (
-              <p className="sg-hand sg-price-hand" data-sg-hand="" aria-hidden="true">
-                only{' '}
-                <span className="sg-hand-em">
-                  {priceSum.diff}
-                  <MarkUnderline />
-                </span>{' '}
-                more → the whole afternoon
-              </p>
-            )}
+            <h2 className="sg-h2">What it costs.</h2>
           </div>
-          <div className="sg-price-grid">
-            {c4SightPackages.map((pkg) => (
-              <div key={pkg.key} className="sg-price" data-sg-item="">
-                {pkg.popular && (
-                  <span className="sg-price-annot sg-annot">
-                    Most value
-                    <MarkRing />
-                    <PuffDots />
-                  </span>
-                )}
-                <h3>{pkg.name}</h3>
-                <p className="sg-price-figure" data-sg-press="">
-                  {pkg.priceLabel}
-                </p>
-                <p className="sg-price-desc">{pkg.description}</p>
-                <div className="sg-price-rule" aria-hidden="true" />
-                <ul>
-                  {pkg.features.map((f) => (
-                    <li key={f}>
-                      <MarkTick />
-                      <span>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+          {/* The teacher's working: what goes into a quote. Spoken to a
+              screen reader as a sentence, drawn as a sum. */}
+          <p className="sg-hand sg-cost-sum" data-sg-hand="">
+            <span className="sg-sr">
+              A workplace quote depends on {C4SITE_QUOTE_FACTORS.join(', ')}. It comes to one fixed
+              price.
+            </span>
+            <span aria-hidden="true">
+              {C4SITE_QUOTE_FACTORS.map((factor, i) => (
+                <Fragment key={factor}>
+                  {i > 0 && <span className="sg-cost-op"> + </span>}
+                  <span className="sg-cost-term">{factor}</span>
+                </Fragment>
+              ))}
+              <span className="sg-cost-op"> = </span>
+              <span className="sg-hand-em">
+                one fixed price
+                <MarkUnderline />
+              </span>
+            </span>
+          </p>
+          <div className="sg-cost-grid">
+            <div className="sg-cost" data-sg-item="">
+              <h3>Workplaces</h3>
+              <p className="sg-cost-figure sg-cost-figure--words" data-sg-press="">
+                Quoted per team
+              </p>
+              <p className="sg-cost-body">
+                A morning for six people down the road is a different job from a full day for forty
+                across two sites, so there is no list price. Tell us about your team and you will
+                have one fixed price after a short call.
+              </p>
+            </div>
+            <VRule />
+            <div className="sg-cost" data-sg-item="">
+              <h3>Schools</h3>
+              <p className="sg-cost-figure" data-sg-press="">
+                {c4SiteIncursion.priceLabel}
+                <span className="sg-cost-unit">for a {c4SiteIncursion.minutes}-minute incursion</span>
+              </p>
+              <ul className="sg-cost-facts">
+                {c4SiteIncursion.facts.map((fact) => (
+                  <li key={fact}>
+                    <MarkTick />
+                    <span>{fact}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="sg-cost-more">
+                <Link to={createPageUrl('ForesightSchools')} className="sg-cost-link">
+                  See training for schools
+                  <MarkArrow />
+                </Link>
+              </p>
+            </div>
           </div>
           <p className="sg-pricing-note" data-sg-item="">
             {C4SIGHT_PRICING_NOTE}

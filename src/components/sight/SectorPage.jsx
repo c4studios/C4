@@ -185,11 +185,63 @@ export default function SectorPage({ data }) {
               <Link to={hubUrl} className="underline underline-offset-2" style={{ color: 'var(--c4-text)' }}>
                 C4Site overview
               </Link>{' '}
-              for the half-day and full-day formats, what your team keeps, and indicative pricing.
+              for the half-day and full-day formats, what your team keeps, and how pricing works.
             </p>
           </motion.div>
         </div>
       </section>
+
+      {/* THE PRICED OFFER — rendered only when a page supplies one (schools:
+          the 90-minute incursion, the one published training price). */}
+      {data.offer && (
+        <section className="py-16 md:py-24 border-t" style={{ borderColor: 'var(--c4-border)' }}>
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+            <motion.div
+              {...(staticMode ? {} : { initial: { opacity: 0, y: 10 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-40px' } })}
+              transition={{ duration: 0.5, ease }}
+              className="grid grid-cols-1 gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16"
+            >
+              <div>
+                <h2 className="text-[clamp(1.4rem,3vw,2rem)] font-semibold tracking-[-0.025em] leading-[1.1]">
+                  {data.offer.heading}
+                </h2>
+                <p className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="text-[clamp(2.6rem,6vw,4rem)] font-semibold tracking-[-0.035em] leading-none tabular-nums">
+                    {data.offer.priceLabel}
+                  </span>
+                  <span className="text-[13.5px]" style={{ color: 'var(--c4-text-muted)' }}>
+                    {data.offer.unit}
+                  </span>
+                </p>
+                <p className="mt-4 max-w-[440px] text-[12.5px] leading-[1.7]" style={{ color: 'var(--c4-text-muted)' }}>
+                  {data.offer.priceNote}
+                </p>
+              </div>
+              <div>
+                <p className="max-w-[560px] text-[14px] leading-[1.75]" style={{ color: 'var(--c4-text)' }}>
+                  {data.offer.body}
+                </p>
+                <ul className="mt-6 flex flex-col gap-3">
+                  {data.offer.facts.map((fact) => (
+                    <li key={fact} className="flex items-start gap-3">
+                      <Check size={15} strokeWidth={2.25} className="mt-0.5 shrink-0" style={{ color: 'var(--c4-accent)' }} />
+                      <span className="text-[13.5px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>{fact}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  to={enquiryUrl}
+                  className="group mt-8 inline-flex items-center gap-2 text-[13px] font-medium underline underline-offset-4"
+                  style={{ color: 'var(--c4-text)' }}
+                >
+                  {data.offer.cta}
+                  <ArrowRight size={14} strokeWidth={2} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       {/* FREE PREVIEW DOWNLOADS — rendered only when a page supplies them
           (schools). Additive: sectors without `data.downloads` are unchanged.

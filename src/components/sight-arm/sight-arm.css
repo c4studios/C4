@@ -343,12 +343,6 @@
   height: 10px;
 }
 
-.sg-price-hand {
-  margin: 0 0 4px;
-  font-size: clamp(19px, 2vw, 22px);
-  transform: rotate(-1.8deg);
-}
-
 .sg-hand-em {
   position: relative;
   display: inline-block;
@@ -559,12 +553,52 @@
   margin-top: clamp(30px, 4.5vw, 46px);
 }
 
+/* The statement and what to do about it, side by side once there is room,
+   so the right half of the board is used and the join under the stage is
+   one screen, not a screen and a half. */
+.sg-hero-grid {
+  display: grid;
+  gap: 0;
+}
+
+@media (min-width: 980px) {
+  .sg-hero-grid {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    gap: clamp(48px, 6vw, 104px);
+    align-items: end;
+  }
+  .sg-hero-grid .sg-lede {
+    margin-top: 0;
+  }
+  .sg-hero-grid .sg-hero-cta {
+    margin-top: clamp(24px, 3vw, 34px);
+  }
+}
+
+.sg-hero-by {
+  margin: clamp(20px, 3vw, 28px) 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--sg-dim);
+}
+
+.sg-hero-by a {
+  color: var(--sg-chalk);
+  text-decoration: underline;
+  text-decoration-color: var(--sg-line-strong);
+  text-underline-offset: 0.22em;
+}
+
+.sg-hero-by a:hover {
+  text-decoration-color: var(--sg-yellow);
+}
+
 /* The chalk tray: a shallow ledge at the foot of the board holding a
    worn chalk stub, the marker-yellow pen, and (after the walk-in) the
    resting eraser, with dust pooled beneath. */
 .sg-tray {
   position: relative;
-  margin-top: clamp(52px, 8vw, 88px);
+  margin-top: clamp(44px, 6vw, 68px);
   height: 30px;
 }
 
@@ -748,6 +782,76 @@
   margin-bottom: clamp(40px, 6vw, 64px);
 }
 
+/* ── Each format's run sheet ───────────────────────────────────────
+   A plain ordered list under each format: the block and its minutes. The
+   afternoon's rows carry the marker yellow, the way the full day does
+   everywhere else on the page. */
+.sg-plan-lead {
+  margin: clamp(26px, 3.5vw, 34px) 0 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--sg-dim);
+}
+
+.sg-plan {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  max-width: 52ch;
+  border-top: 1px solid var(--sg-line);
+}
+
+.sg-plan-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 11px 0 11px 16px;
+  border-bottom: 1px solid var(--sg-line);
+  position: relative;
+}
+
+.sg-plan-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: var(--sg-line-strong);
+}
+
+.sg-plan--pm .sg-plan-row::before {
+  background: var(--sg-yellow);
+}
+
+.sg-plan-name {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--sg-chalk);
+}
+
+.sg-plan-min {
+  flex: none;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--sg-dim);
+}
+
+.sg-plan-row--rest .sg-plan-name {
+  font-weight: 500;
+  color: var(--sg-dim);
+}
+
+.sg-plan-row--rest::before,
+.sg-plan--pm .sg-plan-row--rest::before {
+  background: none;
+  border: 1.5px solid var(--sg-line-strong);
+}
+
 .sg-formats-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -813,36 +917,6 @@
 
 .sg-format-annot {
   margin-top: 14px;
-}
-
-/* Schedule bars: hours drawn to scale (am 3.5h, pm 2.5h of a 6h day). */
-.sg-sched {
-  display: flex;
-  gap: 6px;
-  margin-top: 22px;
-  height: 30px;
-}
-
-.sg-sched-block {
-  display: flex;
-  align-items: center;
-  padding-inline: 10px;
-  border: 1.5px solid var(--sg-line-strong);
-  border-radius: 7px;
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--sg-dim);
-}
-
-.sg-sched-block--am {
-  width: 58.3%;
-}
-
-.sg-sched-block--pm {
-  width: 41.7%;
-  border-color: rgba(240, 206, 74, 0.65);
-  color: var(--sg-yellow);
 }
 
 .sg-format-body {
@@ -1108,21 +1182,36 @@
     0 8px 22px -10px rgba(0, 0, 0, 0.45);
 }
 
-/* The honest answer to "why is paper on a board": one small magnet,
-   top edge, steel with a soft highlight. */
+/* The honest answer to "why is paper on a board": one board magnet, the
+   round plastic kind every staff room has, in the red of the pen. It sits
+   fully on the sheet, which is how a magnet holds paper. Lit from up and to
+   the left like the rest of the board: a domed face with a soft hot spot, a
+   bevelled rim that is bright on the lit side and dark on the far side, a
+   faint moulding ring, and a shadow that falls down and to the right, tight
+   where the magnet touches and soft further out. */
 .sg-paper::before {
   content: '';
   position: absolute;
-  top: -11px;
+  top: 13px;
   left: 50%;
-  width: 22px;
-  height: 22px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   transform: translateX(-50%);
-  background: radial-gradient(circle at 34% 30%, #dfe3df, #99a29b 58%, #5c655e);
+  background:
+    radial-gradient(ellipse 36% 26% at 33% 27%, rgb(255 255 255 / 0.82), rgb(255 255 255 / 0) 72%),
+    radial-gradient(circle at 50% 50%, transparent 0 40%, rgb(0 0 0 / 0.16) 42% 46%, rgb(255 255 255 / 0.1) 47% 50%, transparent 52%),
+    radial-gradient(circle at 37% 31%,
+      color-mix(in srgb, var(--sg-red) 72%, white) 0%,
+      var(--sg-red) 42%,
+      color-mix(in srgb, var(--sg-red) 62%, black) 100%);
   box-shadow:
-    0 2px 5px rgba(0, 0, 0, 0.4),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.28);
+    inset 1.5px 2px 2px rgb(255 255 255 / 0.4),
+    inset -2px -3px 4px rgb(0 0 0 / 0.42),
+    inset 0 0 0 1px rgb(0 0 0 / 0.14),
+    1px 1px 1px rgb(0 0 0 / 0.5),
+    3px 5px 6px rgb(0 0 0 / 0.34),
+    7px 12px 18px rgb(0 0 0 / 0.2);
 }
 
 /* Chalk dust kissing the sheet's bottom edge — it has been sitting
@@ -1322,7 +1411,7 @@
   transform: translateX(4px);
 }
 
-/* ── Pricing: chalk boxes on the deep board ──────────────────────── */
+/* ── What it costs: the working and the two answers, on the deep board ── */
 
 .sg-pricing {
   position: relative;
@@ -1371,86 +1460,135 @@
   margin-bottom: clamp(36px, 5vw, 56px);
 }
 
-.sg-price-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(256px, 1fr));
-  gap: clamp(16px, 2.4vw, 28px);
-  align-items: stretch;
+/* The teacher's working, at the size of a line written to be read from the
+   back of the room. */
+.sg-cost-sum {
+  margin: 0 0 clamp(44px, 6vw, 72px);
+  font-size: clamp(1.7rem, 3.05vw, 2.3rem);
+  line-height: 1.22;
+  transform: rotate(-1.1deg);
+  transform-origin: left center;
+  text-wrap: balance;
 }
 
-.sg-price {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  border: 1.5px solid var(--sg-line-strong);
-  border-radius: 10px;
-  background: var(--sg-raise);
-  padding: clamp(24px, 3vw, 32px);
-  margin-top: 16px;
+.sg-cost-op {
+  color: var(--sg-chalk);
+  opacity: 0.75;
 }
 
-.sg-price-annot {
+.sg-sr {
   position: absolute;
-  top: -19px;
-  right: 14px;
-  background: var(--sg-board-deep);
-  border-radius: 999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
-.sg-price h3 {
-  margin: 0 0 14px;
+.sg-cost-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(40px, 6vw, 56px);
+}
+
+@media (min-width: 820px) {
+  .sg-cost-grid {
+    grid-template-columns: 1fr 12px 1fr;
+    gap: clamp(40px, 5vw, 72px);
+  }
+}
+
+.sg-cost h3 {
+  margin: 0;
   font-size: 1.06rem;
   font-weight: 700;
-  letter-spacing: -0.005em;
-  color: var(--sg-chalk);
+  color: var(--sg-dim);
 }
 
-.sg-price-figure {
-  font-size: clamp(1.85rem, 2.6vw, 2.2rem);
+.sg-cost-figure {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin: 12px 0 0;
+  font-size: clamp(2.7rem, 5.4vw, 3.9rem);
   font-weight: 780;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
+  letter-spacing: -0.03em;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
   color: var(--sg-chalk);
 }
 
-.sg-price-desc {
-  margin: 14px 0 0;
-  font-size: 14.5px;
-  line-height: 1.62;
+.sg-cost-figure--words {
+  font-size: clamp(1.85rem, 3.4vw, 2.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+.sg-cost-unit {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--sg-dim);
+}
+
+.sg-cost-body {
+  margin: 20px 0 0;
+  max-width: 50ch;
+  font-size: 15.5px;
+  line-height: 1.7;
   color: var(--sg-dim);
   text-wrap: pretty;
 }
 
-.sg-price-rule {
-  height: 1px;
-  background: var(--sg-line);
-  margin-block: 20px;
-}
-
-.sg-price ul {
+.sg-cost-facts {
   display: grid;
-  gap: 12px;
-  margin: 0;
+  gap: 11px;
+  margin: 22px 0 0;
   padding: 0;
   list-style: none;
 }
 
-.sg-price li {
+.sg-cost-facts li {
   display: grid;
   grid-template-columns: 24px 1fr;
   gap: 11px;
-  font-size: 14.5px;
+  font-size: 15px;
   line-height: 1.55;
   color: var(--sg-dim);
-  text-wrap: pretty;
 }
 
-.sg-price li .sg-mark {
+.sg-cost-facts li .sg-mark {
   width: 18px;
   height: 18px;
   margin-top: 2px;
   color: var(--sg-yellow);
+}
+
+.sg-cost-more {
+  margin: 24px 0 0;
+}
+
+.sg-cost-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding-block: 6px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--sg-chalk);
+  text-decoration: none;
+}
+
+.sg-cost-link .sg-mark {
+  width: 26px;
+  height: 11px;
+  color: var(--sg-yellow);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sg-cost-link:hover .sg-mark {
+  transform: translateX(4px);
 }
 
 .sg-pricing-note {

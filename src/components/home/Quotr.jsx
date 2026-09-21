@@ -18,7 +18,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import {
   webDesignPackages, webDesignAddOns, brandingPackages, c4LensPackages, seoPackages,
-  automationPackages, socialMediaPackages, supportPlans, c4SightPackages, subscriptionInfo,
+  automationPackages, socialMediaPackages, supportPlans, subscriptionInfo,
   GST_NOTE, ASTERISK_CLAUSE,
 } from '@/data/pricing';
 import { createPageUrl } from '@/utils';
@@ -34,7 +34,6 @@ const LANES = [
   { key: 'automation', label: 'Automation', packages: automationPackages, service: 'automation' },
   { key: 'lens', label: 'Photography', packages: c4LensPackages, service: 'lens' },
   { key: 'brand', label: 'Brand', packages: brandingPackages, service: 'brand_platform' },
-  { key: 'training', label: 'Training', packages: c4SightPackages.filter((p) => p.price > 0), service: 'training' },
   { key: 'seo', label: 'SEO', packages: seoPackages, service: 'seo' },
   { key: 'social', label: 'Social', packages: socialMediaPackages, service: 'social' },
   { key: 'care', label: 'Care plan', packages: supportPlans, service: 'support' },
