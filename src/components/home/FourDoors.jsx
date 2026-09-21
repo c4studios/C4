@@ -226,7 +226,7 @@ const DOORS = [
     word: 'AI training',
     outcome:
       'Hands-on AI workshops for businesses, schools and law firms, run on your own tools and your own real work.',
-    fromPrice: 'From $800',
+    fromPrice: 'Quoted per team',
     timeframe: 'Half / full-day',
     primary: { label: 'Visit C4Site', to: '/Foresight' },
     secondary: { label: 'or enquire about training', to: '/ai-training-enquiry' },

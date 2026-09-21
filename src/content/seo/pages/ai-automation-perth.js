@@ -82,7 +82,7 @@ export default {
       label: 'C4Site',
       heading: 'Want your team trained, not just tooled?',
       body: [
-        'Automation sticks when the team understands it. C4Site is our workplace AI training arm: half-day workshops from $800 and full-day programs from $1,400, run on-site with your actual workflows. The full-day version ends with an automation readiness map — a prioritised list of what to automate next and what it would cost.',
+        'Automation sticks when the team understands it. C4Site is our workplace AI training arm: half-day and full-day workshops, quoted per team and run on-site with your actual workflows. The full-day version ends with an automation readiness map — a prioritised list of what to automate next and what it would cost.',
       ],
     },
   ],
