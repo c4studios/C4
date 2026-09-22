@@ -1,71 +1,96 @@
-import React, { useState, useRef } from 'react';
+/*
+ * /ai-training-enquiry — the C4Site enquiry, on the board.
+ *
+ * One paper slip. The format and group-size choices follow the sector: a
+ * school picks between the 90-minute incursion and staff PD, a workplace
+ * between the half and full day. ?sector= and ?format= pre-fill it, so the
+ * schools page can send a visitor straight to "90-minute incursion". The
+ * backend (functions/api/training.js) stores the labels as free text, so the
+ * school labels need no server change. Honeypot, load time and Turnstile are
+ * unchanged. Moved onto the board on 21 Sep 2026; sending and the result now
+ * happen on the slip instead of a separate full-page state.
+ */
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { Link } from '@/components/c4/SiteLink';
+import { createPageUrl } from '@/utils';
 import { submitTrainingEnquiry } from '@/api/submissions';
-import SubmissionSuccess from '@/components/c4/SubmissionSuccess';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
-import SubmitButton from '@/components/c4/SubmitButton';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema } from '@/lib/schema';
-
-const ease = [0.22, 1, 0.36, 1];
+import { ChalkDefs, ChalkHeading, MarkArrow, useForceDark } from '@/components/sight-arm/kit';
 
 const SECTORS = [
-  { key: 'business', label: 'Office / business' },
+  { key: 'business', label: 'Office or business' },
   { key: 'school', label: 'School' },
   { key: 'law', label: 'Law firm' },
-  { key: 'other', label: 'Other' },
+  { key: 'other', label: 'Something else' },
 ];
 
-const FORMATS = [
-  { key: 'half-day', label: 'Half-day' },
-  { key: 'full-day', label: 'Full-day' },
+const WORK_FORMATS = [
+  { key: 'half-day', label: 'Half day' },
+  { key: 'full-day', label: 'Full day' },
   { key: 'not-sure', label: 'Not sure yet' },
 ];
 
-const GROUP_SIZES = [
-  { key: 'under-10', label: 'Under 10' },
-  { key: '10-20', label: '10–20' },
-  { key: '20-40', label: '20–40' },
-  { key: '40-plus', label: '40+' },
+const SCHOOL_FORMATS = [
+  { key: 'incursion-90', label: '90-minute incursion' },
+  { key: 'staff-pd', label: 'Staff PD' },
+  { key: 'not-sure', label: 'Not sure yet' },
 ];
 
-const fieldClass = 'w-full rounded-sm px-4 py-3 text-[14px] focus:outline-none transition-colors duration-300';
-const labelClass = 'block text-[11px] uppercase tracking-[0.15em] font-medium mb-2';
+const WORK_SIZES = [
+  { key: 'under-10', label: 'Under 10' },
+  { key: '10-20', label: '10 to 20' },
+  { key: '20-40', label: '20 to 40' },
+  { key: '40-plus', label: 'More than 40' },
+];
 
-function PillSelect({ options, value, onChange }) {
+const SCHOOL_SIZES = [
+  { key: 'one-class', label: 'One class' },
+  { key: 'up-to-60', label: 'Up to 60' },
+  { key: 'over-60', label: 'More than 60' },
+];
+
+const labelFor = (options, key) => options.find((o) => o.key === key)?.label || '';
+const has = (options, key) => options.some((o) => o.key === key);
+
+function Choices({ id, label, options, value, onChange }) {
   return (
-    <div className="flex flex-wrap gap-2">
-      {options.map((opt) => (
-        <button
-          key={opt.key}
-          type="button"
-          onClick={() => onChange(value === opt.key ? '' : opt.key)}
-          className="px-4 py-2 text-[12.5px] font-medium border rounded-sm transition-all duration-300"
-          style={value === opt.key
-            ? { backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)', borderColor: 'var(--c4-text)' }
-            : { backgroundColor: 'var(--c4-card-bg)', color: 'var(--c4-text-muted)', borderColor: 'var(--c4-border)' }
-          }
-        >
-          {opt.label}
-        </button>
-      ))}
+    <div className="sg-field" role="group" aria-labelledby={id}>
+      <span className="sg-field-label" id={id}>{label}</span>
+      <div className="sg-choices">
+        {options.map((opt) => (
+          <button
+            key={opt.key}
+            type="button"
+            className="sg-choice"
+            aria-pressed={value === opt.key}
+            onClick={() => onChange(value === opt.key ? '' : opt.key)}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
 
-const labelFor = (options, key) => options.find((o) => o.key === key)?.label || '';
-
 export default function TrainingEnquiry() {
+  useForceDark();
   const [searchParams] = useSearchParams();
-  const preSector = SECTORS.some((s) => s.key === searchParams.get('sector')) ? searchParams.get('sector') : '';
   const loadedAt = useRef(Date.now());
   const turnstileToken = useRef(null);
+  const resultRef = useRef(null);
+
+  const preSector = has(SECTORS, searchParams.get('sector')) ? searchParams.get('sector') : '';
+  const preFormats = preSector === 'school' ? SCHOOL_FORMATS : WORK_FORMATS;
+  const preFormat = has(preFormats, searchParams.get('format')) ? searchParams.get('format') : '';
 
   useDocumentHead({
     title: 'Request a C4Site workshop',
     description:
-      'Enquire about a C4Site workplace AI workshop. Tell us your sector, preferred format and rough group size, and the studio replies directly.',
+      'Enquire about a C4Site AI workshop or a school incursion. Tell us your sector, the format and a rough group size, and the studio replies directly.',
     path: '/ai-training-enquiry',
     jsonLd: breadcrumbSchema([
       { name: 'Home', path: '/' },
@@ -79,183 +104,196 @@ export default function TrainingEnquiry() {
     email: '',
     organisation: '',
     sector: preSector,
-    format: '',
+    format: preFormat,
     groupSize: '',
     message: '',
     _gotcha: '',
   });
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [formError, setFormError] = useState(null);
+  const [status, setStatus] = useState('idle'); // idle | sending | sent
+  const [error, setError] = useState('');
+
+  const isSchool = form.sector === 'school';
+  const formats = isSchool ? SCHOOL_FORMATS : WORK_FORMATS;
+  const sizes = isSchool ? SCHOOL_SIZES : WORK_SIZES;
 
   const update = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
 
+  /* Switching between a school and a workplace swaps the choices; drop any
+     pick that no longer exists rather than send a label from the other list. */
+  const setSector = (sector) =>
+    setForm((prev) => {
+      const nextFormats = sector === 'school' ? SCHOOL_FORMATS : WORK_FORMATS;
+      const nextSizes = sector === 'school' ? SCHOOL_SIZES : WORK_SIZES;
+      return {
+        ...prev,
+        sector,
+        format: has(nextFormats, prev.format) ? prev.format : '',
+        groupSize: has(nextSizes, prev.groupSize) ? prev.groupSize : '',
+      };
+    });
+
+  useEffect(() => {
+    if (status === 'sent') resultRef.current?.focus();
+  }, [status]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
-    setFormError(null);
-
+    setStatus('sending');
+    setError('');
     try {
       await submitTrainingEnquiry({
         name: form.name,
         email: form.email,
         organisation: form.organisation,
         sector: labelFor(SECTORS, form.sector),
-        format: labelFor(FORMATS, form.format),
-        group_size: labelFor(GROUP_SIZES, form.groupSize),
+        format: labelFor(formats, form.format),
+        group_size: labelFor(sizes, form.groupSize),
         message: form.message,
         _gotcha: form._gotcha,
         _loaded: loadedAt.current,
         turnstileToken: turnstileToken.current,
       });
-      setSubmitted(true);
+      setStatus('sent');
     } catch (err) {
       console.error('Enquiry failed:', err);
-      setFormError(err);
-    } finally {
-      setSubmitting(false);
+      setError(err?.message || 'It did not send. Please try again.');
+      setStatus('idle');
     }
   };
 
-  if (submitting || submitted || formError) {
-    return (
-      <div className="min-h-screen pt-28 md:pt-36 pb-24" style={{ backgroundColor: 'var(--c4-bg)' }}>
-        <SubmissionSuccess
-          submitting={submitting}
-          submitted={submitted}
-          error={formError}
-          onRetry={() => setFormError(null)}
-          retryLabel="Back to form"
-          accentLabel="C4Site enquiry"
-          headline="Enquiry received"
-          message="We will reply within one business day with options for your team."
-        />
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen pt-28 md:pt-36 pb-24" style={{ backgroundColor: 'var(--c4-bg)' }}>
-      <div className="max-w-[680px] mx-auto px-6 md:px-12">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
-          <div className="flex items-center gap-3 mb-8 md:mb-10">
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 0.8, delay: 0.2, ease }}
-              className="w-8 h-px origin-left"
-              style={{ backgroundColor: 'var(--c4-accent)' }}
-            />
-            <span className="text-[10px] uppercase tracking-[0.25em] font-medium" style={{ color: 'var(--c4-text-subtle)' }}>
-              C4Site enquiry
-            </span>
-          </div>
-          <h1 className="text-[clamp(1.8rem,4.5vw,2.8rem)] font-semibold tracking-[-0.035em] leading-[1.08]" style={{ color: 'var(--c4-text)' }}>
-            Request a workshop.
-          </h1>
-          <p className="mt-4 text-[14px] md:text-[15px] leading-[1.7] max-w-[480px]" style={{ color: 'var(--c4-text-muted)' }}>
-            Tell us about your team and we will put together the right session. No calls required to start.
+    <div className="sg-root">
+      <ChalkDefs />
+
+      <header className="sg-hero sg-sp-hero sg-hero--form">
+        <div className="sg-wrap">
+          <nav aria-label="Breadcrumb">
+            <ol className="sg-crumb">
+              <li>
+                <Link to={createPageUrl('Foresight')}>C4Site</Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li aria-current="page">Request a workshop</li>
+            </ol>
+          </nav>
+          <ChalkHeading
+            text={isSchool ? 'Tell us about your school.' : 'Tell us about your team.'}
+            mark={isSchool ? 'your school.' : 'your team.'}
+            className="sg-chalk-edge"
+          />
+          <p className="sg-lede">
+            We reply within one business day with options. You don&rsquo;t need to book a call to
+            start.
           </p>
-        </motion.div>
+        </div>
+      </header>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="mt-10 md:mt-14 space-y-7">
-          {/* Name + Email */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Name *</label>
-              <input
-                className={fieldClass}
-                style={{ backgroundColor: 'var(--c4-card-bg)', border: '1px solid var(--c4-border)', color: 'var(--c4-text)' }}
-                required
-                value={form.name}
-                onChange={(e) => update('name', e.target.value)}
-                placeholder="Your name"
-              />
+      <section className="sg-form-page">
+        <div className="sg-wrap">
+          {status === 'sent' ? (
+            <div className="sg-paper sg-slip" role="status">
+              <h2 ref={resultRef} tabIndex={-1}>Enquiry received</h2>
+              <p className="sg-slip-intro">
+                Thanks{form.name ? `, ${form.name.split(' ')[0]}` : ''}. We will reply within one
+                business day with options for your {isSchool ? 'school' : 'team'}.
+              </p>
+              <Link
+                to={createPageUrl(isSchool ? 'ForesightSchools' : 'Foresight')}
+                className="sg-paper-link"
+              >
+                Back to C4Site
+                <MarkArrow />
+              </Link>
             </div>
-            <div>
-              <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Email *</label>
-              <input
-                className={fieldClass}
-                style={{ backgroundColor: 'var(--c4-card-bg)', border: '1px solid var(--c4-border)', color: 'var(--c4-text)' }}
-                type="email"
-                required
-                value={form.email}
-                onChange={(e) => update('email', e.target.value)}
-                placeholder="you@organisation.com"
+          ) : (
+            <form className="sg-paper sg-slip" onSubmit={handleSubmit}>
+              <div className="sg-slip-row">
+                <label className="sg-field">
+                  <span className="sg-field-label">
+                    Name <em>(required)</em>
+                  </span>
+                  <input
+                    className="sg-input" required autoComplete="name"
+                    value={form.name} onChange={(e) => update('name', e.target.value)}
+                  />
+                </label>
+                <label className="sg-field">
+                  <span className="sg-field-label">
+                    Email <em>(required)</em>
+                  </span>
+                  <input
+                    className="sg-input" type="email" required autoComplete="email"
+                    value={form.email} onChange={(e) => update('email', e.target.value)}
+                  />
+                </label>
+              </div>
+
+              <label className="sg-field">
+                <span className="sg-field-label">{isSchool ? 'School' : 'Organisation'}</span>
+                <input
+                  className="sg-input" autoComplete="organization"
+                  value={form.organisation} onChange={(e) => update('organisation', e.target.value)}
+                />
+              </label>
+
+              <Choices id="enq-sector" label="Sector" options={SECTORS} value={form.sector} onChange={setSector} />
+              <Choices
+                id="enq-format"
+                label={isSchool ? 'What you are after' : 'Preferred format'}
+                options={formats}
+                value={form.format}
+                onChange={(v) => update('format', v)}
               />
-            </div>
-          </div>
+              <Choices
+                id="enq-size"
+                label={isSchool ? 'How many students or staff' : 'Rough group size'}
+                options={sizes}
+                value={form.groupSize}
+                onChange={(v) => update('groupSize', v)}
+              />
 
-          {/* Organisation */}
-          <div>
-            <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Organisation</label>
-            <input
-              className={fieldClass}
-              style={{ backgroundColor: 'var(--c4-card-bg)', border: '1px solid var(--c4-border)', color: 'var(--c4-text)' }}
-              value={form.organisation}
-              onChange={(e) => update('organisation', e.target.value)}
-              placeholder="Company, school or firm"
-            />
-          </div>
+              <label className="sg-field">
+                <span className="sg-field-label">
+                  {isSchool ? 'Year levels, and roughly when' : 'What would you like to cover?'}{' '}
+                  <em>(required)</em>
+                </span>
+                <textarea
+                  className="sg-textarea" required
+                  value={form.message} onChange={(e) => update('message', e.target.value)}
+                  placeholder={
+                    isSchool
+                      ? 'Which year levels, how many classes, and a term or week that suits.'
+                      : 'The team, the tools they use, and what you want them to get out of it.'
+                  }
+                />
+              </label>
 
-          {/* Sector */}
-          <div>
-            <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Sector</label>
-            <PillSelect options={SECTORS} value={form.sector} onChange={(v) => update('sector', v)} />
-          </div>
+              {/* Honeypot */}
+              <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px' }}>
+                <input
+                  type="text" name="_gotcha" tabIndex={-1} autoComplete="off"
+                  value={form._gotcha} onChange={(e) => update('_gotcha', e.target.value)}
+                />
+              </div>
 
-          {/* Format */}
-          <div>
-            <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Preferred format</label>
-            <PillSelect options={FORMATS} value={form.format} onChange={(v) => update('format', v)} />
-          </div>
+              <div className="sg-field">
+                <TurnstileWidget
+                  theme="light"
+                  onToken={(t) => { turnstileToken.current = t; }}
+                  onExpire={() => { turnstileToken.current = null; }}
+                />
+              </div>
 
-          {/* Group size */}
-          <div>
-            <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Rough group size</label>
-            <PillSelect options={GROUP_SIZES} value={form.groupSize} onChange={(v) => update('groupSize', v)} />
-          </div>
+              {error && <p className="sg-slip-error" role="alert">{error}</p>}
 
-          {/* Message */}
-          <div>
-            <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>What would you like to cover? *</label>
-            <textarea
-              className={fieldClass + ' resize-none'}
-              style={{ backgroundColor: 'var(--c4-card-bg)', border: '1px solid var(--c4-border)', color: 'var(--c4-text)', minHeight: '128px' }}
-              required
-              value={form.message}
-              onChange={(e) => update('message', e.target.value)}
-              placeholder="The team, the tools they use, and what you want them to get out of it."
-            />
-          </div>
-
-          {/* Honeypot */}
-          <div aria-hidden="true" tabIndex={-1} style={{ position: 'absolute', left: '-9999px' }}>
-            <input
-              type="text"
-              name="_gotcha"
-              value={form._gotcha}
-              onChange={(e) => update('_gotcha', e.target.value)}
-              autoComplete="off"
-            />
-          </div>
-
-          {/* Turnstile */}
-          <div className="pt-2">
-            <TurnstileWidget
-              onToken={(t) => { turnstileToken.current = t; }}
-              onExpire={() => { turnstileToken.current = null; }}
-            />
-          </div>
-
-          {/* Submit */}
-          <div className="pt-2">
-            <SubmitButton submitting={submitting} label="Send enquiry" loadingLabel="Sending" />
-          </div>
-        </form>
-      </div>
+              <button type="submit" className="sg-btn" disabled={status === 'sending'}>
+                {status === 'sending' ? 'Sending…' : 'Send enquiry'}
+                {status !== 'sending' && <MarkArrow />}
+              </button>
+            </form>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

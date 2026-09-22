@@ -1,4 +1,3 @@
-import React from 'react';
 import SectorPage from '@/components/sight/SectorPage';
 
 const DATA = {
@@ -11,7 +10,8 @@ const DATA = {
     description:
       'Verification-first AI workshops for law firms, led by a JD student who understands the conduct obligations. Faster drafting and summarising. Nothing taught is legal advice.',
   },
-  heroLines: ['AI for legal work,', 'verified by default.'],
+  heading: 'AI for legal work, verified by default.',
+  mark: 'verified by default.',
   heroIntro:
     'Conservative, verification-heavy AI training for law firms. Faster drafting and summarising, with the habits that stop AI fabrications reaching a client or a court.',
   tasks: {
@@ -27,7 +27,7 @@ const DATA = {
   risk: {
     heading: 'The fabricated citation problem, handled',
     intro:
-      'AI will invent cases, quotes and authorities with total confidence. In legal work that is a professional risk, not a quirk. Verification is built into everything taught.',
+      'AI will invent cases, quotes and authorities with total confidence. In legal work that is a professional risk. Verification is built into everything taught.',
     points: [
       'Legal professional privilege and client confidentiality stay protected',
       'No fact, citation or authority is relied on without checking it against a real source',
@@ -44,6 +44,7 @@ const DATA = {
   disclaimer:
     'Nothing taught is legal advice. Practitioners remain bound by their professional conduct rules, and no AI output should be filed or relied on unverified.',
   ctaHeading: 'Bring AI into the firm without the risk.',
+  ctaMark: 'without the risk.',
 };
 
 export default function ForesightLaw() {

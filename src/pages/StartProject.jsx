@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { submitProjectInquiry } from '@/api/submissions';
@@ -201,6 +201,17 @@ export default function StartProject() {
   const [submitting, setSubmitting] = useState(false);
   const [fileUploading, setFileUploading] = useState(false);
   const [formError, setFormError] = useState(null);
+  // null while asking, then true or false. Anything but a clear yes means email.
+  const [uploadsEnabled, setUploadsEnabled] = useState(null);
+
+  useEffect(() => {
+    let live = true;
+    fetch('/api/config')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (live) setUploadsEnabled(d?.uploadsEnabled === true); })
+      .catch(() => { if (live) setUploadsEnabled(false); });
+    return () => { live = false; };
+  }, []);
 
   const update = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
 
@@ -430,11 +441,26 @@ export default function StartProject() {
             transition={{ duration: 0.55, delay: 0.68, ease }}
           >
             <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>Attachments</label>
-            <FileUpload
-              files={form.attachments}
-              onChange={files => update('attachments', files)}
-              onUploadingChange={setFileUploading}
-            />
+            {/* Uploads need an R2 bucket bound to the Pages project. Until one is,
+                /api/config reports uploadsEnabled:false and the box would only
+                ever answer "File storage is not configured" (site_issue 85,
+                hit by a real enquiry on 22 Sep 2026). So ask first, and offer
+                email instead of a box that cannot work. */}
+            {uploadsEnabled ? (
+              <FileUpload
+                files={form.attachments}
+                onChange={files => update('attachments', files)}
+                onUploadingChange={setFileUploading}
+              />
+            ) : uploadsEnabled === false ? (
+              <p className="text-[14px] leading-[1.6]" style={{ color: 'var(--c4-text-muted)' }}>
+                Got a logo, sketches or reference files? Send this first, then email them to{' '}
+                <a href="mailto:caleb@c4studios.com.au" className="underline underline-offset-2" style={{ color: 'var(--c4-text)' }}>
+                  caleb@c4studios.com.au
+                </a>{' '}
+                and we&rsquo;ll match them to your enquiry.
+              </p>
+            ) : null}
           </motion.div>
 
           {/* Honeypot – hidden from real users */}
