@@ -1,29 +1,28 @@
-import React from 'react';
-import { Link } from '@/components/c4/SiteLink';
-import { motion } from 'framer-motion';
-import { ArrowRight, Check, ShieldCheck, Scale, Download } from 'lucide-react';
-import { createPageUrl } from '@/utils';
-import PageHero from '@/components/c4/PageHero';
-import useDocumentHead from '@/hooks/useDocumentHead';
-import useStaticMode from '@/hooks/useStaticMode';
-import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
-
-const ease = [0.22, 1, 0.36, 1];
-const eyebrowClass = 'text-[10px] uppercase tracking-[0.22em] font-medium';
-
 /*
- * Shared renderer for the three C4Site sector pages (office, schools, law).
- * Each page passes a `data` object; the per-sector copy lives in the page
- * file so it stays bespoke, while layout, schema and CTAs stay consistent
- * with the C4Site hub.
+ * The C4Site sector pages (office and business, law), and the board parts the
+ * schools page builds from. Same world as the hub (/Foresight): the board,
+ * chalk headings with one yellow underline, the rules frame that never gets
+ * rubbed out, paper held to the board by a magnet. Replaced the generic C4
+ * skin on 21 Sep 2026.
+ *
+ * Nothing here animates. The prerendered HTML is the whole page, so crawlers
+ * that skip JavaScript read everything and useStaticMode has nothing to gate.
+ * Per-sector copy lives in each page file so it stays bespoke.
  */
-export default function SectorPage({ data }) {
-  /* Reveals enhance, never gate: under the prerenderer these drop their hidden
-     initial state, or the sector pages ship half their copy at opacity 0. */
-  const staticMode = useStaticMode();
-  const enquiryUrl = createPageUrl('TrainingEnquiry') + (data.sectorKey ? `?sector=${data.sectorKey}` : '');
-  const hubUrl = createPageUrl('Foresight');
+import { Link } from '@/components/c4/SiteLink';
+import { createPageUrl } from '@/utils';
+import useDocumentHead from '@/hooks/useDocumentHead';
+import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
+import {
+  ChalkDefs, ChalkHeading, MarkArrow, MarkTick, RulesFrame, useForceDark,
+} from '@/components/sight-arm/kit';
 
+export const enquiryUrlFor = (sectorKey, extra = '') =>
+  createPageUrl('TrainingEnquiry') + (sectorKey ? `?sector=${sectorKey}${extra}` : '');
+
+/* Head tags and schema for a sector page. `offers` is passed straight to
+   serviceSchema (the schools page lists the incursion price). */
+export function useSectorHead(data, offers) {
   useDocumentHead({
     title: data.meta.title,
     description: data.meta.description,
@@ -39,312 +38,175 @@ export default function SectorPage({ data }) {
         description: data.meta.description,
         url: data.path,
         serviceType: data.serviceType,
+        offers,
       }),
     ],
   });
+}
 
+/* The top of a board page: where you are, the heading, what it is, what to do. */
+export function BoardHero({ crumb, heading, mark, intro, children }) {
   return (
-    <div style={{ backgroundColor: 'var(--c4-bg)', color: 'var(--c4-text)' }}>
-      <PageHero
-        label={`C4Site · ${data.sector}`}
-        titleLines={data.heroLines}
-        description={data.heroIntro}
-      >
-        <div className="flex flex-wrap items-center gap-5">
-          <Link
-            to={enquiryUrl}
-            className="inline-flex items-center gap-2 px-6 py-3 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300"
-            style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-          >
-            Request a workshop
-            <ArrowRight size={12} strokeWidth={2} />
-          </Link>
-          <Link
-            to={hubUrl}
-            className="text-[11px] uppercase tracking-[0.14em] font-medium"
-            style={{ color: 'var(--c4-text-subtle)' }}
-          >
-            C4Site overview
-          </Link>
+    <header className="sg-hero sg-sp-hero">
+      <div className="sg-wrap">
+        <nav aria-label="Breadcrumb">
+          <ol className="sg-crumb">
+            <li>
+              <Link to={createPageUrl('Foresight')}>C4Site</Link>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li aria-current="page">{crumb}</li>
+          </ol>
+        </nav>
+        <ChalkHeading text={heading} mark={mark} className="sg-chalk-edge" />
+        <p className="sg-lede">{intro}</p>
+        {children}
+        <div className="sg-tray" aria-hidden="true">
+          <span className="sg-tray-ledge" />
+          <span className="sg-tray-chalk" />
+          <span className="sg-tray-marker" />
         </div>
-      </PageHero>
+      </div>
+    </header>
+  );
+}
 
-      {/* EXAMPLE TASKS */}
-      <section className="py-16 md:py-24 border-t" style={{ borderColor: 'var(--c4-border)' }}>
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <motion.div
-            {...(staticMode ? {} : { initial: { opacity: 0, y: 10 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-40px' } })}
-            transition={{ duration: 0.5, ease }}
-            className="mb-10 md:mb-12"
-          >
-            <span className={eyebrowClass} style={{ color: 'var(--c4-text-subtle)' }}>
-              On real work
-            </span>
-            <h2 className="mt-3 text-[clamp(1.4rem,3vw,2rem)] font-semibold tracking-[-0.025em]">
-              {data.tasks.heading}
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {data.tasks.items.map((item, i) => (
-              <motion.div
-                key={item}
-                {...(staticMode ? {} : { initial: { opacity: 0, y: 12 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-20px' } })}
-                transition={{ duration: 0.4, delay: i * 0.05, ease }}
-                className="flex items-start gap-3 rounded-[3px] p-5"
-                style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
-              >
-                <Check size={15} strokeWidth={2.25} className="mt-0.5 shrink-0" style={{ color: 'var(--c4-accent)' }} />
-                <p className="text-[13.5px] leading-[1.6]" style={{ color: 'var(--c4-text)' }}>{item}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* RISK EMPHASIS — the sector differentiator */}
-      <section className="py-16 md:py-24 border-t" style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-bg-alt)' }}>
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
-            <motion.div
-              {...(staticMode ? {} : { initial: { opacity: 0, y: 10 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-40px' } })}
-              transition={{ duration: 0.5, ease }}
-            >
-              <div className="flex items-center gap-3">
-                <ShieldCheck size={18} strokeWidth={1.75} style={{ color: 'var(--c4-accent)' }} />
-                <span className={eyebrowClass} style={{ color: 'var(--c4-text-subtle)' }}>
-                  Safety first
-                </span>
-              </div>
-              <h2 className="mt-4 text-[clamp(1.4rem,3vw,2rem)] font-semibold tracking-[-0.025em] leading-[1.1]">
-                {data.risk.heading}
-              </h2>
-              <p className="mt-5 max-w-[440px] text-[13.5px] leading-[1.75]" style={{ color: 'var(--c4-text-muted)' }}>
-                {data.risk.intro}
-              </p>
-            </motion.div>
-
-            <div className="flex flex-col gap-4">
-              {data.risk.points.map((point, i) => (
-                <motion.div
-                  key={point}
-                  {...(staticMode ? {} : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-20px' } })}
-                  transition={{ duration: 0.4, delay: i * 0.07, ease }}
-                  className="flex items-start gap-4 rounded-[3px] p-5 md:p-6"
-                  style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-bg)' }}
-                >
-                  <Check size={15} strokeWidth={2.25} className="mt-0.5 shrink-0" style={{ color: 'var(--c4-accent)' }} />
-                  <p className="text-[13.5px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>{point}</p>
-                </motion.div>
-              ))}
+/* The rules in the frame. A point is a sentence, or { lead, body }. */
+export function RulesBlock({ lead, heading, intro, points, id }) {
+  return (
+    <section className="sg-section sg-govern" id={id}>
+      <div className="sg-wrap">
+        <div className="sg-rules sg-rules--roomy">
+          <RulesFrame />
+          <div className="sg-rules-grid sg-rules-grid--split">
+            <div>
+              {lead && <p className="sg-rules-lead">{lead}</p>}
+              <h2 className="sg-h2">{heading}</h2>
+              {intro && <p className="sg-rules-copy">{intro}</p>}
+            </div>
+            <div>
+              {points.map((point) => {
+                const key = typeof point === 'string' ? point : point.lead;
+                return (
+                  <div key={key} className="sg-rule-item">
+                    <MarkTick />
+                    {typeof point === 'string' ? (
+                      <p className="sg-rule-text">{point}</p>
+                    ) : (
+                      <div>
+                        <strong>{point.lead}</strong>
+                        <span>{point.body}</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+export function TaskList({ items }) {
+  return (
+    <ul className="sg-tasklist">
+      {items.map((item) => (
+        <li key={item}>
+          <MarkTick />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/* The last thing on the board: one line, one button, then the small print. */
+export function BoardClose({ heading, mark, sub, cta, to, disclaimer }) {
+  return (
+    <section className="sg-close">
+      <div className="sg-wrap">
+        <ChalkHeading as="h2" text={heading} mark={mark} className="sg-h2" />
+        {sub && <p className="sg-sub">{sub}</p>}
+        <div className="sg-close-cta">
+          <Link to={to} className="sg-btn">
+            {cta}
+            <MarkArrow />
+          </Link>
+        </div>
+        {disclaimer && <p className="sg-disclaimer">{disclaimer}</p>}
+      </div>
+    </section>
+  );
+}
+
+export default function SectorPage({ data }) {
+  useForceDark();
+  useSectorHead(data);
+  const enquiryUrl = enquiryUrlFor(data.sectorKey);
+  const hubUrl = createPageUrl('Foresight');
+
+  return (
+    <div className="sg-root">
+      <ChalkDefs />
+
+      <BoardHero crumb={data.sector} heading={data.heading} mark={data.mark} intro={data.heroIntro}>
+        <div className="sg-hero-cta sg-hero-cta--pair">
+          <Link to={enquiryUrl} className="sg-btn">
+            Request a workshop
+            <MarkArrow />
+          </Link>
+          <Link to={hubUrl} className="sg-btn sg-btn--ghost">
+            How a day runs
+          </Link>
+        </div>
+      </BoardHero>
+
+      <section className="sg-section">
+        <div className="sg-wrap">
+          <h2 className="sg-h2">{data.tasks.heading}</h2>
+          <TaskList items={data.tasks.items} />
+        </div>
       </section>
 
-      {/* CREDIBILITY (law) */}
+      <RulesBlock
+        lead="Safety first"
+        heading={data.risk.heading}
+        intro={data.risk.intro}
+        points={data.risk.points}
+      />
+
       {data.credibility && (
-        <section className="py-16 md:py-20 border-t" style={{ borderColor: 'var(--c4-border)' }}>
-          <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-            <motion.div
-              {...(staticMode ? {} : { initial: { opacity: 0, y: 12 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-30px' } })}
-              transition={{ duration: 0.5, ease }}
-              className="max-w-[760px] rounded-[3px] p-7 md:p-9"
-              style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-card-bg)' }}
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <Scale size={18} strokeWidth={1.75} style={{ color: 'var(--c4-accent)' }} />
-                <span className={eyebrowClass} style={{ color: 'var(--c4-text-subtle)' }}>
-                  {data.credibility.heading}
-                </span>
-              </div>
-              <p className="text-[14px] leading-[1.75]" style={{ color: 'var(--c4-text)' }}>
-                {data.credibility.body}
-              </p>
-            </motion.div>
+        <section className="sg-section">
+          <div className="sg-wrap">
+            <div className="sg-paper sg-paper--note">
+              <h2>{data.credibility.heading}</h2>
+              <p>{data.credibility.body}</p>
+            </div>
           </div>
         </section>
       )}
 
-      {/* THE WIN + FORMATS LINK */}
-      <section className="py-16 md:py-20 border-t" style={{ borderColor: 'var(--c4-border)' }}>
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <motion.div
-            {...(staticMode ? {} : { initial: { opacity: 0, y: 10 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-30px' } })}
-            transition={{ duration: 0.5, ease }}
-            className="max-w-[680px]"
-          >
-            <span className={eyebrowClass} style={{ color: 'var(--c4-text-subtle)' }}>
-              What good looks like
-            </span>
-            <p className="mt-4 text-[clamp(1.15rem,2.4vw,1.5rem)] font-medium tracking-[-0.02em] leading-[1.4]" style={{ color: 'var(--c4-text)' }}>
-              {data.win}
-            </p>
-            <p className="mt-6 text-[13.5px] leading-[1.7]" style={{ color: 'var(--c4-text-muted)' }}>
-              {data.governanceNote} See the{' '}
-              <Link to={hubUrl} className="underline underline-offset-2" style={{ color: 'var(--c4-text)' }}>
-                C4Site overview
-              </Link>{' '}
-              for the half-day and full-day formats, what your team keeps, and how pricing works.
-            </p>
-          </motion.div>
+      <section className="sg-section">
+        <div className="sg-wrap">
+          <h2 className="sg-h2">What good looks like</h2>
+          <p className="sg-win">{data.win}</p>
+          <p className="sg-win-note">
+            {data.governanceNote} The <Link to={hubUrl}>C4Site page</Link> sets out the half-day
+            and full-day formats block by block, and how a quote is worked out.
+          </p>
         </div>
       </section>
 
-      {/* THE PRICED OFFER — rendered only when a page supplies one (schools:
-          the 90-minute incursion, the one published training price). */}
-      {data.offer && (
-        <section className="py-16 md:py-24 border-t" style={{ borderColor: 'var(--c4-border)' }}>
-          <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-            <motion.div
-              {...(staticMode ? {} : { initial: { opacity: 0, y: 10 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-40px' } })}
-              transition={{ duration: 0.5, ease }}
-              className="grid grid-cols-1 gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16"
-            >
-              <div>
-                <h2 className="text-[clamp(1.4rem,3vw,2rem)] font-semibold tracking-[-0.025em] leading-[1.1]">
-                  {data.offer.heading}
-                </h2>
-                <p className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <span className="text-[clamp(2.6rem,6vw,4rem)] font-semibold tracking-[-0.035em] leading-none tabular-nums">
-                    {data.offer.priceLabel}
-                  </span>
-                  <span className="text-[13.5px]" style={{ color: 'var(--c4-text-muted)' }}>
-                    {data.offer.unit}
-                  </span>
-                </p>
-                <p className="mt-4 max-w-[440px] text-[12.5px] leading-[1.7]" style={{ color: 'var(--c4-text-muted)' }}>
-                  {data.offer.priceNote}
-                </p>
-              </div>
-              <div>
-                <p className="max-w-[560px] text-[14px] leading-[1.75]" style={{ color: 'var(--c4-text)' }}>
-                  {data.offer.body}
-                </p>
-                <ul className="mt-6 flex flex-col gap-3">
-                  {data.offer.facts.map((fact) => (
-                    <li key={fact} className="flex items-start gap-3">
-                      <Check size={15} strokeWidth={2.25} className="mt-0.5 shrink-0" style={{ color: 'var(--c4-accent)' }} />
-                      <span className="text-[13.5px] leading-[1.65]" style={{ color: 'var(--c4-text-muted)' }}>{fact}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  to={enquiryUrl}
-                  className="group mt-8 inline-flex items-center gap-2 text-[13px] font-medium underline underline-offset-4"
-                  style={{ color: 'var(--c4-text)' }}
-                >
-                  {data.offer.cta}
-                  <ArrowRight size={14} strokeWidth={2} className="transition-transform duration-200 group-hover:translate-x-0.5" />
-                </Link>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      )}
-
-      {/* FREE PREVIEW DOWNLOADS — rendered only when a page supplies them
-          (schools). Additive: sectors without `data.downloads` are unchanged.
-          Ungated static PDFs from public/downloads. */}
-      {data.downloads && (
-        <section className="py-16 md:py-24 border-t" style={{ borderColor: 'var(--c4-border)', backgroundColor: 'var(--c4-bg-alt)' }}>
-          <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-            <motion.div
-              {...(staticMode ? {} : { initial: { opacity: 0, y: 10 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-40px' } })}
-              transition={{ duration: 0.5, ease }}
-              className="max-w-[680px] mb-10 md:mb-12"
-            >
-              <div className="flex items-center gap-3">
-                <Download size={18} strokeWidth={1.75} style={{ color: 'var(--c4-accent)' }} />
-                <span className={eyebrowClass} style={{ color: 'var(--c4-text-subtle)' }}>
-                  Free for teachers
-                </span>
-              </div>
-              <h2 className="mt-4 text-[clamp(1.4rem,3vw,2rem)] font-semibold tracking-[-0.025em] leading-[1.1]">
-                {data.downloads.heading}
-              </h2>
-              <p className="mt-5 text-[13.5px] leading-[1.75]" style={{ color: 'var(--c4-text-muted)' }}>
-                {data.downloads.intro}
-              </p>
-            </motion.div>
-
-            <ul role="list" className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-              {data.downloads.items.map((d, i) => (
-                <motion.li
-                  key={d.file}
-                  {...(staticMode ? {} : { initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-20px' } })}
-                  transition={{ duration: 0.4, delay: i * 0.05, ease }}
-                >
-                  <a
-                    href={d.file}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex h-full items-start gap-4 rounded-[3px] p-5 md:p-6 transition-colors duration-200"
-                    style={{ border: '1px solid var(--c4-border)', backgroundColor: 'var(--c4-bg)' }}
-                  >
-                    <div className="min-w-0 flex-1">
-                      <span
-                        className="inline-block text-[10px] uppercase tracking-[0.18em] font-semibold"
-                        style={{ color: 'var(--c4-accent)' }}
-                      >
-                        {d.band}
-                      </span>
-                      <h3 className="mt-2 text-[15px] font-semibold tracking-[-0.01em]" style={{ color: 'var(--c4-text)' }}>
-                        {d.name}
-                      </h3>
-                      <p className="mt-1.5 text-[13px] leading-[1.6]" style={{ color: 'var(--c4-text-muted)' }}>
-                        {d.line}
-                      </p>
-                    </div>
-                    <span
-                      className="mt-0.5 inline-flex shrink-0 items-center gap-1.5 text-[11px] uppercase tracking-[0.12em] font-semibold transition-colors duration-200"
-                      style={{ color: 'var(--c4-text-subtle)' }}
-                    >
-                      <Download size={14} strokeWidth={2} className="transition-transform duration-200 group-hover:translate-y-0.5" style={{ color: 'var(--c4-accent)' }} />
-                      PDF
-                    </span>
-                  </a>
-                </motion.li>
-              ))}
-            </ul>
-
-            {data.downloads.note && (
-              <p className="mt-8 max-w-[720px] text-[12px] leading-[1.7]" style={{ color: 'var(--c4-text-faint)' }}>
-                {data.downloads.note}
-              </p>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* CTA */}
-      <section className="py-20 md:py-28 border-t" style={{ borderColor: 'var(--c4-border)' }}>
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <motion.div
-            {...(staticMode ? {} : { initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true } })}
-            transition={{ duration: 0.5, ease }}
-            className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between"
-          >
-            <h2 className="text-[clamp(1.4rem,3.4vw,2rem)] font-semibold tracking-[-0.03em] max-w-[560px]">
-              {data.ctaHeading}
-            </h2>
-            <Link
-              to={enquiryUrl}
-              className="inline-flex shrink-0 items-center gap-2 rounded-full px-7 py-3.5 text-[11px] uppercase tracking-[0.14em] font-semibold transition-opacity duration-200 hover:opacity-75"
-              style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
-            >
-              Request a workshop
-              <ArrowRight size={13} strokeWidth={2} />
-            </Link>
-          </motion.div>
-
-          {data.disclaimer && (
-            <p className="mt-10 max-w-[760px] text-[11.5px] leading-[1.6]" style={{ color: 'var(--c4-text-faint)' }}>
-              {data.disclaimer}
-            </p>
-          )}
-        </div>
-      </section>
+      <BoardClose
+        heading={data.ctaHeading}
+        mark={data.ctaMark}
+        sub="Tell us about your team and we will put together the right session."
+        cta="Request a workshop"
+        to={enquiryUrl}
+        disclaimer={data.disclaimer}
+      />
     </div>
   );
 }

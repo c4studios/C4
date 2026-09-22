@@ -1,4 +1,3 @@
-import React from 'react';
 import SectorPage from '@/components/sight/SectorPage';
 
 const DATA = {
@@ -11,7 +10,8 @@ const DATA = {
     description:
       'In-person AI workshops for office and business teams in Perth. Faster emails, documents, summaries and spreadsheets, with client and company data kept safe.',
   },
-  heroLines: ['Practical AI for the', 'everyday work week.'],
+  heading: 'Practical AI for the everyday work week.',
+  mark: 'work week.',
   heroIntro:
     'Hands-on training for office and business teams. Your people learn to use AI on the real work in front of them, with company and client information kept safe.',
   tasks: {
@@ -40,6 +40,7 @@ const DATA = {
     'Every session includes the data-safety module, so the team leaves knowing exactly what is and is not safe to put into these tools.',
   disclaimer: null,
   ctaHeading: 'Bring practical AI to your team, safely.',
+  ctaMark: 'safely.',
 };
 
 export default function ForesightBusiness() {
