@@ -40,6 +40,7 @@ export const DERIVE = {
   iopa: 'iopa-apparel-vercel-app/desktop/01-hero.png',
   'aqua-safe-plumbing': 'aquasafeplumbing-com-au/desktop/01-hero.png',
   'brady-electrical': 'bradyelectrical-com-au/desktop/01-hero.png',
+  'cia-solutions': 'ciasolutions-com-au/desktop/01-hero.png',
   // concepts
   'sgr-prestige': 'sgr-prestige-concept-vercel-app/desktop/01-hero.png',
   eurochem: 'eurochem-concept-vercel-app/desktop/01-hero.png',
@@ -72,6 +73,7 @@ export const KEY = {
   iopa: 'iopa',
   'aqua-safe-plumbing': 'aquasafe',
   'brady-electrical': 'brady',
+  'cia-solutions': 'cia',
   'sgr-prestige': 'sgr',
   eurochem: 'eurochem',
   'cmc-lawns': 'cmc',

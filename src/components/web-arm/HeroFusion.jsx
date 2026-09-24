@@ -59,6 +59,7 @@ import plxJk from './assets/plx-jk.webp';
 import plxIopa from './assets/plx-iopa.webp';
 import plxAquasafe from './assets/plx-aquasafe.webp';
 import plxBrady from './assets/plx-brady.webp';
+import plxCia from './assets/plx-cia.webp';
 import plxSgr from './assets/plx-sgr.webp';
 import plxEurochem from './assets/plx-eurochem.webp';
 import plxCmc from './assets/plx-cmc.webp';
@@ -83,6 +84,7 @@ const PLX_IMG = {
   iopa: plxIopa,
   'aqua-safe-plumbing': plxAquasafe,
   'brady-electrical': plxBrady,
+  'cia-solutions': plxCia,
   'sgr-prestige': plxSgr,
   eurochem: plxEurochem,
   'cmc-lawns': plxCmc,
