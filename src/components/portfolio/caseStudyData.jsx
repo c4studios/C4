@@ -31,7 +31,7 @@ export const CASE_STUDIES = {
     brandColor: '#0B1320',
     thumbnail: '/covers/evidence-advisory.png',
 
-    overview: 'Evidence Advisory are court-trusted digital forensic investigators — they deal in admissible evidence, not assumptions. C4 Studios designed and built their new website around a single, unforgettable idea: a shattered smartphone, suspended like crime-scene evidence and tagged with yellow forensic markers, that the visitor reassembles as they scroll. As you move down the page the glass shards fly back into place, the cracks knit shut, and the screen powers on — a literal reconstruction of evidence that mirrors exactly what the firm does. It is built in WebGL with a hand-tuned, scroll-scrubbed animation, real-time lighting and a bespoke studio environment, and it is fully grabbable in 3D. Around that hero sits a complete, conversion-focused platform: founder profiles, four service lines with dedicated landing pages, an anonymised casework portfolio, an insights/articles engine and an animated FAQ — every page a statically-rendered, individually-indexable URL with structured data, per-page metadata, a sitemap and a working contact form. It is engineered on Next.js (App Router) and shipped as a static export for fast, resilient hosting; the 3D scene is performance-budgeted — a single instanced mesh for the shards, no transmissive materials and a capped device-pixel-ratio — and it degrades gracefully, so a device that cannot run WebGL gets a clean fallback hero with zero impact on the rest of the page. The result is a site that makes a forensics firm feel as precise and modern as the work it does: distinctive enough to be remembered, disciplined enough to be trusted.',
+    overview: 'Evidence Advisory are court-trusted digital forensic investigators — they deal in admissible evidence, not assumptions. C4 Studios designed and built their new website around a single, unforgettable idea: a shattered smartphone, suspended like crime-scene evidence and tagged with yellow forensic markers, that the visitor reassembles as they scroll. As you move down the page the glass shards fly back into place, the cracks knit shut, and the screen powers on — a literal reconstruction of evidence that mirrors exactly what the firm does. It is built in WebGL with a hand-tuned, scroll-scrubbed animation, real-time lighting and a bespoke studio environment, and it is fully grabbable in 3D. Around that hero sits a complete, conversion-focused platform: founder profiles, four service lines with dedicated landing pages, an anonymised casework portfolio, an insights/articles engine and an animated FAQ — every page a statically-rendered, individually-indexable URL with structured data, per-page metadata, a sitemap and a working contact form. It is engineered on Next.js (App Router) and shipped as a static export for fast, resilient hosting; the 3D scene is performance-budgeted — a single instanced mesh for the shards, no transmissive materials and a capped device-pixel-ratio — and it degrades gracefully, so a device that cannot run WebGL gets a clean fallback hero with zero impact on the rest of the page. The result is a site that makes a forensics firm feel as precise and modern as the work it does: distinctive enough to be remembered, disciplined enough to be trusted. Its sister site, CIA Solutions, was rebuilt in the same engagement and now hands investigation enquiries straight through to it.',
 
     screenshots: [
       { url: '/captures/evidenceadvisory-com-au/desktop/01-hero.png', caption: 'Hero — the shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers' },
@@ -124,6 +124,96 @@ export const CASE_STUDIES = {
       'Add anonymised case outcomes and metrics to the casework portfolio as they become publishable',
       'Expand the insights / articles library to deepen topical SEO authority',
       'Offer a lighter-weight, non-WebGL animated hero for the lowest-powered devices',
+    ],
+  },
+
+  'cia-solutions': {
+    slug: 'cia-solutions',
+    name: 'CIA Solutions',
+    oneLiner: 'A three-door site for a forensic training and lab-build practice — rebuilt, and pointed so that thirty years of search history feeds its sister firm instead of competing with it.',
+    client: 'CIA Solutions — Digital Forensic Training & Lab Builds',
+    location: 'Joondalup, WA',
+    timeline: '',
+    budget: '$500 – $1.25k',
+    role: 'Solo (design, development, hosting migration, SEO consolidation)',
+    liveUrl: 'https://ciasolutions.com.au',
+    year: '2026',
+    category: 'web_design',
+    tags: ['Web Design', 'Web Development', 'Hosting Migration', 'SEO'],
+    featured: false,
+    budgetOrder: 1,
+
+    cover: '/covers/cia-solutions.png',
+    brandColor: '#0B1A33',
+    thumbnail: '/captures/ciasolutions-com-au/desktop/01-hero.png',
+
+    overview: 'CIA Solutions has taught digital forensics since 1996 and builds working forensic laboratories for agencies around the world. Its website had grown to six pages, and four of them covered the same services as Evidence Advisory — the sister firm, same owner, that C4 was already being paid to promote. Two sites competing for one set of searches, and the older domain usually winning them. C4 rebuilt CIA Solutions as three doors: investigations, which hands straight over to Evidence Advisory, training, and forensic lab builds. The old service URLs now redirect to the matching Evidence Advisory pages, so thirty years of accumulated search history points at the firm that does that work rather than splitting the traffic in two. The site itself is hand-written HTML and CSS with a PHP contact handler and JSON-LD structured data — no framework, no build step and no CMS to patch — because a lot of this audience opens it on a phone in a classroom. Underneath it the whole hosting account moved across: the domain, the site and the mailboxes now run on the same account as Evidence Advisory, so the second hosting plan was no longer needed.',
+
+    screenshots: [
+      { url: '/captures/ciasolutions-com-au/desktop/01-hero.png', caption: 'Home — est. 1996, Joondalup, and the three doors: investigations, training and lab builds' },
+      { url: '/captures/ciasolutions-com-au/desktop/02-training.png', caption: 'Training — courses, who they are for, and the instructor' },
+      { url: '/captures/ciasolutions-com-au/desktop/03-lab-builds.png', caption: 'Lab builds — designing and fitting out working forensic laboratories' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/ciasolutions-com-au/desktop/01-hero.png', caption: 'Home — est. 1996, Joondalup, and the three doors: investigations, training and lab builds' },
+      { url: '/captures/ciasolutions-com-au/desktop/02-training.png', caption: 'Training — courses, who they are for, and the instructor' },
+      { url: '/captures/ciasolutions-com-au/desktop/03-lab-builds.png', caption: 'Lab builds — designing and fitting out working forensic laboratories' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/ciasolutions-com-au/mobile/01-hero.png', caption: 'Mobile — the three doors stacked' },
+      { url: '/captures/ciasolutions-com-au/mobile/02-training.png', caption: 'Mobile — the training page' },
+    ],
+
+    delivered: [
+      'Rebuilt website — home, training, forensic lab builds and contact',
+      'Investigations routed to the sister firm, Evidence Advisory, rather than duplicated',
+      'Redirects from the old service URLs to the matching Evidence Advisory pages, so the search history carries across',
+      'Hosting consolidation — domain, site and mailboxes moved onto the sister firm\'s existing account',
+      'Working contact form with a PHP handler',
+      'JSON-LD structured data, per-page metadata and a sitemap',
+      'Downloadable instructor flyer',
+    ],
+
+    features: [
+      'Three doors on the home page, one for each thing the practice actually does',
+      'Investigation enquiries handed straight to Evidence Advisory',
+      'Old service URLs 301 to the matching Evidence Advisory service pages',
+      'Hand-written HTML and CSS — no framework, no build step, no CMS',
+      'Roughly 8 KB of HTML per page, so it opens quickly on a classroom connection',
+      'Structured data and metadata on every page',
+    ],
+
+    stack: [
+      'Hand-written HTML & CSS',
+      'PHP (contact handling)',
+      'Apache (cPanel hosting, shared with Evidence Advisory)',
+      'JSON-LD structured data',
+    ],
+
+    integrations: [
+      'Contact form posting to a PHP handler on the same host',
+      'Cross-links and redirects into Evidence Advisory\'s service pages',
+    ],
+
+    performance: [
+      'No framework and no build step — each page is a single hand-written HTML file of about 8 KB',
+      'Two fonts and one stylesheet, with no client-side rendering to wait on',
+      'Runs on the sister firm\'s existing hosting rather than a second plan',
+    ],
+
+    challenges: [
+      'Two businesses with one owner competing for the same searches, where the older, stronger domain was the one being cannibalised',
+      'Keeping thirty years of search history working after a rebuild, rather than resetting it',
+      'Moving a live domain, site and mailboxes onto another account without interrupting mail',
+      'Rewriting the training and credential claims carefully, given the same owner gives expert evidence under the other brand',
+    ],
+
+    improvements: [
+      'Point the old expert witness URL at Evidence Advisory\'s expert witness page, rather than the CIA Solutions home page',
+      'Add course dates and an enquiry-to-enrolment path once the training calendar is set',
+      'Publish lab build case studies as they become shareable',
     ],
   },
 
@@ -2856,6 +2946,7 @@ export const BUILD_ORDER = [
   'transform-fremantle', 'jurassic-pt', 'gocc', 'transform-hakea', 'rocksstream',
   'groverz-tax', 'sharp-bricklaying', 'hvn-gym', 'ds-racing-karts',
   'tidy-gardens-australia', 'evidence-advisory', 'brady-electrical', 'aqua-safe-plumbing',
+  'cia-solutions',
   // apps
   'people-power',
   // concepts (self-initiated, built after the client work)
