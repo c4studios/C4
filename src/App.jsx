@@ -12,6 +12,11 @@ import LeadEngine from './pages/LeadEngine';
 import { liveSeoPages } from './content/seo/registry';
 import { createPageUrl } from './utils';
 import WelcomeReturnButton from './components/welcome/WelcomeReturnButton';
+// C4Site previews — the tracked lead-magnet download page (flat slug).
+// Imported eagerly since 24 Sep 2026: as a lazy() chunk behind a null
+// Suspense fallback, the prerendered page blanked for 50-90ms on load while
+// the chunk arrived (CLS 0.81 measured at 1280). The page is small.
+import C4SitePreviews from './pages/C4SitePreviews';
 
 // Networking-card landing — explicit, chrome-free route (no NavHeader/Footer)
 // so the post-scan experience stays focused and fast. Lazy so it stays out of
@@ -22,8 +27,6 @@ const Welcome = lazy(() => import('./pages/Welcome'));
 // code stays out of the main bundle.
 const PrivateAI = lazy(() => import('./pages/PrivateAI'));
 
-// C4Site previews — the tracked lead-magnet download page (flat slug).
-const C4SitePreviews = lazy(() => import('./pages/C4SitePreviews'));
 
 // How we use AI — the published position statement (flat slug).
 const HowWeUseAI = lazy(() => import('./pages/HowWeUseAI'));

@@ -117,6 +117,23 @@ export function MarkTick() {
   );
 }
 
+/* A cross, for what stays out of the tool and for a line the red pen rejects.
+   Added 24 Sep 2026 so a list of things to keep out is not ticked. */
+export function MarkCross() {
+  return (
+    <svg className="sg-mark" viewBox="0 0 22 22" aria-hidden="true">
+      <Stroke d="M4.6 4.9 C 8.8 9.2, 13 13.4, 17.4 17.9" w={2.4} ghostDash="9 2 14" />
+      <Stroke
+        d="M17.3 4.3 C 13 8.8, 8.9 13.2, 4.5 17.5"
+        w={2.4}
+        ghostDash="7 2 16"
+        tail="M3.8 18.3 C 3.2 18.9, 2.6 19.5, 2 20.1"
+        tailDash="1.6 2.2"
+      />
+    </svg>
+  );
+}
+
 export function MarkArrow() {
   /* Too small for a legible tail at its rendered 26×11px. */
   return (
@@ -127,14 +144,18 @@ export function MarkArrow() {
   );
 }
 
+/* Redrawn 24 Sep 2026 to run edge to edge of its box. The old path only
+   spanned x 16 to 107 of 120, so every ring sat inside its own svg and cut
+   through the first and last letters of the word it circled ("Five" on the
+   hub, "We break it" on the schools page). Now the box is the ring. */
 export function MarkRing() {
   return (
     <svg className="sg-mark" viewBox="0 0 120 46" preserveAspectRatio="none" aria-hidden="true">
       <Stroke
-        d="M17 24 C 15 12.5, 40 5.5, 63 5.8 C 91 6.2, 107 13, 106 23.5 C 105 34.5, 82 41, 56 40.4 C 32 39.8, 18 33.6, 17 22.5 C 16.5 17.8, 21.5 12.6, 28 10.4"
+        d="M6 24 C 4.5 11.5, 33 3.6, 61 3.9 C 92 4.3, 116 11.2, 115.4 23.2 C 114.8 35.6, 88 42.6, 58 42.2 C 30 41.8, 5.2 35.2, 5.2 22.6 C 5.2 16.6, 11.2 11.6, 19 8.7"
         w={2.6}
-        ghostDash="34 6 52 6 40 5 30"
-        tail="M29.6 9.9 C 33.5 8.7, 38 7.9, 42.5 7.5"
+        ghostDash="38 6 58 6 44 5 34"
+        tail="M20.8 8.1 C 25.2 6.8, 30.2 5.9, 35.4 5.4"
         tailDash="5 5.5"
         stretched
       />
@@ -240,22 +261,26 @@ export function useForceDark() {
 /* ── Page ─────────────────────────────────────────────────────────── */
 
 /* The frame that never gets rubbed out: two off-register chalk rectangles
-   around a block of rules. Same geometry as the governance frame on
-   /Foresight. Place it first inside a .sg-rules box. */
-export function RulesFrame() {
+   around a block of rules. Place it first inside a .sg-rules box.
+   Rebuilt 24 Sep 2026: it was ONE svg stretched over the whole box, so the
+   inner rectangle's inset grew with the box's height (about 70px on a tall
+   phone layout) while the padding stayed at 28px, and the rules spilled out
+   of the frame on five pages. Now each rectangle is its own svg, drawn edge
+   to edge, pinned at a fixed pixel inset in CSS (.sg-rules-frame--outer /
+   --inner), and the box's padding always clears the inner one. */
+const FRAME_OUTER = 'M0.9 2.2 C 0.9 1.2 1.6 0.6 2.8 0.6 L 97.3 1.0 C 98.7 1.0 99.3 1.7 99.2 2.9 L 98.9 97.3 C 98.9 98.7 98.2 99.3 96.9 99.3 L 2.7 99.0 C 1.3 99.0 0.7 98.3 0.8 97.1 Z';
+const FRAME_INNER = 'M1.4 1.9 C 1.4 0.9 2.1 0.5 3.3 0.6 L 96.8 0.9 C 98.3 1.0 99.0 1.6 98.9 2.8 L 99.2 97.6 C 99.2 98.9 98.4 99.4 97.1 99.3 L 2.4 98.7 C 1.0 98.6 0.5 97.9 0.6 96.7 Z';
+export function RulesFrame({ late = false }) {
+  const lateAttr = late ? { 'data-sg-late': '' } : {};
   return (
-    <svg className="sg-rules-frame" viewBox="0 0 100 62" preserveAspectRatio="none" aria-hidden="true">
-      <path
-        data-sg-draw=""
-        vectorEffect="non-scaling-stroke"
-        d="M2 4.4 C 2 2.7 3.1 1.7 5 1.7 L 95.4 2.2 C 97.6 2.2 98.4 3.3 98.3 5.2 L 97.9 57.2 C 97.9 59.4 96.8 60.3 94.8 60.3 L 4.8 59.8 C 2.6 59.8 1.7 58.7 1.8 56.8 Z"
-      />
-      <path
-        data-sg-draw=""
-        vectorEffect="non-scaling-stroke"
-        d="M4.6 6.4 C 4.6 4.8 5.6 3.9 7.4 4 L 92.8 4.4 C 94.8 4.5 95.6 5.6 95.5 7.3 L 95.1 54.9 C 95.1 57 94 57.8 92.1 57.7 L 7 57.3 C 5 57.2 4.2 56.2 4.3 54.5 Z"
-      />
-    </svg>
+    <>
+      <svg className="sg-rules-frame sg-rules-frame--outer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" {...lateAttr}>
+        <path data-sg-draw="" vectorEffect="non-scaling-stroke" d={FRAME_OUTER} />
+      </svg>
+      <svg className="sg-rules-frame sg-rules-frame--inner" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" {...lateAttr}>
+        <path data-sg-draw="" vectorEffect="non-scaling-stroke" d={FRAME_INNER} />
+      </svg>
+    </>
   );
 }
 

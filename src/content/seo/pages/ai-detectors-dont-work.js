@@ -18,6 +18,11 @@
  * The neurodivergent-bias claim is deliberately hedged: the supporting work
  * is a book chapter plus Bloomberg reporting, not a large empirical study.
  * Do not upgrade the phrasing to "studies show".
+ *
+ * 24 Sep 2026 (fact audit): "We have told this to every staffroom we have
+ * stood in" and the CTA "We run this session in schools. A half day with
+ * your staff" came out. No school session had been delivered, and staff PD
+ * is 90 minutes. Do not claim a track record here until one exists.
  */
 export default {
   hero: {
@@ -134,7 +139,7 @@ export default {
       kind: 'prose',
       heading: 'Why we publish this',
       body: [
-        'We run [AI training for schools](/ai-training-for-schools), and we could sell more of it by leaving this vague. We have told this to every staffroom we have stood in, so it may as well be written down where a Head of Learning Area can check it before booking anything.',
+        'We sell [AI training for schools](/ai-training-for-schools), and we could sell more of it by leaving this vague. It is what our staff session says about detectors, so it may as well be written down where a Head of Learning Area can check it before booking anything.',
         'Every figure above is linked to its source below. If any of it changes, the page changes.',
       ],
     },
@@ -225,7 +230,7 @@ export default {
   ],
 
   cta: {
-    heading: 'We run this session in schools',
-    text: 'A half day with your staff on what actually works, using your own assessments. No student devices, no student data.',
+    heading: 'A staff session on exactly this',
+    text: 'Monday Morning AI is 90 minutes with your staff: time-savers they can use that week, then assessment and detectors, honestly. No student devices, no student data.',
   },
 };

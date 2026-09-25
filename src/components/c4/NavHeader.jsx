@@ -57,6 +57,10 @@ const RIBBON_PARENTS = {
   '/ai-training-for-business': { to: '/Foresight', label: 'C4Site' },
   '/ai-training-for-schools': { to: '/Foresight', label: 'C4Site' },
   '/ai-training-for-law-firms': { to: '/Foresight', label: 'C4Site' },
+  // The free packs and the enquiry form are C4Site pages too; they used to
+  // fall through to "C4" and send people home instead of back to the hub.
+  '/c4sight-previews': { to: '/Foresight', label: 'C4Site' },
+  '/ai-training-enquiry': { to: '/Foresight', label: 'C4Site' },
 };
 const RIBBON_DEFAULT = { to: '/', label: 'C4' };
 

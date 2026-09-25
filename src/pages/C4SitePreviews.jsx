@@ -8,6 +8,12 @@
  * tags where the visitor came from. The look moved onto the board on 21 Sep
  * 2026, and the button stopped greying out: a press with nothing ticked or no
  * email now says what is missing instead of doing nothing.
+ *
+ * 24 Sep 2026: each row shows the pack's real cover (rendered from the
+ * published PDF into public/c4site-art/series-N.webp), and the rules frame
+ * that repeated the schools page word for word is now a short crossed list of
+ * what the packs never need. The curriculum line no longer says "every
+ * pack": Series 5, the staff pack, has no curriculum codes.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
@@ -17,16 +23,15 @@ import { breadcrumbSchema } from '@/lib/schema';
 import { c4SiteIncursion } from '@/data/pricing';
 import { submitPreviewDownload } from '@/api/submissions';
 import { C4SITE_SERIES as SERIES } from '@/data/c4siteSeries';
-import { BoardClose, BoardHero, RulesBlock } from '@/components/sight/SectorPage';
+import { BoardClose, BoardHero, CrossList } from '@/components/sight/SectorPage';
 import { ChalkDefs, MarkArrow, MarkTick, useForceDark } from '@/components/sight-arm/kit';
 
 const GROUP_FROM_HASH = { primary: ['S1', 'S2'], secondary: ['S3', 'S4'], staff: ['S5'], all: [] };
 
-const SAFETY = [
-  'Every activity runs unplugged, or on our own device at the front of the room.',
-  'No student devices, and no student data entered anywhere.',
-  'No photos of students, and no images of them made or uploaded.',
-  'Mapped to SCSA’s WA curriculum, in its own codes, and to the Australian Curriculum v9.',
+const NEVER_NEEDED = [
+  'Student devices',
+  'Student data, entered anywhere',
+  'Photos of students, or images of them made or uploaded',
 ];
 
 function deliverPack(file) {
@@ -124,7 +129,7 @@ export default function C4SitePreviews() {
         crumb="Free packs"
         heading="Take a real lesson for a test drive."
         mark="test drive."
-        intro="There is a free pack for every C4Site series. Each one is a complete classroom activity you can run tomorrow without us, with its curriculum links and a plain safety note. Pick the ones that fit your school and they download right here."
+        intro="There is a free pack for every C4Site series, each with a complete activity you can run without us and a plain safety note. Pick the ones that fit your school and they download right here."
       />
 
       <section className="sg-section">
@@ -151,6 +156,15 @@ export default function C4SitePreviews() {
                         <span className="sg-pick-box" aria-hidden="true">
                           {on && <MarkTick />}
                         </span>
+                        <img
+                          className="sg-pick-cover"
+                          src={`/c4site-art/series-${s.key.slice(1)}.webp`}
+                          alt=""
+                          width="160"
+                          height="227"
+                          loading="lazy"
+                          decoding="async"
+                        />
                         <span>
                           <span className="sg-pick-band">{s.band}</span>
                           <span className="sg-pick-name">{s.name}</span>
@@ -255,12 +269,21 @@ export default function C4SitePreviews() {
         </div>
       </section>
 
-      <RulesBlock
-        lead="In every pack"
-        heading="Built around a teacher's caution"
-        intro="Teachers are right to be careful with this, and every pack is written that way."
-        points={SAFETY}
-      />
+      <section className="sg-section">
+        <div className="sg-wrap">
+          <div className="sg-split">
+            <div>
+              <h2 className="sg-h2">What the packs never need.</h2>
+              <p className="sg-sub">
+                Every activity runs unplugged, or on one device at the front of the room. The four
+                classroom series are mapped to SCSA&rsquo;s WA curriculum in its own codes, and to the
+                Australian Curriculum v9.
+              </p>
+            </div>
+            <CrossList items={NEVER_NEEDED} className="sg-crosslist--big" />
+          </div>
+        </div>
+      </section>
 
       <BoardClose
         heading="Ran the activity? See what the live incursion adds."

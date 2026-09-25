@@ -823,7 +823,7 @@ export const c4SightPackages = [
       'Full day on-site, about 6 hours',
       'Everything in the half-day workshop',
       'Afternoon building repeatable workflows on your real recurring tasks',
-      'Workflows documented in each attendee\'s own words, plus a short automation-readiness map',
+      'Workflows documented in each attendee\'s own words',
     ],
   },
   {

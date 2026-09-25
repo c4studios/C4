@@ -1079,7 +1079,8 @@
   position: relative;
   background: var(--sg-board-deep);
   border-radius: 12px;
-  padding: clamp(28px, 5vw, 60px);
+  /* Always clears the inner frame (inset 14px) with room to spare. */
+  padding: clamp(44px, 6vw, 76px) clamp(34px, 6vw, 76px);
 }
 
 /* The framed rules — drawn as two overlapping, deliberately off-register
@@ -1095,6 +1096,10 @@
   overflow: visible;
   pointer-events: none;
 }
+/* Two rectangles at FIXED pixel insets, so the gap between them and the
+   distance to the content never change with the box's height. */
+.sg-rules-frame--outer { inset: 3px; width: calc(100% - 6px); height: calc(100% - 6px); }
+.sg-rules-frame--inner { inset: 14px; width: calc(100% - 28px); height: calc(100% - 28px); }
 
 .sg-rules-frame path {
   fill: none;
@@ -1116,13 +1121,6 @@
   .sg-rules-grid {
     grid-template-columns: 0.9fr 1.1fr;
   }
-}
-
-.sg-rules-lead {
-  margin: 0 0 16px;
-  font-size: 13.5px;
-  letter-spacing: 0.02em;
-  color: var(--sg-dim);
 }
 
 .sg-rules-copy {
@@ -1704,60 +1702,11 @@
 }
 .sg-hero-cta--pair { display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: center; }
 
-/* Tasks written on the board: a list, ticked */
-.sg-tasklist {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 4px 48px;
-  margin: clamp(30px, 4vw, 44px) 0 0;
-  padding: 0;
-  list-style: none;
-}
-@media (min-width: 820px) {
-  .sg-tasklist { grid-template-columns: 1fr 1fr; }
-}
-.sg-tasklist li {
-  display: grid;
-  grid-template-columns: 30px 1fr;
-  gap: 14px;
-  align-items: start;
-  padding-block: 16px;
-  border-bottom: 1px solid var(--sg-line);
-  font-size: clamp(1.05rem, 1.7vw, 1.22rem);
-  line-height: 1.45;
-  color: var(--sg-chalk);
-}
-.sg-tasklist li .sg-mark {
-  width: 22px;
-  height: 22px;
-  margin-top: 2px;
-  color: var(--sg-yellow);
-}
-
 /* The rules frame on a sector page: heading left, points right */
 @media (min-width: 900px) {
   .sg-rules-grid--split { grid-template-columns: 0.9fr 1.1fr; }
 }
 
-/* What good looks like: one sentence, written large */
-.sg-win {
-  margin: 20px 0 0;
-  max-width: 36ch;
-  font-size: clamp(1.25rem, 2.4vw, 1.65rem);
-  font-weight: 560;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-  color: var(--sg-chalk);
-  text-wrap: balance;
-}
-.sg-win-note {
-  margin: clamp(24px, 3vw, 32px) 0 0;
-  max-width: 62ch;
-  font-size: 15.5px;
-  line-height: 1.7;
-  color: var(--sg-dim);
-}
-.sg-win-note a,
 .sg-series-more a,
 .sg-curric a {
   color: var(--sg-chalk);
@@ -1765,26 +1714,9 @@
   text-decoration-color: var(--sg-line-strong);
   text-underline-offset: 0.22em;
 }
-.sg-win-note a:hover,
 .sg-series-more a:hover,
 .sg-curric a:hover { text-decoration-color: var(--sg-yellow); }
 
-/* A small paper note on the board (credibility, the taster) */
-.sg-paper--note { max-width: 680px; }
-.sg-paper--note h2 {
-  margin: 0;
-  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
-  font-weight: 750;
-  letter-spacing: -0.015em;
-  line-height: 1.2;
-  color: var(--sg-ink);
-}
-.sg-paper--note p {
-  margin: 14px 0 0;
-  font-size: 15.5px;
-  line-height: 1.7;
-  color: var(--sg-ink-soft);
-}
 .sg-paper-link {
   display: inline-flex;
   align-items: center;
@@ -1892,26 +1824,6 @@
   max-width: 64ch;
   font-size: 16px;
   line-height: 1.7;
-  color: var(--sg-dim);
-}
-.sg-quote {
-  margin: clamp(26px, 3.5vw, 36px) 0 0;
-  padding: 0 0 0 clamp(18px, 2.4vw, 26px);
-  border-left: 2px solid var(--sg-line-strong);
-  max-width: 52ch;
-}
-.sg-quote p {
-  margin: 0;
-  font-size: clamp(1.2rem, 2.2vw, 1.5rem);
-  font-weight: 600;
-  line-height: 1.35;
-  color: var(--sg-chalk);
-}
-.sg-quote cite {
-  display: block;
-  margin-top: 10px;
-  font-size: 14px;
-  font-style: normal;
   color: var(--sg-dim);
 }
 
@@ -2155,16 +2067,15 @@
 @media (min-width: 900px) {
   .sg-split { grid-template-columns: 1fr 1fr; align-items: start; }
 }
-.sg-split .sg-tasklist { grid-template-columns: 1fr; margin-top: 12px; border-top: 1px solid var(--sg-line); }
 .sg-split .sg-hero-cta { margin-top: 30px; }
 
 /* The ring at step size: the hub's ring is tuned for a 2.7rem heading, so at
    17px it needs more room each side or it cuts through the first and last
    letters. */
 .sg-step-name .sg-ringed .sg-mark {
-  inset: -0.55em -0.95em -0.6em;
-  width: calc(100% + 1.9em);
-  height: calc(100% + 1.15em);
+  inset: -0.42em -0.62em -0.46em;
+  width: calc(100% + 1.24em);
+  height: calc(100% + 0.88em);
 }
 
 /* The price stays in view while the steps scroll past it. */
@@ -2174,4 +2085,385 @@
 
 /* The frame's inner line sits about 4.5% in from each side, so a tall rules
    box needs more padding than the hub's to keep text clear of it. */
-.sg-rules--roomy { padding: clamp(40px, 6.5vw, 84px); }
+.sg-rules--roomy { padding: clamp(46px, 6.5vw, 84px) clamp(34px, 6.5vw, 84px); }
+
+/* The magnet sits 13px from the top and is 30px tall. A slip or note with
+   no header row needs its content to start below it, or on a phone the
+   magnet lands on the heading (seen on "Get your packs", 24 Sep 2026). */
+.sg-slip { padding-top: max(60px, clamp(26px, 4vw, 44px)); }
+
+/* ══ The sector pages, rebuilt (24 Sep 2026) ═══════════════════════════
+   Business and law each get their own page around their own material. The
+   parts below: the hero traces, the marked-up paper, the jobs, the run of a
+   day with notes, the pinned take-homes and the quote close. */
+
+/* What the last class left on the right of the board. One per page, all at
+   the hub's 4.5% chalk and hidden where the text column could reach them. */
+.sg-hero--week::before { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20520%20340%27%20fill%3D%27none%27%20stroke%3D%27%23f2f0e9%27%20stroke-width%3D%274%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M34%2072%20C%20170%2066%2C%20330%2070%2C%20492%2064%27%2F%3E%3Cpath%20d%3D%27M126%2038%20C%20124%20130%2C%20128%20226%2C%20125%20318%27%2F%3E%3Cpath%20d%3D%27M218%2036%20C%20220%20128%2C%20216%20222%2C%20219%20316%27%2F%3E%3Cpath%20d%3D%27M310%2040%20C%20308%20132%2C%20312%20228%2C%20309%20320%27%2F%3E%3Cpath%20d%3D%27M402%2038%20C%20404%20130%2C%20400%20224%2C%20403%20318%27%2F%3E%3Cpath%20d%3D%27M52%20104%20C%2070%20100%2C%2088%20106%2C%20106%20102%27%2F%3E%3Cpath%20d%3D%27M52%20138%20C%2068%20135%2C%2084%20140%2C%20100%20136%27%2F%3E%3Cpath%20d%3D%27M146%20106%20C%20164%20102%2C%20184%20108%2C%20200%20104%27%2F%3E%3Cpath%20d%3D%27M150%20170%20C%20158%20176%2C%20162%20182%2C%20166%20188%20C%20174%20172%2C%20184%20158%2C%20196%20146%27%2F%3E%3Cpath%20d%3D%27M238%20104%20C%20256%20101%2C%20274%20106%2C%20292%20102%27%2F%3E%3Cpath%20d%3D%27M238%20142%20C%20254%20139%2C%20270%20143%2C%20286%20140%27%2F%3E%3Cpath%20d%3D%27M238%20180%20C%20250%20177%2C%20264%20181%2C%20276%20178%27%2F%3E%3Cpath%20d%3D%27M332%20100%20C%20350%2097%2C%20368%20102%2C%20386%2098%27%2F%3E%3Cpath%20d%3D%27M324%20132%20C%20318%20116%2C%20352%20110%2C%20380%20112%20C%20400%20114%2C%20398%20142%2C%20372%20146%20C%20350%20150%2C%20322%20148%2C%20326%20128%27%2F%3E%3Cpath%20d%3D%27M422%20104%20C%20440%20100%2C%20458%20106%2C%20476%20102%27%2F%3E%3Cpath%20d%3D%27M428%20170%20C%20436%20176%2C%20440%20182%2C%20444%20188%20C%20452%20172%2C%20462%20158%2C%20474%20146%27%2F%3E%3C%2Fsvg%3E"); }
+.sg-hero--cite::before { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20520%20340%27%20fill%3D%27none%27%20stroke%3D%27%23f2f0e9%27%20stroke-width%3D%274%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M40%2060%20C%20150%2056%2C%20280%2062%2C%20420%2057%27%2F%3E%3Cpath%20d%3D%27M40%20100%20C%20140%2097%2C%20250%20102%2C%20360%2098%27%2F%3E%3Cpath%20d%3D%27M40%20140%20C%20160%20136%2C%20300%20142%2C%20440%20137%27%2F%3E%3Cpath%20d%3D%27M30%20141%20L%20452%20134%27%2F%3E%3Cpath%20d%3D%27M30%20147%20L%20448%20141%27%2F%3E%3Cpath%20d%3D%27M40%20180%20C%20120%20177%2C%20200%20182%2C%20280%20178%27%2F%3E%3Cpath%20d%3D%27M300%20164%20L%20292%20164%20L%20292%20196%20L%20300%20196%27%2F%3E%3Cpath%20d%3D%27M430%20164%20L%20438%20164%20L%20438%20196%20L%20430%20196%27%2F%3E%3Cpath%20d%3D%27M308%20180%20C%20350%20177%2C%20390%20182%2C%20422%20178%27%2F%3E%3Cpath%20d%3D%27M40%20220%20C%20150%20216%2C%20260%20222%2C%20380%20218%27%2F%3E%3Cpath%20d%3D%27M40%20260%20C%20120%20257%2C%20200%20262%2C%20290%20258%27%2F%3E%3Cpath%20d%3D%27M466%20112%20C%20464%2094%2C%20494%2090%2C%20496%20108%20C%20498%20122%2C%20482%20126%2C%20482%20142%27%2F%3E%3Cpath%20d%3D%27M482%20160%20L%20482%20164%27%2F%3E%3C%2Fsvg%3E"); }
+.sg-hero--cards::before { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20520%20340%27%20fill%3D%27none%27%20stroke%3D%27%23f2f0e9%27%20stroke-width%3D%274%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M40%2090%20L%20150%2084%20L%20156%20214%20L%2046%20220%20Z%27%2F%3E%3Cpath%20d%3D%27M190%2080%20L%20300%2080%20L%20300%20212%20L%20190%20212%20Z%27%2F%3E%3Cpath%20d%3D%27M338%2086%20L%20448%2092%20L%20442%20222%20L%20332%20216%20Z%27%2F%3E%3Cpath%20d%3D%27M206%2098%20L%20284%20194%20M%20284%2098%20L%20206%20194%27%2F%3E%3Cpath%20d%3D%27M70%20150%20C%2080%20128%2C%20116%20128%2C%20124%20150%20C%20116%20170%2C%2080%20172%2C%2070%20150%27%2F%3E%3Cpath%20d%3D%27M362%20170%20C%20374%20146%2C%20414%20146%2C%20424%20170%27%2F%3E%3Cpath%20d%3D%27M30%20262%20C%20170%20256%2C%20330%20262%2C%20480%20256%27%2F%3E%3C%2Fsvg%3E"); }
+.sg-sp-hero .sg-hero-by { margin-top: clamp(22px, 3vw, 30px); }
+
+/* ── Paper marked up in red pen ── */
+.sg-markup { max-width: 940px; margin-top: clamp(30px, 4vw, 44px); }
+.sg-mk-block { padding: clamp(18px, 2.4vw, 24px) 0; border-top: 1px solid #e3ded2; }
+.sg-paper-head + .sg-mk-block { border-top: 0; padding-top: 0; }
+.sg-mk-label {
+  margin: 0 0 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--sg-ink-soft);
+}
+.sg-mk-lines { margin: 0; padding: 0; list-style: none; }
+.sg-mk-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  padding: 8px 0;
+}
+.sg-mk-line .sg-pen { order: -1; }
+@media (min-width: 760px) {
+  .sg-mk-line {
+    grid-template-columns: minmax(0, 1fr) minmax(200px, 270px);
+    gap: 32px;
+    align-items: baseline;
+  }
+  .sg-mk-line .sg-pen { order: 0; }
+}
+.sg-mk-text {
+  margin: 0;
+  font-size: clamp(1.02rem, 1.6vw, 1.14rem);
+  line-height: 1.55;
+  color: var(--sg-ink);
+  text-wrap: pretty;
+}
+.sg-mk-text--struck {
+  color: var(--sg-ink-soft);
+  text-decoration: line-through;
+  text-decoration-color: var(--sg-red);
+  text-decoration-thickness: 2px;
+}
+.sg-mk-text--asked { font-size: 15.5px; color: var(--sg-ink-soft); max-width: 66ch; }
+.sg-mk-text--reply { font-weight: 600; }
+/* The red pen: the teacher's hand, on paper. Caveat 700 only (one file). */
+.sg-pen {
+  margin: 0;
+  font-family: var(--sg-hand-font);
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 1.15;
+  color: var(--sg-red);
+  transform: rotate(-1deg);
+  transform-origin: left center;
+}
+.sg-pen b { font-weight: 700; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 0.16em; margin-right: 0.2em; }
+.sg-mk-habit {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 12px;
+  margin-top: 4px;
+  padding-top: clamp(18px, 2.4vw, 24px);
+  border-top: 1.5px solid color-mix(in srgb, var(--sg-red) 40%, transparent);
+}
+.sg-mk-habit .sg-mark { width: 22px; height: 22px; margin-top: 2px; color: var(--sg-red); }
+.sg-mk-habit p { margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--sg-ink-soft); }
+.sg-mk-habit strong { color: var(--sg-ink); }
+
+/* The draft's verdict marks sit in their own column. */
+.sg-draft .sg-draft-line { grid-template-columns: 28px minmax(0, 1fr); column-gap: 10px; }
+.sg-draft .sg-draft-line .sg-pen { order: 0; grid-column: 2; }
+.sg-draft-mark { grid-row: 1 / span 2; padding-top: 3px; color: var(--sg-red); }
+.sg-draft-line--ok .sg-draft-mark { color: var(--sg-board); }
+.sg-draft-mark .sg-mark { width: 20px; height: 20px; }
+@media (min-width: 760px) {
+  .sg-draft .sg-draft-line { grid-template-columns: 28px minmax(0, 1fr) minmax(200px, 270px); column-gap: 14px; }
+  .sg-draft .sg-draft-line .sg-pen { grid-column: 3; }
+  .sg-draft-mark { grid-row: auto; }
+}
+.sg-draft-line--ok .sg-pen { color: var(--sg-board); }
+
+.sg-keep-note { margin: 22px 0 0; max-width: 62ch; font-size: 14.5px; line-height: 1.65; color: var(--sg-dim); }
+
+/* ── Rules frame additions: the two questions and a crossed list ── */
+.sg-test { margin: clamp(22px, 3vw, 30px) 0 0; padding: 0; list-style: none; counter-reset: sg-q; }
+.sg-test li {
+  position: relative;
+  padding: 12px 0 12px 42px;
+  border-top: 1px solid var(--sg-line);
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--sg-chalk);
+  counter-increment: sg-q;
+}
+.sg-test li::before {
+  content: counter(sg-q);
+  position: absolute;
+  left: 0;
+  top: 11px;
+  font-family: var(--sg-hand-font);
+  font-weight: 700;
+  font-size: 1.5em;
+  line-height: 1;
+  color: var(--sg-yellow);
+}
+.sg-test + .sg-rules-copy { margin-top: 18px; }
+.sg-rules-h3 { margin: 0 0 10px; font-size: 17px; font-weight: 700; color: var(--sg-chalk); }
+.sg-rules-small { margin: 18px 0 0; font-size: 14px; line-height: 1.65; color: var(--sg-dim); }
+
+.sg-crosslist { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--sg-line); }
+.sg-crosslist li {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--sg-line);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--sg-chalk);
+}
+.sg-crosslist .sg-mark { width: 20px; height: 20px; margin-top: 2px; color: #e58b7d; }
+.sg-crosslist--big li { font-size: clamp(1.05rem, 1.7vw, 1.2rem); padding: 16px 0; }
+
+/* ── The jobs: title and when you would reach for it ── */
+.sg-jobs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 clamp(28px, 4vw, 48px);
+  margin: clamp(28px, 4vw, 40px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 700px) { .sg-jobs { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1040px) { .sg-jobs { grid-template-columns: 1fr 1fr 1fr; } }
+.sg-jobs li { padding: 18px 0 20px; border-top: 1px solid var(--sg-line-strong); }
+.sg-jobs h3 {
+  margin: 0;
+  font-size: clamp(1.1rem, 1.8vw, 1.28rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: var(--sg-chalk);
+}
+.sg-jobs p { margin: 6px 0 0; font-size: 15px; line-height: 1.6; color: var(--sg-dim); text-wrap: pretty; }
+
+/* ── The run of a day, with what this sector does in each block ── */
+.sg-day-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(40px, 6vw, 56px);
+  margin-top: clamp(30px, 4vw, 44px);
+}
+@media (min-width: 900px) {
+  .sg-day-grid { grid-template-columns: 1fr 12px 1fr; gap: clamp(36px, 4.5vw, 64px); }
+}
+.sg-day h3 {
+  margin: 0;
+  font-size: clamp(1.45rem, 2.4vw, 1.8rem);
+  font-weight: 730;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+.sg-plan--notes { max-width: none; }
+.sg-plan--notes .sg-plan-row { flex-wrap: wrap; row-gap: 3px; }
+.sg-plan--notes .sg-plan-row::before { top: 20px; transform: none; }
+.sg-plan-note {
+  flex-basis: 100%;
+  max-width: 54ch;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--sg-dim);
+  text-wrap: pretty;
+}
+
+/* ── The take-homes, pinned to the board ── */
+.sg-sheets {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 26px;
+  margin-top: clamp(30px, 4vw, 48px);
+}
+.sg-sheet { margin: 0; display: grid; grid-template-columns: minmax(0, 40%) 1fr; gap: 18px; align-items: start; }
+.sg-sheet-img { position: relative; }
+.sg-sheet-img img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+  background: var(--sg-paper);
+  box-shadow:
+    0 22px 50px -24px rgba(0, 0, 0, 0.65),
+    0 6px 16px -8px rgba(0, 0, 0, 0.45);
+}
+/* The same red board magnet the paper uses, at sheet size. */
+.sg-sheet-img::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: -9px;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(ellipse 36% 26% at 33% 27%, rgb(255 255 255 / 0.8), rgb(255 255 255 / 0) 72%),
+    radial-gradient(circle at 37% 31%,
+      color-mix(in srgb, var(--sg-red) 72%, white) 0%,
+      var(--sg-red) 42%,
+      color-mix(in srgb, var(--sg-red) 62%, black) 100%);
+  box-shadow:
+    inset 1.5px 2px 2px rgb(255 255 255 / 0.4),
+    inset -2px -3px 4px rgb(0 0 0 / 0.42),
+    1px 1px 1px rgb(0 0 0 / 0.5),
+    3px 5px 6px rgb(0 0 0 / 0.34);
+}
+.sg-sheet:nth-child(1) .sg-sheet-img { transform: rotate(-1.4deg); }
+/* A dark cover on a dark board needs an edge. */
+.sg-sheet-img img { outline: 1px solid rgb(242 240 233 / 0.14); outline-offset: -1px; }
+@media (max-width: 759px) {
+  .sg-sheet-img::before { width: 16px; height: 16px; top: -6px; }
+}
+.sg-sheet:nth-child(2) .sg-sheet-img { transform: rotate(0.9deg); }
+.sg-sheet:nth-child(3) .sg-sheet-img { transform: rotate(-0.5deg); }
+.sg-sheet figcaption { padding-top: 4px; }
+.sg-sheet figcaption strong { display: block; font-size: 16.5px; font-weight: 700; color: var(--sg-chalk); }
+.sg-sheet figcaption span { display: block; margin-top: 6px; font-size: 14.5px; line-height: 1.6; color: var(--sg-dim); text-wrap: pretty; }
+@media (min-width: 760px) {
+  .sg-sheets { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(26px, 4vw, 52px); max-width: 1000px; }
+  .sg-sheet { grid-template-columns: 1fr; gap: 24px; }
+  .sg-sheet:nth-child(2) { margin-top: 28px; }
+}
+
+/* ── The quote close: the working, the line, the button ── */
+.sg-close--quote .sg-cost-sum { margin: clamp(20px, 3vw, 30px) auto 0; }
+.sg-close--quote .sg-sub { max-width: 60ch; margin-inline: auto; }
+
+/* ── Assessment B fixes (24 Sep 2026) ── */
+/* Form focus on paper: board green, never paler than the resting border. */
+.sg-root .sg-slip .sg-input:focus-visible,
+.sg-root .sg-slip .sg-textarea:focus-visible,
+.sg-root .sg-slip .sg-input:focus,
+.sg-root .sg-slip .sg-textarea:focus {
+  outline: 2.5px solid var(--sg-board);
+  outline-offset: 2px;
+  border-color: var(--sg-board);
+  box-shadow: none;
+}
+.sg-root .sg-slip .sg-input,
+.sg-root .sg-slip .sg-textarea { border-color: #8f897b; }
+/* Touch targets: the breadcrumb link, the pack links and "Select all five". */
+.sg-crumb a { display: inline-block; padding-block: 13px; margin-block: -13px; }
+.sg-series-get { min-height: 44px; }
+.sg-pick-all { min-height: 44px; }
+
+/* ── Schools, 24 Sep 2026: what changes from Year 7, the staff sheet and
+   the curriculum card ── */
+.sg-older { margin-top: clamp(26px, 3.5vw, 34px); }
+.sg-older-list { margin: 12px 0 0; border-top: 1px solid var(--sg-line); }
+.sg-older-list > div { display: grid; grid-template-columns: 1fr; gap: 4px 16px; padding: 14px 0 15px; border-bottom: 1px solid var(--sg-line); }
+@media (min-width: 520px) { .sg-older-list > div { grid-template-columns: 118px 1fr; } }
+.sg-older-list dt { font-size: 14.5px; font-weight: 650; color: var(--sg-yellow); }
+.sg-older-list dd { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--sg-dim); text-wrap: pretty; }
+
+.sg-staff-sheet { max-width: none; }
+.sg-staff-lead { margin: 0; font-size: 14px; font-weight: 650; color: var(--sg-ink-soft); }
+.sg-keep-list--one { grid-template-columns: 1fr !important; margin-top: 16px; gap: 14px; }
+.sg-keep-list--one li { font-size: 16.5px; color: var(--sg-ink); }
+.sg-staff-then { margin: 22px 0 0; padding-top: 18px; border-top: 1px solid #e3ded2; font-size: 15px; line-height: 1.6; color: var(--sg-ink-soft); }
+.sg-staff-then strong { color: var(--sg-ink); }
+
+.sg-code-card { margin: clamp(28px, 4vw, 40px) 0 0; max-width: 620px; transform: rotate(-0.6deg); }
+.sg-code-card .sg-paper-brand { font-size: 15px; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
+.sg-code-card blockquote { margin: 0; }
+.sg-code-card blockquote p { margin: 0; font-size: clamp(1.25rem, 2.4vw, 1.6rem); font-weight: 650; line-height: 1.3; letter-spacing: -0.01em; color: var(--sg-ink); text-wrap: balance; }
+.sg-code-card figcaption { margin-top: 16px; font-size: 14.5px; line-height: 1.6; color: var(--sg-ink-soft); }
+
+/* ── Pack covers in the rows (24 Sep 2026): the real first page of each
+   published pack, so a teacher sees what they are getting before they tick
+   it. Decorative (alt=""), the row's text names the pack. ── */
+.sg-pick button { grid-template-columns: 34px 52px 1fr; align-items: start; }
+.sg-pick-cover,
+.sg-series-cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+  outline: 1px solid rgb(242 240 233 / 0.14);
+  outline-offset: -1px;
+  box-shadow: 0 10px 22px -12px rgba(0, 0, 0, 0.7);
+  transform: rotate(-1.2deg);
+}
+@media (min-width: 560px) { .sg-pick button { grid-template-columns: 34px 64px 1fr; gap: 18px; } }
+.sg-series-row { grid-template-columns: 58px 1fr; column-gap: 18px; }
+.sg-series-cover { grid-row: 1 / span 3; }
+.sg-series-row > :not(.sg-series-cover) { grid-column: 2; }
+@media (min-width: 900px) {
+  .sg-series-row { grid-template-columns: 64px 170px 1fr auto; column-gap: 28px; align-items: start; }
+  .sg-series-cover { grid-row: auto; }
+  .sg-series-row > :not(.sg-series-cover) { grid-column: auto; }
+  .sg-series-band { padding-top: 4px; }
+}
+
+/* ── The enquiry: the slip, and what happens next beside it (24 Sep 2026) ── */
+.sg-enquiry { display: grid; grid-template-columns: 1fr; gap: clamp(40px, 5vw, 64px); align-items: start; }
+@media (min-width: 1000px) {
+  .sg-enquiry { grid-template-columns: minmax(0, 1.75fr) minmax(280px, 1fr); }
+  .sg-next { position: sticky; top: 110px; padding-top: 8px; }
+}
+.sg-next-head { margin: 0; font-size: clamp(1.3rem, 2.2vw, 1.6rem); font-weight: 730; line-height: 1.15; letter-spacing: -0.015em; color: var(--sg-chalk); }
+.sg-next-list { margin: 18px 0 0; padding: 0; list-style: none; counter-reset: sg-next; border-top: 1px solid var(--sg-line); }
+.sg-next-list li {
+  position: relative;
+  padding: 15px 0 16px 44px;
+  border-bottom: 1px solid var(--sg-line);
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--sg-dim);
+  counter-increment: sg-next;
+  text-wrap: pretty;
+}
+.sg-next-list li::before {
+  content: counter(sg-next);
+  position: absolute;
+  left: 2px;
+  top: 12px;
+  font-family: var(--sg-hand-font);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--sg-yellow);
+}
+.sg-next-mail { margin: 20px 0 0; font-size: 14.5px; line-height: 1.6; color: var(--sg-dim); }
+.sg-next-mail a,
+.sg-slip-error a { color: inherit; text-decoration: underline; text-underline-offset: 0.2em; overflow-wrap: anywhere; }
+.sg-next-mail a { display: inline-block; padding-block: 10px; margin-block: -10px; color: var(--sg-chalk); }
+
+/* On a phone the paper's head row starts level with the magnet; every
+   pinned sheet starts its content below it (24 Sep 2026). */
+@media (max-width: 640px) {
+  .sg-paper { padding-top: 62px; }
+}
+
+/* ── The projected screen (schools, 24 Sep 2026): a real TEACH IT test run,
+   thrown onto the board. The projector's spill is a soft chalk-coloured glow
+   around the image; no frame, because a projection has none. ── */
+.sg-projected { margin: clamp(56px, 8vw, 96px) 0 0; max-width: 1000px; }
+.sg-projected-screen { position: relative; }
+.sg-projected-screen img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 1px rgb(242 240 233 / 0.1),
+    0 0 90px -18px rgb(242 240 233 / 0.16),
+    0 30px 60px -30px rgba(0, 0, 0, 0.7);
+}
+.sg-projected figcaption { margin-top: 22px; max-width: 64ch; font-size: 15px; line-height: 1.65; color: var(--sg-dim); text-wrap: pretty; }
+.sg-projected figcaption strong { color: var(--sg-chalk); font-weight: 650; }
+
+/* The site's field focus ring (styles/marks.css) is !important and drawn in
+   --c4-focus, which is pale in dark mode, so on paper it measured 1.16:1.
+   Paper forms re-point the token at board green (24 Sep 2026). */
+.sg-root .sg-slip { --c4-focus: var(--sg-board); }
