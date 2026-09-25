@@ -30,7 +30,7 @@ export const C4SITE_SERIES = [
     group: 'secondary',
     band: 'Years 7 to 9',
     name: 'Can You Trust It?',
-    line: 'What counts as evidence when a machine can invent a fact or fake a face. A free how-AI-works hour never gets this far.',
+    line: 'What counts as evidence when a machine can invent a fact or fake a face, and how to check before you believe it.',
     file: '/downloads/c4sight/Series-3-Can-You-Trust-It-Preview.pdf',
   },
   {
@@ -38,7 +38,7 @@ export const C4SITE_SERIES = [
     group: 'secondary',
     band: 'Years 10 to 12',
     name: 'Your Move',
-    line: 'Using AI for study without handing it the thinking, and why AI detectors do not work. It ends on what AI means for the work they are heading into.',
+    line: 'Using AI for study without handing it the thinking, and why AI detectors do not reliably work. It ends on what AI means for the work they are heading into.',
     file: '/downloads/c4sight/Series-4-Your-Move-Preview.pdf',
   },
   {

@@ -48,7 +48,7 @@ const PLEDGES = [
   {
     claim: 'You can check all of it.',
     body:
-      'Our prices are published rather than quoted on request. Every client testimonial is shown in full and uncurated. Every build in the portfolio links to the live site so you can judge the work yourself.',
+      'Set prices are published on the site, including the school incursion. Workplace training is quoted per team, as one fixed price. Every client testimonial is shown in full and uncurated. Every build in the portfolio links to the live site so you can judge the work yourself.',
     link: { label: 'See the portfolio', to: '/Portfolio' },
   },
 ];

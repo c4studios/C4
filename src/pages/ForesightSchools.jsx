@@ -10,17 +10,30 @@
  * Do not market the 90 as "two presenters, one a registered teacher". The
  * run sheet reserves that line for the longer formats; the 90's honest line
  * is one presenter with the school's own teacher in the room.
+ *
+ * 24 Sep 2026 (fact audit): the minute-by-minute steps are the Pre-primary to
+ * Year 6 session (TEACH IT and the picture cards). From Year 7 the run sheet
+ * swaps the tool and the activity, so the steps are labelled as primary and a
+ * note says what changes. Do not describe BUILD IT or SHIP IT as a working
+ * tool on this page; neither exists yet. Years 7 to 9 run the unplugged
+ * Break the Bot (A.7), where a student plays the bot.
  */
 import { Link } from '@/components/c4/SiteLink';
 import { createPageUrl } from '@/utils';
 import { c4SiteIncursion, C4SIGHT_PRICING_NOTE } from '@/data/pricing';
 import { C4SITE_SERIES } from '@/data/c4siteSeries';
 import {
-  BoardClose, BoardHero, RulesBlock, TaskList, enquiryUrlFor, useSectorHead,
+  BoardClose, BoardHero, RulesBlock, enquiryUrlFor, useSectorHead,
 } from '@/components/sight/SectorPage';
 import {
   ChalkDefs, MarkArrow, MarkRing, MarkTick, VRule, useForceDark,
 } from '@/components/sight-arm/kit';
+
+/* What changes from Year 7, from the run sheet's band table. */
+const SECONDARY_NOTE = [
+  { band: 'Years 7 to 9', line: 'Break the Bot. The class writes a help-bot’s rules, a student plays the bot, and everyone else tries to talk it past them. Then, what counts as evidence when a face can be faked.' },
+  { band: 'Years 10 to 12', line: 'An AI tool used live on the presenter’s laptop, on a task the room votes for. Then assessment, honestly, including why detectors do not reliably work.' },
+];
 
 const DATA = {
   sector: 'Schools',
@@ -48,7 +61,7 @@ const STEPS = [
 const SAFETY = [
   { lead: 'No student devices.', body: 'The tool runs on our laptop and your projector. Students hold cards, write and vote.' },
   { lead: 'No student data.', body: 'Nothing about a student goes into anything we use, not even a name.' },
-  { lead: 'No student images.', body: 'The camera points at the cards students hold up, never at faces, and nothing is saved.' },
+  { lead: 'No student images.', body: 'In the primary session the camera points at the cards students hold up, never at faces, and nothing is saved.' },
   { lead: 'Your teacher stays in the room.', body: 'For the whole session, so there are always two adults present.' },
   { lead: 'Your policies win.', body: 'School and Department policy overrides anything taught in the room.' },
 ];
@@ -77,7 +90,9 @@ export default function ForesightSchools() {
         crumb="Schools"
         heading="Ninety minutes with a machine that gets it wrong."
         mark="gets it wrong."
-        intro="An AI incursion for Perth schools, from Pre-primary to Year 12. Your class watches the machine learn, then watches it get something confidently wrong, and spends the rest of the session working out why. Nobody needs a device."
+        intro="An AI incursion for Perth schools, from Pre-primary to Year 12. Your class watches a machine get something confidently wrong, and spends the rest of the session working out why. Nobody needs a device."
+        by="One presenter, with your own teacher in the room throughout."
+        trace="cards"
       >
         <div className="sg-hero-cta sg-hero-cta--pair">
           <Link to={incursionUrl} className="sg-btn">
@@ -122,7 +137,7 @@ export default function ForesightSchools() {
             </div>
             <VRule />
             <div>
-              <p className="sg-plan-lead sg-plan-lead--top">The ninety minutes, in order</p>
+              <p className="sg-plan-lead sg-plan-lead--top">The ninety minutes, Pre-primary to Year 6</p>
               <ol className="sg-steps">
                 {STEPS.map((step) => (
                   <li key={step.name} className={step.hinge ? 'sg-step sg-step--hinge' : 'sg-step'}>
@@ -146,8 +161,44 @@ export default function ForesightSchools() {
                   </li>
                 ))}
               </ol>
+              <div className="sg-older">
+                <p className="sg-plan-lead">From Year 7, the same shape with the presenter typing and the room deciding</p>
+                <dl className="sg-older-list">
+                  {SECONDARY_NOTE.map((row) => (
+                    <div key={row.band}>
+                      <dt>{row.band}</dt>
+                      <dd>{row.line}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
             </div>
           </div>
+
+          {/* The screen at "We break it": a real test run of TEACH IT, the
+              classifier the presenter brings (c4sight-schools/tools/teach-it,
+              tests/shots/5-rabbit-marked-wrong-1920x1080.png, 24 Sep 2026).
+              The percentage is that run's; the README says the size of the
+              number is not guaranteed, so the caption says "in this run". */}
+          <figure className="sg-projected">
+            <div className="sg-projected-screen">
+              <img
+                src="/c4site-art/teach-it-marked-wrong-1280.webp"
+                srcSet="/c4site-art/teach-it-marked-wrong-800.webp 800w, /c4site-art/teach-it-marked-wrong-1280.webp 1280w"
+                sizes="(min-width: 1160px) 1000px, 100vw"
+                alt="The TEACH IT screen. A drawn rabbit is on camera. The tool says: I think this is a CAT, 95% sure. CAT is struck through in red pen, 95% sure is ringed, and underneath is written: Sure isn't the same as right."
+                width="1280"
+                height="720"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <figcaption>
+              <strong>The screen at minute 30.</strong> Taught only cats and dogs, the machine meets a
+              rabbit. In this test run it said cat, 95% sure, and the presenter marked it wrong in red.
+              It runs offline on our laptop, and nothing is recorded or saved.
+            </figcaption>
+          </figure>
         </div>
       </section>
 
@@ -163,6 +214,15 @@ export default function ForesightSchools() {
           <ul className="sg-series">
             {C4SITE_SERIES.map((s) => (
               <li key={s.key} className="sg-series-row">
+                <img
+                  className="sg-series-cover"
+                  src={`/c4site-art/series-${s.key.slice(1)}.webp`}
+                  alt=""
+                  width="160"
+                  height="227"
+                  loading="lazy"
+                  decoding="async"
+                />
                 <span className="sg-series-band">{s.band}</span>
                 <div>
                   <h3>{s.name}</h3>
@@ -186,7 +246,6 @@ export default function ForesightSchools() {
 
       <RulesBlock
         id="safety"
-        lead="The same in every session"
         heading="Built around a teacher's caution"
         intro="Teachers are right to be careful with this. These rules hold at every year level."
         points={SAFETY}
@@ -208,7 +267,7 @@ export default function ForesightSchools() {
                 <Link to="/ai-detectors-dont-work/" className="sg-inline-link">
                   why AI detectors don&rsquo;t reliably work
                 </Link>{' '}
-                and where your school stands. It runs for 90 minutes with up to 60 staff.
+                and where your school stands.
               </p>
               <div className="sg-hero-cta">
                 <Link to={staffUrl} className="sg-btn sg-btn--ghost">
@@ -217,9 +276,23 @@ export default function ForesightSchools() {
                 </Link>
               </div>
             </div>
-            <div>
-              <p className="sg-plan-lead sg-plan-lead--top">Built live in the first half</p>
-              <TaskList items={STAFF_BUILDS} />
+            <div className="sg-paper sg-staff-sheet">
+              <div className="sg-paper-head">
+                <span className="sg-paper-brand">Monday Morning AI</span>
+                <span className="sg-paper-note">90 minutes, up to 60 staff</span>
+              </div>
+              <p className="sg-staff-lead">Built live at the front, in the first half</p>
+              <ul className="sg-keep-list sg-keep-list--one">
+                {STAFF_BUILDS.map((item) => (
+                  <li key={item}>
+                    <MarkTick />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="sg-staff-then">
+                <strong>Then, the second half.</strong> Assessment, detectors and where your school stands.
+              </p>
             </div>
           </div>
         </div>
@@ -234,13 +307,19 @@ export default function ForesightSchools() {
             Each pack lists the WA content descriptions its series supports, quoted from SCSA, next
             to the Australian Curriculum v9 that WA&rsquo;s is adapted from.
           </p>
-          <blockquote className="sg-quote">
-            <p>Evaluate the authenticity, accuracy and timeliness of acquired data</p>
-            <cite>
-              SCSA, Year 8 Digital Technologies, WA8DIGAD2. SCSA&rsquo;s own examples for it name
-              deepfakes. Series 3 supports it.
-            </cite>
-          </blockquote>
+          <figure className="sg-paper sg-code-card">
+            <div className="sg-paper-head">
+              <span className="sg-paper-brand">WA8DIGAD2</span>
+              <span className="sg-paper-note">SCSA, Year 8 Digital Technologies</span>
+            </div>
+            <blockquote>
+              <p>&ldquo;Evaluate the authenticity, accuracy and timeliness of acquired data&rdquo;</p>
+            </blockquote>
+            <figcaption>
+              SCSA&rsquo;s own examples for it name deepfakes. Series 3, <em>Can You Trust It?</em>,
+              supports it.
+            </figcaption>
+          </figure>
         </div>
       </section>
 

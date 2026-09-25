@@ -58,8 +58,9 @@ import useDocumentHead from '@/hooks/useDocumentHead';
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
 import { c4SightPackages, c4SiteIncursion, C4SITE_QUOTE_FACTORS, C4SIGHT_PRICING_NOTE } from '@/data/pricing';
 import SiteMosaic from '../components/sight-arm/SiteMosaic';
+import { FORMATS, RUN_OF_DAY } from '@/data/c4siteDay';
 import {
-  Stroke, PuffDots, MarkUnderline, MarkTick, MarkArrow, MarkRing, MarkLoop, VRule, ChalkDefs, useForceDark,
+  Stroke, PuffDots, MarkUnderline, MarkTick, MarkArrow, MarkRing, MarkLoop, VRule, ChalkDefs, RulesFrame, useForceDark,
 } from '../components/sight-arm/kit';
 import '../components/sight-arm/sight-arm.css';
 
@@ -67,45 +68,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 
 /* ── Content (facts preserved from the previous page) ─────────────── */
-/* `hours` mirrors the duration already stated in each format's copy —
-   it exists so the margin hand can derive its arithmetic from data
-   instead of hardcoding figures (decision memo §1.4.4). */
-
-const FORMATS = [
-  {
-    label: 'Half day',
-    duration: 'About 3.5 hours',
-    hours: 3.5,
-    popular: false,
-    body: 'Foundations, hands-on work, prompting that produces useful output, and the data-safety module. One sector focus per session. The team leaves having done real work, with a prompt pack they keep.',
-  },
-  {
-    label: 'Full day',
-    duration: 'About 6 hours',
-    hours: 6,
-    popular: true,
-    body: 'The half-day morning, plus an afternoon where attendees bring their own recurring tasks and build repeatable workflows they keep. The deeper option, and it closes with a short automation-readiness map.',
-  },
-];
-
-/* The run of a day, block by block, in minutes. Verbatim from the delivery
-   document (c4sight-workshop-curriculum.md): blocks 0 to 5 are the half day,
-   6 to 8 and the close are the full-day afternoon. `rest` blocks are breaks.
-   Lunch has no stated length there, so it is not listed. */
-const RUN_OF_DAY = [
-  { part: 'am', label: 'Setup', min: 15 },
-  { part: 'am', label: 'What these tools are', min: 30 },
-  { part: 'am', label: 'First hands-on', min: 45 },
-  { part: 'am', label: 'Break', min: 15, rest: true },
-  { part: 'am', label: 'Prompting that works', min: 45 },
-  { part: 'am', label: 'Data safety', min: 30 },
-  { part: 'am', label: 'Making it stick', min: 20 },
-  { part: 'pm', label: 'Your own tasks', min: 60 },
-  { part: 'pm', label: 'Break', min: 15, rest: true },
-  { part: 'pm', label: 'Build a workflow you keep', min: 45 },
-  { part: 'pm', label: 'Your questions', min: 30 },
-  { part: 'pm', label: 'The pack', min: 15 },
-];
+/* FORMATS and RUN_OF_DAY live in src/data/c4siteDay.js (shared with the
+   sector pages since 24 Sep 2026). */
 
 const OUTCOMES = [
   'What these tools really are, and where they confidently get things wrong.',
@@ -142,7 +106,7 @@ const SECTORS = [
   {
     page: 'ForesightLaw',
     title: 'Law firms',
-    body: 'Faster drafting, summarising, and research starting points, with verification built in. Led by someone who understands the conduct obligations and the risk of AI inventing citations.',
+    body: 'Faster drafting, summarising and research starting points, with a checking routine built in, because these tools invent citations that look real.',
   },
 ];
 
@@ -685,28 +649,12 @@ export default function Foresight() {
             {/* The frame that never gets rubbed out — drawn twice, chalk
                 doubled and deliberately off, the one crisp thing on a
                 board of smudges. It finishes drawing after the smear
-                pass has deflected around it. */}
-            <svg
-              className="sg-rules-frame"
-              data-sg-late=""
-              viewBox="0 0 100 62"
-              preserveAspectRatio="none"
-              aria-hidden="true"
-            >
-              <path
-                data-sg-draw=""
-                vectorEffect="non-scaling-stroke"
-                d="M2 4.4 C 2 2.7 3.1 1.7 5 1.7 L 95.4 2.2 C 97.6 2.2 98.4 3.3 98.3 5.2 L 97.9 57.2 C 97.9 59.4 96.8 60.3 94.8 60.3 L 4.8 59.8 C 2.6 59.8 1.7 58.7 1.8 56.8 Z"
-              />
-              <path
-                data-sg-draw=""
-                vectorEffect="non-scaling-stroke"
-                d="M4.6 6.4 C 4.6 4.8 5.6 3.9 7.4 4 L 92.8 4.4 C 94.8 4.5 95.6 5.6 95.5 7.3 L 95.1 54.9 C 95.1 57 94 57.8 92.1 57.7 L 7 57.3 C 5 57.2 4.2 56.2 4.3 54.5 Z"
-              />
-            </svg>
+                pass has deflected around it. (kit.jsx RulesFrame: two
+                fixed-inset rectangles since 24 Sep 2026, so the rules can
+                never spill out of it on a phone.) */}
+            <RulesFrame late />
             <div className="sg-rules-grid">
               <div>
-                <p className="sg-rules-lead">In the corner of the board, where it never gets rubbed out.</p>
                 <h2 className="sg-h2">Every session includes a data-safety module.</h2>
                 <p className="sg-rules-copy">
                   Safe use is taught in the room, on the day, as part of the course. It is the

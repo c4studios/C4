@@ -9,6 +9,12 @@
  * school labels need no server change. Honeypot, load time and Turnstile are
  * unchanged. Moved onto the board on 21 Sep 2026; sending and the result now
  * happen on the slip instead of a separate full-page state.
+ *
+ * 24 Sep 2026: a "what happens next" column beside the slip, which changes
+ * with the sector (sources: the hub's "one fixed price after a short call",
+ * the curriculum's pre-session checklist, the schools page's projector and
+ * floor, and c4SiteIncursion for the price). A failed send now offers the
+ * studio's email, so a teacher is never left with only "try again".
  */
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -18,6 +24,7 @@ import { submitTrainingEnquiry } from '@/api/submissions';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema } from '@/lib/schema';
+import { c4SiteIncursion } from '@/data/pricing';
 import { ChalkDefs, ChalkHeading, MarkArrow, useForceDark } from '@/components/sight-arm/kit';
 
 const SECTORS = [
@@ -50,6 +57,22 @@ const SCHOOL_SIZES = [
   { key: 'one-class', label: 'One class' },
   { key: 'up-to-60', label: 'Up to 60' },
   { key: 'over-60', label: 'More than 60' },
+];
+
+const STUDIO_EMAIL = 'caleb@c4studios.com.au';
+
+const NEXT_WORK = [
+  'We reply within one business day, by email.',
+  'A short call about the team, the tools they already use and the work they want help with.',
+  'One fixed price for the session, set by the people in the room, half day or full, and where you are.',
+  'Before the day, a short checklist so everyone arrives with a device, wifi and access to the tool.',
+];
+
+const NEXT_SCHOOL = [
+  'We reply within one business day, by email.',
+  'We settle the year levels, a date and the room. We need a projector and some clear floor.',
+  `The 90-minute incursion is ${c4SiteIncursion.priceLabel}, with up to ${c4SiteIncursion.maxStudents} students. Staff PD is quoted separately.`,
+  'On the day, one presenter and your own teacher in the room. Students need no devices.',
 ];
 
 const labelFor = (options, key) => options.find((o) => o.key === key)?.label || '';
@@ -189,7 +212,8 @@ export default function TrainingEnquiry() {
       </header>
 
       <section className="sg-form-page">
-        <div className="sg-wrap">
+        <div className="sg-wrap sg-enquiry">
+          <div className="sg-enquiry-slip">
           {status === 'sent' ? (
             <div className="sg-paper sg-slip" role="status">
               <h2 ref={resultRef} tabIndex={-1}>Enquiry received</h2>
@@ -284,7 +308,12 @@ export default function TrainingEnquiry() {
                 />
               </div>
 
-              {error && <p className="sg-slip-error" role="alert">{error}</p>}
+              {error && (
+                <p className="sg-slip-error" role="alert">
+                  {error} If it keeps failing, email{' '}
+                  <a href={`mailto:${STUDIO_EMAIL}`}>{STUDIO_EMAIL}</a> and we will pick it up from there.
+                </p>
+              )}
 
               <button type="submit" className="sg-btn" disabled={status === 'sending'}>
                 {status === 'sending' ? 'Sending…' : 'Send enquiry'}
@@ -292,6 +321,19 @@ export default function TrainingEnquiry() {
               </button>
             </form>
           )}
+          </div>
+
+          <aside className="sg-next" aria-labelledby="sg-next-head">
+            <h2 className="sg-next-head" id="sg-next-head">What happens next</h2>
+            <ol className="sg-next-list">
+              {(isSchool ? NEXT_SCHOOL : NEXT_WORK).map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
+            <p className="sg-next-mail">
+              Rather write it yourself? <a href={`mailto:${STUDIO_EMAIL}`}>{STUDIO_EMAIL}</a>
+            </p>
+          </aside>
         </div>
       </section>
     </div>
