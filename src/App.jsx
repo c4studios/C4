@@ -12,6 +12,7 @@ import LeadEngine from './pages/LeadEngine';
 import { liveSeoPages } from './content/seo/registry';
 import { createPageUrl } from './utils';
 import WelcomeReturnButton from './components/welcome/WelcomeReturnButton';
+import { Analytics } from '@vercel/analytics/react';
 // C4Site previews — the tracked lead-magnet download page (flat slug).
 // Imported eagerly since 24 Sep 2026: as a lazy() chunk behind a null
 // Suspense fallback, the prerendered page blanked for 50-90ms on load while
@@ -85,6 +86,7 @@ function App() {
       <MotionConfig reducedMotion="user">
       <Router>
         <PageViewTracker />
+        <Analytics />
         <Routes>
           {/* Networking-card landing — no Layout chrome, lazy-loaded */}
           <Route
