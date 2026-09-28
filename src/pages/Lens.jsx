@@ -1089,7 +1089,7 @@ export default function Lens() {
           })}
         </div>
         <div className="pkg-note lr">
-          <strong>All prices exclude GST.</strong> Starting prices are based on the scope we agree. If the scope changes, we tell you straight away and pause until the revised price is agreed.<br />
+          <strong>All prices in AUD. No GST is added, as C4 Studios isn&rsquo;t registered for GST.</strong> Starting prices are based on the scope we agree. If the scope changes, we tell you straight away and pause until the revised price is agreed.<br />
           Professional services (legal, financial, medical) may carry a 15–20% surcharge, which we go through on the discovery call.
         </div>
       </section>
