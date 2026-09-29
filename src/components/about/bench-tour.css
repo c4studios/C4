@@ -143,6 +143,14 @@
 
 /* ───────────────────────────────────────────────────── bench objects ── */
 
+/* Paper lying on paper: a flat group, so its sheets stack in paint order
+   and are never depth-sorted against each other as the camera moves. */
+.bt-heap {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
 .bt-obj {
   position: absolute;
   background-size: 100% 100%;

@@ -7,8 +7,8 @@
  * portrait-plus-values-grid About page.
  * OWN-WORLD: the site's bench (warm ground, ink, one red that means start).
  * Real objects lie on it: his portrait print, an open notebook, proof prints
- * of real client sites, a pile of promise cards, a folded run sheet, and a
- * Bible open at Daniel 3. Paper is drawn as raster plates
+ * of real client sites and one labelled concept, a pile of promise cards, a
+ * folded run sheet, and a Bible open at Daniel 3. Paper is drawn as raster plates
  * (scripts/bench-plates.mjs); every word on it is set in HTML.
  * STORY: a first-time visitor learns who does the work, sees the work itself,
  * reads what they can hold him to, then starts a conversation.
@@ -62,14 +62,18 @@ const YEARS = [
   { y: 'Today', t: 'Four services, still one person', d: 'Websites and apps, private AI, photography and video, and AI training.' },
 ];
 
-/* Real client work, from src/components/portfolio/caseStudyData.jsx. */
+/* The work on the bench: client sites from
+   src/components/portfolio/caseStudyData.jsx, and one unofficial concept,
+   labelled as one everywhere it appears and linked to its own live site
+   (which carries its own disclaimer), never to a case study. Caleb chose
+   these on 29 Sep 2026. */
 const WORK = [
+  { name: 'Evidence Advisory', year: '2026', slug: 'evidence-advisory', img: '/captures/evidenceadvisory-com-au/desktop/01-hero-800.webp' },
   { name: 'Transform Fremantle', year: '2026', slug: 'transform-fremantle', img: '/captures/transformfreo-com/desktop/01-hero-800.webp' },
-  { name: 'Jurassic PT', year: '2026', slug: 'jurassic-pt', img: '/captures/jurassic-pt-vercel-app/desktop/01-hero-800.webp' },
-  { name: 'DS Racing Karts', year: '2025–26', slug: 'ds-racing-karts', img: '/captures/dsracingkarts-com-au/desktop/01-hero-800.webp' },
+  { name: 'WA Police Force', year: 'Unofficial concept', slug: 'wapf-concept', href: 'https://wapf-concept.vercel.app', img: '/captures/wapf-concept-vercel-app/desktop/01-hero-800.webp' },
+  { name: 'Aqua-Safe Plumbing', year: '2026', slug: 'aqua-safe-plumbing', img: '/captures/aquasafeplumbing-com-au/desktop/01-hero-800.webp' },
   { name: 'Sharp Bricklaying', year: '2026', slug: 'sharp-bricklaying', img: '/captures/sharpbricklaying-com-au/desktop/01-hero-800.webp' },
-  { name: 'GoCC', year: '2026', slug: 'gocc', img: '/captures/gocc-com-au/desktop/01-hero-800.webp' },
-  { name: 'Groverz Tax', year: '2026', slug: 'groverz-tax', img: '/captures/groverztax-com-au/desktop/01-hero-800.webp' },
+  { name: 'DS Racing Karts', year: '2025–26', slug: 'ds-racing-karts', img: '/captures/dsracingkarts-com-au/desktop/01-hero-800.webp' },
 ];
 
 const PROMISES = [
@@ -98,20 +102,27 @@ const PRINT_W = 640;
 const PRINT_H = 454;
 const PORTRAIT = { x: -310, y: -406, w: 620, h: 812, r: -3 };
 const NOTE_AT = { x: 460, y: -770, r: 3 };
-/* Three proofs dropped beside the portrait: the establishing shot's stack. */
+/* Three client proofs dropped beside the portrait, bottom to top: the
+   establishing shot's stack. */
 const STACK = [
   { i: 3, x: 600, y: 330, r: -7 },
   { i: 1, x: 668, y: 372, r: 4.5 },
   { i: 0, x: 612, y: 432, r: -1.5 },
 ];
-/* The six laid out to be looked at, top-left corners. */
+/* The six laid out to be looked at, top-left corners, in WORK's order.
+   Evidence Advisory and Aqua-Safe take the middle column, which both work
+   stops frame. */
 const SPREAD = [
-  { x: 1950, y: -480, r: -4 }, { x: 2650, y: -500, r: 2.5 }, { x: 3450, y: -470, r: -2 },
-  { x: 1990, y: 60, r: 3 }, { x: 2690, y: 80, r: -3.5 }, { x: 3470, y: 50, r: 1.5 },
+  { x: 2650, y: -500, r: 2.5 },
+  { x: 1950, y: -480, r: -4 },
+  { x: 3450, y: -470, r: -2 },
+  { x: 2690, y: 80, r: -3.5 },
+  { x: 1990, y: 60, r: 3 },
+  { x: 3470, y: 50, r: 1.5 },
 ];
 const SPREAD_C = SPREAD.map((p) => ({ x: p.x + PRINT_W / 2, y: p.y + PRINT_H / 2 }));
 /* The promise cards: centres. The open one is dealt forward; the rest lie in
-   a pile, the next promise on top. */
+   a pile, the card last put down on top. PILE runs from the top down. */
 const CARD_ON = { x: 1500, y: 1900, r: -1 };
 const PILE = [
   { x: 2000, y: 1880, r: -4 },
@@ -261,9 +272,11 @@ const PencilMark = () => (
   </svg>
 );
 
-function Bench({ open, hot, only }) {
+/* The pile, bottom to top, with the open card out of it. */
+const freshPile = (open) => PROMISES.map((_, i) => i).filter((i) => i !== open).reverse();
+
+function Bench({ open, hot, only, pile = freshPile(open) }) {
   const has = (k) => !only || only.includes(k);
-  const order = (i) => (open < 0 ? i : (i - open - 1 + PROMISES.length) % PROMISES.length);
   return (
     <>
       {has('portrait') && (
@@ -286,28 +299,44 @@ function Bench({ open, hot, only }) {
         </div>
       )}
 
-      {has('stack') && STACK.map((s) => <Print key={`stack-${s.i}`} w={WORK[s.i]} at={s} hot={false} />)}
+      {/* Paper that lies on paper sits in one flat group, stacked in paint
+          order the way sheets are. Left loose in the 3D bench, sheets a few
+          pixels apart get re-sorted every frame as the camera moves, and
+          flicker where they overlap. */}
+      {has('stack') && (
+        <div className="bt-heap">
+          {STACK.map((s) => <Print key={`stack-${s.i}`} w={WORK[s.i]} at={s} hot={false} />)}
+        </div>
+      )}
 
       {has('spread') && WORK.map((w, i) => <Print key={w.slug} w={w} at={SPREAD[i]} hot={hot === i} />)}
 
-      {has('cards') && PROMISES.map((p, i) => {
-        const on = open === i;
-        const at = on ? CARD_ON : PILE[order(i)];
-        const z = on ? 90 : (PROMISES.length - 1 - order(i)) * 3;
-        return (
-          <div
-            key={p.t}
-            className={`bt-obj bt-card${on ? ' is-on' : ''}`}
-            data-b={`${at.x - CARD.w / 2},${at.y - CARD.h / 2},${CARD.w},${CARD.h}`}
-            style={{ transform: `translate3d(${at.x - CARD.w / 2}px, ${at.y - CARD.h / 2}px, ${z}px) rotateZ(${at.r}deg)`, ...plate(CARD) }}
-          >
-            <div className="bt-card-rule" />
-            <h4>{p.t}</h4>
-            <p className="bt-card-line">{p.s}</p>
-            <p className="bt-card-detail">{p.d}</p>
-          </div>
-        );
-      })}
+      {has('cards') && (
+        <div className="bt-heap">
+          {PROMISES.map((p, i) => {
+            const on = open === i;
+            const pos = pile.indexOf(i);
+            const at = on ? CARD_ON : PILE[Math.max(0, pile.length - 1 - pos)];
+            return (
+              <div
+                key={p.t}
+                className={`bt-obj bt-card${on ? ' is-on' : ''}`}
+                data-b={`${at.x - CARD.w / 2},${at.y - CARD.h / 2},${CARD.w},${CARD.h}`}
+                style={{
+                  zIndex: on ? 20 : pos + 1,
+                  transform: `translate(${at.x - CARD.w / 2}px, ${at.y - CARD.h / 2}px) rotate(${at.r}deg) scale(${on ? 1.035 : 1})`,
+                  ...plate(CARD),
+                }}
+              >
+                <div className="bt-card-rule" />
+                <h4>{p.t}</h4>
+                <p className="bt-card-line">{p.s}</p>
+                <p className="bt-card-detail">{p.d}</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {has('sheet') && (
         <div className="bt-obj bt-sheet" data-r={SHEET_AT.r} data-b={`${SHEET_AT.x},${SHEET_AT.y},${SHEET.w},${SHEET.h}`} style={{ left: SHEET_AT.x, top: SHEET_AT.y, transform: `rotateZ(${SHEET_AT.r}deg)`, ...plate(SHEET) }}>
@@ -412,6 +441,15 @@ export default function About() {
   const [step, setStep] = useState(-1);
   const toggle = (i) => setOpen((o) => (o === i ? -1 : i));
   hotRef.current = hot;
+  /* the pile keeps its own order: the card put back goes on top */
+  const deckRef = useRef(null);
+  if (!deckRef.current) deckRef.current = { open, pile: freshPile(open) };
+  if (deckRef.current.open !== open) {
+    const prev = deckRef.current.open;
+    const pile = deckRef.current.pile.filter((i) => i !== open && i !== prev);
+    if (prev >= 0) pile.push(prev);
+    deckRef.current = { open, pile };
+  }
 
   /* Smooth scroll, shared with the rest of the site (ServiceWeb pattern). */
   useEffect(() => {
@@ -699,7 +737,7 @@ export default function About() {
           <div className="bt-stage" ref={stageRef} aria-hidden="true">
             <div className="bt-lens">
               <div className="bt-world" ref={worldRef}>
-                <Bench open={open} hot={hot} />
+                <Bench open={open} hot={hot} pile={deckRef.current.pile} />
               </div>
             </div>
             <div className="bt-veil" />
@@ -743,19 +781,27 @@ export default function About() {
                 ))}
               </ol>
               <ul className="bt-worklist" aria-label="Some of the work">
-                {WORK.map((w, i) => (
-                  <li key={w.slug}>
-                    <Link
-                      to={`/CaseStudy/${w.slug}`}
-                      onMouseEnter={() => setHot(i)}
-                      onMouseLeave={() => setHot(-1)}
-                      onFocus={() => setHot(i)}
-                      onBlur={() => setHot(-1)}
-                    >
-                      {w.name}<span>{w.year}</span>
-                    </Link>
-                  </li>
-                ))}
+                {WORK.map((w, i) => {
+                  const glance = {
+                    onMouseEnter: () => setHot(i),
+                    onMouseLeave: () => setHot(-1),
+                    onFocus: () => setHot(i),
+                    onBlur: () => setHot(-1),
+                  };
+                  return (
+                    <li key={w.slug}>
+                      {w.href ? (
+                        <a href={w.href} target="_blank" rel="noopener noreferrer" aria-label={`${w.name}, ${w.year.toLowerCase()}, opens the concept site in a new tab`} {...glance}>
+                          {w.name}<span>{w.year}</span>
+                        </a>
+                      ) : (
+                        <Link to={`/CaseStudy/${w.slug}`} {...glance}>
+                          {w.name}<span>{w.year}</span>
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
             {still(2)}
