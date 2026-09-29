@@ -1,0 +1,1033 @@
+/*
+ * /About — the bench tour (29 Sep 2026). See the contract at the top of
+ * src/pages/About.jsx.
+ *
+ * Static first: without .bt-armed (prerender, reduced motion) this is a
+ * composed flat page: every chapter in normal flow with its object as a still
+ * beside it (below 900px, above it). .bt-armed turns the stage into a camera
+ * view and JS moves the camera. Two armed layouts:
+ *   wide (1180px and up): the stage sits behind the chapters in one grid cell,
+ *     pinned for the length of the tour; the words take a left column and the
+ *     camera works the free space beside it.
+ *   band (below 1180px): the stage is a band pinned under the nav and the
+ *     chapters scroll beneath it, so the bench never sits behind a sentence.
+ * The stage is sticky inside .bt-track, which ends before the red close, so
+ * the bench can never cover the close or the footer.
+ *
+ * Paper is raster (public/bench, drawn by scripts/bench-plates.mjs); the type
+ * set on it uses the geometry in src/components/about/plates.js.
+ */
+
+/* The Bible page's book face: Crimson Pro (SIL OFL), cut down to the
+   characters that page sets by scripts/bench-font.mjs, licence beside it in
+   public/fonts. Self-hosted so every platform draws the same letters. */
+@font-face {
+  font-family: 'Crimson Pro Bench';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/crimson-pro-bench-400.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Crimson Pro Bench';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/crimson-pro-bench-700.woff) format('woff');
+}
+
+.bt-root {
+  --bt-bench: var(--c4-bg);
+  --bt-ink: var(--c4-text);
+  --bt-muted: var(--c4-text-muted);
+  --bt-prose: var(--prose);
+  --bt-rule: var(--c4-border);
+  --bt-sheet: #ffffff;
+  --bt-paper-ink: #1a1a1a;
+  --bt-paper-prose: #3d3c38;
+  --bt-paper-muted: #6b6a64;
+  --bt-paper-faint: #d3cfc6;
+  --bt-shadow: 26, 26, 26;
+  --bt-umber: 92, 70, 48;
+  --bt-ease: cubic-bezier(0.22, 1, 0.36, 1); /* the site's own ease */
+  background: var(--bt-bench);
+  color: var(--bt-ink);
+  font-family: Archivo, 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+:root.dark-mode .bt-root {
+  --bt-shadow: 0, 0, 0;
+}
+
+/* ─────────────────────────────────────────────────────────── stage ── */
+
+.bt-stage {
+  position: relative;
+  overflow: hidden;
+  background: var(--bt-bench);
+  --lx: 50%;
+  --ly: 50%;
+  --lamp: 0;
+}
+
+.bt-lens {
+  position: absolute;
+  inset: 0;
+  perspective: 1900px;
+  perspective-origin: var(--lx) var(--ly);
+}
+
+.bt-world {
+  position: absolute;
+  left: var(--lx);
+  top: var(--ly);
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* The room's light, warm like the bench. It lies over the column too, so no
+   seam shows where the words end. At the name the lamp narrows, but never
+   past warm paper. */
+.bt-light {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at var(--lx) 40%, rgba(var(--bt-umber), 0) 55%, rgba(var(--bt-umber), 0.07) 100%),
+    radial-gradient(75% 70% at var(--lx) var(--ly), rgba(var(--bt-umber), 0) 32%, rgba(var(--bt-umber), calc(var(--lamp) * 0.26)) 100%);
+}
+
+@media (min-width: 1180px) {
+  .bt-armed .bt-track {
+    display: grid;
+  }
+
+  .bt-armed .bt-stage,
+  .bt-armed .bt-chapters {
+    grid-area: 1 / 1;
+  }
+
+  .bt-armed .bt-stage {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100svh;
+    z-index: 0;
+    --lx: 70%;
+  }
+
+  /* keeps the column clean while the camera works the free space */
+  .bt-armed .bt-veil {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(90deg, var(--bt-bench) 0, var(--bt-bench) calc(var(--col, 42%) - 20px), transparent calc(var(--col, 42%) + 150px));
+  }
+}
+
+@media (max-width: 1179.98px) {
+  .bt-armed .bt-stage {
+    position: sticky;
+    top: 0;
+    height: 46svh;
+    z-index: 2;
+    --ly: 58%;
+    box-shadow:
+      0 1px 0 var(--bt-rule),
+      0 16px 24px -18px rgba(var(--bt-shadow), 0.4);
+  }
+}
+
+/* ───────────────────────────────────────────────────── bench objects ── */
+
+.bt-obj {
+  position: absolute;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* Every sheet sits on the bench twice over: a tight contact shadow where it
+   touches, and a soft one from the room's light. */
+.bt-print,
+.bt-work,
+.bt-note,
+.bt-card,
+.bt-sheet,
+.bt-bible {
+  box-shadow:
+    0 1px 1.5px rgba(var(--bt-shadow), 0.22),
+    0 4px 8px -3px rgba(var(--bt-shadow), 0.14),
+    0 34px 70px -28px rgba(var(--bt-shadow), 0.42);
+}
+
+.bt-print {
+  background: var(--bt-sheet);
+  padding: 22px 22px 70px;
+}
+
+.bt-print img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.bt-print-cap {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 22px;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--bt-paper-muted);
+  font-variation-settings: 'wght' 480, 'wdth' 100;
+}
+
+.bt-print-cap b {
+  color: var(--bt-paper-ink);
+  font-variation-settings: 'wght' 680, 'wdth' 96;
+}
+
+/* The notebook, open at the notes. Every line box is one rule pitch (44)
+   tall, so each baseline lands 5px above its rule. */
+.bt-note {
+  width: 1040px;
+  height: 700px;
+  border-radius: 14px;
+}
+
+.bt-note-page {
+  position: absolute;
+  top: 93px;
+  margin: 0;
+  color: var(--bt-paper-ink);
+}
+
+.bt-note-page--l {
+  left: 57px;
+  width: 425px;
+}
+
+.bt-note-page--r {
+  left: 562px;
+  width: 420px;
+}
+
+.bt-note dt {
+  font-size: 25px;
+  line-height: 44px;
+  letter-spacing: -0.01em;
+  font-variation-settings: 'wght' 720, 'wdth' 94;
+}
+
+.bt-note dd {
+  margin: 0 0 44px;
+  font-size: 23px;
+  line-height: 44px;
+  color: var(--bt-paper-prose);
+  font-variation-settings: 'wght' 430, 'wdth' 100;
+}
+
+/* real work, as proof prints */
+.bt-work {
+  width: 640px;
+  padding: 16px 16px 58px;
+  background: var(--bt-sheet);
+  transition: transform 0.7s var(--bt-ease), box-shadow 0.7s var(--bt-ease);
+}
+
+.bt-work img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  background: #ecebe8;
+}
+
+.bt-work-cap {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 22px;
+  color: var(--bt-paper-ink);
+  font-variation-settings: 'wght' 640, 'wdth' 96;
+}
+
+.bt-work-cap span {
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: 18px;
+  color: var(--bt-paper-muted);
+  font-feature-settings: 'tnum', 'zero';
+}
+
+.bt-work.is-hot {
+  box-shadow:
+    0 2px 3px rgba(var(--bt-shadow), 0.18),
+    0 12px 22px -8px rgba(var(--bt-shadow), 0.2),
+    0 70px 100px -34px rgba(var(--bt-shadow), 0.5);
+}
+
+/* The undertakings, on card stock: each one's line and detail on its own
+   card. The open one is dealt forward; the rest lie in a pile. */
+.bt-card {
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  width: 460px;
+  height: 600px;
+  padding: 50px 46px 46px;
+  color: var(--bt-paper-ink);
+  transition: transform 0.95s var(--bt-ease), box-shadow 0.95s var(--bt-ease);
+}
+
+.bt-card.is-on {
+  box-shadow:
+    0 2px 3px rgba(var(--bt-shadow), 0.16),
+    0 14px 26px -10px rgba(var(--bt-shadow), 0.22),
+    0 80px 120px -40px rgba(var(--bt-shadow), 0.52);
+}
+
+.bt-card-rule {
+  flex: none;
+  width: 64px;
+  height: 6px;
+  background: var(--bt-paper-faint);
+  transition: background-color 0.6s var(--bt-ease);
+}
+
+.bt-card.is-on .bt-card-rule {
+  background: var(--bt-paper-ink);
+}
+
+.bt-card h4 {
+  margin: 34px 0 0;
+  font-size: 50px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variation-settings: 'wght' 740, 'wdth' 88;
+}
+
+.bt-card-line {
+  margin: 18px 0 0;
+  font-size: 25px;
+  line-height: 1.35;
+  color: #5f5a52;
+  font-variation-settings: 'wght' 480, 'wdth' 100;
+}
+
+.bt-card-detail {
+  margin: auto 0 0;
+  font-size: 23px;
+  line-height: 1.45;
+  color: var(--bt-paper-prose);
+  font-variation-settings: 'wght' 430, 'wdth' 100;
+}
+
+/* The run sheet: one printed, folded sheet, a row for each step. */
+.bt-sheet {
+  width: 880px;
+  height: 1250px;
+  padding: 72px 78px;
+  color: var(--bt-paper-ink);
+}
+
+.bt-sheet-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 22px;
+  border-bottom: 3px solid var(--bt-paper-ink);
+}
+
+.bt-sheet-head b {
+  font-size: 40px;
+  letter-spacing: -0.02em;
+  font-variation-settings: 'wght' 740, 'wdth' 90;
+}
+
+.bt-sheet-head span {
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: 18px;
+  color: var(--bt-paper-muted);
+}
+
+.bt-sheet-row {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 20px;
+  padding: 40px 0 38px;
+  border-bottom: 1.5px solid #d8d3c9;
+}
+
+.bt-sheet-row b {
+  font-size: 76px;
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  font-variation-settings: 'wght' 760, 'wdth' 84;
+}
+
+.bt-sheet-row h4 {
+  margin: 0;
+  font-size: 36px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-variation-settings: 'wght' 720, 'wdth' 92;
+}
+
+.bt-sheet-row p {
+  margin: 14px 0 0;
+  font-size: 25px;
+  line-height: 1.45;
+  color: var(--bt-paper-prose);
+  font-variation-settings: 'wght' 430, 'wdth' 100;
+}
+
+/* A Bible open at Daniel 3, set the way a Bible is set: running heads, two
+   justified columns a page, verse numbers in bold, in a book serif. Verse 25
+   carries a pencil mark in the margin. */
+.bt-bible {
+  width: 1600px;
+  height: 1180px;
+  border-radius: 18px;
+}
+
+.bt-bible-page {
+  position: absolute;
+  top: 13px;
+  bottom: 13px;
+  width: 787px;
+  padding: 40px 62px 54px;
+  color: #2b241b;
+  font-family: 'Crimson Pro Bench', Georgia, serif;
+}
+
+.bt-bible-page--l {
+  left: 13px;
+  padding-right: 76px;
+}
+
+.bt-bible-page--r {
+  left: 800px;
+  padding-left: 76px;
+}
+
+.bt-bible-head {
+  height: 34px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #cdbfa3;
+  text-align: center;
+  font-size: 15px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #5b5146;
+}
+
+/* padded out into the margins so the clip that ends the page's columns
+   still leaves room for a pencil mark beside them */
+.bt-bible-text {
+  height: calc(100% - 52px);
+  margin: 0 -26px;
+  padding: 0 26px;
+  overflow: hidden;
+  column-count: 2;
+  column-gap: 34px;
+  column-fill: auto;
+  column-rule: 1px solid #d9ceb6;
+  font-size: 16.5px;
+  line-height: 21.5px;
+  text-align: justify;
+  /* the soft hyphens set in About.jsx, the same in every browser */
+  -webkit-hyphens: manual;
+  hyphens: manual;
+  text-wrap: pretty;
+}
+
+.bt-bible-text h5 {
+  margin: 2px 0 12px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.bt-bible-text p {
+  margin: 0;
+}
+
+.bt-bible-text p b {
+  margin-right: 2px;
+  font-size: 11.5px;
+  font-weight: 700;
+  vertical-align: 1px;
+}
+
+.bt-bible-text p.is-marked {
+  position: relative;
+  break-inside: avoid;
+}
+
+.bt-mark {
+  position: absolute;
+  left: -18px;
+  top: 1px;
+  width: 12px;
+  height: calc(100% - 2px);
+  overflow: visible;
+  fill: none;
+}
+
+/* no non-scaling-stroke: Chrome drops it inside a 3D transform */
+.bt-mark path {
+  stroke: #4f4943;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+  stroke-opacity: 0.72;
+}
+
+.bt-mark .bt-mark-2 {
+  stroke-width: 1.3;
+  stroke-opacity: 0.45;
+}
+
+:root.dark-mode .bt-obj {
+  filter: brightness(0.93);
+}
+
+/* ─────────────────────────────────────────────────── the flat page ── */
+
+.bt-still {
+  position: relative;
+  overflow: hidden;
+  height: 300px;
+  margin-top: 28px;
+  --lx: 50%;
+  --ly: 50%;
+}
+
+@media (min-width: 900px) {
+  .bt-root:not(.bt-armed) .bt-ch {
+    display: grid;
+    grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+    align-items: center;
+    column-gap: clamp(32px, 5vw, 88px);
+  }
+
+  .bt-root:not(.bt-armed) .bt-still {
+    height: clamp(340px, 36vw, 560px);
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 899.98px) {
+  .bt-root:not(.bt-armed) .bt-ch {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bt-root:not(.bt-armed) .bt-still {
+    order: -1;
+    margin: 0 0 28px;
+  }
+}
+
+/* ────────────────────────────────────────────────────────── chapters ── */
+
+.bt-chapters {
+  position: relative;
+  z-index: 1;
+  width: min(1400px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(24px, 5vw, 72px);
+}
+
+.bt-ch {
+  padding-block: clamp(56px, 8vw, 96px);
+}
+
+.bt-ch-in {
+  max-width: 34rem;
+}
+
+.bt-armed .bt-ch-in {
+  transition: opacity 0.9s var(--bt-ease), transform 0.9s var(--bt-ease), filter 0.9s var(--bt-ease);
+}
+
+.bt-armed .bt-ch:not(.is-in) .bt-ch-in {
+  opacity: 0;
+  transform: translateY(26px);
+  filter: blur(6px);
+}
+
+@media (min-width: 1180px) {
+  .bt-armed .bt-ch {
+    display: flex;
+    align-items: center;
+    min-height: 118svh;
+    padding-block: 12svh;
+  }
+
+  .bt-armed .bt-ch--open {
+    min-height: 100svh;
+  }
+
+  .bt-armed .bt-ch--long {
+    min-height: 170svh;
+  }
+
+  /* The objects carry these at reading size, so the column keeps them for
+     screen readers only: the notes, each promise's line and detail, each
+     step's description, and the verse. */
+  .bt-armed .bt-notes,
+  .bt-armed .bt-quote,
+  .bt-armed .bt-promise-btn span,
+  .bt-armed .bt-promise-body,
+  .bt-armed .bt-steps p {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* the run sheet's steps, one at a time, in step with the camera. Only the
+     numeral marks the current step, so every word keeps full contrast. */
+  .bt-armed .bt-steps li {
+    align-content: center;
+    min-height: 30svh;
+    border-top: 0;
+  }
+
+  .bt-armed .bt-steps b {
+    transition: color 0.5s var(--bt-ease);
+  }
+
+  .bt-armed .bt-steps[data-active] li:not(.is-on) b {
+    color: var(--bt-muted);
+  }
+}
+
+@media (max-width: 1179.98px) {
+  .bt-armed .bt-ch {
+    padding-block: 44px 72px;
+  }
+
+  .bt-armed .bt-ch--open {
+    padding-top: 30px;
+  }
+
+  /* the band reads the verse close, off the page itself */
+  .bt-armed .bt-quote {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+.bt-h1 {
+  margin: 0;
+  font-size: clamp(2.6rem, 1.6rem + 3.6vw, 4.9rem);
+  line-height: 0.96;
+  letter-spacing: -0.038em;
+  font-variation-settings: 'wght' 700, 'wdth' 90;
+  text-wrap: balance;
+}
+
+.bt-lede {
+  margin: 28px 0 0;
+  max-width: 30rem;
+  font-size: clamp(1.15rem, 1rem + 0.5vw, 1.4rem);
+  line-height: 1.5;
+  color: var(--bt-prose);
+  font-variation-settings: 'wght' 430, 'wdth' 100;
+}
+
+.bt-h2 {
+  margin: 0 0 26px;
+  font-size: clamp(2rem, 1.4rem + 2vw, 3.1rem);
+  line-height: 1.02;
+  letter-spacing: -0.032em;
+  font-variation-settings: 'wght' 700, 'wdth' 92;
+  text-wrap: balance;
+}
+
+.bt-p {
+  margin: 0 0 18px;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--bt-prose);
+  font-variation-settings: 'wght' 420, 'wdth' 100;
+  letter-spacing: -0.006em;
+}
+
+.bt-notes {
+  display: grid;
+  gap: 14px;
+  margin: 30px 0 0;
+  padding: 26px 0 0;
+  border-top: 1px solid var(--bt-rule);
+}
+
+.bt-notes dt {
+  font-size: 0.95rem;
+  font-variation-settings: 'wght' 700, 'wdth' 96;
+}
+
+.bt-notes dd {
+  margin: 2px 0 0;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--bt-muted);
+}
+
+.bt-years {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.bt-years li {
+  display: grid;
+  grid-template-columns: 5.2rem 1fr;
+  gap: 18px;
+  padding: 18px 0;
+  border-top: 1px solid var(--bt-rule);
+}
+
+.bt-years li:last-child {
+  border-bottom: 1px solid var(--bt-rule);
+}
+
+.bt-years b {
+  font-size: 1.6rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variation-settings: 'wght' 740, 'wdth' 88;
+  font-feature-settings: 'tnum';
+}
+
+.bt-years h3 {
+  margin: 0 0 6px;
+  font-size: 1.12rem;
+  font-variation-settings: 'wght' 700, 'wdth' 96;
+}
+
+.bt-years p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--bt-prose);
+}
+
+.bt-worklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bt-worklist a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 9px 14px;
+  border: 1px solid var(--bt-rule);
+  border-radius: 999px;
+  color: var(--bt-ink);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-variation-settings: 'wght' 560, 'wdth' 98;
+  transition: background-color 0.25s, border-color 0.25s, color 0.25s;
+}
+
+.bt-worklist a span {
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: 0.78rem;
+  color: var(--bt-muted);
+  font-feature-settings: 'tnum', 'zero';
+}
+
+.bt-worklist a:hover,
+.bt-worklist a:focus-visible {
+  background: var(--bt-ink);
+  border-color: var(--bt-ink);
+  color: var(--bt-bench);
+}
+
+.bt-worklist a:focus-visible {
+  outline: 2px solid var(--bt-ink);
+  outline-offset: 3px;
+}
+
+.bt-worklist a:hover span,
+.bt-worklist a:focus-visible span {
+  color: var(--bt-bench);
+}
+
+.bt-promises {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--bt-rule);
+}
+
+.bt-promises li {
+  border-bottom: 1px solid var(--bt-rule);
+}
+
+.bt-promise-btn {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 16px;
+  width: 100%;
+  padding: 20px 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.bt-promise-btn:focus-visible {
+  outline: 2px solid var(--bt-ink);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.bt-promise-btn strong {
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+  font-variation-settings: 'wght' 700, 'wdth' 94;
+}
+
+.bt-promise-btn span {
+  grid-column: 1;
+  font-size: 1rem;
+  color: var(--bt-muted);
+}
+
+.bt-promise-x {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  position: relative;
+  width: 22px;
+  height: 22px;
+}
+
+.bt-promise-x::before,
+.bt-promise-x::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: 10px;
+  height: 2px;
+  background: currentColor;
+  transition: transform 0.45s var(--bt-ease);
+}
+
+.bt-promise-x::after {
+  transform: rotate(90deg);
+}
+
+.bt-promise-btn[aria-expanded='true'] .bt-promise-x::after {
+  transform: rotate(0deg);
+}
+
+.bt-promise-body {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.5s var(--bt-ease);
+}
+
+.bt-promise-body > div {
+  overflow: hidden;
+  visibility: visible;
+  transition: visibility 0s;
+}
+
+.bt-promise-body p {
+  margin: 0 0 22px;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--bt-prose);
+}
+
+.bt-armed .bt-promise-body[data-open='false'] {
+  grid-template-rows: 0fr;
+}
+
+/* hidden from reading and from screen readers once it has closed */
+.bt-armed .bt-promise-body[data-open='false'] > div {
+  visibility: hidden;
+  transition: visibility 0s linear 0.5s;
+}
+
+.bt-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bt-steps li {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  gap: 14px;
+  padding: 18px 0;
+  border-top: 1px solid var(--bt-rule);
+}
+
+.bt-steps b {
+  font-size: 1.9rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variation-settings: 'wght' 760, 'wdth' 86;
+}
+
+.bt-steps h3 {
+  margin: 2px 0 6px;
+  font-size: 1.12rem;
+  font-variation-settings: 'wght' 700, 'wdth' 96;
+}
+
+.bt-steps p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--bt-prose);
+}
+
+.bt-quote {
+  margin: 0 0 26px;
+  padding: 26px 28px;
+  background: var(--c4-proof-surface);
+  border: 1px solid var(--c4-proof-border);
+  border-radius: 2px;
+  color: var(--c4-proof-text);
+}
+
+.bt-quote::before {
+  content: '';
+  display: block;
+  width: 2rem;
+  height: 3px;
+  margin-bottom: 16px;
+  background: var(--c4-proof-accent);
+}
+
+.bt-quote p {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
+
+.bt-quote cite {
+  display: block;
+  margin-top: 12px;
+  font-style: normal;
+  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-size: 0.8rem;
+  color: var(--c4-proof-muted);
+}
+
+/* ───────────────────────────────────────────────────────────── close ── */
+
+.bt-close {
+  position: relative;
+  z-index: 1;
+  background: var(--c4-accent);
+  color: #ffffff;
+  padding-block: clamp(96px, 13vw, 170px);
+}
+
+.bt-close-in {
+  width: min(1400px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(24px, 5vw, 72px);
+}
+
+.bt-close h2 {
+  margin: 0;
+  max-width: 14ch;
+  font-size: clamp(2.4rem, 1.5rem + 3.4vw, 4.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.036em;
+  font-variation-settings: 'wght' 720, 'wdth' 90;
+}
+
+.bt-close p {
+  margin: 22px 0 0;
+  max-width: 44ch;
+  font-size: 1.12rem;
+  line-height: 1.6;
+}
+
+.bt-close-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 26px;
+  margin-top: 40px;
+}
+
+/* No transform in the transition list: the magnetic lean owns transform. */
+.bt-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  padding: 0 34px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #1a1a1a;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 12.5px;
+  font-variation-settings: 'wght' 680, 'wdth' 100;
+  transition: background-color 0.25s, color 0.25s, box-shadow 0.35s var(--bt-ease);
+}
+
+.bt-btn:hover {
+  background: #1a1a1a;
+  color: #ffffff;
+  box-shadow: 0 18px 38px -16px rgba(0, 0, 0, 0.5);
+}
+
+.bt-close-link {
+  color: #ffffff;
+  text-underline-offset: 0.2em;
+  font-variation-settings: 'wght' 560, 'wdth' 100;
+}
+
+.bt-close a:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+.bt-close ::selection {
+  background: #1a1a1a;
+  color: #ffffff;
+}
