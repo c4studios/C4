@@ -137,7 +137,7 @@ const DSR = {
   place: 'Perth, WA',
   year: '2026',
   scope:
-    'Ecommerce platform for a WA karting supplier — full shop and checkout, race results, team pages and a custom admin.',
+    'Ecommerce platform for a Sydney-based karting supplier — full shop and checkout, race results, team pages and a custom admin.',
   home: {
     desktop: {
       src: dsrHomeD,
