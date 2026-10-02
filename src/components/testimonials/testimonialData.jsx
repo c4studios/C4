@@ -81,6 +81,17 @@ export const TESTIMONIALS = [
     caseStudySlug: 'aqua-safe-plumbing',
     featured: true,
   },
+  /* Relayed by Caleb on 2 Oct 2026 as "New review from DS Racing", five stars.
+     Verbatim, including the paragraph break. Who posted it, and where, was not
+     stated, so it is attributed to the business, the way The Rocks' is. */
+  {
+    id: 11,
+    quote: "C4 is behind our new website & is doing an excellent job in not only creating it but, maintaining & tweaking it.\n\nCouldn’t ask for better service - very happy & highly recommended.",
+    name: 'DS Racing Karts',
+    role: 'Sydney',
+    caseStudySlug: 'ds-racing-karts',
+    featured: true,
+  },
 ];
 
 export function getFeaturedTestimonials() {

@@ -62,7 +62,7 @@ const PILLARS = [
     slug: 'web-development-perth', type: 'pillar', status: 'live', phase: 2,
     name: 'Web Development Perth', serviceType: 'Web development',
     title: 'Web Development Perth — Apps & Ecommerce | C4 Studios',
-    description: 'Perth web development for online stores, web apps, portals and integrations. React and Next.js builds from a studio that ships its own software.',
+    description: 'Perth web development for online stores, web apps, portals and integrations. React and Next.js builds at a fixed price, from the studio behind Quotr.',
     priority: 0.9, changefreq: 'monthly',
     links: {
       pillars: ['web-design-perth', 'ai-automation-perth'],

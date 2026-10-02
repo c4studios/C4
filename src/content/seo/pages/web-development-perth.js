@@ -1,8 +1,28 @@
 /**
  * Pillar — Web Development Perth. Different intent to web design:
  * stores, apps, portals, integrations.
- * Unique detail: we ship our own SaaS products (C4 Originals) on the same
- * stack we sell, and the named boring-stack rundown.
+ * Unique detail: the proof is development work from the portfolio, and the
+ * named boring-stack rundown.
+ *
+ * Verified 2 Oct 2026, when Caleb asked for the guide to be brought up to date:
+ *   - Prices, the warranty (up to 90 days, on the Custom Platform tier), care
+ *     plans from $99/mo, the $3,500 store's 20 products and the $1,000+ API
+ *     add-on are all from src/data/pricing.js.
+ *   - The build times match how-long-does-a-website-take.js.
+ *   - Each proof card comes from its case study in caseStudyData.jsx:
+ *     DS Racing (499+ products from Square, Square checkout, the Canvas racing
+ *     game), Quotr (no-code calculator builder, one-snippet widget, Stripe
+ *     monthly and lifetime plans), Aqua-Safe (eighteen service pages and
+ *     thirty-seven service-area pages from one content model, ServiceM8
+ *     booking), Groverz (refund estimator on the 2025-26 ATO resident rates,
+ *     a rate-limited contact backend), The Rocks (a streaming-style interface,
+ *     one offline file, no dependencies).
+ * Do NOT add:
+ *   - "We ship our own software products." The software line left the site on
+ *     14 Sep 2026. Quotr is the one product, and the intro names it.
+ *   - A monthly running-cost figure for hosting and services. The old
+ *     "$20 and $100 a month" had no source.
+ *   - People Power, until its case study is restored.
  */
 export default {
   hero: {
@@ -10,7 +30,7 @@ export default {
     title: ['Web development in Perth', 'for jobs a template can’t do.'],
     intro: [
       'C4 Studios is a Perth web development studio for the builds that outgrow a brochure site: online stores, booking systems, customer portals, dashboards and custom web apps. Ecommerce starts at $3,500, web app starters at $4,500, and everything is scoped at a fixed price before we write a line of code.',
-      'We’re not an agency reselling page builders. We ship our own software products on this exact stack — so when we build yours, it’s with tools and habits we bet our own revenue on.',
+      'We’re not an agency reselling page builders. Everything below is custom code, and the same React and Next.js stack runs Quotr, the quoting software we built and run at quotr.us.',
     ],
   },
   sections: [
@@ -38,10 +58,14 @@ export default {
     {
       kind: 'proof',
       label: 'Shipped',
-      heading: 'Built, launched, still running',
+      heading: 'Built and shipped',
       cases: [
-        { name: 'DS Racing Karts', summary: '499-plus go-kart parts imported from a Square catalogue, full checkout, and a custom Canvas mini-game in the header. Ecommerce with personality.', href: '/CaseStudy/ds-racing-karts', tag: 'Ecommerce' },
-        { name: 'People Power', summary: 'A full-stack social platform built from the ground up — real-time messaging, moderation infrastructure and governance tooling. One of our own.', href: '/CaseStudy/people-power', tag: 'Web app' },
+        { name: 'DS Racing Karts', summary: '499-plus go-kart parts moved across from a Square catalogue, Square checkout, and a slot-car racing game written from scratch in Canvas.', href: '/CaseStudy/ds-racing-karts', tag: 'Ecommerce' },
+        { name: 'Quotr', summary: 'Our own product: a no-code calculator builder, a quote widget that installs with one snippet, and Stripe billing with monthly and lifetime plans.', href: '/CaseStudy/quotr', tag: 'SaaS' },
+        { name: 'Aqua-Safe Plumbing', summary: 'Eighteen service pages and thirty-seven service-area pages generated from one content model, with ServiceM8 online booking.', href: '/CaseStudy/aqua-safe-plumbing', tag: 'Content platform' },
+        { name: 'Groverz Tax', summary: 'An interactive tax refund estimator on the 2025-26 ATO resident rates, and a contact backend with rate limiting and spam protection.', href: '/CaseStudy/groverz-tax', tag: 'Calculator' },
+        { name: 'The Rocks', summary: 'A streaming-style interface for a church’s pre-service loops: sign-in, campus profiles, browse rows and inline playback, in one offline file with no dependencies.', href: '/CaseStudy/rocksstream', tag: 'Web app' },
+        /* People Power came off while it is reworked (Caleb, 2 Oct 2026); restore it with the case study. */
       ],
     },
     {
@@ -84,7 +108,7 @@ export default {
       label: 'After launch',
       heading: 'What does it cost to run once it’s live?',
       body: [
-        'Less than people fear, if it’s built sensibly. A marketing site on edge hosting runs for nearly nothing; a store or app adds database and service costs that typically land between $20 and $100 a month at small-business scale — we set everything up in your accounts, so you’re paying providers directly at cost rather than a marked-up “platform fee”.',
+        'Less than people fear, if it’s built sensibly. A marketing site on edge hosting runs for nearly nothing. A store or app adds database and service costs, and we set everything up in your own accounts, so you pay the providers directly at cost rather than a marked-up “platform fee”.',
         'Support is the honest variable. Software needs occasional attention — dependency updates, a payment provider changing an API, a new feature you want. Care plans from $99 a month cover the routine; one-off work gets quoted as it comes. What you’ll never need is a retainer just to keep the lights on.',
       ],
     },

@@ -1,6 +1,6 @@
 /**
  * C4 Studios — Central Pricing Configuration
- * All prices in AUD, excluding GST where applicable.
+ * All prices in AUD. C4 Studios isn't registered for GST, so none is added.
  * Update prices here — all pages reference this file.
  */
 
@@ -784,7 +784,9 @@ export const boosterPacks = [
 /* ── Shared Constants ── */
 export const ASTERISK_CLAUSE = 'All prices are starting prices based on defined scope. Landing pages start at $500, brochure sites at $800, ecommerce stores at $3,500, and web app starters at $4,500. Larger builds scale with pages, catalogue size, integrations, content volume, and custom functionality.';
 
-export const GST_NOTE = 'All prices in AUD, excluding GST where applicable.';
+/* Matches the /Lens line (commit 2410aef) and the invoices: C4 Studios isn't
+   registered for GST, so nothing is "ex GST". */
+export const GST_NOTE = 'All prices in AUD. No GST is added, as C4 Studios isn’t registered for GST.';
 
 export const INDUSTRY_SURCHARGE_NOTE = 'Professional services industries (legal, financial, medical) may incur a 15\u201320% surcharge due to compliance and regulatory requirements. This will be discussed during your discovery call.';
 

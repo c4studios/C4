@@ -27,6 +27,7 @@ const groups = [
       { key: 'C4i', label: <C4iWordmark />, page: 'C4i' },
       { label: 'C4 Lens', page: 'Lens' },
       { label: 'C4Site', page: 'Foresight' },
+      { label: 'SEO & Copywriting', page: 'SeoCopy' },
       // The orphaned Private AI offering now has a crawlable home here.
       { label: 'Private AI', to: '/private-ai' },
       { label: 'Lead Engine', to: '/lead-engine' },

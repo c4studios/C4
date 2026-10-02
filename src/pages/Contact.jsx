@@ -9,6 +9,12 @@
  * segment to C4 red; send closes the last gap and the page writes a receipt
  * back. No departments, no ticket tiers, no queue.
  *
+ * 2 Oct 2026 (Caleb): the fields lost the site-wide boxed ring, which hid the
+ * caret; the underline carries focus. While the request is out, the last
+ * stretch of wire runs dashes down to CALEB. On arrival the receipt is
+ * stamped. Haptics: a tick on pressing Send, then two on arrival (pulse
+ * lands, stamp comes down; one under reduced motion).
+ *
  * Memo rulings honoured here:
  *   - Wire = straight segments anchored to layout slots, recomputed ONLY on
  *     ResizeObserver. Textarea caps at ~8 rows then inner-scrolls.
@@ -80,6 +86,38 @@ function sendErrorLine(err) {
   if (!(err instanceof SubmissionError)) return 'The wire dropped — nothing was sent.';
   if (err.status === 403) return 'The send couldn’t be verified.';
   return err.message;
+}
+
+/* ── Haptics — navigator.vibrate covers Android. iOS Safari has no
+      Vibration API; its only web haptic is toggling a native switch input
+      (Safari 17.4+), the same hidden switch /welcome keeps, and iOS may only
+      honour it inside a tap. So pressing Send ticks inside the tap itself,
+      and the arrival ticks follow wherever the device allows. Silent where
+      unsupported; never run for the prerenderer. ── */
+let iosSwitch = null;
+function haptic(ms) {
+  try {
+    if (typeof navigator === 'undefined' || typeof document === 'undefined') return;
+    if (typeof navigator.vibrate === 'function') {
+      navigator.vibrate(ms);
+      return;
+    }
+    if (!iosSwitch) {
+      const label = document.createElement('label');
+      label.setAttribute('aria-hidden', 'true');
+      label.style.cssText = 'position:fixed;opacity:0;width:0;height:0;overflow:hidden;pointer-events:none';
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.tabIndex = -1;
+      input.setAttribute('switch', '');
+      label.appendChild(input);
+      document.body.appendChild(label);
+      iosSwitch = label;
+    }
+    iosSwitch.click();
+  } catch {
+    /* no haptics here; the receipt carries the confirmation */
+  }
 }
 
 /* ── Read-time odometer (mono garnish, 3-digit scale) ────────────────── */
@@ -205,6 +243,7 @@ export default function Contact() {
   const calebDotRef = useRef(null);
   const calebFlareRef = useRef(null);
   const receiptRef = useRef(null);
+  const stampRef = useRef(null);
   const sendBtnRef = useRef(null);
 
   const [geom, setGeom] = useState(null);
@@ -311,18 +350,32 @@ export default function Contact() {
         0.5,
       );
     }
+    /* Two ticks: the pulse reaching CALEB, then the stamp coming down. */
+    tl.call(haptic, [12], 0.5);
+    const stamp = stampRef.current;
     if (receipt && receipt.children.length) {
       /* NOT a from() at 0.55s — a from with immediateRender:false applies
          its start values only when the playhead REACHES it, so the painted
          receipt would blink out at the theatre beat and re-enter. The
          zero-duration set() at position 0 hides it on the first tick,
          pre-paint; a dead ticker never applies it. */
-      tl.set(receipt.children, { y: 14, autoAlpha: 0 }, 0);
-      tl.to(
-        receipt.children,
-        { y: 0, autoAlpha: 1, duration: 0.45, stagger: 0.07, ease: 'power3.out' },
-        0.55,
-      );
+      const rest = [...receipt.children].filter((el) => el !== stamp);
+      if (stamp) {
+        /* The stamp drops from above the page, square and large, and
+           lands at its resting tilt with a hard stop: accelerate in, no
+           bounce, the way a stamp hits paper. */
+        tl.set(stamp, { autoAlpha: 0, scale: 1.7, rotation: -9 }, 0);
+        tl.to(stamp, { autoAlpha: 1, scale: 1, rotation: -2, duration: 0.2, ease: 'power4.in' }, 0.56);
+        tl.call(haptic, [22], 0.76);
+        tl.fromTo(
+          stamp,
+          { y: 0 },
+          { y: 1.5, duration: 0.06, yoyo: true, repeat: 1, ease: 'power1.out', immediateRender: false },
+          0.76,
+        );
+      }
+      tl.set(rest, { y: 14, autoAlpha: 0 }, 0);
+      tl.to(rest, { y: 0, autoAlpha: 1, duration: 0.45, stagger: 0.07, ease: 'power3.out' }, 0.84);
     }
     return () => tl.kill();
   }, [sent, staticMode]);
@@ -426,6 +479,7 @@ export default function Contact() {
       return;
     }
 
+    if (!prerender) haptic(8); // the press, inside the tap
     setSubmitting(true);
     setSendError(null);
     try {
@@ -444,6 +498,9 @@ export default function Contact() {
       const t = perthParts();
       setReceiptTime(t ? `${t.hh}:${t.mm}` : '');
       setSent(true); // receipt DOM commits here — theatre follows the truth
+      /* Reduced motion skips the theatre but keeps the tick: a haptic is
+         confirmation, not movement on screen. */
+      if (staticMode && !prerender) haptic(18);
     } catch (err) {
       setSendError(err);
     } finally {
@@ -537,6 +594,15 @@ export default function Contact() {
                   y2={s.to}
                 />
               ))}
+              {submitting && geom.send != null && geom.caleb != null && (
+                <line
+                  className="ct-wire-transit"
+                  x1={geom.x}
+                  y1={geom.send}
+                  x2={geom.x}
+                  y2={geom.caleb}
+                />
+              )}
               {sent && geom.you != null && geom.caleb != null && (
                 <line
                   ref={sentLineRef}
@@ -560,7 +626,7 @@ export default function Contact() {
 
           {sent ? (
             <div className="ct-receipt" ref={receiptRef} role="status" tabIndex={-1}>
-              <p className="ct-receipt-stamp">RECEIVED {receiptTime ? `${receiptTime} ` : ''}AWST</p>
+              <p className="ct-receipt-stamp" ref={stampRef}>RECEIVED {receiptTime ? `${receiptTime} ` : ''}AWST</p>
               <p className="ct-receipt-line">
                 reply from {EMAIL} within one business day
               </p>

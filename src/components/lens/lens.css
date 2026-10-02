@@ -247,13 +247,14 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   display: block;
 }
 
-/* The paint stage (live visitors): an SVG the engine appends, the word drawn
-   in with a fine brush. The knife works on hover with a mouse and on a
-   horizontal drag on touch; vertical drags still scroll the page. */
+/* The paint stage (live visitors): a WebGL canvas the engine appends, neon
+   paint in a fluid. It bleeds past the stage on every side so pushed paint
+   has somewhere to go before it meets the edge of the simulation; the
+   section clips it. A mouse pushes the paint on hover, a finger on a
+   horizontal drag; vertical drags still scroll the page. */
 .word-stage.is-live { touch-action: pan-y; cursor: crosshair; z-index: 2; }
 .word-stage.is-live .word-svg { display: none; }
-.paint-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
-.paint-svg .pw-word { will-change: opacity; }
+.paint-gl { position: absolute; left: -9%; top: -16%; width: 118%; height: 132%; display: block; pointer-events: none; }
 
 .svg-word-letter {
   font-family: 'Caveat', cursive;
@@ -590,7 +591,7 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   /* Word stage */
   .word-stage { height: clamp(130px, 38vw, 210px); }
   /* the word is width-bound on a phone: let the paint run into the section's side padding */
-  .paint-svg { width: 112%; left: -6%; }
+  .paint-gl { left: -10%; width: 120%; }
 
   /* Site nav drop */
   .site-nav-drop { left: 20px; top: 60px; }

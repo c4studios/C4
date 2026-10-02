@@ -17,6 +17,9 @@ import WelcomeReturnButton from './components/welcome/WelcomeReturnButton';
 // Suspense fallback, the prerendered page blanked for 50-90ms on load while
 // the chunk arrived (CLS 0.81 measured at 1280). The page is small.
 import C4SitePreviews from './pages/C4SitePreviews';
+// SEO & copywriting (2 Oct 2026). Eager for the same reason as the previews
+// page above: a lazy chunk behind a null fallback blanks the prerendered HTML.
+import SeoCopy from './pages/SeoCopy';
 
 // Networking-card landing — explicit, chrome-free route (no NavHeader/Footer)
 // so the post-scan experience stays focused and fast. Lazy so it stays out of
@@ -148,6 +151,12 @@ function App() {
               <Suspense fallback={null}>
                 <C4SitePreviews />
               </Suspense>
+            </LayoutWrapper>
+          } />
+          {/* SEO & copywriting — service page (flat slug) */}
+          <Route path="/seo-and-copywriting" element={
+            <LayoutWrapper currentPageName="SeoCopy">
+              <SeoCopy />
             </LayoutWrapper>
           } />
           {/* How we use AI — the published position statement (flat slug) */}

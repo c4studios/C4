@@ -36,6 +36,13 @@ const serviceDropdown = [
     page: 'Foresight',
     brief: 'Workplace AI training & workshops',
   },
+  /* Added 2 Oct 2026. When C4Site moves off, this takes its place as C4. */
+  {
+    label: 'SEO & Copywriting',
+    code: 'C5',
+    page: 'SeoCopy',
+    brief: 'Found in search, worth reading once found',
+  },
 ];
 
 const navLinks = [
@@ -290,7 +297,7 @@ header[data-c4-chrome="header"] {
 }
 
 /* Start-a-Project header CTA — the one red object on the right edge.
-   No display here: the header instance is hidden below md by its
+   No display here: the header instance is hidden below lg by its
    Tailwind classes, and this injected sheet sits later in the document
    at equal specificity, so a display value here used to win and show
    the CTA on phones, pushing the menu button past the right edge on
@@ -299,6 +306,7 @@ header[data-c4-chrome="header"] {
    its own display class. */
 .c4-nav-cta {
   align-items: center;
+  white-space: nowrap;
   min-height: 44px;
   padding: 0 18px;
   border-radius: 3px;
@@ -515,7 +523,11 @@ export default function NavHeader() {
               <C4Logo size={48} variant="full" context="header" className="c4-header-logo-lockup" />
             </Link>
 
-            <nav className="hidden md:flex items-center gap-7">
+            {/* The full bar needs about 940px with the compact switch, 1,100 with
+                the labelled one, so it starts at lg and the labels at xl; below
+                lg the menu sheet carries everything (Caleb, 2 Oct 2026: the
+                items crowded and the start button wrapped on tablets). */}
+            <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
               {navLinks.map(link => (
                 link.hasDropdown ? (
                   <div
@@ -537,7 +549,7 @@ export default function NavHeader() {
                       aria-haspopup="true"
                       aria-expanded={servicesOpen}
                       aria-controls="c4-services-panel"
-                      className="flex items-center gap-1 text-[11px] uppercase tracking-[0.13em] transition-colors duration-300 font-medium bg-transparent border-0 p-0"
+                      className="flex items-center gap-1 whitespace-nowrap text-[11px] uppercase tracking-[0.13em] transition-colors duration-300 font-medium bg-transparent border-0 p-0"
                       style={{ color: servicesOpen ? 'var(--c4-link-hover)' : 'var(--c4-text-muted)', cursor: 'pointer' }}
                     >
                       {link.label}
@@ -598,7 +610,7 @@ export default function NavHeader() {
                   <Link
                     key={link.page}
                     to={link.to || createPageUrl(link.page)}
-                    className="text-[11px] uppercase tracking-[0.13em] transition-colors duration-300 font-medium"
+                    className="whitespace-nowrap text-[11px] uppercase tracking-[0.13em] transition-colors duration-300 font-medium"
                     style={{ color: 'var(--c4-text-muted)', cursor: 'pointer' }}
                     onMouseEnter={e => e.currentTarget.style.color = 'var(--c4-link-hover)'}
                     onMouseLeave={e => e.currentTarget.style.color = 'var(--c4-text-muted)'}
@@ -610,16 +622,19 @@ export default function NavHeader() {
             </nav>
 
             <div className="flex items-center gap-3">
-              <Link to={createPageUrl('StartProject')} className="c4-nav-cta hidden md:inline-flex">
+              <Link to={createPageUrl('StartProject')} className="c4-nav-cta hidden lg:inline-flex">
                 Start a Project
               </Link>
-              <div className="hidden md:block">
+              <div className="hidden lg:block xl:hidden">
+                <ThemeToggle compact />
+              </div>
+              <div className="hidden xl:block">
                 <ThemeToggle />
               </div>
 
               <button
                 onClick={() => setMobileOpen(o => !o)}
-                className="md:hidden w-11 h-11 flex items-center justify-center"
+                className="lg:hidden w-11 h-11 flex items-center justify-center"
                 style={{ color: 'var(--c4-text)' }}
                 aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={mobileOpen}

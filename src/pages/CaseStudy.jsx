@@ -8,6 +8,9 @@ import CaseStudyBullets from '../components/portfolio/CaseStudyBullets';
 import CaseStudyGallery from '../components/portfolio/CaseStudyGallery';
 import CaseStudyCTA from '../components/portfolio/CaseStudyCTA';
 import CaseStudyTOC from '../components/portfolio/CaseStudyTOC';
+import DeviceScroll from '../components/portfolio/DeviceScroll';
+import BeforeAfter from '../components/portfolio/BeforeAfter';
+import { getMotion } from '../components/portfolio/portfolioMotion';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema, caseStudyArticleSchema } from '@/lib/schema';
 
@@ -71,6 +74,11 @@ export default function CaseStudy() {
     );
   }
 
+  /* Captures of the live site, from scripts/capture-motion.mjs (2 Oct 2026). */
+  const motion = getMotion(study.slug);
+  const hasDevices = Boolean(motion?.scroll?.desktop && motion?.scroll?.mobile);
+  const hasBefore = Boolean(motion?.before?.approved && motion.before.src && motion.before.after);
+
   const hasScreenshots = (study.screenshots?.length || 0) > 0
     || (study.desktopScreenshots?.length || 0) > 0
     || (study.mobileScreenshots?.length || 0) > 0;
@@ -89,6 +97,18 @@ export default function CaseStudy() {
           {study.overview}
         </p>
       ),
+    },
+    hasDevices && {
+      id: 'in-motion',
+      navLabel: 'In motion',
+      title: 'In motion',
+      content: <DeviceScroll study={study} motion={motion} />,
+    },
+    hasBefore && {
+      id: 'before-after',
+      navLabel: 'Before & after',
+      title: 'Before and after',
+      content: <BeforeAfter study={study} before={motion.before} capturedOn={motion.capturedOn} />,
     },
     hasScreenshots && {
       id: 'screenshots',

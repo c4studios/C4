@@ -12,6 +12,7 @@ export const STATIC_ROUTES = [
   { path: '/c4i', priority: 0.85, changefreq: 'monthly' },
   { path: '/ServiceAI', priority: 0.8, changefreq: 'monthly' },
   { path: '/Lens', priority: 0.9, changefreq: 'monthly' },
+  { path: '/seo-and-copywriting', priority: 0.85, changefreq: 'monthly' },
   { path: '/Foresight', priority: 0.85, changefreq: 'monthly' },
   { path: '/ai-training-for-business', priority: 0.75, changefreq: 'monthly' },
   { path: '/ai-training-for-schools', priority: 0.75, changefreq: 'monthly' },

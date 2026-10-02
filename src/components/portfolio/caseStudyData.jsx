@@ -140,7 +140,7 @@ export const CASE_STUDIES = {
     year: '2026',
     category: 'web_design',
     tags: ['Web Design', 'Web Development', 'Hosting Migration', 'SEO'],
-    featured: false,
+    featured: true,
     budgetOrder: 1,
 
     cover: '/covers/cia-solutions.png',
@@ -724,6 +724,10 @@ export const CASE_STUDIES = {
     category: 'web_app',
     tags: ['Web App', 'Social Platform', 'C4 Original'],
     featured: false,
+    /* Down for rework at Caleb's request, 2 Oct 2026. Hidden from every list
+       and from the prerender; public/_redirects sends its old URL to the
+       portfolio with a 302. Delete this line (and that redirect) to bring it back. */
+    hidden: true,
     budgetOrder: 5,
 
     cover: '/covers/people-power.png',
@@ -2139,7 +2143,7 @@ export const CASE_STUDIES = {
     overview: 'A complete marketing site for Tidy Gardens Australia, a Perth garden, lawn and reticulation business. Its signature is a route-aware "scroll spine" down the left gutter — a vine that grows and sprouts leaves on the home page, a poly-pipe that fills with water and triggers pop-up sprinklers on the reticulation page, and a lawn mower that mows tall grass into a clean striped lawn on the lawn-care page — all scroll-linked and pinned to real page geometry. Around it sit four service pages, a gallery with a drag-to-compare before/after slider, a quote form that emails leads straight to the owner, full SEO and accessibility, and a slim scaled-down version of the motif on mobile. Delivered end-to-end — real photography, branded email, automatic SSL, and a live domain migrated off a defunct provider.',
 
     screenshots: [
-      { url: '/captures/tidygardens-com-au/desktop/01-hero.png', caption: 'Hero — "Reticulation, lawns & gardens, worked by one local team", with the climbing-vine scroll motif down the left gutter' },
+      { url: '/captures/tidygardens-com-au/desktop/01-hero.png', caption: 'Hero — "Reticulation, lawns & gardens" over a real Perth backyard lawn, with the climbing-vine scroll motif down the left gutter' },
       { url: '/captures/tidygardens-com-au/desktop/02-home-vine.png', caption: 'Home — "Four services, one trusted team" as the vine grows on scroll' },
       { url: '/captures/tidygardens-com-au/desktop/03-home-services.png', caption: 'Home — "Trained across Perth & the South West" service overview' },
       { url: '/captures/tidygardens-com-au/desktop/04-reticulation.png', caption: 'Reticulation — repairs, installations and controller replacement' },
@@ -2242,7 +2246,7 @@ export const CASE_STUDIES = {
     year: '2026',
     category: 'web_app',
     tags: ['Interactive Experience', 'Custom Build', 'Church / Non-Profit', 'Motion', 'Streaming-Style UI'],
-    featured: true,
+    featured: false,
     budgetOrder: 4,
 
     cover: '/covers/rocksstream.png',
@@ -2934,8 +2938,10 @@ export const CASE_STUDIES = {
   },
 };
 
+/* A hidden entry (taken down for rework) is treated as if it did not exist. */
 export function getCaseStudy(slug) {
-  return CASE_STUDIES[slug] || null;
+  const study = CASE_STUDIES[slug];
+  return study && !study.hidden ? study : null;
 }
 
 /* Build chronology, oldest → newest — the single source of truth for portfolio
@@ -2962,5 +2968,7 @@ function buildSeq(slug) {
 }
 
 export function getAllCaseStudies() {
-  return Object.values(CASE_STUDIES).map((s) => ({ ...s, seq: buildSeq(s.slug) }));
+  return Object.values(CASE_STUDIES)
+    .filter((s) => !s.hidden)
+    .map((s) => ({ ...s, seq: buildSeq(s.slug) }));
 }

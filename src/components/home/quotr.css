@@ -110,6 +110,39 @@
 .qt-extra.is-on .qt-extra-price { color: var(--c4-text); }
 .qt-tray--note .qt-tray-copy { margin: 0; font-size: 14px; line-height: 1.55; color: var(--c4-text-muted); max-width: 40ch; }
 
+/* The drawer: the rest of the extras, sorted by kind and folded away until
+   asked for. Grid rows carry the height so nothing is measured; the groups
+   come out in order on the site ease and go back faster than they came. */
+.qt-more {
+  display: flex; align-items: center; gap: .7rem; width: 100%; min-height: 46px;
+  margin: 0; padding: .65rem 0; border: 0; border-bottom: 1px solid var(--c4-border); background: none;
+  font: 600 14px/1.2 'Archivo', sans-serif; letter-spacing: -.005em; color: var(--c4-text); text-align: left; cursor: pointer;
+}
+.qt-more-label { text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; transition: text-decoration-color .15s ease; }
+.qt-more:hover .qt-more-label { text-decoration-color: currentColor; }
+.qt-more:focus-visible { outline: 2px solid var(--c4-focus, var(--c4-text)); outline-offset: 3px; }
+.qt-more-count {
+  padding: .3rem .45rem .25rem; border: 1px solid var(--c4-accent); border-radius: 3px;
+  font: 400 11px/1 'B612 Mono', ui-monospace, monospace; color: var(--c4-accent); font-variant-numeric: tabular-nums;
+}
+.qt-more-chev {
+  flex: none; width: 8px; height: 8px; margin: 0 4px 0 auto;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg); transition: transform .32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.qt-more.is-open .qt-more-chev { transform: translateY(2px) rotate(225deg); }
+.qt-more--foot { margin-top: 1.1rem; border-top: 1px solid var(--c4-border); border-bottom: 0; color: var(--c4-text-muted); }
+
+.qt-drawer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .26s cubic-bezier(0.4, 0, 1, 1); }
+.qt-drawer.is-open { grid-template-rows: 1fr; transition: grid-template-rows .52s cubic-bezier(0.22, 1, 0.36, 1); }
+.qt-drawer-inner { min-height: 0; overflow: hidden; }
+.qt-group { padding-top: 1.15rem; opacity: 0; transform: translateY(-10px); transition: opacity .14s ease, transform .2s ease; }
+.qt-drawer.is-open .qt-group {
+  opacity: 1; transform: none;
+  transition: opacity .3s ease calc(70ms + var(--i, 0) * 45ms), transform .52s cubic-bezier(0.22, 1, 0.36, 1) calc(70ms + var(--i, 0) * 45ms);
+}
+.qt-group-label { margin: 0 0 .5rem; font: 400 11px/1.2 'B612 Mono', ui-monospace, monospace; letter-spacing: .06em; color: var(--c4-text-muted); }
+
 /* ── foot: the estimate on proof stock, and the start ── */
 .qt-foot { margin-top: 2.2rem; display: grid; gap: 1.2rem; }
 @media (min-width: 900px) { .qt-foot { grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 2rem; } .qt-fine { grid-column: 1 / -1; } }
@@ -138,4 +171,8 @@
 .qt--compact .qt-h2 { font-size: 1.5rem; }
 .qt--compact .qt-sub { font-size: 14px; }
 
-@media (prefers-reduced-motion: reduce) { .qt-strip { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .qt-strip, .qt-more-chev, .qt-drawer, .qt-drawer.is-open { transition: none; }
+  /* The groups still fade, so the change reads; nothing travels. */
+  .qt-group, .qt-drawer.is-open .qt-group { transform: none; transition: opacity .18s ease; }
+}

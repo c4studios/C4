@@ -1,0 +1,213 @@
+/* ═══ Portfolio motion: the client's site running on the bench ═══
+   Fed by src/data/portfolioMotion.json (scripts/capture-motion.mjs):
+     · DeviceScroll: a laptop and a phone on a case study, scrolling real
+       captures of the live site in step with the reader, and the phone
+       taking the live site itself on request;
+     · PlayLayer: grid tiles that lift and play a clip of the live site;
+     · BeforeAfter: the seam between an archived earlier site and the C4
+       build, where Caleb has approved showing one.
+   The devices are objects on the bench, so they cast the bench's two
+   shadows (DESIGN.md, Elevation & Depth): a tight contact shadow and a long
+   one from the room, longer again for the thing that's picked up. Their
+   hardware follows the ServiceWeb tablet: a graphite ring inside an
+   aluminium band. */
+:root {
+  --dv-contact: 0 1px 1.5px rgba(26, 26, 26, 0.22), 0 4px 8px -3px rgba(26, 26, 26, 0.14);
+  --dv-room: 0 34px 70px -28px rgba(26, 26, 26, 0.42);
+  --dv-room-lifted: 0 52px 96px -30px rgba(26, 26, 26, 0.5);
+}
+:root.dark-mode {
+  --dv-contact: 0 1px 1.5px rgba(0, 0, 0, 0.55), 0 4px 8px -3px rgba(0, 0, 0, 0.45);
+  --dv-room: 0 34px 70px -28px rgba(0, 0, 0, 0.75);
+  --dv-room-lifted: 0 52px 96px -30px rgba(0, 0, 0, 0.85);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not(.light-mode):not(.dark-mode) {
+    --dv-contact: 0 1px 1.5px rgba(0, 0, 0, 0.55), 0 4px 8px -3px rgba(0, 0, 0, 0.45);
+    --dv-room: 0 34px 70px -28px rgba(0, 0, 0, 0.75);
+    --dv-room-lifted: 0 52px 96px -30px rgba(0, 0, 0, 0.85);
+  }
+}
+
+/* ── the stage: pinned while the page moves through it ── */
+.dv-stage { position: relative; height: 250vh; height: 250svh; }
+.dv-pin {
+  position: sticky; top: 0;
+  height: 100vh; height: 100svh;
+  display: flex; flex-direction: column; justify-content: center; gap: 1.4rem;
+  padding: 84px 0 20px; /* the fixed header */
+}
+.dv-set {
+  position: relative; container-type: inline-size;
+  width: min(100%, 1000px, calc((100svh - 220px) * 1.64));
+  margin: 0 auto; aspect-ratio: 1000 / 610;
+}
+
+/* ── the laptop ── */
+.dv-laptop { position: absolute; left: 0; top: 0; width: 80cqw; margin: 0; }
+.dv-lid {
+  position: relative;
+  border: 1.6cqw solid #1b1b1e; border-bottom-width: 2.4cqw;
+  border-radius: 2cqw 2cqw 0.8cqw 0.8cqw;
+  background: #0b0b0c;
+  box-shadow: var(--dv-contact), var(--dv-room);
+}
+.dv-lid::before,
+.dv-handset::before {
+  content: ''; position: absolute; inset: calc(-1 * var(--dv-ring, 1.6cqw) - 2px);
+  border-radius: inherit; padding: 2px;
+  background: conic-gradient(from 210deg, #9b9ba1, #d8d8dd 12%, #7e7e85 26%, #c9c9cf 44%, #8a8a90 58%, #e2e2e6 74%, #85858c 88%, #9b9ba1);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.dv-lid::before { --dv-ring: 1.6cqw; inset: -1.6cqw -1.6cqw -2.4cqw -1.6cqw; margin: -2px; }
+.dv-cam {
+  position: absolute; top: -1cqw; left: 50%; translate: -50% -50%;
+  width: 0.55cqw; height: 0.55cqw; border-radius: 50%; background: #060607;
+  box-shadow: inset 0 0 1px 0.5px rgba(96, 130, 200, 0.55);
+}
+.dv-screen {
+  position: relative; overflow: hidden; background: #0d0d0f;
+  aspect-ratio: 16 / 10; border-radius: 0.35cqw;
+}
+.dv-strip { display: block; width: 100%; height: auto; max-width: none; will-change: transform; transform: translate3d(0, 0, 0); }
+.dv-deck {
+  position: relative; width: 114%; margin-left: -7%; height: 2.3cqw;
+  border-radius: 0.3cqw 0.3cqw 2.2cqw 2.2cqw / 0.3cqw 0.3cqw 1.6cqw 1.6cqw;
+  background: linear-gradient(#e0e0e4, #b4b4ba 55%, #8f8f96);
+  box-shadow: var(--dv-contact), var(--dv-room);
+}
+.dv-notch {
+  position: absolute; left: 50%; top: 0; translate: -50% 0;
+  width: 13%; height: 38%; border-radius: 0 0 0.9cqw 0.9cqw;
+  background: linear-gradient(#a9a9b0, #cbcbd0);
+}
+
+/* ── the phone, set down in front ── */
+.dv-phone { position: absolute; right: 0; bottom: 0; width: 18.5cqw; margin: 0; }
+.dv-handset {
+  --dv-ring: 1cqw;
+  position: relative;
+  border: 1cqw solid #1b1b1e; border-radius: 3.3cqw;
+  background: #0b0b0c;
+  box-shadow: var(--dv-contact), var(--dv-room-lifted);
+}
+/* The captures start at the top of the page with no status bar, so the
+   screen carries a dark status band for the island to sit in, and the site
+   begins below it, the way a phone shows it. */
+.dv-screen--phone { aspect-ratio: 390 / 844; border-radius: 2.3cqw; padding-top: 3.4cqw; background: #0d0d0f; }
+/* The band sits over the capture, so a strip scrolling up slides under it
+   rather than over it (overflow clips at the padding edge, not the content). */
+.dv-screen--phone::before { content: ''; position: absolute; top: 0; left: 0; right: 0; z-index: 2; height: 3.4cqw; background: #0d0d0f; pointer-events: none; }
+.dv-island {
+  position: absolute; top: 1.05cqw; left: 50%; translate: -50% 0;
+  width: 30%; height: 1.45cqw; border-radius: 1cqw; background: #050506;
+  pointer-events: none; z-index: 3;
+}
+
+/* ── under the devices ── */
+.dv-meta {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 0.5rem 1.4rem; font-size: 13.5px; color: var(--c4-text-muted);
+}
+.dv-note { margin: 0; font: 400 11.5px/1.4 'B612 Mono', ui-monospace, monospace; letter-spacing: 0.02em; }
+.dv-try {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 1.15rem;
+  border-radius: 999px; border: 1.5px solid var(--c4-text); background: transparent; color: var(--c4-text);
+  font: 600 13.5px/1 'Archivo', sans-serif; cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.dv-try:hover { background: var(--c4-text); color: var(--c4-bg); }
+.dv-try[aria-pressed='true'] { background: var(--c4-text); color: var(--c4-bg); }
+.dv-open {
+  display: inline-flex; align-items: center; min-height: 44px;
+  color: var(--c4-text); font-weight: 500; text-decoration: underline;
+  text-decoration-color: var(--c4-border); text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s ease;
+}
+.dv-open:hover { text-decoration-color: currentColor; }
+
+/* ── the live site, inside the phone ── */
+.dv-live { position: absolute; inset: 3.4cqw 0 0; background: #ffffff; }
+.dv-live iframe { position: absolute; top: 0; left: 0; border: 0; transform-origin: 0 0; background: #ffffff; }
+.dv-live-wait {
+  position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 1rem;
+  font: 400 11px/1.4 'B612 Mono', ui-monospace, monospace; color: #6b6a64; text-align: center;
+}
+
+/* ── static: nothing pins or moves; each screen scrolls by itself ── */
+.dv-stage.is-static { height: auto; }
+.dv-stage.is-static .dv-pin { position: relative; height: auto; padding: 0.5rem 0 0; }
+.dv-stage.is-static .dv-set { width: min(100%, 1000px); }
+.dv-stage.is-static .dv-screen { overflow-y: auto; overscroll-behavior: contain; }
+
+@media (max-width: 640px) {
+  .dv-stage { height: 190vh; height: 190svh; }
+  .dv-set { width: 100%; aspect-ratio: 1000 / 760; }
+  .dv-laptop { width: 92cqw; }
+  .dv-phone { width: 29cqw; right: -1cqw; }
+}
+
+/* ── the grid: tiles lift and play ── */
+.pf-cover { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+@media (hover: hover) and (pointer: fine) {
+  a:hover .pf-cover,
+  a:focus-visible .pf-cover { transform: translateY(-4px); box-shadow: var(--dv-contact), var(--dv-room-lifted); }
+}
+.pf-play {
+  position: absolute; inset: 0; z-index: 5; width: 100%; height: 100%;
+  object-fit: cover; object-position: top; background: #000000;
+  opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
+}
+.pf-play.is-on { opacity: 1; }
+
+/* ── before and after ── */
+.ba { margin: 0; }
+.ba-frame {
+  position: relative; overflow: hidden; aspect-ratio: 1440 / 900; border-radius: 3px;
+  background: var(--c4-bg-alt); box-shadow: var(--dv-contact), var(--dv-room);
+}
+.ba-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.ba-before { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+.ba-tag {
+  position: absolute; bottom: 12px; z-index: 2; padding: 5px 8px 4px; border-radius: 2px;
+  font: 400 11px/1 'B612 Mono', ui-monospace, monospace; letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.94); color: #1a1a1a; pointer-events: none;
+}
+.ba-tag--before { left: 12px; }
+.ba-tag--after { right: 12px; }
+.ba-range {
+  position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; margin: 0;
+  opacity: 0; cursor: ew-resize; touch-action: pan-y;
+}
+.ba-seam {
+  position: absolute; top: 0; bottom: 0; left: var(--pos); z-index: 2; width: 2px; translate: -1px 0;
+  background: #ffffff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.22); pointer-events: none;
+}
+.ba-grip {
+  position: absolute; top: 50%; left: 50%; translate: -50% -50%;
+  width: 44px; height: 44px; border-radius: 50%; background: #ffffff;
+  box-shadow: var(--dv-contact), 0 10px 24px -8px rgba(0, 0, 0, 0.35);
+}
+.ba-grip::before,
+.ba-grip::after {
+  content: ''; position: absolute; top: 50%; width: 7px; height: 7px;
+  border: solid #1a1a1a; border-width: 0 0 1.5px 1.5px;
+}
+.ba-grip::before { left: 12px; transform: translateY(-50%) rotate(45deg); }
+.ba-grip::after { right: 12px; transform: translateY(-50%) rotate(-135deg); }
+.ba-range:focus-visible + .ba-seam .ba-grip { outline: 2px solid var(--c4-focus, var(--c4-text)); outline-offset: 3px; }
+.ba-cap {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.4rem 1.2rem;
+  margin-top: 0.85rem; font-size: 12.5px; line-height: 1.5; color: var(--c4-text-muted);
+}
+.ba-cap a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-cover, .dv-try { transition: none; }
+  a:hover .pf-cover, a:focus-visible .pf-cover { transform: none; }
+  .pf-play { display: none; }
+}

@@ -10,7 +10,8 @@
  *   Axis 2 (payment, supplied only): own outright or managed monthly.
  *
  * All copy is field-verified capability only: no transcription, no OCR,
- * no overlays. Australian spelling, no em dashes anywhere. Prices ex GST.
+ * no overlays. Australian spelling, no em dashes anywhere. No GST is added:
+ * C4 Studios isn't registered for GST.
  * Every price here is a Caleb-approved figure; change nothing without him.
  */
 
@@ -274,13 +275,13 @@ export const BYO_SPEC = {
 };
 
 export const FINE_PRINT_BYO =
-  'Pricing in AUD ex GST, quoted to fit each practice. On your own hardware the fee covers installation, configuration, training and the 30-day tuning period. Your machine and its operating system stay under your existing vendor warranty and support. Monthly care covers the C4 software: monitoring, updates and model upgrades. Cancel anytime: your system keeps working, you simply stop receiving updates and support.';
+  'Pricing in AUD, quoted to fit each practice, with no GST added as C4 Studios isn’t registered for GST. On your own hardware the fee covers installation, configuration, training and the 30-day tuning period. Your machine and its operating system stay under your existing vendor warranty and support. Monthly care covers the C4 software: monitoring, updates and model upgrades. Cancel anytime: your system keeps working, you simply stop receiving updates and support.';
 
 export const FINE_PRINT_SUPPLIED =
-  'Pricing in AUD ex GST, quoted to fit each practice. Upfront covers the hardware (yours to keep), installation, configuration, team training and a 30-day tuning period. Monthly care covers monitoring, updates, model upgrades and support. Hardware pricing moves with the memory market, so supplied-hardware quotes are held for 14 days. Cancel anytime: your system keeps working, you simply stop receiving updates and support.';
+  'Pricing in AUD, quoted to fit each practice, with no GST added as C4 Studios isn’t registered for GST. Upfront covers the hardware (yours to keep), installation, configuration, team training and a 30-day tuning period. Monthly care covers monitoring, updates, model upgrades and support. Hardware pricing moves with the memory market, so supplied-hardware quotes are held for 14 days. Cancel anytime: your system keeps working, you simply stop receiving updates and support.';
 
 export const FINE_PRINT_MANAGED =
-  'Managed pricing in AUD ex GST, over a 36-month term. We own and maintain the hardware, so there is no capital outlay; the monthly covers the machine, monitoring, updates, model upgrades and support. A one-off setup fee covers install, configuration and training. At the end of the term you can renew, refresh the hardware, or buy the unit out.';
+  'Managed pricing in AUD over a 36-month term, with no GST added as C4 Studios isn’t registered for GST. We own and maintain the hardware, so there is no capital outlay; the monthly covers the machine, monitoring, updates, model upgrades and support. A one-off setup fee covers install, configuration and training. At the end of the term you can renew, refresh the hardware, or buy the unit out.';
 
 /* ── Console scripts ─────────────────────────────────────────────────
    Data-driven steps for the scripted software demos. One renderer
