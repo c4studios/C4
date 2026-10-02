@@ -1,0 +1,474 @@
+{
+  "evidence-advisory": {
+    "liveUrl": "https://evidenceadvisory.com.au/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/evidenceadvisory-com-au/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 5400
+      },
+      "mobile": {
+        "src": "/captures/evidenceadvisory-com-au/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 8483
+      }
+    },
+    "play": {
+      "mp4": "/captures/evidenceadvisory-com-au/motion/play.mp4",
+      "webm": "/captures/evidenceadvisory-com-au/motion/play.webm",
+      "poster": "/captures/evidenceadvisory-com-au/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": false,
+    "frameHeader": "content-security-policy: frame-ancestors 'self'",
+    "before": {
+      "src": "/captures/evidenceadvisory-com-au/motion/before-desktop.webp",
+      "after": "/captures/evidenceadvisory-com-au/motion/after-desktop.webp",
+      "w": 1440,
+      "h": 900,
+      "archivedOn": "2026-06-10",
+      "archiveUrl": "https://web.archive.org/web/20260610215446/https://evidenceadvisory.com.au/",
+      "approved": false
+    }
+  },
+  "cia-solutions": {
+    "liveUrl": "https://ciasolutions.com.au/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/ciasolutions-com-au/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 2003
+      },
+      "mobile": {
+        "src": "/captures/ciasolutions-com-au/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 4832
+      }
+    },
+    "play": {
+      "mp4": "/captures/ciasolutions-com-au/motion/play.mp4",
+      "webm": "/captures/ciasolutions-com-au/motion/play.webm",
+      "poster": "/captures/ciasolutions-com-au/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": false,
+    "frameHeader": "x-frame-options: SAMEORIGIN",
+    "before": {
+      "src": "/captures/ciasolutions-com-au/motion/before-desktop.webp",
+      "after": "/captures/ciasolutions-com-au/motion/after-desktop.webp",
+      "w": 1440,
+      "h": 900,
+      "archivedOn": "2025-11-30",
+      "archiveUrl": "https://web.archive.org/web/20251130080838/http://ciasolutions.com.au/",
+      "approved": false
+    }
+  },
+  "transform-fremantle": {
+    "liveUrl": "https://transformfreo.com/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/transformfreo-com/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 3045
+      },
+      "mobile": {
+        "src": "/captures/transformfreo-com/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 5808
+      }
+    },
+    "play": {
+      "mp4": "/captures/transformfreo-com/motion/play.mp4",
+      "webm": "/captures/transformfreo-com/motion/play.webm",
+      "poster": "/captures/transformfreo-com/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": true,
+    "frameHeader": null,
+    "before": null
+  },
+  "aqua-safe-plumbing": {
+    "liveUrl": "https://www.aquasafeplumbing.com.au/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/aquasafeplumbing-com-au/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 5400
+      },
+      "mobile": {
+        "src": "/captures/aquasafeplumbing-com-au/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 8483
+      }
+    },
+    "play": {
+      "mp4": "/captures/aquasafeplumbing-com-au/motion/play.mp4",
+      "webm": "/captures/aquasafeplumbing-com-au/motion/play.webm",
+      "poster": "/captures/aquasafeplumbing-com-au/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": false,
+    "frameHeader": "content-security-policy: frame-ancestors 'none'",
+    "before": null
+  },
+  "transform-hakea": {
+    "liveUrl": "https://transformhakea.com/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/transformhakea-com/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 5400
+      },
+      "mobile": {
+        "src": "/captures/transformhakea-com/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 8483
+      }
+    },
+    "play": {
+      "mp4": "/captures/transformhakea-com/motion/play.mp4",
+      "webm": "/captures/transformhakea-com/motion/play.webm",
+      "poster": "/captures/transformhakea-com/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": true,
+    "frameHeader": null,
+    "before": null
+  },
+  "gocc": {
+    "liveUrl": "https://gocc.com.au/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/gocc-com-au/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 2153
+      },
+      "mobile": {
+        "src": "/captures/gocc-com-au/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 4039
+      }
+    },
+    "play": {
+      "mp4": "/captures/gocc-com-au/motion/play.mp4",
+      "webm": "/captures/gocc-com-au/motion/play.webm",
+      "poster": "/captures/gocc-com-au/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": true,
+    "frameHeader": null,
+    "before": {
+      "src": "/captures/gocc-com-au/motion/before-desktop.webp",
+      "after": "/captures/gocc-com-au/motion/after-desktop.webp",
+      "w": 1440,
+      "h": 900,
+      "archivedOn": "2025-03-05",
+      "archiveUrl": "https://web.archive.org/web/20250305000846/https://gocc.com.au/",
+      "approved": false
+    }
+  },
+  "ds-racing-karts": {
+    "liveUrl": "https://www.dsracingkarts.com.au/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/dsracingkarts-com-au/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 5400
+      },
+      "mobile": {
+        "src": "/captures/dsracingkarts-com-au/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 8483
+      }
+    },
+    "play": {
+      "mp4": "/captures/dsracingkarts-com-au/motion/play.mp4",
+      "webm": "/captures/dsracingkarts-com-au/motion/play.webm",
+      "poster": "/captures/dsracingkarts-com-au/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": false,
+    "frameHeader": "x-frame-options: DENY",
+    "before": null
+  },
+  "sharp-bricklaying": {
+    "liveUrl": "https://www.sharpbricklaying.com.au/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/sharpbricklaying-com-au/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 5400
+      },
+      "mobile": {
+        "src": "/captures/sharpbricklaying-com-au/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 8483
+      }
+    },
+    "play": {
+      "mp4": "/captures/sharpbricklaying-com-au/motion/play.mp4",
+      "webm": "/captures/sharpbricklaying-com-au/motion/play.webm",
+      "poster": "/captures/sharpbricklaying-com-au/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": false,
+    "frameHeader": "content-security-policy: frame-ancestors 'none'",
+    "before": null
+  },
+  "hvn-gym": {
+    "liveUrl": "https://www.thehvncrossfit.com/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/thehvncrossfit-com/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 5117
+      },
+      "mobile": {
+        "src": "/captures/thehvncrossfit-com/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 8483
+      }
+    },
+    "play": {
+      "mp4": "/captures/thehvncrossfit-com/motion/play.mp4",
+      "webm": "/captures/thehvncrossfit-com/motion/play.webm",
+      "poster": "/captures/thehvncrossfit-com/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": false,
+    "frameHeader": "content-security-policy: frame-ancestors 'none'",
+    "before": null
+  },
+  "groverz-tax": {
+    "liveUrl": "https://groverztax.com.au/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/groverztax-com-au/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 5400
+      },
+      "mobile": {
+        "src": "/captures/groverztax-com-au/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 8483
+      }
+    },
+    "play": {
+      "mp4": "/captures/groverztax-com-au/motion/play.mp4",
+      "webm": "/captures/groverztax-com-au/motion/play.webm",
+      "poster": "/captures/groverztax-com-au/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": false,
+    "frameHeader": "x-frame-options: DENY",
+    "before": null
+  },
+  "tidy-gardens-australia": {
+    "liveUrl": "https://tidygardens.com.au/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/tidygardens-com-au/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 5400
+      },
+      "mobile": {
+        "src": "/captures/tidygardens-com-au/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 8483
+      }
+    },
+    "play": {
+      "mp4": "/captures/tidygardens-com-au/motion/play.mp4",
+      "webm": "/captures/tidygardens-com-au/motion/play.webm",
+      "poster": "/captures/tidygardens-com-au/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": false,
+    "frameHeader": "content-security-policy: frame-ancestors 'none'",
+    "before": {
+      "src": "/captures/tidygardens-com-au/motion/before-desktop.webp",
+      "after": "/captures/tidygardens-com-au/motion/after-desktop.webp",
+      "w": 1440,
+      "h": 900,
+      "archivedOn": "2025-11-05",
+      "archiveUrl": "https://web.archive.org/web/20251105164937/http://tidygardens.com.au/",
+      "approved": false
+    }
+  },
+  "brady-electrical": {
+    "liveUrl": "https://www.bradyelectrical.com.au/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/bradyelectrical-com-au/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 5400
+      },
+      "mobile": {
+        "src": "/captures/bradyelectrical-com-au/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 8483
+      }
+    },
+    "play": {
+      "mp4": "/captures/bradyelectrical-com-au/motion/play.mp4",
+      "webm": "/captures/bradyelectrical-com-au/motion/play.webm",
+      "poster": "/captures/bradyelectrical-com-au/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": false,
+    "frameHeader": "content-security-policy: frame-ancestors 'none'",
+    "before": {
+      "src": "/captures/bradyelectrical-com-au/motion/before-desktop.webp",
+      "after": "/captures/bradyelectrical-com-au/motion/after-desktop.webp",
+      "w": 1440,
+      "h": 900,
+      "archivedOn": "2025-11-11",
+      "archiveUrl": "https://web.archive.org/web/20251111070704/https://bradyelectrical.com.au/",
+      "approved": false
+    }
+  },
+  "quotr": {
+    "liveUrl": "https://quotr.us/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/quotr-us/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 3676
+      },
+      "mobile": {
+        "src": "/captures/quotr-us/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 7108
+      }
+    },
+    "play": {
+      "mp4": "/captures/quotr-us/motion/play.mp4",
+      "webm": "/captures/quotr-us/motion/play.webm",
+      "poster": "/captures/quotr-us/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": false,
+    "frameHeader": "content-security-policy: frame-ancestors 'self'",
+    "before": null
+  },
+  "iopa": {
+    "liveUrl": "https://iopa-apparel.vercel.app/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/iopa-apparel-vercel-app/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 5400
+      },
+      "mobile": {
+        "src": "/captures/iopa-apparel-vercel-app/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 8483
+      }
+    },
+    "play": {
+      "mp4": "/captures/iopa-apparel-vercel-app/motion/play.mp4",
+      "webm": "/captures/iopa-apparel-vercel-app/motion/play.webm",
+      "poster": "/captures/iopa-apparel-vercel-app/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": true,
+    "frameHeader": null,
+    "before": null
+  },
+  "cmc-lawns": {
+    "liveUrl": "https://cmc-lawns-concept.vercel.app/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/cmc-lawns-concept-vercel-app/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 5400
+      },
+      "mobile": {
+        "src": "/captures/cmc-lawns-concept-vercel-app/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 8483
+      }
+    },
+    "play": {
+      "mp4": "/captures/cmc-lawns-concept-vercel-app/motion/play.mp4",
+      "webm": "/captures/cmc-lawns-concept-vercel-app/motion/play.webm",
+      "poster": "/captures/cmc-lawns-concept-vercel-app/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": true,
+    "frameHeader": null,
+    "before": null
+  },
+  "eurochem": {
+    "liveUrl": "https://eurochem-concept.vercel.app/",
+    "capturedOn": "2026-10-02",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/eurochem-concept-vercel-app/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 5400
+      },
+      "mobile": {
+        "src": "/captures/eurochem-concept-vercel-app/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 8483
+      }
+    },
+    "play": {
+      "mp4": "/captures/eurochem-concept-vercel-app/motion/play.mp4",
+      "webm": "/captures/eurochem-concept-vercel-app/motion/play.webm",
+      "poster": "/captures/eurochem-concept-vercel-app/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": true,
+    "frameHeader": null,
+    "before": null
+  }
+}

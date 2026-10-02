@@ -9,6 +9,8 @@ import PortfolioSortMenu from '../components/portfolio/PortfolioSortMenu';
 import { getAllCaseStudies } from '../components/portfolio/caseStudyData';
 import { FeaturedCardSkeleton } from '../components/portfolio/PortfolioCardSkeleton';
 import PortfolioMedia, { WebpImg } from '../components/portfolio/PortfolioMedia';
+import PlayLayer from '../components/portfolio/PlayLayer';
+import { getMotion } from '../components/portfolio/portfolioMotion';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import useStaticMode from '@/hooks/useStaticMode';
 import { breadcrumbSchema } from '@/lib/schema';
@@ -59,6 +61,7 @@ function FeaturedCard({ study, index }) {
   const previewStart = study.cover ? 0 : 1;
   const previews = (study.screenshots || []).slice(previewStart, previewStart + 3);
   const staticMode = useStaticMode();
+  const clip = getMotion(study.slug)?.play;
 
   return (
     <motion.div
@@ -68,7 +71,7 @@ function FeaturedCard({ study, index }) {
         <div className="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-3 md:gap-4">
           {/* Cover — logo wallpaper */}
           <div
-            className={`relative aspect-[16/9] overflow-hidden rounded-[2px] flex items-center justify-center ${study.backdropClassName || ''}`}
+            className={`pf-cover relative aspect-[16/9] overflow-hidden rounded-[2px] flex items-center justify-center ${study.backdropClassName || ''}`}
             style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
           >
             {study.cover ? (
@@ -90,6 +93,7 @@ function FeaturedCard({ study, index }) {
                 imageClassName="transition-transform duration-700 group-hover:scale-[1.03]"
               />
             )}
+            {clip ? <PlayLayer clip={clip} /> : null}
             {study.concept && (
               <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ backgroundColor: 'var(--c4-bg)', border: '1px solid var(--c4-border)' }}>
                 <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />
@@ -159,13 +163,14 @@ function FeaturedCard({ study, index }) {
 
 function ProjectCard({ study, index }) {
   const staticMode = useStaticMode();
+  const clip = getMotion(study.slug)?.play;
   return (
     <motion.div
       {...cardReveal(staticMode, { y: 24, delay: index * 0.06, margin: '-40px' })}
     >
       <Link to={createPageUrl(`CaseStudy/${study.slug}`)} className="group block">
         <div
-          className={`relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center ${study.backdropClassName || ''}`}
+          className={`pf-cover relative aspect-[16/10] overflow-hidden rounded-[2px] flex items-center justify-center ${study.backdropClassName || ''}`}
           style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
         >
           {study.cover ? (
@@ -188,6 +193,7 @@ function ProjectCard({ study, index }) {
               imageClassName="transition-transform duration-700 group-hover:scale-[1.03]"
             />
           )}
+          {clip ? <PlayLayer clip={clip} /> : null}
           {study.concept && (
             <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 rounded-full px-2.5 py-[3px]" style={{ backgroundColor: 'var(--c4-bg)', border: '1px solid var(--c4-border)' }}>
               <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: 'var(--c4-accent)' }} />

@@ -219,6 +219,21 @@
   opacity: 0;
 }
 
+/* In flight: while the request is out, the last stretch of wire carries
+   the message down to CALEB as running dashes. It shows only for as long
+   as the send really takes, never a staged delay. Reduced motion gets the
+   dashes standing still, which still says "in transit". */
+.ct-wire-transit {
+  stroke: var(--ct-signal-stroke);
+  stroke-width: 2;
+  stroke-dasharray: 5 9;
+  fill: none;
+  animation: ct-transit 520ms linear infinite;
+}
+@keyframes ct-transit {
+  to { stroke-dashoffset: -14; }
+}
+
 /* Nodes — the two ends of the line. */
 .ct-node {
   position: relative;
@@ -395,6 +410,23 @@ textarea.ct-input {
   background: var(--c4-text);
 }
 
+/* The fields draw their own focus: the baseline goes to full ink and the
+   label lifts. The site-wide field ring (marks.css) sat hard against the
+   input at offset 0, and with no left padding the red caret landed on the
+   ring's left edge and vanished into it (Caleb, 2 Oct 2026). So the ring
+   comes off here, by name and with weight enough to beat marks.css, and the
+   underline carries focus. High-contrast mode paints no backgrounds, so the
+   underline disappears there and the ring returns, clear of the caret. */
+html .ct-page .ct-field > .ct-input.ct-input:focus-visible {
+  outline: none !important;
+}
+@media (forced-colors: active) {
+  html .ct-page .ct-field > .ct-input.ct-input:focus-visible {
+    outline: 2px solid Highlight !important;
+    outline-offset: 6px !important;
+  }
+}
+
 .ct-field.is-error .ct-underline {
   transform: scaleY(1);
   background: var(--ct-signal-stroke);
@@ -554,13 +586,29 @@ textarea.ct-input {
   outline: none;
 }
 
+/* The stamp: the receipt is franked the moment the message lands. Inked
+   in the signal red, a couple of degrees off square the way a hand-held
+   stamp comes down. The resting tilt lives here, so the reduced-motion and
+   prerendered receipt look the same as the animated one ends. */
 .ct-receipt-stamp {
+  display: inline-block;
   font-family: 'B612 Mono', ui-monospace, monospace;
   font-size: 1rem;
   letter-spacing: 0.1em;
   font-variant-numeric: tabular-nums;
-  color: var(--c4-text);
-  margin: 0 0 0.85rem;
+  color: var(--ct-signal-text);
+  margin: 0 0 1.2rem;
+  padding: 0.55rem 0.8rem 0.5rem;
+  border: 2px solid var(--ct-signal-stroke);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--c4-bg), inset 0 0 0 2.5px var(--ct-signal-stroke);
+  transform: rotate(-2deg);
+  transform-origin: 40% 60%;
+  /* Worn ink: a sparse noise mask knocks small voids out of the frame and
+     letters, the way a rubber stamp never prints solid. Sparse enough that
+     every character still reads. */
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -7 0 0 0 5.3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -7 0 0 0 5.3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 .ct-receipt-line {

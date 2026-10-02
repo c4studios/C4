@@ -25,6 +25,7 @@ person building it.
 - [Private AI systems](https://c4studios.com.au/private-ai): AI installed on your own hardware — nothing leaves the building. Tiers from $1,600.
 - [AI services](https://c4studios.com.au/ServiceAI): How C4 applies AI to real business workflows.
 - [C4 Lens — photography & video](https://c4studios.com.au/Lens): Brand photography, videography, drone work and motion graphics.
+- [SEO & copywriting](https://c4studios.com.au/seo-and-copywriting): SEO packages from $400 one-off or $500 a month, and website copy at $500 with a build.
 - [C4Site — AI training](https://c4studios.com.au/Foresight): Practical AI workshops for workplaces and schools.
 - [Lead Engine](https://c4studios.com.au/lead-engine): Done-for-you lead generation system.
 - [Portfolio](https://c4studios.com.au/Portfolio): Selected client work and case studies.

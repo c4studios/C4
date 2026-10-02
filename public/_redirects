@@ -83,6 +83,12 @@
 /CaseStudy        /  200
 /CaseStudy/       /  200
 
+# People Power is down for rework (Caleb, 2 Oct 2026). Its case study is
+# hidden in caseStudyData.jsx and no longer prerendered, so these temporary
+# 302s send old links to the portfolio. Remove them when it comes back.
+/CaseStudy/people-power    /Portfolio/  302
+/CaseStudy/people-power/   /Portfolio/  302
+
 # Real 404s. This used to be `/*  /index.html  200`, which returned HTTP 200
 # with the homepage for every wrong URL — so any typo, dead backlink or
 # crawler probe produced another copy of the front page at a new address.

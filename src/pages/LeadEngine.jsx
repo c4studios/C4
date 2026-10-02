@@ -332,7 +332,7 @@ export default function LeadEngine() {
           </div>
           <Reveal>
             <p className="mt-5 text-[12.5px]" style={{ color: 'var(--c4-text-subtle)' }}>
-              $1,950 setup · from $250/month · no lock-in contracts. All prices in AUD, ex GST.
+              $1,950 setup · from $250/month · no lock-in contracts. All prices in AUD. No GST is added, as C4 Studios isn&rsquo;t registered for GST.
             </p>
           </Reveal>
         </div>

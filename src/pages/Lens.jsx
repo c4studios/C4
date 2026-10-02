@@ -81,14 +81,17 @@ function useForceDark() {
 }
 
 /* ── Data ── */
+/* Each word is painted with a split-loaded brush: `col` over `col2`, turning
+   through the middle of every stroke. Neon on the black (Caleb, 2 Oct 2026);
+   `voice` was a lilac and is now a red-orange, so no violet is left. */
 const WORDS = [
-  { text: 'character', col: '#d6ff3a' },
-  { text: 'essence',   col: '#ff3fa3' },
-  { text: 'nature',    col: '#3ff8ff' },
-  { text: 'truth',     col: '#ff8a1c' },
-  { text: 'soul',      col: '#f7ff00' },
-  { text: 'voice',     col: '#b388ff' },
-  { text: 'story',     col: '#3ff8ff' },
+  { text: 'character', col: '#d6ff3a', col2: '#3ff8ff' },
+  { text: 'essence',   col: '#ff3fa3', col2: '#ff8a1c' },
+  { text: 'nature',    col: '#3ff8ff', col2: '#39ff6e' },
+  { text: 'truth',     col: '#ff8a1c', col2: '#f7ff00' },
+  { text: 'soul',      col: '#f7ff00', col2: '#ff3fa3' },
+  { text: 'voice',     col: '#ff5a36', col2: '#ff3fa3' },
+  { text: 'story',     col: '#3ff8ff', col2: '#ff3fa3' },
 ];
 
 /* Package cards render from c4LensPackages (src/data/pricing.js) — the same
@@ -557,41 +560,74 @@ export default function Lens() {
     }
 
     /* ═══ THE PAINT STAGE — "We exist to capture the [word] of your brand." ═══
-       Live visitors get high-vis paint thrown onto the black (paintWord.js): the
-       word is painted in behind a brush front, drops fly, drips run, and the
-       cursor is a knife. Prerender and reduced motion get the SVG word below,
-       fully drawn, so the sentence is always complete in the static HTML. */
+       Live visitors get neon paint in a fluid (paintWord.js): each word is
+       brushed in fast with a split-loaded brush, flecks fly, and a cursor or
+       finger pushes the paint around. Prerender, reduced motion and devices
+       without WebGL2 get the SVG word below, fully drawn in the same two
+       colours, so the sentence is always complete in the static HTML. */
     function renderStaticWord() {
       const svgEl = document.getElementById('wordSvg');
-      if (!svgEl) return;
+      if (!svgEl || svgEl.childNodes.length) return;
       const word = WORDS[0];
       svgEl.setAttribute('viewBox', '0 -200 2000 400');
+      const defs = document.createElementNS(NS, 'defs');
+      const grad = document.createElementNS(NS, 'linearGradient');
+      grad.setAttribute('id', 'wordSplit');
+      grad.setAttribute('x1', '0'); grad.setAttribute('y1', '0');
+      grad.setAttribute('x2', '0'); grad.setAttribute('y2', '1');
+      for (const [off, col] of [['0.36', word.col], ['0.64', word.col2 || word.col]]) {
+        const stop = document.createElementNS(NS, 'stop');
+        stop.setAttribute('offset', off);
+        stop.setAttribute('stop-color', col);
+        grad.appendChild(stop);
+      }
+      defs.appendChild(grad);
+      svgEl.appendChild(defs);
       const t = document.createElementNS(NS, 'text');
       t.setAttribute('x', '0');
       t.setAttribute('y', '0');
       t.setAttribute('class', 'svg-word-letter');
       t.textContent = word.text;
-      t.style.fill = word.col;
+      t.style.fill = 'url(#wordSplit)';
       svgEl.appendChild(t);
-      const box = t.getBBox();
-      const padX = 20, padY = 15;
-      svgEl.setAttribute('viewBox', `${box.x - padX} ${box.y - padY} ${box.width + padX * 2} ${box.height + padY * 2}`);
+      /* Fit the box to the ink, and again once Caveat is in: measured on the
+         fallback face, the box came out wider than the word and the word sat
+         left of centre. */
+      const fit = () => {
+        if (!svgEl.isConnected) return;
+        const box = t.getBBox();
+        const padX = 20, padY = 15;
+        svgEl.setAttribute('viewBox', `${box.x - padX} ${box.y - padY} ${box.width + padX * 2} ${box.height + padY * 2}`);
+      };
+      fit();
+      if (document.fonts && document.fonts.load) document.fonts.load("700 160px 'Caveat'").then(fit, () => {});
     }
 
     let stage = null;
     let capIO = null;
     const wordStage = document.getElementById('wordStage');
+    const fallBack = () => {
+      if (capIO) { capIO.disconnect(); capIO = null; }
+      stage = null;
+      if (wordStage) wordStage.classList.remove('is-live');
+      renderStaticWord();
+    };
     if (staticMode || !wordStage) {
       renderStaticWord();
     } else {
       wordStage.classList.add('is-live');
-      stage = createPaintStage(wordStage, { words: WORDS });
-      /* Same clutch as the hero motor: the paint only runs while §01 is on screen. */
-      capIO = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) stage.start(); else stage.stop();
-      }, { threshold: 0.3 });
-      const captureEl = document.getElementById('capture');
-      if (captureEl) capIO.observe(captureEl);
+      stage = createPaintStage(wordStage, { words: WORDS, onFail: fallBack });
+      if (!stage) {
+        fallBack();
+      } else {
+        /* Same clutch as the hero motor: the paint only runs while §01 is on screen. */
+        capIO = new IntersectionObserver((entries) => {
+          if (!stage) return;
+          if (entries[0].isIntersecting) stage.start(); else stage.stop();
+        }, { threshold: 0.3 });
+        const captureEl = document.getElementById('capture');
+        if (captureEl) capIO.observe(captureEl);
+      }
     }
 
 
@@ -1014,6 +1050,9 @@ export default function Lens() {
             <div className="cap-stmt-fixed">
               <span className="cap-stmt-label">We exist to capture the</span>
               <div className="word-stage" id="wordStage">
+                {/* The painted word is drawn, so a screen reader would hear the
+                    sentence with a hole in it; this fills the hole. */}
+                <span className="lens-sr-only">{WORDS[0].text}</span>
                 <svg id="wordSvg" className="word-svg" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
               </div>
               <span className="cap-stmt-label">of your brand.</span>

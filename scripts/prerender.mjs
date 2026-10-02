@@ -39,9 +39,14 @@ const CASE_STUDY_SRC = await readFile(
   path.resolve(__dirname, '..', 'src', 'components', 'portfolio', 'caseStudyData.jsx'),
   'utf8',
 );
-const CASE_STUDY_SLUGS = [
-  ...CASE_STUDY_SRC.matchAll(/^ {2}'([\w-]+)':\s*\{/gm),
-].map((match) => match[1]);
+/* An entry marked `hidden: true` is down for rework: no page, no sitemap line. */
+const CASE_STUDY_SLUGS = CASE_STUDY_SRC.split(/^(?= {2}'[\w-]+':\s*\{)/m)
+  .map((block) => ({
+    slug: (block.match(/^ {2}'([\w-]+)':\s*\{/) || [])[1],
+    hidden: /^ {4}hidden:\s*true/m.test(block),
+  }))
+  .filter((entry) => entry.slug && !entry.hidden)
+  .map((entry) => entry.slug);
 if (CASE_STUDY_SLUGS.length === 0) {
   throw new Error('prerender: failed to derive CASE_STUDY_SLUGS from caseStudyData.jsx');
 }

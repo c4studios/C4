@@ -11,8 +11,9 @@
  * Built after the hosted quotr.us embed was retired from the home page on
  * 14 September 2026 (it loaded slowly and the software line is gone). This
  * one is static markup with a little state: it prerenders fully in its
- * default lane, needs no network, and the only motion is the till's digits
- * rolling (transform only; instant under reduced motion).
+ * default lane, needs no network, and the motion is the till's digits
+ * rolling and the extras drawer sliding out (transform and grid rows only;
+ * instant under reduced motion).
  */
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
@@ -38,6 +39,44 @@ const LANES = [
   { key: 'social', label: 'Social', packages: socialMediaPackages, service: 'social' },
   { key: 'care', label: 'Care plan', packages: supportPlans, service: 'support' },
 ];
+
+/* The extras tray. The website lane has forty extras, and as one list they
+   filled the page (Caleb, 2 Oct 2026). Six broadly useful ones stay out on
+   the tray; the rest fold into a drawer, sorted by kind. The sorting is
+   presentation only: names match pricing.js exactly, and anything added
+   there that no group names still shows, under "Everything else". */
+const EXTRAS_OUT = [
+  'Additional page', 'Copywriting package', 'Online booking / appointments',
+  'SEO foundations', 'Google Business Profile setup', 'AI chatbot',
+];
+const EXTRA_GROUPS = [
+  ['Pages and words', ['Additional page', '3-page pack', '5-page pack', 'Copywriting package', 'Branding add-on', 'Photography + videography add-on', 'Blog/CMS']],
+  ['Bookings and tools', ['Online booking / appointments', 'AI chatbot', 'Client portal / login area', 'Advanced form', 'Newsletter integration', 'Live chat', 'Custom API integration', 'Admin dashboard']],
+  ['Selling online', ['Product catalogue setup', 'Extra product batch (up to 25)', 'Shipping/tax rules', 'Payment gateway setup', 'Inventory or POS sync']],
+  ['Page sections', ['Image gallery', 'Testimonials section', 'FAQ section', 'Google Maps', 'Social feed', 'Video background', 'Custom 404']],
+  ['Motion', ['Basic animation pass', 'GSAP page transitions', 'Parallax effect', 'Logo animation']],
+  ['Search and setup', ['SEO foundations', 'Google Business Profile setup', 'Accessibility (WCAG)', 'Multi-language', 'Speed optimisation', 'Cookie consent', 'SSL setup', 'Domain + DNS', 'Business email setup']],
+];
+
+function trayFor(addOns) {
+  const byName = new Map(addOns.map((a) => [a.name, a]));
+  const out = EXTRAS_OUT.map((n) => byName.get(n)).filter(Boolean);
+  const placed = new Set(out.map((a) => a.name));
+  const groups = [];
+  for (const [label, names] of EXTRA_GROUPS) {
+    const items = names.map((n) => byName.get(n)).filter((a) => a && !placed.has(a.name));
+    items.forEach((a) => placed.add(a.name));
+    if (items.length) groups.push({ label, items });
+  }
+  const rest = addOns.filter((a) => !placed.has(a.name));
+  if (rest.length) groups.push({ label: 'Everything else', items: rest });
+  return { out, groups, folded: groups.reduce((t, g) => t + g.items.length, 0) };
+}
+
+/* The prerenderer gets the drawer open, so the static HTML carries every
+   price; a visitor's browser starts with it shut. The app renders with
+   createRoot, so the two never have to match. */
+const PRERENDER = typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent);
 
 /* Where a package sits on the rail: log scale, so $200 and $5,000 both get room. */
 function railPositions(packages) {
@@ -77,10 +116,28 @@ export default function Quotr({ compact = false, heading = 'Price it yourself.' 
   const [extras, setExtras] = useState(() => new Set());
   const [monthlyPlan, setMonthlyPlan] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(PRERENDER);
   const liveRef = useRef(null);
+  const moreRef = useRef(null);
 
   const pkg = lane.packages.find((p) => p.key === pkgKey) || lane.packages[0];
   const positions = useMemo(() => railPositions(lane.packages), [lane]);
+  const tray = useMemo(() => (lane.addOns ? trayFor(lane.addOns) : null), [lane]);
+  const foldedTicked = tray ? tray.groups.reduce((t, g) => t + g.items.filter((a) => extras.has(a.name)).length, 0) : 0;
+
+  /* Shutting the drawer from its foot: focus goes back to the toggle above,
+     and the page brings it into view if the long list had scrolled it off. */
+  const foldAway = () => {
+    setDrawerOpen(false);
+    const btn = moreRef.current;
+    if (!btn) return;
+    btn.focus({ preventScroll: true });
+    const r = btn.getBoundingClientRect();
+    if (r.top < 80 || r.bottom > window.innerHeight) {
+      const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      btn.scrollIntoView({ block: 'center', behavior: still ? 'auto' : 'smooth' });
+    }
+  };
 
   const chooseLane = (key) => {
     const next = LANES.find((l) => l.key === key);
@@ -97,12 +154,13 @@ export default function Quotr({ compact = false, heading = 'Price it yourself.' 
   const oneOff = (pkgMonthly ? 0 : (monthlyPlan ? 0 : pkg.price)) + extraItems.reduce((t, a) => t + a.price, 0);
   const monthly = (pkgMonthly ? pkg.price : 0) + (monthlyPlan && lane.payMonthly && pkg.monthlyPrice ? pkg.monthlyPrice : 0);
   const months = monthlyPlan && subscriptionInfo.monthsToOwnership[pkg.key];
-  const open = /\+$/.test(pkg.priceLabel || '') || pkg.price === 0;
+  /* Open-ended: a "+" package, a $0 one, or any ticked extra priced "from". */
+  const open = /\+$/.test(pkg.priceLabel || '') || pkg.price === 0 || extraItems.some((a) => a.suffix);
 
   const summary = [
     `${lane.label} · ${pkg.name} · ${pkg.priceLabel}${monthlyPlan && pkg.monthlyLabel ? ` (paying ${pkg.monthlyLabel})` : ''}`,
-    ...extraItems.map((a) => `+ ${a.name} · ${money(a.price)}`),
-    `Estimate: ${oneOff ? money(oneOff) : ''}${oneOff && monthly ? ' + ' : ''}${monthly ? `${money(monthly)}/mo` : ''}${open ? ' (starting price)' : ''} · ex GST`,
+    ...extraItems.map((a) => `+ ${a.name} · ${money(a.price)}${a.suffix || ''}`),
+    `Estimate: ${oneOff ? money(oneOff) : ''}${oneOff && monthly ? ' + ' : ''}${monthly ? `${money(monthly)}/mo` : ''}${open ? ' (starting price)' : ''} · no GST added`,
   ].join('\n');
 
   useEffect(() => {
@@ -113,6 +171,17 @@ export default function Quotr({ compact = false, heading = 'Price it yourself.' 
     try { await navigator.clipboard.writeText(summary); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch { /* clipboard unavailable: the summary is on screen */ }
   };
   const startUrl = `${createPageUrl('StartProject')}?service=${lane.service}&package=${pkg.key}`;
+
+  const extraRow = (a) => (
+    <li key={a.name}>
+      <label className={`qt-extra${extras.has(a.name) ? ' is-on' : ''}`}>
+        <input type="checkbox" checked={extras.has(a.name)} onChange={() => toggleExtra(a.name)} />
+        <span className="qt-extra-box" aria-hidden="true" />
+        <span className="qt-extra-name">{a.name}</span>
+        <span className="qt-extra-price">{money(a.price)}{a.suffix || ''}</span>
+      </label>
+    </li>
+  );
 
   return (
     <section className={`qt${compact ? ' qt--compact' : ''}`} aria-labelledby={`${uid}-h`}>
@@ -127,7 +196,7 @@ export default function Quotr({ compact = false, heading = 'Price it yourself.' 
             <span className="qt-till-label">{monthly && !oneOff ? 'per month' : 'estimate'}</span>
             <Till value={oneOff || monthly} suffix={monthly && !oneOff ? '/mo' : (open ? '+' : '')} />
             {oneOff && monthly ? <span className="qt-till-second">+ {money(monthly)}/mo</span> : null}
-            <span className="qt-till-note">ex GST · starting price</span>
+            <span className="qt-till-note">starting price · no GST added</span>
           </div>
           <p className="sr-only" aria-live="polite" ref={liveRef} />
         </header>
@@ -191,22 +260,41 @@ export default function Quotr({ compact = false, heading = 'Price it yourself.' 
             ) : null}
           </div>
 
-          {/* The tray of extras */}
-          {lane.addOns ? (
+          {/* The tray of extras: six out, the rest in the drawer */}
+          {tray ? (
             <div className="qt-tray">
               <p className="qt-tray-label">Extras</p>
-              <ul className="qt-tray-list">
-                {lane.addOns.map((a) => (
-                  <li key={a.name}>
-                    <label className={`qt-extra${extras.has(a.name) ? ' is-on' : ''}`}>
-                      <input type="checkbox" checked={extras.has(a.name)} onChange={() => toggleExtra(a.name)} />
-                      <span className="qt-extra-box" aria-hidden="true" />
-                      <span className="qt-extra-name">{a.name}</span>
-                      <span className="qt-extra-price">{money(a.price)}</span>
-                    </label>
-                  </li>
-                ))}
-              </ul>
+              <ul className="qt-tray-list">{tray.out.map(extraRow)}</ul>
+              {tray.folded ? (
+                <>
+                  <button
+                    ref={moreRef}
+                    type="button"
+                    className={`qt-more${drawerOpen ? ' is-open' : ''}`}
+                    aria-expanded={drawerOpen}
+                    aria-controls={`${uid}-drawer`}
+                    onClick={() => setDrawerOpen((o) => !o)}
+                  >
+                    <span className="qt-more-label">{drawerOpen ? 'Fewer extras' : `${tray.folded} more extras`}</span>
+                    {!drawerOpen && foldedTicked ? <span className="qt-more-count">{foldedTicked} ticked</span> : null}
+                    <span className="qt-more-chev" aria-hidden="true" />
+                  </button>
+                  <div id={`${uid}-drawer`} className={`qt-drawer${drawerOpen ? ' is-open' : ''}`} inert={drawerOpen ? undefined : ''}>
+                    <div className="qt-drawer-inner">
+                      {tray.groups.map((g, gi) => (
+                        <div className="qt-group" key={g.label} style={{ '--i': gi }}>
+                          <p className="qt-group-label" id={`${uid}-g${gi}`}>{g.label}</p>
+                          <ul className="qt-tray-list" aria-labelledby={`${uid}-g${gi}`}>{g.items.map(extraRow)}</ul>
+                        </div>
+                      ))}
+                      <button type="button" className="qt-more qt-more--foot is-open" onClick={foldAway}>
+                        <span className="qt-more-label">Fewer extras</span>
+                        <span className="qt-more-chev" aria-hidden="true" />
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : null}
             </div>
           ) : (
             <div className="qt-tray qt-tray--note">

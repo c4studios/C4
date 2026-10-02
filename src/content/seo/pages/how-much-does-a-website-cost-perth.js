@@ -94,7 +94,7 @@ export default {
     },
     {
       q: 'Do these prices include GST?',
-      a: 'Prices are in Australian dollars and exclude GST where applicable — standard for business services. Your written quote spells out the GST position before you commit, so the invoice never surprises you.',
+      a: 'There’s no GST to add. C4 Studios isn’t registered for GST, so the prices here, in Australian dollars, are what you pay, and every invoice says so.',
     },
     {
       q: 'How much does an ecommerce website cost in Perth?',

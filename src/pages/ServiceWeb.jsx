@@ -178,7 +178,7 @@ const TIDY_SHOW = {
   year: '2026',
   scope: 'Motion-led site for a garden & reticulation business, with a living scroll motif.',
   frames: [
-    { src: tidyHero, w: 900, h: 563, alt: 'Tidy Gardens Australia home page — a green, motion-led hero for a Perth garden-care business.' },
+    { src: tidyHero, w: 900, h: 563, alt: 'Tidy Gardens Australia home page — the headline over a backyard lawn, for a Perth garden-care business.' },
     { src: tidyF2, w: 900, h: 563, alt: 'Tidy Gardens — the scroll-driven lawnmower motif cutting tall grass into a striped lawn.' },
     { src: tidyF3, w: 900, h: 563, alt: 'Tidy Gardens — reticulation repairs, installations and controller replacement.' },
   ],

@@ -10,6 +10,7 @@ const PAGE_URLS = {
     TrainingEnquiry: '/ai-training-enquiry',
     C4SitePreviews: '/c4sight-previews',
     HowWeUseAI: '/how-we-use-ai',
+    SeoCopy: '/seo-and-copywriting',
 };
 
 export function createPageUrl(pageName) {

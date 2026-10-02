@@ -230,6 +230,26 @@ function CallForm({ onBack }) {
   );
 }
 
+const QUOTR_LIGHT = {
+  backgroundColor: '#FFFFFF',
+  colorScheme: 'light',
+  '--c4-bg': '#F7F5F2',
+  '--c4-bg-alt': '#F0EDE8',
+  '--c4-card-bg': '#FFFFFF',
+  '--c4-text': '#1A1A1A',
+  '--c4-text-muted': '#6B6A64',
+  '--c4-text-subtle': '#72706A',
+  '--c4-border': '#DDDBD7',
+  '--c4-border-light': '#ECEAE6',
+  '--c4-accent': '#C23030',
+  '--c4-accent-hover': '#A82828',
+  '--c4-proof-surface': '#FFF8F2',
+  '--c4-proof-border': '#E7D7C9',
+  '--c4-proof-text': '#241B18',
+  '--c4-focus': '#1A1A1A',
+  '--c4-caret': '#C23030',
+};
+
 function QuoteView({ onBack }) {
 
   return (
@@ -242,7 +262,12 @@ function QuoteView({ onBack }) {
       >
         <ArrowLeft size={14} /> Back
       </button>
-      <div className="flex-1 overflow-y-auto" style={{ backgroundColor: '#FFFFFF' }}>
+      {/* /welcome forces the dark palette on the whole document, but this
+          sheet is a light panel. Quotr reads the site tokens, so without
+          these it set dark-mode ink (#ECE7DE) on white and the extras were
+          unreadable. The values are the light theme's own, from globals.css
+          and marks.css. */}
+      <div className="flex-1 overflow-y-auto" style={QUOTR_LIGHT}>
         <Quotr compact heading="Lock in a starting price." />
       </div>
     </div>
@@ -302,12 +327,13 @@ export default function BookingSheet({ open, onClose }) {
   const [view, setView] = useState('choose'); // choose | schedule | call | quote
   const quickBuzz = () => { try { if (navigator.vibrate) navigator.vibrate(12); } catch { /* */ } };
 
-  // Reset to the chooser each time the sheet is opened, and warm the
+  // Reset to the chooser each time the sheet is opened. (It used to warm a
+  // connection to the hosted quotr.us embed too. The embed was retired on
+  // 14 Sep 2026 and its import removed, but the call stayed, so opening the
+  // sheet threw and blanked /welcome until 2 Oct 2026. Quotr is local now
+  // and needs no warming.)
   useEffect(() => {
-    if (open) {
-      setView('choose');
-      preconnectQuotr();
-    }
+    if (open) setView('choose');
   }, [open]);
 
   // Lock body scroll while open.
