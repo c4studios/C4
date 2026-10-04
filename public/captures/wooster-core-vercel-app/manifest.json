@@ -1,0 +1,158 @@
+{
+  "version": 3,
+  "sourceUrl": "https://wooster-henna.vercel.app",
+  "slug": "wooster-core-vercel-app",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 6,
+      "captures": [
+        {
+          "id": "01-lid",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 375248,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-lid.png"
+        },
+        {
+          "id": "02-in-the-box",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 846019,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-in-the-box.png"
+        },
+        {
+          "id": "03-part-lit",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 707930,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-part-lit.png"
+        },
+        {
+          "id": "04-specs",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 405328,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-specs.png"
+        },
+        {
+          "id": "05-ready",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 461678,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-ready.png"
+        },
+        {
+          "id": "06-cart",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 256452,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-cart.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 6,
+      "captures": [
+        {
+          "id": "01-lid",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 446464,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-lid.png"
+        },
+        {
+          "id": "02-in-the-box",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 1070217,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-in-the-box.png"
+        },
+        {
+          "id": "03-part-lit",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 929979,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-part-lit.png"
+        },
+        {
+          "id": "04-specs",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 321642,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-specs.png"
+        },
+        {
+          "id": "05-ready",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 560179,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/05-ready.png"
+        },
+        {
+          "id": "06-cart",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 64642,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-cart.png"
+        }
+      ]
+    }
+  }
+}

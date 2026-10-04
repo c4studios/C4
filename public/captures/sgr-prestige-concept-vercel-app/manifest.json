@@ -9,11 +9,11 @@
         "width": 1440,
         "height": 900
       },
-      "captureCount": 7,
+      "captureCount": 12,
       "captures": [
         {
           "id": "01-hero",
-          "caption": "Opening a scroll-scrubbed night sequence: the trailer, the doors, the car coming down the ramp",
+          "caption": "Opening. A scroll-scrubbed night sequence: the trailer, the doors, the car coming down the ramp",
           "route": "/",
           "bytes": 645581,
           "dimensions": {
@@ -23,21 +23,21 @@
           "filePath": "desktop/01-hero.png"
         },
         {
-          "id": "02-how-it-works",
-          "caption": "How it works, written as the steps a customer actually goes through",
+          "id": "02-what-we-carry",
+          "caption": "What goes in the trailer, set out like a consignment docket: six kinds of car and the one thing to tell SGR about each",
           "route": "/",
-          "bytes": 148986,
+          "bytes": 149632,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
-          "filePath": "desktop/02-how-it-works.png"
+          "filePath": "desktop/02-what-we-carry.png"
         },
         {
           "id": "03-condition",
-          "caption": "The condition report, the document that settles arguments, shown rather than described",
+          "caption": "The condition report. Ring damage on the car the way a driver does at pickup, or tick it off the list",
           "route": "/",
-          "bytes": 216430,
+          "bytes": 255112,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -45,48 +45,103 @@
           "filePath": "desktop/03-condition.png"
         },
         {
-          "id": "04-insurance",
-          "caption": "Insurance stated as facts, with visible ruled blanks where the owner still has to supply one",
+          "id": "04-carbon-copy",
+          "caption": "Lift the top sheet and the customer copy underneath carries every mark in carbon",
           "route": "/",
-          "bytes": 97256,
+          "bytes": 262886,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
-          "filePath": "desktop/04-insurance.png"
+          "filePath": "desktop/04-carbon-copy.png"
         },
         {
-          "id": "05-gallery",
-          "caption": "Gallery, every photograph the owner’s own, re-encoded rather than replaced with stock",
+          "id": "05-insurance",
+          "caption": "“Fully insured” is not a number. Six transporters’ insurance claims quoted word for word, with the cover amount left blank where none is published",
           "route": "/",
-          "bytes": 809331,
+          "bytes": 98362,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
-          "filePath": "desktop/05-gallery.png"
+          "filePath": "desktop/05-insurance.png"
         },
         {
-          "id": "06-quote",
-          "caption": "Quote, protected by a honeypot and a time-to-submit check instead of the 804 KB of reCAPTCHA the current site ships",
+          "id": "06-custody-log",
+          "caption": "The custody log. Six stages between the two doors, in order, and what you’re holding at the end of each",
           "route": "/",
-          "bytes": 63924,
+          "bytes": 97509,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
-          "filePath": "desktop/06-quote.png"
+          "filePath": "desktop/06-custody-log.png"
         },
         {
-          "id": "07-transport",
+          "id": "07-sign-off",
+          "caption": "Delivery and sign-off. The delivery sheet is laid over your pickup copy, carrying the marks you rang further up the page",
+          "route": "/",
+          "bytes": 158326,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/07-sign-off.png"
+        },
+        {
+          "id": "08-trailer",
+          "caption": "The trailer. The same rig and the same driver from one driveway to the other",
+          "route": "/",
+          "bytes": 863344,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/08-trailer.png"
+        },
+        {
+          "id": "09-who-we-are",
+          "caption": "Who you’re dealing with. SGR’s own claims set large, each pointing to where the page backs it up",
+          "route": "/",
+          "bytes": 95012,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/09-who-we-are.png"
+        },
+        {
+          "id": "10-gallery",
+          "caption": "The work. Every photograph is SGR’s own, taken on the job",
+          "route": "/",
+          "bytes": 810839,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/10-gallery.png"
+        },
+        {
+          "id": "11-quote",
+          "caption": "Quote, set as a consignment note: the two ends of the trip and the car. Everything else is a phone call",
+          "route": "/",
+          "bytes": 63671,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/11-quote.png"
+        },
+        {
+          "id": "12-transport",
           "caption": "Enclosed car transport, one of six service pages, each written rather than templated",
           "route": "/transport/enclosed-car-transport",
-          "bytes": 274283,
+          "bytes": 270902,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
-          "filePath": "desktop/07-transport.png"
+          "filePath": "desktop/12-transport.png"
         }
       ]
     },
@@ -95,11 +150,11 @@
         "width": 430,
         "height": 932
       },
-      "captureCount": 7,
+      "captureCount": 12,
       "captures": [
         {
           "id": "01-hero",
-          "caption": "Opening a scroll-scrubbed night sequence: the trailer, the doors, the car coming down the ramp",
+          "caption": "Opening. A scroll-scrubbed night sequence: the trailer, the doors, the car coming down the ramp",
           "route": "/",
           "bytes": 607405,
           "dimensions": {
@@ -109,21 +164,21 @@
           "filePath": "mobile/01-hero.png"
         },
         {
-          "id": "02-how-it-works",
-          "caption": "How it works, written as the steps a customer actually goes through",
+          "id": "02-what-we-carry",
+          "caption": "What goes in the trailer, set out like a consignment docket: six kinds of car and the one thing to tell SGR about each",
           "route": "/",
-          "bytes": 167287,
+          "bytes": 163684,
           "dimensions": {
             "width": 860,
             "height": 1864
           },
-          "filePath": "mobile/02-how-it-works.png"
+          "filePath": "mobile/02-what-we-carry.png"
         },
         {
           "id": "03-condition",
-          "caption": "The condition report, the document that settles arguments, shown rather than described",
+          "caption": "The condition report. Ring damage on the car the way a driver does at pickup, or tick it off the list",
           "route": "/",
-          "bytes": 480575,
+          "bytes": 542780,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -131,40 +186,95 @@
           "filePath": "mobile/03-condition.png"
         },
         {
-          "id": "04-insurance",
-          "caption": "Insurance stated as facts, with visible ruled blanks where the owner still has to supply one",
+          "id": "04-carbon-copy",
+          "caption": "Lift the top sheet and the customer copy underneath carries every mark in carbon",
           "route": "/",
-          "bytes": 150332,
+          "bytes": 341051,
           "dimensions": {
             "width": 860,
             "height": 1864
           },
-          "filePath": "mobile/04-insurance.png"
+          "filePath": "mobile/04-carbon-copy.png"
         },
         {
-          "id": "05-gallery",
-          "caption": "Gallery, every photograph the owner’s own, re-encoded rather than replaced with stock",
+          "id": "05-insurance",
+          "caption": "“Fully insured” is not a number. Six transporters’ insurance claims quoted word for word, with the cover amount left blank where none is published",
           "route": "/",
-          "bytes": 1009755,
+          "bytes": 145205,
           "dimensions": {
             "width": 860,
             "height": 1864
           },
-          "filePath": "mobile/05-gallery.png"
+          "filePath": "mobile/05-insurance.png"
         },
         {
-          "id": "06-quote",
-          "caption": "Quote, protected by a honeypot and a time-to-submit check instead of the 804 KB of reCAPTCHA the current site ships",
+          "id": "06-custody-log",
+          "caption": "The custody log. Six stages between the two doors, in order, and what you’re holding at the end of each",
           "route": "/",
-          "bytes": 103378,
+          "bytes": 160514,
           "dimensions": {
             "width": 860,
             "height": 1864
           },
-          "filePath": "mobile/06-quote.png"
+          "filePath": "mobile/06-custody-log.png"
         },
         {
-          "id": "07-transport",
+          "id": "07-sign-off",
+          "caption": "Delivery and sign-off. The delivery sheet is laid over your pickup copy, carrying the marks you rang further up the page",
+          "route": "/",
+          "bytes": 330450,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/07-sign-off.png"
+        },
+        {
+          "id": "08-trailer",
+          "caption": "The trailer. The same rig and the same driver from one driveway to the other",
+          "route": "/",
+          "bytes": 930977,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/08-trailer.png"
+        },
+        {
+          "id": "09-who-we-are",
+          "caption": "Who you’re dealing with. SGR’s own claims set large, each pointing to where the page backs it up",
+          "route": "/",
+          "bytes": 159067,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/09-who-we-are.png"
+        },
+        {
+          "id": "10-gallery",
+          "caption": "The work. Every photograph is SGR’s own, taken on the job",
+          "route": "/",
+          "bytes": 1026498,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/10-gallery.png"
+        },
+        {
+          "id": "11-quote",
+          "caption": "Quote, set as a consignment note: the two ends of the trip and the car. Everything else is a phone call",
+          "route": "/",
+          "bytes": 97379,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/11-quote.png"
+        },
+        {
+          "id": "12-transport",
           "caption": "Enclosed car transport, one of six service pages, each written rather than templated",
           "route": "/transport/enclosed-car-transport",
           "bytes": 585968,
@@ -172,7 +282,7 @@
             "width": 860,
             "height": 1864
           },
-          "filePath": "mobile/07-transport.png"
+          "filePath": "mobile/12-transport.png"
         }
       ]
     }

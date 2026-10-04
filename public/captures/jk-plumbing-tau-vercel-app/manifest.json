@@ -1,0 +1,180 @@
+{
+  "version": 3,
+  "sourceUrl": "https://jk-plumbing-tau.vercel.app",
+  "slug": "jk-plumbing-tau-vercel-app",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 7,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 595049,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-hero.png"
+        },
+        {
+          "id": "02-problems",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 620933,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-problems.png"
+        },
+        {
+          "id": "03-problems-tab",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 635895,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-problems-tab.png"
+        },
+        {
+          "id": "04-services",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 806083,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-services.png"
+        },
+        {
+          "id": "05-work",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 1291522,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-work.png"
+        },
+        {
+          "id": "06-areas",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 609964,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-areas.png"
+        },
+        {
+          "id": "07-contact",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 579804,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/07-contact.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 7,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 1083159,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-hero.png"
+        },
+        {
+          "id": "02-problems",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 1158344,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-problems.png"
+        },
+        {
+          "id": "03-problems-tab",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 1123186,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-problems-tab.png"
+        },
+        {
+          "id": "04-services",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 1437389,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-services.png"
+        },
+        {
+          "id": "05-work",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 1641337,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/05-work.png"
+        },
+        {
+          "id": "06-areas",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 941990,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-areas.png"
+        },
+        {
+          "id": "07-contact",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 917369,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/07-contact.png"
+        }
+      ]
+    }
+  }
+}
