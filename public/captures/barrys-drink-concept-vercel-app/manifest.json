@@ -1,0 +1,334 @@
+{
+  "version": 3,
+  "sourceUrl": "https://barrys-drink-concept.vercel.app",
+  "slug": "barrys-drink-concept-vercel-app",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 14,
+      "captures": [
+        {
+          "id": "01-machine",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 268517,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-machine.png"
+        },
+        {
+          "id": "02-drop",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 288086,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-drop.png"
+        },
+        {
+          "id": "03-in-hand",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 197379,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-in-hand.png"
+        },
+        {
+          "id": "04-founders",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 711687,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-founders.png"
+        },
+        {
+          "id": "05-board",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 171133,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-board.png"
+        },
+        {
+          "id": "06-shop",
+          "caption": "TBD",
+          "route": "/shop",
+          "bytes": 260771,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-shop.png"
+        },
+        {
+          "id": "07-mixed-ten",
+          "caption": "TBD",
+          "route": "/shop",
+          "bytes": 400468,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/07-mixed-ten.png"
+        },
+        {
+          "id": "08-merch",
+          "caption": "TBD",
+          "route": "/shop",
+          "bytes": 366811,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/08-merch.png"
+        },
+        {
+          "id": "09-footy-loyals",
+          "caption": "TBD",
+          "route": "/promos",
+          "bytes": 318247,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/09-footy-loyals.png"
+        },
+        {
+          "id": "10-points",
+          "caption": "TBD",
+          "route": "/promos",
+          "bytes": 457991,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/10-points.png"
+        },
+        {
+          "id": "11-who-is-barry",
+          "caption": "TBD",
+          "route": "/who-is-barry",
+          "bytes": 728864,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/11-who-is-barry.png"
+        },
+        {
+          "id": "12-stockists",
+          "caption": "TBD",
+          "route": "/stockists",
+          "bytes": 130879,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/12-stockists.png"
+        },
+        {
+          "id": "13-contact",
+          "caption": "TBD",
+          "route": "/contact",
+          "bytes": 124260,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/13-contact.png"
+        },
+        {
+          "id": "14-age-gate",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 176880,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/14-age-gate.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 14,
+      "captures": [
+        {
+          "id": "01-machine",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 362884,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-machine.png"
+        },
+        {
+          "id": "02-drop",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 389184,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-drop.png"
+        },
+        {
+          "id": "03-in-hand",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 309111,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-in-hand.png"
+        },
+        {
+          "id": "04-founders",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 693398,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-founders.png"
+        },
+        {
+          "id": "05-board",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 191978,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/05-board.png"
+        },
+        {
+          "id": "06-shop",
+          "caption": "TBD",
+          "route": "/shop",
+          "bytes": 279673,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-shop.png"
+        },
+        {
+          "id": "07-mixed-ten",
+          "caption": "TBD",
+          "route": "/shop",
+          "bytes": 329625,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/07-mixed-ten.png"
+        },
+        {
+          "id": "08-merch",
+          "caption": "TBD",
+          "route": "/shop",
+          "bytes": 371098,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/08-merch.png"
+        },
+        {
+          "id": "09-footy-loyals",
+          "caption": "TBD",
+          "route": "/promos",
+          "bytes": 234029,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/09-footy-loyals.png"
+        },
+        {
+          "id": "10-points",
+          "caption": "TBD",
+          "route": "/promos",
+          "bytes": 160837,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/10-points.png"
+        },
+        {
+          "id": "11-who-is-barry",
+          "caption": "TBD",
+          "route": "/who-is-barry",
+          "bytes": 619197,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/11-who-is-barry.png"
+        },
+        {
+          "id": "12-stockists",
+          "caption": "TBD",
+          "route": "/stockists",
+          "bytes": 177357,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/12-stockists.png"
+        },
+        {
+          "id": "13-contact",
+          "caption": "TBD",
+          "route": "/contact",
+          "bytes": 182311,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/13-contact.png"
+        },
+        {
+          "id": "14-age-gate",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 189044,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/14-age-gate.png"
+        }
+      ]
+    }
+  }
+}
