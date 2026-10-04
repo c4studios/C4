@@ -13,9 +13,9 @@
       "captures": [
         {
           "id": "01-lid",
-          "caption": "TBD",
+          "caption": "The lid. A live WebGL print stands in for the box’s line drawing, with the price and the kit listed the way the real lid lists them",
           "route": "/",
-          "bytes": 375248,
+          "bytes": 287098,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -24,9 +24,9 @@
         },
         {
           "id": "02-in-the-box",
-          "caption": "TBD",
+          "caption": "In the box. The real kraft tray, photographed from above, beside a packing list priced in Australian dollars",
           "route": "/",
-          "bytes": 846019,
+          "bytes": 656537,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -35,9 +35,9 @@
         },
         {
           "id": "03-part-lit",
-          "caption": "TBD",
+          "caption": "Point at a line in the packing list and that part lights up in the tray, with its part number",
           "route": "/",
-          "bytes": 707930,
+          "bytes": 524400,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -46,9 +46,9 @@
         },
         {
           "id": "04-specs",
-          "caption": "TBD",
+          "caption": "Specs, set beside real close-ups of the print: the 0.2 mm layer lines and the stainless washers",
           "route": "/",
-          "bytes": 405328,
+          "bytes": 372345,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -57,9 +57,9 @@
         },
         {
           "id": "05-ready",
-          "caption": "TBD",
+          "caption": "Ready to ship. The real boxes, and the two kits to add from there",
           "route": "/",
-          "bytes": 461678,
+          "bytes": 433623,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -68,9 +68,9 @@
         },
         {
           "id": "06-cart",
-          "caption": "TBD",
+          "caption": "Add a kit and the cart slides in as a packing slip",
           "route": "/",
-          "bytes": 256452,
+          "bytes": 264747,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -88,9 +88,9 @@
       "captures": [
         {
           "id": "01-lid",
-          "caption": "TBD",
+          "caption": "The lid. A live WebGL print stands in for the box’s line drawing, with the price and the kit listed the way the real lid lists them",
           "route": "/",
-          "bytes": 446464,
+          "bytes": 333818,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -99,9 +99,9 @@
         },
         {
           "id": "02-in-the-box",
-          "caption": "TBD",
+          "caption": "In the box. The real kraft tray, photographed from above, beside a packing list priced in Australian dollars",
           "route": "/",
-          "bytes": 1070217,
+          "bytes": 749093,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -110,9 +110,9 @@
         },
         {
           "id": "03-part-lit",
-          "caption": "TBD",
+          "caption": "Point at a line in the packing list and that part lights up in the tray, with its part number",
           "route": "/",
-          "bytes": 929979,
+          "bytes": 608788,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -121,9 +121,9 @@
         },
         {
           "id": "04-specs",
-          "caption": "TBD",
+          "caption": "Specs, set beside real close-ups of the print: the 0.2 mm layer lines and the stainless washers",
           "route": "/",
-          "bytes": 321642,
+          "bytes": 265428,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -132,9 +132,9 @@
         },
         {
           "id": "05-ready",
-          "caption": "TBD",
+          "caption": "Ready to ship. The real boxes, and the two kits to add from there",
           "route": "/",
-          "bytes": 560179,
+          "bytes": 527291,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -143,9 +143,9 @@
         },
         {
           "id": "06-cart",
-          "caption": "TBD",
+          "caption": "Add a kit and the cart slides in as a packing slip",
           "route": "/",
-          "bytes": 64642,
+          "bytes": 44529,
           "dimensions": {
             "width": 860,
             "height": 1864

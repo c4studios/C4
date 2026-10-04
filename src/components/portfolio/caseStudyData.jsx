@@ -1604,33 +1604,33 @@ export const CASE_STUDIES = {
     brandColor: '#FF6B00',
     thumbnail: '/captures/wooster-core-vercel-app/desktop/01-lid.png',
 
-    overview: 'Wooster Core is a self-initiated concept storefront for Arty Design’s 3D-printed kitesurf handle, built to show what C4 ships before a brief exists. The October 2026 redesign is built around the product’s own box. The hero is the lid, laid out like the real one, with a live WebGL print standing in for its line drawing: the handle builds layer by layer with an orange trace at the nozzle, down to the bolts and washers in the kit. Below it the kraft foam tray, from a real top-down photo, is the shop: point at a line in the packing list and its part lights up in the tray. A spec panel uses real close-ups of the print, the close shows the real boxes, and the cart is a packing slip. Every colour is sampled from the product photos, and the concept is hidden from search.',
+    overview: 'Wooster Core is a self-initiated concept storefront for Arty Design’s 3D-printed kitesurf handle, built to show what C4 ships before a brief exists. The October 2026 redesign is built around the product’s own box. The hero is the lid, laid out like the real one, with a live WebGL print standing in for its line drawing: the handle builds layer by layer with an orange trace at the nozzle, down to the bolts and washers in the kit. Below it the kraft foam tray, from a real top-down photo, is the shop: point at a line in the packing list and its part lights up in the tray. A spec panel uses real close-ups of the print, and the close shows the real boxes. Every colour is sampled from the product photos, and the concept is hidden from search.',
 
     screenshots: [
-      { url: '/captures/wooster-core-vercel-app/desktop/01-lid.png', caption: 'The lid. A live WebGL print stands in for the box’s line drawing, with the price and the kit listed the way the real lid lists them' },
+      { url: '/captures/wooster-core-vercel-app/desktop/01-lid.png', caption: 'The lid. A live WebGL print stands in for the box’s line drawing, with the price and contents bottom-left as on the real lid, and the Woo Mount add-on beside the handle kit' },
       { url: '/captures/wooster-core-vercel-app/desktop/02-in-the-box.png', caption: 'In the box. The real kraft tray, photographed from above, beside a packing list priced in Australian dollars' },
       { url: '/captures/wooster-core-vercel-app/desktop/03-part-lit.png', caption: 'Point at a line in the packing list and that part lights up in the tray, with its part number' },
       { url: '/captures/wooster-core-vercel-app/desktop/04-specs.png', caption: 'Specs, set beside real close-ups of the print: the 0.2 mm layer lines and the stainless washers' },
       { url: '/captures/wooster-core-vercel-app/desktop/05-ready.png', caption: 'Ready to ship. The real boxes, and the two kits to add from there' },
-      { url: '/captures/wooster-core-vercel-app/desktop/06-cart.png', caption: 'Add a kit and the cart slides in as a packing slip' },
+      { url: '/captures/wooster-core-vercel-app/desktop/06-cart.png', caption: 'Add a kit and the cart slides in beside the lid' },
     ],
 
     desktopScreenshots: [
-      { url: '/captures/wooster-core-vercel-app/desktop/01-lid.png', caption: 'The lid. A live WebGL print stands in for the box’s line drawing, with the price and the kit listed the way the real lid lists them' },
+      { url: '/captures/wooster-core-vercel-app/desktop/01-lid.png', caption: 'The lid. A live WebGL print stands in for the box’s line drawing, with the price and contents bottom-left as on the real lid, and the Woo Mount add-on beside the handle kit' },
       { url: '/captures/wooster-core-vercel-app/desktop/02-in-the-box.png', caption: 'In the box. The real kraft tray, photographed from above, beside a packing list priced in Australian dollars' },
       { url: '/captures/wooster-core-vercel-app/desktop/03-part-lit.png', caption: 'Point at a line in the packing list and that part lights up in the tray, with its part number' },
       { url: '/captures/wooster-core-vercel-app/desktop/04-specs.png', caption: 'Specs, set beside real close-ups of the print: the 0.2 mm layer lines and the stainless washers' },
       { url: '/captures/wooster-core-vercel-app/desktop/05-ready.png', caption: 'Ready to ship. The real boxes, and the two kits to add from there' },
-      { url: '/captures/wooster-core-vercel-app/desktop/06-cart.png', caption: 'Add a kit and the cart slides in as a packing slip' },
+      { url: '/captures/wooster-core-vercel-app/desktop/06-cart.png', caption: 'Add a kit and the cart slides in beside the lid' },
     ],
 
     mobileScreenshots: [
-      { url: '/captures/wooster-core-vercel-app/mobile/01-lid.png', caption: 'The lid. A live WebGL print stands in for the box’s line drawing, with the price and the kit listed the way the real lid lists them' },
+      { url: '/captures/wooster-core-vercel-app/mobile/01-lid.png', caption: 'The lid. A live WebGL print stands in for the box’s line drawing, with the price and contents bottom-left as on the real lid, and the Woo Mount add-on beside the handle kit' },
       { url: '/captures/wooster-core-vercel-app/mobile/02-in-the-box.png', caption: 'In the box. The real kraft tray, photographed from above, beside a packing list priced in Australian dollars' },
       { url: '/captures/wooster-core-vercel-app/mobile/03-part-lit.png', caption: 'Point at a line in the packing list and that part lights up in the tray, with its part number' },
       { url: '/captures/wooster-core-vercel-app/mobile/04-specs.png', caption: 'Specs, set beside real close-ups of the print: the 0.2 mm layer lines and the stainless washers' },
       { url: '/captures/wooster-core-vercel-app/mobile/05-ready.png', caption: 'Ready to ship. The real boxes, and the two kits to add from there' },
-      { url: '/captures/wooster-core-vercel-app/mobile/06-cart.png', caption: 'Add a kit and the cart slides in as a packing slip' },
+      { url: '/captures/wooster-core-vercel-app/mobile/06-cart.png', caption: 'Add a kit and the cart slides in beside the lid' },
     ],
 
     delivered: [
@@ -1638,12 +1638,12 @@ export const CASE_STUDIES = {
       'The live WebGL print as the hero, with an orange trace and nozzle on the layer being printed, the kit’s bolts and washers, and a poster frame for first paint',
       'A shop built from the real tray photo, with a mask per part so each one can light on its own',
       'A spec panel using real close-ups of the printed part',
-      'A cart drawer and cart page set as a packing slip',
+      'A cart drawer and cart page',
       'Noindex across the site; the unsourced testimonials, the newsletter form that signed nobody up and the dead links removed',
     ],
 
     features: [
-      'Box-lid hero laid out like the real lid: the name over a rule, PERFORMANCE BIG AIR, the price and the kit, ENGINEERED BY ARTY DESIGN',
+      'Box-lid hero laid out like the real lid and lettered in the silver ink measured off it: the name over a rule, PERFORMANCE BIG AIR, the price and the kit, ENGINEERED BY ARTY DESIGN',
       'Real-time FDM print in three.js: the part builds layer by layer, with an orange hot trace and nozzle at the print line',
       'First paint shows a pre-rendered poster of the print, and the 3D takes over from the same frame',
       'Packing list linked to the tray photo: point at a line and its part lights up; each part has its own link',
@@ -1657,7 +1657,7 @@ export const CASE_STUDIES = {
       'TypeScript',
       'Tailwind CSS v4',
       'three.js 0.183 with @react-three/fiber 9.5 and @react-three/drei 10.7',
-      'Archivo and Martian Mono via next/font',
+      'Lexend for the box lettering, Archivo and Martian Mono, via next/font',
       'Framer Motion in the cart drawer; GSAP only in the C4 footer credit',
       'Stripe server SDK and Stripe.js',
       'Vercel hosting',
