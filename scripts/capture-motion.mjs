@@ -38,9 +38,9 @@
  *   like a wheel, so Chrome's scroll anchoring can absorb a slider changing height above the fold.
  *   A hero video that plays once and has already ended is rewound for the clip (DS Racing).
  *
- * Not in SITES on purpose: jurassic-pt (until its redesign), barrys-drink (redesign shipping; add it
- * once live), people-power (hidden), rocksstream (behind a login). sgr-prestige, wooster-core and
- * jk-plumbing-solutions were added 4 Oct 2026, after their redesigns shipped.
+ * Not in SITES on purpose: jurassic-pt (until its redesign), people-power (hidden), rocksstream
+ * (behind a login). sgr-prestige, wooster-core, jk-plumbing-solutions and barrys-drink were added
+ * 4 Oct 2026, after their redesigns shipped.
  */
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
@@ -71,6 +71,8 @@ const MOBILE_UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (
  *   hide                    extra selectors to hide in every capture
  *   keepInClip              selectors the floating-widget sweep must leave alone in the clip
  *   css                     extra CSS for captures only
+ *   storage                 localStorage entries to seed before the page loads, for the site's own
+ *                           saved answers (Barry's 18+ question), so captures show the site behind it
  *   stripCss                extra CSS for the scroll strips only, e.g. to fold a scroll-scrubbed
  *                           runway down to one screen so the strip reaches the page under it while
  *                           the clip still plays the runway
@@ -157,6 +159,12 @@ const SITES = {
     settle: 6000,
   },
   'jk-plumbing-solutions': { url: 'https://jk-plumbing-tau.vercel.app/', folder: 'jk-plumbing-tau-vercel-app' },
+  'barrys-drink': {
+    url: 'https://barrys-drink-concept.vercel.app/',
+    folder: 'barrys-drink-concept-vercel-app',
+    /* The site asks for 18+ before anything; answer with its own key so the captures show the machine. */
+    storage: { 'barry-concept-age': 'ok' },
+  },
 };
 
 /* ---------- arguments ---------- */
@@ -182,7 +190,7 @@ const CAPTURE_CSS = `
   html[data-cm-hide-top] [data-cm-top] { visibility: hidden !important; opacity: 0 !important; }
 `;
 
-async function newPage(browser, device, { clock = false } = {}) {
+async function newPage(browser, device, { clock = false, storage = null } = {}) {
   const ctx = await browser.newContext({
     viewport: { width: device.width, height: device.height },
     deviceScaleFactor: device.scale,
@@ -199,6 +207,7 @@ async function newPage(browser, device, { clock = false } = {}) {
     const focus = HTMLElement.prototype.focus;
     HTMLElement.prototype.focus = function f(opts) { return focus.call(this, { ...(opts || {}), preventScroll: true }); };
   });
+  if (storage) await ctx.addInitScript((kv) => { try { for (const [k, v] of Object.entries(kv)) localStorage.setItem(k, v); } catch (_) { /* storage blocked */ } }, storage);
   if (clock) await ctx.clock.install();
   const page = await ctx.newPage();
   return { ctx, page };
@@ -368,7 +377,7 @@ async function fadedBelowFold(page, limit) {
 
 /* ---------- strips ---------- */
 async function captureStrip(browser, slug, site, device, outFile) {
-  const { ctx, page } = await newPage(browser, device, { clock: !!site.freeze });
+  const { ctx, page } = await newPage(browser, device, { clock: !!site.freeze, storage: site.storage });
   try {
     await load(page, site, slug);
     if (site.stripCss) await page.addStyleTag({ content: site.stripCss });
@@ -472,7 +481,7 @@ async function stitch(page, slug, device, H, h, freeze = false) {
 const easeInOutSine = (t) => (1 - Math.cos(Math.PI * t)) / 2;
 
 async function captureClip(browser, slug, site, dir, tmp) {
-  const { ctx, page } = await newPage(browser, CLIP, { clock: true });
+  const { ctx, page } = await newPage(browser, CLIP, { clock: true, storage: site.storage });
   const frames = path.join(tmp, 'frames');
   rmSync(frames, { recursive: true, force: true });
   mkdirSync(frames, { recursive: true });

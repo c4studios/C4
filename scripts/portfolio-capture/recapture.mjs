@@ -123,6 +123,9 @@ async function runDevice(browser, kind, vp) {
     hasTouch: kind === 'mobile',
   });
   await preConsent(context);
+  /* cfg.storage seeds the site's own saved answers before its scripts run (e.g. an age
+     gate). A target can opt out for one load by setting sessionStorage 'cm-no-seed'. */
+  if (cfg.storage) await context.addInitScript((kv) => { try { if (sessionStorage.getItem('cm-no-seed')) return; for (const [k, v] of Object.entries(kv)) localStorage.setItem(k, v); } catch (_) {} }, cfg.storage);
   const page = await context.newPage();
   const deviceDir = path.join(OUT_ROOT, kind);
   await ensureDir(deviceDir);
