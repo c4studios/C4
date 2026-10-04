@@ -4,6 +4,13 @@
  * `anchor` scrolls the first element containing that text to near the top.
  */
 
+const ring = async (page) => {
+  for (const zone of ['Bonnet and front bar', 'Off-side front wheel', "Driver's door"]) {
+    const btn = page.locator('#condition-report button', { hasText: zone }).first();
+    if ((await btn.textContent()).includes('Not marked')) { await btn.click(); await page.waitForTimeout(250); }
+  }
+};
+
 export const CONFIGS = {
   // ── Transform Fremantle ────────────────────────────────────────────
   'transformfreo-com': {
@@ -71,16 +78,74 @@ export const CONFIGS = {
     ],
   },
 
+  // Re-shot 4 Oct 2026 after the refinement shipped (c44a093): the condition
+  // report became a carbon pad and the custody log one column. The pad shots
+  // ring three zones with `ring` (only if unmarked: shots on one route share a
+  // page); the sign-off shot rings them too, so stage 6 has marks to lay over.
   'sgr-prestige-concept-vercel-app': {
     site: 'https://sgr-prestige-concept.vercel.app',
     targets: [
-      { id: '01-hero', route: '/', caption: 'Opening a scroll-scrubbed night sequence: the trailer, the doors, the car coming down the ramp' },
-      { id: '02-how-it-works', route: '/', selector: '#how-it-works', caption: 'How it works, written as the steps a customer actually goes through' },
-      { id: '03-condition', route: '/', selector: '#condition-report', caption: 'The condition report, the document that settles arguments, shown rather than described' },
-      { id: '04-insurance', route: '/', selector: '#insurance', caption: 'Insurance stated as facts, with visible ruled blanks where the owner still has to supply one' },
-      { id: '05-gallery', route: '/', selector: '#gallery', caption: 'Gallery, every photograph the owner’s own, re-encoded rather than replaced with stock' },
-      { id: '06-quote', route: '/', selector: '#quote', caption: 'Quote, protected by a honeypot and a time-to-submit check instead of the 804 KB of reCAPTCHA the current site ships' },
-      { id: '07-transport', route: '/transport/enclosed-car-transport', caption: 'Enclosed car transport, one of six service pages, each written rather than templated' },
+      { id: '01-hero', route: '/', caption: 'Opening. A scroll-scrubbed night sequence: the trailer, the doors, the car coming down the ramp' },
+      { id: '02-what-we-carry', route: '/', selector: '#what-we-carry', caption: 'What goes in the trailer, set out like a consignment docket: six kinds of car and the one thing to tell SGR about each' },
+      { id: '03-condition', route: '/', selector: '#condition-report', action: ring, caption: 'The condition report. Ring damage on the car the way a driver does at pickup, or tick it off the list' },
+      { id: '04-carbon-copy', route: '/', selector: '#condition-report', caption: 'Lift the top sheet and the customer copy underneath carries every mark in carbon', action: async (page) => {
+        await ring(page);
+        await page.locator('#condition-report button', { hasText: 'Lift the top sheet' }).first().click();
+        await page.waitForTimeout(1600);
+      } },
+      { id: '05-insurance', route: '/', selector: '#insurance', caption: '“Fully insured” is not a number. Six transporters’ insurance claims quoted word for word, with the cover amount left blank where none is published' },
+      { id: '06-custody-log', route: '/', selector: '#how-it-works', caption: 'The custody log. Six stages between the two doors, in order, and what you’re holding at the end of each' },
+      { id: '07-sign-off', route: '/', selector: '#how-it-works', caption: 'Delivery and sign-off. The delivery sheet is laid over your pickup copy, carrying the marks you rang further up the page', action: async (page) => {
+        await ring(page);
+        const bottom = await page.evaluate(() => { const s = document.querySelector('#how-it-works').getBoundingClientRect(); return s.bottom + scrollY; });
+        for (let y = bottom - 2400; y < bottom; y += 300) { await page.evaluate((yy) => scrollTo(0, yy), y); await page.waitForTimeout(120); }
+        await page.evaluate((yy) => scrollTo(0, yy - innerHeight + 120), bottom);
+        await page.waitForTimeout(1500);
+      } },
+      { id: '08-trailer', route: '/', selector: '#trailer', caption: 'The trailer. The same rig and the same driver from one driveway to the other' },
+      { id: '09-who-we-are', route: '/', selector: '#who-we-are', caption: 'Who you’re dealing with. SGR’s own claims set large, each pointing to where the page backs it up' },
+      { id: '10-gallery', route: '/', selector: '#gallery', caption: 'The work. Every photograph is SGR’s own, taken on the job' },
+      { id: '11-quote', route: '/', selector: '#quote', caption: 'Quote, set as a consignment note: the two ends of the trip and the car. Everything else is a phone call' },
+      { id: '12-transport', route: '/transport/enclosed-car-transport', caption: 'Enclosed car transport, one of six service pages, each written rather than templated' },
+    ],
+  },
+
+  // JK Plumbing concept, re-shot 4 Oct 2026 after the letterpress redesign
+  // shipped (50749bd). The second board shot opens another tab of its own.
+  'jk-plumbing-tau-vercel-app': {
+    site: 'https://jk-plumbing-tau.vercel.app',
+    targets: [
+      { id: '01-hero', route: '/', caption: 'The problems a customer arrives with, set in wood type to fill the page, and the phone number on a full-width red band' },
+      { id: '02-problems', route: '/', selector: '#problems', caption: 'What’s playing up? Pick the problem and the board says what to do right now and what the plumber will do, citing Sydney Water where the fault is theirs' },
+      { id: '03-problems-tab', route: '/', selector: '#problems', caption: 'Another tab, another problem: hot water gone cold, what to check first and what happens next', action: async (page) => {
+        const tabs = page.locator('#problems [role="tab"]');
+        if (await tabs.count() > 2) { await tabs.nth(2).click(); await page.waitForTimeout(500); }
+      } },
+      { id: '04-services', route: '/', selector: '#services', caption: 'What we do, set in wood type beside the business’s own photos, including camera footage from inside a line' },
+      { id: '05-work', route: '/', selector: '#work', caption: 'Our work. The business’s own photos of the ute, the gear and finished jobs, printed in one ink until you hover' },
+      { id: '06-areas', route: '/', selector: '#areas', caption: 'Where we work, billed like a poster: Campbelltown first, then the towns around it' },
+      { id: '07-contact', route: '/', selector: '#contact', caption: 'Urgent jobs get the phone number. Planned jobs go on a yellow letterbox handbill with tear-off tabs' },
+    ],
+  },
+
+  // Wooster Core concept, re-shot 4 Oct 2026 after "The Box and its Foam"
+  // shipped (1fcf42c). The hero waits for the live print to build a while.
+  'wooster-core-vercel-app': {
+    site: 'https://wooster-henna.vercel.app',
+    targets: [
+      { id: '01-lid', route: '/', settle: 7000, caption: 'The lid. A live WebGL print stands in for the box’s line drawing, with the price and the kit listed the way the real lid lists them' },
+      { id: '02-in-the-box', route: '/', selector: '#kit', caption: 'In the box. The real kraft tray, photographed from above, beside a packing list priced in Australian dollars' },
+      { id: '03-part-lit', route: '/', selector: '#kit', caption: 'Point at a line in the packing list and that part lights up in the tray, with its part number', action: async (page) => {
+        const items = page.locator('#kit li, #kit [role="listitem"], #kit button');
+        if (await items.count() > 1) { await items.nth(1).hover(); await page.waitForTimeout(600); }
+      } },
+      { id: '04-specs', route: '/', selector: '#specs', caption: 'Specs, set beside real close-ups of the print: the 0.2 mm layer lines and the stainless washers' },
+      { id: '05-ready', route: '/', anchor: 'Ready to ship', caption: 'Ready to ship. The real boxes, and the two kits to add from there' },
+      { id: '06-cart', route: '/', caption: 'Add a kit and the cart slides in as a packing slip', action: async (page) => {
+        await page.evaluate(() => scrollTo(0, 0));
+        await page.locator('button', { hasText: 'Add to cart' }).first().click();
+        await page.waitForTimeout(900);
+      } },
     ],
   },
 

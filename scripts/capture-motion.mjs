@@ -38,9 +38,9 @@
  *   like a wheel, so Chrome's scroll anchoring can absorb a slider changing height above the fold.
  *   A hero video that plays once and has already ended is rewound for the clip (DS Racing).
  *
- * Not in SITES on purpose (2 Oct 2026): jurassic-pt (until its redesign), wooster-core, barrys-drink,
- * jk-plumbing-solutions and sgr-prestige (being redesigned), people-power (hidden), rocksstream
- * (behind a login). Add them once they are ready.
+ * Not in SITES on purpose: jurassic-pt (until its redesign), barrys-drink (redesign shipping; add it
+ * once live), people-power (hidden), rocksstream (behind a login). sgr-prestige, wooster-core and
+ * jk-plumbing-solutions were added 4 Oct 2026, after their redesigns shipped.
  */
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
@@ -71,6 +71,9 @@ const MOBILE_UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (
  *   hide                    extra selectors to hide in every capture
  *   keepInClip              selectors the floating-widget sweep must leave alone in the clip
  *   css                     extra CSS for captures only
+ *   stripCss                extra CSS for the scroll strips only, e.g. to fold a scroll-scrubbed
+ *                           runway down to one screen so the strip reaches the page under it while
+ *                           the clip still plays the runway
  *   stretchFixed            selectors of fixed full-screen textures to spread down the whole page
  *                           in 'full' strips (otherwise they stop after the first screen)
  *   freeze                  pause page time before strip screenshots, for idle animations that
@@ -139,6 +142,21 @@ const SITES = {
   },
   'cmc-lawns': { url: 'https://cmc-lawns-concept.vercel.app', folder: 'cmc-lawns-concept-vercel-app' },
   eurochem: { url: 'https://eurochem-concept.vercel.app', folder: 'eurochem-concept-vercel-app' },
+  'sgr-prestige': {
+    url: 'https://sgr-prestige-concept.vercel.app/',
+    folder: 'sgr-prestige-concept-vercel-app',
+    /* The opening is two pinned runways (560svh of scrubbed night footage, then 260svh of type), so a
+       strip would spend six screens on one held frame. Strips fold each to one screen; the clip keeps
+       the runway, so it plays the sequence. */
+    stripCss: 'main > section:nth-of-type(1), main > section:nth-of-type(2) { height: 100svh !important; }',
+  },
+  'wooster-core': {
+    url: 'https://wooster-henna.vercel.app/',
+    folder: 'wooster-core-vercel-app',
+    /* The hero prints the handle live in WebGL; give it time to get going before the clip starts. */
+    settle: 6000,
+  },
+  'jk-plumbing-solutions': { url: 'https://jk-plumbing-tau.vercel.app/', folder: 'jk-plumbing-tau-vercel-app' },
 };
 
 /* ---------- arguments ---------- */
@@ -353,6 +371,7 @@ async function captureStrip(browser, slug, site, device, outFile) {
   const { ctx, page } = await newPage(browser, device, { clock: !!site.freeze });
   try {
     await load(page, site, slug);
+    if (site.stripCss) await page.addStyleTag({ content: site.stripCss });
     await declineCookies(page, slug);
     const limit = device.height * device.viewports;
     await primePage(page, slug, site, limit);
