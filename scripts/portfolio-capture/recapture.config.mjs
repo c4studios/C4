@@ -133,7 +133,7 @@ export const CONFIGS = {
   'wooster-core-vercel-app': {
     site: 'https://wooster-henna.vercel.app',
     targets: [
-      { id: '01-lid', route: '/', settle: 7000, caption: 'The lid. A live WebGL print stands in for the box’s line drawing, with the price and the kit listed the way the real lid lists them' },
+      { id: '01-lid', route: '/', settle: 7000, caption: 'The lid. A live WebGL print stands in for the box’s line drawing, with the price and contents bottom-left as on the real lid, and the Woo Mount add-on beside the handle kit' },
       { id: '02-in-the-box', route: '/', selector: '#kit', caption: 'In the box. The real kraft tray, photographed from above, beside a packing list priced in Australian dollars' },
       { id: '03-part-lit', route: '/', selector: '#kit', caption: 'Point at a line in the packing list and that part lights up in the tray, with its part number', action: async (page) => {
         const items = page.locator('#kit li, #kit [role="listitem"], #kit button');
@@ -141,7 +141,7 @@ export const CONFIGS = {
       } },
       { id: '04-specs', route: '/', selector: '#specs', caption: 'Specs, set beside real close-ups of the print: the 0.2 mm layer lines and the stainless washers' },
       { id: '05-ready', route: '/', anchor: 'Ready to ship', caption: 'Ready to ship. The real boxes, and the two kits to add from there' },
-      { id: '06-cart', route: '/', caption: 'Add a kit and the cart slides in as a packing slip', action: async (page) => {
+      { id: '06-cart', route: '/', caption: 'Add a kit and the cart slides in beside the lid', action: async (page) => {
         await page.evaluate(() => scrollTo(0, 0));
         await page.locator('button', { hasText: 'Add to cart' }).first().click();
         await page.waitForTimeout(900);
