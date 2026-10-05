@@ -34,7 +34,7 @@ export const DERIVE = {
   'people-power': 'peoplepower-app/desktop/01-intro.png',
   quotr: 'quotr-us/desktop/01.png',
   returndesk: 'c4-saas-suite-vercel-app/desktop/01.png',
-  'barrys-drink': 'barrys-drink-concept-vercel-app/desktop/01-machine.png',
+  'barrys-drink': 'barrys-drink-concept-vercel-app/desktop/01-hero.png',
   'wooster-core': 'wooster-core-vercel-app/desktop/01-lid.png',
   'jk-plumbing-solutions': 'jk-plumbing-tau-vercel-app/desktop/01-hero.png',
   iopa: 'iopa-apparel-vercel-app/desktop/01-hero.png',

@@ -12,65 +12,65 @@
       "captureCount": 14,
       "captures": [
         {
-          "id": "01-machine",
+          "id": "01-hero",
           "caption": "TBD",
           "route": "/",
-          "bytes": 268517,
+          "bytes": 1040066,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
-          "filePath": "desktop/01-machine.png"
+          "filePath": "desktop/01-hero.png"
         },
         {
-          "id": "02-drop",
+          "id": "02-range",
           "caption": "TBD",
           "route": "/",
-          "bytes": 288086,
+          "bytes": 243850,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
-          "filePath": "desktop/02-drop.png"
+          "filePath": "desktop/02-range.png"
         },
         {
-          "id": "03-in-hand",
+          "id": "03-flavour",
           "caption": "TBD",
           "route": "/",
-          "bytes": 197379,
+          "bytes": 239520,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
-          "filePath": "desktop/03-in-hand.png"
+          "filePath": "desktop/03-flavour.png"
         },
         {
-          "id": "04-founders",
+          "id": "04-loyals",
           "caption": "TBD",
           "route": "/",
-          "bytes": 711687,
+          "bytes": 732443,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
-          "filePath": "desktop/04-founders.png"
+          "filePath": "desktop/04-loyals.png"
         },
         {
-          "id": "05-board",
+          "id": "05-esky",
           "caption": "TBD",
           "route": "/",
-          "bytes": 171133,
+          "bytes": 155762,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
-          "filePath": "desktop/05-board.png"
+          "filePath": "desktop/05-esky.png"
         },
         {
           "id": "06-shop",
           "caption": "TBD",
           "route": "/shop",
-          "bytes": 260771,
+          "bytes": 400473,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -78,21 +78,21 @@
           "filePath": "desktop/06-shop.png"
         },
         {
-          "id": "07-mixed-ten",
+          "id": "07-mix",
           "caption": "TBD",
           "route": "/shop",
-          "bytes": 400468,
+          "bytes": 553780,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
-          "filePath": "desktop/07-mixed-ten.png"
+          "filePath": "desktop/07-mix.png"
         },
         {
           "id": "08-merch",
           "caption": "TBD",
           "route": "/shop",
-          "bytes": 366811,
+          "bytes": 305407,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -103,7 +103,7 @@
           "id": "09-footy-loyals",
           "caption": "TBD",
           "route": "/promos",
-          "bytes": 318247,
+          "bytes": 251963,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -114,7 +114,7 @@
           "id": "10-points",
           "caption": "TBD",
           "route": "/promos",
-          "bytes": 457991,
+          "bytes": 220305,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -122,21 +122,21 @@
           "filePath": "desktop/10-points.png"
         },
         {
-          "id": "11-who-is-barry",
+          "id": "11-the-four",
           "caption": "TBD",
           "route": "/who-is-barry",
-          "bytes": 728864,
+          "bytes": 554742,
           "dimensions": {
             "width": 1440,
             "height": 900
           },
-          "filePath": "desktop/11-who-is-barry.png"
+          "filePath": "desktop/11-the-four.png"
         },
         {
           "id": "12-stockists",
           "caption": "TBD",
           "route": "/stockists",
-          "bytes": 130879,
+          "bytes": 147567,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -147,7 +147,7 @@
           "id": "13-contact",
           "caption": "TBD",
           "route": "/contact",
-          "bytes": 124260,
+          "bytes": 145802,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -158,7 +158,7 @@
           "id": "14-age-gate",
           "caption": "TBD",
           "route": "/",
-          "bytes": 176880,
+          "bytes": 535353,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -175,65 +175,65 @@
       "captureCount": 14,
       "captures": [
         {
-          "id": "01-machine",
+          "id": "01-hero",
           "caption": "TBD",
           "route": "/",
-          "bytes": 362884,
+          "bytes": 1020047,
           "dimensions": {
             "width": 860,
             "height": 1864
           },
-          "filePath": "mobile/01-machine.png"
+          "filePath": "mobile/01-hero.png"
         },
         {
-          "id": "02-drop",
+          "id": "02-range",
           "caption": "TBD",
           "route": "/",
-          "bytes": 389184,
+          "bytes": 294263,
           "dimensions": {
             "width": 860,
             "height": 1864
           },
-          "filePath": "mobile/02-drop.png"
+          "filePath": "mobile/02-range.png"
         },
         {
-          "id": "03-in-hand",
+          "id": "03-flavour",
           "caption": "TBD",
           "route": "/",
-          "bytes": 309111,
+          "bytes": 287037,
           "dimensions": {
             "width": 860,
             "height": 1864
           },
-          "filePath": "mobile/03-in-hand.png"
+          "filePath": "mobile/03-flavour.png"
         },
         {
-          "id": "04-founders",
+          "id": "04-loyals",
           "caption": "TBD",
           "route": "/",
-          "bytes": 693398,
+          "bytes": 759949,
           "dimensions": {
             "width": 860,
             "height": 1864
           },
-          "filePath": "mobile/04-founders.png"
+          "filePath": "mobile/04-loyals.png"
         },
         {
-          "id": "05-board",
+          "id": "05-esky",
           "caption": "TBD",
           "route": "/",
-          "bytes": 191978,
+          "bytes": 228026,
           "dimensions": {
             "width": 860,
             "height": 1864
           },
-          "filePath": "mobile/05-board.png"
+          "filePath": "mobile/05-esky.png"
         },
         {
           "id": "06-shop",
           "caption": "TBD",
           "route": "/shop",
-          "bytes": 279673,
+          "bytes": 497092,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -241,21 +241,21 @@
           "filePath": "mobile/06-shop.png"
         },
         {
-          "id": "07-mixed-ten",
+          "id": "07-mix",
           "caption": "TBD",
           "route": "/shop",
-          "bytes": 329625,
+          "bytes": 401462,
           "dimensions": {
             "width": 860,
             "height": 1864
           },
-          "filePath": "mobile/07-mixed-ten.png"
+          "filePath": "mobile/07-mix.png"
         },
         {
           "id": "08-merch",
           "caption": "TBD",
           "route": "/shop",
-          "bytes": 371098,
+          "bytes": 429900,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -266,7 +266,7 @@
           "id": "09-footy-loyals",
           "caption": "TBD",
           "route": "/promos",
-          "bytes": 234029,
+          "bytes": 290982,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -277,7 +277,7 @@
           "id": "10-points",
           "caption": "TBD",
           "route": "/promos",
-          "bytes": 160837,
+          "bytes": 167717,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -285,21 +285,21 @@
           "filePath": "mobile/10-points.png"
         },
         {
-          "id": "11-who-is-barry",
+          "id": "11-the-four",
           "caption": "TBD",
           "route": "/who-is-barry",
-          "bytes": 619197,
+          "bytes": 685101,
           "dimensions": {
             "width": 860,
             "height": 1864
           },
-          "filePath": "mobile/11-who-is-barry.png"
+          "filePath": "mobile/11-the-four.png"
         },
         {
           "id": "12-stockists",
           "caption": "TBD",
           "route": "/stockists",
-          "bytes": 177357,
+          "bytes": 198461,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -310,7 +310,7 @@
           "id": "13-contact",
           "caption": "TBD",
           "route": "/contact",
-          "bytes": 182311,
+          "bytes": 192094,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -321,7 +321,7 @@
           "id": "14-age-gate",
           "caption": "TBD",
           "route": "/",
-          "bytes": 189044,
+          "bytes": 385473,
           "dimensions": {
             "width": 860,
             "height": 1864

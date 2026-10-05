@@ -149,35 +149,44 @@ export const CONFIGS = {
     ],
   },
 
-  // Barry's Drink concept, re-shot 4 Oct 2026 after "The Barry Machine"
-  // shipped (09df136). The drop shot presses two buttons so cans fall into the bay.
-  // The site asks for 18+ first; captures answer with the site's own key, and the
-  // last shot clears it to show the question itself.
+  // Barry's Drink concept, re-shot 5 Oct 2026 after it was rebuilt as "The
+  // Barry Shoot" (0b66914), replacing the vending machine shot the day before.
+  // The site asks for 18+ first; captures answer with the site's own key, and
+  // the last shot clears it to show the question itself.
   'barrys-drink-concept-vercel-app': {
     site: 'https://barrys-drink-concept.vercel.app',
     storage: { 'barry-concept-age': 'ok' },
     targets: [
-      { id: '01-machine', route: '/', caption: 'The machine. Seven flavours and the Mixed 10-Pack lit behind the glass, each with its strength on a segment readout and a round lit button' },
-      { id: '02-drop', route: '/', caption: 'Press a button and the can drops into the bay, where it tumbles and settles and can be picked up or thrown', action: async (page) => {
-        await page.evaluate(() => scrollTo(0, 0));
-        for (const can of ['Watermelon & Lemon', 'Strawberry Smash']) {
-          await page.locator(`button[aria-label^="${can}. Drop one"]`).first().click();
-          await page.waitForTimeout(900);
-        }
-        await page.waitForTimeout(1800);
+      { id: '01-hero', route: '/', caption: 'Sidequests are better with Barry’s: the founders from Barry’s own banner and Instagram, and the mark as a giant die-cut sticker finishing the line' },
+      { id: '02-range', route: '/', selector: '#range', caption: 'Pick your flavour. One can in your hand at a time, turning in 3D, with its base, strength and standard drinks on one label band' },
+      { id: '03-flavour', route: '/', selector: '#range', caption: 'Each flavour floods the field with its own colour; here, Cherry Vanilla', action: async (page) => {
+        await page.locator('#range button', { hasText: 'Cherry Vanilla' }).first().click();
+        await page.waitForTimeout(400);
+        await page.evaluate(() => { const r = document.querySelector('#range'); scrollTo(0, r.getBoundingClientRect().top + scrollY - 80); });
+        await page.waitForTimeout(1600);
       } },
-      { id: '03-in-hand', route: '/', selector: '#in-hand', caption: 'Pick a can up and turn it over in 3D: its base, strength and sizes, with a placeholder where Barry’s publishes no price' },
-      { id: '04-founders', route: '/', anchor: 'The Barry Boys, at your local footy club.', caption: 'The four founders on the side of the machine, as manga renders, bringing in Footy Loyals' },
-      { id: '05-board', route: '/', anchor: 'Places to grab one, state by state.', caption: 'Stockists on an LED board, state by state, from Barry’s own stockist map on 2 October 2026' },
-      { id: '06-shop', route: '/shop', caption: 'The shop as a bank of machines, one for each base: shochu, agave and whisky' },
-      { id: '07-mixed-ten', route: '/shop', selector: '#mixed-ten', caption: 'The Mixed 10-Pack, Barry’s own fixed mix, with the one flavour that has no can art yet marked as such' },
+      { id: '04-loyals', route: '/', anchor: 'Win the Barry Boys', caption: 'Footy Loyals on the home page: win the Barry Boys for your local footy club' },
+      { id: '05-esky', route: '/', caption: 'The esky. Add a can and it drops in. It’s a list to take to the bottle shop, because Barry’s doesn’t sell drinks online', action: async (page) => {
+        for (const can of ['Tropical Mango', 'Cherry Vanilla', 'Grapefruit Paloma']) {
+          await page.locator('#range button', { hasText: can }).first().click();
+          await page.waitForTimeout(300);
+          await page.locator('#range button', { hasText: 'Add to esky' }).first().click();
+          await page.waitForTimeout(500);
+        }
+        await page.locator('a[href="/esky"]').first().click();
+        await page.waitForURL('**/esky', { timeout: 15000 });
+        await page.evaluate(() => scrollTo(0, 250));
+        await page.waitForTimeout(3000);
+      } },
+      { id: '06-shop', route: '/shop', caption: 'Pick your Barry. The range by base, with every can’s strength up front' },
+      { id: '07-mix', route: '/shop', selector: '#mixed-ten', caption: 'Whisky and cola, and the Mixed 10-Pack, Barry’s own fixed mix, with the flavour that has no can art yet marked as such' },
       { id: '08-merch', route: '/shop', selector: '#merch', caption: 'Merch, the part of Barry’s store that does sell online, at its own prices as listed on 2 October 2026' },
-      { id: '09-footy-loyals', route: '/promos', caption: 'Footy Loyals. Pick your club’s home-ground session, each one hosted by one of the four' },
-      { id: '10-points', route: '/promos', anchor: 'How clubs rack up points', caption: 'How clubs rack up points, from 10 to 60, beside Barry’s own campaign poster' },
-      { id: '11-who-is-barry', route: '/who-is-barry', caption: 'Who is Barry? The four founders and how it started, in Barry’s own words' },
-      { id: '12-stockists', route: '/stockists', caption: 'Find Barry’s. Search a postcode or pick a state on the map' },
+      { id: '09-footy-loyals', route: '/promos', caption: 'Footy Loyals. Pick your club’s home-ground session, each hosted by one of the four' },
+      { id: '10-points', route: '/promos', anchor: 'How clubs rack up points', caption: 'How clubs rack up points, from 10 to 60, and the two ways to win' },
+      { id: '11-the-four', route: '/who-is-barry', caption: 'Who is Barry? The four founders, in Barry’s own words' },
+      { id: '12-stockists', route: '/stockists', caption: 'Find Barry’s across 1,144 stockists, by postcode or by state, from Barry’s own map on 2 October 2026' },
       { id: '13-contact', route: '/contact', caption: 'Contact. Pick what it’s about and the form changes to suit. The concept sends nothing, and says so' },
-      { id: '14-age-gate', route: '/', caption: 'The first thing the machine asks', action: async (page) => {
+      { id: '14-age-gate', route: '/', caption: 'The first thing the site asks', action: async (page) => {
         await page.evaluate(() => { sessionStorage.setItem('cm-no-seed', '1'); localStorage.removeItem('barry-concept-age'); });
         await page.reload({ waitUntil: 'networkidle' });
         await page.waitForTimeout(2200);
@@ -185,6 +194,8 @@ export const CONFIGS = {
       } },
     ],
   },
+
+
 
   'eurochem-concept-vercel-app': {
     site: 'https://eurochem-concept.vercel.app',
