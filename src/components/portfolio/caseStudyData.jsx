@@ -1939,7 +1939,6 @@ export const CASE_STUDIES = {
     ],
 
     improvements: [
-      'Barry’s approval of the founder photos and renders, of which none is on file',
       'Barry’s own nutrition panels and ingredients for the can backs',
       'Can art for Crushed Lemon, which is in the Mixed 10-Pack but has none in the concept',
       'Barry’s newer flavours, which the concept doesn’t carry yet',
