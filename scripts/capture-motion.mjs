@@ -38,8 +38,9 @@
  *   like a wheel, so Chrome's scroll anchoring can absorb a slider changing height above the fold.
  *   A hero video that plays once and has already ended is rewound for the clip (DS Racing).
  *
- * Not in SITES on purpose: jurassic-pt (until its redesign), people-power (hidden), rocksstream
- * (behind a login). sgr-prestige, wooster-core, jk-plumbing-solutions and barrys-drink were added
+ * Not in SITES on purpose: jurassic-pt (until its redesign is live on jurassicpt.com; the stills
+ * were shot from the preview, and the motion note prints the host it was captured from),
+ * people-power (hidden), rocksstream (behind a login). sgr-prestige, wooster-core, jk-plumbing-solutions and barrys-drink were added
  * 4 Oct 2026, after their redesigns shipped.
  */
 import { spawnSync } from 'node:child_process';

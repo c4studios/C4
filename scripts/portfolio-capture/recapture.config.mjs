@@ -212,6 +212,57 @@ export const CONFIGS = {
     ],
   },
 
+  // Jurassic PT, re-shot 5 Oct 2026 from its redesign (branch redesign-unearthed-lift)
+  // before launch. The site here is the live domain, so a re-run after launch needs
+  // no change. Until then, pass the preview's address in JPT_SITE: it stays out of
+  // this public repo. The finder keeps its answers in sessionStorage, so the shot
+  // that answers it runs last.
+  'jurassic-pt-vercel-app': {
+    site: process.env.JPT_SITE || 'https://www.jurassicpt.com',
+    targets: [
+      { id: '01-hero', route: '/', caption: 'Welcome to Jurassic PT. Shelley’s own badge is the crest, set on the red of the team’s singlets' },
+      { id: '02-start', route: '/', selector: '#start', caption: 'Where are you starting from? The first of two questions, asked one at a time with three plain answers' },
+      { id: '03-huskies', route: '/', caption: 'Bring the baby. Meet the huskies. Photos from Shelley’s Instagram, framed like a clubroom wall', action: async (page) => {
+        await page.evaluate(() => {
+          const h = [...document.querySelectorAll('h2')].find((e) => e.textContent.includes('Bring the baby'));
+          const head = document.querySelector('header')?.getBoundingClientRect().height || 80;
+          scrollTo(0, h.getBoundingClientRect().top + scrollY - head - 32);
+        });
+        await page.waitForTimeout(500);
+      } },
+      { id: '04-owner', route: '/', anchor: 'Owner-led, from the very first hello', caption: 'Owner-led, from the very first hello. Shelley’s background, and a member’s line quoted exactly, with an ellipsis where words are cut' },
+      { id: '05-member-words', route: '/', selector: '#member-words', caption: 'The honour board: twelve members’ testimonials in full and word for word, narrowed by the situations a visitor picks' },
+      { id: '06-classes', route: '/', selector: '#classes', caption: 'Find your class. Seven coached classes in one column, each opening to say what it involves. Here, Big Bang Circuit', action: async (page) => {
+        const row = page.locator('#classes button', { hasText: 'Big Bang Circuit' }).first();
+        if ((await row.getAttribute('aria-expanded')) !== 'true') await row.click();
+        await page.mouse.move(4, 300);
+        await page.waitForTimeout(700);
+      } },
+      { id: '07-join', route: '/', selector: '#join', caption: 'Ways to join: three memberships priced by the week, and the two-week intro offer underneath' },
+      { id: '08-find', route: '/', anchor: 'Find the studio', caption: 'Find the studio: the shopfront on Federation Ln, with the address beside it' },
+      { id: '09-memberships', route: '/memberships', caption: 'Memberships and prices, with the first-two-weeks offer in its own band' },
+      { id: '10-personal-training', route: '/personal-training', caption: 'Personal training: one-on-one coaching around your schedule' },
+      { id: '11-massage', route: '/remedial-massage', caption: 'Remedial massage, with the four treatments listed underneath' },
+      { id: '12-contact', route: '/contact', caption: 'The consult request. Visitors choose how Shelley gets in touch, and their finder answers come with them', action: async (page) => {
+        await page.evaluate(() => {
+          const h = [...document.querySelectorAll('h2')].find((e) => e.textContent.includes('Request your free consult'));
+          const head = document.querySelector('header')?.getBoundingClientRect().height || 80;
+          scrollTo(0, h.getBoundingClientRect().top + scrollY - head - 64);
+        });
+        await page.waitForTimeout(500);
+      } },
+      { id: '13-finder', route: '/', selector: '#start', caption: 'Two answers later: the classes that suit and one button to book the consult, where Shelley checks the fit', action: async (page) => {
+        await page.locator('#start button.answer', { hasText: 'Getting back into it' }).first().click();
+        await page.waitForTimeout(500);
+        await page.locator('#start button.answer', { hasText: 'Build strength' }).first().click();
+        await page.waitForTimeout(900);
+        await page.evaluate(() => { const r = document.querySelector('#start'); scrollTo(0, r.getBoundingClientRect().top + scrollY - 80); });
+        await page.mouse.move(4, 300);
+        await page.waitForTimeout(700);
+      } },
+    ],
+  },
+
   'eurochem-concept-vercel-app': {
     site: 'https://eurochem-concept.vercel.app',
     targets: [
