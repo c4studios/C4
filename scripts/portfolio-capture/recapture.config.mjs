@@ -197,6 +197,21 @@ export const CONFIGS = {
 
 
 
+  // …as He leads…, first shot 5 Oct 2026. The contact page is left out on purpose:
+  // it carries people's names and phone numbers, which stay off the C4 site.
+  'asheleads-com-au': {
+    site: 'https://www.asheleads.com.au',
+    targets: [
+      { id: '01-about', route: '/', caption: 'The name as the ministry writes it, lowercase with an ellipsis at each end, over three photographs of Fremantle with shaded boxes between them' },
+      { id: '02-vision', route: '/index.html', selector: '#vision', caption: 'The vision statement, set large, with the ministry described in its own words underneath' },
+      { id: '03-statement', route: '/what-we-believe.html', caption: 'Statement of Faith. Every page opens the same way: masthead, title, then the row of photographs and shaded boxes' },
+      { id: '04-creed', route: '/what-we-believe.html', selector: '#creed', caption: 'The Apostles’ Creed, each line with its scripture references, all reproduced from the ministry’s own document' },
+      { id: '05-policy', route: '/ministry-policy.html', caption: 'Ministry policy and procedure, in the ministry’s own words, section by section' },
+      { id: '06-worker-agreement', route: '/worker-agreement.html', caption: 'The worker agreement, which prints for signing by hand, so nothing personal is collected online' },
+      { id: '07-resources', route: '/resources.html', caption: 'Resources: the ministry’s booklets as PDFs, each with its page count and size' },
+    ],
+  },
+
   'eurochem-concept-vercel-app': {
     site: 'https://eurochem-concept.vercel.app',
     targets: [

@@ -1,0 +1,180 @@
+{
+  "version": 3,
+  "sourceUrl": "https://www.asheleads.com.au",
+  "slug": "asheleads-com-au",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 7,
+      "captures": [
+        {
+          "id": "01-about",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 471181,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-about.png"
+        },
+        {
+          "id": "02-vision",
+          "caption": "TBD",
+          "route": "/index.html",
+          "bytes": 132157,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-vision.png"
+        },
+        {
+          "id": "03-statement",
+          "caption": "TBD",
+          "route": "/what-we-believe.html",
+          "bytes": 434316,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-statement.png"
+        },
+        {
+          "id": "04-creed",
+          "caption": "TBD",
+          "route": "/what-we-believe.html",
+          "bytes": 162316,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-creed.png"
+        },
+        {
+          "id": "05-policy",
+          "caption": "TBD",
+          "route": "/ministry-policy.html",
+          "bytes": 420717,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-policy.png"
+        },
+        {
+          "id": "06-worker-agreement",
+          "caption": "TBD",
+          "route": "/worker-agreement.html",
+          "bytes": 363126,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-worker-agreement.png"
+        },
+        {
+          "id": "07-resources",
+          "caption": "TBD",
+          "route": "/resources.html",
+          "bytes": 425109,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/07-resources.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 7,
+      "captures": [
+        {
+          "id": "01-about",
+          "caption": "TBD",
+          "route": "/",
+          "bytes": 324535,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-about.png"
+        },
+        {
+          "id": "02-vision",
+          "caption": "TBD",
+          "route": "/index.html",
+          "bytes": 184814,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-vision.png"
+        },
+        {
+          "id": "03-statement",
+          "caption": "TBD",
+          "route": "/what-we-believe.html",
+          "bytes": 343500,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-statement.png"
+        },
+        {
+          "id": "04-creed",
+          "caption": "TBD",
+          "route": "/what-we-believe.html",
+          "bytes": 277626,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-creed.png"
+        },
+        {
+          "id": "05-policy",
+          "caption": "TBD",
+          "route": "/ministry-policy.html",
+          "bytes": 337938,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/05-policy.png"
+        },
+        {
+          "id": "06-worker-agreement",
+          "caption": "TBD",
+          "route": "/worker-agreement.html",
+          "bytes": 304167,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-worker-agreement.png"
+        },
+        {
+          "id": "07-resources",
+          "caption": "TBD",
+          "route": "/resources.html",
+          "bytes": 313081,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/07-resources.png"
+        }
+      ]
+    }
+  }
+}

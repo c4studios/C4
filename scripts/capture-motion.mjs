@@ -165,6 +165,7 @@ const SITES = {
     /* The site asks for 18+ before anything; answer with its own key so the captures show the machine. */
     storage: { 'barry-concept-age': 'ok' },
   },
+  'as-he-leads': { url: 'https://www.asheleads.com.au/', folder: 'asheleads-com-au' },
 };
 
 /* ---------- arguments ---------- */
@@ -201,6 +202,9 @@ async function newPage(browser, device, { clock = false, storage = null } = {}) 
     timezoneId: 'Australia/Perth',
     reducedMotion: 'no-preference',
     colorScheme: 'light',
+    /* Capture CSS is injected as a style tag; a strict site CSP (as He leads: style-src 'self')
+       would refuse it. This only relaxes the capture browser, never the site. */
+    bypassCSP: true,
   });
   /* An embedded form that grabs focus on load must not scroll the page under the camera (quotr). */
   await ctx.addInitScript(() => {

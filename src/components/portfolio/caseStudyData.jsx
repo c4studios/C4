@@ -710,6 +710,111 @@ export const CASE_STUDIES = {
     ],
   },
 
+  'as-he-leads': {
+    slug: 'as-he-leads',
+    name: '…as He leads…',
+    oneLiner: 'A website and business cards for a Christian outreach ministry in Fremantle: its statement of faith reproduced word for word, one QR code away from the card.',
+    client: '…as He leads…, a Christian outreach ministry',
+    location: 'Fremantle, WA',
+    timeline: 'One week from brief to live (29 Aug – 4 Sep 2026)',
+    budget: '',
+    role: 'Solo (design, development, print, deployment)',
+    liveUrl: 'https://www.asheleads.com.au',
+    year: '2026',
+    category: 'web_design',
+    tags: ['Website', 'Ministry', 'Print', 'Typography', 'Static HTML'],
+    featured: false,
+    budgetOrder: 0,
+
+    cover: null,
+    brandColor: '#6d2f86',
+    thumbnail: '/captures/asheleads-com-au/desktop/01-about.png',
+
+    overview: '…as He leads… is a Christian outreach ministry in Fremantle. The brief was a business card and a website, with a QR code on the card that leads to what the ministry believes. C4 built six pages and the cards. Every doctrinal word comes from the ministry’s own documents and is never typed by hand: the pages are generated from the supplied text, and a check proves they match it before anything ships. Every scripture reference was read against the King James text before launch. Each page opens on the same furniture, a masthead, the page title, and a row of three photographs of Fremantle with shaded boxes between them, set in Vollkorn. The policy and the worker agreement print for signing by hand, so the site collects nothing personal. The cards carry a vector QR code that goes straight to the live site.',
+
+    screenshots: [
+      { url: '/captures/asheleads-com-au/desktop/01-about.png', caption: 'The name as the ministry writes it, lowercase with an ellipsis at each end, over three photographs of Fremantle with shaded boxes between them' },
+      { url: '/captures/asheleads-com-au/desktop/02-vision.png', caption: 'The vision statement, set large, with the ministry described in its own words underneath' },
+      { url: '/captures/asheleads-com-au/desktop/03-statement.png', caption: 'Statement of Faith. Every page opens the same way: masthead, title, then the row of photographs and shaded boxes' },
+      { url: '/captures/asheleads-com-au/desktop/04-creed.png', caption: 'The Apostles’ Creed, each line with its scripture references, all reproduced from the ministry’s own document' },
+      { url: '/captures/asheleads-com-au/desktop/05-policy.png', caption: 'Ministry policy and procedure, in the ministry’s own words, section by section' },
+      { url: '/captures/asheleads-com-au/desktop/06-worker-agreement.png', caption: 'The worker agreement, which prints for signing by hand, so nothing personal is collected online' },
+      { url: '/captures/asheleads-com-au/desktop/07-resources.png', caption: 'Resources: the ministry’s booklets as PDFs, each with its page count and size' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/asheleads-com-au/desktop/01-about.png', caption: 'The name as the ministry writes it, lowercase with an ellipsis at each end, over three photographs of Fremantle with shaded boxes between them' },
+      { url: '/captures/asheleads-com-au/desktop/02-vision.png', caption: 'The vision statement, set large, with the ministry described in its own words underneath' },
+      { url: '/captures/asheleads-com-au/desktop/03-statement.png', caption: 'Statement of Faith. Every page opens the same way: masthead, title, then the row of photographs and shaded boxes' },
+      { url: '/captures/asheleads-com-au/desktop/04-creed.png', caption: 'The Apostles’ Creed, each line with its scripture references, all reproduced from the ministry’s own document' },
+      { url: '/captures/asheleads-com-au/desktop/05-policy.png', caption: 'Ministry policy and procedure, in the ministry’s own words, section by section' },
+      { url: '/captures/asheleads-com-au/desktop/06-worker-agreement.png', caption: 'The worker agreement, which prints for signing by hand, so nothing personal is collected online' },
+      { url: '/captures/asheleads-com-au/desktop/07-resources.png', caption: 'Resources: the ministry’s booklets as PDFs, each with its page count and size' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/asheleads-com-au/mobile/01-about.png', caption: 'The name as the ministry writes it, lowercase with an ellipsis at each end, over three photographs of Fremantle with shaded boxes between them' },
+      { url: '/captures/asheleads-com-au/mobile/02-vision.png', caption: 'The vision statement, set large, with the ministry described in its own words underneath' },
+      { url: '/captures/asheleads-com-au/mobile/03-statement.png', caption: 'Statement of Faith. Every page opens the same way: masthead, title, then the row of photographs and shaded boxes' },
+      { url: '/captures/asheleads-com-au/mobile/04-creed.png', caption: 'The Apostles’ Creed, each line with its scripture references, all reproduced from the ministry’s own document' },
+      { url: '/captures/asheleads-com-au/mobile/05-policy.png', caption: 'Ministry policy and procedure, in the ministry’s own words, section by section' },
+      { url: '/captures/asheleads-com-au/mobile/06-worker-agreement.png', caption: 'The worker agreement, which prints for signing by hand, so nothing personal is collected online' },
+      { url: '/captures/asheleads-com-au/mobile/07-resources.png', caption: 'Resources: the ministry’s booklets as PDFs, each with its page count and size' },
+    ],
+
+    delivered: [
+      'Six pages: about, statement of faith, ministry policy and procedure, a worker agreement form, resources and contacts',
+      'Business cards for print, with a vector QR code to the live site',
+      'A page generator that builds every page from the supplied text, and a check that proves the pages match it before anything ships',
+      'Every scripture reference checked against the King James text',
+      'A printable worker agreement and ministry declaration, signed by hand, so no personal details are collected online',
+      'A resources page with the ministry’s booklets as PDFs',
+      'A privacy and website policy, security headers, and search indexing switched on at launch',
+    ],
+
+    features: [
+      'The name set exactly as the ministry writes it: lowercase, with an ellipsis at each end',
+      'The same opening on every page: masthead, title, and a row of three Fremantle photographs with shaded boxes, staggered and still',
+      'Scripture references beside every line of the creed',
+      'A masthead that steps away as you read and comes back compact',
+      'Booklets listed with their page counts and file sizes',
+      'Print styles, so the policy and the agreement print clean for signing',
+    ],
+
+    stack: [
+      'Static HTML and CSS, no framework',
+      'A Python page generator and a Node verification script',
+      'Two small progressive-enhancement scripts, for the masthead and for scroll',
+      'Vollkorn and Vollkorn SC',
+      'QR code generated with segno as vector, error correction level Q',
+      'Vercel hosting, deployed from GitHub',
+    ],
+
+    integrations: [
+      'No forms: the agreement and the declaration print for signing by hand',
+      'Fonts from Google Fonts',
+      'C4 Studios credit',
+    ],
+
+    performance: [
+      'Static pages behind a content security policy and security headers, checked with curl on the live domain',
+      'One h1 on every page, checked across every file',
+      'Canonicals on the www address the booklets already print',
+    ],
+
+    challenges: [
+      'Reproducing doctrine exactly: the text is never typed by hand, and a build that fails the match does not ship',
+      'Designing for someone who has just scanned a card on a phone, outdoors, with about thirty seconds to spare',
+      'Keeping the layout the shape the ministry asked for in writing',
+    ],
+
+    improvements: [
+      'Serve the fonts from the site itself instead of Google',
+      'A share image for links',
+      'A screen-reader pass, on top of the automated and keyboard checks',
+    ],
+  },
+
   'people-power': {
     slug: 'people-power',
     name: 'People Power',
@@ -2922,7 +3027,7 @@ export const BUILD_ORDER = [
   'transform-fremantle', 'jurassic-pt', 'gocc', 'transform-hakea', 'rocksstream',
   'groverz-tax', 'sharp-bricklaying', 'hvn-gym', 'ds-racing-karts',
   'tidy-gardens-australia', 'evidence-advisory', 'brady-electrical', 'aqua-safe-plumbing',
-  'cia-solutions',
+  'cia-solutions', 'as-he-leads',
   // apps
   'people-power',
   // concepts (self-initiated, built after the client work)
