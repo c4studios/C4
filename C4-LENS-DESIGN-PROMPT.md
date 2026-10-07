@@ -13,7 +13,7 @@ Design a landing page for **C4 Lens** — the photography, videography, and vide
 - **Website:** c4studios.com.au
 - **Email:** caleb@c4studios.com.au
 - **Phone:** 0479 000 404
-- **Instagram:** https://www.instagram.com/c4studiosperth/
+- **Instagram:** https://www.instagram.com/c4studios.com.au/
 - **Target market:** Australian small-to-medium businesses needing professional visual content to replace stock imagery and build trust.
 
 ---
