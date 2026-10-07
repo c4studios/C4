@@ -18,9 +18,12 @@ export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
  * footer and the structured data ended up pointing at two different accounts,
  * which splits the entity signal that sameAs exists to consolidate. Add or
  * change a profile HERE and nowhere else.
+ *
+ * Renamed again on 7 Oct 2026, to c4studios.com.au, in the C4 Studios / C4Site
+ * split. Instagram does not redirect an old handle, so /c4studiosperth/ died.
  */
 export const PROFILES = {
-  instagram: 'https://www.instagram.com/c4studiosperth/',
+  instagram: 'https://www.instagram.com/c4studios.com.au/',
   linkedinCompany: 'https://www.linkedin.com/company/c4studios',
   linkedinPersonal: 'https://www.linkedin.com/in/caleb-scott-525a7a3b9/',
   github: 'https://github.com/c4studios',
