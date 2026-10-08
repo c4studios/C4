@@ -56,6 +56,9 @@
 
 /* ── the lead: the newest claim at display size ──────────────── */
 .ins__lead { padding-block: clamp(3rem, 6vw, 4.5rem) 0; }
+/* With one article there's no ledger below to close the page, so the lead
+   takes the ledger's bottom space and the meta line clears the footer. */
+.ins__lead:last-child { padding-bottom: clamp(5rem, 9vw, 7rem); }
 .ins__lead-dek {
   margin: 0;
   font-size: clamp(1.9rem, 1.1rem + 3.2vw, 3.4rem);

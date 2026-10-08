@@ -14,6 +14,8 @@ C4 Studios operates across four arms under one roof:
 
 AI training for workplaces and schools is run by our sister company, C4Site: https://c4site.com.au/
 
+Articles on AI are published by our sister company, C4Site: https://c4site.com.au/articles/
+
 Founded 2022 by Caleb Scott. Serving Perth, Fremantle and Western Australia
 (and remote clients Australia-wide). Every project is delivered directly by the
 person building it.
@@ -30,7 +32,7 @@ person building it.
 - [SEO & copywriting](https://c4studios.com.au/seo-and-copywriting): SEO packages from $400 one-off or $249 a month, and website copy at $500 with a build.
 - [Lead Engine](https://c4studios.com.au/lead-engine): Done-for-you lead generation system.
 - [Portfolio](https://c4studios.com.au/Portfolio): Selected client work and case studies.
-- [Insights](https://c4studios.com.au/insights): Articles on AI, websites and search, each with its sources listed.
+- [Insights](https://c4studios.com.au/insights): Articles on websites and what they cost.
 - [How we use AI](https://c4studios.com.au/how-we-use-ai): Where AI is and is not used in C4 Studios' own work.
 - [Contact](https://c4studios.com.au/Contact): Email, phone and a direct message form.
 - [Start a project](https://c4studios.com.au/start): Begin a new engagement with C4 Studios.

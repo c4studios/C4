@@ -496,6 +496,12 @@ const SUBURB_PAGES = SUBURB_SERVICES.flatMap((service) =>
 //   published / updated  ISO dates, required for Article JSON-LD
 //   readMinutes          shown on the index card
 //   dek                  one-line standfirst for the index card
+//
+// The six live AI articles moved to c4site.com.au on 9 Oct 2026, keeping
+// their slugs under /articles/. Their entries came out of this list, and that
+// alone takes them out of the routes, the prerender, the sitemap, llms.txt and
+// the /insights index. public/_redirects sends each old address to its new
+// page. Their content modules stay in pages/ unused until the clean-up.
 const ARTICLES = [
   {
     slug: 'why-web-designers-hide-their-prices', type: 'article', status: 'live', phase: 7,
@@ -509,34 +515,12 @@ const ARTICLES = [
     links: { pillars: ['how-much-does-a-website-cost-perth', 'web-design-perth', 'diy-website-vs-hiring-a-designer'] },
   },
   {
-    slug: 'ai-detectors-dont-work', type: 'article', status: 'live', phase: 7,
-    name: 'AI Detectors Don’t Work',
-    title: 'AI Detectors Don’t Work | C4 Studios',
-    description: 'What independent testing found, who gets falsely flagged, the universities that switched detection off, and what schools should do instead.',
-    dek: 'What independent testing found, published with the receipts.',
-    image: '/insights/ai-detectors-dont-work-og.jpg',
-    published: '2026-08-03', updated: '2026-08-03', readMinutes: 8,
-    priority: 0.7, changefreq: 'yearly',
-    links: { pillars: ['ai-automation-perth'] },
-  },
-  {
     slug: 'private-ai-vs-chatgpt-subscriptions', type: 'article', status: 'draft', phase: 7,
     name: 'Private AI vs ChatGPT Subscriptions',
     title: 'Private AI vs ChatGPT Subscriptions | C4 Studios',
     description: 'The honest cost comparison: what a per-seat subscription stack really costs a small team, what on-premise costs, and where each one wins.',
     dek: 'The per-seat maths, run properly, including where subscriptions win.',
     published: '2026-08-03', updated: '2026-08-03', readMinutes: 7,
-    priority: 0.65, changefreq: 'yearly',
-    links: { pillars: ['ai-automation-perth'] },
-  },
-  {
-    slug: 'one-page-ai-policy', type: 'article', status: 'live', phase: 7,
-    name: 'The One-Page AI Policy',
-    title: 'The One-Page AI Policy Your Business Needs | C4 Studios',
-    description: 'Most AI policies are unread PDFs. Here is the one-page version, what each line is for, and whether the 10 December 2026 privacy change applies to you.',
-    dek: 'A policy people will actually read, free to take and adapt.',
-    image: '/insights/one-page-ai-policy-og.jpg',
-    published: '2026-08-04', updated: '2026-08-04', readMinutes: 6,
     priority: 0.65, changefreq: 'yearly',
     links: { pillars: ['ai-automation-perth'] },
   },
@@ -654,54 +638,6 @@ const ARTICLES = [
     dek: 'Why a benchmark score tells you almost nothing about your documents.',
     published: '2026-08-29', updated: '2026-08-29', verified: '2026-08-29', readMinutes: 6,
     priority: 0.65, changefreq: 'yearly',
-  },
-  {
-    // Live. Card + OG image still to be produced.
-    // When the image exists, add image: '/insights/ai-indemnity-you-already-have-og.jpg'.
-    slug: 'ai-indemnity-you-already-have', type: 'article', status: 'live', phase: 7,
-    name: 'The AI Indemnity You Already Have',
-    title: 'The AI Indemnity You Already Have | C4 Studios',
-    description: 'Microsoft already defends M365 customers against certain copyright claims on AI output. What it covers, and the conditions that quietly switch it off.',
-    dek: 'What Microsoft already covers, and the condition most custom builds fail.',
-    published: '2026-08-29', updated: '2026-08-29', readMinutes: 7,
-    priority: 0.65, changefreq: 'yearly',
-    links: { pillars: ['ai-automation-perth'] },
-  },
-  {
-    // Live. Card + OG image still to be produced.
-    // When the image exists, add image: '/insights/what-ai-benchmark-scores-dont-tell-you-og.jpg'.
-    slug: 'what-ai-benchmark-scores-dont-tell-you', type: 'article', status: 'live', phase: 7,
-    name: 'What Benchmark Scores Do Not Tell You',
-    title: 'What AI Benchmark Scores Don\'t Tell You | C4 Studios',
-    description: 'Three studies on what benchmark scores actually measure, why nearly half have saturated, and the test to run on your own documents instead.',
-    dek: 'Six in seven published comparisons report no statistical test at all.',
-    published: '2026-08-29', updated: '2026-08-29', readMinutes: 7,
-    priority: 0.65, changefreq: 'yearly',
-    links: { pillars: ['ai-automation-perth'] },
-  },
-  {
-    // Live. Card + OG image still to be produced.
-    // When the image exists, add image: '/insights/open-weight-is-not-open-source-og.jpg'.
-    slug: 'open-weight-is-not-open-source', type: 'article', status: 'live', phase: 7,
-    name: 'Open Weight Is Not Open Source',
-    title: 'Open Weight Is Not Open Source | C4 Studios',
-    description: 'The licences on downloadable AI models differ enormously. One reserves the right to restrict your use remotely, on weights running on your own hardware.',
-    dek: 'What you actually agree to when the model runs on your own hardware.',
-    published: '2026-08-29', updated: '2026-08-29', readMinutes: 8,
-    priority: 0.65, changefreq: 'yearly',
-    links: { pillars: ['ai-automation-perth'] },
-  },
-  {
-    // Live. Card + OG image still to be produced.
-    // When the image exists, add image: '/insights/ai-writes-more-code-and-ships-less-og.jpg'.
-    slug: 'ai-writes-more-code-and-ships-less', type: 'article', status: 'live', phase: 7,
-    name: 'AI Writes More Code And Ships Less',
-    title: 'AI Writes More Code And Ships Less | C4 Studios',
-    description: 'A randomised trial and 8.1 million pull requests, no connection to each other, pointing the same way: the bottleneck moved from writing to reviewing.',
-    dek: 'They felt 20% faster. Measurement said 19% slower.',
-    published: '2026-09-02', updated: '2026-09-02', readMinutes: 7,
-    priority: 0.65, changefreq: 'yearly',
-    links: { pillars: ['ai-automation-perth', 'web-development-perth'] },
   },
 ];
 

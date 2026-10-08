@@ -99,6 +99,25 @@
 /downloads/c4sight/Series-4-Your-Move-Preview.pdf               https://c4site.com.au/free-packs/series-4-your-move.pdf               301
 /downloads/c4sight/Series-5-Monday-Morning-AI-Preview.pdf       https://c4site.com.au/free-packs/series-5-monday-morning-ai.pdf       301
 
+# The six AI articles moved to c4site.com.au on 9 Oct 2026. Each keeps its
+# slug under /articles/, and each old address goes straight there in one hop,
+# listed with and without its trailing slash. Their entries came out of the SEO
+# registry (src/content/seo/registry.js) in the same change, so none of these
+# paths is prerendered any more and no rule here shadows a real page. Schools
+# emails already sent link to /ai-detectors-dont-work/, and these keep working.
+/ai-detectors-dont-work                    https://c4site.com.au/articles/ai-detectors-dont-work/                    301
+/ai-detectors-dont-work/                   https://c4site.com.au/articles/ai-detectors-dont-work/                    301
+/one-page-ai-policy                        https://c4site.com.au/articles/one-page-ai-policy/                        301
+/one-page-ai-policy/                       https://c4site.com.au/articles/one-page-ai-policy/                        301
+/ai-indemnity-you-already-have             https://c4site.com.au/articles/ai-indemnity-you-already-have/             301
+/ai-indemnity-you-already-have/            https://c4site.com.au/articles/ai-indemnity-you-already-have/             301
+/what-ai-benchmark-scores-dont-tell-you    https://c4site.com.au/articles/what-ai-benchmark-scores-dont-tell-you/    301
+/what-ai-benchmark-scores-dont-tell-you/   https://c4site.com.au/articles/what-ai-benchmark-scores-dont-tell-you/    301
+/open-weight-is-not-open-source            https://c4site.com.au/articles/open-weight-is-not-open-source/            301
+/open-weight-is-not-open-source/           https://c4site.com.au/articles/open-weight-is-not-open-source/            301
+/ai-writes-more-code-and-ships-less        https://c4site.com.au/articles/ai-writes-more-code-and-ships-less/        301
+/ai-writes-more-code-and-ships-less/       https://c4site.com.au/articles/ai-writes-more-code-and-ships-less/        301
+
 # SPA routes that are NOT prerendered — they need index.html served at 200.
 # Everything else on the site has its own static file (115 of them), which is
 # what makes the real 404 below safe.
