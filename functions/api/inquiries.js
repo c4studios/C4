@@ -246,6 +246,7 @@ function formatServiceType(key) {
     brand_platform: 'Branding & Identity',
     automation: 'AI & Software',
     lens: 'C4 Lens',
+    seo: 'SEO & Copywriting',
     training: 'AI training',
     rebuild: 'Software Rebuild',
     other: 'Other',

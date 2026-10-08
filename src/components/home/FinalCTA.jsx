@@ -17,7 +17,8 @@ const choices = [
   { key: 'web', label: 'Build a website', to: '/start?service=web_design', chip: 'hm-chip--web' },
   { key: 'c4i', label: 'Put AI to work', to: '/c4i', chip: 'hm-chip--c4i' },
   { key: 'lens', label: 'Brand & visual', to: '/Lens', chip: 'hm-chip--lens' },
-  { key: 'sight', label: 'Train your team', to: '/ai-training-enquiry', chip: 'hm-chip--sight' },
+  // "Train your team" came out with C4Site on 8 Oct 2026 (D2).
+  { key: 'seo', label: 'Get found on Google', to: '/seo-and-copywriting', chip: 'hm-chip--seo' },
 ];
 
 export default function FinalCTA() {

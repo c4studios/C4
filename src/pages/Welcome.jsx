@@ -95,14 +95,17 @@ const ARMS = [
       </svg>
     ),
   },
+  /* SEO & Copywriting took C4Site's place on 8 Oct 2026 (D2). C4Site gets
+     a sister link here once c4site.com.au is live. */
   {
-    to: '/Foresight',
-    name: 'C4Site',
-    line: 'Hands-on AI training that leaves your team genuinely capable.',
-    color: '#54b06a',
+    to: '/seo-and-copywriting',
+    name: 'SEO & Copywriting',
+    line: 'Found in search, and worth reading once found.',
+    color: '#e05a4c',
     mark: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M4 12.5l5 5L20 6.5" />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+        <circle cx="10.5" cy="10.5" r="6.3" />
+        <path d="M15.2 15.2L20 20" />
       </svg>
     ),
   },

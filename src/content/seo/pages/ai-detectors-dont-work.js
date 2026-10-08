@@ -139,7 +139,7 @@ export default {
       kind: 'prose',
       heading: 'Why we publish this',
       body: [
-        'We sell [AI training for schools](/ai-training-for-schools), and we could sell more of it by leaving this vague. It is what our staff session says about detectors, so it may as well be written down where a Head of Learning Area can check it before booking anything.',
+        'A vague answer helps nobody, so this one is written down where a Head of Learning Area can check it before relying on a detector.',
         'Every figure above is linked to its source below. If any of it changes, the page changes.',
       ],
     },

@@ -59,7 +59,7 @@ const GLANCE = [
 
 const YEARS = [
   { y: '2022', t: 'C4 Studios begins', d: 'Founded in Perth as a one-person studio with one rule: the person you brief is the person who builds.' },
-  { y: 'Today', t: 'Four services, still one person', d: 'Websites and apps, private AI, photography and video, and AI training.' },
+  { y: 'Today', t: 'Four services, still one person', d: 'Websites and apps, private AI, photography and video, SEO and copywriting.' },
 ];
 
 /* The work on the bench: client sites from

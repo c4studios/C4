@@ -108,7 +108,13 @@ const SERVICE_ADDONS = {
     'Same-day delivery',
     'Location scouting',
   ],
-  training: [],
+  seo: [
+    'Local SEO / GBP management',
+    'Additional page optimisation',
+    'Content writing (per page)',
+    'Competitor analysis',
+    'Backlink building',
+  ],
 };
 
 const SERVICES = [
@@ -116,7 +122,8 @@ const SERVICES = [
   { key: 'brand_platform', label: 'Branding & Identity' },
   { key: 'automation', label: 'AI & Software' },
   { key: 'lens', label: 'C4 Lens' },
-  { key: 'training', label: 'AI training' },
+  // AI training went with C4Site (8 Oct 2026); SEO took its place.
+  { key: 'seo', label: 'SEO & Copywriting' },
   { key: 'other', label: 'Something Else' },
 ];
 

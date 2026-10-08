@@ -176,7 +176,7 @@ export default {
       kind: 'prose',
       heading: 'Why we publish this',
       body: [
-        'We run [AI training for businesses](/ai-training-for-business), and a policy is usually the first thing a client asks for. We would rather hand this over than sell it, partly because a policy you wrote yourself is one you can actually enforce.',
+        'We would rather hand this over than sell it, partly because a policy you wrote yourself is one you can actually enforce.',
         'Our own position on how we use AI in client work is published at [how we use AI](/how-we-use-ai). Where the banned-data clause is the hard part — because the work genuinely involves confidential material — the answer is sometimes a model that runs on hardware you own, which is what [private AI](/private-ai) is for.',
         'This is general information, not legal advice. The privacy law summarised above is linked to its source below, and if it changes this page changes.',
       ],

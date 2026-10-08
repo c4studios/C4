@@ -92,6 +92,18 @@ export const TESTIMONIALS = [
     caseStudySlug: 'ds-racing-karts',
     featured: true,
   },
+  /* A five-star Google review relayed by Caleb on 8 Oct 2026, posted "2 days
+     ago". Verbatim. The reviewer's name wasn't given, so it is attributed to
+     the ministry. The review describes it: a Fremantle ministry, six pages,
+     policy documents, booklets and a card. */
+  {
+    id: 12,
+    quote: "We run a ministry in Fremantle and had nothing online, just a phone number. C4 Studios built us a six-page website with our policy documents and downloadable booklets, and it was live in about three weeks. We sent changes most days, usually as photos of handwritten notes, and they came back done shortly after. We can hand someone a card now and know the address on it goes somewhere. Would recommend to any small business in Perth needing a site built properly.",
+    name: '…as He leads…',
+    role: 'Fremantle',
+    caseStudySlug: 'as-he-leads',
+    featured: true,
+  },
 ];
 
 export function getFeaturedTestimonials() {

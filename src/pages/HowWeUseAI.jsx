@@ -34,26 +34,22 @@ const PLEDGES = [
       'Our private AI systems run on your own hardware. Nothing is sent to a third party, nothing trains anyone else’s model, and the system keeps working with the internet switched off.',
     link: { label: 'How private AI works', to: '/private-ai' },
   },
-  {
-    claim: 'In classrooms, students never touch a tool.',
-    body:
-      'No student devices. No student data entered anywhere. No student images captured or generated. A staff member is present throughout, the camera only ever frames the objects children hold up rather than faces, and the tool runs offline on our own hotspot rather than the school network.',
-    link: { label: 'The schools programme', to: '/ai-training-for-schools' },
-  },
+  /* The classroom pledge went with C4Site, which runs the schools work now
+     (8 Oct 2026). */
   {
     claim: 'We say the unpopular true things.',
     body:
-      'AI detectors do not reliably work, and we will not tell your students otherwise. Most businesses do not need an AI strategy, they need three automations and a tidy website. We will talk you out of work we do not think you need.',
+      'AI detectors do not reliably work, and we will not pretend otherwise. Most businesses do not need an AI strategy, they need three automations and a tidy website. We will talk you out of work we do not think you need.',
   },
   {
     claim: 'You can check all of it.',
     body:
-      'Set prices are published on the site, including the school incursion. Workplace training is quoted per team, as one fixed price. Every client testimonial is shown in full and uncurated. Every build in the portfolio links to the live site so you can judge the work yourself.',
+      'Set prices are published on the site. Client testimonials are shown in full, and every build in the portfolio links to the live site so you can judge the work yourself.',
     link: { label: 'See the portfolio', to: '/Portfolio' },
   },
 ];
 
-const REVIEWED = '12 August 2026';
+const REVIEWED = '8 October 2026';
 
 export default function HowWeUseAI() {
   const staticMode = useStaticMode();
@@ -304,13 +300,6 @@ export default function HowWeUseAI() {
                 style={{ backgroundColor: 'var(--c4-text)', color: 'var(--c4-bg)' }}
               >
                 Start a project
-              </Link>
-              <Link
-                to={createPageUrl('Foresight')}
-                className="text-[11px] uppercase tracking-[0.14em] font-medium transition-opacity hover:opacity-70"
-                style={{ color: 'var(--c4-text-subtle)' }}
-              >
-                AI training
               </Link>
             </div>
           </div>

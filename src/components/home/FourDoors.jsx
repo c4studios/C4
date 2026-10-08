@@ -7,7 +7,8 @@
      C2 · the solder-mask board — sampled ai-arm tokens + copper traces
      C3 · black behind a hairline 9-gon aperture arc (no amber here —
           the tungsten glow belongs to /Lens itself)
-     C4 · chalkboard green + one chalk stroke
+     C4 · paper and a page of search results with yours on top
+          (SEO & Copywriting took C4Site's place on 8 Oct 2026, D2)
    Every ProductTrio destination, label, outcome line, price and
    timeframe survives verbatim; both links per door sit in the DOM at
    rest. The proof-strip stats are letterpressed into the lintel.
@@ -17,7 +18,12 @@ import { Link } from '@/components/c4/SiteLink';
 import { ArrowRight } from 'lucide-react';
 import C4iWordmark from '@/components/c4/C4iWordmark';
 import { trackEvent } from '@/lib/track';
+import { seoPackages } from '@/data/pricing';
 import { gsap, EASE, revealHeading, useStaticMode } from './homeMotion';
+
+// The SEO door quotes the published card, so it follows pricing.js.
+const SEO_ONE_OFF_FROM = Math.min(...seoPackages.filter((p) => p.priceSuffix === 'one-off').map((p) => p.price));
+const SEO_MONTHLY_FROM = Math.min(...seoPackages.filter((p) => /\/mo$/.test(p.priceLabel) && typeof p.price === 'number').map((p) => p.price));
 
 import weaveGocc from './assets/weave-gocc.webp';
 import weaveJk from './assets/weave-jk.webp';
@@ -120,45 +126,37 @@ function BoardTraces() {
   );
 }
 
-/* A worked lesson-board for the Sight face: tally strokes counted and
-   struck through, a chalk arrow to a tick that lands, a ghost of the
-   last class under an eraser pass, and the underline the word sits on. */
-function ChalkLesson() {
-  const CHALK = '#f2f0e9';
+/* The SEO face: a page of results for a typed search, with yours at
+   number one and the rest paler below it. Drawn, not a screenshot of
+   any real search engine. */
+function SearchStack() {
+  const INK = '#1d1b18';
+  const RED = '#C23030';
   return (
-    <svg className="hm-chalk" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      {/* ghost of the last lesson — erased, still faintly there */}
-      <g stroke={CHALK} strokeLinecap="round" fill="none" opacity="0.16">
-        <path d="M58 52 C 66 50.5, 76 52.5, 86 51" strokeWidth="1.6" vectorEffect="non-scaling-stroke" />
-        <path d="M60 58 C 68 56.8, 75 58.4, 82 57.2" strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
+    <svg className="hm-serp" viewBox="0 0 100 140" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+      {/* the search, typed */}
+      <rect x="10" y="22" width="80" height="9" rx="4.5" fill="none" stroke={INK} strokeOpacity="0.28" strokeWidth="0.6" />
+      <rect x="14" y="25.6" width="26" height="1.8" rx="0.9" fill={INK} fillOpacity="0.55" />
+      <rect x="40.6" y="24.6" width="0.5" height="3.8" fill={RED} />
+      {/* result one: yours */}
+      <g className="hm-serp-you">
+        <rect x="10" y="37" width="80" height="18.5" rx="1.5" fill="#ffffff" fillOpacity="0.72" />
+        <rect x="13" y="40.6" width="5.2" height="5.2" rx="0.8" fill={RED} />
+        <text x="15.6" y="44.5" textAnchor="middle" fontSize="3.7" fontWeight="700" fill="#ffffff" fontFamily="Archivo, sans-serif">1</text>
+        <rect x="21.5" y="40.8" width="44" height="2.6" rx="1.3" fill={INK} />
+        <rect x="21.5" y="45" width="24" height="1.4" rx="0.7" fill={RED} fillOpacity="0.85" />
+        <rect x="21.5" y="48.6" width="58" height="1.2" rx="0.6" fill={INK} fillOpacity="0.35" />
+        <rect x="21.5" y="51.2" width="46" height="1.2" rx="0.6" fill={INK} fillOpacity="0.35" />
       </g>
-      <rect x="52" y="44" width="42" height="22" rx="3" fill={CHALK} fillOpacity="0.035" transform="rotate(-2 73 55)" />
-      {/* the tally — four counted, the fifth strikes through */}
-      <g stroke={CHALK} strokeLinecap="round" fill="none">
-        <path d="M15 22 C 15.4 27, 14.8 32, 15.3 37" strokeWidth="2.3" strokeOpacity="0.82" vectorEffect="non-scaling-stroke" />
-        <path d="M21 21.5 C 20.6 26.5, 21.3 31.5, 20.8 36.6" strokeWidth="2.1" strokeOpacity="0.72" vectorEffect="non-scaling-stroke" />
-        <path d="M27 22.2 C 27.5 27, 26.9 32, 27.4 36.9" strokeWidth="2.3" strokeOpacity="0.85" vectorEffect="non-scaling-stroke" />
-        <path d="M33 21.8 C 32.6 26.8, 33.2 31.6, 32.8 36.4" strokeWidth="2" strokeOpacity="0.68" vectorEffect="non-scaling-stroke" />
-        <path d="M10 33.5 C 18 30.5, 28 28.5, 38 25.5" strokeWidth="2.5" strokeOpacity="0.88" vectorEffect="non-scaling-stroke" />
-      </g>
-      {/* chalk arrow to the tick — the lesson lands */}
-      <g stroke={CHALK} strokeLinecap="round" fill="none">
-        <path d="M44 30 C 52 26.5, 58 25, 65 24.5" strokeWidth="1.7" strokeOpacity="0.55" vectorEffect="non-scaling-stroke" />
-        <path d="M61.5 21.5 L 65.6 24.4 L 61.2 26.8" strokeWidth="1.6" strokeOpacity="0.55" vectorEffect="non-scaling-stroke" />
-        <path d="M72 25.5 L 75.4 29.5 L 82.5 18.5" strokeWidth="2.6" strokeOpacity="0.9" vectorEffect="non-scaling-stroke" />
-      </g>
-      {/* eraser pass above the tray */}
-      <rect x="6" y="58" width="34" height="12" rx="6" fill={CHALK} fillOpacity="0.04" transform="rotate(-3 23 64)" />
-      {/* the underline the door word sits on, and settled dust */}
-      <path d="M10 96 C 26 92.5, 44 95.5, 60 93.2 S 86 94.8, 91 92.6" fill="none" stroke={CHALK} strokeWidth="2.6" strokeLinecap="round" strokeOpacity="0.85" vectorEffect="non-scaling-stroke" />
-      <path d="M12 99 C 30 96, 50 98.5, 68 96.4" fill="none" stroke={CHALK} strokeWidth="1.1" strokeLinecap="round" strokeOpacity="0.3" vectorEffect="non-scaling-stroke" />
-      <g fill={CHALK}>
-        <circle cx="22" cy="103" r="0.7" fillOpacity="0.4" />
-        <circle cx="35" cy="41" r="0.6" fillOpacity="0.35" />
-        <circle cx="47" cy="101.5" r="0.55" fillOpacity="0.32" />
-        <circle cx="73" cy="100" r="0.7" fillOpacity="0.38" />
-        <circle cx="78" cy="31" r="0.55" fillOpacity="0.3" />
-      </g>
+      {/* everyone else, below */}
+      {[62, 75, 88].map((y, i) => (
+        <g key={y} opacity={0.62 - i * 0.16}>
+          <text x="15.6" y={y + 2.4} textAnchor="middle" fontSize="3" fill={INK} fillOpacity="0.55" fontFamily="Archivo, sans-serif">{i + 2}</text>
+          <rect x="21.5" y={y} width={40 - i * 4} height="2.2" rx="1.1" fill={INK} fillOpacity="0.55" />
+          <rect x="21.5" y={y + 3.8} width="20" height="1.2" rx="0.6" fill={INK} fillOpacity="0.4" />
+          <rect x="21.5" y={y + 6.6} width={54 - i * 6} height="1.1" rx="0.55" fill={INK} fillOpacity="0.28" />
+        </g>
+      ))}
     </svg>
   );
 }
@@ -218,18 +216,18 @@ const DOORS = [
     secondary: { label: 'or book a shoot', to: '/start?service=lens' },
   },
   {
-    key: 'sight',
-    face: 'sight',
-    faceTo: '/Foresight',
-    faceAria: 'Enter C4Site',
-    tag: 'C4Site',
-    word: 'AI training',
+    key: 'seo',
+    face: 'seo',
+    faceTo: '/seo-and-copywriting',
+    faceAria: 'Enter SEO & Copywriting',
+    tag: 'SEO & Copywriting',
+    word: 'Get found on Google',
     outcome:
-      'Hands-on AI workshops for businesses, schools and law firms, run on your own tools and your own real work.',
-    fromPrice: 'Quoted per team',
-    timeframe: 'Half / full-day',
-    primary: { label: 'Visit C4Site', to: '/Foresight' },
-    secondary: { label: 'or enquire about training', to: '/ai-training-enquiry' },
+      'Technical fixes up front, then new articles every month, so you’re easier to find on Google. Website copy too, written plainly.',
+    fromPrice: `From $${SEO_ONE_OFF_FROM}`,
+    timeframe: `Or $${SEO_MONTHLY_FROM}/mo`,
+    primary: { label: 'See SEO & copywriting', to: '/seo-and-copywriting' },
+    secondary: { label: 'or start an SEO brief', to: '/start?service=seo' },
   },
 ];
 
@@ -245,7 +243,7 @@ function DoorFaceArt({ kind }) {
   }
   if (kind === 'c4i') return <BoardTraces />;
   if (kind === 'lens') return <ApertureIris />;
-  return <ChalkLesson />;
+  return <SearchStack />;
 }
 
 export default function FourDoors() {

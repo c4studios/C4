@@ -151,7 +151,7 @@ export default {
       kind: 'prose',
       heading: 'Why we publish this',
       body: [
-        'We sell [AI training for businesses](/ai-training-for-business) and we get asked which model is best. The honest answer is that it depends on your documents, and that the way to find out takes a morning and produces a better answer than any chart.',
+        'Which model is best depends on your documents, and finding out takes a morning and gives a better answer than any chart.',
         'We would rather hand over the method than have clients choose on a number nobody has tested. It also makes us easier to check, because the same test that grades a vendor grades us.',
         'Where the deciding factor is confidentiality rather than capability, the comparison changes shape entirely, and that is what [private AI](/private-ai) is about. Our own position on using these tools in client work is at [how we use AI](/how-we-use-ai).',
       ],
