@@ -7,8 +7,8 @@
      C2 · the solder-mask board — sampled ai-arm tokens + copper traces
      C3 · black behind a hairline 9-gon aperture arc (no amber here —
           the tungsten glow belongs to /Lens itself)
-     C4 · paper and a page of search results with yours on top
-          (SEO & Copywriting took C4Site's place on 8 Oct 2026, D2)
+     C4 · the paste-up board from /seo-and-copywriting, your listing
+          ringed at first (SEO & Copywriting took C4Site's place, D2)
    Every ProductTrio destination, label, outcome line, price and
    timeframe survives verbatim; both links per door sit in the DOM at
    rest. The proof-strip stats are letterpressed into the lintel.
@@ -18,6 +18,7 @@ import { Link } from '@/components/c4/SiteLink';
 import { ArrowRight } from 'lucide-react';
 import C4iWordmark from '@/components/c4/C4iWordmark';
 import { trackEvent } from '@/lib/track';
+import SeoDoorFace from '@/components/seo-copy/DoorFace';
 import { seoPackages } from '@/data/pricing';
 import { gsap, EASE, revealHeading, useStaticMode } from './homeMotion';
 
@@ -126,41 +127,6 @@ function BoardTraces() {
   );
 }
 
-/* The SEO face: a page of results for a typed search, with yours at
-   number one and the rest paler below it. Drawn, not a screenshot of
-   any real search engine. */
-function SearchStack() {
-  const INK = '#1d1b18';
-  const RED = '#C23030';
-  return (
-    <svg className="hm-serp" viewBox="0 0 100 140" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
-      {/* the search, typed */}
-      <rect x="10" y="22" width="80" height="9" rx="4.5" fill="none" stroke={INK} strokeOpacity="0.28" strokeWidth="0.6" />
-      <rect x="14" y="25.6" width="26" height="1.8" rx="0.9" fill={INK} fillOpacity="0.55" />
-      <rect x="40.6" y="24.6" width="0.5" height="3.8" fill={RED} />
-      {/* result one: yours */}
-      <g className="hm-serp-you">
-        <rect x="10" y="37" width="80" height="18.5" rx="1.5" fill="#ffffff" fillOpacity="0.72" />
-        <rect x="13" y="40.6" width="5.2" height="5.2" rx="0.8" fill={RED} />
-        <text x="15.6" y="44.5" textAnchor="middle" fontSize="3.7" fontWeight="700" fill="#ffffff" fontFamily="Archivo, sans-serif">1</text>
-        <rect x="21.5" y="40.8" width="44" height="2.6" rx="1.3" fill={INK} />
-        <rect x="21.5" y="45" width="24" height="1.4" rx="0.7" fill={RED} fillOpacity="0.85" />
-        <rect x="21.5" y="48.6" width="58" height="1.2" rx="0.6" fill={INK} fillOpacity="0.35" />
-        <rect x="21.5" y="51.2" width="46" height="1.2" rx="0.6" fill={INK} fillOpacity="0.35" />
-      </g>
-      {/* everyone else, below */}
-      {[62, 75, 88].map((y, i) => (
-        <g key={y} opacity={0.62 - i * 0.16}>
-          <text x="15.6" y={y + 2.4} textAnchor="middle" fontSize="3" fill={INK} fillOpacity="0.55" fontFamily="Archivo, sans-serif">{i + 2}</text>
-          <rect x="21.5" y={y} width={40 - i * 4} height="2.2" rx="1.1" fill={INK} fillOpacity="0.55" />
-          <rect x="21.5" y={y + 3.8} width="20" height="1.2" rx="0.6" fill={INK} fillOpacity="0.4" />
-          <rect x="21.5" y={y + 6.6} width={54 - i * 6} height="1.1" rx="0.55" fill={INK} fillOpacity="0.28" />
-        </g>
-      ))}
-    </svg>
-  );
-}
-
 const DOORS = [
   {
     key: 'web',
@@ -243,7 +209,7 @@ function DoorFaceArt({ kind }) {
   }
   if (kind === 'c4i') return <BoardTraces />;
   if (kind === 'lens') return <ApertureIris />;
-  return <SearchStack />;
+  return <SeoDoorFace />;
 }
 
 export default function FourDoors() {
