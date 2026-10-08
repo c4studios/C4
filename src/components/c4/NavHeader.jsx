@@ -55,15 +55,9 @@ const navLinks = [
    so /Lens and /lens both resolve here). The label always tells the truth
    about where the ribbon leads. Everything unlisted falls through to the
    home fallback — the "ALWAYS-back, never a dead end" guarantee. */
-const RIBBON_PARENTS = {
-  '/ai-training-for-business': { to: '/Foresight', label: 'C4Site' },
-  '/ai-training-for-schools': { to: '/Foresight', label: 'C4Site' },
-  '/ai-training-for-law-firms': { to: '/Foresight', label: 'C4Site' },
-  // The free packs and the enquiry form are C4Site pages too; they used to
-  // fall through to "C4" and send people home instead of back to the hub.
-  '/c4sight-previews': { to: '/Foresight', label: 'C4Site' },
-  '/ai-training-enquiry': { to: '/Foresight', label: 'C4Site' },
-};
+// The C4Site pages that used to lead back to /Foresight moved to
+// c4site.com.au on 9 Oct 2026, so nothing has a parent other than home.
+const RIBBON_PARENTS = {};
 const RIBBON_DEFAULT = { to: '/', label: 'C4' };
 
 /* Resolve the ribbon's hierarchical parent from the lowercased pathname.

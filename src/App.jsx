@@ -12,13 +12,9 @@ import LeadEngine from './pages/LeadEngine';
 import { liveSeoPages } from './content/seo/registry';
 import { createPageUrl } from './utils';
 import WelcomeReturnButton from './components/welcome/WelcomeReturnButton';
-// C4Site previews — the tracked lead-magnet download page (flat slug).
-// Imported eagerly since 24 Sep 2026: as a lazy() chunk behind a null
-// Suspense fallback, the prerendered page blanked for 50-90ms on load while
-// the chunk arrived (CLS 0.81 measured at 1280). The page is small.
-import C4SitePreviews from './pages/C4SitePreviews';
-// SEO & copywriting (2 Oct 2026). Eager for the same reason as the previews
-// page above: a lazy chunk behind a null fallback blanks the prerendered HTML.
+// SEO & copywriting (2 Oct 2026). Imported eagerly: as a lazy() chunk behind
+// a null Suspense fallback, a prerendered page blanks while the chunk arrives
+// (CLS 0.81 measured at 1280 on the old C4Site previews page, 24 Sep 2026).
 import SeoCopy from './pages/SeoCopy';
 
 // Networking-card landing — explicit, chrome-free route (no NavHeader/Footer)
@@ -142,14 +138,6 @@ function App() {
             <LayoutWrapper currentPageName="PrivateAI">
               <Suspense fallback={null}>
                 <PrivateAI />
-              </Suspense>
-            </LayoutWrapper>
-          } />
-          {/* C4Site previews — tracked lead-magnet download page (flat slug) */}
-          <Route path="/c4sight-previews" element={
-            <LayoutWrapper currentPageName="C4SitePreviews">
-              <Suspense fallback={null}>
-                <C4SitePreviews />
               </Suspense>
             </LayoutWrapper>
           } />

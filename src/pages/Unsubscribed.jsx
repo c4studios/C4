@@ -131,17 +131,17 @@ export default function Unsubscribed() {
               style={{ borderColor: 'var(--c4-border)' }}
             >
               <p className="text-[14px] leading-[1.75]" style={{ color: 'var(--c4-text-muted)' }}>
-                While you’re here, two things that stay free and need no email address.
+                While you’re here, two things that stay free.
               </p>
               <div className="mt-6 flex flex-col gap-4">
-                <Link
-                  to="/c4sight-previews"
+                <a
+                  href="https://c4site.com.au/free-packs/"
                   className="group inline-flex items-baseline gap-2 text-[15px] font-semibold tracking-[-0.01em] transition-opacity hover:opacity-70"
                   style={{ color: 'var(--c4-text)' }}
                 >
                   The classroom activity packs
                   <ArrowUpRight size={14} strokeWidth={2.4} style={{ color: 'var(--c4-accent)' }} />
-                </Link>
+                </a>
                 <p className="text-[13.5px] leading-[1.7] -mt-2" style={{ color: 'var(--c4-text-muted)' }}>
                   Run by your own teacher, no devices and no student data. Yours to keep.
                 </p>

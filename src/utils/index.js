@@ -4,11 +4,6 @@ const PAGE_URLS = {
     C4i: '/c4i',
     PrivacyPolicy: '/privacy-policy',
     TermsOfService: '/terms-of-service',
-    ForesightBusiness: '/ai-training-for-business',
-    ForesightSchools: '/ai-training-for-schools',
-    ForesightLaw: '/ai-training-for-law-firms',
-    TrainingEnquiry: '/ai-training-enquiry',
-    C4SitePreviews: '/c4sight-previews',
     HowWeUseAI: '/how-we-use-ai',
     SeoCopy: '/seo-and-copywriting',
 };

@@ -46,7 +46,7 @@
 /SoftwareProduct/*  /  301
 # /Contact is a real page again (fable pass — "The Direct Line").
 
-# Lower-case spellings of the capitalised routes, and the arm's own name.
+# Lower-case spellings of the capitalised routes.
 # Safe beside the real pages because rule matching is case-sensitive: these
 # never match /About/ itself (checked 19 Sep 2026: /Software 404'd while
 # /software 301'd).
@@ -60,16 +60,44 @@
 /lens/         /Lens/        301
 /support       /Support/     301
 /support/      /Support/     301
-/foresight     /Foresight/   301
-/foresight/    /Foresight/   301
-/c4site        /Foresight/   301
-/c4site/       /Foresight/   301
-/C4Site        /Foresight/   301
-/C4Site/       /Foresight/   301
 /serviceweb    /ServiceWeb/  301
 /serviceweb/   /ServiceWeb/  301
 /serviceai     /ServiceAI/   301
 /serviceai/    /ServiceAI/   301
+
+# C4Site moved to its own domain, c4site.com.au (live 9 Oct 2026). Every old
+# C4Site address here sends a permanent redirect straight to its new page, in
+# one hop. None of these paths is prerendered any more (src/lib/prerenderRoutes.js),
+# so no rule in this block shadows a real page. Each path is listed with and
+# without its trailing slash, like the rules above. The aliases (/foresight,
+# /c4site, /C4Site) go straight to the new home page, not via /Foresight/.
+# The unsubscribe rule at the top of this file and the /unsubscribed page
+# stay on c4studios.com.au, because emails already sent link to them.
+/Foresight                   https://c4site.com.au/                            301
+/Foresight/                  https://c4site.com.au/                            301
+/foresight                   https://c4site.com.au/                            301
+/foresight/                  https://c4site.com.au/                            301
+/c4site                      https://c4site.com.au/                            301
+/c4site/                     https://c4site.com.au/                            301
+/C4Site                      https://c4site.com.au/                            301
+/C4Site/                     https://c4site.com.au/                            301
+/ai-training-for-business    https://c4site.com.au/ai-training-for-business/   301
+/ai-training-for-business/   https://c4site.com.au/ai-training-for-business/   301
+/ai-training-for-schools     https://c4site.com.au/ai-training-for-schools/    301
+/ai-training-for-schools/    https://c4site.com.au/ai-training-for-schools/    301
+/ai-training-for-law-firms   https://c4site.com.au/ai-training-for-law-firms/  301
+/ai-training-for-law-firms/  https://c4site.com.au/ai-training-for-law-firms/  301
+/ai-training-enquiry         https://c4site.com.au/enquire/                    301
+/ai-training-enquiry/        https://c4site.com.au/enquire/                    301
+/c4sight-previews            https://c4site.com.au/free-packs/                 301
+/c4sight-previews/           https://c4site.com.au/free-packs/                 301
+# The five free packs. The old files were deleted from public/downloads/c4sight
+# in the same change, so only these rules answer.
+/downloads/c4sight/Series-1-The-Computer-Puppy-Preview.pdf      https://c4site.com.au/free-packs/series-1-the-computer-puppy.pdf      301
+/downloads/c4sight/Series-2-Who-Taught-The-Machine-Preview.pdf  https://c4site.com.au/free-packs/series-2-who-taught-the-machine.pdf  301
+/downloads/c4sight/Series-3-Can-You-Trust-It-Preview.pdf        https://c4site.com.au/free-packs/series-3-can-you-trust-it.pdf        301
+/downloads/c4sight/Series-4-Your-Move-Preview.pdf               https://c4site.com.au/free-packs/series-4-your-move.pdf               301
+/downloads/c4sight/Series-5-Monday-Morning-AI-Preview.pdf       https://c4site.com.au/free-packs/series-5-monday-morning-ai.pdf       301
 
 # SPA routes that are NOT prerendered — they need index.html served at 200.
 # Everything else on the site has its own static file (115 of them), which is
