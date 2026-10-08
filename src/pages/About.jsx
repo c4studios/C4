@@ -51,7 +51,7 @@ import '../components/about/bench-tour.css';
 /* ── The words ─────────────────────────────────────────────────────── */
 
 const GLANCE = [
-  { k: 'Work', v: 'Websites, web apps, AI tools and the systems behind them. The whole arc: strategy, design, build, hosting, security and upkeep.' },
+  { k: 'Work', v: 'Websites, web apps and the systems behind them. The whole arc: strategy, design, build, hosting, security and upkeep.' },
   { k: 'Study', v: 'Juris Doctor (JD) in Law, in progress.' },
   { k: 'Service', v: 'Children’s ministry leader at Barnabas Christian Fellowship. Camp Kids Jam, remote community work in Leonora and outreach in Manila. Founder of tutoring initiatives including The Learning Frontier.' },
   { k: 'Approach', v: 'Direct collaboration and careful architecture, with finance and data modelling for churches and community groups.' },
@@ -59,7 +59,8 @@ const GLANCE = [
 
 const YEARS = [
   { y: '2022', t: 'C4 Studios begins', d: 'Founded in Perth as a one-person studio with one rule: the person you brief is the person who builds.' },
-  { y: 'Today', t: 'Four services, still one person', d: 'Websites and apps, private AI, photography and video, SEO and copywriting.' },
+  /* Private AI went to C4Site with C4i on 9 Oct 2026. */
+  { y: 'Today', t: 'Three services, still one person', d: 'Websites and apps, photography and video, SEO and copywriting.' },
 ];
 
 /* The work on the bench: client sites from
@@ -424,7 +425,7 @@ export default function About() {
   useDocumentHead({
     title: 'About — Caleb Scott, founder of C4 Studios, Perth',
     description:
-      'C4 Studios is Caleb Scott, founder and sole operator, building websites and AI systems in Perth since 2022. The person you brief is the person who builds.',
+      'C4 Studios is Caleb Scott, founder and sole operator, building websites and software in Perth since 2022. The person you brief is the person who builds.',
     path: '/About',
     jsonLd,
   });

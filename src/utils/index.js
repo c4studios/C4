@@ -1,7 +1,5 @@
 const PAGE_URLS = {
     StartProject: '/start',
-    PrivateAI: '/private-ai',
-    C4i: '/c4i',
     PrivacyPolicy: '/privacy-policy',
     TermsOfService: '/terms-of-service',
     HowWeUseAI: '/how-we-use-ai',

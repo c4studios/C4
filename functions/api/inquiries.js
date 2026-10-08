@@ -244,6 +244,10 @@ function formatServiceType(key) {
     web_app: 'Web Application',
     ecommerce: 'E-Commerce',
     brand_platform: 'Branding & Identity',
+    software: 'Custom Software',
+    // 'automation' and 'training' left the /start form when C4i (9 Oct 2026)
+    // and C4Site (8 Oct 2026) moved to c4site.com.au. Their labels stay so
+    // stale ?service= links and old submissions still read properly.
     automation: 'AI & Software',
     lens: 'C4 Lens',
     seo: 'SEO & Copywriting',

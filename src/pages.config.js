@@ -57,8 +57,6 @@ import Home from './pages/Home';
 import Lens from './pages/Lens';
 import Portfolio from './pages/Portfolio';
 import ServiceWeb from './pages/ServiceWeb';
-import ServiceAI from './pages/ServiceAI';
-import C4i from './pages/C4i';
 import StartProject from './pages/StartProject';
 import __Layout from './Layout.jsx';
 
@@ -72,8 +70,6 @@ export const PAGES = {
     "Lens": Lens,
     "Portfolio": Portfolio,
     "ServiceWeb": ServiceWeb,
-    "ServiceAI": ServiceAI,
-    "C4i": C4i,
     "StartProject": StartProject,
     "PrivacyPolicy": PrivacyPolicy,
     "TermsOfService": TermsOfService,

@@ -349,15 +349,15 @@ export default function Portfolio() {
       '@type': 'CollectionPage',
       name: 'C4 Studios Portfolio — Selected Work',
       description:
-        'Selected case studies from C4 Studios — Perth-based web design, AI and software, brand and photography projects.',
+        'Selected case studies from C4 Studios — Perth-based web design, software, brand and photography projects.',
       url: 'https://c4studios.com.au/Portfolio/',
     },
   ], []);
 
   useDocumentHead({
-    title: 'Portfolio — Selected Web, AI & Brand Case Studies',
+    title: 'Portfolio — Selected Web, Software & Brand Case Studies',
     description:
-      'Selected case studies from C4 Studios. Custom websites, AI automations, brand systems and photography projects, with scope, stack and outcomes for each.',
+      'Selected case studies from C4 Studios. Custom websites, software, brand systems and photography projects, with scope, stack and outcomes for each.',
     path: '/Portfolio',
     jsonLd: portfolioJsonLd,
   });

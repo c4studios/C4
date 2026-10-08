@@ -8,7 +8,6 @@ import {
   brandingPackages,
   c4LensPackages,
   seoPackages,
-  automationPackages,
   socialMediaPackages,
   bundlePackages,
   supportPlans,
@@ -33,7 +32,8 @@ register('web_design', 'Web & Applications', webDesignPackages);
 register('brand_platform', 'Branding & Identity', brandingPackages);
 register('seo', 'SEO & Search', seoPackages);
 register('social', 'Social Media & Content', socialMediaPackages);
-register('automation', 'AI & Software', automationPackages);
+// 'automation' (AI & Software) and its packages went to C4Site with C4i on
+// 9 Oct 2026. Custom Software has no packages; it's scoped on the call.
 register('lens', 'C4 Lens', c4LensPackages);
 register('bundle', 'Bundle Deal', bundlePackages);
 register('support', 'Support Plan', supportPlans);
@@ -91,11 +91,12 @@ const SERVICE_ADDONS = {
     'Social content calendar',
     'Community management',
   ],
-  automation: [
-    'Additional workflow',
-    'Extra tool integration',
+  // The generic software add-ons from the old AI & Software list. The
+  // AI-only one (Training session) and the two that only extended an
+  // automation package (Additional workflow, Extra tool integration) went
+  // with C4i on 9 Oct 2026.
+  software: [
     'Monitoring & alerts setup',
-    'Training session',
     'Ongoing maintenance',
     'Custom software rebuild',
     'API integration',
@@ -120,7 +121,11 @@ const SERVICE_ADDONS = {
 const SERVICES = [
   { key: 'web_design', label: 'Web & Apps' },
   { key: 'brand_platform', label: 'Branding & Identity' },
-  { key: 'automation', label: 'AI & Software' },
+  // Was 'automation' / 'AI & Software' until C4i went to C4Site (9 Oct 2026).
+  // A new key, so enquiries say which form they came from. An old
+  // ?service=automation link still submits as 'automation', which
+  // functions/api/inquiries.js labels "AI & Software".
+  { key: 'software', label: 'Custom Software' },
   { key: 'lens', label: 'C4 Lens' },
   // AI training went with C4Site (8 Oct 2026); SEO took its place.
   { key: 'seo', label: 'SEO & Copywriting' },
@@ -179,7 +184,7 @@ export default function StartProject() {
   useDocumentHead({
     title: 'Start a Project — Brief C4 Studios',
     description:
-      'Tell us about your project — website, AI automation, brand, or photography. Send a brief and the studio replies directly.',
+      'Tell us about your project — website, custom software, brand, or photography. Send a brief and the studio replies directly.',
     path: '/start',
     jsonLd: breadcrumbSchema([
       { name: 'Home', path: '/' },

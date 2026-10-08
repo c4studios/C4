@@ -5,7 +5,6 @@ import { motion, AnimatePresence, useMotionValueEvent, useScroll } from 'framer-
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import C4Logo from './C4Logo';
-import C4iWordmark from './C4iWordmark';
 import ThemeToggle from './ThemeToggle';
 import { trackEvent } from '@/lib/track';
 
@@ -18,23 +17,19 @@ const serviceDropdown = [
     page: 'ServiceWeb',
     brief: 'Custom websites, web apps & SaaS platforms',
   },
-  {
-    label: <C4iWordmark />,
-    code: 'C2',
-    page: 'C4i',
-    brief: 'AI, local or cloud — private systems & automations',
-  },
+  /* C4i went to C4Site with private AI and automation on 9 Oct 2026, so
+     the codes close up and run C1 to C3 in menu order. */
   {
     label: 'C4 Lens',
-    code: 'C3',
+    code: 'C2',
     page: 'Lens',
     brief: 'Photography, video & brand identity',
   },
   /* C4Site is its own business now, so C4 Studios no longer lists it here
-     (Caleb, 8 Oct 2026). SEO & Copywriting takes its slot as C4 (D2). */
+     (Caleb, 8 Oct 2026). SEO & Copywriting took its slot (D2). */
   {
     label: 'SEO & Copywriting',
-    code: 'C4',
+    code: 'C3',
     page: 'SeoCopy',
     brief: 'Found in search, worth reading once found',
   },

@@ -41,7 +41,7 @@ export default function SeoCta({ cta = {} }) {
             <ArrowRight size={13} strokeWidth={2} className="opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300" />
           </Link>
           <p className="mt-8 text-[12px] leading-[1.6]" style={{ color: 'var(--c4-text-subtle)' }}>
-            C4 Studios is a web design and automation studio based in Perth, Western Australia, working with businesses across WA and Australia-wide.
+            C4 Studios is a web design and development studio based in Perth, Western Australia, working with businesses across WA and Australia-wide.
           </p>
         </motion.div>
       </div>

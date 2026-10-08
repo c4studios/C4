@@ -408,8 +408,8 @@ async function generateOgImage(browser, outputPath) {
   <div class="grain"></div>
   <div class="frame"></div>
   <div class="label">C4 Studios — Perth</div>
-  <h1>Websites, AI automations <span class="accent">&amp;</span> photography.</h1>
-  <p class="sub">A Perth design and development studio building flagship websites, AI automations and brand-led photography for ambitious founders.</p>
+  <h1>Websites, photography <span class="accent">&amp;</span> SEO.</h1>
+  <p class="sub">A Perth design and development studio building flagship websites and software, with brand-led photography and SEO, for ambitious founders.</p>
   <div class="footer">
     <span class="brand">c4studios.com.au</span>
     <span>Founder-led · Est. 2022</span>

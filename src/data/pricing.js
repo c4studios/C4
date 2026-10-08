@@ -552,68 +552,12 @@ export const seoPackages = [
   },
 ];
 
-/* ── Automation & AI Packages ── */
-export const automationPackages = [
-  {
-    key: 'automation-core',
-    name: 'Core',
-    price: 750,
-    priceLabel: '$750',
-    popular: false,
-    description: 'A single automation to streamline one key workflow.',
-    features: [
-      '1 automated workflow',
-      'Integration of up to 2 tools',
-      'Basic documentation',
-      '14-day support window',
-    ],
-  },
-  {
-    key: 'workflow-starter',
-    name: 'Workflow Starter',
-    price: 1500,
-    priceLabel: '$1,500',
-    popular: false,
-    description: 'A single automated workflow to eliminate repetitive tasks.',
-    features: [
-      '1 automated workflow (n8n or custom)',
-      'Integration of up to 3 tools/platforms',
-      'Documentation + training session',
-      '30-day support window',
-    ],
-  },
-  {
-    key: 'workflow-pro',
-    name: 'Workflow Pro',
-    price: 3500,
-    priceLabel: '$3,500',
-    popular: true,
-    description: 'Multiple workflows with monitoring and error handling.',
-    features: [
-      'Up to 3 automated workflows',
-      'Integration of up to 8 tools/platforms',
-      'Error handling + monitoring setup',
-      'Documentation + 2 training sessions',
-      '60-day support window',
-    ],
-  },
-  {
-    key: 'custom-ai',
-    name: 'Custom AI',
-    price: 5000,
-    priceLabel: '$5,000+',
-    popular: false,
-    description: 'Bespoke AI agents, chatbots, and data pipelines.',
-    features: [
-      'Custom AI agent/chatbot',
-      'Data pipeline setup',
-      'API integrations',
-      'Full documentation',
-      '90-day support window',
-      'Ongoing maintenance available',
-    ],
-  },
-];
+/* ── Automation & AI Packages ──
+   Gone on 9 Oct 2026. Automation and AI systems are C4i's, and C4i is
+   C4Site's now (c4site.com.au), so its prices are C4Site's to publish. The
+   private AI ladder never lived here: it's in src/components/private-ai/
+   tiers.ts, which moves with that page and is imported by no page that
+   stays. Don't add either back to this file. */
 
 /* ── Social Media Packages ── */
 export const socialMediaPackages = [

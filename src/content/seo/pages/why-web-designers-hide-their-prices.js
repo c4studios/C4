@@ -7,9 +7,11 @@
  * This one owns the "why won't anyone tell me" query and funnels there.
  *
  * Every figure quoted is a real published tier from src/data/pricing.js
- * (Landing $500, Brochure $800, Business $1,500, ecommerce from $3,500,
- * automation Core $750, Private AI from $1,600). The C4Site half day came
- * out on 8 Oct 2026: AI training is C4Site's, not C4 Studios'.
+ * (Landing $500, Brochure $800, Business $1,500, ecommerce from $3,500).
+ * The C4Site half day came out on 8 Oct 2026: AI training is C4Site's, not
+ * C4 Studios'. Automation Core $750 and Private AI from $1,600 came out on
+ * 9 Oct 2026, when C4i moved to C4Site; pricing.js no longer carries either.
+ * Do NOT add them back here, and do not relink them.
  * No industry averages, no invented benchmarks.
  */
 export default {
@@ -79,7 +81,7 @@ export default {
       label: 'Our side',
       heading: 'What happened when we published ours',
       body: [
-        'We put every price on the site: landing pages at $500, a brochure site at $800, a business website at $1,500, online stores from $3,500. Automations start at $750, and [private AI](/private-ai) from $1,600 installed.',
+        'We put every price on the site: landing pages at $500, a brochure site at $800, a business website at $1,500, online stores from $3,500.',
         'Two things followed, and neither was the disaster the received wisdom predicts. Fewer enquiries arrived, and a much higher share of them were real. People who cannot spend $1,500 now find that out on the pricing page instead of on a call, which saves them an afternoon and saves us one. The enquiries that do come through open with what they want rather than what it might cost.',
         'The trade is genuine and worth stating plainly. Publishing a number means occasionally losing work to someone cheaper before ever getting to explain the difference. That has happened. It is still the better arrangement, because the alternative is spending the same hours on people who were never going to proceed.',
       ],

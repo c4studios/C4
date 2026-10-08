@@ -6,6 +6,7 @@ import SectionLabel from '@/components/c4/SectionLabel';
 import { webPricingGuides, ASTERISK_CLAUSE } from '@/data/pricing';
 import { resolveLiveSlugs } from '@/content/seo/registry';
 import useStaticMode from '@/hooks/useStaticMode';
+import { inline } from './ArticleSections';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -64,6 +65,11 @@ function SectionHeading({ label, heading }) {
   );
 }
 
+/* A link inside the prose ([label](href) in the content module, parsed by
+   ArticleSections' inline()) reads in ink with an underline, so it isn't
+   told apart by colour alone. marks.css sets the underline's offset. */
+const PROSE_LINKS = '[&_a]:underline [&_a]:text-[color:var(--c4-text)] [&_a:hover]:decoration-2';
+
 function Paragraphs({ body = [], size = 'base' }) {
   const cls = size === 'lg'
     ? 'text-[15px] md:text-[16px] leading-[1.75]'
@@ -71,7 +77,7 @@ function Paragraphs({ body = [], size = 'base' }) {
   return (
     <div className="space-y-4 max-w-[680px]">
       {body.map((p, i) => (
-        <p key={i} className={cls} style={{ color: 'var(--c4-text-muted)' }}>{p}</p>
+        <p key={i} className={`${cls} ${PROSE_LINKS}`} style={{ color: 'var(--c4-text-muted)' }}>{inline(p)}</p>
       ))}
     </div>
   );

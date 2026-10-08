@@ -16,9 +16,9 @@ export default function Home() {
   ], []);
 
   useDocumentHead({
-    title: 'C4 Studios — Web Design, AI Automations & Photography in Perth',
+    title: 'C4 Studios — Web Design, Photography & SEO in Perth',
     description:
-      'Perth design and development studio building custom websites, AI automations, and professional photography for ambitious founders and brands.',
+      'Perth design and development studio building custom websites and software, with professional photography and SEO, for ambitious founders and brands.',
     path: '/',
     jsonLd,
   });

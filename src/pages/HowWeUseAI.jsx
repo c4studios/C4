@@ -28,11 +28,17 @@ const PLEDGES = [
     body:
       'If AI wrote a first draft, built part of a workflow, or generated an image, we say so. You never have to guess, and you never have to ask.',
   },
+  /* Rewritten 9 Oct 2026, when private AI went to C4Site with C4i: it was
+     about C4i's systems, and it's now about how C4 Studios treats a
+     client's data. Both sentences are already published: the handover is
+     the "You keep the keys" promise on /About, and the second sentence is
+     section 5 of the privacy policy ("We do not sell or trade personal
+     information"). */
   {
     claim: 'Your data stays yours.',
     body:
-      'Our private AI systems run on your own hardware. Nothing is sent to a third party, nothing trains anyone else’s model, and the system keeps working with the internet switched off.',
-    link: { label: 'How private AI works', to: '/private-ai' },
+      'Your accounts and your data stay in your name, and the full code is handed over at the end of the job. We don’t sell or trade personal information.',
+    link: { label: 'Read the privacy policy', to: '/privacy-policy' },
   },
   /* The classroom pledge went with C4Site, which runs the schools work now
      (8 Oct 2026). */
@@ -77,7 +83,7 @@ export default function HowWeUseAI() {
         publisher: { '@id': `${SITE_URL}/#localbusiness` },
         dateModified: '2026-08-12',
         mainEntityOfPage: `${SITE_URL}/how-we-use-ai/`,
-        about: ['Responsible AI', 'AI ethics', 'AI transparency', 'Private AI'],
+        about: ['Responsible AI', 'AI ethics', 'AI transparency'],
       },
     ],
   });
@@ -99,7 +105,7 @@ export default function HowWeUseAI() {
       <PageHero
         label="C4 Studios · Our position"
         titleLines={['How we use AI.']}
-        description="We build AI systems for a living, and we teach people to use them. That makes it our job to be straight about what AI is for, and where it stops."
+        description="We use AI most of the working week. That makes it our job to be straight about what AI is for, and where it stops."
       />
 
       {/* The personal position, added 12 Aug 2026 when the nine-part stance

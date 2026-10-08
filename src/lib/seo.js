@@ -46,9 +46,9 @@ export const ORG_INFO = {
   url: SITE_URL,
   logo: `${SITE_URL}/c4-logo.png`,
   description:
-    'Founder-led Perth studio building custom high-performance websites, AI ' +
-    'automations and agents, and brand photography, videography and motion ' +
-    'graphics for ambitious founders and businesses.',
+    'Founder-led Perth studio building custom high-performance websites and ' +
+    'software, and brand photography, videography and motion graphics for ' +
+    'ambitious founders and businesses.',
   founder: 'Caleb Scott',
   foundingDate: '2022',
   email: 'caleb@c4studios.com.au',

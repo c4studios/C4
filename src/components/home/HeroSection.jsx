@@ -24,9 +24,12 @@ const DELETE_SPEED = 32;
 
    'Your team spends 14h a week being a database.' was removed on 2 Sep: the
    14h figure has no traceable source, and an unsourced number on the homepage
-   breaches the studio's own rule. Restore it only with a citation. */
+   breaches the studio's own rule. Restore it only with a citation.
+
+   'Websites and AI systems, built in Perth.' became websites and software on
+   9 Oct 2026, when AI systems went to C4Site with C4i. */
 const PHRASES = [
-  'Websites and AI systems, built in Perth.',
+  'Websites and software, built in Perth.',
   'Your website is 30% of the job.',
   'Loud websites. Quiet systems.',
   'Engineering, not decoration.',
@@ -120,9 +123,10 @@ export default function HeroSection() {
               </Link>
             </motion.div>
 
-            {/* The thesis line: the ONLY place the first fold names all four
+            {/* The thesis line: the ONLY place the first fold names all three
                 trades (hero audit: no arm vocabulary was visible before
-                scrolling). Quiet on purpose — the doors below do the selling. */}
+                scrolling). Quiet on purpose — the doors below do the selling.
+                Private AI came out on 9 Oct 2026; it's C4Site's now. */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -130,8 +134,8 @@ export default function HeroSection() {
               className="mt-6 text-[13px] leading-relaxed md:mt-7"
               style={{ color: 'var(--c4-text-subtle)' }}
             >
-              Websites and apps, private AI, photography, SEO and copywriting.
-              Perth-built, all four doors below.
+              Websites and apps, photography, SEO and copywriting.
+              Perth-built, all three doors below.
             </motion.p>
           </div>
         </div>

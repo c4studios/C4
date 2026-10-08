@@ -30,10 +30,13 @@ import { Link } from '@/components/c4/SiteLink';
  * "related reading" block does far more weakly. The first version of this
  * article referred to "the pricing page" and "the cost guide" in body copy
  * and linked to neither.
+ *
+ * Exported for SeoSections' prose too (9 Oct 2026), so a service or
+ * industry page can carry one link in a sentence the same way.
  */
 const INLINE_LINK = /\[([^\]]+)\]\(([^)]+)\)/g;
 
-function inline(text) {
+export function inline(text) {
   if (typeof text !== 'string' || !text.includes('](')) return text;
   const out = [];
   let last = 0;
