@@ -8,7 +8,7 @@ export default {
     label: 'SEO — Fremantle',
     title: ['SEO in Fremantle'],
     intro: [
-      'Fremantle search is two markets wearing one postcode: visitors planning a weekend — cafes, markets, things to do — and locals needing services like anywhere else. Good Freo SEO works both, deliberately. C4 Studios does it without the agency theatre: tune-ups from $400, growth plans from $500 a month, and honest advice about which searches your business should actually chase.',
+      'Fremantle search is two markets wearing one postcode: visitors planning a weekend — cafes, markets, things to do — and locals needing services like anywhere else. Good Freo SEO works both, deliberately. C4 Studios does it without the agency theatre: tune-ups from $400, monthly plans from $249, and honest advice about which searches your business should actually chase.',
     ],
   },
   sections: [
@@ -37,7 +37,7 @@ export default {
       label: 'Pricing',
       heading: 'What does Fremantle SEO cost?',
       body: [
-        'Tune-ups at $400, the full foundation at $800, monthly growth from $500 with a three-month minimum — the same published prices as every suburb, because Freo shouldn’t pay a tourism premium. Most independents here start with the foundation plus a Google Business Profile overhaul, and add monthly work only once the audit shows terms worth the retainer. If the site itself is the handbrake, business sites start at $1,500.',
+        'Tune-ups at $400, the full foundation at $800, monthly plans from $249 with a three-month minimum — the same published prices as every suburb, because Freo shouldn’t pay a tourism premium. Most independents here start with the foundation plus a Google Business Profile overhaul, and add monthly work only once the audit shows terms worth the retainer. If the site itself is the handbrake, business sites start at $1,500.',
       ],
     },
   ],

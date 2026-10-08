@@ -37,7 +37,7 @@ export default {
       label: 'Pricing',
       heading: 'What does SEO cost up here?',
       body: [
-        'The same published ladder as everywhere: $400 tune-up, $800 foundation, $500 a month for growth work on a three-month minimum. Most Joondalup businesses start with the foundation plus profile overhaul; the monthly tier earns its place once the audit shows which corridor suburbs are winnable and worth it. If the website is the weak link, business sites start at $1,500 with the SEO floor built in.',
+        'The same published ladder as everywhere: $400 tune-up, $800 foundation, then monthly work from $249 on a three-month minimum. Most Joondalup businesses start with the foundation plus profile overhaul; the monthly tier earns its place once the audit shows which corridor suburbs are winnable and worth it. If the website is the weak link, business sites start at $1,500 with the SEO floor built in.',
       ],
     },
   ],

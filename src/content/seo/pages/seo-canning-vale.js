@@ -38,7 +38,7 @@ export default {
       label: 'Pricing',
       heading: 'What does it cost?',
       body: [
-        'The published ladder, industrial estate or not: $400 tune-up, $800 foundation including the capability-term map, $500 a month where ongoing content makes sense — which in B2B it often does, because the early-research content is the moat. We’ll show which terms carry budgets before recommending anything monthly. If the site can’t hold capability pages, builds start at $1,500.',
+        'The published ladder, industrial estate or not: $400 tune-up, $800 foundation including the capability-term map, from $249 a month where ongoing content makes sense — which in B2B it often does, because the early-research content is the moat. We’ll show which terms carry budgets before recommending anything monthly. If the site can’t hold capability pages, builds start at $1,500.',
       ],
     },
   ],

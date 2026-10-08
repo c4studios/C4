@@ -25,7 +25,7 @@ person building it.
 - [Private AI systems](https://c4studios.com.au/private-ai): AI installed on your own hardware — nothing leaves the building. Tiers from $1,600.
 - [AI services](https://c4studios.com.au/ServiceAI): How C4 applies AI to real business workflows.
 - [C4 Lens — photography & video](https://c4studios.com.au/Lens): Brand photography, videography, drone work and motion graphics.
-- [SEO & copywriting](https://c4studios.com.au/seo-and-copywriting): SEO packages from $400 one-off or $500 a month, and website copy at $500 with a build.
+- [SEO & copywriting](https://c4studios.com.au/seo-and-copywriting): SEO packages from $400 one-off or $249 a month, and website copy at $500 with a build.
 - [Lead Engine](https://c4studios.com.au/lead-engine): Done-for-you lead generation system.
 - [Portfolio](https://c4studios.com.au/Portfolio): Selected client work and case studies.
 - [Insights](https://c4studios.com.au/insights): Articles on AI, websites and search, each with its sources listed.
@@ -39,7 +39,7 @@ person building it.
 - [AI search optimisation (GEO) Perth](https://c4studios.com.au/ai-search-optimisation-perth): Get recommended by ChatGPT, Perplexity and Google AI. AI Visibility Check $400.
 - [Web design Perth](https://c4studios.com.au/web-design-perth): Custom-coded websites from $1,500 with fixed quotes.
 - [Web development Perth](https://c4studios.com.au/web-development-perth): Online stores, web apps, portals and integrations.
-- [SEO Perth](https://c4studios.com.au/seo-perth): One-off fixes from $400 or monthly growth plans from $500.
+- [SEO Perth](https://c4studios.com.au/seo-perth): One-off fixes from $400 or monthly plans from $249.
 - [AI & automation Perth](https://c4studios.com.au/ai-automation-perth): Workflows from $750 to custom AI agents.
 - [Branding Perth](https://c4studios.com.au/branding-perth): Logos from $250 to full identity systems.
 - [Photo & video Perth](https://c4studios.com.au/photo-video-perth): Headshots, brand shoots, drone and short-form content.

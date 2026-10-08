@@ -52,7 +52,7 @@ export default {
   faqs: [
     {
       q: 'How much should a small business spend on SEO?',
-      a: 'Start small and honest: $400–$800 one-off fixes the foundations. Ongoing work at $500 a month only makes sense once the maths does — one extra job a month covering the fee is the usual bar, and for most local services it’s a low bar. Scale spend with results, never ahead of them.',
+      a: 'Start small and honest: $400–$800 one-off fixes the foundations. Ongoing work, from $249 a month, only makes sense once the maths does — one extra job a month covering the fee is the usual bar, and for most local services it’s a low bar. Scale spend with results, never ahead of them.',
     },
     {
       q: 'Is SEO worth it for a brand-new business?',

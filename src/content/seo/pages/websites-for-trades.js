@@ -60,7 +60,7 @@ export default {
       label: 'Pricing',
       heading: 'What does a trade website cost?',
       mode: 'anchor',
-      note: 'Most trade sites land at the $1,500 tier with quote forms and galleries included. Add local SEO from $400 one-off, or $500 a month if you want the rankings worked on properly.',
+      note: 'Most trade sites land at the $1,500 tier with quote forms and galleries included. Add local SEO from $400 one-off, or from $249 a month if you want the rankings worked on properly.',
     },
   ],
   faqs: [

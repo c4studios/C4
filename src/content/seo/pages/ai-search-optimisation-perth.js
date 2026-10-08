@@ -83,7 +83,7 @@ export default {
       label: 'What it costs',
       heading: 'How we price it',
       body: [
-        'For most Perth businesses GEO isn’t a separate invoice — it’s built into the SEO work, because the foundations overlap almost entirely. Our SEO packages start at $400 for a one-off or $500 a month for ongoing work, and the AI-search foundations come baked in.',
+        'For most Perth businesses GEO isn’t a separate invoice — it’s built into the SEO work, because the foundations overlap almost entirely. Our SEO packages start at $400 for a one-off or $249 a month for ongoing work, and the AI-search foundations come baked in.',
         'If you just want to know where you stand, an AI Visibility Check is a $400 one-off: we prompt the major assistants as your customers would, show you exactly what they say about your business today, and hand back a prioritised list of what would move it. No retainer required, and it credits toward ongoing work if you decide to go further.',
       ],
     },

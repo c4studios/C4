@@ -38,7 +38,7 @@ export default {
       label: 'Pricing',
       heading: 'What does it cost?',
       body: [
-        'Published prices, beach or not: $400 tune-up, $800 foundation including the season map, $500 a month for the businesses whose curve justifies year-round work. Plenty here genuinely suit a different shape — foundation once, then a pre-season sprint each year — and we’ll recommend that when it’s true. If the site can’t hold seasonal pages at all, builds start at $800.',
+        'Published prices, beach or not: $400 tune-up, $800 foundation including the season map, from $249 a month for the businesses whose curve justifies year-round work. Plenty here genuinely suit a different shape — foundation once, then a pre-season sprint each year — and we’ll recommend that when it’s true. If the site can’t hold seasonal pages at all, builds start at $800.',
       ],
     },
   ],

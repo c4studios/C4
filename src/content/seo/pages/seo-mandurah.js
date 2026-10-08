@@ -38,7 +38,7 @@ export default {
       label: 'Pricing',
       heading: 'What does it cost?',
       body: [
-        'Published prices, no regional loading: $400 tune-up, $800 foundation, $500 a month where ongoing work is justified — and in the Peel we’ll often tell you it isn’t yet, because the foundation alone moves so much. Start small, take the cheap wins, escalate only when the audit shows terms worth the retainer. If the website itself can’t hold a ranking, rebuilds start at $1,500.',
+        'Published prices, no regional loading: $400 tune-up, $800 foundation, from $249 a month where ongoing work is justified — and in the Peel we’ll often tell you it isn’t yet, because the foundation alone moves so much. Start small, take the cheap wins, escalate only when the audit shows terms worth the retainer. If the website itself can’t hold a ranking, rebuilds start at $1,500.',
       ],
     },
   ],

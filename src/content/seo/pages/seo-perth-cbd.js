@@ -38,7 +38,7 @@ export default {
       label: 'Pricing',
       heading: 'What does city SEO cost?',
       body: [
-        'The same honest packages as everywhere else: $400 for the one-off tune-up, $800 for the full foundation, $500 a month for ongoing growth and $1,000 a month where the fight justifies it. City competition doesn’t change our prices — it changes which package we’ll recommend, and we’ll say plainly when the monthly tier is the only realistic path for your terms. If the website itself is the weak link, business sites start at $1,500.',
+        'The same honest packages as everywhere else: $400 for the one-off tune-up, $800 for the full foundation, $249 or $500 a month for ongoing work and $1,000 a month where the fight justifies it. City competition doesn’t change our prices — it changes which package we’ll recommend, and we’ll say plainly when the monthly tier is the only realistic path for your terms. If the website itself is the weak link, business sites start at $1,500.',
       ],
     },
   ],

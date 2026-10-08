@@ -74,7 +74,7 @@ const PILLARS = [
     slug: 'seo-perth', type: 'pillar', status: 'live', phase: 2,
     name: 'SEO Perth', serviceType: 'Search engine optimisation',
     title: 'SEO Perth — Search Optimisation Done Honestly | C4 Studios',
-    description: 'SEO for Perth businesses without the lock-in: one-off fixes from $400 or monthly growth plans from $500. Plain-English reporting, no smoke and mirrors.',
+    description: 'SEO for Perth businesses without the lock-in: one-off fixes from $400 or monthly plans from $249. Plain-English reporting, no smoke and mirrors.',
     priority: 0.9, changefreq: 'monthly',
     links: {
       pillars: ['web-design-perth', 'ai-search-optimisation-perth'],
