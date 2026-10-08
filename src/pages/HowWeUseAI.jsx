@@ -57,7 +57,7 @@ export default function HowWeUseAI() {
   useDocumentHead({
     title: 'How we use AI — C4 Studios',
     description:
-      'The full C4 Studios position on AI: where the founder stands personally, the parenting rule the studio runs by, and six checkable commitments. Judgement stays human, AI use is disclosed, and students never touch a tool.',
+      'The full C4 Studios position on AI: where the founder stands personally, the parenting rule the studio runs by, and five checkable commitments. Judgement stays human and AI use is disclosed.',
     path: '/how-we-use-ai',
     jsonLd: [
       breadcrumbSchema([
