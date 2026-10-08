@@ -55,11 +55,6 @@ import Contact from './pages/Contact';
 import Support from './pages/Support';
 import Home from './pages/Home';
 import Lens from './pages/Lens';
-import Foresight from './pages/Foresight';
-import ForesightBusiness from './pages/ForesightBusiness';
-import ForesightSchools from './pages/ForesightSchools';
-import ForesightLaw from './pages/ForesightLaw';
-import TrainingEnquiry from './pages/TrainingEnquiry';
 import Portfolio from './pages/Portfolio';
 import ServiceWeb from './pages/ServiceWeb';
 import ServiceAI from './pages/ServiceAI';
@@ -75,11 +70,6 @@ export const PAGES = {
     "Support": Support,
     "Home": Home,
     "Lens": Lens,
-    "Foresight": Foresight,
-    "ForesightBusiness": ForesightBusiness,
-    "ForesightSchools": ForesightSchools,
-    "ForesightLaw": ForesightLaw,
-    "TrainingEnquiry": TrainingEnquiry,
     "Portfolio": Portfolio,
     "ServiceWeb": ServiceWeb,
     "ServiceAI": ServiceAI,

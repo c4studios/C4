@@ -26,12 +26,13 @@ const groups = [
       { label: 'Web & Applications', page: 'ServiceWeb' },
       { key: 'C4i', label: <C4iWordmark />, page: 'C4i' },
       { label: 'C4 Lens', page: 'Lens' },
-      // C4Site is its own business now (8 Oct 2026). It gets one sister link,
-      // "C4Site, by C4", once c4site.com.au is live (D2).
       { label: 'SEO & Copywriting', page: 'SeoCopy' },
       // The orphaned Private AI offering now has a crawlable home here.
       { label: 'Private AI', to: '/private-ai' },
       { label: 'Lead Engine', to: '/lead-engine' },
+      // C4Site is its own business (8 Oct 2026) on its own domain (live
+      // 9 Oct). One sister link, worded per D2.
+      { label: 'C4Site, by C4', href: 'https://c4site.com.au/' },
     ]
   },
   {

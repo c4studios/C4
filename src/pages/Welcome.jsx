@@ -95,8 +95,8 @@ const ARMS = [
       </svg>
     ),
   },
-  /* SEO & Copywriting took C4Site's place on 8 Oct 2026 (D2). C4Site gets
-     a sister link here once c4site.com.au is live. */
+  /* SEO & Copywriting took C4Site's place on 8 Oct 2026 (D2). C4Site has a
+     sister link under the arms instead, to c4site.com.au. */
   {
     to: '/seo-and-copywriting',
     name: 'SEO & Copywriting',
@@ -410,6 +410,10 @@ export default function Welcome() {
                 </Link>
               ))}
             </nav>
+            <p className="body" style={{ marginTop: '18px' }}>
+              {'AI training for teams and schools has its own home now: '}
+              <a href="https://c4site.com.au/" style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: '3px' }}>C4Site, by C4</a>.
+            </p>
           </div>
         </section>
 
