@@ -27,17 +27,20 @@ import './quotr.css';
 
 const isMonthly = (pkg) => /\/mo/.test(pkg.priceLabel || '');
 const money = (n) => `$${Math.round(n).toLocaleString('en-AU')}`;
+/* A package whose price isn't set yet (price: null, priceLabel 'TBC') has no
+   place on a price rail or in a till. It joins its lane once it's priced. */
+const priced = (list) => list.filter((p) => typeof p.price === 'number');
 
 /* The lanes are the arms, in the order the site sells them. `service` is the
    key /start already understands. */
 const LANES = [
-  { key: 'web', label: 'Website', packages: webDesignPackages, addOns: webDesignAddOns, service: 'web_design', payMonthly: true },
-  { key: 'automation', label: 'Automation', packages: automationPackages, service: 'automation' },
-  { key: 'lens', label: 'Photography', packages: c4LensPackages, service: 'lens' },
-  { key: 'brand', label: 'Brand', packages: brandingPackages, service: 'brand_platform' },
-  { key: 'seo', label: 'SEO', packages: seoPackages, service: 'seo' },
-  { key: 'social', label: 'Social', packages: socialMediaPackages, service: 'social' },
-  { key: 'care', label: 'Care plan', packages: supportPlans, service: 'support' },
+  { key: 'web', label: 'Website', packages: priced(webDesignPackages), addOns: webDesignAddOns, service: 'web_design', payMonthly: true },
+  { key: 'automation', label: 'Automation', packages: priced(automationPackages), service: 'automation' },
+  { key: 'lens', label: 'Photography', packages: priced(c4LensPackages), service: 'lens' },
+  { key: 'brand', label: 'Brand', packages: priced(brandingPackages), service: 'brand_platform' },
+  { key: 'seo', label: 'SEO', packages: priced(seoPackages), service: 'seo' },
+  { key: 'social', label: 'Social', packages: priced(socialMediaPackages), service: 'social' },
+  { key: 'care', label: 'Care plan', packages: priced(supportPlans), service: 'support' },
 ];
 
 /* The extras tray. The website lane has forty extras, and as one list they

@@ -8,7 +8,7 @@ export default {
     label: 'SEO Perth',
     title: ['SEO in Perth without', 'the smoke and mirrors.'],
     intro: [
-      'C4 Studios does SEO for Perth businesses the unglamorous way: fix the technical problems, build pages people actually search for, earn links that make sense, and report it all in plain English. One-off packages start at $400; monthly growth plans run from $500 a month on a three-month minimum — not a twelve-month contract.',
+      'C4 Studios does SEO for Perth businesses the unglamorous way: fix the technical problems, build pages people actually search for, earn links that make sense, and report it all in plain English. One-off packages start at $400; monthly plans run from $249 a month on a three-month minimum — not a twelve-month contract.',
       'And if your site is healthy and your market is small, we’ll tell you a one-off tune-up is all you need. Retainers should be earned, not assumed.',
     ],
   },
@@ -41,6 +41,7 @@ export default {
       rows: [
         ['Core', '$400 one-off', 'A health check plus the essential fixes — meta tags, Search Console, sitemap submission.'],
         ['Foundation', '$800 one-off', 'Full technical audit, on-page work across five pages, schema markup and a 20-keyword research report.'],
+        ['Steady', '$249/mo, 3-month min.', 'A lighter plan: one optimised article a month, keyword tracking, technical monitoring and a monthly report.'],
         ['Growth', '$500/mo, 3-month min.', 'Ongoing work: two optimised posts a month, keyword tracking, link opportunities, monthly reporting.'],
         ['Dominate', '$1,000/mo, 6-month min.', 'Four posts a month, active link building, quarterly competitor analysis and Google Business Profile management.'],
       ],
@@ -96,7 +97,7 @@ export default {
   faqs: [
     {
       q: 'How much does SEO cost in Perth?',
-      a: 'One-off packages are $400 (Core) and $800 (Foundation). Ongoing plans are $500 a month on a three-month minimum, or $1,000 a month with active link building on a six-month minimum. No lock-in beyond those minimums, and no surprise extras.',
+      a: 'One-off packages are $400 (Core) and $800 (Foundation). Ongoing plans are $249 a month (Steady) or $500 a month (Growth), both on a three-month minimum, or $1,000 a month with active link building on a six-month minimum. No lock-in beyond those minimums, and no surprise extras.',
     },
     {
       q: 'How long before SEO shows results?',

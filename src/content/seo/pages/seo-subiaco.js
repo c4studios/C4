@@ -38,7 +38,7 @@ export default {
       label: 'Pricing',
       heading: 'What does it cost?',
       body: [
-        'The published ladder, no precinct premium: $400 tune-up, $800 foundation, $500 a month for ongoing growth on a three-month minimum. Practices typically need the foundation plus a condition-page build; the monthly tier earns its place where competition around the hospital justifies it — and the audit will say either way. If the site itself undermines the work, rebuilds start at $1,500 plus the medical surcharge where it applies.',
+        'The published ladder, no precinct premium: $400 tune-up, $800 foundation, from $249 a month for ongoing work on a three-month minimum. Practices typically need the foundation plus a condition-page build; the monthly tier earns its place where competition around the hospital justifies it — and the audit will say either way. If the site itself undermines the work, rebuilds start at $1,500 plus the medical surcharge where it applies.',
       ],
     },
   ],

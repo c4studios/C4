@@ -38,7 +38,7 @@ export default {
       label: 'Pricing',
       heading: 'What does it cost?',
       body: [
-        'Published prices: $400 tune-up, $800 foundation, $500 a month where the growth justifies ongoing work — and in a corridor adding rooftops monthly, it often genuinely does, because the market itself compounds. We’ll still show the maths first. If the website loses the newcomers the rankings win, rebuilds start at $1,500.',
+        'Published prices: $400 tune-up, $800 foundation, from $249 a month where the growth justifies ongoing work — and in a corridor adding rooftops monthly, it often genuinely does, because the market itself compounds. We’ll still show the maths first. If the website loses the newcomers the rankings win, rebuilds start at $1,500.',
       ],
     },
   ],

@@ -497,6 +497,25 @@ export const seoPackages = [
       'Keyword research report (20 keywords)',
     ],
   },
+  /* The lighter monthly plan, priced by Caleb on 8 Oct 2026. Scope as he
+     set it: one article a month, keyword tracking, technical monitoring and
+     a monthly report. Feature wording matches Growth's so the two compare
+     line for line. */
+  {
+    key: 'steady',
+    name: 'Steady',
+    price: 249,
+    priceLabel: '$249/mo',
+    priceSuffix: 'min. 3 months',
+    popular: false,
+    description: 'A lighter monthly plan: one article a month, tracked and reported.',
+    features: [
+      '1 new optimised blog post/month',
+      'Monthly keyword tracking',
+      'Ongoing technical SEO monitoring',
+      'Monthly performance report',
+    ],
+  },
   {
     key: 'growth',
     name: 'Growth',

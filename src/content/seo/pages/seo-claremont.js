@@ -38,7 +38,7 @@ export default {
       label: 'Pricing',
       heading: 'What does it cost?',
       body: [
-        'Published prices, no postcode loading: $400 for the tune-up — often disproportionately effective here, for the reasons above — $800 for the full foundation, $500 a month where ongoing content earns its keep. Established businesses usually need the foundation once, then quarterly attention rather than a heavy retainer. If the website itself is beyond saving, rebuilds from $1,500 keep your domain and its history intact.',
+        'Published prices, no postcode loading: $400 for the tune-up — often disproportionately effective here, for the reasons above — $800 for the full foundation, from $249 a month where ongoing content earns its keep. Established businesses usually need the foundation once, then quarterly attention rather than a heavy retainer. If the website itself is beyond saving, rebuilds from $1,500 keep your domain and its history intact.',
       ],
     },
   ],

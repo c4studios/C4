@@ -37,7 +37,7 @@ export default {
       label: 'Pricing',
       heading: 'What does it cost?',
       body: [
-        'Published prices: $400 tune-up, $800 foundation including the catchment map, $500 a month where the eastern build-out justifies ongoing work. Workshops and suppliers usually need the foundation plus two or three honest service-area pages — a bounded project, not a subscription. If the site can’t hold those pages, builds start at $1,500 with the structure included.',
+        'Published prices: $400 tune-up, $800 foundation including the catchment map, from $249 a month where the eastern build-out justifies ongoing work. Workshops and suppliers usually need the foundation plus two or three honest service-area pages — a bounded project, not a subscription. If the site can’t hold those pages, builds start at $1,500 with the structure included.',
       ],
     },
   ],

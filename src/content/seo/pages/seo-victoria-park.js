@@ -38,7 +38,7 @@ export default {
       label: 'Pricing',
       heading: 'What does it cost?',
       body: [
-        'Published prices, strip or not: $400 for the tune-up, $800 for the foundation including the cuisine-page plan, $500 a month where ongoing content and tracking are justified. Most venues need the foundation plus a disciplined review habit before any retainer makes sense — and we’ll say so. If the website can’t carry a structured menu at all, that’s an $800 build conversation first.',
+        'Published prices, strip or not: $400 for the tune-up, $800 for the foundation including the cuisine-page plan, from $249 a month where ongoing content and tracking are justified. Most venues need the foundation plus a disciplined review habit before any retainer makes sense — and we’ll say so. If the website can’t carry a structured menu at all, that’s an $800 build conversation first.',
       ],
     },
   ],

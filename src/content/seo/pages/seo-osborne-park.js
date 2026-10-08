@@ -38,7 +38,7 @@ export default {
       label: 'Pricing',
       heading: 'What does it cost?',
       body: [
-        'Published prices, no postcode premium: $400 tune-up, $800 foundation including the category-page plan, $500 a month when ongoing content and tracking earn their keep. Showroom businesses usually need the foundation plus a category build-out first — recurring spend only makes sense once the pages exist to rank. If the site can’t carry category pages at all, that’s a build conversation first, from $1,500.',
+        'Published prices, no postcode premium: $400 tune-up, $800 foundation including the category-page plan, from $249 a month when ongoing content and tracking earn their keep. Showroom businesses usually need the foundation plus a category build-out first — recurring spend only makes sense once the pages exist to rank. If the site can’t carry category pages at all, that’s a build conversation first, from $1,500.',
       ],
     },
   ],
