@@ -57,9 +57,9 @@ export default function Insights() {
   const [lead, ...rest] = articles;
 
   useDocumentHead({
-    title: 'Insights — Writing on AI, Web and Design | C4 Studios',
+    title: 'Insights — Writing on Web and Design | C4 Studios',
     description:
-      'Practical writing from a working Perth studio: what we tell clients about AI, what websites really cost, and the things the industry would rather not say.',
+      'Practical writing from a working Perth studio: what websites really cost, and the things the industry would rather not say.',
     path: '/insights',
     jsonLd: [
       localBusinessSchema(),
@@ -72,7 +72,7 @@ export default function Insights() {
         '@type': 'CollectionPage',
         name: 'Insights',
         url: `${SITE_URL}/insights/`,
-        description: 'Articles from C4 Studios on AI, web and design.',
+        description: 'Articles from C4 Studios on web and design.',
       },
     ],
   });
@@ -84,7 +84,7 @@ export default function Insights() {
           <h1 className="ins__title">Things worth writing down.</h1>
           <p className="ins__intro">
             What we end up explaining to clients often enough that it may as well
-            be written down. Mostly about AI, websites and what things actually
+            be written down. Mostly about websites and what things actually
             cost. Everything here is free to read and free to disagree with.
           </p>
           <p className="ins__key">
