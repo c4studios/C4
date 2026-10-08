@@ -30,16 +30,11 @@ const serviceDropdown = [
     page: 'Lens',
     brief: 'Photography, video & brand identity',
   },
-  {
-    label: 'C4Site',
-    code: 'C4',
-    page: 'Foresight',
-    brief: 'Workplace AI training & workshops',
-  },
-  /* Added 2 Oct 2026. When C4Site moves off, this takes its place as C4. */
+  /* C4Site is its own business now, so C4 Studios no longer lists it here
+     (Caleb, 8 Oct 2026). SEO & Copywriting takes its slot as C4 (D2). */
   {
     label: 'SEO & Copywriting',
-    code: 'C5',
+    code: 'C4',
     page: 'SeoCopy',
     brief: 'Found in search, worth reading once found',
   },
@@ -358,6 +353,15 @@ export default function NavHeader() {
   const panelRef = useRef(null);
   const closeTimer = useRef(null);
   const prevPathRef = useRef(null);
+  // True while the sheet is open because the pointer is over it. A click on
+  // the trigger then keeps it open: it used to toggle it shut, so the items
+  // vanished under the cursor, and a touch tap (which fires mouseenter first)
+  // could never open it at all.
+  const hoverOpened = useRef(false);
+  // On desktop widths the bar stays put; only below lg (logo and menu button)
+  // does it slide away on scroll. It used to vanish on any downward scroll,
+  // which read as the nav disappearing in a windowed browser.
+  const desktopRef = useRef(false);
 
   /* Cloudflare 308-normalises prerendered paths to their slash form (/Lens
      becomes /Lens/), so every route test here compares without it. */
@@ -370,10 +374,22 @@ export default function NavHeader() {
   // but kept for parity with any case-variant path).
   const lockVisible = isLens;
 
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return undefined;
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const sync = () => {
+      desktopRef.current = mq.matches;
+      if (mq.matches) setHidden(false);
+    };
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+
   useMotionValueEvent(scrollY, "change", (latest) => {
     const prev = scrollY.getPrevious();
     setScrolled(latest > 30);
-    setHidden(!lockVisible && latest > prev && latest > 120);
+    setHidden(!lockVisible && !desktopRef.current && latest > prev && latest > 120);
   });
 
   useEffect(() => {
@@ -420,14 +436,31 @@ export default function NavHeader() {
   const handleDropdownEnter = () => {
     clearTimeout(closeTimer.current);
     // Track only the closed->open transition, not every hover re-entry.
-    if (!servicesOpen) trackEvent('nav_services_open', {});
+    if (!servicesOpen) {
+      trackEvent('nav_services_open', {});
+      hoverOpened.current = true;
+    }
     setServicesOpen(true);
   };
 
   const handleDropdownLeave = () => {
     // Long enough to cross the bridge below the trigger or drift off the
     // panel's edge and back; short enough that the sheet still folds away.
-    closeTimer.current = setTimeout(() => setServicesOpen(false), 260);
+    closeTimer.current = setTimeout(() => {
+      hoverOpened.current = false;
+      setServicesOpen(false);
+    }, 260);
+  };
+
+  const handleTriggerClick = () => {
+    // The first click after a hover-open keeps the sheet open (see
+    // hoverOpened). Keyboard and later clicks toggle as before.
+    if (hoverOpened.current && servicesOpen) {
+      hoverOpened.current = false;
+      return;
+    }
+    hoverOpened.current = false;
+    setServicesOpen((o) => !o);
   };
 
   // History shortcut: if the visitor arrived from the mapped parent, go back
@@ -544,7 +577,7 @@ export default function NavHeader() {
                     <button
                       type="button"
                       ref={buttonRef}
-                      onClick={() => setServicesOpen(o => !o)}
+                      onClick={handleTriggerClick}
                       onKeyDown={onTriggerKeyDown}
                       aria-haspopup="true"
                       aria-expanded={servicesOpen}

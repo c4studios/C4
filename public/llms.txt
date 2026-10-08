@@ -2,15 +2,15 @@
 
 > C4 Studios is a founder-led design, development and AI studio based in Perth,
 > Western Australia. We build custom high-performance websites, AI automations
-> and agents, private AI systems, brand photography, videography and motion
-> graphics, and run practical AI training for teams and schools.
+> and agents, private AI systems, brand photography, videography, motion
+> graphics, SEO and copywriting.
 
 C4 Studios operates across four arms under one roof:
 
-- **Web** — custom websites and web apps, redesigns, e-commerce, landing pages, SEO and ongoing support.
+- **Web** — custom websites and web apps, redesigns, e-commerce, landing pages and ongoing support.
 - **C4i (AI)** — AI automations, agents, workflow automation, and private AI systems that run on your own hardware or in the cloud.
 - **C4 Lens** — brand photography, videography, drone/aerial work and motion graphics.
-- **C4Site** — practical AI training, workshops and incursions for workplaces and schools.
+- **SEO & copywriting** — technical SEO, on-page work, monthly articles and website copy.
 
 Founded 2022 by Caleb Scott. Serving Perth, Fremantle and Western Australia
 (and remote clients Australia-wide). Every project is delivered directly by the
@@ -26,7 +26,6 @@ person building it.
 - [AI services](https://c4studios.com.au/ServiceAI): How C4 applies AI to real business workflows.
 - [C4 Lens — photography & video](https://c4studios.com.au/Lens): Brand photography, videography, drone work and motion graphics.
 - [SEO & copywriting](https://c4studios.com.au/seo-and-copywriting): SEO packages from $400 one-off or $500 a month, and website copy at $500 with a build.
-- [C4Site — AI training](https://c4studios.com.au/Foresight): Practical AI workshops for workplaces and schools.
 - [Lead Engine](https://c4studios.com.au/lead-engine): Done-for-you lead generation system.
 - [Portfolio](https://c4studios.com.au/Portfolio): Selected client work and case studies.
 - [Insights](https://c4studios.com.au/insights): Articles on AI, websites and search, each with its sources listed.
@@ -44,12 +43,6 @@ person building it.
 - [AI & automation Perth](https://c4studios.com.au/ai-automation-perth): Workflows from $750 to custom AI agents.
 - [Branding Perth](https://c4studios.com.au/branding-perth): Logos from $250 to full identity systems.
 - [Photo & video Perth](https://c4studios.com.au/photo-video-perth): Headshots, brand shoots, drone and short-form content.
-
-## AI training
-
-- [AI training for business](https://c4studios.com.au/ai-training-for-business): Practical AI workshops for teams and organisations.
-- [AI training for schools](https://c4studios.com.au/ai-training-for-schools): AI education programs for schools and educators.
-- [AI training for law firms](https://c4studios.com.au/ai-training-for-law-firms): AI adoption and workshops tailored to legal practices.
 
 <!-- The build inserts Guides, Articles, Industries and Suburbs here from the SEO registry, and rewrites every link to the address the server serves. -->
 

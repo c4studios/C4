@@ -166,7 +166,7 @@ export default {
       kind: 'prose',
       heading: 'Why we publish this',
       body: [
-        'We run [AI training for businesses](/ai-training-for-business) and the liability question comes up in almost every session. Handing over the answer is more useful than holding it back, and a firm that understands its own contract asks better questions of everyone selling to it.',
+        'Handing over the answer is more useful than holding it back, and a firm that understands its own contract asks better questions of everyone selling to it.',
         'Where the harder problem is confidentiality rather than copyright, an indemnity does not help, because the exposure is the data going out at all. That is a different architecture, and it is what [private AI](/private-ai) is for.',
         'Our own position on how we use these tools in client work is at [how we use AI](/how-we-use-ai).',
       ],

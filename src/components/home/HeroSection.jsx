@@ -130,7 +130,7 @@ export default function HeroSection() {
               className="mt-6 text-[13px] leading-relaxed md:mt-7"
               style={{ color: 'var(--c4-text-subtle)' }}
             >
-              Websites and apps, private AI, photography, and hands-on AI training.
+              Websites and apps, private AI, photography, SEO and copywriting.
               Perth-built, all four doors below.
             </motion.p>
           </div>

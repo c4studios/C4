@@ -2,7 +2,7 @@
  * Pillar — AI & Automation Perth.
  * Unique detail: the proof section names C4's own automation products
  * (ReviewLoop's AI reply writer, Nudge's rate-rise nudges, Quotr) running
- * in production, plus the C4Site workshop tie-in.
+ * in production.
  */
 export default {
   hero: {
@@ -75,14 +75,6 @@ export default {
       body: [
         'Sometimes the right answer is a $30-a-month off-the-shelf product, and we’ll tell you so — recommending one costs us a project and earns us a referrer. Buy when your need is generic and a mature tool nails it. Build when the workflow is genuinely yours: your rules, your systems wired together, your edge cases — or when you’re paying for three overlapping subscriptions that one custom workflow would replace.',
         'The audit settles it with numbers rather than vibes: hours saved, subscriptions replaced, payback period. If custom doesn’t clear the bar, you keep the audit and the recommendation anyway.',
-      ],
-    },
-    {
-      kind: 'prose',
-      label: 'C4Site',
-      heading: 'Want your team trained, not just tooled?',
-      body: [
-        'Automation sticks when the team understands it. C4Site is our workplace AI training arm: half-day and full-day workshops, quoted per team and run on-site with your actual workflows. The full-day version ends with an automation readiness map — a prioritised list of what to automate next and what it would cost.',
       ],
     },
   ],

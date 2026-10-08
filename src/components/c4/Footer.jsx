@@ -26,7 +26,8 @@ const groups = [
       { label: 'Web & Applications', page: 'ServiceWeb' },
       { key: 'C4i', label: <C4iWordmark />, page: 'C4i' },
       { label: 'C4 Lens', page: 'Lens' },
-      { label: 'C4Site', page: 'Foresight' },
+      // C4Site is its own business now (8 Oct 2026). It gets one sister link,
+      // "C4Site, by C4", once c4site.com.au is live (D2).
       { label: 'SEO & Copywriting', page: 'SeoCopy' },
       // The orphaned Private AI offering now has a crawlable home here.
       { label: 'Private AI', to: '/private-ai' },
