@@ -57,8 +57,8 @@
 /support/      /Support/     301
 /serviceweb    /ServiceWeb/  301
 /serviceweb/   /ServiceWeb/  301
-/serviceai     /ServiceAI/   301
-/serviceai/    /ServiceAI/   301
+# /serviceai used to land on /ServiceAI/. Both moved to C4Site on 9 Oct 2026,
+# so its rules are in the C4i block below, pointing straight there.
 
 # C4Site moved to its own domain, c4site.com.au (live 9 Oct 2026). Every old
 # C4Site address here sends a permanent redirect straight to its new page, in
@@ -114,9 +114,63 @@
 /ai-writes-more-code-and-ships-less        https://c4site.com.au/articles/ai-writes-more-code-and-ships-less/        301
 /ai-writes-more-code-and-ships-less/       https://c4site.com.au/articles/ai-writes-more-code-and-ships-less/        301
 
+# C4i moved to C4Site on 9 Oct 2026, with the Lead Engine page and the AI &
+# automation pages. Each old address goes straight to its C4Site page in one
+# hop, with and without the trailing slash. None of these paths is prerendered
+# any more (src/lib/prerenderRoutes.js and the SEO registry), so no rule in
+# this block shadows a real page. The 36 rules are verbatim from C4Site's map,
+# c4site-website/launch/private-ai-redirects.txt: /ServiceAI and /serviceai go
+# to AI automation, which carries that page's substance now, and the twelve
+# suburb pages, which weren't ported, share the pillar's landing. The query
+# string carries through, and /private-ai/ there still reads ?tier= and ?supply=.
+
+# Private AI (was the C4i offer)
+/private-ai                   https://c4site.com.au/private-ai/            301
+/private-ai/                  https://c4site.com.au/private-ai/            301
+/c4i                          https://c4site.com.au/private-ai/            301
+/c4i/                         https://c4site.com.au/private-ai/            301
+
+# The cloud AI page: its substance is AI automation's
+/ServiceAI                    https://c4site.com.au/ai-automation-perth/   301
+/ServiceAI/                   https://c4site.com.au/ai-automation-perth/   301
+/serviceai                    https://c4site.com.au/ai-automation-perth/   301
+/serviceai/                   https://c4site.com.au/ai-automation-perth/   301
+
+# AI automation, and its twelve suburb pages (not ported as pages)
+/ai-automation-perth          https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-perth/         https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-perth-cbd      https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-perth-cbd/     https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-fremantle      https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-fremantle/     https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-subiaco        https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-subiaco/       https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-joondalup      https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-joondalup/     https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-osborne-park   https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-osborne-park/  https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-victoria-park  https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-victoria-park/ https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-claremont      https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-claremont/     https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-scarborough    https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-scarborough/   https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-canning-vale   https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-canning-vale/  https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-midland        https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-midland/       https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-rockingham     https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-rockingham/    https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-mandurah       https://c4site.com.au/ai-automation-perth/   301
+/ai-automation-mandurah/      https://c4site.com.au/ai-automation-perth/   301
+
+# The Lead Engine (was "C4 Lead Engine")
+/lead-engine                  https://c4site.com.au/lead-engine/           301
+/lead-engine/                 https://c4site.com.au/lead-engine/           301
+
 # SPA routes that are NOT prerendered — they need index.html served at 200.
-# Everything else on the site has its own static file (115 of them), which is
-# what makes the real 404 below safe.
+# Everything else on the site has its own static file (85 prerendered pages
+# on 9 Oct 2026), which is what makes the real 404 below safe.
 /welcome     /  200
 /welcome/    /  200
 

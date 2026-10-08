@@ -152,9 +152,9 @@ function ReadOdometer({ seconds, on }) {
    ═══════════════════════════════════════════════════════════════════════ */
 export default function Contact() {
   useDocumentHead({
-    title: 'Contact C4 Studios — Web Design & AI in Perth',
+    title: 'Contact C4 Studios — Web Design & Photography in Perth',
     description:
-      'Talk to C4 Studios in Perth about a website, AI automation, private AI, SEO or photography. A reply within one business day.',
+      'Talk to C4 Studios in Perth about a website, custom software, SEO or photography. A reply within one business day.',
     path: '/Contact',
     /* The page is about the business entity defined site-wide as
        #localbusiness (address, phone, email live there, not here). */

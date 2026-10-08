@@ -19,7 +19,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import {
   webDesignPackages, webDesignAddOns, brandingPackages, c4LensPackages, seoPackages,
-  automationPackages, socialMediaPackages, supportPlans, subscriptionInfo,
+  socialMediaPackages, supportPlans, subscriptionInfo,
   GST_NOTE, ASTERISK_CLAUSE,
 } from '@/data/pricing';
 import { createPageUrl } from '@/utils';
@@ -32,10 +32,10 @@ const money = (n) => `$${Math.round(n).toLocaleString('en-AU')}`;
 const priced = (list) => list.filter((p) => typeof p.price === 'number');
 
 /* The lanes are the arms, in the order the site sells them. `service` is the
-   key /start already understands. */
+   key /start already understands. The Automation lane went to C4Site with
+   C4i on 9 Oct 2026, and its packages left pricing.js with it. */
 const LANES = [
   { key: 'web', label: 'Website', packages: priced(webDesignPackages), addOns: webDesignAddOns, service: 'web_design', payMonthly: true },
-  { key: 'automation', label: 'Automation', packages: priced(automationPackages), service: 'automation' },
   { key: 'lens', label: 'Photography', packages: priced(c4LensPackages), service: 'lens' },
   { key: 'brand', label: 'Brand', packages: priced(brandingPackages), service: 'brand_platform' },
   { key: 'seo', label: 'SEO', packages: priced(seoPackages), service: 'seo' },

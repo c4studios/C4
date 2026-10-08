@@ -8,7 +8,6 @@ import { Suspense, lazy, useEffect } from 'react';
 import { trackEvent } from './lib/track';
 import PageNotFound from './lib/PageNotFound';
 import SeoPage from './pages/SeoPage';
-import LeadEngine from './pages/LeadEngine';
 import { liveSeoPages } from './content/seo/registry';
 import { createPageUrl } from './utils';
 import WelcomeReturnButton from './components/welcome/WelcomeReturnButton';
@@ -22,10 +21,10 @@ import SeoCopy from './pages/SeoCopy';
 // the main bundle.
 const Welcome = lazy(() => import('./pages/Welcome'));
 
-// Private AI — offering landing page (flat slug). Lazy so GSAP-heavy page
-// code stays out of the main bundle.
-const PrivateAI = lazy(() => import('./pages/PrivateAI'));
-
+// C4i, /private-ai, /ServiceAI, /lead-engine and the AI & automation pages
+// moved to C4Site (c4site.com.au) with C4i on 9 Oct 2026. public/_redirects
+// sends their old paths there. The page files stay in src/ unimported until
+// a later cleanup deletes them.
 
 // How we use AI — the published position statement (flat slug).
 const HowWeUseAI = lazy(() => import('./pages/HowWeUseAI'));
@@ -51,7 +50,7 @@ function LegacyStartProjectRedirect() {
 }
 
 /* First-party page_view on every SPA route change (and the landing render).
-   trackEvent itself refuses to fire under the prerender UA, so the 113
+   trackEvent itself refuses to fire under the prerender UA, so the
    prerendered pages don't log a deploy's worth of phantom views. */
 function PageViewTracker() {
   const location = useLocation();
@@ -127,20 +126,6 @@ function App() {
               }
             />
           ))}
-          {/* Lead Engine — standalone product landing page (flat slug) */}
-          <Route path="/lead-engine" element={
-            <LayoutWrapper currentPageName="LeadEngine">
-              <LeadEngine />
-            </LayoutWrapper>
-          } />
-          {/* Private AI — offering landing page (flat slug) */}
-          <Route path="/private-ai" element={
-            <LayoutWrapper currentPageName="PrivateAI">
-              <Suspense fallback={null}>
-                <PrivateAI />
-              </Suspense>
-            </LayoutWrapper>
-          } />
           {/* SEO & copywriting — service page (flat slug) */}
           <Route path="/seo-and-copywriting" element={
             <LayoutWrapper currentPageName="SeoCopy">

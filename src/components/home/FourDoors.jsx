@@ -1,22 +1,24 @@
 /* ─────────────────────────────────────────────────────────────────
-   FOLD 3 — FOUR DOORS (ProductTrio reborn; the identical card grid dies)
+   FOLD 3 — THE DOORS (ProductTrio reborn; the identical card grid dies)
 
-   Four material doorways, each an honest sample of the destination
-   arm's own shipped identity, at doorway scale only (memo §1.2):
+   Three material doorways since 9 Oct 2026, when the C4i door went to
+   C4Site with C4i (the file keeps its old name). Each is an honest
+   sample of the destination arm's own shipped identity, at doorway
+   scale only (memo §1.2):
      C1 · a weave of real client captures on studio dark
-     C2 · the solder-mask board — sampled ai-arm tokens + copper traces
-     C3 · black behind a hairline 9-gon aperture arc (no amber here —
+     C2 · black behind a hairline 9-gon aperture arc (no amber here —
           the tungsten glow belongs to /Lens itself)
-     C4 · the paste-up board from /seo-and-copywriting, your listing
+     C3 · the paste-up board from /seo-and-copywriting, your listing
           ringed at first (SEO & Copywriting took C4Site's place, D2)
-   Every ProductTrio destination, label, outcome line, price and
-   timeframe survives verbatim; both links per door sit in the DOM at
-   rest. The proof-strip stats are letterpressed into the lintel.
+   The codes match the Services menu. Three across from 900px, each door
+   on its side between 640 and 899, one column on phones: home.css has
+   the reasons. Every ProductTrio destination, label, outcome line, price
+   and timeframe survives verbatim; both links per door sit in the DOM
+   at rest. The proof-strip stats are letterpressed into the lintel.
    ───────────────────────────────────────────────────────────────── */
 import React, { useLayoutEffect, useRef } from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import { ArrowRight } from 'lucide-react';
-import C4iWordmark from '@/components/c4/C4iWordmark';
 import { trackEvent } from '@/lib/track';
 import SeoDoorFace from '@/components/seo-copy/DoorFace';
 import { seoPackages } from '@/data/pricing';
@@ -45,10 +47,12 @@ const WEAVE = [
   { src: weaveHakea, alt: 'Transform Hakea website capture' },
 ];
 
-/* Hairline 9-gon arc for the C3 face — six of nine edges, off-centre. */
+/* Hairline 9-gon arc for the C2 face — six of nine edges, off-centre. */
 /* A miniature of the /Lens hero: the 9-blade aperture iris inside its
    barrel, f-stop ticks, HUD corner brackets and the REC lamp. The blade
-   group rotates on hover (CSS) like the lens being focused. */
+   group rotates on hover (CSS) like the lens being focused. The plate is
+   100 x 140 cut with `slice`, so the face has to stay at least 3:4 tall
+   or the REC lamp and the top brackets fall off the edge. */
 function ApertureIris() {
   const CX = 50;
   const CY = 54;
@@ -99,34 +103,6 @@ function ApertureIris() {
   );
 }
 
-/* Copper trace routing for the C2 face — sampled ai-arm values
-   (board #0e2f4e / module #134634 / copper #dd9e63 / gold #e8c56c). */
-function BoardTraces() {
-  return (
-    <svg className="hm-traces" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <g fill="none" stroke="#dd9e63" strokeWidth="1" strokeOpacity="0.55" vectorEffect="non-scaling-stroke">
-        <path d="M-2 22 H 34 L 44 32 V 58" vectorEffect="non-scaling-stroke" />
-        <path d="M-2 30 H 28 L 38 40 V 96 L 48 106 H 70" vectorEffect="non-scaling-stroke" />
-        <path d="M102 12 H 74 L 64 22 V 42" vectorEffect="non-scaling-stroke" />
-        <path d="M102 84 H 84 L 76 76 V 30" vectorEffect="non-scaling-stroke" />
-      </g>
-      <g fill="#dd9e63" fillOpacity="0.8">
-        <circle cx="44" cy="58" r="1.7" />
-        <circle cx="64" cy="42" r="1.7" />
-        <circle cx="70" cy="106" r="1.7" />
-        <circle cx="76" cy="30" r="1.7" />
-      </g>
-      <rect x="50" y="46" width="22" height="16" rx="1.4" fill="#134634" stroke="#e8c56c" strokeWidth="0.8" strokeOpacity="0.85" />
-      <g fill="#e8c56c" fillOpacity="0.75">
-        <rect x="52.5" y="43.4" width="2.2" height="2.6" />
-        <rect x="57.5" y="43.4" width="2.2" height="2.6" />
-        <rect x="62.5" y="43.4" width="2.2" height="2.6" />
-        <rect x="67.5" y="43.4" width="2.2" height="2.6" />
-      </g>
-    </svg>
-  );
-}
-
 const DOORS = [
   {
     key: 'web',
@@ -141,31 +117,6 @@ const DOORS = [
     timeframe: '2 to 3 weeks',
     primary: { label: 'See the web work', to: '/ServiceWeb' },
     secondary: { label: 'or start a web brief', to: '/start?service=web_design' },
-  },
-  {
-    key: 'c4i',
-    face: 'c4i',
-    faceTo: '/c4i',
-    faceAria: 'Enter C4i',
-    tag: (
-      <>
-        <C4iWordmark /> · AI
-      </>
-    ),
-    word: 'Private AI & automations',
-    outcome:
-      'A private AI system on your own hardware, or cloud-based automations, agents and custom tools. Choose the setup that fits.',
-    fromPrice: 'Local or cloud',
-    timeframe: 'Scoped to you',
-    primary: {
-      label: (
-        <>
-          Explore <C4iWordmark />
-        </>
-      ),
-      to: '/c4i',
-    },
-    secondary: { label: 'or scope an AI build', to: '/start?service=automation' },
   },
   {
     key: 'lens',
@@ -207,7 +158,6 @@ function DoorFaceArt({ kind }) {
       </span>
     );
   }
-  if (kind === 'c4i') return <BoardTraces />;
   if (kind === 'lens') return <ApertureIris />;
   return <SeoDoorFace />;
 }
@@ -259,7 +209,7 @@ export default function FourDoors() {
             ref={h2Ref}
             className="hm-h2 max-w-[24ch] text-[clamp(1.7rem,3.4vw,2.7rem)]"
           >
-            Four services. One studio. Pick a starting point.
+            Three services from one studio. Pick where to start.
           </h2>
           <p className="hm-sub max-w-[36ch] text-[13.5px]">
             Most clients start with one of these. Each card opens a short brief: fixed scope, transparent pricing, founder reply within a business day.

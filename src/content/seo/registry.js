@@ -37,11 +37,14 @@ const SUBURBS = [
   { key: 'mandurah',      shortName: 'Mandurah',      batchPhase: 6, neighbours: ['rockingham', 'fremantle'],                  industries: ['websites-for-cafes', 'websites-for-trades'] },
 ];
 
-/* ── Suburb-page services (web design, SEO, AI & automation only) ──── */
+/* ── Suburb-page services (web design and SEO only) ────────────────── */
+// AI & Automation left on 9 Oct 2026 with C4i, which is C4Site's now. Its
+// pillar (/ai-automation-perth) and its 12 suburb pages are no longer
+// generated; public/_redirects sends all 13 old paths to C4Site's
+// /ai-automation-perth/. Don't add the service back here.
 const SUBURB_SERVICES = [
   { prefix: 'web-design',    label: 'Web Design',      pillar: 'web-design-perth',    serviceType: 'Web design' },
   { prefix: 'seo',           label: 'SEO',             pillar: 'seo-perth',           serviceType: 'Search engine optimisation' },
-  { prefix: 'ai-automation', label: 'AI & Automation', pillar: 'ai-automation-perth', serviceType: 'AI and workflow automation' },
 ];
 
 /* ── Pillars (6) ───────────────────────────────────────────────────── */
@@ -65,7 +68,7 @@ const PILLARS = [
     description: 'Perth web development for online stores, web apps, portals and integrations. React and Next.js builds at a fixed price, from the studio behind Quotr.',
     priority: 0.9, changefreq: 'monthly',
     links: {
-      pillars: ['web-design-perth', 'ai-automation-perth'],
+      pillars: ['web-design-perth'],
       industries: ['ecommerce-for-retail-and-makers', 'websites-for-recruitment-agencies', 'websites-for-law-firms'],
       comparisons: ['wordpress-vs-nextjs', 'how-much-does-a-website-cost-perth', 'how-long-does-a-website-take'],
     },
@@ -80,18 +83,6 @@ const PILLARS = [
       pillars: ['web-design-perth', 'ai-search-optimisation-perth'],
       industries: ['websites-for-trades', 'websites-for-allied-health', 'websites-for-cafes'],
       comparisons: ['do-small-businesses-need-seo', 'how-much-does-a-website-cost-perth'],
-    },
-  },
-  {
-    slug: 'ai-automation-perth', type: 'pillar', status: 'live', phase: 2,
-    name: 'AI & Automation Perth', serviceType: 'AI and workflow automation',
-    title: 'AI & Automation Perth for Business | C4 Studios',
-    description: 'Practical AI and workflow automation for Perth businesses — single workflows from $750 to custom AI agents, built by a studio that runs its own.',
-    priority: 0.9, changefreq: 'monthly',
-    links: {
-      pillars: ['web-development-perth', 'seo-perth', 'ai-search-optimisation-perth'],
-      industries: ['websites-for-recruitment-agencies', 'websites-for-law-firms', 'websites-for-trades'],
-      comparisons: ['how-much-does-a-website-cost-perth'],
     },
   },
   {
@@ -125,7 +116,7 @@ const PILLARS = [
     description: 'Show up when Perth customers ask ChatGPT, Perplexity or Google AI who to hire. GEO and AI-search optimisation from the studio that ranks itself.',
     priority: 0.9, changefreq: 'monthly',
     links: {
-      pillars: ['seo-perth', 'web-design-perth', 'ai-automation-perth'],
+      pillars: ['seo-perth', 'web-design-perth'],
       industries: ['websites-for-trades', 'websites-for-law-firms', 'websites-for-allied-health'],
       comparisons: ['do-small-businesses-need-seo', 'how-much-does-a-website-cost-perth'],
     },
@@ -156,7 +147,7 @@ const INDUSTRIES = [
     title: 'Websites for Law Firms Perth | C4 Studios',
     description: 'Law firm websites built by a UWA JD student: practice-area pages that answer real questions, intake that filters, and automation for routine work.',
     priority: 0.8, changefreq: 'monthly',
-    links: { pillars: ['web-design-perth', 'ai-automation-perth'], comparisons: ['how-much-does-a-website-cost-perth'] },
+    links: { pillars: ['web-design-perth'], comparisons: ['how-much-does-a-website-cost-perth'] },
   },
   {
     slug: 'websites-for-automotive', type: 'industry', status: 'live', phase: 4,
@@ -178,9 +169,9 @@ const INDUSTRIES = [
     slug: 'websites-for-recruitment-agencies', type: 'industry', status: 'live', phase: 4,
     name: 'Websites for Recruitment Agencies',
     title: 'Websites for Recruitment Agencies | C4 Studios',
-    description: 'Recruitment websites that serve candidates and clients without compromise — jobs boards, sector pages, brief-us paths, plus automation and outbound.',
+    description: 'Recruitment websites that serve candidates and clients without compromise — jobs boards, sector pages, brief-us paths, plus automation.',
     priority: 0.8, changefreq: 'monthly',
-    links: { pillars: ['web-design-perth', 'ai-automation-perth'], comparisons: ['how-much-does-a-website-cost-perth'] },
+    links: { pillars: ['web-design-perth'], comparisons: ['how-much-does-a-website-cost-perth'] },
   },
   {
     slug: 'websites-for-cafes', type: 'industry', status: 'live', phase: 4,
@@ -268,12 +259,13 @@ const COMPARISONS = [
   },
 ];
 
-/* ── Suburb pages (36 = 3 services × 12 suburbs), generated ────────── */
+/* ── Suburb pages (24 = 2 services × 12 suburbs), generated ────────── */
 // Per-page overrides for the generated entries. Phases 5/6 flip a suburb
 // page live by adding { status: 'live', title, description } under its slug
-// — everything else (link graph, schema fields) stays generated.
+// — everything else (link graph, schema fields) stays generated. The twelve
+// ai-automation-* overrides came out with the service on 9 Oct 2026.
 const SUBURB_PAGE_META = {
-  /* ── Phase 5 — batch 1 (top 6 suburbs × 3 services) ── */
+  /* ── Phase 5 — batch 1 (top 6 suburbs × 2 services) ── */
   'web-design-perth-cbd': {
     status: 'live',
     title: 'Web Design Perth CBD — City-Grade Websites | C4 Studios',
@@ -283,11 +275,6 @@ const SUBURB_PAGE_META = {
     status: 'live',
     title: 'SEO Perth CBD — Winnable City Terms | C4 Studios',
     description: 'SEO for Perth CBD businesses: which competitive city terms are winnable, which are not worth the money, and where specificity beats agency budgets.',
-  },
-  'ai-automation-perth-cbd': {
-    status: 'live',
-    title: 'AI & Automation Perth CBD for Firms | C4 Studios',
-    description: 'Automation for CBD firms: intake, document assembly and chasing that recover billable hours. Workflows from $750, confidentiality by design.',
   },
   'web-design-fremantle': {
     status: 'live',
@@ -299,11 +286,6 @@ const SUBURB_PAGE_META = {
     title: 'SEO Fremantle — Visitors & Locals | C4 Studios',
     description: 'Fremantle SEO that works both markets: weekend visitors and local services. Honest packages from $400, no tourism premium.',
   },
-  'ai-automation-fremantle': {
-    status: 'live',
-    title: 'AI & Automation Fremantle | C4 Studios',
-    description: 'Automation for Freo independents: bookings, orders and invoice chasing handled quietly while the personal touch stays personal. Workflows from $750.',
-  },
   'web-design-joondalup': {
     status: 'live',
     title: 'Web Design Joondalup & the North | C4 Studios',
@@ -313,11 +295,6 @@ const SUBURB_PAGE_META = {
     status: 'live',
     title: 'SEO Joondalup — Northern Corridor | C4 Studios',
     description: 'SEO for Joondalup and the northern corridor: map-pack wins, service-area coverage and honest advice on which suburbs are winnable.',
-  },
-  'ai-automation-joondalup': {
-    status: 'live',
-    title: 'AI & Automation Joondalup | C4 Studios',
-    description: 'Automation for the Joondalup appointment economy — reminders that kill no-shows, recalls that refill calendars. Workflows from $750.',
   },
   'web-design-osborne-park': {
     status: 'live',
@@ -329,11 +306,6 @@ const SUBURB_PAGE_META = {
     title: 'SEO Osborne Park — Category Pages | C4 Studios',
     description: 'SEO for the Osborne Park strip: category pages that fill carparks, B2B search capture and metro service-area coverage from a depot address.',
   },
-  'ai-automation-osborne-park': {
-    status: 'live',
-    title: 'AI & Automation Osborne Park | C4 Studios',
-    description: 'Automation for the working strip: quotes that follow themselves up, invoices that chase, account reorders on autopilot. From $750.',
-  },
   'web-design-subiaco': {
     status: 'live',
     title: 'Web Design Subiaco — Practices & Retail | C4 Studios',
@@ -343,11 +315,6 @@ const SUBURB_PAGE_META = {
     status: 'live',
     title: 'SEO Subiaco — Patients & Referrers | C4 Studios',
     description: 'SEO for the Subiaco double audience — patients and referrers — done inside AHPRA rules, plus Rokeby Road retail visibility. From $400.',
-  },
-  'ai-automation-subiaco': {
-    status: 'live',
-    title: 'AI & Automation Subiaco | C4 Studios',
-    description: 'Discreet automation for specialist suites: referral intake, recalls and report chasing inside the systems you already trust. From $750.',
   },
   'web-design-victoria-park': {
     status: 'live',
@@ -359,13 +326,8 @@ const SUBURB_PAGE_META = {
     title: 'SEO Victoria Park — Albany Hwy Strip | C4 Studios',
     description: 'SEO for the Vic Park strip: cuisine-specific searches, review velocity and the map-pack tiebreakers when competitors are metres apart.',
   },
-  'ai-automation-victoria-park': {
-    status: 'live',
-    title: 'AI & Automation Victoria Park | C4 Studios',
-    description: 'Automation for the Vic Park speed economy — instant enquiry replies, booking reminders and dealer lead routing. Workflows from $750.',
-  },
 
-  /* ── Phase 6 — batch 2 (remaining 6 suburbs × 3 services) ── */
+  /* ── Phase 6 — batch 2 (remaining 6 suburbs × 2 services) ── */
   'web-design-claremont': {
     status: 'live',
     title: 'Web Design Claremont — Rebuilt Properly | C4 Studios',
@@ -375,11 +337,6 @@ const SUBURB_PAGE_META = {
     status: 'live',
     title: 'SEO Claremont — Old Domains, New Wins | C4 Studios',
     description: 'Established Claremont businesses sit on aged-domain authority they have never used. We clear the technical dust and let it rank. From $400.',
-  },
-  'ai-automation-claremont': {
-    status: 'live',
-    title: 'AI & Automation Claremont | C4 Studios',
-    description: 'Clienteling, automated: client-book follow-ups, appointment lifecycles and post-purchase care for relationship businesses. From $750.',
   },
   'web-design-scarborough': {
     status: 'live',
@@ -391,11 +348,6 @@ const SUBURB_PAGE_META = {
     title: 'SEO Scarborough — The Season Curve | C4 Studios',
     description: 'Seasonal SEO done on a calendar: build winter, win summer. Surge pages, locals-base terms and the January fitness machine. From $400.',
   },
-  'ai-automation-scarborough': {
-    status: 'live',
-    title: 'AI & Automation Scarborough | C4 Studios',
-    description: 'Membership-lifecycle automation for the fitness cluster: intro follow-through, waitlists, pause-and-return flows, payment recovery. From $750.',
-  },
   'web-design-canning-vale': {
     status: 'live',
     title: 'Web Design Canning Vale — B2B & Industrial | C4 Studios',
@@ -405,11 +357,6 @@ const SUBURB_PAGE_META = {
     status: 'live',
     title: 'SEO Canning Vale — Supplier Searches | C4 Studios',
     description: 'B2B SEO for the industrial estate: capability terms procurement actually types, supplier-diligence pages and problem-search capture. From $400.',
-  },
-  'ai-automation-canning-vale': {
-    status: 'live',
-    title: 'AI & Automation Canning Vale | C4 Studios',
-    description: 'Dispatch-chain automation for warehouses and distributors: order updates that send themselves, PO chasing, reorder prompts. From $750.',
   },
   'web-design-midland': {
     status: 'live',
@@ -421,11 +368,6 @@ const SUBURB_PAGE_META = {
     title: 'SEO Midland — Metro Plus Regional | C4 Studios',
     description: 'Midland gets searched from two directions. We build for both: local map-pack work plus the hills-and-valley catchment competitors ignore. From $400.',
   },
-  'ai-automation-midland': {
-    status: 'live',
-    title: 'AI & Automation Midland | C4 Studios',
-    description: 'Distance-tolerant service for the gateway: photo-first quoting, ready-for-pickup notices and stock answers that save second trips. From $750.',
-  },
   'web-design-rockingham': {
     status: 'live',
     title: 'Web Design Rockingham — New Residents | C4 Studios',
@@ -436,11 +378,6 @@ const SUBURB_PAGE_META = {
     title: 'SEO Rockingham — Win the Waves | C4 Studios',
     description: 'Posting seasons and estate settlements deliver households choosing every provider at once. Be ranked and review-rich when they land. From $400.',
   },
-  'ai-automation-rockingham': {
-    status: 'live',
-    title: 'AI & Automation Rockingham | C4 Studios',
-    description: 'Growth without headcount: instant enquiry handling, onboarding rails and booking lifecycles for corridor businesses scaling fast. From $750.',
-  },
   'web-design-mandurah': {
     status: 'live',
     title: 'Web Design Mandurah — Peel Capital | C4 Studios',
@@ -450,11 +387,6 @@ const SUBURB_PAGE_META = {
     status: 'live',
     title: 'SEO Mandurah — Own the Peel | C4 Studios',
     description: 'Google treats the Peel as its own market — thinner competition, same prize. Regional SEO fundamentals that win front pages. From $400.',
-  },
-  'ai-automation-mandurah': {
-    status: 'live',
-    title: 'AI & Automation Mandurah | C4 Studios',
-    description: 'Automation behind the phone manner: after-the-call admin, trade waitlists and seasonal surge handling for Peel businesses. From $750.',
   },
 };
 
@@ -522,7 +454,6 @@ const ARTICLES = [
     dek: 'The per-seat maths, run properly, including where subscriptions win.',
     published: '2026-08-03', updated: '2026-08-03', readMinutes: 7,
     priority: 0.65, changefreq: 'yearly',
-    links: { pillars: ['ai-automation-perth'] },
   },
   {
     // Draft. The "at this time" qualifier is the article. Never let an edit

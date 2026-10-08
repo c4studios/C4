@@ -9,18 +9,17 @@ export const STATIC_ROUTES = [
   { path: '/', priority: 1.0, changefreq: 'weekly' },
   { path: '/About', priority: 0.7, changefreq: 'monthly' },
   { path: '/ServiceWeb', priority: 0.85, changefreq: 'monthly' },
-  { path: '/c4i', priority: 0.85, changefreq: 'monthly' },
-  { path: '/ServiceAI', priority: 0.8, changefreq: 'monthly' },
   { path: '/Lens', priority: 0.9, changefreq: 'monthly' },
   { path: '/seo-and-copywriting', priority: 0.85, changefreq: 'monthly' },
   // The C4Site pages (/Foresight, the three /ai-training-for-* pages,
   // /ai-training-enquiry and /c4sight-previews) moved to c4site.com.au on
   // 9 Oct 2026. public/_redirects sends their old paths there, so they are
   // neither prerendered nor listed in the sitemap here.
+  // C4i went the same way on 9 Oct 2026: /c4i, /ServiceAI, /private-ai and
+  // /lead-engine redirect to c4site.com.au, as do the AI & automation pages
+  // that the SEO registry used to generate.
   { path: '/Portfolio', priority: 0.85, changefreq: 'weekly' },
   { path: '/start', priority: 0.7, changefreq: 'monthly' },
-  { path: '/lead-engine', priority: 0.7, changefreq: 'monthly' },
-  { path: '/private-ai', priority: 0.85, changefreq: 'monthly' },
   { path: '/how-we-use-ai', priority: 0.75, changefreq: 'yearly' },
   { path: '/insights', priority: 0.75, changefreq: 'weekly' },
   // Prerendered so the URL resolves as a static file, but kept out of the

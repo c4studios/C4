@@ -5,7 +5,6 @@ import { createPageUrl } from '@/utils';
 import { liveSeoPages } from '@/content/seo/registry';
 import { PROFILES, PHONE } from '@/lib/seo';
 import C4Logo from './C4Logo';
-import C4iWordmark from './C4iWordmark';
 
 const groups = [
   {
@@ -24,14 +23,12 @@ const groups = [
     title: 'Services',
     links: [
       { label: 'Web & Applications', page: 'ServiceWeb' },
-      { key: 'C4i', label: <C4iWordmark />, page: 'C4i' },
       { label: 'C4 Lens', page: 'Lens' },
       { label: 'SEO & Copywriting', page: 'SeoCopy' },
-      // The orphaned Private AI offering now has a crawlable home here.
-      { label: 'Private AI', to: '/private-ai' },
-      { label: 'Lead Engine', to: '/lead-engine' },
+      // C4i, Private AI and Lead Engine went to C4Site on 9 Oct 2026; the
+      // sister link below is the way there.
       // C4Site is its own business (8 Oct 2026) on its own domain (live
-      // 9 Oct). One sister link, worded per D2.
+      // 9 Oct). One sister link, worded per D2, kept last.
       { label: 'C4Site, by C4', href: 'https://c4site.com.au/' },
     ]
   },
@@ -148,7 +145,7 @@ export default function Footer() {
               className="text-[10.5px] uppercase tracking-[0.24em]"
               style={{ color: 'var(--c4-footer-text-dim)' }}
             >
-              Web · AI · Photography · Training
+              Web · Software · Photography · SEO
             </span>
           </div>
         </div>

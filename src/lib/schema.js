@@ -64,11 +64,10 @@ export function localBusinessSchema() {
     areaServed: ORG_INFO.areaServed.map((name) => ({ '@type': 'Place', name })),
     founder: { '@type': 'Person', name: ORG_INFO.founder },
     foundingDate: ORG_INFO.foundingDate,
+    // AI and workflow automation went to C4Site with C4i on 9 Oct 2026.
     knowsAbout: [
       'Web design',
       'Web development',
-      'AI automation',
-      'Workflow automation',
       'SaaS development',
       'Branding',
       'SEO',
@@ -77,7 +76,6 @@ export function localBusinessSchema() {
     ],
     makesOffer: [
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Web design and development' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'C4i: private and cloud AI systems, automations and agents' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'C4 Lens: photography, videography and brand identity' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'SEO and copywriting' } },
     ],

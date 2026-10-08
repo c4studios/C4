@@ -113,7 +113,7 @@
 .cwd .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 .cwd .tag { font-size: 12.5px; padding: 7px 14px; border-radius: 999px; border: 0.5px solid rgba(255, 255, 255, 0.16); color: rgba(243, 242, 239, 0.8); transition: border-color 0.3s, color 0.3s; }
 
-/* The four arms — a nav, not a card grid; each row carries its arm's
+/* The three arms — a nav, not a card grid; each row carries its arm's
    accent via --arm, on a hairline-separated list. */
 .cwd .arms { display: flex; flex-direction: column; margin-top: 22px; }
 .cwd .arm {

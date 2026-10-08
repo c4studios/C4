@@ -23,7 +23,6 @@ import { Link } from '@/components/c4/SiteLink';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { recordScan } from '@/api/submissions';
 import { createPageUrl } from '@/utils';
-import C4iWordmark from '@/components/c4/C4iWordmark';
 import '../components/hero/welcome-dark.css';
 
 const HelixCanvas = lazy(() => import('@/components/hero/HelixCanvas'));
@@ -42,15 +41,16 @@ const HEADLINE = {
 };
 /* built per-device: "finger" on touch, "cursor" with a mouse */
 const makeLines = (coarse) => ({
-  idle: `Perth studio — web, AI, brand & training. Run your ${coarse ? 'finger' : 'cursor'} through the helix.`,
+  idle: `Perth studio — web, brand & SEO. Run your ${coarse ? 'finger' : 'cursor'} through the helix.`,
   book: 'Sounds good — let’s find a time that works.',
   save: 'Saved straight to your phone — no typing.',
   folio: 'Opening the work →',
 });
 
-/* The four arms, each a button through to its own page. The mark carries
-   a hint of that arm's identity (window / chip / iris / chalk tick), tinted
-   in the arm's accent via --arm. Names + destinations match the site. */
+/* The three arms, each a button through to its own page. The mark carries
+   a hint of that arm's identity (window / iris / magnifier), tinted in the
+   arm's accent via --arm. Names + destinations match the site. The C4i arm
+   went to C4Site on 9 Oct 2026; the sister line under the arms covers it. */
 const ARMS = [
   {
     to: '/ServiceWeb',
@@ -63,22 +63,6 @@ const ARMS = [
         <path d="M3 8.5h18" />
         <circle cx="6" cy="6.25" r="0.7" fill="currentColor" stroke="none" />
         <circle cx="8.4" cy="6.25" r="0.7" fill="currentColor" stroke="none" />
-      </svg>
-    ),
-  },
-  {
-    to: '/c4i',
-    name: (
-      <>
-        <C4iWordmark /> · AI
-      </>
-    ),
-    line: 'Private AI on your own hardware, or automations in the cloud.',
-    color: '#5a9bd8',
-    mark: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-        <rect x="7" y="7" width="10" height="10" rx="1.4" />
-        <path d="M10 7V4M14 7V4M10 20v-3M14 20v-3M7 10H4M7 14H4M20 10h-3M20 14h-3" />
       </svg>
     ),
   },
@@ -390,13 +374,13 @@ export default function Welcome() {
           </div>
         </section>
 
-        {/* What C4 does now — the four arms, each a button through */}
+        {/* What C4 does now — the three arms, each a button through */}
         <section className="sec">
           <div className="inner">
             <div className="kick">what c4 does now</div>
-            <h2>One studio, four arms.</h2>
+            <h2>One studio, three arms.</h2>
             <p className="body">{`It began with websites and grew. Today each side of C4 is its own craft — all built and run by me, here in Perth. Tap through to whichever fits, or book a call and I’ll point you the right way.`}</p>
-            <nav className="arms" aria-label="The four arms of C4 Studios">
+            <nav className="arms" aria-label="The three arms of C4 Studios">
               {ARMS.map((arm) => (
                 <Link className="arm" key={arm.to} to={arm.to} style={{ '--arm': arm.color }}>
                   <span className="arm-mark">{arm.mark}</span>
@@ -411,7 +395,7 @@ export default function Welcome() {
               ))}
             </nav>
             <p className="body" style={{ marginTop: '18px' }}>
-              {'AI training for teams and schools has its own home now: '}
+              {'AI training and private AI have their own home now: '}
               <a href="https://c4site.com.au/" style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: '3px' }}>C4Site, by C4</a>.
             </p>
           </div>

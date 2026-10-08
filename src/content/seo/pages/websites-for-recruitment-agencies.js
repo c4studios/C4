@@ -1,14 +1,23 @@
 /**
  * Industry — Websites for Recruitment Agencies.
- * Unique detail: the dual-audience (candidates AND clients) structure,
- * and the C4 Lead Engine cross-sell for outbound.
+ * Unique detail: the dual-audience (candidates AND clients) structure.
+ *
+ * 9 Oct 2026: Lead Engine moved to the sister company, C4Site, with C4i.
+ * Out came the Lead Engine pitch, its FAQ entry (the FAQ schema is built
+ * from `faqs`, so it went from there too) with its $1,950 setup and $250 a
+ * month, the "tell you straight if Lead Engine fits" CTA line, and both
+ * "automation from $750" prices, since pricing.js no longer carries one.
+ * What stays is one pointer to C4Site's Lead Engine page, with no price.
+ * Do NOT add any of it back. The automation table and the "site plus
+ * automation" FAQ are still here, waiting on Caleb's call on whether that
+ * work is custom software or C4Site's.
  */
 export default {
   hero: {
     label: 'Websites for Recruitment Agencies',
     title: ['Recruitment websites that work', 'both sides of the desk.'],
     intro: [
-      'C4 Studios builds websites and automation for recruitment agencies — sites that convince candidates to apply and clients to brief, without one audience drowning out the other. Sites from $1,500; job boards and portal features scoped from the $2,500–$4,500 tiers; and automation behind the scenes from $750, which is where agencies usually feel it most.',
+      'C4 Studios builds websites and automation for recruitment agencies — sites that convince candidates to apply and clients to brief, without one audience drowning out the other. Sites from $1,500, with job boards and portal features scoped from the $2,500–$4,500 tiers.',
     ],
   },
   sections: [
@@ -39,8 +48,7 @@ export default {
       label: 'Beyond the site',
       heading: 'What about the outbound side?',
       body: [
-        'A website converts the demand that finds you; recruitment mostly runs on demand you go and find. That’s why we built C4 Lead Engine — a done-for-you outbound system that researches and qualifies fresh prospects overnight and drafts a personalised email to each one, straight into your own inbox by 9am. You read them with your coffee and hit send; nothing leaves your outbox without you. Agencies are the textbook case: high deal value, clear targets, and a sales motion that rewards consistency over genius.',
-        'It runs as a separate engagement from the website, but they’re built to feed each other — outbound earns the click, the site closes the credibility check. There’s a full rundown on the Lead Engine page.',
+        'A website converts the demand that finds you. Recruitment mostly runs on demand you go and find, and for that side our sister company, C4Site, runs [Lead Engine](https://c4site.com.au/lead-engine/).',
       ],
     },
     {
@@ -61,7 +69,7 @@ export default {
       label: 'Pricing',
       heading: 'What does a recruitment website cost?',
       mode: 'anchor',
-      note: 'A dual-audience agency site typically lands at $1,500–$2,500; ATS integration and portal features are scoped on top. Automation workflows start at $750, and Lead Engine is quoted as its own engagement.',
+      note: 'A dual-audience agency site typically lands at $1,500–$2,500; ATS integration and portal features are scoped on top.',
     },
   ],
   faqs: [
@@ -74,10 +82,6 @@ export default {
       a: 'Usually — most modern ATS platforms expose feeds or APIs we can pull listings from, so the website stays current without double entry. Where integration isn’t possible, we build the board to be updated in minutes, because a stale board is worse than none.',
     },
     {
-      q: 'What’s C4 Lead Engine, in one paragraph?',
-      a: 'A done-for-you outbound system: it researches and qualifies prospects overnight, then drafts a personalised email to each — in your voice, into your own Outlook or Gmail — by 9am, for you to approve and send. Nothing sends without you. The website convinces; Lead Engine fills the top of the funnel that referrals and job ads don’t reach. From $1,950 setup, $250 a month.',
-    },
-    {
       q: 'Candidates complain they never hear back — can the site help?',
       a: 'The site plus automation can: instant acknowledgment, honest status updates at each stage, and a polite close-out when a role fills. It’s the cheapest reputation repair in recruitment, because “they actually got back to me” is rare enough to be a differentiator.',
     },
@@ -88,6 +92,6 @@ export default {
   ],
   cta: {
     heading: 'Fill your own funnel for once.',
-    text: 'Tell us your sectors, your ATS and where new business comes from today. We’ll scope the site — and tell you straight if Lead Engine fits.',
+    text: 'Tell us your sectors, your ATS and where new business comes from today, and we’ll scope the site.',
   },
 };
