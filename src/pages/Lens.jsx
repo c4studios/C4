@@ -22,6 +22,8 @@ import { createPageUrl } from '@/utils';
 import { c4LensPackages } from '@/data/pricing';
 import { createPaintStage } from '../components/lens/paintWord';
 import GlyphPortal from '../components/ui/glyph-portal';
+import LensMotion from '../components/lens/LensMotion';
+import { MOTION_FILMS } from '../components/lens/motionFilms';
 
 import { reassertStoredTheme } from '../components/c4/ThemeContext';
 import '../components/lens/lens.css';
@@ -67,6 +69,11 @@ const LENS_JSONLD = [
     contentUrl: '/sharp-bricklaying-drone.mp4',
     uploadDate: '2026-06-09',
     duration: 'PT45S',
+  }),
+  /* The motion section's films, from the same entries the section renders. */
+  ...MOTION_FILMS.map((film) => {
+    const lead = film.cuts[0];
+    return videoObjectSchema({ ...film.schema, thumbnailUrl: lead.poster, contentUrl: lead.src });
   }),
 ];
 
@@ -776,7 +783,7 @@ export default function Lens() {
         </div>
         <div className="brand"><span className="logo-dot"></span>C4 LENS</div>
         <div className="nav-links">
-          <a href="#capture">Our Work</a>
+          <a href="#motion">Our Work</a>
           <a href="#services">Services</a>
           <a href="#packages">Packages</a>
           <a href="#caleb">About</a>
@@ -801,7 +808,7 @@ export default function Lens() {
         <div className="lens-mobile-menu">
           <Link to="/" className="lens-mobile-back" onClick={() => setMobileMenuOpen(false)}>← C4 Studios</Link>
           <div className="lens-mobile-sep" />
-          <a href="#capture" onClick={() => setMobileMenuOpen(false)}>Our Work</a>
+          <a href="#motion" onClick={() => setMobileMenuOpen(false)}>Our Work</a>
           <a href="#services" onClick={() => setMobileMenuOpen(false)}>Services</a>
           <a href="#packages" onClick={() => setMobileMenuOpen(false)}>Packages</a>
           <a href="#caleb" onClick={() => setMobileMenuOpen(false)}>About</a>
@@ -1061,6 +1068,9 @@ export default function Lens() {
 
         </div>
       </section>
+
+      {/* MOTION — films in their clients' own colours (LensMotion.jsx) */}
+      <LensMotion />
 
       {/* â•â•â•â•â•â•â•â• SERVICES â•â•â•â•â•â•â•â• */}
       <section className="slab dark" id="services">

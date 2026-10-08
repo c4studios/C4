@@ -846,3 +846,281 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   .lens-portal [data-gp-content] { padding: 48px 20px; }
   .lens-portal-kick { font-size: 12px; padding: 0 20px; }
 }
+
+/* ═══ MOTION — films in their clients' own colours (8 Oct 2026) ═══
+   LensMotion.jsx and MotionFilm.jsx. The films lead and the chrome stays in
+   the page's own register: Bebas and Caveat for the words, Geist Mono for
+   anything measured, amber as the one accent. Each film sits in the
+   viewfinder's four corners, which lock on in amber while it plays; while it
+   waits for frames the picture goes soft, the way a lens hunts before it
+   locks. Under it runs its colour strip, every frame averaged to one column,
+   and the strip is the scrubber: played at full colour, still to come darker
+   and mostly grey. Nothing here hides before a script runs. */
+
+/* Height budget: a film and its transport fit one screen under the nav. The
+   heading and both films share one frame, so their edges line up. */
+.mo-inner { --mo-h: max(calc(100vh - 250px), 420px); max-width: 1400px; margin: 0 auto; }
+@supports (height: 100svh) { .mo-inner { --mo-h: max(calc(100svh - 250px), 420px); } }
+.mo-head {
+  display: grid; grid-template-columns: minmax(0, 1fr);
+  align-items: end; column-gap: 56px; row-gap: 26px;
+  max-width: calc(var(--mo-h) * 16 / 9); margin: 0 auto clamp(64px, 8vw, 112px);
+}
+@media (min-width: 1025px) { .mo-head { grid-template-columns: minmax(0, 1fr) minmax(0, 25rem); } }
+.lens-page .motion .mo-head h2 { margin-bottom: 0; }
+.mo-lede { margin: 0; max-width: 34rem; padding-bottom: .55em; font-size: 17px; line-height: 1.65; color: var(--ink-2); }
+
+.mo-film { margin: 0 auto; max-width: calc(var(--mo-h) * 16 / 9); }
+.mo-film + .mo-film { margin-top: clamp(120px, 14vw, 190px); }
+.mo-film[data-cuts="dual"], .mo-film[data-cuts="tall"] { --mo-ar: 9 / 16; }
+@media (min-width: 768px) { .mo-film[data-cuts="dual"] { --mo-ar: 16 / 9; } }
+
+.mo-deck { width: min(100%, calc(var(--mo-h) * var(--mo-ar))); margin: 0 auto; container-type: inline-size; }
+.mo-stage { position: relative; aspect-ratio: var(--mo-ar); background: #0a0a0a; }
+.mo-video, .mo-poster, .mo-poster img {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+}
+.mo-video { object-fit: contain; background: #000; }
+.mo-poster { z-index: 1; transition: opacity .45s cubic-bezier(.22,1,.36,1); }
+.mo-poster img { object-fit: cover; }
+.mo-stage.is-started .mo-poster { opacity: 0; visibility: hidden; transition: opacity .45s cubic-bezier(.22,1,.36,1), visibility 0s linear .45s; }
+
+/* Waiting for frames: the lens hunts. */
+.mo-video, .mo-poster img { transition: filter .35s ease; }
+.mo-stage.is-waiting .mo-video, .mo-stage.is-waiting .mo-poster img { filter: blur(3px) brightness(.9); }
+
+/* The viewfinder: grey corners at rest, amber and closer in while it plays. */
+.mo-corner {
+  position: absolute; z-index: 2; width: 16px; height: 16px; pointer-events: none;
+  border: 0 solid rgba(245,245,240,.3);
+  transition: transform .55s cubic-bezier(.22,1,.36,1), border-color .3s ease;
+}
+.mo-corner--tl { top: -11px; left: -11px; border-top-width: 1px; border-left-width: 1px; }
+.mo-corner--tr { top: -11px; right: -11px; border-top-width: 1px; border-right-width: 1px; }
+.mo-corner--bl { bottom: -11px; left: -11px; border-bottom-width: 1px; border-left-width: 1px; }
+.mo-corner--br { bottom: -11px; right: -11px; border-bottom-width: 1px; border-right-width: 1px; }
+.mo-stage.is-playing .mo-corner { border-color: var(--amber); }
+.mo-stage.is-playing .mo-corner--tl { transform: translate(5px, 5px); }
+.mo-stage.is-playing .mo-corner--tr { transform: translate(-5px, 5px); }
+.mo-stage.is-playing .mo-corner--bl { transform: translate(5px, -5px); }
+.mo-stage.is-playing .mo-corner--br { transform: translate(-5px, -5px); }
+
+/* Pointer and finger targets. The whole film while it plays; the play mark,
+   set inside the viewfinder's own corners, while it is still. */
+.mo-hit {
+  position: absolute; inset: 0; z-index: 2; margin: 0; padding: 0;
+  border: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.mo-play {
+  position: absolute; z-index: 3; left: 50%; top: 50%;
+  width: 72px; height: 72px; margin: -36px 0 0 -36px; padding: 0;
+  display: block; border: 0; border-radius: 0;
+  color: var(--ink); background: rgba(0,0,0,.5);
+  cursor: pointer; animation: mo-appear .25s .15s both; -webkit-tap-highlight-color: transparent;
+  transition: color .25s ease, background-color .25s ease;
+}
+.mo-play svg { display: block; width: 100%; height: 100%; }
+@keyframes mo-appear { from { opacity: 0; } to { opacity: 1; } }
+
+/* The transport: the colour strip, then the controls. */
+.mo-transport { --mo-t: 0; margin-top: 24px; }
+.mo-strip { position: relative; height: 30px; }
+.mo-strip-film, .mo-strip-film img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.mo-strip-film img { object-fit: fill; }
+.mo-shade {
+  position: absolute; inset: 0; pointer-events: none;
+  background: rgba(0,0,0,.64);
+  transform-origin: right center; transform: scaleX(calc(1 - var(--mo-t)));
+}
+/* Where it can, the shade takes most of the colour out as well as the light,
+   leaving a ghost of it so the strip still reads as the film at rest. */
+@supports ((-webkit-backdrop-filter: grayscale(1)) or (backdrop-filter: grayscale(1))) {
+  .mo-shade {
+    background: rgba(0,0,0,.18);
+    -webkit-backdrop-filter: grayscale(.8) brightness(.6); backdrop-filter: grayscale(.8) brightness(.6);
+  }
+}
+
+/* The playhead is the slider's own thumb, so dragging it is native. */
+.mo-range {
+  position: absolute; left: 0; right: 0; top: -8px;
+  width: 100%; height: 46px; margin: 0; padding: 0;
+  background: transparent; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+}
+.mo-range::-webkit-slider-runnable-track { height: 46px; background: transparent; border: 0; }
+.mo-range::-moz-range-track { height: 46px; background: transparent; border: 0; }
+.mo-range::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 3px; height: 46px; border: 0; border-radius: 0;
+  background: var(--ink); box-shadow: 0 0 0 1px rgba(0,0,0,.55);
+}
+.mo-range::-moz-range-thumb {
+  width: 3px; height: 46px; border: 0; border-radius: 0;
+  background: var(--ink); box-shadow: 0 0 0 1px rgba(0,0,0,.55);
+}
+.mo-range:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.mo-range:disabled { cursor: not-allowed; }
+
+.mo-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; }
+.mo-gap { flex: 1 1 auto; }
+.mo-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  height: 44px; min-width: 44px; padding: 0 14px;
+  font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink); background: transparent; border: 1px solid var(--line-2);
+  cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent;
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+.mo-btn svg { flex-shrink: 0; }
+.mo-btn--icon { width: 44px; padding: 0; }
+.mo-btn:not(:disabled):active { background: rgba(245,245,240,.14); }
+.mo-btn.is-on { color: var(--amber); border-color: rgba(232,166,88,.6); }
+.mo-btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.mo-btn:disabled { opacity: .4; cursor: not-allowed; }
+.mo-btn .lens-sr-only, .mo-link .lens-sr-only, .mo-words .lens-sr-only { text-transform: none; }
+.mo-time {
+  margin-left: 6px; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .06em;
+  color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.mo-error { margin: 12px 0 0; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .04em; color: var(--ink-2); }
+
+/* The slate: who it was for, what it is, and the credits. */
+.mo-slate { margin-top: 30px; }
+.mo-slate h3 {
+  margin: 0; font-family: 'Bebas Neue', sans-serif; font-weight: 400;
+  font-size: clamp(34px, 3.2vw, 50px); line-height: .92; letter-spacing: .01em;
+  color: var(--ink); text-wrap: balance;
+}
+.mo-kind {
+  margin: 12px 0 0; font-family: 'Geist Mono', monospace; font-size: 11px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2);
+}
+.mo-num { font-variant-numeric: tabular-nums; }
+.mo-desc { margin: 18px 0 0; max-width: 34rem; font-size: 15.5px; line-height: 1.7; color: var(--ink-2); }
+.mo-credits {
+  list-style: none; margin: 18px 0 0; padding: 0;
+  font-family: 'Geist Mono', monospace; font-size: 10.5px; line-height: 1.75; letter-spacing: .04em; color: var(--ink-3);
+}
+.mo-link {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin-top: 10px;
+  font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--amber); text-decoration: none; transition: color .25s ease;
+}
+.mo-link .btn-arrow { display: inline-block; transition: transform .35s ease; }
+.mo-link:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+/* What's on screen: the film's words in order, on a ruled list. */
+.mo-words { margin-top: 26px; border-top: 1px solid var(--line); }
+.mo-words summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  min-height: 48px; cursor: pointer; list-style: none;
+  font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-2); transition: color .25s ease; -webkit-tap-highlight-color: transparent;
+}
+.mo-words summary::-webkit-details-marker { display: none; }
+/* A drawn plus that loses its upright when open. */
+.mo-words summary::after {
+  content: ''; flex: none; width: 11px; height: 11px;
+  background:
+    linear-gradient(var(--amber), var(--amber)) center / 11px 1px no-repeat,
+    linear-gradient(var(--amber), var(--amber)) center / 1px 11px no-repeat;
+  transition: background-size .25s ease;
+}
+.mo-words[open] summary::after { background-size: 11px 1px, 1px 0; }
+.mo-words summary:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.mo-words ol { list-style: none; margin: 0 0 6px; padding: 0; columns: 2; column-gap: 48px; }
+.mo-words li {
+  display: grid; grid-template-columns: 3em minmax(0, 1fr); column-gap: 12px;
+  padding: 8px 0; border-top: 1px solid var(--line); break-inside: avoid;
+  font-size: 14px; line-height: 1.55; color: var(--ink);
+}
+.mo-words li.is-scene { color: var(--ink-2); }
+.mo-tc { padding-top: 2px; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .04em; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+/* Hover belongs to pointers that hover, so a tapped control on a phone
+   doesn't stay lit. */
+@media (hover: hover) {
+  .mo-btn:not(:disabled):hover { background: var(--ink); color: #000; border-color: var(--ink); }
+  .mo-btn.is-on:not(:disabled):hover { background: var(--amber); color: #000; border-color: var(--amber); }
+  .mo-play:hover { color: var(--amber); background: rgba(0,0,0,.72); }
+  .mo-strip:hover .mo-shade { background: rgba(0,0,0,.5); }
+  .mo-link:hover { color: #f2c98c; }
+  .mo-link:hover .btn-arrow { transform: translateX(3px); }
+  .mo-words summary:hover { color: var(--ink); }
+}
+@supports ((-webkit-backdrop-filter: grayscale(1)) or (backdrop-filter: grayscale(1))) {
+  @media (hover: hover) {
+    .mo-strip:hover .mo-shade { background: rgba(0,0,0,.1); -webkit-backdrop-filter: grayscale(.8) brightness(.75); backdrop-filter: grayscale(.8) brightness(.75); }
+  }
+}
+
+/* The wide film's slate reads across, under the picture. */
+@media (min-width: 768px) {
+  .mo-film--wide .mo-slate {
+    display: grid; column-gap: 48px; align-items: start;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-areas: "id desc" "id credits" "id link";
+  }
+  .mo-film--wide .mo-id { grid-area: id; }
+  .mo-film--wide .mo-desc { grid-area: desc; margin-top: 0; }
+  .mo-film--wide .mo-credits { grid-area: credits; }
+  .mo-film--wide .mo-link { grid-area: link; justify-self: start; }
+}
+@media (min-width: 1025px) {
+  .mo-film--wide .mo-slate {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 5fr) minmax(0, 3fr);
+    grid-template-areas: "id desc credits" "id link credits";
+  }
+  .mo-film--wide .mo-credits { margin-top: 3px; }
+}
+
+/* The tall film stands beside its slate; its words run under both. */
+@media (min-width: 768px) {
+  .mo-film--tall {
+    display: grid; grid-template-columns: auto minmax(0, 1fr);
+    column-gap: clamp(40px, 6vw, 104px); align-items: center;
+  }
+  .mo-film--tall .mo-deck { width: min(calc(var(--mo-h) * 9 / 16), 46vw); margin: 0; }
+  .mo-film--tall .mo-slate { margin-top: 0; max-width: 30rem; }
+  .mo-film--tall .mo-slate h3 { font-size: clamp(44px, 4.6vw, 72px); }
+  .mo-film--tall .mo-words { grid-column: 1 / -1; margin-top: 40px; }
+}
+
+@media (max-width: 767px) {
+  .mo-inner { --mo-h: max(calc(100vh - 240px), 420px); }
+  @supports (height: 100svh) { .mo-inner { --mo-h: max(calc(100svh - 240px), 420px); } }
+  .mo-lede { font-size: 16px; padding-bottom: 0; }
+  .mo-film + .mo-film { margin-top: 104px; }
+  .mo-deck { margin-left: 0; }
+  .mo-corner--tl, .mo-corner--tr { top: -9px; }
+  .mo-corner--bl, .mo-corner--br { bottom: -9px; }
+  .mo-corner--tl, .mo-corner--bl { left: -9px; }
+  .mo-corner--tr, .mo-corner--br { right: -9px; }
+  .mo-transport { margin-top: 20px; }
+  .mo-slate { margin-top: 26px; }
+  .mo-words ol { columns: 1; }
+}
+/* A deck narrower than its controls (a phone, or the tall film beside its
+   slate) drops the running total and tightens the buttons to stay on one row. */
+@container (max-width: 400px) {
+  .mo-total { display: none; }
+  .mo-btn { padding: 0 11px; letter-spacing: .05em; }
+  .mo-btn--icon { padding: 0; }
+}
+@container (max-width: 340px) {
+  .mo-controls { gap: 6px; }
+  .mo-time { margin-left: 2px; }
+  .mo-btn { padding: 0 9px; gap: 7px; letter-spacing: .04em; }
+  .mo-btn--icon { padding: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mo-corner { transition: border-color .12s ease; }
+  .mo-stage.is-playing .mo-corner { transform: none; }
+  .mo-play { animation: none; }
+  .mo-poster, .mo-stage.is-started .mo-poster { transition: opacity .12s ease, visibility 0s linear .12s; }
+  .mo-video, .mo-poster img { transition: none; }
+  .mo-words summary::after { transition: none; }
+  .mo-link .btn-arrow, .mo-link:hover .btn-arrow { transition: none; transform: none; }
+}
