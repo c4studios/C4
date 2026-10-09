@@ -22,7 +22,8 @@ import { createPageUrl } from '@/utils';
 import { c4LensPackages } from '@/data/pricing';
 import { createPaintStage } from '../components/lens/paintWord';
 import GlyphPortal from '../components/ui/glyph-portal';
-import LensMotion from '../components/lens/LensMotion';
+import LensWork from '../components/lens/LensWork';
+import { DSR, WORK_VIDEOS } from '../components/lens/lensStudies';
 import { MOTION_FILMS } from '../components/lens/motionFilms';
 
 import { reassertStoredTheme } from '../components/c4/ThemeContext';
@@ -43,35 +44,13 @@ const LENS_JSONLD = [
     { name: 'Home', path: '/' },
     { name: 'C4 Lens', path: '/Lens' },
   ]),
-  videoObjectSchema({
-    name: 'DS Racing Karts — site header & logo animation',
-    description:
-      'Animated website header and logo animation produced for DS Racing Karts by C4 Studios.',
-    thumbnailUrl: '/lens-posters/dsr.jpg',
-    contentUrl: '/DSR%20header.mp4',
-    uploadDate: '2026-06-09',
-    duration: 'PT7S',
-  }),
-  videoObjectSchema({
-    name: 'HVN — brand film & aerial drone work',
-    description:
-      'Full brand show reel with aerial drone videography for HVN, produced by C4 Studios.',
-    thumbnailUrl: '/lens-posters/hvn.jpg',
-    contentUrl: '/hvn.mp4',
-    uploadDate: '2026-06-09',
-    duration: 'PT30S',
-  }),
-  videoObjectSchema({
-    name: 'Sharp Bricklaying — aerial & on-site videography',
-    description:
-      'Aerial drone and on-site videography for Sharp Bricklaying, captured across active Perth job sites by C4 Studios.',
-    thumbnailUrl: '/lens-posters/sharp.jpg',
-    contentUrl: '/sharp-bricklaying-drone.mp4',
-    uploadDate: '2026-06-09',
-    duration: 'PT45S',
-  }),
-  /* The motion section's films, from the same entries the section renders. */
-  ...MOTION_FILMS.map((film) => {
+  /* Every video in the case studies, from the same entries LensWork renders
+     (lensStudies.js), so the schema can't name a file the page doesn't show. No
+     person is named as the maker. */
+  ...WORK_VIDEOS.map((v) => videoObjectSchema(v)),
+  /* The two films from motionFilms.js: Aqua-Safe, and the DS Racing reel while
+     it's in its study (DSR.reel in lensStudies.js). */
+  ...MOTION_FILMS.filter((film) => film.id !== 'dsr' || DSR.reel).map((film) => {
     const lead = film.cuts[0];
     return videoObjectSchema({ ...film.schema, thumbnailUrl: lead.poster, contentUrl: lead.src });
   }),
@@ -177,9 +156,9 @@ export default function Lens() {
 
   useEffect(() => {
     /* â•â•â•â•â•â•â•â•â•â•â• FONTS â•â•â•â•â•â•â•â•â•â•â• */
-    /* All five families (Bebas Neue, Geist, Geist Mono, Instrument Serif, Caveat)
-       are self-hosted in src/styles/fonts.css and loaded globally via main.jsx —
-       no runtime Google Fonts injection. */
+    /* All four families (Bebas Neue, Geist, Geist Mono, Caveat) are self-hosted
+       in src/styles/fonts.css and loaded globally via main.jsx — no runtime
+       Google Fonts injection. Instrument Serif went on 9 September 2026. */
 
     /* â•â•â•â•â•â•â•â•â•â•â• BODY â•â•â•â•â•â•â•â•â•â•â• */
     const prevBodyBg = document.body.style.background;
@@ -638,35 +617,6 @@ export default function Lens() {
     }
 
 
-    /* â•â•â•â•â•â•â•â•â•â•â• PORTFOLIO SCROLL â•â•â•â•â•â•â•â•â•â•â• */
-    const pfOuter = document.getElementById('portfolioOuter');
-    const pfTrack = document.getElementById('pfTrack');
-    const pfBar = document.getElementById('pfBar');
-    const pfCount = document.getElementById('pfCount');
-    function sizePortfolio() {
-      if (!pfTrack || !pfOuter) return;
-      const travel = Math.max(0, pfTrack.scrollWidth - window.innerWidth);
-      pfOuter.style.setProperty('--pf-travel', travel + 'px');
-    }
-    function onPfScroll() {
-      if (!pfOuter || !pfTrack || !pfBar) return;
-      const rect = pfOuter.getBoundingClientRect();
-      const total = pfOuter.offsetHeight - window.innerHeight;
-      const scrolled = clamp(-rect.top, 0, total);
-      const t2 = total > 0 ? scrolled / total : 0;
-      pfTrack.style.transform = `translateX(${-t2 * Math.max(0, pfTrack.scrollWidth - window.innerWidth)}px)`;
-      pfBar.style.transform = `scaleX(${t2.toFixed(4)})`;
-      if (pfCount) {
-        const nCards = pfTrack.querySelectorAll('.pf-card').length;
-        const cur = 1 + Math.round(t2 * (nCards - 1));
-        pfCount.textContent = `Frame ${String(cur).padStart(2, '0')} / ${String(nCards).padStart(2, '0')}`;
-      }
-    }
-    window.addEventListener('scroll', onPfScroll, { passive: true });
-    const onResize = () => { sizePortfolio(); onPfScroll(); };
-    window.addEventListener('resize', onResize);
-    requestAnimationFrame(() => { sizePortfolio(); onPfScroll(); });
-
     /* â•â•â•â•â•â•â•â•â•â•â• SCROLL REVEALS + STAT COUNT-UP â•â•â•â•â•â•â•â•â•â•â• */
     const revealEls = document.querySelectorAll('.lens-page .lr');
     let revealIO = null;
@@ -682,15 +632,6 @@ export default function Lens() {
         });
       }, { threshold: 0.15, rootMargin: '0px 0px -7% 0px' });
       revealEls.forEach(el => revealIO.observe(el));
-    }
-
-    /* Static mode: strip video autoplay so the posters stand (honest end state) */
-    if (staticMode) {
-      document.querySelectorAll('.lens-page video.pf-img').forEach(v => {
-        v.autoplay = false;
-        v.removeAttribute('autoplay');
-        try { v.pause(); } catch { /* ignore */ }
-      });
     }
 
 
@@ -727,8 +668,6 @@ export default function Lens() {
       cancelAnimationFrame(cursorRafId);
       if (stage) stage.destroy();
       window.removeEventListener('scroll', onHeroScroll);
-      window.removeEventListener('scroll', onPfScroll);
-      window.removeEventListener('resize', onResize);
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mousemove', onLensParallax);
       if (revealIO) revealIO.disconnect();
@@ -783,7 +722,7 @@ export default function Lens() {
         </div>
         <div className="brand"><span className="logo-dot"></span>C4 LENS</div>
         <div className="nav-links">
-          <a href="#motion">Our Work</a>
+          <a href="#work">Our Work</a>
           <a href="#services">Services</a>
           <a href="#packages">Packages</a>
           <a href="#caleb">About</a>
@@ -808,7 +747,7 @@ export default function Lens() {
         <div className="lens-mobile-menu">
           <Link to="/" className="lens-mobile-back" onClick={() => setMobileMenuOpen(false)}>← C4 Studios</Link>
           <div className="lens-mobile-sep" />
-          <a href="#motion" onClick={() => setMobileMenuOpen(false)}>Our Work</a>
+          <a href="#work" onClick={() => setMobileMenuOpen(false)}>Our Work</a>
           <a href="#services" onClick={() => setMobileMenuOpen(false)}>Services</a>
           <a href="#packages" onClick={() => setMobileMenuOpen(false)}>Packages</a>
           <a href="#caleb" onClick={() => setMobileMenuOpen(false)}>About</a>
@@ -1069,8 +1008,9 @@ export default function Lens() {
         </div>
       </section>
 
-      {/* MOTION — films in their clients' own colours (LensMotion.jsx) */}
-      <LensMotion />
+      {/* THE WORK: nine case studies, film and photography first, then the
+          motion built into client sites (LensWork.jsx, data in lensStudies.js). */}
+      <LensWork />
 
       {/* â•â•â•â•â•â•â•â• SERVICES â•â•â•â•â•â•â•â• */}
       <section className="slab dark" id="services">
@@ -1089,7 +1029,7 @@ export default function Lens() {
           <div className="svc-card lr lr-fade" style={{ '--lr-delay': '180ms' }}>
             <div className="svc-tag">Drone &amp; Aerial</div>
             <h3>THE PERSPECTIVE<br />THEY&rsquo;VE NEVER SEEN.</h3>
-            <div className="desc">Licensed drone work for sites, events and construction, for the moments when a ground-level shot can&rsquo;t show the scale.</div>
+            <div className="desc">Drone work for sites, events and construction, for the moments when a ground-level shot can&rsquo;t show the scale.</div>
           </div>
           <div className="svc-card lr lr-fade" style={{ '--lr-delay': '270ms' }}>
             <div className="svc-tag">Post-Production</div>
@@ -1097,9 +1037,9 @@ export default function Lens() {
             <div className="desc">Reels, cutdowns and event highlights, graded and mixed in-house. Bring your own footage if you have it.</div>
           </div>
           <div className="svc-card lr lr-fade" style={{ '--lr-delay': '360ms' }}>
-            <div className="svc-tag">Branding</div>
-            <h3>A LOOK THAT<br />HOLDS TOGETHER.</h3>
-            <div className="desc">Logo, colour and type, built so the photography, the website and the socials look like they came from the same place.</div>
+            <div className="svc-tag">Motion</div>
+            <h3>MAKE THE SITE<br />MOVE.</h3>
+            <div className="desc">Motion graphics for films and socials, and animation built into the website itself, drawn in code and running in the visitor&rsquo;s browser.</div>
           </div>
         </div>
       </section>
@@ -1174,28 +1114,6 @@ export default function Lens() {
           </div>
         </div>
       </section>
-
-      {/* â•â•â•â•â•â•â•â• PORTFOLIO â•â•â•â•â•â•â•â• */}
-      <div className="portfolio-outer" id="portfolioOuter">
-        <div className="portfolio-sticky">
-          <div className="pf-top-row">
-            <span className="t">Selected work</span>
-            <span>PERTH, W.A. · 2024–2026</span>
-          </div>
-          <div className="pf-hint">Scroll to pan</div>
-          <div className="pf-count" id="pfCount">Frame 01 / 03</div>
-          <div className="pf-track" id="pfTrack">
-            <div className="pf-card wide"><video src="/DSR%20header.mp4" poster="/lens-posters/dsr.jpg" preload="none" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">01 · DSR</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">DS RACING KARTS</div><div className="cat">SITE HEADERS / LOGO ANIMATION</div></div></div>
-            <div className="pf-card wide"><video src="/hvn.mp4" poster="/lens-posters/hvn.jpg" preload="none" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">02 · HVN</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">HVN</div><div className="cat">FULL SHOW / DRONE WORK</div></div></div>
-            <div className="pf-card wide"><video src="/sharp-bricklaying-drone.mp4" poster="/lens-posters/sharp.jpg" preload="none" autoPlay muted loop playsInline className="pf-img" /><div className="pf-corner">03 · SHARP</div><div className="pf-mask"></div><div className="pf-cap"><div className="name">SHARP BRICKLAYING</div><div className="cat">AERIAL / ON-SITE PHOTOGRAPHY</div></div></div>
-            <div className="pf-slate">
-              <div className="pf-slate-reel">END OF REEL · 03 PRODUCTIONS</div>
-              <div className="pf-slate-next">NEXT SLOT — <a href="#contact">YOURS? →</a></div>
-            </div>
-          </div>
-          <div className="pf-bar-wrap"><div className="pf-bar" id="pfBar"></div></div>
-        </div>
-      </div>
 
       {/* The ending: the word LENS, and a camera that goes through it. */}
       <div id="contact" className="lens-ending">

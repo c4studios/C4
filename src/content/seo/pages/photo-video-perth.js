@@ -1,7 +1,23 @@
 /**
  * Pillar — Photo & Video Perth (C4 Lens).
- * Unique details: exact delivered-image counts per package, and the
- * two-campus church media system.
+ * Unique details: exact delivered-image counts per package, and The Rocks'
+ * At the Movies motion graphics.
+ *
+ * Corrected 9 Oct 2026, with the /Lens case studies (no figure added):
+ *   - The intro named a person ("It's led by Caleb Scott"). It now speaks
+ *     for C4 Lens; Caleb asked that the Lens work name no one.
+ *   - "Licensed" came off the drone line: no CASA licence is on file
+ *     (brain gap 137). Do not add it back until one is.
+ *   - The Rocks was "services captured, edited and published as a repeatable
+ *     weekly pipeline", and the FAQ said weekly church media and full-show
+ *     coverage were "regular work" with "a two-campus setup we run as an
+ *     ongoing pipeline". Nothing backs either: C4 made the At the Movies
+ *     motion graphics, and the church supplies its own videos
+ *     (caseStudyData rocksstream). Do not add a pipeline claim back.
+ *   - HVN was "Full-show coverage and drone work". The film shows aerial
+ *     footage of the building and a walk through the gym, and that's all
+ *     it says now.
+ *   - DS Racing's header film was "shot". It was made, as a motion graphic.
  */
 export default {
   hero: {
@@ -9,7 +25,7 @@ export default {
     title: ['Photo and video in Perth that', 'replaces stock imagery for good.'],
     intro: [
       'C4 Lens is the photography and videography arm of C4 Studios: commercial shoots for Perth businesses, from a $200 headshot session to full-day productions with 60-plus edited photos, short and long-form video, drone work and motion graphics.',
-      'It’s led by Caleb Scott, story-first and edit-inclusive — you book a package and receive a finished, delivered library, not a memory card and good luck.',
+      'Every C4 Lens package includes the edit, so what comes back is a finished library that’s ready to use.',
     ],
   },
   sections: [
@@ -32,7 +48,7 @@ export default {
         { title: 'Products', text: 'Clean catalogue shots through to styled lifestyle imagery for stores and socials.' },
         { title: 'Events and services', text: 'Launches, conferences, church services and full-show coverage — captured without getting in the way.' },
         { title: 'Short-form content', text: 'Reels and vertical video shot and cut for social, in batches that keep your feed alive for months.' },
-        { title: 'Drone and aerial', text: 'Licensed aerial photo and video — sites, venues, fleets and the establishing shot nothing on the ground can get.' },
+        { title: 'Drone and aerial', text: 'Aerial photo and video — sites, venues, fleets and the establishing shot nothing on the ground can get.' },
       ],
     },
     {
@@ -53,9 +69,9 @@ export default {
       label: 'On the reel',
       heading: 'Recent work through the lens',
       cases: [
-        { name: 'HVN', summary: 'Full-show coverage and drone work — the kind of footage a phone on a tripod can’t get, edited into something worth replaying.', tag: 'Event & drone' },
-        { name: 'The Rocks', summary: 'A two-campus media system for a Perth church: services captured, edited and published as a repeatable weekly pipeline, not a one-off favour.', tag: 'Media system' },
-        { name: 'DS Racing Karts', summary: 'Motorsport content shot to match a brand built around speed — including the film running in the site’s header.', href: '/CaseStudy/ds-racing-karts', tag: 'Motorsport' },
+        { name: 'HVN', summary: 'A film for the top of their home page, with aerial footage of the building and a walk through the gym.', href: '/CaseStudy/hvn-gym', tag: 'Aerial & film' },
+        { name: 'The Rocks', summary: 'Motion graphics for The Rocks Church’s At the Movies series: a streaming-style screen made to play before the service at both campuses.', href: '/CaseStudy/rocksstream', tag: 'Motion graphics' },
+        { name: 'DS Racing Karts', summary: 'Motion graphics made to match a brand built around speed, including the film that opens their home page.', href: '/CaseStudy/ds-racing-karts', tag: 'Motorsport' },
       ],
     },
     {
@@ -111,7 +127,7 @@ export default {
     },
     {
       q: 'Can you cover our event or church service?',
-      a: 'Yes, and unobtrusively — full-show event coverage and weekly church media are both regular work, including a two-campus setup we run as an ongoing pipeline. Tell us the venue and running order and we’ll quote it properly.',
+      a: 'Yes, and without getting in the way. Tell us the venue and the running order and we’ll quote it properly.',
     },
     {
       q: 'Who owns the photos and footage?',

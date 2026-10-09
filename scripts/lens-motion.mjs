@@ -1,4 +1,6 @@
-/* Web cuts of the motion films on /Lens (src/components/lens/LensMotion.jsx).
+/* Web cuts of the two motion films on /Lens, which play in their case studies
+   (src/components/lens/LensWork.jsx; the other case-study media comes from
+   scripts/lens-work.mjs).
    The masters live outside the repo and are never committed. Pass their paths:
      node scripts/lens-motion.mjs --dsr <dsr-reel-1080x1920.mp4> \
        --aquasafe-16x9 <aquasafe-promo-16x9.mp4> --aquasafe-9x16 <aquasafe-promo-9x16.mp4>

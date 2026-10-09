@@ -1,0 +1,435 @@
+/* ═══ THE WORK — case studies on /Lens (9 Oct 2026) ═══
+   LensWork.jsx, LensLoop.jsx, and MotionFilm.jsx's bare mode. Lens stays the
+   camera: black ground, Bebas names, Geist for the account, Caveat for the one
+   note on why it suits, Geist Mono for anything measured, amber viewfinder
+   corners. Each study adds one object from its client's world, in the
+   client's colour, and nothing from one study is reused in another.
+   Nothing here hides before a script runs. */
+
+.lw {
+  --lw-ease: cubic-bezier(.22, 1, .36, 1);
+  --mo-h: max(calc(100vh - 250px), 420px);
+}
+@supports (height: 100svh) { .lw { --mo-h: max(calc(100svh - 250px), 420px); } }
+.lw .lens-sr-only { text-transform: none; }
+
+/* ── Section heads ── */
+.lw-head {
+  max-width: 1400px; margin: 0 auto clamp(76px, 8vw, 124px);
+  display: grid; gap: 34px; align-items: end;
+}
+.lens-page .lw-head h2 { margin-bottom: 0; }
+@media (min-width: 1025px) { .lw-head { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: 56px; } }
+.lw-lede { margin: 0; max-width: 34rem; font-size: 17px; line-height: 1.65; color: var(--ink-2); }
+.lw-head--site { margin-bottom: clamp(64px, 7vw, 104px); }
+
+/* The reel log: every study, a jump away. lens.css pins every nav on the page
+   to the top as the page's own bar, so this one is put back in the flow. */
+.lens-page nav.lw-log {
+  position: static; z-index: auto; display: block; margin-top: 26px; padding: 0;
+  mix-blend-mode: normal; color: inherit;
+}
+.lw-log ul { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 28px; }
+.lw-log li { break-inside: avoid; border-top: 1px solid var(--line); }
+.lw-log a {
+  display: flex; align-items: center; min-height: 44px; padding: 4px 0;
+  font-size: 14px; line-height: 1.3; color: var(--ink); text-decoration: none;
+  transition: color .25s ease;
+}
+.lw-log a:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+/* ── A study ── */
+.lw-study { position: relative; max-width: 1400px; margin: clamp(128px, 13vw, 196px) auto 0; scroll-margin-top: 84px; }
+.lw-head + .lw-study { margin-top: 0; }
+.lw--site .lw-study { margin-top: clamp(104px, 10vw, 156px); }
+.lw--site .lw-head + .lw-study { margin-top: 0; }
+.lw-fig { margin: 0; }
+
+/* The account: who, where, what, where it runs, and the note. */
+.lw-account { min-width: 0; }
+.lw-name {
+  margin: 0; font-family: 'Bebas Neue', sans-serif; font-weight: 400;
+  font-size: clamp(42px, 4.4vw, 70px); line-height: .92; letter-spacing: .01em;
+  color: var(--ink); text-wrap: balance;
+}
+.lw-place {
+  margin: 12px 0 0; font-family: 'Geist Mono', monospace; font-size: 11px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2);
+}
+.lw-made { margin: 24px 0 0; max-width: 34rem; font-size: 16.5px; line-height: 1.68; color: var(--ink); }
+.lw-runs { margin: 12px 0 0; max-width: 34rem; font-size: 15px; line-height: 1.7; color: var(--ink-2); }
+.lw-fits {
+  margin: 20px 0 0; max-width: 24em;
+  font-family: 'Caveat', cursive; font-weight: 600; font-size: clamp(23px, 1.9vw, 28px);
+  line-height: 1.2; color: var(--amber); text-wrap: pretty;
+}
+.lw-out {
+  color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px;
+  text-decoration-color: rgba(245,245,240,.4); text-underline-offset: .22em;
+  white-space: nowrap; transition: text-decoration-color .25s ease, color .25s ease;
+}
+.lw-out svg { display: inline-block; vertical-align: -1px; margin-left: 3px; }
+.lw-out:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.lw-case {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin-top: 14px;
+  font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--amber); text-decoration: none; transition: color .25s ease;
+}
+.lw-case .btn-arrow { display: inline-block; transition: transform .35s ease; }
+.lw-case:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.lw-credits { margin-top: 18px; }
+.lw-cap { margin: 16px 0 0; max-width: 40rem; font-size: 13.5px; line-height: 1.55; color: var(--ink-2); }
+
+/* ── LensLoop: the viewfinder without a transport ── */
+.lw-stage { position: relative; aspect-ratio: var(--lw-ar); background: #0a0a0a; }
+@media (min-width: 768px) { .lw-stage[data-cuts="dual"] { aspect-ratio: var(--lw-ar-wide); } }
+.lw-video, .lw-poster, .lw-poster img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.lw-video { object-fit: cover; background: #000; }
+.lw-poster { z-index: 1; transition: opacity .45s var(--lw-ease); }
+.lw-poster img { object-fit: cover; }
+/* Until it has a file, an image paints Chrome's grey outline; keep it hidden. */
+.lw-poster img:not([src]) { visibility: hidden; }
+.lw-stage--contain .lw-video, .lw-stage--contain .lw-poster img { object-fit: contain; }
+/* The poster stands whenever the clip isn't playing, so a paused, blocked or
+   re-buffering clip shows a picture, never the video's black ground. */
+.lw-stage.is-playing .lw-poster { opacity: 0; visibility: hidden; transition: opacity .45s var(--lw-ease), visibility 0s linear .45s; }
+.lw-video, .lw-poster img { transition: filter .35s ease; }
+.lw-stage.is-waiting .lw-video, .lw-stage.is-waiting .lw-poster img { filter: blur(3px) brightness(.9); }
+.lw-stage.is-playing .mo-corner { border-color: var(--amber); }
+.lw-stage.is-playing .mo-corner--tl { transform: translate(5px, 5px); }
+.lw-stage.is-playing .mo-corner--tr { transform: translate(-5px, 5px); }
+.lw-stage.is-playing .mo-corner--bl { transform: translate(5px, -5px); }
+.lw-stage.is-playing .mo-corner--br { transform: translate(-5px, -5px); }
+.lw-mark { width: 60px; height: 60px; margin: -30px 0 0 -30px; }
+.lw-toggle {
+  position: absolute; z-index: 4; right: 10px; bottom: 10px;
+  display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
+  color: var(--ink); background: rgba(0,0,0,.58); border: 1px solid rgba(245,245,240,.26);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+.lw-toggle:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.lw-toggle:disabled { opacity: .4; cursor: not-allowed; }
+.lw-error {
+  position: absolute; z-index: 5; left: 10px; right: 64px; bottom: 10px; margin: 0;
+  font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--ink); background: rgba(0,0,0,.7); padding: 6px 8px;
+}
+
+/* MotionFilm in a study: the deck without the slate. */
+.lw .mo-film--bare { margin: 0; max-width: none; }
+.lw .mo-film--bare .mo-deck { margin: 0; }
+
+/* ════ HVN CrossFit: the teal stripe that runs along the gym's walls ════ */
+.lw-hvn { --hvn: #3cbcb4; display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 52px; column-gap: clamp(36px, 5vw, 88px); }
+.lw-hvn-film .mo-film--bare { --mo-h: min(86vh, 820px); }
+@supports (height: 100svh) { .lw-hvn-film .mo-film--bare { --mo-h: min(86svh, 820px); } }
+.lw-hvn-film .mo-deck { width: min(100%, calc(var(--mo-h) * 9 / 16)); }
+.lw-hvn-coaches { margin: 0; }
+.lw-hvn-line {
+  position: relative; list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(10px, 1.4vw, 20px);
+}
+/* The stripe, in their teal, at chest height behind the line-up, and out past
+   it to the edges of the screen, the way it runs down the gym. */
+.lw-hvn-line::before {
+  content: ''; position: absolute; z-index: 0; top: 37%; height: 16px;
+  left: 50%; width: 100vw; transform: translateX(-50%);
+  background: var(--hvn);
+}
+.lw-hvn-line li { position: relative; z-index: 1; }
+.lw-hvn-line picture, .lw-hvn-line img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; background: #121414; }
+.lw-hvn-coaches .lw-cap { margin-top: 16px; }
+@media (min-width: 768px) {
+  .lw-hvn {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-areas: "film copy" "film game" "coaches coaches";
+    align-items: start;
+  }
+  .lw-hvn-film { grid-area: film; }
+  .lw-hvn .lw-account { grid-area: copy; }
+  .lw-hvn-game { grid-area: game; align-self: end; }
+  .lw-hvn-coaches { grid-area: coaches; margin-top: clamp(12px, 3vw, 44px); }
+}
+@media (max-width: 767px) {
+  .lw-hvn-film .mo-deck { width: min(100%, 420px); }
+  .lw-hvn-line { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Two rows on a phone, so two runs of stripe. */
+  .lw-hvn-line::before {
+    top: 0; bottom: 0; height: auto;
+    background:
+      linear-gradient(var(--hvn), var(--hvn)) 0 18% / 100% 11px no-repeat,
+      linear-gradient(var(--hvn), var(--hvn)) 0 69.5% / 100% 11px no-repeat;
+  }
+}
+
+/* ════ Sharp Bricklaying: laid in stretcher bond, under a string line ════ */
+.lw-sharp { --sharp: #1b4332; --mortar: #514c45; --stringline: #ff7a1a; }
+.lw-sharp-head { display: grid; row-gap: 44px; column-gap: clamp(36px, 5vw, 88px); }
+@media (min-width: 768px) { .lw-sharp-head { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); align-items: end; } }
+.lw-sharp-loader { max-width: 620px; }
+/* A mason's line pulled tight between two pins, the way every course starts. */
+.lw-sharp-line { position: relative; height: 1.5px; margin: 64px 4px 30px; background: var(--stringline); }
+.lw-sharp-line span {
+  position: absolute; top: 50%; width: 5px; height: 20px; border-radius: 2px;
+  background: #b9b2a5; transform: translateY(-50%);
+  box-shadow: 0 3px 6px -2px rgba(0,0,0,.6);
+}
+.lw-sharp-line span:first-child { left: -4px; }
+.lw-sharp-line span:last-child { right: -4px; }
+/* The wall: bricks are photos and films at their own aspect, joints are the
+   mortar showing through, and no two joints sit one above the other. */
+.lw-wall { display: grid; gap: 6px; background: var(--mortar); padding: 6px; }
+.lw-wall--pier { grid-template-rows: minmax(0, 1fr); }
+.lw-courses { display: grid; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 6px; min-height: 0; }
+.lw-course { display: grid; gap: 6px; min-height: 0; }
+.lw-pier { min-height: 0; }
+.lw-brick { position: relative; margin: 0; min-width: 0; min-height: 0; height: 100%; overflow: hidden; background: #141210; }
+.lw-brick picture, .lw-brick img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.lw-brick .lw-stage { aspect-ratio: auto; width: 100%; height: 100%; }
+.lw-brick .mo-corner--tl { top: 8px; left: 8px; }
+.lw-brick .mo-corner--tr { top: 8px; right: 8px; }
+.lw-brick .mo-corner--bl { bottom: 8px; left: 8px; }
+.lw-brick .mo-corner--br { bottom: 8px; right: 8px; }
+.lw-brick .lw-toggle { right: 8px; bottom: 8px; }
+.lw-brick-cap {
+  position: absolute; z-index: 3; left: 8px; top: 8px; max-width: calc(100% - 16px);
+  padding: 4px 7px; font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink); background: rgba(0,0,0,.66);
+}
+.lw-brick .lw-mark { width: 52px; height: 52px; margin: -26px 0 0 -26px; }
+@media (max-width: 899px) { .lw-wall { padding: 4px; gap: 4px; } .lw-course { gap: 4px; } }
+
+/* ════ DS Racing Karts: five start lights and the pit board ════ */
+.lw-dsr { --dsr: #e60012; display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 44px; column-gap: clamp(28px, 4vw, 64px); }
+.lw-dsr-gantry {
+  display: flex; align-items: center; gap: clamp(10px, 1.3vw, 16px); width: max-content; max-width: 100%;
+  padding: 12px 15px; margin: 0 0 22px;
+  background: #0c0c0c; border: 1px solid #262626; border-radius: 3px;
+}
+/* Flat lamps: lit, they glow in the kart red; out, they go dark. */
+.lw-dsr-gantry span {
+  flex: none; width: clamp(20px, 2.2vw, 30px); height: clamp(20px, 2.2vw, 30px); border-radius: 50%;
+  background: var(--dsr); box-shadow: 0 0 14px 1px rgba(230, 0, 18, .55);
+  transition: background-color .12s linear, box-shadow .12s linear;
+}
+.lw-dsr-gantry.is-out span { background: #2a0b0d; box-shadow: none; }
+.lw-dsr-board { margin: 34px 0 0; max-width: 26rem; border-bottom: 1px solid var(--line-2); }
+.lw-dsr-board > div {
+  display: flex; align-items: baseline; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line-2);
+  font-family: 'Geist Mono', monospace; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase;
+}
+.lw-dsr-board dt { color: var(--ink-2); }
+.lw-dsr-board > div::after { content: ''; order: 1; flex: 1 1 auto; border-bottom: 1px dotted rgba(245,245,240,.22); transform: translateY(-3px); }
+.lw-dsr-board dd { order: 2; margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
+/* The reel: the film, then its notes. One column until there is room for
+   both side by side (1025px and up). */
+.lw-dsr-reel { display: grid; gap: 30px; grid-template-columns: minmax(0, 1fr); }
+.lw-dsr-reel .mo-film--bare { --mo-h: min(70vh, 640px); width: min(100%, calc(var(--mo-h) * 9 / 16)); }
+.lw-dsr-reel .mo-deck { width: 100%; }
+.lw-dsr-reel-notes { min-width: 0; }
+.lw-dsr-reel-notes .lw-made { margin-top: 0; }
+.lw-dsr-reel-notes .mo-words ol { columns: 1; }
+@media (min-width: 768px) {
+  .lw-dsr { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .lw-dsr-headblock { grid-column: 1 / -1; }
+  .lw-dsr-side { grid-column: 1 / -1; }
+  .lw-dsr-chassis { grid-column: 1 / 7; }
+  .lw-dsr-game { grid-column: 7 / -1; }
+}
+/* 768 to 1024: half a row is too narrow for the reel and its notes side by
+   side, so the notes go under the tachometer and the reel stands beside both. */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .lw-dsr-reel { display: contents; }
+  .lw-dsr-tacho { grid-column: 1 / 7; grid-row: 4; }
+  .lw-dsr-reel-notes { grid-column: 1 / 7; grid-row: 5; }
+  .lw-dsr-reel .mo-film--bare { grid-column: 7 / -1; grid-row: 4 / 6; justify-self: end; }
+}
+@media (min-width: 1025px) {
+  .lw-dsr-headblock { grid-column: 1 / 9; grid-row: 1; }
+  .lw-dsr-side { grid-column: 9 / -1; grid-row: 1; align-self: end; }
+  .lw-dsr-chassis { grid-column: 1 / 6; }
+  .lw-dsr-game { grid-column: 6 / -1; }
+  .lw-dsr-tacho { grid-column: 1 / 5; align-self: start; }
+  .lw-dsr-reel { grid-column: 5 / -1; grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+  /* A length here, since a percentage has nothing to resolve against in an auto track. */
+  .lw-dsr-reel .mo-film--bare { width: calc(var(--mo-h) * 9 / 16); max-width: 100%; }
+}
+
+/* ════ Aqua-Safe Plumbing: the water, as a full field ════ */
+.lw-aqua {
+  --aqua: #0f5c7a;
+  --ink-2: #cfe5ec; --ink-3: #b6d4dd; --line: rgba(245,245,240,.16); --line-2: rgba(245,245,240,.28);
+  display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 44px; column-gap: clamp(36px, 5vw, 80px);
+  padding: clamp(56px, 7vw, 104px) 0;
+}
+.lw-aqua::before {
+  content: ''; position: absolute; z-index: 0; top: 0; bottom: 0; left: 50%; width: 100vw;
+  transform: translateX(-50%); background: var(--aqua);
+}
+.lw-aqua > * { position: relative; z-index: 1; }
+.lw-aqua .lw-fits { color: #ffd08f; }
+.lw-aqua .lw-case { color: #ffd08f; }
+.lw-aqua .lw-out { text-decoration-color: rgba(245,245,240,.55); }
+.lw-aqua .mo-film--bare { --mo-h: min(72vh, 700px); }
+.lw-aqua .mo-strip { outline: 1px solid rgba(0,0,0,.25); }
+.lw-aqua .mo-btn { border-color: rgba(245,245,240,.3); }
+.lw-aqua .mo-play { background: rgba(4, 40, 54, .55); }
+@media (min-width: 1025px) {
+  .lw-aqua { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); align-items: start; }
+  .lw-aqua .lw-account { padding-top: 6px; }
+}
+
+/* ════ Evidence Advisory: an exhibit label, filled in by hand ════ */
+.lw-ea { --ea: #0b1320; --marker: #f6c21c; display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 40px; column-gap: clamp(36px, 5vw, 80px); }
+.lw-exhibit {
+  width: min(100%, 340px); margin: 0 0 40px; padding-bottom: 8px;
+  background: #f3efe5; color: #1a1a1a; border-radius: 2px;
+  transform: rotate(-1.2deg); transform-origin: 20% 0;
+  box-shadow: 0 1px 1.5px rgba(0,0,0,.4), 0 22px 44px -24px rgba(0,0,0,.95);
+}
+.lw-exhibit-head {
+  margin: 0; padding: 10px 14px 7px; border-radius: 2px 2px 0 0;
+  background: var(--marker); color: #141414;
+  font-family: 'Bebas Neue', sans-serif; font-size: 24px; line-height: 1; letter-spacing: .2em;
+}
+.lw-exhibit dl { margin: 0; padding: 2px 14px; }
+.lw-exhibit dl > div { display: grid; grid-template-columns: 6.2em minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 7px 0 6px; border-bottom: 1px solid #cfc7b5; }
+.lw-exhibit dt { font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .09em; text-transform: uppercase; color: #5c5547; }
+.lw-exhibit dd { margin: 0; font-family: 'Caveat', cursive; font-weight: 600; font-size: 21px; line-height: 1.05; color: #1d2f63; overflow-wrap: anywhere; }
+/* 768 to 1024: a 7:4 split leaves the recording small with a void under it,
+   so it takes the full width and the account and the label sit side by side. */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .lw-ea-side { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); column-gap: 40px; align-items: start; }
+  .lw-ea-side .lw-account { grid-column: 1; grid-row: 1; }
+  .lw-ea-side .lw-exhibit { grid-column: 2; grid-row: 1; margin: 6px 0 0; }
+  .lw-ea-side .lw-exhibit dl > div { grid-template-columns: 5.4em minmax(0, 1fr); }
+  .lw-ea-side .lw-exhibit dd { font-size: 18px; }
+}
+@media (min-width: 1025px) {
+  .lw-ea { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); align-items: start; }
+  .lw-ea-side { padding-top: 4px; }
+}
+
+/* ════ Tidy Gardens: three stakes in a bed, each with its plant tag ════ */
+.lw-tidy { --tidy: #1e3a2a; --tag: #366c27; --tag-ink: #f2eee2; display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 48px; column-gap: clamp(36px, 5vw, 88px); }
+.lw-tidy-bed {
+  list-style: none; margin: 0; padding: clamp(28px, 3vw, 40px) clamp(16px, 3vw, 40px) clamp(30px, 3vw, 44px);
+  display: flex; justify-content: center; align-items: flex-start; gap: clamp(30px, 6vw, 84px);
+  background: #102117; border-radius: 3px;
+}
+.lw-stake { position: relative; width: clamp(66px, 6.4vw, 86px); padding-bottom: 60px; }
+.lw-stake .lw-stage { background: #0d1a12; }
+.lw-stake .lw-toggle { top: calc(100% + 12px); bottom: auto; right: auto; left: 50%; transform: translateX(-50%); }
+.lw-stake .lw-mark { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
+.lw-tag {
+  position: relative; z-index: 2; width: 108px; margin: 0 0 18px; left: 50%; transform: translateX(-50%) rotate(-2.5deg);
+  padding: 9px 8px 17px; text-align: center; background: var(--tag); color: var(--tag-ink);
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%);
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,.5));
+}
+.lw-stake:nth-child(2) .lw-tag { transform: translateX(-50%) rotate(1.8deg); }
+.lw-stake:nth-child(3) .lw-tag { transform: translateX(-50%) rotate(-1deg); }
+.lw-stake { display: flex; flex-direction: column; }
+.lw-stake .lw-tag { order: -1; }
+.lw-tag-name { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 21px; line-height: 1; letter-spacing: .04em; }
+.lw-tag-page { display: block; margin-top: 4px; font-family: 'Geist Mono', monospace; font-size: 10px; line-height: 1.25; letter-spacing: .07em; text-transform: uppercase; color: rgba(242, 238, 226, .88); }
+@media (min-width: 900px) { .lw-tidy { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; } }
+@media (max-width: 420px) { .lw-tidy-bed { gap: 30px; } .lw-tag { width: 92px; } .lw-tag-name { font-size: 18px; } }
+
+/* ════ Brady Electrical: a drawing sheet, title block bottom right ════ */
+.lw-brady { --brady: #547c2a; --cad: rgba(140, 196, 84, .5); --cad-ink: #b4d69a; display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 36px; column-gap: clamp(36px, 5vw, 80px); }
+.lw-brady-media { padding: clamp(10px, 1.2vw, 16px); border: 1px solid var(--cad); }
+.lw-titleblock { margin: 0; border: 1px solid var(--cad); font-family: 'Geist Mono', monospace; align-self: end; }
+.lw-titleblock > div { display: grid; grid-template-columns: 7em minmax(0, 1fr); }
+.lw-titleblock > div + div { border-top: 1px solid var(--cad); }
+.lw-titleblock dt { padding: 9px 10px; border-right: 1px solid var(--cad); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--cad-ink); }
+.lw-titleblock dd { margin: 0; padding: 9px 10px; font-size: 12px; letter-spacing: .03em; color: var(--ink); }
+.lw-brady-side { display: grid; row-gap: 32px; column-gap: clamp(36px, 5vw, 80px); }
+@media (min-width: 768px) {
+  .lw-brady-side { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); align-items: end; }
+}
+
+/* ════ Groverz Tax: an adding-machine tape ════ */
+.lw-groverz { --gz: #25256d; --gz-ink: #2b2a62; --gz-red: #c62f2a; display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 36px; column-gap: clamp(28px, 4vw, 64px); }
+.lw-tape {
+  justify-self: start; width: 170px; padding: 26px 18px 24px;
+  background: #f5f2e9; color: var(--gz-ink); font-family: 'Geist Mono', monospace;
+  clip-path: polygon(0 4px, 8.33% 0, 16.66% 4px, 25% 0, 33.33% 4px, 41.66% 0, 50% 4px, 58.33% 0, 66.66% 4px, 75% 0, 83.33% 4px, 91.66% 0, 100% 4px, 100% calc(100% - 4px), 91.66% 100%, 83.33% calc(100% - 4px), 75% 100%, 66.66% calc(100% - 4px), 58.33% 100%, 50% calc(100% - 4px), 41.66% 100%, 33.33% calc(100% - 4px), 25% 100%, 16.66% calc(100% - 4px), 8.33% 100%, 0 calc(100% - 4px));
+  filter: drop-shadow(0 10px 14px rgba(0,0,0,.5));
+}
+.lw-tape ul { list-style: none; margin: 0; padding: 0; }
+.lw-tape li { display: flex; justify-content: space-between; font-size: 15px; line-height: 2.05; font-variant-numeric: tabular-nums; }
+.lw-tape li span { color: #6f6da0; }
+.lw-tape-total {
+  display: flex; justify-content: space-between; gap: 8px; margin: 10px 0 0; padding-top: 10px;
+  border-top: 1px dashed #8f8cbd; font-size: 11px; line-height: 1.3; color: var(--gz-red);
+  overflow-wrap: anywhere;
+}
+.lw-groverz-media .lw-stage { outline: 1px solid rgba(124, 122, 214, .35); }
+@media (min-width: 1025px) {
+  .lw-groverz { grid-template-columns: minmax(0, 4fr) auto minmax(0, 5fr); align-items: center; }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .lw-groverz { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "copy tape" "media media"; align-items: end; }
+  .lw-groverz .lw-account { grid-area: copy; }
+  .lw-tape { grid-area: tape; }
+  .lw-groverz-media { grid-area: media; }
+}
+
+/* ════ The Rocks, At the Movies: a red ticket for the film night ════ */
+.lw-rocks { --rocks: #e50914; display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 40px; column-gap: clamp(36px, 5vw, 80px); }
+.lw-ticket {
+  --notch: 58px;
+  display: grid; grid-template-columns: var(--notch) minmax(0, 1fr); width: min(100%, 420px); margin-top: 36px;
+  background: #b5060e; color: #fff7f2; border-radius: 3px;
+  -webkit-mask: radial-gradient(circle at var(--notch) 0, transparent 8px, #000 8.5px) top / 100% 51% no-repeat, radial-gradient(circle at var(--notch) 100%, transparent 8px, #000 8.5px) bottom / 100% 51% no-repeat;
+  mask: radial-gradient(circle at var(--notch) 0, transparent 8px, #000 8.5px) top / 100% 51% no-repeat, radial-gradient(circle at var(--notch) 100%, transparent 8px, #000 8.5px) bottom / 100% 51% no-repeat;
+}
+.lw-ticket-stub {
+  display: grid; place-items: center; margin: 0; padding: 14px 0;
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  background: #f3ece0; color: #b5060e; border-radius: 0 3px 3px 0;
+  font-family: 'Bebas Neue', sans-serif; font-size: 19px; letter-spacing: .32em; text-transform: uppercase;
+}
+.lw-ticket-body { padding: 20px 22px 20px 20px; border-left: 2px dashed rgba(255, 247, 242, .45); }
+.lw-ticket-title { margin: 0 0 12px; font-family: 'Bebas Neue', sans-serif; font-size: 32px; line-height: .95; letter-spacing: .04em; color: #fff7f2; }
+.lw-quote { margin: 0; }
+.lw-quote p { margin: 0; font-size: 15px; line-height: 1.55; color: #fff7f2; }
+.lw-quote footer { margin-top: 12px; font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: rgba(255, 247, 242, .82); }
+/* The same at 768 to 1024 as Evidence Advisory: full-width recording, then
+   the account beside the ticket. */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .lw-rocks-side { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); column-gap: 40px; align-items: start; }
+  .lw-rocks-side .lw-ticket { margin-top: 6px; }
+}
+@media (min-width: 1025px) { .lw-rocks { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); align-items: start; } }
+
+/* ── Hover belongs to pointers that hover ── */
+@media (hover: hover) {
+  .lw-log a:hover { color: var(--amber); }
+  .lw-out:hover { text-decoration-color: currentColor; }
+  .lw-case:hover { color: #f2c98c; }
+  .lw-case:hover .btn-arrow { transform: translateX(3px); }
+  .lw-aqua .lw-case:hover { color: #fff1dc; }
+  .lw-toggle:not(:disabled):hover { background: var(--ink); color: #000; border-color: var(--ink); }
+}
+
+/* ── Phones ── */
+@media (max-width: 767px) {
+  .lw-lede { font-size: 16px; }
+  .lw-made { font-size: 16px; }
+  .lw-log ul { column-gap: 18px; }
+  .lw-log a { font-size: 13px; }
+  .lw-study { margin-top: 112px; }
+  .lw--site .lw-study { margin-top: 96px; }
+  .lw-aqua { padding: 52px 0; }
+  .lw-exhibit { margin-bottom: 30px; }
+  .lw-sharp-line { margin: 48px 4px 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lw-stage.is-playing .mo-corner { transform: none; }
+  .lw-poster, .lw-stage.is-playing .lw-poster { transition: opacity .12s ease, visibility 0s linear .12s; }
+  .lw-video, .lw-poster img { transition: none; }
+  .lw-case .btn-arrow, .lw-case:hover .btn-arrow { transition: none; transform: none; }
+}
