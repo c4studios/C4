@@ -1,34 +1,40 @@
 /*
  * The opening of /seo-and-copywriting and the page's one authored moment:
- * the climb. The board (Board.jsx) holds an example search; the visitor's
+ * the climb. The results page (Results.jsx) holds an example search; your
  * listing starts at the top of page two, and each piece of work in the
- * column moves it up, until it's first.
+ * column beside it moves it up, until it's first.
  *
- * Armed (a browser with motion allowed and room to pin), the board pins
- * beside the steps from 1024px, or as a band across the top below that, and
- * the step under the reading line sets where the listing sits. Static (the
- * prerenderer, reduced motion, or a screen too short to pin), the page is
- * flat: the board sits beside the heading at its starting point, and every
- * step carries its own still of the board. The words never depend on the
- * motion; each step says where the listing sits in plain text.
+ * Armed (motion allowed, and a window at least 560px tall), the page pins
+ * beside the steps from 1024px wide, or as a band across the top below
+ * that, and the scroll drives it directly. Each step holds a position while
+ * its words are read; between two steps the listing travels, overtaking the
+ * results it passes one at a time, and it moves with a little weight (the
+ * value it draws follows the scroll through a short damping). Nothing is
+ * re-rendered while it moves: positions are written straight to the page.
+ *
+ * Flat (the prerenderer, reduced motion, or a window too short to pin), the
+ * page doesn't move at all: the opening shows the starting point, and every
+ * step carries its own still of the results. The words never depend on the
+ * motion; each step says where the listing sits in plain text, so the climb
+ * is never announced as it moves. The one thing announced, politely, is a
+ * change of example search, because the visitor asked for it.
  */
 import { useEffect, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import useStaticMode from '@/hooks/useStaticMode';
 import { seoPackages } from '@/data/pricing';
 import { createPageUrl } from '@/utils';
-import Board from './Board';
+import Results, { ordinal } from './Results';
 import { EXAMPLES, RANKS } from './examples';
-import { GRAPHITE, Graphite, ringPath } from './pencil';
 
 const PRERENDER = typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent);
-const TALL_ENOUGH = '(min-height: 520px)';
+const TALL_ENOUGH = '(min-height: 560px)';
+const WIDE = '(min-width: 1024px)';
+const COMPACT = '(max-width: 639.98px)';
+const START = createPageUrl('StartProject');
 
-const ordinal = (n) => {
-  const s = ['th', 'st', 'nd', 'rd'];
-  const v = n % 100;
-  return `${n}${s[(v - 20) % 10] || s[v] || s[0]}`;
-};
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const smooth = (t) => t * t * t * (t * (t * 6 - 15) + 10); // smootherstep
 
 const STEPS = [
   {
@@ -132,98 +138,137 @@ const WHO = {
   ],
 };
 
+/* Worked out once: pricing.js doesn't change while the page is open. */
+const SAID = Object.fromEntries(STEPS.map((s) => [s.key, (WHO[s.key] ? WHO[s.key]() : []).filter(Boolean)]));
+
 function WhoDoesIt({ step }) {
-  const said = (WHO[step] ? WHO[step]() : []).filter(Boolean);
+  const said = SAID[step] || [];
   if (!said.length) return null;
-  return <p className="sc-step-in">{said.join(' ')}</p>;
+  return <p className="sc-step-who">{said.join(' ')}</p>;
 }
 
-function useArmed(staticMode) {
-  const [armed, setArmed] = useState(() => (
-    !staticMode && typeof window !== 'undefined' && typeof window.matchMedia === 'function'
-      && window.matchMedia(TALL_ENOUGH).matches
-  ));
+/* A media query as state, read synchronously on the first render so the
+   page lays out right before it paints. */
+function useMedia(query, enabled = true) {
+  const read = () => enabled && typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+    && window.matchMedia(query).matches;
+  const [on, setOn] = useState(read);
   useEffect(() => {
-    if (staticMode || typeof window.matchMedia !== 'function') return undefined;
-    const mq = window.matchMedia(TALL_ENOUGH);
-    const on = () => setArmed(mq.matches);
-    mq.addEventListener?.('change', on);
-    return () => mq.removeEventListener?.('change', on);
-  }, [staticMode]);
-  return armed;
+    if (!enabled || typeof window.matchMedia !== 'function') { setOn(false); return undefined; }
+    const mq = window.matchMedia(query);
+    const sync = () => setOn(mq.matches);
+    sync();
+    mq.addEventListener?.('change', sync);
+    return () => mq.removeEventListener?.('change', sync);
+  }, [query, enabled]);
+  return on;
 }
 
 export default function Climb() {
   const staticMode = useStaticMode();
-  const armed = useArmed(staticMode);
+  const armed = useMedia(TALL_ENOUGH, !staticMode);
+  const wide = useMedia(WIDE);
+  const compact = useMedia(COMPACT);
   const [exKey, setExKey] = useState(EXAMPLES[0].key);
   const ex = EXAMPLES.find((e) => e.key === exKey) || EXAMPLES[0];
   const [step, setStep] = useState(0);
-  const [stuck, setStuck] = useState(false);
+  const [said, setSaid] = useState('');
+  const stageApi = useRef(null);
   const stageRef = useRef(null);
-  const colRef = useRef(null);
   const stepRefs = useRef([]);
+  const stepNow = useRef(0);
 
-  /* The step whose heading has crossed the reading line sets the board.
-     Beside the steps the line sits a little below the middle of the
-     screen; under the band it sits in the space left below the band. */
+  /* The scroll drives the climb. Each step's words hold a position; the
+     listing travels between two of them while the next step's heading rises
+     to the reading line (56% down the screen beside the steps, or 42% of the
+     way down the room under the band). */
   useEffect(() => {
-    if (!armed) { setStep(0); return undefined; }
+    if (!armed) { stepNow.current = 0; setStep(0); return undefined; }
+    const wideMq = window.matchMedia(WIDE);
     let raf = 0;
-    const narrow = window.matchMedia('(max-width: 1023px)');
-    const update = () => {
-      raf = 0;
+    let last = 0;
+    let drawn = RANKS[0];
+    let placed = NaN; // what the page was last drawn at; a hold redraws nothing
+
+    const progress = () => {
       const vh = window.innerHeight;
       let line = vh * 0.56;
-      if (narrow.matches && stageRef.current) {
+      let travel = vh * 0.32;
+      if (!wideMq.matches && stageRef.current) {
         const b = stageRef.current.getBoundingClientRect().bottom;
         line = b + (vh - b) * 0.42;
+        travel = Math.max(90, (vh - b) * 0.5);
       }
-      let next = 0;
-      stepRefs.current.forEach((el, i) => {
-        if (el && el.getBoundingClientRect().top < line) next = i + 1;
+      let p = 0;
+      stepRefs.current.forEach((el) => {
+        if (!el) return;
+        p += smooth(clamp01((line + travel - el.getBoundingClientRect().top) / travel));
       });
-      setStep(next);
-      /* The band is pinned once it reaches its sticky top. */
-      const col = colRef.current;
-      if (col && narrow.matches) {
-        const top = parseFloat(window.getComputedStyle(col).top) || 0;
-        setStuck(col.getBoundingClientRect().top <= top + 1);
-      } else {
-        setStuck(false);
-      }
+      return p;
     };
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
-    update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+
+    const frame = (t) => {
+      raf = 0;
+      const p = progress();
+      const i = Math.min(RANKS.length - 2, Math.floor(p));
+      const target = RANKS[i] + (RANKS[i + 1] - RANKS[i]) * (p - i);
+      const dt = last ? Math.min(48, t - last) : 16;
+      drawn += (target - drawn) * (1 - Math.exp(-dt / 85));
+      if (Math.abs(target - drawn) < 0.002) drawn = target;
+      if (stageApi.current && drawn !== placed) { stageApi.current.place(drawn); placed = drawn; }
+      const s = Math.min(STEPS.length, Math.floor(p + 0.5));
+      if (s !== stepNow.current) { stepNow.current = s; setStep(s); }
+      if (drawn !== target) { last = t; raf = requestAnimationFrame(frame); } else { last = 0; }
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+    /* a resize can change the scale, so the next frame redraws whatever it is */
+    const resized = () => { placed = NaN; kick(); };
+
+    /* the first frame lands where the scroll already is, with no travel */
+    const p0 = progress();
+    const i0 = Math.min(RANKS.length - 2, Math.floor(p0));
+    drawn = RANKS[i0] + (RANKS[i0 + 1] - RANKS[i0]) * (p0 - i0);
+    kick();
+    window.addEventListener('scroll', kick, { passive: true });
+    window.addEventListener('resize', resized);
+    const fonts = typeof document !== 'undefined' && document.fonts && document.fonts.ready;
+    if (fonts) fonts.then(resized, () => {});
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('scroll', kick);
+      window.removeEventListener('resize', resized);
     };
-  }, [armed]);
+  }, [armed, wide]);
+
+  const choose = (e) => {
+    setExKey(e.key);
+    setSaid(`Showing the example search “${e.query}”.`);
+  };
 
   return (
-    <section className={`sc-climb ${armed ? 'is-armed' : 'is-flat'}${stuck ? ' is-stuck' : ''}`} aria-labelledby="sc-h1">
+    <section className={`sc-climb ${armed ? 'is-armed' : 'is-flat'}`} aria-labelledby="sc-h1">
       <div className="sc-frame sc-climb-grid">
         <header className="sc-intro">
           <h1 className="sc-h1" id="sc-h1">SEO and copywriting in Perth</h1>
           <p className="sc-lede">
-            When someone searches Google for what you do, the first few results get the call. We do the work
-            that moves your business up that page, and we write what people read when they get there.
+            When someone searches Google for what you do, the first few results get the call. We do the work that moves
+            your business up that page, and we write what people read when they get there.
           </p>
           <div className="sc-actions">
-            <Link to={`${createPageUrl('StartProject')}?service=seo`} className="sc-btn-start">Start a project</Link>
+            <Link to={`${START}?service=seo`} className="sc-btn-start">Start a project</Link>
             <a href="#prices" className="sc-btn-ghost">See the prices</a>
           </div>
         </header>
 
-        <div className="sc-stage-col" ref={colRef}>
+        <div className="sc-stage-col">
           <figure className="sc-stage" ref={stageRef}>
-            <Board ex={ex} step={armed ? step : 0} still={!armed} skeleton={PRERENDER} focus={armed ? 0.5 : 0.62} />
+            {armed ? (
+              <Results ref={stageApi} ex={ex} step={step} compact={compact} foot={wide} typing />
+            ) : (
+              <Results ex={ex} step={0} still skeleton={PRERENDER} compact={compact} />
+            )}
             <figcaption className="sr-only">
-              {`An example page of search results for “${ex.query}”, with invented listings. Your business is ${ordinal(RANKS[armed ? step : 0])}${(armed ? step : 0) <= 1 ? ', at the top of page two' : ''}.`}
+              {`An example search for “${ex.query}”. Your business starts ${ordinal(RANKS[0])}, at the top of page two, and each step below moves it up.`}
             </figcaption>
           </figure>
         </div>
@@ -235,18 +280,19 @@ export default function Climb() {
               <button
                 key={e.key}
                 type="button"
-                className={`sc-chip${e.key === ex.key ? ' is-on' : ''}`}
+                className="sc-chip"
                 aria-pressed={e.key === ex.key}
-                onClick={() => setExKey(e.key)}
+                onClick={() => choose(e)}
               >
                 {e.query}
               </button>
             ))}
           </div>
           <p className="sc-try-note">
-            The board is an example. The other listings are made up, and in real life the climb takes months.
+            The search is an example. The other results are stand-ins, and in real life the climb takes months.
             {armed ? ' Scroll down and watch what each piece of work does to your listing.' : ' Each step below shows where your listing sits once that work is done.'}
           </p>
+          <p className="sr-only" aria-live="polite">{said}</p>
         </div>
 
         <ol className="sc-steps">
@@ -256,25 +302,17 @@ export default function Climb() {
             return (
               <li key={s.key} className={`sc-step${on ? ' is-on' : ''}`}>
                 <div className="sc-step-text" ref={(el) => { stepRefs.current[i] = el; }}>
-                  <h2 className="sc-step-h"><span>{s.title}</span></h2>
+                  <h2 className="sc-step-h">{s.title}</h2>
                   <p className="sc-step-body">{s.body}</p>
                   <p className="sc-step-where">
-                    In the example:{' '}
-                    <b>
-                      {ordinal(rank)}
-                      {armed ? (
-                        <svg className="sc-where-ring" viewBox="0 0 60 30" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                          <g filter={`url(#${GRAPHITE})`}><Graphite d={ringPath(5, 5, 50, 20, 40 + i)} pass={[0.4, 0.3]} /></g>
-                        </svg>
-                      ) : null}
-                    </b>
+                    In the example: <b className="sc-where">{ordinal(rank)}</b>
                     {s.where ? `, ${s.where}` : ''}.
                   </p>
                   <WhoDoesIt step={s.key} />
                 </div>
                 {!armed ? (
-                  <div className="sc-step-still" aria-hidden="true">
-                    <Board ex={ex} step={i + 1} still skeleton={PRERENDER} />
+                  <div className="sc-still">
+                    <Results ex={ex} step={i + 1} still skeleton={PRERENDER} compact={compact} windowH={compact ? 380 : 400} query={false} foot={false} />
                   </div>
                 ) : null}
               </li>

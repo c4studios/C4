@@ -2,56 +2,57 @@
  * /seo-and-copywriting: SEO and copywriting as a service (Caleb, 2 Oct 2026:
  * "now that i'm moving c4 site off the website once it's ready to go, i think
  * we need to start advertising seo and copywriting as a service"). In the
- * Services menu, and the fourth door on the home page once C4Site moves off.
+ * Services menu, and the SEO door on the home page.
  *
- * Rebuilt 8 Oct 2026 from Caleb's brief: "the seo page needs to be a lot
- * more pretty to look at ... seo is all about ranking high on google, so
- * find a way to express that." The three trial openings (?layout=room |
- * answer | edit) are gone; this is the one page.
+ * Rebuilt 8 Oct 2026 as the climb on a paste-up board, and rebuilt again on
+ * 9 Oct 2026 from Caleb's note: "the seo page in it's entirety just doesn't
+ * look good ... i like the idea that the seo page's 'gimmick' is that as we
+ * scroll, we get to see the search result increasingly higher". The climb
+ * stays; the board, the graph paper, the pencil and the invented listings go.
  *
  * DIRECTION CONTRACT
- *  THESIS   Ranking, shown happening. An example search's first page sits
- *           on the bench as a paste-up board, and the visitor's listing
- *           climbs from the top of page two to first as they read what each
- *           piece of work does. It refuses the service-page default (hero,
- *           three cards, price cards, call to action) and the SEO page of
- *           charts and promises.
- *  OWN-WORLD The bench (warm paper, ink, one red that means start, proof
- *           stock for prices and verbatim answers). The arm's own material
- *           is the paste-up board: white board ruled in non-repro blue,
- *           register marks, results as strips of card stock with the
- *           bench's contact shadow, positions in B612 down the edge, a cut
- *           line at page two, graphite pencil for the edits. The board stays
- *           paper in both themes.
- *  STORY    The visitor sees their business missing from page one, watches
- *           each piece of work move it up, is told plainly that nobody can
- *           promise first place, reads five published prices from $249 a
- *           month, sees how the writing works, and starts a project.
- *  FIRST VIEWPORT Left: the h1 at display size, a two-sentence lede, the
- *           red start button and a quiet "See the prices", then the example
- *           searches. Right (a band across the top below 1024px): the board,
- *           the query being typed with the red caret, ten results, the cut
- *           line, and the visitor's listing at 11th.
- *  FORM     The climb (ranked first of seven structures). Seed 573d879d dealt
- *           the question desk, page one month by month, and the crawler's
- *           view; the brief's idea outranked the roll. The month-by-month
- *           card gave the stills (each step keeps its own picture of the
- *           board) and the honesty about time; the question desk gave the
- *           verbatim answers; the crawler's view was declined (a reflex
- *           DESIGN.md refuses).
+ *  THESIS   Ranking, shown as precise type. Your listing climbs an example
+ *           results page, one piece of work at a time. It refuses the SEO
+ *           page of graphs and promises, and a cloned Google screen.
+ *  OWN-WORLD The bench: warm paper, ink, hairlines, one red (the caret and
+ *           the start button), proof stock for prices and answers quoted
+ *           word for word. The results are set on it like an annotated
+ *           reference page: a rail of position keys, stand-in results as
+ *           ruled lines, one horizon where page one ends. Your listing is
+ *           the one sheet you could lift; the work marks its words.
+ *  STORY    The visitor sees their business just off page one, watches each
+ *           piece of work move it up, hears that nobody can promise first
+ *           place, reads five published prices, and starts.
+ *  FIRST VIEWPORT Left: the h1 at display size, the lede, the red start
+ *           button, "See the prices", the example switch. Right (a band
+ *           below 1024px): the results page, your listing 11th, under the
+ *           horizon, its key struck.
+ *  FORM     The brief's own climb. Seed 0cb90b57 dealt the AFL ladder, then
+ *           the eye-level shelf; both failed on truth (invented points,
+ *           bought placement), so the brief's direction is built, raised by
+ *           the challengers below.
  *  FINISH   unreviewed and undocumented is unfinished; this build ends with
  *           the finish review, the verdict, DESIGN.md, and every shipping
  *           raster carrying its provenance.
  *
+ * Raised by the dealt challengers (all declined, each kept for one thing):
+ *   the centre-rail reference page: keys on a rail, hairlines at one pixel;
+ *   the struck cathode stack: every position present as a ghost, yours struck;
+ *   the plankton wake: the trail your listing leaves, ticked where it held;
+ *   the weather-project sun: the end of page one as the page's one horizon;
+ *   the phosphor terminal: state printed as words, never a badge;
+ *   the VU meter: the listing moves with weight, never by jumps;
+ *   the tensegrity column: each piece of work marks the exact words it changes.
+ *
  * Built from published facts only: prices from pricing.js, answers imported
- * from the site's own articles, and an example board labelled as invented.
+ * from the site's own articles, and an example search labelled as one. No
+ * raster ships with this page; everything on it is type and CSS.
  */
 import { useMemo } from 'react';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema, serviceSchema } from '@/lib/schema';
 import { seoPackages } from '@/data/pricing';
 import Climb from '@/components/seo-copy/Climb';
-import { GraphiteDefs } from '@/components/seo-copy/pencil';
 import {
   Guarantee, Prices, Writing, Questions, Close, COPY_ADDON, FROM_ONE_OFF, FROM_MONTHLY,
 } from '@/components/seo-copy/sections';
@@ -96,7 +97,6 @@ export default function SeoCopy() {
 
   return (
     <div className="sc-page">
-      <GraphiteDefs />
       <Climb />
       <Guarantee />
       <Prices />
