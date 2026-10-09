@@ -217,7 +217,7 @@ const CASES = [
     name: 'Sharp Bricklaying',
     place: 'Perth, WA',
     year: '2026',
-    scope: 'Premium bricklayer’s site built from licensed drone aerials and a multi-job gallery.',
+    scope: 'Premium bricklayer’s site built from drone aerials and a multi-job gallery.',
     img: sharpHero,
     w: 900,
     h: 563,

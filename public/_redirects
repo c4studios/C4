@@ -22,9 +22,10 @@
 
 # Retired legacy paths — server-side mirrors of the client redirects in
 # src/App.jsx, so old links 301 without booting the SPA first.
-# Brand & Growth folded into C4 Lens.
-/ServiceBrand   /Lens/  301
-/ServiceBrand/  /Lens/  301
+# The old brand service page. Brand work sat under C4 Lens until logo design
+# became its own arm on 9 Oct 2026, so it lands on Logo Design now.
+/ServiceBrand   /logo-design/  301
+/ServiceBrand/  /logo-design/  301
 # Ventures and Rebuild initiatives are no longer offered.
 /Ventures   /  301
 /Ventures/  /  301

@@ -179,8 +179,10 @@ function App() {
           {/* /Services retired: the services live as individual pages reached
               via the nav dropdown. Old links land on home. */}
           <Route path="/Services" element={<Navigate to="/" replace />} />
-          {/* Brand & Growth folded into C4 Lens (the brand & visual pillar). */}
-          <Route path="/ServiceBrand" element={<Navigate to={createPageUrl('Lens')} replace />} />
+          {/* The old brand service page. Brand work sat under C4 Lens until
+              logo design became its own arm on 9 Oct 2026, so it lands on
+              Logo Design now (public/_redirects mirrors this). */}
+          <Route path="/ServiceBrand" element={<Navigate to={createPageUrl('LogoDesign')} replace />} />
           {/* Initiatives retired: Ventures and Rebuild are no longer offered. */}
           <Route path="/Ventures" element={<Navigate to="/" replace />} />
           <Route path="/Rebuild" element={<Navigate to="/" replace />} />

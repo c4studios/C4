@@ -39,7 +39,7 @@ person building it.
 - [Web design Perth](https://c4studios.com.au/web-design-perth): Custom-coded websites from $1,500 with fixed quotes.
 - [Web development Perth](https://c4studios.com.au/web-development-perth): Online stores, web apps, portals and integrations.
 - [SEO Perth](https://c4studios.com.au/seo-perth): One-off fixes from $400 or monthly plans from $249.
-- [Branding Perth](https://c4studios.com.au/branding-perth): Logos from $250 to full identity systems.
+- [Logo Design Perth — Logos to Full Identity](https://c4studios.com.au/branding-perth): Logos from $250 to full identity systems.
 - [Photo & video Perth](https://c4studios.com.au/photo-video-perth): Headshots, brand shoots, drone and short-form content.
 
 <!-- The build inserts Guides, Articles, Industries and Suburbs here from the SEO registry, and rewrites every link to the address the server serves. -->
