@@ -23,6 +23,7 @@ import './livesupport.css';
  * prerenderer, which should capture the page without a modal in the tree.
  */
 const OPEN_EVENT = 'c4:live-support';
+const PRERENDER = typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent);
 
 function perthTime() {
   try {
@@ -106,7 +107,11 @@ export default function LiveSupport() {
     }
   };
 
-  if (staticMode || hiddenHere) return null;
+  /* Only the prerenderer goes without it, as the note above says. This was
+     staticMode, which is reduced motion too, so a visitor who'd asked for
+     less motion lost the drawer, and the Support page's "Live support" card
+     did nothing (found 9 Oct 2026). Reduced motion is handled in the CSS. */
+  if (PRERENDER || hiddenHere) return null;
 
   return (
     <>

@@ -2,15 +2,20 @@
  * /About — the bench tour (29 Sep 2026). See the contract at the top of
  * src/pages/About.jsx.
  *
- * Static first: without .bt-armed (prerender, reduced motion) this is a
- * composed flat page: every chapter in normal flow with its object as a still
- * beside it (below 900px, above it). .bt-armed turns the stage into a camera
- * view and JS moves the camera. Two armed layouts:
- *   wide (1180px and up): the stage sits behind the chapters in one grid cell,
- *     pinned for the length of the tour; the words take a left column and the
- *     camera works the free space beside it.
- *   band (below 1180px): the stage is a band pinned under the nav and the
- *     chapters scroll beneath it, so the bench never sits behind a sentence.
+ * Static first: without .bt-armed (prerender, reduced motion, or a window
+ * with no room for either camera) this is a composed flat page: every
+ * chapter in normal flow with its object as a still beside it (below 900px,
+ * above it). .bt-armed turns the stage into a camera view and JS moves the
+ * camera. Two armed layouts, chosen in About.jsx (layoutFor) from the
+ * window's width and height and set here as a class:
+ *   .bt-wide (1000px wide and 560px tall, up): the stage sits behind the
+ *     chapters in one grid cell, pinned for the length of the tour; the words
+ *     take a left column and the camera works the free space beside it.
+ *     .bt-carry hides the words the objects carry; JS sets it only while
+ *     the camera keeps them at reading size.
+ *   .bt-band (narrower, on a portrait screen tall enough to read under it):
+ *     the stage is a band pinned under the nav and the chapters scroll
+ *     beneath it, so the bench never sits behind a sentence.
  * The stage is sticky inside .bt-track, which ends before the red close, so
  * the bench can never cover the close or the footer.
  *
@@ -100,45 +105,41 @@
     radial-gradient(75% 70% at var(--lx) var(--ly), rgba(var(--bt-umber), 0) 32%, rgba(var(--bt-umber), calc(var(--lamp) * 0.26)) 100%);
 }
 
-@media (min-width: 1180px) {
-  .bt-armed .bt-track {
-    display: grid;
-  }
-
-  .bt-armed .bt-stage,
-  .bt-armed .bt-chapters {
-    grid-area: 1 / 1;
-  }
-
-  .bt-armed .bt-stage {
-    position: sticky;
-    top: 0;
-    align-self: start;
-    height: 100svh;
-    z-index: 0;
-    --lx: 70%;
-  }
-
-  /* keeps the column clean while the camera works the free space */
-  .bt-armed .bt-veil {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(90deg, var(--bt-bench) 0, var(--bt-bench) calc(var(--col, 42%) - 20px), transparent calc(var(--col, 42%) + 150px));
-  }
+.bt-armed.bt-wide .bt-track {
+  display: grid;
 }
 
-@media (max-width: 1179.98px) {
-  .bt-armed .bt-stage {
-    position: sticky;
-    top: 0;
-    height: 46svh;
-    z-index: 2;
-    --ly: 58%;
-    box-shadow:
-      0 1px 0 var(--bt-rule),
-      0 16px 24px -18px rgba(var(--bt-shadow), 0.4);
-  }
+.bt-armed.bt-wide .bt-stage,
+.bt-armed.bt-wide .bt-chapters {
+  grid-area: 1 / 1;
+}
+
+.bt-armed.bt-wide .bt-stage {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100svh;
+  z-index: 0;
+  --lx: 70%;
+}
+
+/* keeps the column clean while the camera works the free space */
+.bt-armed.bt-wide .bt-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--bt-bench) 0, var(--bt-bench) calc(var(--col, 42%) - 20px), transparent calc(var(--col, 42%) + 150px));
+}
+
+.bt-armed.bt-band .bt-stage {
+  position: sticky;
+  top: 0;
+  height: 46svh;
+  z-index: 2;
+  --ly: 58%;
+  box-shadow:
+    0 1px 0 var(--bt-rule),
+    0 16px 24px -18px rgba(var(--bt-shadow), 0.4);
 }
 
 /* ───────────────────────────────────────────────────── bench objects ── */
@@ -575,79 +576,84 @@
   filter: blur(6px);
 }
 
-@media (min-width: 1180px) {
-  .bt-armed .bt-ch {
-    display: flex;
-    align-items: center;
-    min-height: 118svh;
-    padding-block: 12svh;
-  }
+.bt-armed.bt-wide .bt-ch {
+  display: flex;
+  align-items: center;
+  min-height: 118svh;
+  padding-block: 12svh;
+}
 
-  .bt-armed .bt-ch--open {
-    min-height: 100svh;
-  }
+.bt-armed.bt-wide .bt-ch--open {
+  min-height: 100svh;
+}
 
-  .bt-armed .bt-ch--long {
-    min-height: 170svh;
-  }
+.bt-armed.bt-wide .bt-ch--long {
+  min-height: 170svh;
+}
 
-  /* The objects carry these at reading size, so the column keeps them for
-     screen readers only: the notes, each promise's line and detail, each
-     step's description, and the verse. */
-  .bt-armed .bt-notes,
-  .bt-armed .bt-quote,
-  .bt-armed .bt-promise-btn span,
-  .bt-armed .bt-promise-body,
-  .bt-armed .bt-steps p {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  /* the run sheet's steps, one at a time, in step with the camera. Only the
-     numeral marks the current step, so every word keeps full contrast. */
-  .bt-armed .bt-steps li {
-    align-content: center;
-    min-height: 30svh;
-    border-top: 0;
-  }
-
-  .bt-armed .bt-steps b {
-    transition: color 0.5s var(--bt-ease);
-  }
-
-  .bt-armed .bt-steps[data-active] li:not(.is-on) b {
-    color: var(--bt-muted);
+/* Under 1180px the column narrows (to 26rem at the least) so the camera
+   still has clear space beside it; from 1180px it is the site's 34rem. */
+@media (max-width: 1179.98px) {
+  .bt-armed.bt-wide .bt-ch-in {
+    max-width: max(26rem, 44vw);
   }
 }
 
-@media (max-width: 1179.98px) {
-  .bt-armed .bt-ch {
-    padding-block: 44px 72px;
-  }
+/* The objects carry these at reading size, so the column keeps them for
+   screen readers only: the notes, each promise's line and detail, each
+   step's description, and the verse. Only with .bt-carry: where the camera
+   can't keep them at reading size, the column shows them. */
+.bt-armed.bt-wide.bt-carry .bt-notes,
+.bt-armed.bt-wide.bt-carry .bt-quote,
+.bt-armed.bt-wide.bt-carry .bt-promise-btn span,
+.bt-armed.bt-wide.bt-carry .bt-promise-body,
+.bt-armed.bt-wide.bt-carry .bt-steps p {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 
-  .bt-armed .bt-ch--open {
-    padding-top: 30px;
-  }
+/* the run sheet's steps, one at a time, in step with the camera. Only the
+   numeral marks the current step, so every word keeps full contrast. */
+.bt-armed.bt-wide .bt-steps li {
+  align-content: center;
+  min-height: 30svh;
+  border-top: 0;
+}
 
-  /* the band reads the verse close, off the page itself */
-  .bt-armed .bt-quote {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-    border: 0;
-  }
+.bt-armed.bt-wide .bt-steps b {
+  transition: color 0.5s var(--bt-ease);
+}
+
+.bt-armed.bt-wide .bt-steps[data-active] li:not(.is-on) b {
+  color: var(--bt-muted);
+}
+
+.bt-armed.bt-band .bt-ch {
+  padding-block: 44px 72px;
+}
+
+.bt-armed.bt-band .bt-ch--open {
+  padding-top: 30px;
+}
+
+/* the band reads the verse close, off the page itself */
+.bt-armed.bt-band .bt-quote {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 .bt-h1 {

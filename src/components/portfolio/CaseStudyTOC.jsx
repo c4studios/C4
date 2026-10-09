@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import LineSidebar from '@/components/ui/LineSidebar';
 import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion';
@@ -7,6 +7,8 @@ import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion';
 // clears the fixed 72px NavHeader with a little breathing room. Kept in sync
 // with the `scroll-mt-28` (7rem) applied to each CaseStudySection.
 const HEADER_OFFSET = 112;
+
+const isPrerender = () => typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent);
 
 /**
  * Sticky, proximity-reactive table of contents for the Case Study page.
@@ -22,6 +24,8 @@ export default function CaseStudyTOC({ sections }) {
   const prefersReduced = usePrefersReducedMotion();
   const [mounted, setMounted] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [clear, setClear] = useState(true);
+  const railRef = useRef(null);
 
   useEffect(() => setMounted(true), []);
 
@@ -39,6 +43,17 @@ export default function CaseStudyTOC({ sections }) {
         if (el && el.getBoundingClientRect().top - HEADER_OFFSET <= 1) next = i;
       }
       setActiveIndex(next);
+      // The rail sits in the left margin, which the case study keeps clear.
+      // The footer's columns don't, and it used to sit on top of them at the
+      // end of the page; a short window would also put its top under the
+      // nav. It steps aside for both.
+      const rail = railRef.current;
+      if (rail) {
+        const r = rail.getBoundingClientRect();
+        const foot = document.querySelector('footer');
+        const footTop = foot ? foot.getBoundingClientRect().top : Infinity;
+        setClear(r.top >= HEADER_OFFSET - 24 && footTop > r.bottom + 24);
+      }
     };
     const onScroll = () => {
       if (ticking) return;
@@ -53,7 +68,8 @@ export default function CaseStudyTOC({ sections }) {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
-  }, [sections]);
+    // mounted: measure again once the rail exists to be measured
+  }, [sections, mounted]);
 
   const handleItemClick = useCallback(
     index => {
@@ -66,10 +82,20 @@ export default function CaseStudyTOC({ sections }) {
   );
 
   // A TOC for one or two sections is just noise. Client-only (needs document).
-  if (!mounted || sections.length < 3) return null;
+  // The prerenderer is a real browser, so it mounted this too, and the portal
+  // it froze sat on <body> outside #root, where createRoot never cleans it
+  // up: from 1400px every case study showed that copy (Overview lit, forever)
+  // under the live one, and the two drew over each other once the reader
+  // moved past the first section (found 9 Oct 2026). Crawlers have the
+  // section headings themselves.
+  if (!mounted || sections.length < 3 || isPrerender()) return null;
 
   return createPortal(
-    <div className="fixed left-6 top-1/2 z-40 hidden w-fit -translate-y-1/2 select-none min-[1400px]:block">
+    <div
+      ref={railRef}
+      aria-hidden={clear ? undefined : 'true'}
+      className={`fixed left-6 top-1/2 z-40 hidden w-fit -translate-y-1/2 select-none transition-[opacity,visibility] duration-300 min-[1400px]:block${clear ? '' : ' pointer-events-none invisible opacity-0'}`}
+    >
       <LineSidebar
         items={sections.map(s => s.label)}
         activeIndex={activeIndex}
