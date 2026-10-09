@@ -420,7 +420,7 @@ export const c4LensPackages = [
   },
   {
     key: 'business-branding',
-    name: 'Business Branding',
+    name: 'Brand Shoot',
     price: 650,
     priceLabel: '$650',
     popular: true,
@@ -658,7 +658,7 @@ export const bundlePackages = [
       { service: 'Web Design', detail: 'Business Website ($1,500 package)' },
       { service: 'Branding', detail: 'Brand Essentials' },
       { service: 'SEO', detail: 'SEO Foundation' },
-      { service: 'C4 Lens', detail: 'Business Branding Shoot' },
+      { service: 'C4 Lens', detail: 'Brand Shoot' },
       { service: 'Social', detail: '20 social media posts' },
       { service: 'Support', detail: '30-day launch warranty' },
     ],

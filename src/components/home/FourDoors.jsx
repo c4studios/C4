@@ -17,7 +17,9 @@
    two from 640, one column on phones: home.css has the reasons. Both
    links per door sit in the DOM at rest. Lens dropped "brand identity"
    from its copy on 9 Oct 2026, since logos and identities have their
-   own arm now. The proof-strip stats are letterpressed into the lintel.
+   own arm now. The lintel of figures above the doors (50+, 200+, <7,
+   100%) came off on 9 Oct 2026 at Caleb's word: none had a source, and
+   "<7 day turnaround" sat right above a web door saying 2 to 3 weeks.
    ───────────────────────────────────────────────────────────────── */
 import React, { useLayoutEffect, useRef } from 'react';
 import { Link } from '@/components/c4/SiteLink';
@@ -49,13 +51,6 @@ import weaveGocc from './assets/weave-gocc.webp';
 import weaveJk from './assets/weave-jk.webp';
 import weaveBarrys from './assets/weave-barrys.webp';
 import weaveHakea from './assets/weave-hakea.webp';
-
-const STATS = [
-  { value: '50+', label: 'Perth businesses served' },
-  { value: '200+', label: 'Assets delivered' },
-  { value: '<7', label: 'Day turnaround' },
-  { value: '100%', label: 'Founder-led' },
-];
 
 const WEAVE = [
   { src: weaveGocc, alt: 'GoCC coaching practice website capture' },
@@ -254,21 +249,6 @@ export default function FourDoors() {
           <p className="hm-sub max-w-[36ch] text-[13.5px]">
             Most clients start with one of these. Each card opens a short brief: fixed scope, transparent pricing, founder reply within a business day.
           </p>
-        </div>
-      </div>
-
-      {/* The lintel — proof letterpressed above the doors */}
-      <div className="hm-lintel">
-        <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-          <div className="hm-lintel-inner">
-            <span className="hm-label">C4 Services</span>
-            {STATS.map((s) => (
-              <span key={s.label} className="hm-lintel-stat">
-                <b>{s.value}</b>
-                <span>{s.label}</span>
-              </span>
-            ))}
-          </div>
         </div>
       </div>
 

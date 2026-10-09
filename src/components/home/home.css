@@ -513,37 +513,6 @@
                     never read as the top of the next face.
    ───────────────────────────────────────────────────────────────── */
 
-.hm-lintel {
-  border-top: 1px solid var(--c4-border);
-  border-bottom: 1px solid var(--c4-border);
-  background: var(--c4-bg-alt);
-}
-.hm-lintel-inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 14px 34px;
-  padding: 16px 0;
-}
-.hm-lintel-stat {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 8px;
-}
-.hm-lintel-stat b {
-  font-family: var(--hm-disp);
-  font-weight: 700;
-  font-size: 19px;
-  letter-spacing: -0.02em;
-  color: var(--c4-text);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
-}
-:root.dark-mode .hm-lintel-stat b { text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6); }
-.hm-lintel-stat span {
-  font-size: 12.5px;
-  color: var(--hm-ink2);
-}
-
 .hm-doors {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
