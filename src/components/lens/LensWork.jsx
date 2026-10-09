@@ -493,44 +493,9 @@ export default function LensWork() {
     };
   }, [reveal]);
 
-  /* Arriving on /Lens#work. The page resets the scroll to the top as it
-     mounts (PageTransition: at once, a frame later and on a 90ms timer that
-     runs late on a busy start), and the site's smooth scrolling animates
-     those resets, so a single landing gets carried away. For the first
-     moments, until the visitor scrolls themselves, scrolling is held instant
-     and the page is put back on the target whenever it drifts off. */
-  useEffect(() => {
-    if (!askedForStudies()) return undefined;
-    const id = window.location.hash.slice(1);
-    const root = document.documentElement;
-    const before = root.style.scrollBehavior;
-    root.style.scrollBehavior = 'auto';
-    let done = false, raf = 0;
-    const targetOff = () => {
-      const target = document.getElementById(id);
-      if (!target) return 0;
-      return target.getBoundingClientRect().top - (parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
-    };
-    const land = () => {
-      raf = 0;
-      if (done) return;
-      const target = document.getElementById(id);
-      if (target && Math.abs(targetOff()) > 2) target.scrollIntoView({ block: 'start', behavior: 'instant' });
-    };
-    const onScroll = () => { if (!done && !raf && Math.abs(targetOff()) > 2) raf = requestAnimationFrame(land); };
-    const finish = () => {
-      if (done) return;
-      done = true;
-      cancelAnimationFrame(raf);
-      root.style.scrollBehavior = before;
-      window.removeEventListener('scroll', onScroll);
-      for (const t of ['wheel', 'touchstart', 'keydown', 'pointerdown']) window.removeEventListener(t, finish);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    for (const t of ['wheel', 'touchstart', 'keydown', 'pointerdown']) window.addEventListener(t, finish, { passive: true });
-    const timers = [setTimeout(land, 0), setTimeout(land, 160), setTimeout(land, 650), setTimeout(finish, 2500)];
-    return () => { timers.forEach(clearTimeout); finish(); };
-  }, []);
+  /* Arriving on /Lens#work is PageTransition's job since 10 Oct 2026: it lands
+     on any fragment and holds it while the page settles. The studies open from
+     the first render (useState above), so the target is already in place. */
 
   /* the focus pull runs once per opening */
   useEffect(() => {
