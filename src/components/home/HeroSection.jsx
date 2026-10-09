@@ -88,8 +88,8 @@ export default function HeroSection() {
                 className="mt-7 max-w-[37rem] text-[15px] leading-[1.82] md:mt-9 md:text-[16px]"
                 style={{ color: 'var(--c4-text-muted)', textWrap: 'pretty' }}
               >
-                We design and build with clear direction, refined execution,
-                and quality that holds up after launch.
+                You deal with the person doing the work, from the first call to
+                long after launch.
               </motion.p>
             </div>
 
