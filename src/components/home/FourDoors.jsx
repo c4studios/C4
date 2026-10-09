@@ -1,25 +1,32 @@
 /* ─────────────────────────────────────────────────────────────────
    FOLD 3 — THE DOORS (ProductTrio reborn; the identical card grid dies)
 
-   Four material doorways again since 9 Oct 2026, when Logo Design
-   became the fourth arm (Caleb: "we've been getting a lot of enquiries
-   regarding logo design"). There were three for a day, after the C4i
-   door went to C4Site. Each is an honest sample of the destination
-   arm's own world, at doorway scale only (memo §1.2):
-     C1 · a weave of real client captures on studio dark
-     C2 · black behind a hairline 9-gon aperture arc (no amber here —
-          the tungsten glow belongs to /Lens itself)
-     C3 · the paste-up board from /seo-and-copywriting, your listing
-          ringed at first (SEO & Copywriting took C4Site's place, D2)
-     C4 · the vinyl offcut from /logo-design on its cutting mat, the
-          stand-in mark halfway through the weed (logo-design/DoorFace)
-   The codes match the Services menu. Four across from 1024px, two by
-   two from 640, one column on phones: home.css has the reasons. Both
-   links per door sit in the DOM at rest. Lens dropped "brand identity"
-   from its copy on 9 Oct 2026, since logos and identities have their
-   own arm now. The lintel of figures above the doors (50+, 200+, <7,
-   100%) came off on 9 Oct 2026 at Caleb's word: none had a source, and
-   "<7 day turnaround" sat right above a web door saying 2 to 3 weeks.
+   Four doors since 9 Oct 2026, when Logo Design became the fourth arm
+   (Caleb: "we've been getting a lot of enquiries regarding logo
+   design"). The codes match the Services menu. Four across from 1024px,
+   two by two from 640, one column on phones: home.css has the reasons.
+   Both links per door sit in the DOM at rest.
+
+   The faces were redrawn on 9 Oct 2026 as one system (Caleb: "lens
+   looks like a child drew it, website tile is good in concept, just
+   needs updating, seo should focus more on ranking and needs to be more
+   minimalsitic, and logo design needs to look less childish as well").
+   The C4Site banners were the bar: one flat field, one strong thing,
+   nothing else. Every face carries the arm's name and a note on what it
+   shows at top left, and its action at the foot, in Archivo at one
+   setting. Each face's art is its own:
+     C1 · three live client home pages, a slice of each hero stacked edge
+          to edge, each holding a whole headline and its intro, the
+          headlines on the face's margin (door-faces.mjs cuts)
+     C2 · one C4 Lens photograph, Sharp Bricklaying's brick corner, full
+          bleed under an ink band. The sky can't carry small type either
+          way (measured), so the label sits on the band, not on the photo
+     C3 · an example search, the result at 1, and that result's title
+          running off the face in the board's blue (seo-copy/DoorFace)
+     C4 · our own 4 with its anchor points and the C's bezier handles
+          (logo-design/DoorFace)
+   The art layer is aria-hidden; the label, the note and the title are
+   real text, so the prerendered HTML carries them.
    ───────────────────────────────────────────────────────────────── */
 import React, { useLayoutEffect, useRef } from 'react';
 import { Link } from '@/components/c4/SiteLink';
@@ -40,71 +47,44 @@ const SEO_MONTHLY_FROM = Math.min(...seoPackages.filter((p) => /\/mo$/.test(p.pr
    concepts and doesn't count. */
 const LOGO_FROM = Math.min(...brandingPackages.filter((p) => typeof p.price === 'number').map((p) => p.price));
 
-import weaveGocc from './assets/weave-gocc.webp';
-import weaveJk from './assets/weave-jk.webp';
-import weaveBarrys from './assets/weave-barrys.webp';
-import weaveHakea from './assets/weave-hakea.webp';
+/* The two raster faces. scripts/door-faces.mjs makes every file, with its
+   origin in the EXIF; the widths are the ones it writes. */
+const ART = import.meta.glob('./assets/doors/*.{avif,webp}', { eager: true, query: '?url', import: 'default' });
+const art = (name, w, ext) => ART[`./assets/doors/${name}-${w}.${ext}`];
+const srcSet = (name, widths, ext) => widths.map((w) => `${art(name, w, ext)} ${w}w`).join(', ');
 
-const WEAVE = [
-  { src: weaveGocc, alt: 'GoCC coaching practice website capture' },
-  { src: weaveJk, alt: 'JK Plumbing Solutions website capture' },
-  { src: weaveBarrys, alt: "Barry's Drink concept site capture" },
-  { src: weaveHakea, alt: 'Transform Hakea website capture' },
+/* A face is 220 to 310px wide four across, up to about 455px two by two,
+   and the art takes about half of a phone's face. */
+const FACE_SIZES = '(min-width: 1024px) min(calc(25vw - 39px), 310px), (min-width: 640px) calc(50vw - 55px), calc(52vw - 25px)';
+
+/* A slice of each home page hero, all cut 2756 wide from the 2x captures,
+   each holding a whole headline and its intro, with every headline starting
+   on the face's own margin (door-faces.mjs has the boxes). */
+const STRIP_W = 2756;
+const STRIPS = [
+  { name: 'strip-aquasafe', h: 816 },
+  { name: 'strip-brady', h: 876 },
+  { name: 'strip-tidy', h: 668 },
 ];
+const STRIP_SIZES = [480, 720, 960];
+const LENS_SIZES = [360, 540, 720, 960];
 
-/* Hairline 9-gon arc for the C2 face — six of nine edges, off-centre. */
-/* A miniature of the /Lens hero: the 9-blade aperture iris inside its
-   barrel, f-stop ticks, HUD corner brackets and the REC lamp. The blade
-   group rotates on hover (CSS) like the lens being focused. The plate is
-   100 x 140 cut with `slice`, so the face has to stay at least 3:4 tall
-   or the REC lamp and the top brackets fall off the edge. */
-function ApertureIris() {
-  const CX = 50;
-  const CY = 54;
-  const R = 38;
-  const SWEEP = 112; // chord sweep — sets the inner opening (~0.56R)
-  const pt = (deg, r = R) => {
-    const a = ((deg - 90) * Math.PI) / 180;
-    return [CX + r * Math.cos(a), CY + r * Math.sin(a)];
-  };
-  const chord = (k, offset = 0) => {
-    const [x1, y1] = pt(k * 40 + offset);
-    const [x2, y2] = pt(k * 40 + offset + SWEEP);
-    return `M${x1.toFixed(2)} ${y1.toFixed(2)} L${x2.toFixed(2)} ${y2.toFixed(2)}`;
-  };
-  const blades = Array.from({ length: 9 }, (_, k) => chord(k));
-  const bladesGhost = Array.from({ length: 9 }, (_, k) => chord(k, 4));
-  const ticks = Array.from({ length: 36 }, (_, k) => {
-    const major = k % 4 === 0;
-    const [x1, y1] = pt(k * 10, R + 2);
-    const [x2, y2] = pt(k * 10, R + (major ? 5.4 : 3.6));
-    return { d: `M${x1.toFixed(2)} ${y1.toFixed(2)} L${x2.toFixed(2)} ${y2.toFixed(2)}`, major };
-  });
+function Picture({ name, widths, w, h, className }) {
   return (
-    <svg className="hm-ninegon" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      {/* barrel */}
-      <circle cx={CX} cy={CY} r={R} fill="none" stroke="rgba(255,255,255,0.34)" strokeWidth="1.3" vectorEffect="non-scaling-stroke" />
-      <circle cx={CX} cy={CY} r={R - 3.2} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
-      {/* f-stop ticks */}
-      {ticks.map((t, i) => (
-        <path key={i} d={t.d} stroke={`rgba(255,255,255,${t.major ? 0.36 : 0.18})`} strokeWidth={t.major ? 1.2 : 1} strokeLinecap="round" vectorEffect="non-scaling-stroke" fill="none" />
-      ))}
-      {/* iris blades — rotates on hover via CSS */}
-      <g className="hm-iris-blades">
-        {bladesGhost.map((d, i) => (
-          <path key={`g${i}`} d={d} stroke="rgba(255,255,255,0.14)" strokeWidth="1" strokeLinecap="round" vectorEffect="non-scaling-stroke" fill="none" />
-        ))}
-        {blades.map((d, i) => (
-          <path key={i} d={d} stroke="rgba(255,255,255,0.56)" strokeWidth="1.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" fill="none" />
-        ))}
-      </g>
-      {/* the opening */}
-      <circle cx={CX} cy={CY} r={R * 0.5} fill="rgba(255,255,255,0.045)" />
-      {/* HUD whispers: corner brackets + REC lamp */}
-      <path d="M8 10 L8 4 L14 4 M92 130 L92 136 L86 136" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.1" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-      <circle cx="88" cy="8" r="1.7" fill="#ff3b30" fillOpacity="0.85" />
-      <circle cx="88" cy="8" r="3.4" fill="none" stroke="#ff3b30" strokeOpacity="0.28" strokeWidth="0.8" vectorEffect="non-scaling-stroke" />
-    </svg>
+    <picture>
+      <source type="image/avif" srcSet={srcSet(name, widths, 'avif')} sizes={FACE_SIZES} />
+      <img
+        className={className}
+        src={art(name, widths[0], 'webp')}
+        srcSet={srcSet(name, widths, 'webp')}
+        sizes={FACE_SIZES}
+        width={w}
+        height={h}
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
   );
 }
 
@@ -114,7 +94,8 @@ const DOORS = [
     face: 'web',
     faceTo: '/ServiceWeb',
     faceAria: 'Enter Web & Applications',
-    tag: 'Web design & development',
+    tag: 'Web & Applications',
+    note: 'Aqua-Safe, Brady, Tidy Gardens',
     word: 'Build a website',
     outcome:
       'Custom marketing sites, web apps and SaaS platforms that are fast, refined and built to convert. You own the codebase end-to-end.',
@@ -129,6 +110,7 @@ const DOORS = [
     faceTo: '/Lens',
     faceAria: 'Enter C4 Lens',
     tag: 'C4 Lens',
+    note: 'Shot for Sharp Bricklaying',
     word: 'Photography & video',
     outcome:
       'Photography and short-form video, a coherent visual system for Perth businesses ready to retire stock.',
@@ -143,6 +125,7 @@ const DOORS = [
     faceTo: '/seo-and-copywriting',
     faceAria: 'Enter SEO & Copywriting',
     tag: 'SEO & Copywriting',
+    note: 'Example search',
     word: 'Get found on Google',
     outcome:
       'Technical fixes up front, then new articles every month, so you’re easier to find on Google. Website copy too, written plainly.',
@@ -157,6 +140,7 @@ const DOORS = [
     faceTo: '/logo-design',
     faceAria: 'Enter Logo Design',
     tag: 'Logo Design',
+    note: 'Our mark',
     word: 'Design a logo',
     outcome:
       'A logo that holds up from the sign out front to a 16-pixel browser tab, in colour and in one. Every file is yours once it’s paid.',
@@ -170,14 +154,12 @@ const DOORS = [
 function DoorFaceArt({ kind }) {
   if (kind === 'web') {
     return (
-      <span className="hm-weave" aria-hidden="true">
-        {WEAVE.map((w) => (
-          <img key={w.src} src={w.src} alt="" loading="lazy" decoding="async" />
-        ))}
+      <span className="hm-strips">
+        {STRIPS.map((s) => <Picture key={s.name} name={s.name} widths={STRIP_SIZES} w={STRIP_W} h={s.h} />)}
       </span>
     );
   }
-  if (kind === 'lens') return <ApertureIris />;
+  if (kind === 'lens') return <Picture name="lens-corner" widths={LENS_SIZES} w={1388} h={1536} className="hm-lens-photo" />;
   if (kind === 'logo') return <LogoDoorFace />;
   return <SeoDoorFace />;
 }
@@ -255,8 +237,11 @@ export default function FourDoors() {
                 className={`hm-doorface hm-doorface--${door.face}`}
                 aria-label={door.faceAria}
               >
-                <DoorFaceArt kind={door.face} />
-                <span className="hm-door-tag">{door.tag}</span>
+                <span className="hm-art" aria-hidden="true"><DoorFaceArt kind={door.face} /></span>
+                <span className="hm-door-tag">
+                  <span className="hm-door-name">{door.tag}</span>
+                  <span className="hm-door-note">{door.note}</span>
+                </span>
                 {/* The arrow is the same lucide icon the buttons use (it was a
                     text glyph until 9 Oct 2026), held to the last word by a
                     no-break space so it never wraps on its own. */}

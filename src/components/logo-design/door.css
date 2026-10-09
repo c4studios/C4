@@ -1,42 +1,28 @@
 /* ═══ The Logo Design door's face (DoorFace.jsx) ═══
-   The vinyl offcut from /logo-design at doorway scale, on the cutting mat.
-   The mat, the backing paper and the vinyl are materials, so they keep the
-   same colours in both themes, like the paste-up board on the SEO door.
-   The face fills its parent and sits behind the door's tag (top left) and
-   title (the foot), which are FourDoors' own .hm-doorface--logo rules in
-   home.css. */
+   The C4 mark's 4 with its construction showing, on the C's own light grey.
+   The colours are the logo's light-theme set (COLOURS.mono in C4Logo.jsx):
+   body #414243, arm #6c6d6d, C #e6e4e2. They're the mark, so they stay the
+   same in both themes. Ink is #1a1a1a, the bench's own, for every outline,
+   handle and anchor. The face fills FourDoors' art layer; the door's label
+   and title are FourDoors' (.hm-doorface--logo in home.css). */
 
-.lg-door {
-  position: absolute; inset: 0; z-index: -1; overflow: hidden; display: block;
-  container-type: size;
-  background: #2b6a4e;
-}
-.lg-door-art { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.lg-door { position: absolute; inset: 0; display: block; background: #e6e4e2; }
+.lg-door .lg-door-tall,
+.lg-door .lg-door-wide { position: absolute; display: block; overflow: hidden; }
+.lg-door .lg-door-tall { inset: 0; width: 100%; height: 100%; }
+.lg-door .lg-door-wide { display: none; }
 
-.lg-door-mat line { stroke: rgba(226, 244, 233, 0.2); stroke-width: 1px; vector-effect: non-scaling-stroke; }
-.lg-door-mat .lg-door-tick { stroke: rgba(236, 248, 240, 0.5); }
-.lg-door-angle { fill: none; stroke: rgba(226, 244, 233, 0.16); stroke-width: 1px; vector-effect: non-scaling-stroke; }
-.lg-door-fold { fill: none; stroke: rgba(0, 0, 0, 0.5); stroke-width: 2px; vector-effect: non-scaling-stroke; }
-.lg-door-fold-light { fill: none; stroke: rgba(255, 255, 255, 0.26); stroke-width: 1.5px; vector-effect: non-scaling-stroke; }
+.lg-door-c { fill: none; stroke: #1a1a1a; stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.lg-door-body { fill: #414243; }
+.lg-door-arm { fill: #6c6d6d; }
+.lg-door-handle line { stroke: #1a1a1a; stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.lg-door-handle circle { fill: #1a1a1a; }
+.lg-door-anchor { fill: #ffffff; stroke: #1a1a1a; stroke-width: 1px; vector-effect: non-scaling-stroke; }
 
-/* hover or focus: the flap comes up a little further off the sheet */
-.lg-door-flap { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); transform-box: fill-box; transform-origin: 70% 20%; }
-.lg-door-flapshadow { transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
-a:hover > .lg-door .lg-door-flap,
-a:focus-visible > .lg-door .lg-door-flap { transform: rotate(-1.4deg) scale(1.012); }
-a:hover > .lg-door .lg-door-flapshadow,
-a:focus-visible > .lg-door .lg-door-flapshadow { opacity: 0.75; }
-
-/* Short, wide faces (the one-column phone layout, 172px tall): the whole
-   300 x 400 drawing at 0.47 scale, sized by the face's height and pinned top
-   right, so the flap's lowest corner stays about 15px above the title from
-   a 320px phone to a 639px one (measured 9 Oct 2026). At the old half-width
-   placement the title ran over the flap. */
+/* Short, wide faces (the one-column phone layout, 172px tall): the same crop
+   run off the top, sized by the face's height and set in the right half, with
+   the arm's slanted end kept whole. The title keeps the left half. */
 @container (aspect-ratio > 1.45) {
-  .lg-door-art { left: auto; right: 1.8cqh; top: -25.3cqh; width: 82cqh; height: 109.3cqh; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .lg-door-flap, .lg-door-flapshadow { transition: none; }
-  a:hover > .lg-door .lg-door-flap, a:focus-visible > .lg-door .lg-door-flap { transform: none; }
+  .lg-door .lg-door-tall { display: none; }
+  .lg-door .lg-door-wide { display: block; top: 0; right: 14px; height: 100%; width: auto; aspect-ratio: 345 / 330; }
 }

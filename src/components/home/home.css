@@ -14,10 +14,11 @@
      dark   body   #ECE7DE on #0F1115 ........ 14.6:1
      dark   muted  #A7ABB4 on #0F1115 ........  8.4:1
      white  on red #FFFFFF on #C23030 ........  5.6:1  (dark: on #B33A3A 5.9:1)
-     door faces    #f2f0e9 on #16352c ........ 11.7:1
-                   #ffffff on #050505 ........ 20.4:1
-                   #f4f3f1 on #2b6a4e ........  5.8:1  (logo: the cutting mat)
-                   tag at 90% on the mat ....  5.0:1
+     door faces    #f4f3f1 on #131316 ........ 16.7:1  (web; its note 9.9:1)
+     (measured     #ffffff on #131316 ........ 18.5:1  (lens band; its note 10.9:1)
+      9 Oct 2026)  #ffffff on the lens slab ..  9.4:1  (the worst pixel under it)
+                   #1a1a1a on #ffffff ........ 17.4:1  (seo; its note 7.9:1)
+                   #1a1a1a on #e6e4e2 ........ 13.7:1  (logo; its note 6.9:1)
    ═════════════════════════════════════════════════════════════════ */
 
 .hm-root {
@@ -500,17 +501,15 @@
 /* ─────────────────────────────────────────────────────────────────
    FOLD 3 — THE DOORS (the arms at doorway scale)
 
-   Four doors again since 9 Oct 2026, when Logo Design became the fourth
-   arm (there were three for a day, after C4i went to C4Site):
-     1024px and up  four across, one row of doorways. Each face keeps the
-                    3:4 doorway, so the art drawn for a tall door fits,
-                    and the Lens iris keeps its REC lamp and brackets.
+   Four doors since 9 Oct 2026, when Logo Design became the fourth arm:
+     1024px and up  four across, one row of doorways, each face 3:4.
      640 to 1023px  two by two. Four is even, so nothing is stranded, and
                     a face stays a doorway instead of lying on its side.
                     Each row's dossiers line up, because the outcome
                     paragraph takes the slack.
-     under 640px    one column. Doors sit well apart so a door's buttons
-                    never read as the top of the next face.
+     under 640px    one column of short, wide faces. Doors sit well apart
+                    so a door's buttons never read as the top of the next
+                    face.
    ───────────────────────────────────────────────────────────────── */
 
 .hm-doors {
@@ -523,20 +522,31 @@
 
 .hm-door { display: flex; flex-direction: column; min-width: 0; }
 
-/* The face — a real material sample from the arm's shipped identity.
-   3:4 is the doorway: the four-across faces ran 0.72 to 0.77 wide for
-   their height, and the Lens iris needs at least that much height. */
+/* The face. One system for all four since 9 Oct 2026:
+     top left   the arm's name, and under it in the instrument face a note
+                on what the face shows (whose sites, whose photo, "Example
+                search", our own mark);
+     the foot   the action, in Archivo at one setting on every face;
+     the edge   a 1px rule inside it in the face's own ink at 10%, so a
+                light face keeps its edge on the light bench and a dark
+                one on the dark;
+     the rest   the art, which carries no type of its own except the SEO
+                face's example search.
+   The face is a size container, so its type and art size off its own
+   width (cqw) and read the same on a 220px face as on a 455px one. Faces
+   are materials: they keep their colours in both themes. */
 .hm-doorface {
+  --face-ink: #1a1a1a;
+  --face-rule: rgba(26, 26, 26, 0.1);
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  display: block;
   overflow: hidden;
   border-radius: 4px;
   aspect-ratio: 3 / 4;
-  padding: 20px;
-  text-decoration: none;
+  container-type: size;
   isolation: isolate;
+  color: var(--face-ink);
+  text-decoration: none;
 }
 
 /* Phones: compact faces, the hero audit's fix for tall faces that buried
@@ -550,29 +560,58 @@
   .hm-doorface { aspect-ratio: auto; min-height: 172px; }
 }
 .hm-doorface::after {
-  /* door-open sheen — clip-path swings open on hover */
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(115deg, rgba(255, 255, 255, 0.1), transparent 46%);
-  clip-path: inset(0 100% 0 0);
-  transition: clip-path 0.7s var(--hm-ease);
+  z-index: 3;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--face-rule);
   pointer-events: none;
 }
+
+/* The art layer. Hover or keyboard focus brings the art a little closer,
+   the one motion all four faces share. It moves inside its own box, so a
+   band or the type never shifts. */
+.hm-art { position: absolute; inset: 0; z-index: 0; display: block; overflow: hidden; }
+.hm-art > * { transition: transform 0.9s var(--hm-ease); }
+.hm-art > picture { position: absolute; inset: 0; display: block; }
+.hm-doorface:focus-visible .hm-art > * { transform: scale(1.03); }
 @media (hover: hover) and (pointer: fine) {
-  .hm-doorface:hover::after { clip-path: inset(0 0 0 0); }
+  .hm-doorface:hover .hm-art > * { transform: scale(1.03); }
   .hm-doorface:hover .hm-door-arrow { transform: translateX(4px); }
 }
 
 .hm-door-tag {
-  font-size: 12px;
-  font-weight: 500;
+  position: absolute;
+  z-index: 2;
+  top: 6.4cqw;
+  left: 7.2cqw;
+  right: 7.2cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+}
+.hm-door-name { font-size: max(11.5px, 4.3cqw); font-weight: 600; line-height: 1.15; }
+.hm-door-note {
+  font-family: var(--hm-mono);
+  font-size: max(9px, 3.25cqw);
+  line-height: 1.25;
   letter-spacing: 0.02em;
-  margin-bottom: auto;
+  opacity: 0.76;
 }
 .hm-door-word {
-  display: block;
-  line-height: 1.04;
+  position: absolute;
+  z-index: 2;
+  left: 7.2cqw;
+  right: 7.2cqw;
+  bottom: 6.4cqw;
+  margin: 0;
+  font-family: var(--hm-disp);
+  font-weight: 720;
+  font-stretch: 94%;
+  font-size: clamp(19px, 10.2cqw, 34px);
+  line-height: 1;
+  letter-spacing: -0.032em;
   text-wrap: balance;
 }
 /* An icon sized to the title it ends, so it scales with each door's face. */
@@ -584,96 +623,59 @@
   transition: transform 0.4s var(--hm-ease);
 }
 
-/* C1 — captures-weave over studio dark. */
-.hm-doorface--web { background: #14161c; }
-.hm-doorface--web .hm-weave {
+/* C1 — Web & Applications: three live client home pages, a full-width
+   slice of each hero stacked edge to edge on studio dark. Each slice holds
+   a whole headline and its intro, and shows the site at its own width, so
+   no panel is cut off at the side (scripts/door-faces.mjs). The stack
+   starts on the same line as the Lens photo next door: both sit under an
+   ink band 22.5% of the face's width deep. */
+.hm-doorface--web { --face-ink: #f4f3f1; --face-rule: rgba(244, 243, 241, 0.1); background: #131316; }
+.hm-doorface--web .hm-strips {
   position: absolute;
-  inset: -4%;
-  z-index: -1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  transform: rotate(-3deg);
+  top: 22.5cqw;
+  right: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
 }
-.hm-doorface--web .hm-weave img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 2px;
-  opacity: 0.5;
-  filter: saturate(0.85);
-}
-.hm-doorface--web::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(185deg, rgba(16, 17, 22, 0.42) 8%, rgba(16, 17, 22, 0.94) 78%);
-}
-.hm-doorface--web .hm-door-tag { color: rgba(244, 243, 241, 0.82); }
-.hm-doorface--web .hm-door-word {
-  font-family: var(--hm-disp);
-  font-weight: 740;
-  font-stretch: 96%;
-  font-size: clamp(1.55rem, 2vw, 1.9rem);
-  letter-spacing: -0.03em;
-  color: #f4f3f1;
+.hm-doorface--web .hm-strips picture,
+.hm-doorface--web .hm-strips img { display: block; width: 100%; height: auto; }
+
+/* C2 — C4 Lens: one photograph, full bleed under an ink band. The label
+   sits on the band because the sky is a mid blue that neither white nor
+   black can hold at 12px. Measured across every crop tried on 9 Oct 2026,
+   white reached at most 3.2:1 against the sky's brightest pixels and black
+   at most 3.5:1 against its darkest. The title sits on the shadowed slab,
+   which is dark and even (see DESIGN.md for the numbers). */
+.hm-doorface--lens { --face-ink: #ffffff; --face-rule: rgba(255, 255, 255, 0.1); background: #131316; }
+.hm-doorface--lens .hm-art { top: 22.5cqw; }
+.hm-lens-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; }
+
+/* C3 — SEO & Copywriting: an example search and one result at 1, on white
+   (seo-copy/DoorFace.jsx, door.css). */
+.hm-doorface--seo { background: #ffffff; }
+
+/* C4 — Logo Design: our own 4 with its construction showing, on the C's
+   own light grey (logo-design/DoorFace.jsx, door.css). */
+.hm-doorface--logo { background: #e6e4e2; }
+
+/* Phone faces are 172px tall and 272 to 591px wide, so here the type is
+   sized in px. It keeps the left half and the art takes the right. */
+@container (aspect-ratio > 1.45) {
+  .hm-door-tag { top: 15px; right: 52%; left: 16px; gap: 3px; }
+  .hm-door-name { font-size: 12px; }
+  .hm-door-note { font-size: 9.5px; }
+  .hm-door-word { right: 52%; bottom: 15px; left: 16px; font-size: 22px; }
+  .hm-doorface--web .hm-strips { top: 0; bottom: 0; left: 52%; justify-content: center; }
+  .hm-doorface--lens .hm-art { top: 0; left: 52%; }
+  .hm-lens-photo { object-position: 40% 30%; }
 }
 
-/* C2 — black behind a hairline 9-gon aperture arc. No amber: the
-   tungsten glow belongs to /Lens itself. (The C4i board door that sat
-   here went to C4Site on 9 Oct 2026.) */
-.hm-doorface--lens { background: #050505; }
-.hm-doorface--lens .hm-ninegon { position: absolute; inset: 0; z-index: -1; }
-/* The iris focuses on hover — blades turn like a lens being pulled. */
-.hm-doorface--lens .hm-iris-blades {
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.hm-doorface--lens:hover .hm-iris-blades { transform: rotate(20deg); }
 @media (prefers-reduced-motion: reduce) {
-  .hm-doorface--lens .hm-iris-blades { transition: none; }
-  .hm-doorface--lens:hover .hm-iris-blades { transform: none; }
-}
-.hm-doorface--lens .hm-door-tag { color: rgba(255, 255, 255, 0.72); }
-.hm-doorface--lens .hm-door-word {
-  font-family: 'Bebas Neue', 'Archivo', sans-serif;
-  font-weight: 400;
-  font-size: clamp(2rem, 2.6vw, 2.5rem);
-  letter-spacing: 0.015em;
-  color: #ffffff;
-  text-transform: uppercase;
-}
-
-/* C3 — SEO & Copywriting (took C4Site's door, 8 Oct 2026): the paste-up
-   board from /seo-and-copywriting (seo-copy/DoorFace.jsx, door.css), your
-   listing ringed at first. The one light door of the four. */
-.hm-doorface--seo { background: #f2eee6; }
-.hm-doorface--seo::after { background: linear-gradient(115deg, rgba(194, 48, 48, 0.07), transparent 46%); }
-.hm-doorface--seo .hm-door-tag { color: rgba(29, 27, 24, 0.74); }
-.hm-doorface--seo .hm-door-word {
-  font-family: var(--hm-disp);
-  font-weight: 740;
-  font-stretch: 96%;
-  font-size: clamp(1.55rem, 2vw, 1.9rem);
-  letter-spacing: -0.03em;
-  color: #1d1b18;
-}
-
-/* C4 — Logo Design (9 Oct 2026): the vinyl offcut from /logo-design on its
-   green cutting mat (logo-design/DoorFace.jsx, door.css), the stand-in mark
-   halfway through the weed. The title takes the mark's own setting, Archivo
-   wide and heavy, the way a signwriter would letter it. */
-.hm-doorface--logo { background: #2b6a4e; }
-.hm-doorface--logo .hm-door-tag { color: rgba(244, 243, 241, 0.9); }
-.hm-doorface--logo .hm-door-word {
-  font-family: var(--hm-disp);
-  font-weight: 800;
-  font-stretch: 112%;
-  font-size: clamp(1.45rem, 1.85vw, 1.8rem);
-  letter-spacing: -0.03em;
-  color: #f4f3f1;
+  .hm-art > *,
+  .hm-door-arrow { transition: none; }
+  .hm-doorface:hover .hm-art > *,
+  .hm-doorface:focus-visible .hm-art > * { transform: none; }
 }
 
 /* Under-door dossier — theme surface, both CTAs always in DOM. */
@@ -892,7 +894,6 @@
   .hm-frame,
   .hm-grain,
   .hm-frame .hm-cap,
-  .hm-doorface::after,
   .hm-plate--featured .hm-feat-media img {
     transition: none !important;
   }

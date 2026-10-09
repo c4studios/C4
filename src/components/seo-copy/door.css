@@ -1,130 +1,59 @@
 /* ═══ The SEO and copywriting door's face (DoorFace.jsx) ═══
-   The board from /seo-and-copywriting at doorway scale. It's paper, so it
-   keeps the same inks in both themes, like the board on the page. It fills
-   its parent and sits behind the door's tag (top left) and title (lower
-   part), so the stack keeps clear of both: it fades out above the title,
-   and on short, wide faces (phones) it moves to the right half and shows
-   only the search and the listing at first. */
+   White, like the page a search lands on, with ink type, the site's red
+   caret, and the result's title in the board's non-repro blue (#2a6c8a,
+   5.66:1 on white). Paper keeps its inks in both themes. Sizes run off the
+   face's own width (cqw: FourDoors makes the face a size container), so the
+   search and the result keep their places at every face size. */
 
 .sc-door {
-  --dr-board: #fcfcfa;
-  --dr-grid: rgba(122, 190, 219, 0.2);
-  --dr-grid-major: rgba(98, 174, 209, 0.32);
-  --dr-blue: #2a6c8a;
-  --dr-blue-soft: #8cc7dd;
-  --dr-ink: #1a1a1a;
-  --dr-muted: #5e5d57;
-  --dr-pencil: #34312c;
-  --dr-strip: 0 0.5px 0 rgba(26, 26, 26, 0.06), 0 1px 1.5px rgba(26, 26, 26, 0.16), 0 3px 6px -3px rgba(26, 26, 26, 0.16);
-  position: absolute; inset: 0; z-index: -1; overflow: hidden; display: block;
-  container-type: size;
-  background-color: var(--dr-board);
-  background-image:
-    linear-gradient(var(--dr-grid-major) 1px, transparent 1px),
-    linear-gradient(90deg, var(--dr-grid-major) 1px, transparent 1px),
-    linear-gradient(var(--dr-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--dr-grid) 1px, transparent 1px);
-  background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
-  background-position: 9px 9px;
+  position: absolute; inset: 0; display: block; overflow: hidden;
+  background: #ffffff; color: #1a1a1a;
   font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* graphite (pencil.jsx), with the door's own filter */
-.sc-door .sc-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
-.sc-door .sc-g path { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
-.sc-door .sc-g-main { stroke-width: 1.4; opacity: 0.86; }
-.sc-door .sc-g-pass { stroke-width: 0.75; opacity: 0.42; }
-
-.sc-door-reg { position: absolute; width: 11px; height: 11px; border: 1px solid var(--dr-blue-soft); border-radius: 50%; }
-.sc-door-reg::before, .sc-door-reg::after { content: ''; position: absolute; background: var(--dr-blue-soft); }
-.sc-door-reg::before { left: 50%; top: -3px; bottom: -3px; width: 1px; transform: translateX(-0.5px); }
-.sc-door-reg::after { top: 50%; left: -3px; right: -3px; height: 1px; transform: translateY(-0.5px); }
-.sc-door-reg--tl { top: 6px; left: 6px; }
-.sc-door-reg--tr { top: 6px; right: 6px; }
-.sc-door-reg--bl { bottom: 6px; left: 6px; }
-.sc-door-reg--br { bottom: 6px; right: 6px; }
-
-/* the stack: the search, the listing at first, then the results it passed */
-.sc-door-stack {
-  position: absolute; top: 17%; left: 9%; right: 4%; bottom: 34%;
-  display: flex; flex-direction: column; gap: 6px;
-  padding: 0 32px 0 30px; /* the positions on the left, the pencil on the right, inside the mask */
-  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 50%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0, #000 50%, transparent 100%);
+/* the search line */
+.sc-door-q {
+  position: absolute; left: 7.2cqw; right: 7.2cqw; top: 33cqw;
+  display: flex; align-items: center; gap: 2.4cqw;
+  padding-bottom: 3cqw; border-bottom: 1px solid rgba(26, 26, 26, 0.22);
+  font-size: max(11px, 5cqw); font-weight: 500; line-height: 1; white-space: nowrap;
 }
-.sc-door-query {
-  flex: none; display: flex; align-items: center; gap: 6px; height: 28px; padding: 0 11px;
-  border-radius: 999px; background: #ffffff; box-shadow: var(--dr-strip), inset 0 0 0 1px rgba(26, 26, 26, 0.14);
-  font-size: 11px; font-weight: 520; color: var(--dr-ink); white-space: nowrap;
+.sc-door-glass { flex: none; width: 4.4cqw; height: 4.4cqw; fill: none; stroke: #1a1a1a; stroke-width: 1.6; stroke-linecap: round; }
+.sc-door-caret { flex: none; width: 1.5px; height: 1.05em; margin-left: -1.4cqw; background: #c23030; }
+
+/* the result at 1: its position and its site */
+.sc-door-hit {
+  position: absolute; left: 7.2cqw; right: 7.2cqw; top: 52cqw;
+  display: flex; align-items: flex-end; gap: 3cqw;
 }
-.sc-door-glass { flex: none; width: 11px; height: 11px; fill: none; stroke: var(--dr-muted); stroke-width: 1.6; stroke-linecap: round; }
-.sc-door-q { flex: none; }
-.sc-door-caret { flex: none; width: 1.5px; height: 12px; margin-left: -4px; background: #c23030; }
-
-.sc-door-you, .sc-door-strip { position: relative; flex: none; display: block; border-radius: 2px; }
-.sc-door-strip::before, .sc-door-n::before {
-  content: attr(data-n); position: absolute; top: 0; right: 0;
-  font: 400 10px/1 'B612 Mono', ui-monospace, monospace; color: var(--dr-blue);
+.sc-door-n {
+  font-family: 'B612 Mono', ui-monospace, monospace; font-weight: 400;
+  font-size: 13cqw; line-height: 0.76; letter-spacing: -0.04em; color: #2a6c8a;
+  font-variant-numeric: tabular-nums;
 }
-.sc-door-strip::before { right: calc(100% + 11px); top: 8px; }
-.sc-door-n { position: absolute; right: calc(100% + 6px); top: 3px; width: 18px; height: 16px; }
-.sc-door-n::before { right: 5px; top: 3px; color: var(--dr-ink); font-weight: 700; }
-.sc-door-ring { position: absolute; left: -4px; top: -2px; width: 27px; height: 21px; overflow: visible; color: var(--dr-pencil); }
+.sc-door-site { display: flex; align-items: center; gap: 1.6cqw; padding-bottom: 0.2cqw; font-size: max(9px, 3.4cqw); font-weight: 500; line-height: 1.2; color: #3d3c38; white-space: nowrap; }
+.sc-door-fav { flex: none; width: 3.8cqw; height: 3.8cqw; border-radius: 50%; background: #1a1a1a; color: #ffffff; font-size: 2.3cqw; line-height: 3.8cqw; font-weight: 700; text-align: center; }
 
-.sc-door-you {
-  z-index: 1; padding: 7px 10px 9px; background: #ffffff;
-  box-shadow: var(--dr-strip), inset 0 0 0 1.5px var(--dr-ink);
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+/* and its title, big enough to run off the face */
+.sc-door-title {
+  position: absolute; left: 7.2cqw; top: 66cqw;
+  font-size: 15.5cqw; font-weight: 680; line-height: 1; letter-spacing: -0.035em;
+  color: #2a6c8a; white-space: nowrap;
 }
-.sc-door-site { display: flex; align-items: center; gap: 5px; font-size: 9.5px; font-weight: 650; color: var(--dr-ink); white-space: nowrap; }
-.sc-door-fav { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--dr-ink); color: #ffffff; font-size: 6px; line-height: 10px; text-align: center; font-weight: 700; }
-.sc-door-title { display: block; margin-top: 4px; font-size: 12px; font-weight: 660; line-height: 1.2; letter-spacing: -0.01em; color: var(--dr-ink); white-space: nowrap; }
 
-.sc-door-strip {
-  display: flex; align-items: center; gap: 6px; padding: 7px 10px;
-  background-color: #ffffff;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.58)), url('/bench/card-stock.jpg');
-  background-size: 100% 100%, 100% auto; background-repeat: no-repeat;
-  box-shadow: var(--dr-strip);
-}
-.sc-door-strip:nth-child(odd) { transform: rotate(-0.4deg); }
-.sc-door-strip:nth-child(even) { transform: rotate(0.3deg); }
-.sc-door-strip .sc-door-fav { width: 9px; height: 9px; background: #d8d4cd; box-shadow: inset 0 0 0 1px rgba(26, 26, 26, 0.08); }
-.sc-door-strip:nth-child(3) .sc-door-fav { background: #c9d5dc; }
-.sc-door-strip:nth-child(4) .sc-door-fav { background: #ddd2c4; }
-.sc-door-kind { font-size: 10px; font-weight: 620; line-height: 1.2; color: #3d3c38; white-space: nowrap; }
-
-/* the trail it climbed, in pencil, up the right-hand margin */
-.sc-door-trail { position: absolute; left: calc(100% + 2px); top: 10px; width: 26px; height: 116px; overflow: visible; color: var(--dr-pencil); }
-.sc-door-trail path { stroke-dasharray: 1; stroke-dashoffset: 0; }
-
-/* short, wide faces (the one-column phone layout): the right half, between
-   the tag and the title, holds the search and the listing at first */
+/* Short, wide faces (the one-column phone layout, always 172px tall but 272
+   to 591px wide, so most sizes here are in px): the search and the result
+   take the right half, level with the door's label, and the title runs off
+   the right edge there too. Its size runs off the face's width, as on the
+   tall faces, so the edge always falls inside "Joondalup" (about 17 of its
+   characters show) and never between two words. */
 @container (aspect-ratio > 1.45) {
-  .sc-door-stack { top: 23%; left: 41%; right: 4%; bottom: 31%; gap: 5px; padding: 0 4px 0 26px; -webkit-mask-image: none; mask-image: none; }
-  .sc-door-query { height: 22px; padding: 0 9px; gap: 5px; font-size: 10px; }
-  .sc-door-glass { width: 10px; height: 10px; }
-  .sc-door-caret { height: 11px; }
-  .sc-door-you { padding: 5px 9px 6px; }
-  .sc-door-title { font-size: 11px; margin-top: 3px; }
-  .sc-door-strip, .sc-door-trail { display: none; }
+  .sc-door-q { left: 52%; right: 14px; top: 16px; gap: 6px; padding-bottom: 7px; font-size: min(12px, 3.8cqw); }
+  .sc-door-glass { width: min(11px, 3.5cqw); height: min(11px, 3.5cqw); }
+  .sc-door-caret { margin-left: -3px; }
+  .sc-door-hit { left: 52%; right: 14px; top: 62px; gap: 7px; }
+  .sc-door-n { font-size: 20px; }
+  .sc-door-site { gap: 4px; font-size: 9.5px; }
+  .sc-door-fav { width: 10px; height: 10px; font-size: 6px; line-height: 10px; }
+  .sc-door-title { left: 52%; top: 94px; font-size: 7.1cqw; }
 }
-
-/* hover: the listing lifts, the trail is drawn again */
-a:hover > .sc-door .sc-door-you,
-a:focus-visible > .sc-door .sc-door-you {
-  transform: translateY(-3px);
-  box-shadow: 0 1px 2px rgba(26, 26, 26, 0.18), 0 18px 30px -14px rgba(26, 26, 26, 0.45), inset 0 0 0 1.5px var(--dr-ink);
-}
-a:hover > .sc-door .sc-door-trail .sc-g-main { animation: sc-door-draw 0.8s ease-out; }
-a:hover > .sc-door .sc-door-trail .sc-g-pass { animation: sc-door-draw 0.7s ease-out 0.15s backwards; }
-@keyframes sc-door-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-
-@media (prefers-reduced-motion: reduce) {
-  .sc-door-you { transition: none; }
-  a:hover > .sc-door .sc-door-you, a:focus-visible > .sc-door .sc-door-you { transform: none; }
-  a:hover > .sc-door .sc-door-trail path { animation: none; }
-}
-
-/* The door's tag and title are FourDoors' own (.hm-doorface--seo in home.css).
-   On this paper the ink title and the 74% ink tag hold 7:1 and better. */
