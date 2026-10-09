@@ -80,6 +80,9 @@ const WORDS = [
   { text: 'story',     col: '#3ff8ff', col2: '#ff3fa3' },
 ];
 
+/* The pin threshold for the Glyph Portal ending (lens.css keeps the hero's in step). */
+const PORTAL_ROOM = '(min-height: 461px)';
+
 /* Package cards render from c4LensPackages (src/data/pricing.js) — the same
    source StartProject quotes from — so names, prices, order and the popular
    flag can't drift. The lines below are this page's abbreviated display copy
@@ -153,6 +156,16 @@ export default function Lens() {
     if (document.fonts && document.fonts.load) document.fonts.load('400 100px "Bebas Neue"').then(done, done); else done();
     return () => { on = false; };
   }, [staticRender]);
+  /* The portal's camera needs a screen's height to travel through the letter;
+     a window shorter than its pin threshold gets the plain call to action. */
+  const [portalFits, setPortalFits] = useState(() => typeof window === 'undefined' || window.matchMedia(PORTAL_ROOM).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(PORTAL_ROOM);
+    const on = () => setPortalFits(mq.matches);
+    on();
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
 
   useEffect(() => {
     /* â•â•â•â•â•â•â•â•â•â•â• FONTS â•â•â•â•â•â•â•â•â•â•â• */
@@ -312,7 +325,6 @@ export default function Lens() {
     /* â•â•â•â•â•â•â•â•â•â•â• HERO SCROLL ENGINE â•â•â•â•â•â•â•â•â•â•â• */
     const heroScroll = document.getElementById('heroScroll');
     const lensWrap = document.getElementById('lensWrap');
-    const lensLayer = document.getElementById('lensLayer');
     const lensEye = document.getElementById('lensEye');
     const eyePupil = document.getElementById('eyePupil');
     const focusRing = document.getElementById('focusRing');
@@ -321,7 +333,6 @@ export default function Lens() {
     const scrollInd = document.getElementById('scrollInd');
     const tickFlash = document.getElementById('tickFlash');
     const shutterFlash = document.getElementById('shutterFlash');
-    const gridOverlay = document.getElementById('gridOverlay');
     const lensFlare = document.getElementById('lensFlare');
     const hudF = document.getElementById('hudF');
     const hudShutter = document.getElementById('hudShutter');
@@ -349,7 +360,7 @@ export default function Lens() {
         b.buffer = buf;
         const gn = audioCtx.createGain(); gn.gain.value = 0.15;
         b.connect(gn); gn.connect(audioCtx.destination); b.start();
-      } catch (e) { /* ignore */ }
+      } catch { /* ignore */ }
     }
 
     let rawT = 0, smoothT = 0;
@@ -373,17 +384,38 @@ export default function Lens() {
     };
     if (finePointer && !staticMode) document.addEventListener('mousemove', onLensParallax, { passive: true });
 
-    let lastTickStep = -1, lastMs = performance.now();
+    let lastTickStep = -1;
     let lastBlur = -1, lastVf = -1;
     const heroSticky = heroScroll ? heroScroll.querySelector('.hero-sticky') : null;
     let shutterFired = false;
     let heroRafId;
 
+    /* Fit the lens to the room it has. The copy sits at the top and the
+       buttons at the foot, and the lens takes what's between, so nothing
+       overlaps in a short or narrow window. The title may run over the
+       barrel's outer ring but never onto the glass, which starts 11.5% in.
+       Measured rather than guessed, because the title's wrap and the button
+       block's height change with the window and the fonts. Below the pin
+       threshold (lens.css) the hero stops pinning and rests in focus. */
+    let pinned = true;
+    const fitHero = () => {
+      if (!heroSticky || !lensWrap || !quoteBlock || !heroBottom) return;
+      const H = heroSticky.clientHeight, W = heroSticky.clientWidth;
+      const copyBottom = quoteBlock.offsetTop + quoteBlock.offsetHeight;
+      const room = heroBottom.offsetTop - 14 - copyBottom;
+      const d = Math.max(140, Math.min(W * 0.78, H * 0.66, room / 0.9));
+      const top = copyBottom + room / 2 - 0.55 * d;
+      heroSticky.style.setProperty('--lens-d', `${Math.round(d)}px`);
+      heroSticky.style.setProperty('--lens-top', `${Math.round(top)}px`);
+      heroSticky.classList.add('is-fitted');
+      pinned = heroScroll.offsetHeight > window.innerHeight * 1.3;
+    };
+    fitHero();
+    const heroRO = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(fitHero) : null;
+    if (heroRO) [heroSticky, quoteBlock, heroBottom].forEach((el) => { if (el) heroRO.observe(el); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHero, () => {});
 
     function heroFrame(now) {
-      const dt = Math.min(0.1, (now - lastMs) / 1000);
-      lastMs = now;
-
       /* Slower smoothing for more deliberate feel */
       smoothT = lerp(smoothT, rawT, 0.06);
       const t = smoothT;
@@ -395,7 +427,7 @@ export default function Lens() {
        *   t = 0.90–1.00  hold: shutter
        */
       const focusRaw = clamp((t - 0.04) / 0.40, 0, 1);
-      const focusP = staticMode ? 1 : eio(focusRaw);
+      const focusP = staticMode || !pinned ? 1 : eio(focusRaw);
       const bladeRawT = clamp((t - 0.42) / 0.48, 0, 1);
       const bladeProgress = eio(bladeRawT);
 
@@ -469,9 +501,6 @@ export default function Lens() {
         eyePupil.setAttribute('r', pupilR);
       }
 
-      /* Rule-of-thirds grid: disabled — was showing as visible pattern */
-      /* if (gridOverlay) gridOverlay.classList.toggle('on', t > 0.20); */
-
       /* UI fades */
       const uiFade = clamp(1 - t * 3.2, 0, 1);
       if (quoteBlock) {
@@ -535,7 +564,6 @@ export default function Lens() {
           cancelAnimationFrame(heroRafId);
           heroRafId = 0;
         } else if (!heroRafId) {
-          lastMs = performance.now();
           onHeroScroll();
           /* Snap only on real drift — a fast anchor jump must not whip the aperture */
           if (Math.abs(rawT - smoothT) > 0.2) smoothT = rawT;
@@ -592,27 +620,32 @@ export default function Lens() {
     let stage = null;
     let capIO = null;
     const wordStage = document.getElementById('wordStage');
+    /* The paint's field is the whole section, edge to edge: the canvas fills
+       it, the pointer works anywhere in it, and the word stays in its stage. */
+    const captureEl = document.getElementById('capture');
     const fallBack = () => {
       if (capIO) { capIO.disconnect(); capIO = null; }
       stage = null;
       if (wordStage) wordStage.classList.remove('is-live');
+      if (captureEl) captureEl.classList.remove('is-live');
       renderStaticWord();
     };
-    if (staticMode || !wordStage) {
+    if (staticMode || !wordStage || !captureEl) {
       renderStaticWord();
     } else {
       wordStage.classList.add('is-live');
-      stage = createPaintStage(wordStage, { words: WORDS, onFail: fallBack });
+      captureEl.classList.add('is-live');
+      stage = createPaintStage(wordStage, { words: WORDS, field: captureEl, onFail: fallBack });
       if (!stage) {
         fallBack();
       } else {
-        /* Same clutch as the hero motor: the paint only runs while §01 is on screen. */
+        /* Same clutch as the hero motor: the paint runs only while any of
+           its section is on screen. */
         capIO = new IntersectionObserver((entries) => {
           if (!stage) return;
           if (entries[0].isIntersecting) stage.start(); else stage.stop();
-        }, { threshold: 0.3 });
-        const captureEl = document.getElementById('capture');
-        if (captureEl) capIO.observe(captureEl);
+        }, { threshold: 0 });
+        capIO.observe(captureEl);
       }
     }
 
@@ -659,13 +692,14 @@ export default function Lens() {
     }
 
     /* â•â•â•â•â•â•â•â•â•â•â• AUDIO â•â•â•â•â•â•â•â•â•â•â• */
-    const onAudioInit = () => { if (!audioCtx) try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} };
+    const onAudioInit = () => { if (!audioCtx) try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch { /* no audio */ } };
     document.addEventListener('click', onAudioInit, { once: true });
 
     /* â•â•â•â•â•â•â•â•â•â•â• CLEANUP â•â•â•â•â•â•â•â•â•â•â• */
     return () => {
       cancelAnimationFrame(heroRafId);
       cancelAnimationFrame(cursorRafId);
+      if (heroRO) heroRO.disconnect();
       if (stage) stage.destroy();
       window.removeEventListener('scroll', onHeroScroll);
       document.removeEventListener('mousemove', onMouseMove);
@@ -677,7 +711,7 @@ export default function Lens() {
       document.body.style.background = prevBodyBg;
       document.body.classList.remove('cursor-on');
       if (siteHeader) siteHeader.style.display = '';
-      if (audioCtx) try { audioCtx.close(); } catch (e) {}
+      if (audioCtx) try { audioCtx.close(); } catch { /* already closed */ }
     };
   }, []);
 
@@ -1117,7 +1151,7 @@ export default function Lens() {
 
       {/* The ending: the word LENS, and a camera that goes through it. */}
       <div id="contact" className="lens-ending">
-        {!staticRender && portalReady ? (
+        {!staticRender && portalReady && portalFits ? (
           <GlyphPortal
             word="LENS"
             fontFamily="'Bebas Neue', 'Arial Black', Arial, sans-serif"

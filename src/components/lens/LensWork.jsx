@@ -33,14 +33,35 @@
  * reveal (the page's .lr held a heading at opacity 0 until an observer fired,
  * which a keyboard jump could outrun). Stills get their files a screen early, like
  * the posters, and the prerendered HTML carries their alt text but no file.
+ *
+ * Behind a button (9 Oct 2026). Caleb liked the studies but they took over the
+ * page, so the section now shows its heading, the line "These are examples of
+ * what C4 Lens can do." and a "See our case studies" button, and the nine
+ * studies wait behind it. "Built into the site" sits behind the same button:
+ * Caleb asked for all the entries to go behind one, and two folded sections in
+ * a row would put two headings and two buttons between the paint and the
+ * services. The studies stay in the HTML under hidden="until-found", so
+ * crawlers read them and the browser's find-in-page opens them; nothing inside
+ * is rendered, and no poster, still or video is fetched, until they open. The
+ * nav's Our Work, a #work link (or a link to any one study) and find-in-page
+ * all open them. Opening is a focus pull: the first frames arrive soft and
+ * sharpen, the way the lens hunts and locks. "Hide case studies" at the foot
+ * folds them away and hands the visitor back to the button.
  */
-import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import React, { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
+import { ArrowDown, ArrowUp, ArrowUpRight } from 'lucide-react';
 import { Link } from '@/components/c4/SiteLink';
+import useStaticMode from '@/hooks/useStaticMode';
 import MotionFilm, { FilmWords } from './MotionFilm';
 import LensLoop from './LensLoop';
 import { WORK_FILM, WORK_SITE, HVN, SHARP, DSR, AQUA, EA, TIDY, BRADY, GROVERZ, ROCKS } from './lensStudies';
 import './lens-work.css';
+
+const STUDIES_ID = 'work-studies';
+/* A link that points into the studies: the section, one study, or the site group. */
+const INTO_STUDIES = /^#(work|in-the-site)(-|$)/;
+const askedForStudies = () => typeof window !== 'undefined' && INTO_STUDIES.test(window.location.hash);
 
 const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
@@ -395,42 +416,186 @@ const SITE_STUDIES = { ea: EaStudy, tidy: TidyStudy, brady: BradyStudy, groverz:
 
 export default function LensWork() {
   const log = useMemo(() => [...WORK_FILM, ...WORK_SITE], []);
+  const staticMode = useStaticMode();
+  /* Open from the first render when the visitor arrived on #work, so the
+     studies never flash shut; the prerenderer has no hash, so its HTML is shut. */
+  const [open, setOpen] = useState(askedForStudies);
+  const [pulling, setPulling] = useState(false);
+  const openRef = useRef(open);
+  const regionRef = useRef(null);
+  const toggleRef = useRef(null);
+
+  /* React 18 can only write `hidden` as a boolean, so until-found is set here,
+     before the browser paints. */
+  useLayoutEffect(() => {
+    openRef.current = open;
+    const el = regionRef.current;
+    if (!el) return;
+    if (open) el.removeAttribute('hidden');
+    else el.setAttribute('hidden', 'until-found');
+  }, [open]);
+
+  /* Synchronous, so a link's own jump lands on studies that are already open. */
+  const reveal = useCallback(() => {
+    if (openRef.current) return;
+    openRef.current = true;
+    flushSync(() => {
+      setOpen(true);
+      setPulling(!staticMode);
+    });
+  }, [staticMode]);
+
+  const fold = useCallback((handBack) => {
+    openRef.current = false;
+    flushSync(() => {
+      setOpen(false);
+      setPulling(false);
+    });
+    if (INTO_STUDIES.test(window.location.hash)) {
+      window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
+    }
+    const btn = toggleRef.current;
+    if (handBack && btn) {
+      btn.scrollIntoView({ block: 'center', behavior: 'instant' });
+      btn.focus({ preventScroll: true });
+    }
+  }, []);
+
+  useEffect(() => {
+    /* find-in-page, or a fragment link straight to a study, opened it */
+    const region = regionRef.current;
+    const onMatch = () => {
+      if (openRef.current) return;
+      openRef.current = true;
+      setOpen(true);
+    };
+    if (region) region.addEventListener('beforematch', onMatch);
+    /* The nav's Our Work, the reel log, any in-page link into the studies:
+       open them first, then let the browser make its own jump. */
+    const onClick = (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = e.target instanceof Element ? e.target.closest('a[href^="#"]') : null;
+      if (a && INTO_STUDIES.test(a.getAttribute('href'))) reveal();
+    };
+    /* the hash changed some other way (typed, or back and forward) */
+    const onHash = () => {
+      if (!INTO_STUDIES.test(window.location.hash)) return;
+      reveal();
+      const target = document.getElementById(window.location.hash.slice(1));
+      if (target) target.scrollIntoView({ block: 'start' });
+    };
+    document.addEventListener('click', onClick, true);
+    window.addEventListener('hashchange', onHash);
+    return () => {
+      if (region) region.removeEventListener('beforematch', onMatch);
+      document.removeEventListener('click', onClick, true);
+      window.removeEventListener('hashchange', onHash);
+    };
+  }, [reveal]);
+
+  /* Arriving on /Lens#work. The page resets the scroll to the top as it
+     mounts (PageTransition: at once, a frame later and on a 90ms timer that
+     runs late on a busy start), and the site's smooth scrolling animates
+     those resets, so a single landing gets carried away. For the first
+     moments, until the visitor scrolls themselves, scrolling is held instant
+     and the page is put back on the target whenever it drifts off. */
+  useEffect(() => {
+    if (!askedForStudies()) return undefined;
+    const id = window.location.hash.slice(1);
+    const root = document.documentElement;
+    const before = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    let done = false, raf = 0;
+    const targetOff = () => {
+      const target = document.getElementById(id);
+      if (!target) return 0;
+      return target.getBoundingClientRect().top - (parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
+    };
+    const land = () => {
+      raf = 0;
+      if (done) return;
+      const target = document.getElementById(id);
+      if (target && Math.abs(targetOff()) > 2) target.scrollIntoView({ block: 'start', behavior: 'instant' });
+    };
+    const onScroll = () => { if (!done && !raf && Math.abs(targetOff()) > 2) raf = requestAnimationFrame(land); };
+    const finish = () => {
+      if (done) return;
+      done = true;
+      cancelAnimationFrame(raf);
+      root.style.scrollBehavior = before;
+      window.removeEventListener('scroll', onScroll);
+      for (const t of ['wheel', 'touchstart', 'keydown', 'pointerdown']) window.removeEventListener(t, finish);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    for (const t of ['wheel', 'touchstart', 'keydown', 'pointerdown']) window.addEventListener(t, finish, { passive: true });
+    const timers = [setTimeout(land, 0), setTimeout(land, 160), setTimeout(land, 650), setTimeout(finish, 2500)];
+    return () => { timers.forEach(clearTimeout); finish(); };
+  }, []);
+
+  /* the focus pull runs once per opening */
+  useEffect(() => {
+    if (!pulling) return undefined;
+    const t = setTimeout(() => setPulling(false), 1200);
+    return () => clearTimeout(t);
+  }, [pulling]);
+
   return (
-    <>
-      <section className="slab dark lw" id="work" aria-labelledby="work-title">
-        <header className="lw-head">
-          <h2 id="work-title">
-            WHAT C4 LENS<br /><em>can do.</em>
-          </h2>
-          <div className="lw-head-side">
-            <p className="lw-lede">These are examples of what C4 Lens can do. Each was made for a client, and each one says where it runs.</p>
-            <nav className="lw-log" aria-label="The case studies">
-              <ul>
-                {log.map((s) => (
-                  <li key={s.id}><a href={`#work-${s.id}`}>{s.client}</a></li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-        </header>
+    <section className="slab dark lw" id="work" aria-labelledby="work-title">
+      <header className="lw-head">
+        <h2 id="work-title">
+          WHAT C4 LENS<br /><em>can do.</em>
+        </h2>
+        <div className="lw-head-side">
+          <p className="lw-lede">These are examples of what C4 Lens can do. Each was made for a client, and each one says where it runs.</p>
+          <button
+            ref={toggleRef}
+            type="button"
+            className="lw-reveal"
+            aria-expanded={open}
+            aria-controls={STUDIES_ID}
+            onClick={() => (open ? fold(false) : reveal())}
+          >
+            <span className="lw-reveal-label">{open ? 'Hide case studies' : 'See our case studies'}</span>
+            {open
+              ? <ArrowUp aria-hidden="true" size={16} strokeWidth={1.5} />
+              : <ArrowDown aria-hidden="true" size={16} strokeWidth={1.5} />}
+          </button>
+        </div>
+      </header>
+
+      <div id={STUDIES_ID} ref={regionRef} className={`lw-studies${pulling ? ' is-pulling' : ''}`}>
+        <nav className="lw-log" aria-label="The case studies">
+          <ul>
+            {log.map((s) => (
+              <li key={s.id}><a href={`#work-${s.id}`}>{s.client}</a></li>
+            ))}
+          </ul>
+        </nav>
         {WORK_FILM.map((s) => {
           const Study = FILM_STUDIES[s.id];
           return <Study key={s.id} />;
         })}
-      </section>
 
-      <section className="slab dark lw lw--site" id="in-the-site" aria-labelledby="site-title">
-        <header className="lw-head lw-head--site">
-          <h2 id="site-title">
-            BUILT INTO<br /><em>the site.</em>
-          </h2>
-          <p className="lw-lede">Some of the motion we make is built into a client&rsquo;s own website or screens, and runs live in code. The clips below are recordings of each one running.</p>
-        </header>
-        {WORK_SITE.map((s) => {
-          const Study = SITE_STUDIES[s.id];
-          return <Study key={s.id} />;
-        })}
-      </section>
-    </>
+        <section className="lw-site" id="in-the-site" aria-labelledby="site-title">
+          <header className="lw-head lw-head--site">
+            <h2 id="site-title">
+              BUILT INTO<br /><em>the site.</em>
+            </h2>
+            <p className="lw-lede">Some of the motion we make is built into a client&rsquo;s own website or screens, and runs live in code. The clips below are recordings of each one running.</p>
+          </header>
+          {WORK_SITE.map((s) => {
+            const Study = SITE_STUDIES[s.id];
+            return <Study key={s.id} />;
+          })}
+        </section>
+
+        <div className="lw-foot">
+          <button type="button" className="lw-reveal" aria-expanded="true" aria-controls={STUDIES_ID} onClick={() => fold(true)}>
+            <span className="lw-reveal-label">Hide case studies</span>
+            <ArrowUp aria-hidden="true" size={16} strokeWidth={1.5} />
+          </button>
+        </div>
+      </div>
+    </section>
   );
 }

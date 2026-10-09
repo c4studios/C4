@@ -15,21 +15,66 @@
 
 /* ── Section heads ── */
 .lw-head {
-  max-width: 1400px; margin: 0 auto clamp(76px, 8vw, 124px);
+  max-width: 1400px; margin: 0 auto;
   display: grid; gap: 34px; align-items: end;
 }
-.lens-page .lw-head h2 { margin-bottom: 0; }
+/* .lw raises this above lens.css's `.lens-page .slab h2` (70px), which loads
+   after this file and was winning at equal weight. */
+.lens-page .lw .lw-head h2 { margin-bottom: 0; }
 @media (min-width: 1025px) { .lw-head { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: 56px; } }
 .lw-lede { margin: 0; max-width: 34rem; font-size: 17px; line-height: 1.65; color: var(--ink-2); }
 .lw-head--site { margin-bottom: clamp(64px, 7vw, 104px); }
 
+/* ── The button the studies wait behind ──
+   The viewfinder again: two amber corners frame the label at rest and close
+   in on it under the pointer or the keyboard, the way the corners lock onto a
+   film when it plays. */
+.lw-reveal {
+  position: relative; display: inline-flex; align-items: center; gap: 14px;
+  min-height: 56px; margin-top: 30px; padding: 0 22px 0 24px;
+  font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink); background: transparent; border: 1px solid var(--line-2); border-radius: 0;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: background-color .25s ease, border-color .25s ease, color .25s ease;
+}
+.lw-reveal svg { flex: none; color: var(--amber); transition: transform .45s var(--lw-ease), color .25s ease; }
+.lw-reveal::before, .lw-reveal::after {
+  content: ''; position: absolute; width: 12px; height: 12px; pointer-events: none;
+  border: 0 solid var(--amber);
+  transition: transform .45s var(--lw-ease);
+}
+.lw-reveal::before { top: -7px; left: -7px; border-top-width: 1px; border-left-width: 1px; }
+.lw-reveal::after { bottom: -7px; right: -7px; border-bottom-width: 1px; border-right-width: 1px; }
+.lw-reveal:focus-visible { outline: 2px solid var(--amber); outline-offset: 5px; }
+.lw-reveal:focus-visible::before { transform: translate(4px, 4px); }
+.lw-reveal:focus-visible::after { transform: translate(-4px, -4px); }
+.lw-reveal:active { background: rgba(245,245,240,.08); }
+.lw-head-side .lw-reveal { display: flex; width: max-content; max-width: 100%; }
+
+/* ── The studies, behind it ──
+   hidden="until-found" keeps them in the page for crawlers and find-in-page.
+   No display rule here: a browser without until-found treats it as plain
+   hidden through its own stylesheet, and any author display would override
+   that and show them. The element carries no box of its own (no padding, no
+   border), so shut it takes no room where the browser keeps it laid out. */
+
+/* Opening is a focus pull: the first frames arrive soft and sharpen. */
+@keyframes lw-pull {
+  0% { opacity: 0; filter: blur(10px); transform: translateY(22px); }
+  55% { opacity: 1; filter: blur(2px); }
+  100% { opacity: 1; filter: none; transform: none; }
+}
+.lw-studies.is-pulling > .lw-log { animation: lw-pull .8s var(--lw-ease) both; }
+.lw-studies.is-pulling > .lw-study:first-of-type { animation: lw-pull .95s var(--lw-ease) .09s both; }
+
 /* The reel log: every study, a jump away. lens.css pins every nav on the page
    to the top as the page's own bar, so this one is put back in the flow. */
 .lens-page nav.lw-log {
-  position: static; z-index: auto; display: block; margin-top: 26px; padding: 0;
+  position: static; z-index: auto; display: block; max-width: 1400px; margin: clamp(56px, 6vw, 88px) auto 0; padding: 0;
   mix-blend-mode: normal; color: inherit;
 }
 .lw-log ul { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 28px; }
+@media (min-width: 900px) { .lw-log ul { columns: 3; column-gap: 40px; } }
 .lw-log li { break-inside: avoid; border-top: 1px solid var(--line); }
 .lw-log a {
   display: flex; align-items: center; min-height: 44px; padding: 4px 0;
@@ -40,10 +85,22 @@
 
 /* ── A study ── */
 .lw-study { position: relative; max-width: 1400px; margin: clamp(128px, 13vw, 196px) auto 0; scroll-margin-top: 84px; }
-.lw-head + .lw-study { margin-top: 0; }
-.lw--site .lw-study { margin-top: clamp(104px, 10vw, 156px); }
-.lw--site .lw-head + .lw-study { margin-top: 0; }
+.lw-log + .lw-study { margin-top: clamp(76px, 8vw, 124px); }
+.lw-site .lw-study { margin-top: clamp(104px, 10vw, 156px); }
+.lw-site .lw-head + .lw-study { margin-top: 0; }
 .lw-fig { margin: 0; }
+
+/* "Built into the site": its own movement inside the same reveal, under a
+   hairline that runs out to the edges of the screen, as the section's did. */
+.lw-site { position: relative; max-width: 1400px; margin: clamp(128px, 13vw, 196px) auto 0; padding-top: clamp(96px, 10vw, 140px); scroll-margin-top: 0; }
+.lw-site::before {
+  content: ''; position: absolute; top: 0; left: 50%; width: 100vw; height: 1px;
+  transform: translateX(-50%); background: var(--line);
+}
+
+/* The way back out, at the foot of the studies. */
+.lw-foot { max-width: 1400px; margin: clamp(104px, 10vw, 156px) auto 0; padding-top: 34px; border-top: 1px solid var(--line); }
+.lw-foot .lw-reveal { margin-top: 0; }
 
 /* The account: who, where, what, where it runs, and the note. */
 .lw-account { min-width: 0; }
@@ -406,6 +463,11 @@
 
 /* ── Hover belongs to pointers that hover ── */
 @media (hover: hover) {
+  .lw-reveal:hover { background: rgba(245,245,240,.05); border-color: rgba(232,166,88,.55); }
+  .lw-reveal:hover::before { transform: translate(4px, 4px); }
+  .lw-reveal:hover::after { transform: translate(-4px, -4px); }
+  .lw-reveal[aria-expanded="false"]:hover svg { transform: translateY(2px); }
+  .lw-reveal[aria-expanded="true"]:hover svg { transform: translateY(-2px); }
   .lw-log a:hover { color: var(--amber); }
   .lw-out:hover { text-decoration-color: currentColor; }
   .lw-case:hover { color: #f2c98c; }
@@ -421,13 +483,19 @@
   .lw-log ul { column-gap: 18px; }
   .lw-log a { font-size: 13px; }
   .lw-study { margin-top: 112px; }
-  .lw--site .lw-study { margin-top: 96px; }
+  .lw-site .lw-study { margin-top: 96px; }
+  .lw-site { margin-top: 112px; padding-top: 80px; }
+  .lw-foot { margin-top: 96px; }
+  .lw-head-side .lw-reveal { width: 100%; justify-content: space-between; }
   .lw-aqua { padding: 52px 0; }
   .lw-exhibit { margin-bottom: 30px; }
   .lw-sharp-line { margin: 48px 4px 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .lw-studies.is-pulling > * { animation: none; }
+  .lw-reveal::before, .lw-reveal::after, .lw-reveal svg { transition: none; }
+  .lw-reveal:hover::before, .lw-reveal:hover::after, .lw-reveal:focus-visible::before, .lw-reveal:focus-visible::after, .lw-reveal:hover svg { transform: none; }
   .lw-stage.is-playing .mo-corner { transform: none; }
   .lw-poster, .lw-stage.is-playing .lw-poster { transition: opacity .12s ease, visibility 0s linear .12s; }
   .lw-video, .lw-poster img { transition: none; }
