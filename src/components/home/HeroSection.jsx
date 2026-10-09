@@ -52,15 +52,21 @@ export default function HeroSection() {
   const opacity = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
   const ruleWidth = useTransform(scrollYProgress, [0, 0.3], ['100%', '40%']);
 
+  /* The cover fills the first screen and grows past it rather than clip what
+     it holds. It was h-[100svh] with overflow hidden, and on a short window
+     (1280x720, 1366x768, 1024x640, 900x600, a 375x667 phone) that cut off
+     the "Perth, Australia" row and, shorter still, the Scroll invite. The
+     padding now tightens with the screen's height (svh), reaching the old
+     112px at 800px tall and up, so a tall screen looks as it did. */
   return (
-    <section ref={ref} className="relative flex h-[100svh] flex-col overflow-hidden" style={{ isolation: 'isolate' }}>
+    <section ref={ref} className="relative flex min-h-[100svh] flex-col overflow-hidden" style={{ isolation: 'isolate' }}>
       <div className="absolute inset-0 z-0" style={{ position: 'absolute' }}>
         <CraftHeatmap />
       </div>
 
       <motion.div
-        style={{ y, opacity }}
-        className="relative z-10 flex flex-1 items-center py-24 md:py-28"
+        style={{ y, opacity, paddingTop: 'clamp(84px, 14svh, 112px)', paddingBottom: 'clamp(24px, calc(28svh - 140px), 112px)' }}
+        className="relative z-10 flex flex-1 items-center"
       >
         <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12">
           <div className="max-w-[860px]">
@@ -142,13 +148,13 @@ export default function HeroSection() {
         </div>
       </motion.div>
 
-      <div className="relative z-10 mx-auto w-full max-w-[1400px] px-6 pb-7 md:px-12 md:pb-9">
+      <div className="relative z-10 mx-auto w-full max-w-[1400px] px-6 md:px-12" style={{ paddingBottom: 'clamp(16px, 4svh, 36px)' }}>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1.42 }}
         >
-          <div className="mb-8 flex justify-center md:mb-9">
+          <div className="flex justify-center" style={{ marginBottom: 'clamp(16px, 4svh, 36px)' }}>
             <button
               onClick={() => {
                 if (ref?.current?.nextElementSibling) {

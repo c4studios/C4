@@ -205,24 +205,29 @@ header[data-c4-chrome="header"] {
 }
 
 /* Header logo clears the top-left keep-out zone so it never sits beneath the
-   fixed back-ribbon (§3 — the ribbon owns that corner). Below md the header
-   row is just the logo + menu button, so a flat clear works. From md up the
+   fixed back-ribbon (§3 — the ribbon owns that corner). Below lg the header
+   row is just the logo + menu button, so a flat clear works. From lg up the
    row also carries the nav + Start-a-Project CTA, so the reserve is bounded
-   two ways: it tapers UP from zero at the md breakpoint (so it never eats the
-   tightly-packed narrow-desktop row and shoves the nav off), and tapers DOWN
+   two ways: it grows with the width past the narrow-desktop row (so it never
+   eats that tightly-packed row and shoves the nav off), and tapers DOWN
    again once the centred max-w container has itself carried the logo clear of
    the ribbon on wide screens (no pointless mid-canvas drift). The reserve
    always stays smaller than the width gained past 768px, so the nav/CTA are
    never pushed off-canvas. Applied only while the ribbon is shown (sub-pages);
    Home keeps its far-left logo. Padding, not transform — the nav must reflow
    around the reserve — and left static (no layout animation) per the motion
-   budget. Two-class selector so it wins over the base .c4-header-logo-link. */
+   budget. Two-class selector so it wins over the base .c4-header-logo-link.
+   The taper started at md, from before the nav moved to lg (2 Oct 2026),
+   and between 768 and about 1000px it left the logo under the ribbon on a
+   row that only holds the logo and the menu button (found 9 Oct 2026).
+   The 14px keeps the mark 12px clear of the ribbon at 1024, where it used
+   to touch; the row still has about 46px to spare there. */
 .c4-header-logo-link.c4-logo-cleared { padding-left: 120px; }
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .c4-header-logo-link.c4-logo-cleared {
     padding-left: clamp(
       0px,
-      min(calc((100vw - 768px) * 0.3), calc(176px - max(0px, (100vw - 1400px) / 2))),
+      min(calc((100vw - 768px) * 0.3 + 14px), calc(176px - max(0px, (100vw - 1400px) / 2))),
       176px
     );
   }
@@ -536,9 +541,13 @@ export default function NavHeader() {
         </Link>
       )}
 
+      {/* Below lg the bar slides away while you scroll down. Focus coming
+          into it brings it back: Tab round from the footer used to land on
+          the logo and the menu button while they were still off screen. */}
       <motion.header
         animate={{ y: hidden && !mobileOpen ? -80 : 0 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        onFocusCapture={() => setHidden(false)}
         data-c4-chrome="header"
         className="fixed top-0 left-0 right-0 z-50 transition-[background-color,box-shadow] duration-500"
         style={{

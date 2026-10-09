@@ -179,9 +179,12 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Bottom bar */}
+        {/* Bottom bar. Its foot keeps clear of the fixed Support pill
+            (18px from the corner, 44px tall), which used to sit over
+            "Available worldwide" at the end of every page on any window
+            under about 1430px wide. */}
         <div
-          className="py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+          className="pt-5 pb-[76px] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
           style={{ borderTop: `1px solid ${HAIRLINE_FAINT}` }}
         >
           <span className="text-[10.5px] tabular-nums" style={{ color: 'var(--c4-footer-text-muted)' }}>

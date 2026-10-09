@@ -29,6 +29,13 @@
  * column keeps those for screen readers only; in the band the column keeps
  * everything except the verse, which the band reads close.
  *
+ * Windowed (9 Oct 2026): the camera is chosen by the room the window has,
+ * not its width alone (layoutFor, below). Side by side from 1000px wide and
+ * 560px tall, with a narrower column under 1180px; the objects carry words
+ * only while the camera keeps them at reading size (CARRY_MIN), and
+ * otherwise the column keeps every word. The band is for portrait screens
+ * tall enough to read under it. Anything else gets the flat page.
+ *
  * Copy: the facts of the previous page, rewritten to the house voice. Caleb's
  * rulings of 29 Sep 2026 bind: C4 Studios is just Caleb (sole operator), and
  * this page keeps "completing a Juris Doctor (JD) in Law" although every other
@@ -96,9 +103,31 @@ const VERSE = `“${DANIEL_3[24]}”`;
 
 /* ── The bench: where things lie (world px) and where the camera goes ─ */
 
-/* At or above this width the words take a column and the camera works the
-   free space beside it; below it the bench is a band pinned over the words. */
-const WIDE_MIN = 1180;
+/* Which camera the window has room for (9 Oct 2026, after Caleb's report of
+   the band in a windowed browser). Side by side from SIDE_MIN wide: the
+   words take a column and the camera works the free space beside it. Below
+   that, on a screen that's portrait or close to it and tall enough to read
+   under it, the bench is a band pinned over the words; the nav slides away
+   as you scroll down there, so the band gets the top of the screen. Anywhere
+   else (a short window, or a landscape one too narrow for a column and a
+   camera) the band was a letterbox of tiny objects with a strip of words
+   under it, so the page goes flat: every word in the column, each object as
+   a still beside its own section, nothing pinned. */
+const SIDE_MIN = 1000;
+const SIDE_MIN_H = 560;
+const BAND_MIN_H = 620;
+const BAND_MAX_ASPECT = 1.15;
+const layoutFor = (vw, vh) => {
+  if (vw >= SIDE_MIN && vh >= SIDE_MIN_H) return 'wide';
+  if (vw < SIDE_MIN && vh >= BAND_MIN_H && vw <= vh * BAND_MAX_ASPECT) return 'band';
+  return 'flat';
+};
+/* Side by side, the objects carry the notes, each promise, each step and
+   the verse only while the camera's scale (k in measure) keeps them at
+   reading size: at 0.78 the notebook's notes land near 12px, the smallest
+   of the four. Below it (a short window, or a narrow one) the column keeps
+   every word and the bench is the picture beside them. */
+const CARRY_MIN = 0.78;
 
 const PRINT_W = 640;
 const PRINT_H = 454;
@@ -432,6 +461,9 @@ export default function About() {
   });
 
   const staticMode = useStaticMode();
+  /* the window's room decides the camera, and a resize can change it */
+  const [room, setRoom] = useState(() => (typeof window === 'undefined' ? 'flat' : layoutFor(window.innerWidth, window.innerHeight)));
+  const flat = staticMode || room === 'flat';
   const rootRef = useRef(null);
   const stageRef = useRef(null);
   const worldRef = useRef(null);
@@ -452,6 +484,20 @@ export default function About() {
     if (prev >= 0) pile.push(prev);
     deckRef.current = { open, pile };
   }
+
+  useEffect(() => {
+    if (staticMode) return undefined;
+    let raf = 0;
+    const onResize = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => setRoom(layoutFor(window.innerWidth, window.innerHeight)));
+    };
+    window.addEventListener('resize', onResize);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [staticMode]);
 
   /* Smooth scroll, shared with the rest of the site (ServiceWeb pattern). */
   useEffect(() => {
@@ -480,7 +526,7 @@ export default function About() {
       const [x, y, w, h] = el.dataset.b.split(',').map(Number);
       return { el, x, y, w, h, blur: -1, dim: null, op: -1 };
     });
-  }, [open, staticMode]);
+  }, [open, flat]);
 
   /* The camera. Every stop names the pose it holds and the words it holds it
      for; between two stops the camera waits, then travels, pulling back a
@@ -491,7 +537,7 @@ export default function About() {
     const root = rootRef.current;
     const stage = stageRef.current;
     const world = worldRef.current;
-    if (staticMode || !root || !stage || !world) return undefined;
+    if (flat || !root || !stage || !world) return undefined;
     root.classList.add('bt-armed');
 
     let anchors = [];
@@ -505,13 +551,20 @@ export default function About() {
     const measure = () => {
       vh = window.innerHeight;
       const vw = window.innerWidth;
-      layout = vw >= WIDE_MIN ? 'wide' : 'band';
+      /* 'flat' unmounts the camera through the resize state; until then
+         the last camera holds */
+      const fits = layoutFor(vw, vh);
+      if (fits !== 'flat') layout = fits;
+      root.classList.toggle('bt-wide', layout === 'wide');
+      root.classList.toggle('bt-band', layout === 'band');
       let k;
       if (layout === 'wide') {
         const col = root.querySelector('.bt-chapters');
         const cs = getComputedStyle(col);
-        const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-        const colRight = col.getBoundingClientRect().left + parseFloat(cs.paddingLeft) + 34 * rem;
+        /* the column is 34rem from 1180px and narrower below it, so it is
+           measured rather than assumed */
+        const colW = Math.max(...Array.from(root.querySelectorAll('.bt-ch-in'), (el) => el.getBoundingClientRect().width));
+        const colRight = col.getBoundingClientRect().left + parseFloat(cs.paddingLeft) + colW;
         /* the camera frames the clear space past the column's fade */
         const clear = vw - colRight - 120;
         stage.style.setProperty('--col', `${Math.round(colRight)}px`);
@@ -520,7 +573,9 @@ export default function About() {
         frameW = clear;
         colPx = colRight;
         lxPx = colRight + 120 + clear / 2;
+        root.classList.toggle('bt-carry', k >= CARRY_MIN);
       } else {
+        root.classList.remove('bt-carry');
         stage.style.removeProperty('--col');
         stage.style.removeProperty('--lx');
         k = clamp(Math.min(vw / 375, stage.offsetHeight / 373), 0.45, 1.6);
@@ -667,13 +722,19 @@ export default function About() {
     };
     gsap.ticker.add(tick);
 
-    /* Keyboard focus never lands off screen or under the pinned band. */
+    /* Keyboard focus never lands off screen or under the pinned band. Only
+       the column needs it: the band never covers the close or the footer,
+       and the nav and ribbon are fixed. The band's clear line is its
+       height, not its live bottom edge: coming back up from the close, the
+       band is still scrolled away with the track, and its edge sat far above
+       the screen (9 Oct 2026: Tab round from the footer on a phone put the
+       first work link 900px above the screen). */
     const onFocus = (e) => {
       const el = e.target;
       const lenis = window.__c4Lenis;
-      if (!lenis || !(el instanceof HTMLElement) || !el.getBoundingClientRect) return;
+      if (!lenis || !(el instanceof HTMLElement) || !el.closest('.bt-chapters')) return;
       const r = el.getBoundingClientRect();
-      const top = layout === 'band' ? stage.getBoundingClientRect().bottom + 16 : 96;
+      const top = layout === 'band' ? stage.offsetHeight + 16 : 96;
       const bottom = window.innerHeight - 96;
       if (r.top < top || r.bottom > bottom) lenis.scrollTo(el, { immediate: true, offset: -(top + 24) });
     };
@@ -697,11 +758,11 @@ export default function About() {
       ro.disconnect();
       window.removeEventListener('resize', measure);
       if (fine) window.removeEventListener('pointermove', onMove);
-      root.classList.remove('bt-armed');
+      root.classList.remove('bt-armed', 'bt-wide', 'bt-band', 'bt-carry');
       stage.style.removeProperty('--col');
       stage.style.removeProperty('--lx');
     };
-  }, [staticMode]);
+  }, [flat]);
 
   /* The start button leans toward the cursor, as on /ServiceWeb. */
   useEffect(() => {
@@ -730,12 +791,12 @@ export default function About() {
 
   const startUrl = createPageUrl('StartProject');
   const contactUrl = createPageUrl('Contact');
-  const still = (n) => (staticMode ? <Still still={STILLS[n]} open={n === 3 ? 0 : -1} /> : null);
+  const still = (n) => (flat ? <Still still={STILLS[n]} open={n === 3 ? 0 : -1} /> : null);
 
   return (
     <div className="bt-root" ref={rootRef}>
       <div className="bt-track">
-        {!staticMode && (
+        {!flat && (
           <div className="bt-stage" ref={stageRef} aria-hidden="true">
             <div className="bt-lens">
               <div className="bt-world" ref={worldRef}>
@@ -814,7 +875,7 @@ export default function About() {
               <h2 className="bt-h2" id="bt-promise">What you can hold me to</h2>
               <ul className="bt-promises">
                 {PROMISES.map((p, i) => {
-                  const isOpen = staticMode || open === i;
+                  const isOpen = flat || open === i;
                   return (
                     <li key={p.t}>
                       <button type="button" className="bt-promise-btn" aria-expanded={isOpen} aria-controls={`bt-pr-${i}`} onClick={() => toggle(i)}>
