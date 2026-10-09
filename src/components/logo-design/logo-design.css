@@ -1,441 +1,493 @@
-/* ═══ /logo-design: the weed, on the bench ═══
-   The page is the bench: warm paper, ink, the one red where you start, and
-   proof stock under anything checkable (the prices, the ownership answer
-   quoted word for word). The arm's own material is the signwriter's: a green
-   self-healing cutting mat with its centimetre ruling, and an offcut of gloss
-   black sign vinyl on white backing paper. The mat, the vinyl and the paper
-   are materials, so they keep their own colours in both themes; only the
-   shadows under them turn black in the dark. */
+/* ═══ /logo-design: the eye test, then the bench ═══
+   The opening is an exam room: a dim charcoal room and a dark chart, with
+   our logo's own colours as the only colour in it. It's dark in both themes
+   because the logo's C is nearly white and needs the dark. After the test
+   the page is the bench: paper, ink, proof stock under anything checkable,
+   and the one red where you start. The plates that carry the logo stay dark
+   in both themes, like every material on the site. */
 
-.lg-page {
-  --lg-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --lg-contact: 0 1px 1.5px rgba(26, 26, 26, 0.22), 0 4px 8px -3px rgba(26, 26, 26, 0.14);
-  --lg-room: 0 34px 70px -28px rgba(26, 26, 26, 0.42);
-  /* the materials */
-  --lg-mat: #2b6a4e;            /* self-healing mat green: #f4f3f1 holds 5.8:1 on it */
-  --lg-mat-ink: rgba(240, 250, 244, 0.92); /* words on the mat: 5.2:1 */
-  --lg-liner: #f6f5ef;          /* the backing paper */
-  --lg-vinyl: #151515;
-  --lg-handle: #f2b705;         /* the weeding hook's handle, and the stand-in's colour version */
+.ld-page {
+  --ld-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ld-nav: 60px;
+  /* the exam room */
+  --ld-room: #111215;
+  --ld-panel: #17191d;
+  --ld-edge: rgba(236, 231, 222, 0.09);
+  --ld-ink: #ece7de;      /* 15.2:1 on the room */
+  --ld-prose: #d6d1c7;    /* 12.1:1 */
+  --ld-muted: #a3a7b0;    /* 7.7:1 */
+  --ld-fig: #9da2ac;      /* 6.8:1 on the chart */
+  /* the bench's two shadows */
+  --ld-contact: 0 1px 1.5px rgba(26, 26, 26, 0.22), 0 4px 8px -3px rgba(26, 26, 26, 0.14);
+  --ld-lift: 0 34px 70px -28px rgba(26, 26, 26, 0.42);
   background: var(--c4-bg);
   color: var(--c4-text);
   font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
 }
-:root.dark-mode .lg-page {
-  --lg-contact: 0 1px 1.5px rgba(0, 0, 0, 0.55), 0 4px 8px -3px rgba(0, 0, 0, 0.45);
-  --lg-room: 0 34px 70px -28px rgba(0, 0, 0, 0.8);
+@media (min-width: 768px) { .ld-page { --ld-nav: 72px; } }
+:root.dark-mode .ld-page {
+  --ld-contact: 0 1px 1.5px rgba(0, 0, 0, 0.55), 0 4px 8px -3px rgba(0, 0, 0, 0.45);
+  --ld-lift: 0 34px 70px -28px rgba(0, 0, 0, 0.8);
 }
 @media (prefers-color-scheme: dark) {
-  :root:not(.light-mode):not(.dark-mode) .lg-page {
-    --lg-contact: 0 1px 1.5px rgba(0, 0, 0, 0.55), 0 4px 8px -3px rgba(0, 0, 0, 0.45);
-    --lg-room: 0 34px 70px -28px rgba(0, 0, 0, 0.8);
+  :root:not(.light-mode):not(.dark-mode) .ld-page {
+    --ld-contact: 0 1px 1.5px rgba(0, 0, 0, 0.55), 0 4px 8px -3px rgba(0, 0, 0, 0.45);
+    --ld-lift: 0 34px 70px -28px rgba(0, 0, 0, 0.8);
   }
 }
 
-.lg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.ld-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 
 /* the bench's container: 1400px, gutters of 1.5rem and 3rem from 768px */
-.lg-frame { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
-@media (min-width: 768px) { .lg-frame { padding: 0 3rem; } }
+.ld-frame { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
+@media (min-width: 768px) { .ld-frame { padding: 0 3rem; } }
 
-/* ── type ── the h1 and h2 take the stand-in wordmark's setting, Archivo
-   wide and heavy, the way a signwriter letters a van */
-.lg-h1 {
-  margin: 0; max-width: 11ch;
-  font-weight: 800; font-stretch: 110%;
-  font-size: clamp(2.6rem, 1.4rem + 3.8vw, 4.5rem); line-height: 0.96; letter-spacing: -0.03em;
-  text-wrap: balance;
+/* ── type ──
+   Headings take the proportions of the word Studios in our lockup: upright,
+   heavy and narrow. Archivo's width axis does it, so there's no second
+   family. Figures are B612, always tabular. */
+.ld-h1, .ld-h2, .ld-close-h {
+  margin: 0;
+  font-weight: 780; font-stretch: 72%;
+  letter-spacing: -0.012em; text-wrap: balance;
 }
-.lg-h2 {
-  margin: 0 0 1.1rem;
-  font-weight: 760; font-stretch: 106%;
-  font-size: clamp(2rem, 1.25rem + 2.4vw, 3.1rem); line-height: 1.02; letter-spacing: -0.026em;
-  text-wrap: balance;
-}
-.lg-lede {
-  margin: 1.4rem 0 0; max-width: 34rem;
-  font-size: clamp(1.06rem, 1rem + 0.25vw, 1.2rem); line-height: 1.6; color: var(--prose, var(--c4-text));
-  text-wrap: pretty;
-}
-.lg-say { margin: 0; max-width: 36rem; font-size: 1.125rem; line-height: 1.6; color: var(--prose, var(--c4-text)); text-wrap: pretty; }
-.lg-fine-print { margin: 1.3rem 0 0; font-size: 13px; line-height: 1.5; color: var(--c4-text-muted); }
-.lg-more { margin: 1.5rem 0 0; font-size: 15px; line-height: 1.6; color: var(--c4-text-muted); }
-.lg-more a, .lg-proof-src a, .lg-addon a {
+.ld-h1 { max-width: 11ch; font-size: clamp(3.2rem, 1.9rem + 4.4vw, 6rem); line-height: 0.9; }
+.ld-h2 { font-size: clamp(2.3rem, 1.5rem + 2.6vw, 3.9rem); line-height: 0.95; }
+.ld-h3 { margin: 0 0 0.55rem; font-size: 1.22rem; font-weight: 720; letter-spacing: -0.012em; line-height: 1.25; }
+.ld-say { margin: 0; max-width: 36rem; font-size: 1.125rem; line-height: 1.62; color: var(--prose, var(--c4-text)); text-wrap: pretty; }
+.ld-say-stack { display: grid; gap: 1rem; }
+.ld-fine-print { margin: 1.3rem 0 0; font-size: 13px; line-height: 1.5; color: var(--c4-text-muted); }
+.ld-more { margin: 1.5rem 0 0; font-size: 15px; line-height: 1.6; color: var(--c4-text-muted); }
+.ld-more a, .ld-proof-src a, .ld-addon a {
   color: var(--c4-text); text-decoration: underline; text-decoration-color: var(--c4-border);
   text-underline-offset: 3px; transition: text-decoration-color 0.2s ease;
 }
-.lg-more a:hover, .lg-proof-src a:hover, .lg-addon a:hover { text-decoration-color: currentColor; }
+.ld-more a:hover, .ld-proof-src a:hover, .ld-addon a:hover { text-decoration-color: currentColor; }
+.ld-page [data-fig] { font-family: 'B612 Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
 
 /* ── buttons ── */
-.lg-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-top: 2rem; }
-.lg-btn-start, .lg-btn-ghost {
+.ld-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-top: 2rem; }
+.ld-btn-start, .ld-btn-ghost {
   display: inline-flex; align-items: center; justify-content: center; min-height: 56px; border-radius: 999px;
   font-size: 12.5px; font-weight: 650; line-height: 1; letter-spacing: 0.14em; text-transform: uppercase;
   text-decoration: none; white-space: nowrap;
 }
-.lg-btn-start {
+.ld-btn-start {
   padding: 0 2.2rem; background: var(--c4-accent); color: #ffffff;
-  transition: background-color 0.2s ease, transform 0.35s var(--lg-ease), box-shadow 0.35s var(--lg-ease);
+  transition: background-color 0.2s ease, transform 0.35s var(--ld-ease), box-shadow 0.35s var(--ld-ease);
 }
-.lg-btn-start:hover { background: var(--c4-accent-hover, var(--c4-accent)); transform: translateY(-2px); box-shadow: 0 18px 38px -16px rgba(194, 48, 48, 0.55); }
-.lg-btn-ghost {
-  padding: 0 1.7rem; border: 1px solid var(--c4-text); color: var(--c4-text); background: transparent;
-  transition: background-color 0.2s ease, color 0.2s ease;
+.ld-btn-start:hover { background: var(--c4-accent-hover, var(--c4-accent)); transform: translateY(-2px); box-shadow: 0 18px 38px -16px rgba(194, 48, 48, 0.55); }
+.ld-btn-ghost {
+  padding: 0 1.7rem; border: 1px solid currentColor; color: inherit; background: transparent;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
-.lg-btn-ghost:hover { background: var(--c4-text); color: var(--c4-bg); }
 
-/* ── the opening ─────────────────────────────────────────────────────── */
+/* ══ The exam room ═══════════════════════════════════════════════════ */
 
-.lg-hero { padding: clamp(7rem, 15vh, 9.5rem) 0 clamp(3.5rem, 7vw, 6rem); }
-.lg-hero-grid { display: grid; gap: 2.4rem; }
-@media (min-width: 1024px) {
-  .lg-hero-grid {
-    grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
-    column-gap: clamp(2.25rem, 4.6vw, 4.75rem); align-items: center;
+.ld-exam, .ld-one {
+  --c4-focus: var(--ld-ink);
+  --c4-sel: rgba(236, 231, 222, 0.22);
+  --c4-sel-ink: #ffffff;
+  background: var(--ld-room); color: var(--ld-ink);
+}
+.ld-exam .ld-btn-ghost:hover { background: var(--ld-ink); border-color: var(--ld-ink); color: var(--ld-room); }
+.ld-exam .ld-lede { color: var(--ld-prose); }
+
+.ld-copy { padding: calc(var(--ld-nav) + clamp(2.5rem, 7vh, 5rem)) 0 clamp(2.5rem, 6vh, 4rem); }
+.ld-lede {
+  margin: 1.5rem 0 0; max-width: 31rem;
+  font-size: clamp(1.06rem, 1rem + 0.25vw, 1.2rem); line-height: 1.6; text-wrap: pretty;
+}
+
+.ld-stage { position: relative; min-width: 0; }
+/* the chart is drawn in this box, so a viewBox unit is a CSS pixel */
+.ld-stage-in { position: relative; width: 100%; height: 100%; }
+.ld-chart { display: block; width: 100%; height: 100%; overflow: hidden; }
+.ld-chart-panel { stroke: var(--ld-edge); stroke-width: 1; }
+.ld-fig { font: 400 12px 'B612 Mono', ui-monospace, monospace; fill: var(--ld-fig); font-variant-numeric: tabular-nums; transition: opacity 0.3s ease; }
+.ld-chart.is-moving .ld-fig { opacity: 0; }
+.ld-tab { fill: #ffffff; }
+.ld-tab-title { font: 500 12px 'Archivo', 'Helvetica Neue', Arial, sans-serif; fill: #3c4043; }
+.ld-tab-x { stroke: #5f6368; stroke-width: 1.3; stroke-linecap: round; fill: none; }
+/* one line lit at a time: a band of light behind it, the rest dimmed the
+   way an examiner masks them */
+.ld-row { transition: opacity 0.45s var(--ld-ease); }
+.ld-row.is-dim { opacity: 0.22; }
+.ld-window { transition: transform 0.5s var(--ld-ease); }
+
+.ld-steps { padding-bottom: clamp(3rem, 8vh, 6rem); }
+.ld-step-h {
+  margin: 0 0 0.7rem;
+  font-weight: 760; font-stretch: 78%; letter-spacing: -0.01em; line-height: 1.02;
+  font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.3rem);
+}
+.ld-step-say { margin: 0; max-width: 30rem; font-size: 1.125rem; line-height: 1.62; color: var(--ld-prose); text-wrap: pretty; }
+.ld-step { transition: opacity 0.45s var(--ld-ease); }
+/* a caption that isn't being read steps back, but still holds 4.8:1 */
+.ld-step.is-quiet { opacity: 0.6; }
+
+/* On a phone the nav slides away as you scroll down, and the back ribbon
+   used to stay behind over the words. On this page it goes with the nav.
+   (The nav's own code isn't touched; this reads the state it sets.) */
+@media (max-width: 1023.98px) {
+  html:has(.ld-page) .c4-back-ribbon { transition: transform 0.35s var(--ld-ease, ease); }
+  html:has(.ld-page):has(header[data-c4-chrome="header"][style*="-80px"]) .c4-back-ribbon { transform: translateY(-110%); }
+}
+
+/* wide: the chart pinned full height beside the words */
+.ld-exam.is-wide .ld-exam-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+  grid-template-areas: "copy stage" "steps stage";
+  column-gap: clamp(2rem, 4vw, 4.5rem);
+}
+.ld-exam.is-wide .ld-copy {
+  grid-area: copy; min-height: 100vh; min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding-top: calc(var(--ld-nav) + 1.5rem); padding-bottom: 2rem;
+}
+.ld-exam.is-wide .ld-stage {
+  grid-area: stage; align-self: start;
+  position: sticky; top: var(--ld-nav);
+  height: calc(100vh - var(--ld-nav)); height: calc(100svh - var(--ld-nav));
+  padding: clamp(1rem, 2.6vh, 1.75rem) 0;
+}
+/* The reading line is 70% down the screen (Exam.jsx). Each caption is
+   shorter than the distance from there to the nav, so the next one lights
+   before this one's heading goes under the nav. */
+.ld-exam.is-wide .ld-steps { grid-area: steps; padding-top: 15vh; padding-top: 15svh; }
+.ld-exam.is-wide .ld-step { min-height: 54vh; min-height: 54svh; padding-top: 0.25rem; }
+.ld-exam.is-wide .ld-step:last-child { min-height: 62vh; min-height: 62svh; }
+
+/* band: the chart pinned under the nav, the words scrolling beneath it. The
+   reading line is 80% of the way down the space under the band, and a
+   caption takes 72% of that space, for the same reason as above. */
+.ld-exam.is-band { --ld-band: clamp(250px, 50vh, 440px); --ld-below: calc(100vh - var(--ld-nav) - var(--ld-band)); }
+@supports (height: 1svh) {
+  .ld-exam.is-band { --ld-band: clamp(250px, 50svh, 440px); --ld-below: calc(100svh - var(--ld-nav) - var(--ld-band)); }
+}
+.ld-exam.is-band .ld-copy { padding-bottom: calc(var(--ld-nav) + 1rem); }
+.ld-exam.is-band .ld-stage {
+  position: sticky; top: var(--ld-nav); z-index: 2;
+  height: var(--ld-band);
+  margin: 0 -1.5rem; padding: 0.6rem 1.5rem; background: var(--ld-room);
+}
+/* the nav slides away on a phone while you scroll down; the band keeps the
+   strip above it covered so captions don't show through */
+.ld-exam.is-band .ld-stage::before {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 100%; height: var(--ld-nav);
+  background: var(--ld-room);
+}
+/* the last caption ends where the band lets go, so it's still in sight
+   below the band when the chart scrolls away */
+.ld-exam.is-band .ld-steps { padding-top: calc(var(--ld-below) * 0.55); padding-bottom: calc(var(--ld-below) * 0.12); }
+.ld-exam.is-band .ld-step { min-height: calc(var(--ld-below) * 0.72); }
+.ld-exam.is-band .ld-step:last-child { min-height: calc(var(--ld-below) * 0.82); }
+@media (min-width: 768px) {
+  .ld-exam.is-band .ld-stage { margin: 0 -3rem; padding: 0.75rem 3rem; }
+}
+
+/* flat: nothing pins or moves; the chart sits with the words, every line lit */
+.ld-exam.is-flat .ld-copy { padding-bottom: 2rem; }
+.ld-exam.is-flat .ld-steps { display: grid; gap: 2rem 3rem; padding-top: 2.5rem; }
+.ld-exam.is-flat .ld-step-h { font-size: clamp(1.4rem, 1.15rem + 0.8vw, 1.9rem); }
+@media (min-width: 900px) {
+  .ld-exam.is-flat .ld-exam-grid {
+    display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-areas: "copy stage" "steps steps"; column-gap: clamp(2rem, 4vw, 4.5rem); align-items: center;
   }
+  .ld-exam.is-flat .ld-copy { grid-area: copy; }
+  .ld-exam.is-flat .ld-stage { grid-area: stage; margin-top: calc(var(--ld-nav) + 1.5rem); }
+  .ld-exam.is-flat .ld-steps { grid-area: steps; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-.lg-stage-col { margin: 0; min-width: 0; }
-.lg-stage-cap { margin: 1rem 0 0; max-width: 40rem; font-size: 15px; line-height: 1.55; color: var(--c4-text-muted); text-wrap: pretty; }
 
-/* the mat: one object on the bench, with the bench's two shadows, and a
-   fine matte grain that the browser rasterises once */
-.lg-stage {
-  position: relative; aspect-ratio: 1000 / 760; border-radius: 3px; overflow: hidden;
-  background-color: var(--lg-mat);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.22 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-blend-mode: soft-light;
-  box-shadow: var(--lg-contact), var(--lg-room);
-  -webkit-user-select: none; user-select: none;
-}
-.lg-sheet-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; }
+/* ── one or two? ─────────────────────────────────────────────────────── */
 
-.lg-grid { stroke: rgba(226, 244, 233, 0.12); stroke-width: 1px; vector-effect: non-scaling-stroke; }
-.lg-grid-major { stroke: rgba(226, 244, 233, 0.27); stroke-width: 1px; vector-effect: non-scaling-stroke; }
-.lg-angle { fill: none; stroke: rgba(226, 244, 233, 0.16); stroke-width: 1px; stroke-dasharray: 7 6; vector-effect: non-scaling-stroke; }
-.lg-rule { font: 400 13px 'B612 Mono', ui-monospace, monospace; fill: rgba(236, 248, 240, 0.58); }
-.lg-score { fill: none; stroke: rgba(236, 248, 240, 0.09); stroke-width: 1px; vector-effect: non-scaling-stroke; }
-
-/* the cut shows as a fine light line in the gloss */
-.lg-cut { fill: none; stroke: rgba(255, 255, 255, 0.42); stroke-width: 0.8px; vector-effect: non-scaling-stroke; }
-.lg-fold { fill: none; stroke: rgba(0, 0, 0, 0.5); stroke-width: 2.5px; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-.lg-fold-light { fill: none; stroke: rgba(255, 255, 255, 0.3); stroke-width: 2px; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-
-/* the hook rides above everything; lifted off the mat, its shadow drops
-   away and softens (Sheet.jsx moves it, and the pieces on its point) */
-.lg-sheet-svg--hook { pointer-events: none; }
-.is-carried .lg-cut { display: none; }
-.lg-hook-shadow { transition: transform 0.3s var(--lg-ease), opacity 0.3s ease; }
-.lg-hook.is-lifted .lg-hook-shadow { transform: translate(-12px, 20px); opacity: 0.55; }
-
-/* the corner you can pull: a hand-sized target over the lifted corner */
-.lg-corner {
-  position: absolute; z-index: 2; width: 64px; height: 64px; translate: -50% -50%;
-  border-radius: 50%; cursor: grab; touch-action: none;
+.ld-one { padding: clamp(4rem, 10vh, 7rem) 0 clamp(4.5rem, 11vh, 8rem); border-top: 1px solid var(--ld-edge); }
+.ld-one .ld-say { color: var(--ld-prose); }
+.ld-one-grid { display: grid; gap: 2.2rem clamp(2.5rem, 6vw, 6rem); }
+@media (min-width: 900px) {
+  .ld-one-grid {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    grid-template-areas: "text test" "answer test";
+    grid-template-rows: auto 1fr;
+  }
+  .ld-one-text { grid-area: text; }
+  .ld-one-test { grid-area: test; }
+  .ld-one-answer { grid-area: answer; align-self: end; }
 }
-.lg-stage.is-peel .lg-corner { cursor: grabbing; }
-.lg-stage.is-cut .lg-corner::after {
-  /* a quiet ring round the lifted corner, so the pull is findable */
-  content: ''; position: absolute; inset: 22px; border-radius: 50%;
-  border: 1.5px solid rgba(244, 243, 241, 0.75);
-  animation: lg-ring 1.8s var(--lg-ease) infinite;
+.ld-one-text .ld-say { margin-top: 1.1rem; }
+.ld-one-choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(0.9rem, 2.4vw, 1.75rem); }
+.ld-choice {
+  display: grid; gap: 0.85rem; justify-items: start; align-content: start;
+  margin: 0; padding: clamp(0.85rem, 2vw, 1.25rem); text-align: left;
+  border-radius: 4px; border: 1px solid var(--ld-edge); background: var(--ld-panel); color: var(--ld-ink);
+  font: inherit; cursor: pointer;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
 }
-@keyframes lg-ring { 0% { transform: scale(0.6); opacity: 0.9; } 100% { transform: scale(1.6); opacity: 0; } }
-
-.lg-mat-note {
-  position: absolute; left: 3.4%; bottom: 3.2%; margin: 0; z-index: 1;
-  font: 400 11px/1.3 'B612 Mono', ui-monospace, monospace; letter-spacing: 0.02em;
-  color: var(--lg-mat-ink); pointer-events: none;
-}
-.lg-again {
-  position: absolute; right: 2.6%; top: 3.4%; z-index: 3;
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0 1.05rem;
-  border-radius: 999px; border: 1px solid rgba(240, 250, 244, 0.42);
-  background: rgba(8, 26, 18, 0.34); color: #f4f3f1;
-  font: 600 13.5px/1 'Archivo', sans-serif; letter-spacing: 0.01em; cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
-}
-.lg-again:hover { background: rgba(8, 26, 18, 0.55); border-color: rgba(240, 250, 244, 0.7); }
-/* while the sheet is being weeded the button stays focusable but waits */
-.lg-again[aria-disabled='true'] { opacity: 0.5; cursor: default; }
-.lg-again[aria-disabled='true']:hover { background: rgba(8, 26, 18, 0.34); border-color: rgba(240, 250, 244, 0.42); }
-.lg-again:focus-visible, .lg-corner:focus-visible { outline: 2px solid #f4f3f1; outline-offset: 3px; }
-
-/* ── the family ──────────────────────────────────────────────────────── */
-
-.lg-sec { padding: clamp(4rem, 9vw, 7.5rem) 0; }
-.lg-split-head {
-  display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: 0.5rem clamp(2rem, 5vw, 4rem); align-items: end; margin-bottom: clamp(1.8rem, 3.5vw, 2.6rem);
-}
-.lg-split-head .lg-h2 { margin: 0; }
-
-/* the three sizes laid out on a length of the same mat as the opening: its
-   ruler along the top edge, the centimetre ruling with every fifth line
-   heavier (24px to the centimetre, about the opening's own scale), the
-   angle guides from the bottom left corner, and the same grain. The ruling
-   sits a little fainter than the opening's because words sit on it here. */
-.lg-sizes {
-  list-style: none; margin: 0;
-  display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.2fr) minmax(0, 0.95fr);
-  gap: clamp(1.2rem, 2.6vw, 2.4rem); align-items: end;
-  padding: clamp(2.4rem, 4vw, 3.2rem) clamp(1.2rem, 3vw, 2.4rem) clamp(1.4rem, 3vw, 2.2rem);
-  border-radius: 3px; background-color: var(--lg-mat);
-  background-image:
-    repeating-linear-gradient(90deg, rgba(236, 248, 240, 0.55) 0 1px, transparent 1px 120px),
-    repeating-linear-gradient(90deg, rgba(236, 248, 240, 0.32) 0 1px, transparent 1px 24px),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='700'%3E%3Cpath d='M0 700 L404 0 M0 700 L700 0 M0 700 L1212 0' fill='none' stroke='rgba(226,244,233,0.16)' stroke-width='1' stroke-dasharray='7 6'/%3E%3C/svg%3E"),
-    repeating-linear-gradient(90deg, rgba(226, 244, 233, 0.22) 0 1px, transparent 1px 120px),
-    repeating-linear-gradient(0deg, rgba(226, 244, 233, 0.22) 0 1px, transparent 1px 120px),
-    repeating-linear-gradient(90deg, rgba(226, 244, 233, 0.1) 0 1px, transparent 1px 24px),
-    repeating-linear-gradient(0deg, rgba(226, 244, 233, 0.1) 0 1px, transparent 1px 24px),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.22 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 100% 14px, 100% 8px, auto, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 220px 220px;
-  background-position: 18px 0, 18px 0, 0 100%, 18px 0, 0 100%, 18px 0, 0 100%, 0 0;
-  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
-  background-blend-mode: normal, normal, normal, normal, normal, normal, normal, soft-light;
-  box-shadow: var(--lg-contact), var(--lg-room);
-}
-.lg-size { display: flex; flex-direction: column; gap: 0.9rem; min-width: 0; }
-.lg-cut-piece {
-  display: grid; place-items: center; padding: 9% 7%;
-  background: var(--lg-liner); border-radius: 2px;
-  box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.32), 0 12px 24px -14px rgba(0, 0, 0, 0.55);
-}
-.lg-size--full .lg-cut-piece { transform: rotate(-0.8deg); }
-.lg-size--short .lg-cut-piece { transform: rotate(0.6deg); padding: 12% 9%; }
-.lg-size-mark { display: block; width: 100%; height: auto; }
-/* words over the ruling carry a halo of bare mat, so a grid line never runs
-   right up against a letter: over a heavy line the caption would drop to
-   3.5:1, and on the bare mat it holds 5.4:1 */
-.lg-size-say, .lg-mat-note { text-shadow: 0 0 2px var(--lg-mat), 0 0 5px var(--lg-mat), 0 0 9px var(--lg-mat); }
-.lg-size-say { margin: 0; font-size: 14.5px; line-height: 1.45; color: var(--lg-mat-ink); }
-.lg-size-say b { display: block; color: #ffffff; font-weight: 680; }
-
-/* the browser tab: the symbol at its true 16 pixels, then every pixel shown */
-.lg-tabview {
-  display: grid; gap: 0.9rem; justify-items: start; padding: 0.85rem;
-  background: var(--lg-liner); border-radius: 2px; transform: rotate(-0.5deg);
-  box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.32), 0 12px 24px -14px rgba(0, 0, 0, 0.55);
-}
-.lg-tab {
-  display: inline-flex; align-items: center; gap: 8px; max-width: 100%; height: 34px; padding: 0 10px 0 12px;
-  border-radius: 4px 4px 0 0; background: #ffffff; box-shadow: 0 0 0 1px #dcdad4;
-  font: 500 13px/1 'Archivo', sans-serif; color: #1a1a1a;
-}
-.lg-tab-icon { flex: none; display: block; width: 16px; height: 16px; image-rendering: pixelated; }
-.lg-tab-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lg-tab-x { position: relative; flex: none; width: 10px; height: 10px; margin-left: 6px; opacity: 0.55; }
-.lg-tab-x::before, .lg-tab-x::after { content: ''; position: absolute; left: -1px; right: -1px; top: 50%; height: 1.3px; background: #1a1a1a; transform: rotate(45deg); }
-.lg-tab-x::after { transform: rotate(-45deg); }
-.lg-pixels {
-  position: relative; display: block; width: min(100%, 132px); aspect-ratio: 1;
-  background: #ffffff; box-shadow: 0 0 0 1px #dcdad4;
-}
-.lg-pixels img { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
-/* a hairline between the pixels, so they read as pixels */
-.lg-pixels::after {
+.ld-choice:hover { border-color: rgba(236, 231, 222, 0.3); }
+.ld-choice[aria-pressed='true'] { border-color: var(--ld-ink); background: #1d2025; }
+.ld-choice-n { font: 700 clamp(1.5rem, 1.2rem + 1vw, 2.1rem)/1 'B612 Mono', ui-monospace, monospace; color: var(--ld-ink); }
+/* the 16 x 16 bitmap, every pixel kept square, with a hairline between them */
+.ld-px { position: relative; display: block; width: 100%; aspect-ratio: 1; background: #ffffff; }
+.ld-px-canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; }
+.ld-px::after {
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background-image:
-    linear-gradient(90deg, rgba(220, 218, 212, 0.9) 1px, transparent 1px),
-    linear-gradient(rgba(220, 218, 212, 0.9) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(60, 64, 67, 0.12) 1px, transparent 1px),
+    linear-gradient(rgba(60, 64, 67, 0.12) 1px, transparent 1px);
   background-size: 6.25% 6.25%;
 }
+.ld-choice-name { font-size: 14.5px; line-height: 1.3; color: var(--ld-prose); }
+/* the picked square, on its way down into the tabs */
+.ld-px-ghost { position: fixed; z-index: 45; margin: 0; pointer-events: none; transform-origin: 0 0; image-rendering: pixelated; }
 
-/* the same mark, three ways */
-.lg-ways { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(0.8rem, 2vw, 1.4rem); margin-top: clamp(1.6rem, 3vw, 2.2rem); }
-.lg-way { margin: 0; }
-.lg-way-plate {
-  display: grid; place-items: center; aspect-ratio: 16 / 6; padding: 0 9%;
-  background: #ffffff; border-radius: 3px; box-shadow: var(--lg-contact);
+/* both icons at real size in two tab bars, in Chrome's own light and dark
+   colours; the pick is the open tab */
+.ld-tabs { display: grid; gap: 0.6rem; margin: 1.25rem 0 0; }
+.ld-tabbar {
+  display: flex; align-items: flex-end; gap: 2px; min-width: 0;
+  padding: 7px 10px 0; border-radius: 6px 6px 0 0;
+  font: 500 13px/1 'Archivo', 'Helvetica Neue', Arial, sans-serif;
 }
-.lg-way-plate svg { display: block; width: 100%; height: auto; }
-.lg-way-plate--dark { background: #1d2024; }
-/* reversed out and stitched: white thread on a navy knit work shirt. The
-   knit is rows of small Vs under the same grain as the mat; the thread is
-   satin laid across each column of each letter (sections.jsx, Stitched,
-   from satin-data.js), raised off the cloth by #lg-thread. */
-.lg-way-plate--stitch {
-  background-color: #1e2b45;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='8'%3E%3Cpath d='M0 0 L3 3.6 L6 0 M0 4 L3 7.6 L6 4' fill='none' stroke='rgba(255,255,255,0.075)' stroke-width='1.1'/%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.22 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 6px 8px, 220px 220px;
-  background-blend-mode: normal, soft-light;
+.ld-tabbar--light { background: #dee1e6; color: #3c4043; }
+.ld-tabbar--dark { background: #202124; color: #e8eaed; }
+.ld-tabchip {
+  display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 16px 0 12px;
+  border-radius: 8px 8px 0 0; transition: background-color 0.4s var(--ld-ease);
 }
-.lg-way-plate--stitch svg { overflow: visible; }
-/* on the dark bench the dark plate needs its edge, as proof stock does */
-:root.dark-mode .lg-way-plate--dark { box-shadow: 0 0 0 1px rgba(236, 231, 222, 0.14), var(--lg-contact); }
+.ld-tabbar--light .ld-tabchip.is-open { background: #ffffff; }
+.ld-tabbar--dark .ld-tabchip.is-open { background: #35363a; }
+.ld-icon16 { flex: none; display: block; width: 16px; height: 16px; }
+.ld-tabbar-name { margin: 0 2px 11px auto; padding-left: 0.75rem; font-size: 12px; font-weight: 500; white-space: nowrap; }
+.ld-tabbar--light .ld-tabbar-name { color: #5f6368; }   /* 4.7:1 on the bar */
+.ld-tabbar--dark .ld-tabbar-name { color: #9aa0a6; }    /* 6.1:1 */
+.ld-tabs-cap { margin: 0.2rem 0 0; font-size: 14px; line-height: 1.45; color: var(--ld-muted); }
+.ld-choice-note { min-height: 1.6em; margin: 0.85rem 0 0; font-size: 15.5px; line-height: 1.55; color: var(--ld-ink); text-wrap: pretty; }
+.ld-one-answer { margin-top: 0.4rem; }
+
+/* ══ The bench ═══════════════════════════════════════════════════════ */
+
+.ld-sec { padding: clamp(4.5rem, 10vw, 8rem) 0; }
+.ld-pair { display: grid; gap: 2rem clamp(2rem, 5vw, 4.5rem); margin-top: clamp(2.4rem, 4.5vw, 3.2rem); }
+@media (min-width: 768px) { .ld-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ld-pair .ld-say { font-size: 1.0625rem; }
+
+/* the plates that carry the logo are dark in both themes; on the dark bench
+   they take an edge, as proof stock does */
+.ld-plate, .ld-spec--dark {
+  box-shadow: var(--ld-contact), var(--ld-lift);
+}
+:root.dark-mode .ld-plate, :root.dark-mode .ld-spec--dark { box-shadow: 0 0 0 1px rgba(236, 231, 222, 0.12), var(--ld-contact), var(--ld-lift); }
 @media (prefers-color-scheme: dark) {
-  :root:not(.light-mode):not(.dark-mode) .lg-way-plate--dark { box-shadow: 0 0 0 1px rgba(236, 231, 222, 0.14), var(--lg-contact); }
+  :root:not(.light-mode):not(.dark-mode) .ld-plate,
+  :root:not(.light-mode):not(.dark-mode) .ld-spec--dark { box-shadow: 0 0 0 1px rgba(236, 231, 222, 0.12), var(--ld-contact), var(--ld-lift); }
 }
-.lg-way figcaption { margin-top: 0.6rem; font-size: 14px; line-height: 1.45; color: var(--c4-text-muted); }
 
-/* ── the redraw ──────────────────────────────────────────────────────── */
+/* ── three shapes: the title over the plate, the notes under it ── */
+.ld-shapes-h { max-width: 16ch; margin-bottom: clamp(1.6rem, 3.4vw, 2.6rem); }
+.ld-notes {
+  display: grid; gap: 2rem clamp(1.75rem, 3.6vw, 3.25rem);
+  margin-top: clamp(2.2rem, 4vw, 3rem);
+}
+@media (min-width: 640px) { .ld-notes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .ld-notes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.ld-note { padding-top: 1rem; border-top: 1px solid var(--c4-border); }
+.ld-note .ld-say { font-size: 1.0625rem; }
+.ld-plate { margin: 0; border-radius: 3px; background: var(--ld-panel); overflow: hidden; }
+.ld-plate-svg { display: block; width: 100%; height: auto; }
+.ld-plate-svg--stacked { display: none; max-width: 520px; margin: 0 auto; }
+/* the stacked plate draws at about 0.4 of its units on a phone, so its words
+   are set larger to come out at 13 to 14px */
+.ld-plate-svg--stacked .ld-plate-fig { font-size: 32px; }
+.ld-plate-svg--stacked .ld-plate-name { font-size: 32px; }
+@media (max-width: 899.98px) {
+  .ld-plate-svg--wide { display: none; }
+  .ld-plate-svg--stacked { display: block; }
+}
+.ld-guide line { stroke: rgba(236, 231, 222, 0.16); stroke-width: 1; vector-effect: non-scaling-stroke; stroke-dasharray: 4 5; }
+.ld-slant { stroke: rgba(236, 231, 222, 0.42); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.ld-clear { fill: none; stroke: rgba(236, 231, 222, 0.34); stroke-width: 1; vector-effect: non-scaling-stroke; stroke-dasharray: 6 5; }
+.ld-clear-x { fill: rgba(36, 139, 47, 0.32); stroke: rgba(236, 231, 222, 0.5); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.ld-plate-fig { font: 400 22px 'B612 Mono', ui-monospace, monospace; fill: #b4b8c0; }
+.ld-plate-name { font: 600 26px 'Archivo', 'Helvetica Neue', Arial, sans-serif; fill: #c9ccd2; letter-spacing: 0.01em; }
+/* a gap, measured: a line across it with a dot at each end, and a leader
+   out to its figure */
+.ld-measure-line { stroke: #ece7de; stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+.ld-measure circle { fill: #ece7de; }
+.ld-measure-lead { stroke: rgba(236, 231, 222, 0.45); stroke-width: 1; vector-effect: non-scaling-stroke; }
 
-.lg-redraw { background: var(--c4-bg-alt); }
-.lg-redraw-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 2.4rem clamp(2.5rem, 6vw, 6rem); align-items: center; }
-.lg-rebuild {
-  margin-top: 1.6rem; padding: 1.3rem clamp(1.1rem, 2.6vw, 1.6rem) 1.4rem;
-  background: var(--c4-proof-surface); border: 1px solid var(--c4-proof-border); border-radius: 2px;
-  color: var(--c4-proof-text); box-shadow: var(--lg-contact);
+/* ── red and green: the duochrome, edge to edge ── */
+.ld-colours { padding-bottom: clamp(4.5rem, 10vw, 8rem); }
+.ld-duo { margin: 0; }
+.ld-duo-halves { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* both marks sit dead centre in their halves, as the two targets of the test
+   do; the heading and the colours are pinned to the corners round them */
+.ld-duo-half {
+  --duo-pad: clamp(1.25rem, 3vw, 3rem);
+  --duo-edge: clamp(1.4rem, 3vw, 2.4rem);
+  position: relative; display: grid; place-items: center;
+  min-height: clamp(22rem, 62vh, 36rem); padding: clamp(5.5rem, 9vw, 7.5rem) var(--duo-pad);
+  color: #ffffff;
+  --c4-focus: #ffffff;
 }
-.lg-rebuild-price {
-  margin: 0 0 0.7rem; font: 700 clamp(1.75rem, 1.35rem + 1.2vw, 2.35rem)/1 'B612 Mono', ui-monospace, monospace;
-  letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
+.ld-duo-half--red { background: #a30000; }
+.ld-duo-half--green { background: #22632f; }
+.ld-duo-h { position: absolute; top: var(--duo-edge); left: var(--duo-pad); color: #ffffff; }
+.ld-duo-mark { display: block; width: min(62%, 21rem); height: auto; }
+.ld-duo-spec {
+  position: absolute; left: var(--duo-pad); right: var(--duo-pad); bottom: var(--duo-edge);
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 1rem; margin: 0;
+  font-size: 15px; line-height: 1.35;
 }
-.lg-rebuild .lg-row-go { margin-top: 1rem; }
+.ld-duo-name { font-size: clamp(1.5rem, 1.15rem + 1.1vw, 2.2rem); font-weight: 780; font-stretch: 72%; line-height: 1; }
+.ld-duo-alt { display: inline-flex; align-items: center; gap: 0.55rem; font-size: 14px; }
+.ld-duo-chip { flex: none; width: 22px; height: 22px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.55); }
+.ld-duo-grey { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); height: 34px; }
+.ld-duo-cap { padding-top: 1rem; font-size: 14.5px; line-height: 1.5; color: var(--c4-text-muted); }
+.ld-duo-cap-text { display: block; max-width: 46rem; }
+.ld-colours-body { padding-top: clamp(2.5rem, 5vw, 4rem); }
+.ld-colours-say { display: grid; gap: 1rem 3rem; margin-bottom: clamp(1.6rem, 3vw, 2.2rem); }
+@media (min-width: 900px) { .ld-colours-say { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
-.lg-ba { margin: 0; min-width: 0; }
-.lg-ba-frame {
-  position: relative; overflow: hidden; aspect-ratio: 16 / 6.5; border-radius: 3px;
-  background: #ffffff; box-shadow: var(--lg-contact), var(--lg-room);
+.ld-strip { display: grid; margin-top: clamp(1.4rem, 3vw, 2rem); border-radius: 3px; overflow: hidden; }
+.ld-strip--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ld-strip--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ld-spec { margin: 0; display: grid; grid-template-rows: auto 1fr; }
+.ld-spec svg { display: block; width: 100%; height: auto; }
+.ld-spec + .ld-spec { border-left: 1px solid rgba(236, 231, 222, 0.08); }
+.ld-spec figcaption { padding: 0 1rem 1rem; font-size: 14px; line-height: 1.4; }
+.ld-spec--dark figcaption { color: #c9ccd2; }
+.ld-spec--light { box-shadow: inset 0 0 0 1px var(--c4-border); }
+.ld-spec--light figcaption { color: #4a4945; }
+.ld-spec--red figcaption { color: #ffffff; }
+@media (max-width: 899.98px) {
+  .ld-strip--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-.lg-ba-after, .lg-ba-before { position: absolute; inset: 0; display: grid; align-items: center; padding: 0 3%; background: #ffffff; }
-.lg-ba-after svg, .lg-ba-before img { display: block; width: 100%; height: auto; }
-.lg-ba-before { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
-.lg-ba-tag {
-  position: absolute; bottom: 12px; z-index: 2; padding: 5px 8px 4px; border-radius: 2px;
-  font: 400 11px/1 'B612 Mono', ui-monospace, monospace; letter-spacing: 0.04em;
-  background: #1a1a1a; color: #ffffff; pointer-events: none;
+@media (max-width: 539.98px) {
+  .ld-strip--3 { grid-template-columns: minmax(0, 1fr); }
+  .ld-strip--3 .ld-spec { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr); grid-template-rows: none; align-items: center; }
+  .ld-strip--3 .ld-spec figcaption { padding: 0 1rem 0 0; }
+  .ld-spec + .ld-spec { border-left: 0; border-top: 1px solid rgba(236, 231, 222, 0.08); }
 }
-.lg-ba-tag--before { left: 12px; }
-.lg-ba-tag--after { right: 12px; }
-.lg-ba-range {
-  position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; margin: 0;
-  opacity: 0; cursor: ew-resize; touch-action: pan-y;
-}
-.lg-ba-seam {
-  position: absolute; top: 0; bottom: 0; left: var(--pos); z-index: 2; width: 2px; translate: -1px 0;
-  background: #1a1a1a; pointer-events: none;
-}
-.lg-ba-grip {
-  position: absolute; top: 50%; left: 50%; translate: -50% -50%;
-  width: 44px; height: 44px; border-radius: 50%; background: #1a1a1a;
-  box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.3), 0 10px 24px -8px rgba(0, 0, 0, 0.4);
-}
-.lg-ba-grip::before, .lg-ba-grip::after {
-  content: ''; position: absolute; top: 50%; width: 7px; height: 7px;
-  border: solid #ffffff; border-width: 0 0 1.5px 1.5px;
-}
-.lg-ba-grip::before { left: 12px; transform: translateY(-50%) rotate(45deg); }
-.lg-ba-grip::after { right: 12px; transform: translateY(-50%) rotate(-135deg); }
-.lg-ba-range:focus-visible + .lg-ba-seam .lg-ba-grip { outline: 2px solid var(--c4-text); outline-offset: 3px; }
-.lg-ba-cap { margin-top: 0.85rem; max-width: 38rem; font-size: 14px; line-height: 1.5; color: var(--c4-text-muted); }
 
-/* ── what it costs: the price list on proof stock ────────────────────── */
-
-.lg-ledger {
+/* ── what it costs: the price list on proof stock ── */
+.ld-prices-head { display: grid; gap: 1rem; max-width: 46rem; margin-bottom: clamp(1.8rem, 3.4vw, 2.6rem); }
+.ld-ledger {
   border-radius: 3px; background: var(--c4-proof-surface); border: 1px solid var(--c4-proof-border);
-  color: var(--c4-proof-text); box-shadow: var(--lg-contact), var(--lg-room);
+  color: var(--c4-proof-text); box-shadow: var(--ld-contact), var(--ld-lift);
 }
-.lg-ledger-group + .lg-ledger-group { border-top: 1px solid var(--c4-proof-border); }
-.lg-ledger-h {
+.ld-ledger-group + .ld-ledger-group { border-top: 1px solid var(--c4-proof-border); }
+.ld-ledger-h {
   margin: 0; padding: 1.5rem clamp(1.2rem, 3vw, 2.2rem) 0.2rem;
   font-size: 1.05rem; font-weight: 720; letter-spacing: -0.01em; color: var(--c4-proof-text);
 }
-.lg-row {
+.ld-row {
   display: grid; grid-template-columns: minmax(10.5rem, 0.62fr) minmax(0, 1.5fr) 15rem;
   gap: 0.9rem clamp(1.5rem, 3vw, 2.6rem); align-items: start;
   padding: 1.35rem clamp(1.2rem, 3vw, 2.2rem) 1.5rem;
   scroll-margin-top: 110px;
 }
-.lg-row + .lg-row { border-top: 1px solid var(--c4-proof-border); }
-.lg-row:target { background: color-mix(in srgb, var(--c4-proof-border) 32%, transparent); }
-.lg-row-name { margin: 0; font-size: 1.3rem; font-weight: 720; line-height: 1.15; letter-spacing: -0.015em; }
-.lg-row-price {
+.ld-row + .ld-row { border-top: 1px solid var(--c4-proof-border); }
+.ld-row:target { background: color-mix(in srgb, var(--c4-proof-border) 32%, transparent); }
+.ld-row-name { margin: 0; font-size: 1.3rem; font-weight: 720; line-height: 1.15; letter-spacing: -0.015em; }
+.ld-row-price {
   margin: 0.4rem 0 0; font: 700 clamp(1.75rem, 1.35rem + 1.2vw, 2.35rem)/1 'B612 Mono', ui-monospace, monospace;
   letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
 }
-.lg-comma { margin: 0 -0.2em 0 -0.16em; }
-.lg-row-desc { margin: 0.15rem 0 0.7rem; font-size: 15.5px; line-height: 1.5; }
-.lg-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14.5rem), 1fr)); gap: 0.3rem 1.5rem; }
-.lg-list li { position: relative; padding-left: 1rem; font-size: 15px; line-height: 1.45; }
-.lg-list li::before { content: ''; position: absolute; left: 0; top: 0.66em; width: 6px; height: 1.5px; background: currentColor; opacity: 0.55; }
-.lg-row-go {
+/* B612 Mono 700 gives every glyph a 0.65em cell. A digit's ink leaves about
+   0.13em between neighbours, but the comma's ink sits at the left of its
+   cell (0.05 to 0.25em), so it trails a 0.45em hole. Measured on the font
+   file, 9 Oct 2026: these margins leave 0.06em before the comma and 0.1em
+   after it. */
+.ld-comma { margin: 0 -0.35em 0 -0.07em; }
+.ld-row-desc { margin: 0.15rem 0 0.7rem; font-size: 15.5px; line-height: 1.5; }
+.ld-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14.5rem), 1fr)); gap: 0.3rem 1.5rem; }
+.ld-list li { position: relative; padding-left: 1rem; font-size: 15px; line-height: 1.45; }
+.ld-list li::before { content: ''; position: absolute; left: 0; top: 0.66em; width: 6px; height: 1.5px; background: currentColor; opacity: 0.55; }
+.ld-row-go {
   align-self: center; justify-self: end; display: inline-flex; align-items: center; min-height: 44px; padding: 0 1.1rem;
   gap: 0.45em; border-radius: 999px; border: 1px solid var(--c4-proof-border); color: var(--c4-proof-text);
   font-size: 15px; font-weight: 640; text-decoration: none; white-space: nowrap;
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
-.lg-row-go:hover { border-color: currentColor; }
-.lg-addon { margin: 0; padding: 0.4rem clamp(1.2rem, 3vw, 2.2rem) 1.5rem; font-size: 15.5px; line-height: 1.55; }
-.lg-addon a { color: var(--c4-proof-text); text-decoration-color: var(--c4-proof-border); }
-.lg-addon-fig { font: 700 1.05em 'B612 Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.ld-row-go:hover { border-color: currentColor; }
+.ld-addon { margin: 0; padding: 0.4rem clamp(1.2rem, 3vw, 2.2rem) 1.5rem; font-size: 15.5px; line-height: 1.55; }
+.ld-addon a { color: var(--c4-proof-text); text-decoration-color: var(--c4-proof-border); }
+.ld-addon-fig { font-weight: 700; font-size: 1.05em; letter-spacing: -0.02em; }
 
-/* ── how it runs, and who owns it ────────────────────────────────────── */
-
-.lg-process { border-top: 1px solid var(--c4-border-light); }
-.lg-process-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 2.5rem clamp(2.5rem, 6vw, 6rem); align-items: start; }
-.lg-steps { list-style: none; margin: 0.4rem 0 0; padding: 0; border-bottom: 1px solid var(--c4-border); }
-.lg-step { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); gap: 0 1rem; padding: 1.15rem 0; border-top: 1px solid var(--c4-border); }
-.lg-step-n { font: 700 1.05rem/1.35 'B612 Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; color: var(--c4-text); }
-.lg-step-h { margin: 0 0 0.3rem; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
-.lg-step-say { margin: 0; max-width: 34rem; font-size: 1.0625rem; line-height: 1.6; color: var(--prose, var(--c4-text)); }
+/* ── how it runs, and who owns it ── */
+.ld-process { border-top: 1px solid var(--c4-border-light); }
+.ld-process-grid { display: grid; gap: 2.5rem clamp(2.5rem, 6vw, 6rem); align-items: start; }
+@media (min-width: 900px) { .ld-process-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); } }
+.ld-steps-list { list-style: none; margin: 1.6rem 0 0; padding: 0; border-bottom: 1px solid var(--c4-border); }
+.ld-runstep { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); gap: 0 1rem; padding: 1.15rem 0; border-top: 1px solid var(--c4-border); }
+.ld-runstep-n { font: 700 1.05rem/1.35 'B612 Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; color: var(--c4-text); }
+.ld-runstep-h { margin: 0 0 0.3rem; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
+.ld-runstep-say { margin: 0; max-width: 34rem; font-size: 1.0625rem; line-height: 1.6; color: var(--prose, var(--c4-text)); }
 
 /* a verbatim answer, on proof sheet under the short red rule */
-.lg-proof {
+.ld-proof {
   position: relative; margin: 0;
   padding: clamp(1.6rem, 3.4vw, 2.4rem) clamp(1.4rem, 3vw, 2.2rem);
   background: var(--c4-proof-surface); border: 1px solid var(--c4-proof-border); border-radius: 2px;
-  color: var(--c4-proof-text); box-shadow: var(--lg-contact), var(--lg-room);
+  color: var(--c4-proof-text); box-shadow: var(--ld-contact), var(--ld-lift);
 }
-.lg-proof-rule { display: block; width: 2rem; height: 2px; margin-bottom: 1.1rem; background: var(--c4-proof-accent); }
-.lg-proof-q { margin: 0; font-size: 1.05rem; font-weight: 700; line-height: 1.35; }
-.lg-proof-a { margin: 0; }
-.lg-proof-a p { margin: 0.7rem 0 0; font-size: clamp(1.1rem, 1rem + 0.4vw, 1.3rem); line-height: 1.55; text-wrap: pretty; }
-.lg-proof-src { margin-top: 1.1rem; font: 400 13px/1.55 'B612 Mono', ui-monospace, monospace; color: var(--c4-proof-muted); }
-.lg-proof-src a { color: var(--c4-proof-text); text-decoration-color: var(--c4-proof-border); }
+.ld-proof-rule { display: block; width: 2rem; height: 2px; margin-bottom: 1.1rem; background: var(--c4-proof-accent); }
+.ld-proof-q { margin: 0; font-size: 1.05rem; font-weight: 700; line-height: 1.35; }
+.ld-proof-a { margin: 0; }
+.ld-proof-a p { margin: 0.7rem 0 0; font-size: clamp(1.1rem, 1rem + 0.4vw, 1.3rem); line-height: 1.55; text-wrap: pretty; }
+.ld-proof-src { margin-top: 1.1rem; font-size: 14px; line-height: 1.55; color: var(--c4-proof-muted); }
+.ld-proof-src a { color: var(--c4-proof-text); text-decoration-color: var(--c4-proof-border); }
 
-/* ── the close: the page's one red field ─────────────────────────────── */
-
-.lg-close { padding: clamp(4rem, 9vw, 7rem) 0; background: var(--c4-accent); color: #ffffff; }
-.lg-close-h { margin: 0; max-width: 16ch; font-weight: 800; font-stretch: 110%; font-size: clamp(2.2rem, 1.3rem + 3.2vw, 4rem); line-height: 0.98; letter-spacing: -0.028em; }
-.lg-close-say { margin: 1.1rem 0 0; max-width: 46ch; font-size: 1.12rem; line-height: 1.6; color: #ffffff; }
-.lg-start {
+/* ── the close: the page's one red field ── */
+.ld-close { padding: clamp(4rem, 9vw, 7rem) 0; background: var(--c4-accent); color: #ffffff; }
+.ld-close-h { max-width: 14ch; font-size: clamp(2.6rem, 1.6rem + 3.4vw, 4.6rem); line-height: 0.92; }
+.ld-close-say { margin: 1.1rem 0 0; max-width: 46ch; font-size: 1.12rem; line-height: 1.6; color: #ffffff; }
+.ld-start {
   display: inline-flex; align-items: center; min-height: 56px; margin-top: 1.9rem; padding: 0 2.2rem;
   border-radius: 999px; background: #ffffff; color: #1a1a1a;
   font-size: 12.5px; font-weight: 650; line-height: 1; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
-.lg-start:hover { background: #1a1a1a; color: #ffffff; }
-.lg-start:focus-visible { outline: 2px solid #ffffff; outline-offset: 3px; }
-.lg-fine { margin: 1.4rem 0 0; font-size: 13px; line-height: 1.5; color: rgba(255, 255, 255, 0.88); }
+.ld-start:hover { background: #1a1a1a; color: #ffffff; }
+.ld-start:focus-visible { outline: 2px solid #ffffff; outline-offset: 3px; }
+.ld-fine { margin: 1.4rem 0 0; font-size: 13px; line-height: 1.5; color: rgba(255, 255, 255, 0.88); }
 
-/* ── narrower ────────────────────────────────────────────────────────── */
-
-@media (max-width: 899px) {
-  .lg-split-head, .lg-redraw-grid, .lg-process-grid { grid-template-columns: minmax(0, 1fr); }
-  .lg-sizes { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .lg-size--full { grid-column: 1 / -1; }
-  .lg-row { grid-template-columns: minmax(0, 1fr); gap: 0.7rem; }
-  .lg-row-go { justify-self: start; }
+/* ── narrower ── */
+@media (max-width: 899.98px) {
+  .ld-row { grid-template-columns: minmax(0, 1fr); gap: 0.7rem; }
+  .ld-row-go { justify-self: start; }
 }
-@media (max-width: 639px) {
-  .lg-hero { padding-top: 5.6rem; }
-  .lg-h1 { font-size: clamp(2.3rem, 1.5rem + 3.4vw, 2.7rem); }
-  .lg-lede { margin-top: 1rem; font-size: 1.05rem; line-height: 1.55; }
-  .lg-actions { flex-wrap: nowrap; gap: 0.9rem; margin-top: 1.3rem; }
-  .lg-btn-start { min-height: 52px; padding: 0 1.35rem; letter-spacing: 0.12em; }
-  .lg-btn-ghost { min-height: 44px; padding: 0 0.2rem; border-color: transparent; letter-spacing: 0.12em; text-decoration: underline; text-decoration-color: var(--c4-border); text-underline-offset: 5px; }
-  .lg-btn-ghost:hover { background: transparent; color: var(--c4-text); text-decoration-color: currentColor; }
-  .lg-sizes { grid-template-columns: minmax(0, 1fr); }
-  .lg-ways { grid-template-columns: minmax(0, 1fr); }
-  .lg-way-plate { aspect-ratio: 16 / 5; }
-  .lg-again { font-size: 12.5px; padding: 0 0.85rem; }
-  .lg-mat-note { font-size: 10px; }
-  /* short enough that the tags sit under the mark, not across it */
-  .lg-ba-frame { aspect-ratio: 16 / 9; }
+@media (max-width: 639.98px) {
+  .ld-copy { padding-top: calc(var(--ld-nav) + 2rem); }
+  .ld-lede { margin-top: 1rem; font-size: 1.04rem; line-height: 1.55; }
+  .ld-actions { flex-wrap: nowrap; gap: 0.9rem; margin-top: 1.3rem; }
+  .ld-btn-start { min-height: 52px; padding: 0 1.35rem; letter-spacing: 0.12em; }
+  .ld-btn-ghost { min-height: 44px; padding: 0 0.2rem; border-color: transparent; letter-spacing: 0.12em; text-decoration: underline; text-decoration-color: rgba(236, 231, 222, 0.4); text-underline-offset: 5px; }
+  .ld-exam .ld-btn-ghost:hover { background: transparent; color: var(--ld-ink); text-decoration-color: currentColor; border-color: transparent; }
+  /* the duochrome stacks: red over green */
+  .ld-duo-halves { grid-template-columns: minmax(0, 1fr); }
+  .ld-duo-half { min-height: 21rem; padding-top: 5rem; padding-bottom: 5.5rem; }
+  .ld-duo-mark { width: min(56%, 14rem); }
 }
-/* the start button's label is longer than the SEO page's, so on the
-   narrowest phones the prices link drops to its own line */
 @media (max-width: 420px) {
-  .lg-actions { flex-wrap: wrap; }
+  .ld-actions { flex-wrap: wrap; }
+  .ld-tabchip { padding: 0 10px 0 9px; gap: 6px; }
+  .ld-tabbar { padding: 6px 6px 0; }
+}
+
+/* short windows: the hero's words keep to the space under the nav */
+@media (max-height: 700px) and (min-width: 1024px) {
+  .ld-h1 { font-size: clamp(3rem, 1.4rem + 3.6vw, 4.6rem); }
+  .ld-lede { margin-top: 1.1rem; font-size: 1.04rem; line-height: 1.55; }
+  .ld-actions { margin-top: 1.4rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lg-btn-start, .lg-btn-ghost, .lg-row-go, .lg-again, .lg-start { transition-property: color, background-color, border-color, opacity, box-shadow; }
-  .lg-btn-start:hover { transform: none; }
-  .lg-hook-shadow { transition: none; }
-  /* the ring still marks the corner to pull, it just doesn't pulse */
-  .lg-stage.is-cut .lg-corner::after { animation: none; }
+  .ld-btn-start, .ld-btn-ghost, .ld-row-go, .ld-start, .ld-choice { transition-property: color, background-color, border-color, opacity, box-shadow; }
+  .ld-btn-start:hover { transform: none; }
+  .ld-row, .ld-step, .ld-window, .ld-fig { transition: none; }
+  .ld-tabchip { transition-duration: 0.12s; }
+  html:has(.ld-page) .c4-back-ribbon { transition: none; }
 }
