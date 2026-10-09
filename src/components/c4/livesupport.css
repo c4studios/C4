@@ -26,7 +26,13 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  box-shadow: 0 14px 30px -18px rgba(0, 0, 0, 0.45);
+  /* The 2px rim is the bench's own colour. On the bench it melts into the
+     paper and the pill reads as it always did; over a ground the same colour
+     as the pill (the #1A1A1A footer in light, the dark rooms on Lens and Logo
+     Design) it's the edge that keeps the pill visible. It had none there
+     (1:1 against the footer, found 9 Oct 2026). In dark the pill is light, so
+     its fill carries it and the rim melts into the dark ground instead. */
+  box-shadow: 0 0 0 2px var(--c4-bg), 0 14px 30px -18px rgba(0, 0, 0, 0.45);
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), padding 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease, color 0.2s ease;
 }
 /* Round by default, so it sits in the side gutter instead of over the text. The word
