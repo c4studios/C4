@@ -27,7 +27,7 @@ import { ArrowRight } from 'lucide-react';
 import { trackEvent } from '@/lib/track';
 import SeoDoorFace from '@/components/seo-copy/DoorFace';
 import LogoDoorFace from '@/components/logo-design/DoorFace';
-import { seoPackages, brandingPackages } from '@/data/pricing';
+import { seoPackages, brandingPackages, logoTimeline } from '@/data/pricing';
 import { gsap, EASE, revealHeading, useStaticMode } from './homeMotion';
 
 // The SEO door quotes the published card, so it follows pricing.js.
@@ -39,13 +39,6 @@ const SEO_MONTHLY_FROM = Math.min(...seoPackages.filter((p) => /\/mo$/.test(p.pr
    revisions)"). A rebuild redraws a logo you already have, so it offers no
    concepts and doesn't count. */
 const LOGO_FROM = Math.min(...brandingPackages.filter((p) => typeof p.price === 'number').map((p) => p.price));
-const LOGO_CONCEPTS = brandingPackages
-  .flatMap((p) => (p.features || []).map((f) => /(\d+)\s+(?:initial\s+)?concepts?\b/i.exec(f)))
-  .filter(Boolean)
-  .map((m) => Number(m[1]));
-const LOGO_RANGE = LOGO_CONCEPTS.length
-  ? `${Math.min(...LOGO_CONCEPTS)} to ${Math.max(...LOGO_CONCEPTS)} concepts`
-  : 'Fixed scope';
 
 import weaveGocc from './assets/weave-gocc.webp';
 import weaveJk from './assets/weave-jk.webp';
@@ -168,7 +161,7 @@ const DOORS = [
     outcome:
       'A logo that holds up from the sign out front to a 16-pixel browser tab, in colour and in one. Every file is yours once it’s paid.',
     fromPrice: `From $${LOGO_FROM}`,
-    timeframe: LOGO_RANGE,
+    timeframe: logoTimeline,
     primary: { label: 'See logo design', to: '/logo-design' },
     secondary: { label: 'or start a logo brief', to: '/start?service=logo_design' },
   },

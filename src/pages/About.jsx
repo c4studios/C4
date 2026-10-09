@@ -58,7 +58,7 @@ const GLANCE = [
 ];
 
 const YEARS = [
-  { y: '2022', t: 'C4 Studios begins', d: 'Founded in Perth as a one-person studio with one rule: the person you brief is the person who builds.' },
+  { y: 'Dec 2025', t: 'C4 Studios begins', d: 'Founded in Perth as a one-person studio with one rule: the person you brief is the person who builds.' },
   /* Private AI went to C4Site with C4i on 9 Oct 2026, and logo design
      became the fourth service the same day. */
   { y: 'Today', t: 'Four services, still one person', d: 'Websites and apps, photography and video, SEO and copywriting, and logo design.' },
@@ -426,7 +426,7 @@ export default function About() {
   useDocumentHead({
     title: 'About — Caleb Scott, founder of C4 Studios, Perth',
     description:
-      'C4 Studios is Caleb Scott, founder and sole operator, building websites and software in Perth since 2022. The person you brief is the person who builds.',
+      'C4 Studios is Caleb Scott, founder and sole operator, building websites and software in Perth since December 2025. The person you brief is the person who builds.',
     path: '/About',
     jsonLd,
   });
@@ -752,7 +752,7 @@ export default function About() {
             <div className="bt-ch-in">
               <h1 className="bt-h1">The person you brief is the person who builds.</h1>
               <p className="bt-lede">
-                C4 Studios is Caleb Scott, founder and sole operator, in Perth since 2022. I do every part of the work myself.
+                C4 Studios is Caleb Scott, founder and sole operator, in Perth since December 2025. I do every part of the work myself.
               </p>
             </div>
             {still(0)}

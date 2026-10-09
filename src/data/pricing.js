@@ -273,7 +273,7 @@ export const webDesignAddOns = [
   { name: '3-page pack', price: 250 },
   { name: '5-page pack', price: 400 },
   { name: 'Copywriting package', price: 500 },
-  { name: 'Branding add-on', price: 400 },
+  { name: 'Branding add-on', price: 400, detail: 'A logo designed alongside your new website: 2 initial concepts, 2 revision rounds, a colour palette and font pairing used across the site, and the favicon and social profile image. Final files: SVG + PNG.' },
   { name: 'Photography + videography add-on', price: 750 },
   { name: 'Online booking / appointments', price: 400 },
   { name: 'Client portal / login area', price: 1000 },
@@ -311,6 +311,9 @@ export const webDesignAddOns = [
 ];
 
 /* ── Branding Packages ── */
+/* How long a logo job takes, brief to hand-over (Caleb, 9 Oct 2026). */
+export const logoTimeline = '1 to 2 weeks';
+
 export const brandingPackages = [
   {
     key: 'brand-core',

@@ -182,7 +182,7 @@ export default function HeroSection() {
             <span>Perth, Australia</span>
             <span className="hidden sm:inline">Founder-led studio</span>
             <span className="sm:hidden" aria-hidden="true" />
-            <span>Est. 2022</span>
+            <span>Est. Dec 2025</span>
           </div>
         </motion.div>
       </div>
