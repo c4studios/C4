@@ -300,25 +300,33 @@ export default function TestimonialReel({ testimonials = [] }) {
                 </button>
               </div>
 
-              <div className="flex items-center gap-2">
+              {/* Each button is a 24px-tall target, at least 24px wide, round a
+                  3px bar that looks as it did. The bars were the buttons, so
+                  the target was 3px tall (found 9 Oct 2026). */}
+              <div className="flex items-center">
                 {testimonials.map((t, index) => (
                   <button
                     key={t.id}
                     onClick={() => goTo(index, index > current ? 1 : -1)}
-                    aria-label={`Go to testimonial ${index + 1}`}
-                    aria-current={index === current}
-                    className="relative h-[3px] overflow-hidden rounded-full transition-all duration-500"
-                    style={{
-                      width: index === current ? 30 : 10,
-                      backgroundColor: index === current ? 'var(--c4-proof-border)' : 'color-mix(in srgb, var(--c4-proof-border) 55%, transparent)',
-                    }}
+                    aria-label={`Go to testimonial ${index + 1} of ${total}`}
+                    aria-current={index === current ? 'true' : undefined}
+                    className="flex h-6 items-center rounded-full px-[7px]"
                   >
-                    {index === current && !reduced && (
-                      <span
-                        className="absolute inset-y-0 left-0 rounded-full"
-                        style={{ width: `${progress * 100}%`, backgroundColor: 'var(--c4-proof-accent)' }}
-                      />
-                    )}
+                    <span
+                      aria-hidden="true"
+                      className="relative block h-[3px] overflow-hidden rounded-full transition-all duration-500"
+                      style={{
+                        width: index === current ? 30 : 10,
+                        backgroundColor: index === current ? 'var(--c4-proof-border)' : 'color-mix(in srgb, var(--c4-proof-border) 55%, transparent)',
+                      }}
+                    >
+                      {index === current && !reduced && (
+                        <span
+                          className="absolute inset-y-0 left-0 rounded-full"
+                          style={{ width: `${progress * 100}%`, backgroundColor: 'var(--c4-proof-accent)' }}
+                        />
+                      )}
+                    </span>
                   </button>
                 ))}
               </div>

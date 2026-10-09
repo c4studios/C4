@@ -71,15 +71,13 @@ export default function CaseStudyTOC({ sections }) {
     // mounted: measure again once the rail exists to be measured
   }, [sections, mounted]);
 
-  const handleItemClick = useCallback(
-    index => {
-      const el = document.getElementById(sections[index]?.id);
-      if (!el) return;
-      setActiveIndex(index); // optimistic; scroll-spy keeps it honest afterwards
-      el.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
-    },
-    [sections, prefersReduced]
-  );
+  // Each entry is a real #section link (10 Oct 2026; it was a clickable <li>
+  // a keyboard couldn't reach). The browser makes the jump, honouring the
+  // sections' scroll-margin and reduced motion (styles/marks.css), and moves
+  // keyboard focus there; this only lights the entry straight away.
+  const handleItemClick = useCallback(index => {
+    setActiveIndex(index); // optimistic; scroll-spy keeps it honest afterwards
+  }, []);
 
   // A TOC for one or two sections is just noise. Client-only (needs document).
   // The prerenderer is a real browser, so it mounted this too, and the portal
@@ -98,6 +96,8 @@ export default function CaseStudyTOC({ sections }) {
     >
       <LineSidebar
         items={sections.map(s => s.label)}
+        hrefs={sections.map(s => `#${s.id}`)}
+        ariaLabel="On this page"
         activeIndex={activeIndex}
         onItemClick={handleItemClick}
         accentColor="var(--c4-accent)"

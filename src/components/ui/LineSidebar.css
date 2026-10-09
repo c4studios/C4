@@ -33,14 +33,40 @@
    step, with no CSS transitions to stagger. */
 .line-sidebar__item {
   position: relative;
+}
+
+/* The control inside each item (a link with hrefs, a button without) carries
+   the click and the keyboard. It sits exactly over the item, so the marker and
+   ticks, positioned from the item's edge, land where they always did. */
+.line-sidebar__link {
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
   cursor: pointer;
 }
 
 /* Widen the pointer target so items react a touch before the cursor arrives */
-.line-sidebar__item::before {
+.line-sidebar__link::before {
   content: '';
   position: absolute;
   inset: -6px -48px;
+}
+
+.line-sidebar__link:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 5px;
+  border-radius: 2px;
+}
+
+.line-sidebar__link:focus-visible .line-sidebar__label {
+  color: var(--accent-color);
 }
 
 .line-sidebar__label {

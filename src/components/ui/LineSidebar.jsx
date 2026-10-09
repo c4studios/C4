@@ -45,6 +45,12 @@ const LineSidebar = ({
   // external scroll-spy can drive the highlight; otherwise the component stays
   // self-managed via clicks, exactly like the upstream React Bits component.
   activeIndex: controlledActive = undefined,
+  // C4 addition (10 Oct 2026): optional hrefs, one per item. With them each
+  // item is a real link (Tab, Enter, the browser's own jump, aria-current
+  // "location"); without them it's a button. The upstream component made
+  // the <li> itself clickable, which a keyboard can't reach.
+  hrefs,
+  ariaLabel,
   onItemClick,
   className = ''
 }) => {
@@ -145,6 +151,7 @@ const LineSidebar = ({
 
   return (
     <nav
+      aria-label={ariaLabel}
       className={`line-sidebar${showMarker ? ' line-sidebar--markers' : ''}${scaleTick ? ' line-sidebar--scale-tick' : ''}${className ? ` ${className}` : ''}`}
       style={{
         '--accent-color': accentColor,
@@ -160,23 +167,33 @@ const LineSidebar = ({
       }}
     >
       <ul ref={listRef} className="line-sidebar__list" onPointerMove={handlePointerMove} onPointerLeave={handlePointerLeave}>
-        {items.map((label, index) => (
-          <li
-            key={`${label}-${index}`}
-            ref={el => {
-              itemRefs.current[index] = el;
-            }}
-            className="line-sidebar__item"
-            aria-current={activeIndex === index ? 'true' : undefined}
-            onClick={() => handleClick(index, label)}
-          >
-            {showMarker && <span className="line-sidebar__marker" aria-hidden="true" />}
-            <span className="line-sidebar__label">
-              {showIndex && <span className="line-sidebar__index">{String(index + 1).padStart(2, '0')}</span>}
-              <span className="line-sidebar__text">{label}</span>
-            </span>
-          </li>
-        ))}
+        {items.map((label, index) => {
+          const href = hrefs?.[index];
+          const Control = href ? 'a' : 'button';
+          const current = activeIndex === index;
+          return (
+            <li
+              key={`${label}-${index}`}
+              ref={el => {
+                itemRefs.current[index] = el;
+              }}
+              className="line-sidebar__item"
+            >
+              <Control
+                className="line-sidebar__link"
+                {...(href ? { href } : { type: 'button' })}
+                aria-current={current ? (href ? 'location' : 'true') : undefined}
+                onClick={() => handleClick(index, label)}
+              >
+                {showMarker && <span className="line-sidebar__marker" aria-hidden="true" />}
+                <span className="line-sidebar__label">
+                  {showIndex && <span className="line-sidebar__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>}
+                  <span className="line-sidebar__text">{label}</span>
+                </span>
+              </Control>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );
