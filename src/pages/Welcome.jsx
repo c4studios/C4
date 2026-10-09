@@ -445,13 +445,7 @@ export default function Welcome() {
         <section className="sec">
           <div className="inner">
             <div className="kick">the basics</div>
-            <h2>Running this since 2022</h2>
-            <div className="stats">
-              <div className="stat"><b data-n="2022">2022</b><span>founded</span></div>
-              <div className="stat"><b data-n="50" data-s="+">50+</b><span>Perth businesses</span></div>
-              <div className="stat"><b data-n="200" data-s="+">200+</b><span>assets shipped</span></div>
-              <div className="stat"><b data-n="6">6</b><span>own products</span></div>
-            </div>
+            <h2>Yours to keep</h2>
             <p className="body">{`You own everything I build — code, accounts, domains, all of it. If you ever move on, you take the lot with you.`}</p>
           </div>
         </section>

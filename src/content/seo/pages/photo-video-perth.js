@@ -18,6 +18,8 @@
  *     footage of the building and a walk through the gym, and that's all
  *     it says now.
  *   - DS Racing's header film was "shot". It was made, as a motion graphic.
+ *   - The $650 package was renamed from "Business Branding" to "Brand Shoot"
+ *     (pricing.js) so it can't be read as logo work. Same price and contents.
  */
 export default {
   hero: {
@@ -59,7 +61,7 @@ export default {
       rows: [
         ['Core', '$200', 'A 30-minute shoot at one location and 5 edited images, delivered by online gallery.'],
         ['Portrait Session', '$350', 'A one-hour shoot and 15 edited images — personal brand, professional profiles, team additions.'],
-        ['Business Branding', '$650', 'Two hours across up to two locations: headshots plus workspace and lifestyle shots, 30 edited images.'],
+        ['Brand Shoot', '$650', 'Two hours across up to two locations: headshots plus workspace and lifestyle shots, 30 edited images.'],
         ['Content Creation', '$1,200', 'A half-day photo and video shoot: 40 edited photos plus two short-form videos cut for social.'],
         ['Full Production', '$2,500+', 'A full day: 60-plus edited photos, four short-form videos and one long-form film with grading, sound design and motion graphics.'],
       ],
@@ -119,7 +121,7 @@ export default {
     },
     {
       q: 'How many photos do we actually get?',
-      a: 'Exact counts, in writing: 5 at Core, 15 at Portrait, 30 at Business Branding, 40 plus two videos at Content Creation, and 60-plus with five videos at Full Production. Extra selects can always be added from the gallery afterwards.',
+      a: 'Exact counts, in writing: 5 at Core, 15 at Portrait, 30 at Brand Shoot, 40 plus two videos at Content Creation, and 60-plus with five videos at Full Production. Extra selects can always be added from the gallery afterwards.',
     },
     {
       q: 'Do you shoot video for social media?',
