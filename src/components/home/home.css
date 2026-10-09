@@ -794,7 +794,9 @@
 }
 .hm-choice:hover { background: var(--c4-bg-alt); }
 
-/* Miniature door materials — a callback you feel. */
+/* Miniature door faces, a callback you feel. Redrawn with the faces on
+   9 Oct 2026, so the closing list no longer shows the old mat and board.
+   The inside is 24 by 34 (border-box). */
 .hm-chip {
   position: relative;
   flex: none;
@@ -804,50 +806,46 @@
   overflow: hidden;
   border: 1px solid var(--c4-border);
 }
-.hm-chip--web { background: linear-gradient(160deg, #22262e 20%, #14161c 80%); }
-.hm-chip--web::after {
-  content: '';
-  position: absolute;
-  inset: 6px 5px;
-  border-radius: 1px;
+/* C1: Aqua-Safe, Brady and Tidy Gardens stacked under the ink band, each
+   with its headline (band colours sampled from the face's own strips) */
+.hm-chip--web {
   background:
-    linear-gradient(0deg, transparent 44%, rgba(244, 243, 241, 0.5) 44%, rgba(244, 243, 241, 0.5) 52%, transparent 52%),
-    linear-gradient(0deg, transparent 72%, rgba(244, 243, 241, 0.3) 72%, rgba(244, 243, 241, 0.3) 78%, transparent 78%);
+    linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)) 3px 9px / 13px 2px no-repeat,
+    linear-gradient(#1d1d1f, #1d1d1f) 3px 18px / 13px 2px no-repeat,
+    linear-gradient(#efe9d6, #efe9d6) 3px 28px / 13px 2px no-repeat,
+    linear-gradient(180deg, #131316 0 6px, #3f525d 6px 15px, #131316 15px 16px, #e9ebe8 16px 24px, #131316 24px 25px, #2b3529 25px 100%);
 }
-.hm-chip--lens { background: #050505; }
-.hm-chip--lens::after {
-  content: '';
+/* C2: the Sharp brick corner itself, under the ink band */
+.hm-chip--lens { background: #131316; }
+.hm-chip--lens img {
   position: absolute;
-  inset: -40% -40% auto auto;
-  width: 34px;
-  height: 34px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 3px;
-  transform: rotate(20deg);
+  top: 6px;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: calc(100% - 6px);
+  object-fit: cover;
+  object-position: 62% 50%;
 }
-.hm-chip--seo { background: #f2eee6; }
-.hm-chip--seo::after {
-  /* the number one result, in miniature */
-  content: '';
-  position: absolute;
-  inset: 8px 4px auto 4px;
-  height: 14px;
+/* C3: the search line and caret, the result's site, and its title in the
+   board's blue running off the face */
+.hm-chip--seo {
   background:
-    linear-gradient(90deg, #C23030 0 4px, transparent 4px),
-    linear-gradient(0deg, transparent 78%, rgba(29, 27, 24, 0.85) 78%),
-    linear-gradient(0deg, transparent 30%, rgba(29, 27, 24, 0.3) 30%, rgba(29, 27, 24, 0.3) 40%, transparent 40%);
+    linear-gradient(#1a1a1a, #1a1a1a) 3px 8px / 14px 1px no-repeat,
+    linear-gradient(#c23030, #c23030) 18px 5px / 1px 5px no-repeat,
+    linear-gradient(#3d3c38, #3d3c38) 3px 15px / 3px 3px no-repeat,
+    linear-gradient(#2a6c8a, #2a6c8a) 3px 21px / 30px 5px no-repeat,
+    #ffffff;
 }
-.hm-chip--logo { background: #2b6a4e; }
-.hm-chip--logo::after {
-  /* the offcut on the mat: backing paper with the roundel standing on it */
-  content: '';
+/* C4: our own 4 in the logo's greys on the C's grey, cropped off the top
+   and right like the face */
+.hm-chip--logo { background: #e6e4e2; }
+.hm-chip--logo svg {
   position: absolute;
-  inset: 8px 4px 9px 4px;
-  border-radius: 1px;
-  background:
-    radial-gradient(circle at 50% 50%, #151515 0 5.5px, transparent 6px),
-    #f6f5ef;
-  transform: rotate(-4deg);
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* The tally — proof you actually passed, draining into /start. */

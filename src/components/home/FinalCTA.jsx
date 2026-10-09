@@ -11,17 +11,46 @@ import { Link } from '@/components/c4/SiteLink';
 import { ArrowRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { revealHeading, useStaticMode } from './homeMotion';
+import { BODY, ARM } from '@/components/logo-design/DoorFace';
+import lensCorner from './assets/doors/lens-corner-360.webp';
 
 const choices = [
-  { key: 'web', label: 'Build a website', to: '/start?service=web_design', chip: 'hm-chip--web' },
+  { key: 'web', label: 'Build a website', to: '/start?service=web_design' },
   // "Put AI to work" (to /c4i) went to C4Site with C4i on 9 Oct 2026.
   // Lens was "Brand & visual" until 9 Oct 2026, when logos and brand
   // identity got their own arm, Logo Design.
-  { key: 'lens', label: 'Photography & video', to: '/Lens', chip: 'hm-chip--lens' },
+  { key: 'lens', label: 'Photography & video', to: '/Lens' },
   // "Train your team" came out with C4Site on 8 Oct 2026 (D2).
-  { key: 'seo', label: 'Get found on Google', to: '/seo-and-copywriting', chip: 'hm-chip--seo' },
-  { key: 'logo', label: 'Design a logo', to: '/logo-design', chip: 'hm-chip--logo' },
+  { key: 'seo', label: 'Get found on Google', to: '/seo-and-copywriting' },
+  { key: 'logo', label: 'Design a logo', to: '/logo-design' },
 ];
+
+const points = (list) => list.map((p) => p.join(',')).join(' ');
+
+/* The four doors in miniature, redrawn with the faces on 9 Oct 2026: three
+   client home pages stacked under the ink band, the Lens photograph, the
+   search with its result at 1 running off the edge, and our own 4 cropped
+   off the top and right. Decorative; the label beside each says it all. */
+function Chip({ kind }) {
+  if (kind === 'lens') {
+    return (
+      <span className="hm-chip hm-chip--lens" aria-hidden="true">
+        <img src={lensCorner} alt="" width={360} height={398} loading="lazy" decoding="async" />
+      </span>
+    );
+  }
+  if (kind === 'logo') {
+    return (
+      <span className="hm-chip hm-chip--logo" aria-hidden="true">
+        <svg viewBox="280 120 330 440" preserveAspectRatio="xMidYMid slice" focusable="false">
+          <polygon points={points(BODY)} fill="#414243" />
+          <polygon points={points(ARM)} fill="#6c6d6d" />
+        </svg>
+      </span>
+    );
+  }
+  return <span className={`hm-chip hm-chip--${kind}`} aria-hidden="true" />;
+}
 
 export default function FinalCTA() {
   const h2Ref = useRef(null);
@@ -73,7 +102,7 @@ export default function FinalCTA() {
               <li key={c.key} style={{ borderBottom: '1px solid var(--c4-border)' }}>
                 <Link to={c.to} className="hm-choice group">
                   <span className="flex min-w-0 items-center gap-4">
-                    <span className={`hm-chip ${c.chip}`} aria-hidden="true" />
+                    <Chip kind={c.key} />
                     <span className="truncate text-[1.05rem] font-semibold tracking-[-0.015em] md:text-[1.15rem]" style={{ color: 'var(--c4-text)' }}>
                       {c.label}
                     </span>
