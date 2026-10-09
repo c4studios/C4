@@ -4,13 +4,21 @@
  * (per brief), FirmFlow (C4 Original, AI content engine for professional
  * services). Unique details: the JD-reads-your-drafts angle and the
  * published 15–20% compliance surcharge.
+ *
+ * 9 Oct 2026: all automation is C4Site's, with or without AI (Caleb's answer
+ * 3B, brain site_issue 149). Out came "and automation" and "routine-work
+ * automation behind the scenes" from the intro, "and automation for routine
+ * work" from the registry description, and the whole "Where does automation
+ * fit in a law practice?" section. The IPSI proof named above lived only in
+ * that section, so it went too. No figure was added. Do NOT add any of it
+ * back.
  */
 export default {
   hero: {
     label: 'Websites for Law Firms',
     title: ['Law firm websites built by someone', 'who reads judgments for fun.'],
     intro: [
-      'C4 Studios builds websites and automation for law firms — practice-area pages that answer what clients actually search, intake that filters matters before they reach a lawyer, and routine-work automation behind the scenes. The studio is run by Caleb Scott, a current JD student at UWA, which makes the briefing conversations unusually short.',
+      'C4 Studios builds websites for law firms — practice-area pages that answer what clients actually search, and intake that filters matters before they reach a lawyer. The studio is run by Caleb Scott, a current JD student at UWA, which makes the briefing conversations unusually short.',
     ],
   },
   sections: [
@@ -34,15 +42,6 @@ export default {
         { title: 'Costs transparency', text: 'Fixed-fee items published where you offer them, honest “from” ranges where you can’t. It pre-qualifies harder than any form.' },
         { title: 'Proof and reviews', text: 'Google reviews surfaced properly, presented conservatively — first-person bragging reads poorly in this profession.' },
         { title: 'Speed and structure', text: 'Fast pages with structured data, because “family lawyer perth” is a search you win on technical merit as much as reputation.' },
-      ],
-    },
-    {
-      kind: 'prose',
-      label: 'The quiet win',
-      heading: 'Where does automation fit in a law practice?',
-      body: [
-        'In the routine work nobody bills honestly: intake acknowledgments, appointment reminders, document collection chasing, file-opening checklists, the third email asking a client for their ID. We’ve done automation work for IPSI, so this isn’t theory bolted onto web design.',
-        'The pattern for legal work is strict: AI and automation draft, route and remind; a human signs everything that matters. Nothing leaves the building unsupervised, and your professional obligations stay exactly where they belong — with the practitioners.',
       ],
     },
     {

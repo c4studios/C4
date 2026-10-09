@@ -2966,7 +2966,7 @@ export const CASE_STUDIES = {
     year: '2025',
     category: 'saas',
     status: 'Live',
-    tags: ['AI & Software', 'SaaS', 'Next.js'],
+    tags: ['Software', 'SaaS', 'Next.js'],
     featured: false,
     budgetOrder: 0,
     brandColor: '#2563eb',

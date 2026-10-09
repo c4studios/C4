@@ -43,18 +43,20 @@ const LANES = [
   { key: 'care', label: 'Care plan', packages: priced(supportPlans), service: 'support' },
 ];
 
-/* The extras tray. The website lane has forty extras, and as one list they
-   filled the page (Caleb, 2 Oct 2026). Six broadly useful ones stay out on
+/* The extras tray. The website lane had forty extras, and as one list they
+   filled the page (Caleb, 2 Oct 2026). Five broadly useful ones stay out on
    the tray; the rest fold into a drawer, sorted by kind. The sorting is
    presentation only: names match pricing.js exactly, and anything added
-   there that no group names still shows, under "Everything else". */
+   there that no group names still shows, under "Everything else". The AI
+   chatbot was the sixth until 9 Oct 2026, when it came off C4 Studios
+   (Caleb's answer 2A, brain site_issue 148). */
 const EXTRAS_OUT = [
   'Additional page', 'Copywriting package', 'Online booking / appointments',
-  'SEO foundations', 'Google Business Profile setup', 'AI chatbot',
+  'SEO foundations', 'Google Business Profile setup',
 ];
 const EXTRA_GROUPS = [
   ['Pages and words', ['Additional page', '3-page pack', '5-page pack', 'Copywriting package', 'Branding add-on', 'Photography + videography add-on', 'Blog/CMS']],
-  ['Bookings and tools', ['Online booking / appointments', 'AI chatbot', 'Client portal / login area', 'Advanced form', 'Newsletter integration', 'Live chat', 'Custom API integration', 'Admin dashboard']],
+  ['Bookings and tools', ['Online booking / appointments', 'Client portal / login area', 'Advanced form', 'Newsletter integration', 'Live chat', 'Custom API integration', 'Admin dashboard']],
   ['Selling online', ['Product catalogue setup', 'Extra product batch (up to 25)', 'Shipping/tax rules', 'Payment gateway setup', 'Inventory or POS sync']],
   ['Page sections', ['Image gallery', 'Testimonials section', 'FAQ section', 'Google Maps', 'Social feed', 'Video background', 'Custom 404']],
   ['Motion', ['Basic animation pass', 'GSAP page transitions', 'Parallax effect', 'Logo animation']],
@@ -263,7 +265,7 @@ export default function Quotr({ compact = false, heading = 'Price it yourself.' 
             ) : null}
           </div>
 
-          {/* The tray of extras: six out, the rest in the drawer */}
+          {/* The tray of extras: five out, the rest in the drawer */}
           {tray ? (
             <div className="qt-tray">
               <p className="qt-tray-label">Extras</p>

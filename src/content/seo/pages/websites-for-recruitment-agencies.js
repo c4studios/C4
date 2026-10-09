@@ -8,16 +8,23 @@
  * month, the "tell you straight if Lead Engine fits" CTA line, and both
  * "automation from $750" prices, since pricing.js no longer carries one.
  * What stays is one pointer to C4Site's Lead Engine page, with no price.
- * Do NOT add any of it back. The automation table and the "site plus
- * automation" FAQ are still here, waiting on Caleb's call on whether that
- * work is custom software or C4Site's.
+ * Do NOT add any of it back.
+ *
+ * Also 9 Oct 2026: Caleb answered the open question this note used to
+ * carry. All automation is C4Site's, with or without AI (answer 3B, brain
+ * site_issue 149). Out came "and automation" from the intro, "plus
+ * automation" from the registry description, the "Where automation pays in
+ * an agency" table, and the "Candidates complain they never hear back" FAQ,
+ * so the FAQPage schema now lists the same three questions the page shows.
+ * The Lead Engine pointer stays (answer 6A). No figure was added. Do NOT
+ * add the automation back either.
  */
 export default {
   hero: {
     label: 'Websites for Recruitment Agencies',
     title: ['Recruitment websites that work', 'both sides of the desk.'],
     intro: [
-      'C4 Studios builds websites and automation for recruitment agencies — sites that convince candidates to apply and clients to brief, without one audience drowning out the other. Sites from $1,500, with job boards and portal features scoped from the $2,500–$4,500 tiers.',
+      'C4 Studios builds websites for recruitment agencies — sites that convince candidates to apply and clients to brief, without one audience drowning out the other. Sites from $1,500, with job boards and portal features scoped from the $2,500–$4,500 tiers.',
     ],
   },
   sections: [
@@ -52,19 +59,6 @@ export default {
       ],
     },
     {
-      kind: 'table',
-      label: 'Automation',
-      heading: 'Where automation pays in an agency',
-      head: ['Workflow', 'What it replaces'],
-      rows: [
-        ['Candidate acknowledgment + status updates', 'The “black hole” reputation that kills referrals.'],
-        ['Interview scheduling and reminders', 'Three-way email tennis and no-shows.'],
-        ['Client brief intake and routing', 'Briefs lost in inboxes while a competitor returns the call.'],
-        ['Reference and document chasing', 'The admin nobody bills and everybody hates.'],
-        ['Review collection after placements', 'Your best proof, gathered while everyone’s still happy.'],
-      ],
-    },
-    {
       kind: 'pricing',
       label: 'Pricing',
       heading: 'What does a recruitment website cost?',
@@ -80,10 +74,6 @@ export default {
     {
       q: 'Can you integrate our ATS or job multi-poster?',
       a: 'Usually — most modern ATS platforms expose feeds or APIs we can pull listings from, so the website stays current without double entry. Where integration isn’t possible, we build the board to be updated in minutes, because a stale board is worse than none.',
-    },
-    {
-      q: 'Candidates complain they never hear back — can the site help?',
-      a: 'The site plus automation can: instant acknowledgment, honest status updates at each stage, and a polite close-out when a role fills. It’s the cheapest reputation repair in recruitment, because “they actually got back to me” is rare enough to be a differentiator.',
     },
     {
       q: 'How long does an agency site take?',

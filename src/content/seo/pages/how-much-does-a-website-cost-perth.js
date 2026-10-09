@@ -4,6 +4,13 @@
  * the number, ongoing costs, and the pay-monthly path.
  * Unique details: the 15–20% professional-services compliance surcharge,
  * and the "why quotes vary" freelancer/studio/agency breakdown.
+ *
+ * 9 Oct 2026: the AI chatbot add-on came off C4 Studios (Caleb's answer 2A,
+ * brain site_issue 148), so "AI chatbots $1,500" left the features line in
+ * "What actually moves the price?". That line is now two sentences. No
+ * figure was added: the three left ($400 booking, $600 payment gateway,
+ * $1,000 client portal) still match webDesignAddOns in src/data/pricing.js.
+ * Do NOT add a chatbot or any other AI add-on back.
  */
 export default {
   hero: {
@@ -47,7 +54,7 @@ export default {
       label: 'Variables',
       heading: 'What actually moves the price?',
       body: [
-        'Pages and layouts: a simple matching page adds about $100; a new custom layout is quoted separately. Features: online booking adds $400, payment gateways $600, client portals $1,000, AI chatbots $1,500. Content readiness matters more than people expect — entry prices assume you supply approved copy and images, and professional copywriting adds $500 if you’d rather hand us a rough doc.',
+        'Pages and layouts: a simple matching page adds about $100; a new custom layout is quoted separately. Features: online booking adds $400 and payment gateways $600. Client portals are $1,000. Content readiness matters more than people expect — entry prices assume you supply approved copy and images, and professional copywriting adds $500 if you’d rather hand us a rough doc.',
         'Integrations move numbers too: connecting accounting software, CRMs or inventory starts around $1,000 because someone has to make two systems agree. And one most guides won’t tell you: legal, financial and medical websites usually carry a 15–20% surcharge, because compliance review, disclaimers and regulatory wording take real hours.',
       ],
     },
