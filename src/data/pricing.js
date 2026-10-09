@@ -159,7 +159,7 @@ export const webDesignPackages = [
       'Client portals or login areas',
       'Inventory or POS sync',
       'Custom dashboards/admin tools',
-      'Automation or AI integration',
+      'Complex API integrations',
       '5 revision rounds',
       '90-day launch warranty',
     ],
@@ -224,7 +224,7 @@ export const webScopeNotes = [
     title: 'Apps are MVP-first',
     points: [
       '$4,500 web apps are for one clear workflow with a defined data model and a simple dashboard, portal, or user area.',
-      'Roles, permissions, client portals, admin tooling, AI, automations, and complex integrations are add-ons or proposal scope.',
+      'Roles, permissions, client portals, admin tooling, and complex integrations are add-ons or proposal scope.',
     ],
   },
   {
@@ -263,7 +263,11 @@ export const subscriptionInfo = {
   cancellation: '6-month minimum, then 30 days notice.',
 };
 
-/* ── Web Design Add-Ons ── */
+/* ── Web Design Add-Ons ──
+   9 Oct 2026: the AI chatbot add-on came off, and the platform and app
+   scope lines above stopped offering AI and automation. That work is
+   C4Site's now (Caleb's answers 2A and 3B, brain site_issues 148 and 149).
+   Don't add any of it back. */
 export const webDesignAddOns = [
   { name: 'Additional page', price: 100 },
   { name: '3-page pack', price: 250 },
@@ -272,7 +276,6 @@ export const webDesignAddOns = [
   { name: 'Branding add-on', price: 400 },
   { name: 'Photography + videography add-on', price: 750 },
   { name: 'Online booking / appointments', price: 400 },
-  { name: 'AI chatbot', price: 1500 },
   { name: 'Client portal / login area', price: 1000 },
   { name: 'Advanced form', price: 300 },
   { name: 'Newsletter integration', price: 250 },

@@ -45,7 +45,7 @@ const PLEDGES = [
   {
     claim: 'We say the unpopular true things.',
     body:
-      'AI detectors do not reliably work, and we will not pretend otherwise. Most businesses do not need an AI strategy, they need three automations and a tidy website. We will talk you out of work we do not think you need.',
+      'Most businesses do not need a complicated website. They need a tidy one that does its job. We will talk you out of work we do not think you need.',
   },
   {
     claim: 'You can check all of it.',
@@ -125,8 +125,8 @@ export default function HowWeUseAI() {
 
             <motion.div {...reveal(1)} className="mt-7 space-y-6 max-w-[64ch]">
               <p className="text-[15.5px] leading-[1.85]" style={{ color: 'var(--c4-text-muted)' }}>
-                I don&rsquo;t love AI, which tends to surprise people given what this studio does all
-                day. I use it most of the working week and I&rsquo;d still call it a drill rather than
+                I don&rsquo;t love AI, which tends to surprise people.
+                I use it most of the working week and I&rsquo;d still call it a drill rather than
                 a colleague. What I won&rsquo;t do is depend on it.{' '}
                 <strong style={{ color: 'var(--c4-text)', fontWeight: 640 }}>
                   The moment a tool starts doing your thinking instead of your work, it stops being a
