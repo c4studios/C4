@@ -1807,6 +1807,29 @@
   display: none;
 }
 
+/* Reduced motion: the rows never travel, so every tile past the window's
+   edge stayed out of sight while the keyboard still tabbed into it (12 of
+   21 links at every size, measured 9 Oct 2026). Here the three rows
+   become one grid and the whole record sits on the page. The prerender
+   keeps the travelling layout, because it is also the first paint for
+   visitors who do get the motion. */
+@media (prefers-reduced-motion: reduce) {
+  .lv-fusion[data-static] .lv-plx-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 24vw, 280px), 1fr));
+    gap: clamp(16px, 2.4vw, 32px);
+    padding-inline: clamp(20px, 5vw, 56px);
+  }
+
+  .lv-fusion[data-static] .lv-plx-row {
+    display: contents;
+  }
+
+  .lv-fusion[data-static] .lv-plx-card {
+    width: auto;
+  }
+}
+
 @media (max-width: 899.98px) {
   .lv-fusion-pin {
     height: 340vh;

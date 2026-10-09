@@ -148,7 +148,8 @@ export default function HeroSection() {
         </div>
       </motion.div>
 
-      <div className="relative z-10 mx-auto w-full max-w-[1400px] px-6 md:px-12" style={{ paddingBottom: 'clamp(16px, 4svh, 36px)' }}>
+      {/* On phones the Support pill (fixed, bottom right) sat on "Est. Dec 2025" in the first screen, so the row clears its 60px there. */}
+      <div className="relative z-10 mx-auto w-full max-w-[1400px] px-6 pb-[76px] sm:pb-[clamp(16px,4svh,36px)] md:px-12">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
