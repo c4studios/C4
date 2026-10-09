@@ -120,7 +120,7 @@ export default function LiveSupport() {
         hidden={open}
       >
         <Headphones size={15} strokeWidth={2} aria-hidden="true" />
-        <span>Support</span>
+        <span className="ls-trigger-label">Support</span>
       </button>
 
       {open && (
