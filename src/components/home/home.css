@@ -16,6 +16,8 @@
      white  on red #FFFFFF on #C23030 ........  5.6:1  (dark: on #B33A3A 5.9:1)
      door faces    #f2f0e9 on #16352c ........ 11.7:1
                    #ffffff on #050505 ........ 20.4:1
+                   #f4f3f1 on #2b6a4e ........  5.8:1  (logo: the cutting mat)
+                   tag at 90% on the mat ....  5.0:1
    ═════════════════════════════════════════════════════════════════ */
 
 .hm-root {
@@ -498,15 +500,15 @@
 /* ─────────────────────────────────────────────────────────────────
    FOLD 3 — THE DOORS (the arms at doorway scale)
 
-   Three doors since 9 Oct 2026, when C4i went to C4Site. Three is laid
-   out as three, never as four with one missing:
-     900px and up   three across, a triptych. Each face keeps the
-                    doorway proportion the four-across faces had (about
-                    3:4), so the art drawn for a tall door still fits.
-     640 to 899px   each door on its side: the face stands on the left,
-                    its dossier beside it at the foot. Three across is
-                    too narrow here for the dossier and its pill button,
-                    and two across would strand the third door.
+   Four doors again since 9 Oct 2026, when Logo Design became the fourth
+   arm (there were three for a day, after C4i went to C4Site):
+     1024px and up  four across, one row of doorways. Each face keeps the
+                    3:4 doorway, so the art drawn for a tall door fits,
+                    and the Lens iris keeps its REC lamp and brackets.
+     640 to 1023px  two by two. Four is even, so nothing is stranded, and
+                    a face stays a doorway instead of lying on its side.
+                    Each row's dossiers line up, because the outcome
+                    paragraph takes the slack.
      under 640px    one column. Doors sit well apart so a door's buttons
                     never read as the top of the next face.
    ───────────────────────────────────────────────────────────────── */
@@ -544,10 +546,11 @@
 
 .hm-doors {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(14px, 1.6vw, 22px);
 }
-@media (max-width: 899px) { .hm-doors { grid-template-columns: minmax(0, 1fr); row-gap: 36px; } }
+@media (max-width: 1023px) { .hm-doors { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 44px; } }
+@media (max-width: 639px) { .hm-doors { grid-template-columns: minmax(0, 1fr); } }
 
 .hm-door { display: flex; flex-direction: column; min-width: 0; }
 
@@ -567,27 +570,12 @@
   isolation: isolate;
 }
 
-/* 640 to 899px: the door on its side. The face takes the left track at
-   3:4 and the dossier stands beside it, settled at the foot so the
-   outcome line reads level with the door's own title and the buttons
-   line up with the bottom of the face. */
-@media (min-width: 640px) and (max-width: 899px) {
-  .hm-door {
-    display: grid;
-    grid-template-columns: minmax(200px, 36%) minmax(0, 1fr);
-    column-gap: clamp(20px, 3.4vw, 30px);
-  }
-  /* Two classes: the base dossier rules sit further down the file. */
-  .hm-door > .hm-doorinfo { justify-content: flex-end; padding: 0; }
-  .hm-door > .hm-doorinfo p { flex: none; }
-  .hm-doorinfo .hm-door-ctas { margin-top: 0; }
-}
-
-/* Phones: compact faces so the three doors land within about two
-   screens (the hero audit's reason, from when four doors buried C4Site
-   3.3 screens deep). The wide gap keeps each door's buttons with their
-   own face. Placed AFTER the base rule — equal specificity, so source
-   order decides. */
+/* Phones: compact faces, the hero audit's fix for tall faces that buried
+   the last door 3.3 screens deep. Measured at 375 by 812 on 9 Oct 2026,
+   the four doors run 2.1 screens from the first face to the last button,
+   and the fourth door starts 3.1 screens down the page. The wide gap keeps
+   each door's buttons with their own face. Placed AFTER the base rule —
+   equal specificity, so source order decides. */
 @media (max-width: 639px) {
   .hm-doors { row-gap: 40px; }
   .hm-doorface { aspect-ratio: auto; min-height: 172px; }
@@ -618,9 +606,12 @@
   line-height: 1.04;
   text-wrap: balance;
 }
+/* An icon sized to the title it ends, so it scales with each door's face. */
 .hm-door-arrow {
   display: inline-block;
-  margin-top: 10px;
+  width: 0.72em;
+  height: 0.72em;
+  vertical-align: -0.06em;
   transition: transform 0.4s var(--hm-ease);
 }
 
@@ -688,7 +679,7 @@
 
 /* C3 — SEO & Copywriting (took C4Site's door, 8 Oct 2026): the paste-up
    board from /seo-and-copywriting (seo-copy/DoorFace.jsx, door.css), your
-   listing ringed at first. The one light door of the three. */
+   listing ringed at first. The one light door of the four. */
 .hm-doorface--seo { background: #f2eee6; }
 .hm-doorface--seo::after { background: linear-gradient(115deg, rgba(194, 48, 48, 0.07), transparent 46%); }
 .hm-doorface--seo .hm-door-tag { color: rgba(29, 27, 24, 0.74); }
@@ -699,6 +690,21 @@
   font-size: clamp(1.55rem, 2vw, 1.9rem);
   letter-spacing: -0.03em;
   color: #1d1b18;
+}
+
+/* C4 — Logo Design (9 Oct 2026): the vinyl offcut from /logo-design on its
+   green cutting mat (logo-design/DoorFace.jsx, door.css), the stand-in mark
+   halfway through the weed. The title takes the mark's own setting, Archivo
+   wide and heavy, the way a signwriter would letter it. */
+.hm-doorface--logo { background: #2b6a4e; }
+.hm-doorface--logo .hm-door-tag { color: rgba(244, 243, 241, 0.9); }
+.hm-doorface--logo .hm-door-word {
+  font-family: var(--hm-disp);
+  font-weight: 800;
+  font-stretch: 112%;
+  font-size: clamp(1.45rem, 1.85vw, 1.8rem);
+  letter-spacing: -0.03em;
+  color: #f4f3f1;
 }
 
 /* Under-door dossier — theme surface, both CTAs always in DOM. */
@@ -729,6 +735,11 @@
 .hm-door-meta b { color: var(--c4-text); font-weight: 600; }
 .hm-door-meta span { color: var(--hm-ink2); }
 .hm-door-meta i { color: var(--c4-border); font-style: normal; }
+/* Four across at 1024 leaves a door about 220px wide, too narrow for the
+   longest row ("From $200 / Half / full-day shoots"). The row may wrap,
+   but each part stays whole. */
+.hm-door-meta { flex-wrap: wrap; row-gap: 4px; }
+.hm-door-meta b, .hm-door-meta span { white-space: nowrap; }
 
 /* Always stacked: the pill, then the quieter link under it. Left to wrap,
    doors in the same row split differently (one side by side, the next
@@ -854,6 +865,18 @@
     linear-gradient(90deg, #C23030 0 4px, transparent 4px),
     linear-gradient(0deg, transparent 78%, rgba(29, 27, 24, 0.85) 78%),
     linear-gradient(0deg, transparent 30%, rgba(29, 27, 24, 0.3) 30%, rgba(29, 27, 24, 0.3) 40%, transparent 40%);
+}
+.hm-chip--logo { background: #2b6a4e; }
+.hm-chip--logo::after {
+  /* the offcut on the mat: backing paper with the roundel standing on it */
+  content: '';
+  position: absolute;
+  inset: 8px 4px 9px 4px;
+  border-radius: 1px;
+  background:
+    radial-gradient(circle at 50% 50%, #151515 0 5.5px, transparent 6px),
+    #f6f5ef;
+  transform: rotate(-4deg);
 }
 
 /* The tally — proof you actually passed, draining into /start. */

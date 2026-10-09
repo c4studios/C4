@@ -2,14 +2,15 @@
 
 > C4 Studios is a founder-led design and development studio based in Perth,
 > Western Australia. We build custom high-performance websites and software,
-> and we do brand photography, videography, motion graphics, SEO and
-> copywriting.
+> and we do brand photography, videography, motion graphics, SEO,
+> copywriting and logo design.
 
-C4 Studios operates across three arms under one roof:
+C4 Studios operates across four arms under one roof:
 
 - **Web** — custom websites and web apps, redesigns, e-commerce, landing pages and ongoing support.
 - **C4 Lens** — brand photography, videography, drone/aerial work and motion graphics.
 - **SEO & copywriting** — technical SEO, on-page work, monthly articles and website copy.
+- **Logo design** — new logos, redraws of logos people already have, brand essentials and full brand identities.
 
 Our sister company, C4Site, runs AI training and private AI systems at https://c4site.com.au/ and publishes articles on AI at https://c4site.com.au/articles/
 
@@ -24,6 +25,7 @@ person building it.
 - [Web design & development](https://c4studios.com.au/ServiceWeb): Custom websites and web apps built for speed, SEO and conversion.
 - [C4 Lens — photography & video](https://c4studios.com.au/Lens): Brand photography, videography, drone work and motion graphics.
 - [SEO & copywriting](https://c4studios.com.au/seo-and-copywriting): SEO packages from $400 one-off or $249 a month, and website copy at $500 with a build.
+- [Logo design](https://c4studios.com.au/logo-design): Core $250, Logo Rebuild $450, Logo Only $500, Brand Essentials $1,200 and Full Brand Identity from $2,500, with branding added to a website build for $400.
 - [Portfolio](https://c4studios.com.au/Portfolio): Selected client work and case studies.
 - [Insights](https://c4studios.com.au/insights): Articles on websites and what they cost.
 - [How we use AI](https://c4studios.com.au/how-we-use-ai): Where AI is and is not used in C4 Studios' own work.

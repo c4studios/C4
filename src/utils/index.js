@@ -4,6 +4,7 @@ const PAGE_URLS = {
     TermsOfService: '/terms-of-service',
     HowWeUseAI: '/how-we-use-ai',
     SeoCopy: '/seo-and-copywriting',
+    LogoDesign: '/logo-design',
 };
 
 export function createPageUrl(pageName) {

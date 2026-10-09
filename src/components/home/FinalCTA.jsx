@@ -3,9 +3,8 @@
 
    Everything the page has argued lands on one button: the tally of
    proof you scrolled past drains into the /start verdict — the only
-   large red object on the page. The three choices render as the door
-   materials in miniature; every label and destination is verbatim
-   from the baseline. Static end-state: the verdict rests full red.
+   large red object on the page. The four choices render as the door
+   materials in miniature. Static end-state: the verdict rests full red.
    ───────────────────────────────────────────────────────────────── */
 import React, { useLayoutEffect, useRef } from 'react';
 import { Link } from '@/components/c4/SiteLink';
@@ -16,9 +15,12 @@ import { revealHeading, useStaticMode } from './homeMotion';
 const choices = [
   { key: 'web', label: 'Build a website', to: '/start?service=web_design', chip: 'hm-chip--web' },
   // "Put AI to work" (to /c4i) went to C4Site with C4i on 9 Oct 2026.
-  { key: 'lens', label: 'Brand & visual', to: '/Lens', chip: 'hm-chip--lens' },
+  // Lens was "Brand & visual" until 9 Oct 2026, when logos and brand
+  // identity got their own arm, Logo Design.
+  { key: 'lens', label: 'Photography & video', to: '/Lens', chip: 'hm-chip--lens' },
   // "Train your team" came out with C4Site on 8 Oct 2026 (D2).
   { key: 'seo', label: 'Get found on Google', to: '/seo-and-copywriting', chip: 'hm-chip--seo' },
+  { key: 'logo', label: 'Design a logo', to: '/logo-design', chip: 'hm-chip--logo' },
 ];
 
 export default function FinalCTA() {
@@ -65,7 +67,7 @@ export default function FinalCTA() {
             </div>
           </div>
 
-          {/* Right — the three doors in miniature */}
+          {/* Right — the four doors in miniature */}
           <ul role="list" className="flex flex-col" style={{ borderTop: '1px solid var(--c4-border)' }}>
             {choices.map((c) => (
               <li key={c.key} style={{ borderBottom: '1px solid var(--c4-border)' }}>

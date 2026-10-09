@@ -25,6 +25,8 @@ const groups = [
       { label: 'Web & Applications', page: 'ServiceWeb' },
       { label: 'C4 Lens', page: 'Lens' },
       { label: 'SEO & Copywriting', page: 'SeoCopy' },
+      // The fourth arm from 9 Oct 2026.
+      { label: 'Logo Design', page: 'LogoDesign' },
       // C4i, Private AI and Lead Engine went to C4Site on 9 Oct 2026; the
       // sister link below is the way there.
       // C4Site is its own business (8 Oct 2026) on its own domain (live
@@ -97,7 +99,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="transition-colors duration-200" style={{ backgroundColor: 'var(--c4-footer-bg)' }}>
+    <footer className="c4-site-foot transition-colors duration-200" style={{ backgroundColor: 'var(--c4-footer-bg)' }}>
       <style>{`
         .c4-foot-link {
           font-size: 12.5px;
@@ -108,8 +110,11 @@ export default function Footer() {
         @media (hover: hover) {
           .c4-foot-link:hover { transform: translateX(2px); }
         }
-        .c4-foot-link:focus-visible {
-          outline: 2px solid var(--c4-ring);
+        /* The footer is dark in both themes, so the ring is light here.
+           It was --c4-ring, which in the light theme is ink at 40% and
+           didn't show on #1A1A1A at all (found 9 Oct 2026). */
+        .c4-site-foot a:focus-visible {
+          outline: 2px solid #ECE7DE;
           outline-offset: 2px;
           border-radius: 2px;
         }
@@ -141,11 +146,14 @@ export default function Footer() {
             >
               {PHONE.display}
             </a>
+            {/* Logos joined on 9 Oct 2026, and the line no longer fits a
+                tablet or a phone, so below lg it breaks after Photography
+                rather than leaving a dot at the end of a line. */}
             <span
-              className="text-[10.5px] uppercase tracking-[0.24em]"
+              className="text-[10.5px] uppercase tracking-[0.24em] leading-[1.7] md:text-right"
               style={{ color: 'var(--c4-footer-text-dim)' }}
             >
-              Web · Software · Photography · SEO
+              Web · Software · Photography<span className="hidden lg:inline"> · </span><br className="lg:hidden" />SEO · Logos
             </span>
           </div>
         </div>

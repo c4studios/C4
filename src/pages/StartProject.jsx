@@ -29,7 +29,11 @@ function register(serviceKey, serviceName, packages) {
   });
 }
 register('web_design', 'Web & Applications', webDesignPackages);
-register('brand_platform', 'Branding & Identity', brandingPackages);
+// Logo Design, the fourth arm from 9 Oct 2026, sells the logo packages at
+// their published prices. It replaced 'brand_platform' (Branding & Identity)
+// on this form; see SERVICE_ALIASES below for links that still carry the
+// old key.
+register('logo_design', 'Logo Design', brandingPackages);
 register('seo', 'SEO & Search', seoPackages);
 register('social', 'Social Media & Content', socialMediaPackages);
 // 'automation' (AI & Software) and its packages went to C4Site with C4i on
@@ -76,20 +80,15 @@ function buildRichDescription(serviceKey, pkgKey, pricing) {
 /* ── Add-ons shown per service category ── */
 const SERVICE_ADDONS = {
   web_design: webDesignAddOns.map(a => a.name),
-  brand_platform: [
+  // The brand items from the old Branding & Identity list. Its SEO and social
+  // items stayed behind: SEO has its own list below.
+  logo_design: [
     'Business card design',
     'Social media templates',
     'Presentation template',
     'Brand guidelines document',
     'Signage/merch mockups',
     'Email signature design',
-    'Additional page optimisation',
-    'Competitor analysis',
-    'Local SEO / GBP management',
-    'Backlink building',
-    'Content writing (per page)',
-    'Social content calendar',
-    'Community management',
   ],
   // The generic software add-ons from the old AI & Software list. The
   // AI-only one (Training session) and the two that only extended an
@@ -120,7 +119,6 @@ const SERVICE_ADDONS = {
 
 const SERVICES = [
   { key: 'web_design', label: 'Web & Apps' },
-  { key: 'brand_platform', label: 'Branding & Identity' },
   // Was 'automation' / 'AI & Software' until C4i went to C4Site (9 Oct 2026).
   // A new key, so enquiries say which form they came from. An old
   // ?service=automation link still submits as 'automation', which
@@ -129,8 +127,15 @@ const SERVICES = [
   { key: 'lens', label: 'C4 Lens' },
   // AI training went with C4Site (8 Oct 2026); SEO took its place.
   { key: 'seo', label: 'SEO & Copywriting' },
+  // Was 'brand_platform' / 'Branding & Identity' until Logo Design became the
+  // fourth arm on 9 Oct 2026. Moved after SEO to follow the arms' order.
+  { key: 'logo_design', label: 'Logo Design' },
   { key: 'other', label: 'Something Else' },
 ];
+
+/* Old links that still carry a retired key: a brand link means logos now,
+   so it opens Logo Design with its package filled in. */
+const SERVICE_ALIASES = { brand_platform: 'logo_design' };
 
 const BUDGETS = [
   { key: 'under_1k', label: 'Under $1k' },
@@ -174,7 +179,8 @@ function PillSelect({ options, value, onChange }) {
 
 export default function StartProject() {
   const [searchParams] = useSearchParams();
-  const preService = searchParams.get('service') || '';
+  const rawService = searchParams.get('service') || '';
+  const preService = SERVICE_ALIASES[rawService] || rawService;
   const prePackage = searchParams.get('package') || '';
   const preBudget = searchParams.get('budget') || '';
   const prePricing = searchParams.get('pricing') || '';

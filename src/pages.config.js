@@ -55,6 +55,7 @@ import Contact from './pages/Contact';
 import Support from './pages/Support';
 import Home from './pages/Home';
 import Lens from './pages/Lens';
+import LogoDesign from './pages/LogoDesign';
 import Portfolio from './pages/Portfolio';
 import ServiceWeb from './pages/ServiceWeb';
 import StartProject from './pages/StartProject';
@@ -68,6 +69,9 @@ export const PAGES = {
     "Support": Support,
     "Home": Home,
     "Lens": Lens,
+    // Logo Design (9 Oct 2026). Its address is /logo-design, from PAGE_URLS
+    // in src/utils, so App.jsx's route for each page here lands it there.
+    "LogoDesign": LogoDesign,
     "Portfolio": Portfolio,
     "ServiceWeb": ServiceWeb,
     "StartProject": StartProject,

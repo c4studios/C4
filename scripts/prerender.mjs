@@ -391,7 +391,8 @@ async function generateOgImage(browser, outputPath) {
     color: rgba(236,231,222,0.45); font-weight: 500; }
   .label::before { content: ""; display: inline-block; width: 36px; height: 1px;
     background: #B33A3A; margin-right: 14px; transform: translateY(-4px); }
-  h1 { position: absolute; left: 88px; right: 88px; top: 200px;
+  /* Raised from 200px on 9 Oct 2026: the g in "logos" hung into the line below. */
+  h1 { position: absolute; left: 88px; right: 88px; top: 178px;
     font-size: 92px; font-weight: 600; letter-spacing: -0.045em; line-height: 0.98;
     max-width: 980px; }
   .accent { color: #B33A3A; }
@@ -408,8 +409,8 @@ async function generateOgImage(browser, outputPath) {
   <div class="grain"></div>
   <div class="frame"></div>
   <div class="label">C4 Studios — Perth</div>
-  <h1>Websites, photography <span class="accent">&amp;</span> SEO.</h1>
-  <p class="sub">A Perth design and development studio building flagship websites and software, with brand-led photography and SEO, for ambitious founders.</p>
+  <h1>Websites, photography, SEO <span class="accent">&amp;</span> logos.</h1>
+  <p class="sub">A Perth design and development studio building flagship websites and software, with brand-led photography, SEO and logo design, for ambitious founders.</p>
   <div class="footer">
     <span class="brand">c4studios.com.au</span>
     <span>Founder-led · Est. 2022</span>

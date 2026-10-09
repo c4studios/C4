@@ -1,32 +1,49 @@
 /* ─────────────────────────────────────────────────────────────────
    FOLD 3 — THE DOORS (ProductTrio reborn; the identical card grid dies)
 
-   Three material doorways since 9 Oct 2026, when the C4i door went to
-   C4Site with C4i (the file keeps its old name). Each is an honest
-   sample of the destination arm's own shipped identity, at doorway
-   scale only (memo §1.2):
+   Four material doorways again since 9 Oct 2026, when Logo Design
+   became the fourth arm (Caleb: "we've been getting a lot of enquiries
+   regarding logo design"). There were three for a day, after the C4i
+   door went to C4Site. Each is an honest sample of the destination
+   arm's own world, at doorway scale only (memo §1.2):
      C1 · a weave of real client captures on studio dark
      C2 · black behind a hairline 9-gon aperture arc (no amber here —
           the tungsten glow belongs to /Lens itself)
      C3 · the paste-up board from /seo-and-copywriting, your listing
           ringed at first (SEO & Copywriting took C4Site's place, D2)
-   The codes match the Services menu. Three across from 900px, each door
-   on its side between 640 and 899, one column on phones: home.css has
-   the reasons. Every ProductTrio destination, label, outcome line, price
-   and timeframe survives verbatim; both links per door sit in the DOM
-   at rest. The proof-strip stats are letterpressed into the lintel.
+     C4 · the vinyl offcut from /logo-design on its cutting mat, the
+          stand-in mark halfway through the weed (logo-design/DoorFace)
+   The codes match the Services menu. Four across from 1024px, two by
+   two from 640, one column on phones: home.css has the reasons. Both
+   links per door sit in the DOM at rest. Lens dropped "brand identity"
+   from its copy on 9 Oct 2026, since logos and identities have their
+   own arm now. The proof-strip stats are letterpressed into the lintel.
    ───────────────────────────────────────────────────────────────── */
 import React, { useLayoutEffect, useRef } from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import { ArrowRight } from 'lucide-react';
 import { trackEvent } from '@/lib/track';
 import SeoDoorFace from '@/components/seo-copy/DoorFace';
-import { seoPackages } from '@/data/pricing';
+import LogoDoorFace from '@/components/logo-design/DoorFace';
+import { seoPackages, brandingPackages } from '@/data/pricing';
 import { gsap, EASE, revealHeading, useStaticMode } from './homeMotion';
 
 // The SEO door quotes the published card, so it follows pricing.js.
 const SEO_ONE_OFF_FROM = Math.min(...seoPackages.filter((p) => p.priceSuffix === 'one-off').map((p) => p.price));
 const SEO_MONTHLY_FROM = Math.min(...seoPackages.filter((p) => /\/mo$/.test(p.priceLabel) && typeof p.price === 'number').map((p) => p.price));
+
+/* So does the logo door: the lowest logo price, and the range of concepts
+   the packages offer ("2 initial concepts", "Logo design (5 concepts, 4
+   revisions)"). A rebuild redraws a logo you already have, so it offers no
+   concepts and doesn't count. */
+const LOGO_FROM = Math.min(...brandingPackages.filter((p) => typeof p.price === 'number').map((p) => p.price));
+const LOGO_CONCEPTS = brandingPackages
+  .flatMap((p) => (p.features || []).map((f) => /(\d+)\s+(?:initial\s+)?concepts?\b/i.exec(f)))
+  .filter(Boolean)
+  .map((m) => Number(m[1]));
+const LOGO_RANGE = LOGO_CONCEPTS.length
+  ? `${Math.min(...LOGO_CONCEPTS)} to ${Math.max(...LOGO_CONCEPTS)} concepts`
+  : 'Fixed scope';
 
 import weaveGocc from './assets/weave-gocc.webp';
 import weaveJk from './assets/weave-jk.webp';
@@ -124,9 +141,9 @@ const DOORS = [
     faceTo: '/Lens',
     faceAria: 'Enter C4 Lens',
     tag: 'C4 Lens',
-    word: 'Photography, video & brand',
+    word: 'Photography & video',
     outcome:
-      'Photography, short-form video and brand identity, a coherent visual system for Perth businesses ready to retire stock.',
+      'Photography and short-form video, a coherent visual system for Perth businesses ready to retire stock.',
     fromPrice: 'From $200',
     timeframe: 'Half / full-day shoots',
     primary: { label: 'Visit C4 Lens', to: '/Lens' },
@@ -146,6 +163,20 @@ const DOORS = [
     primary: { label: 'See SEO & copywriting', to: '/seo-and-copywriting' },
     secondary: { label: 'or start an SEO brief', to: '/start?service=seo' },
   },
+  {
+    key: 'logo',
+    face: 'logo',
+    faceTo: '/logo-design',
+    faceAria: 'Enter Logo Design',
+    tag: 'Logo Design',
+    word: 'Design a logo',
+    outcome:
+      'A logo that holds up from the sign out front to a 16-pixel browser tab, in colour and in one. Every file is yours once it’s paid.',
+    fromPrice: `From $${LOGO_FROM}`,
+    timeframe: LOGO_RANGE,
+    primary: { label: 'See logo design', to: '/logo-design' },
+    secondary: { label: 'or start a logo brief', to: '/start?service=logo_design' },
+  },
 ];
 
 function DoorFaceArt({ kind }) {
@@ -159,6 +190,7 @@ function DoorFaceArt({ kind }) {
     );
   }
   if (kind === 'lens') return <ApertureIris />;
+  if (kind === 'logo') return <LogoDoorFace />;
   return <SeoDoorFace />;
 }
 
@@ -177,20 +209,28 @@ export default function FourDoors() {
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         revealHeading(h2Ref.current);
         const doors = gsap.utils.toArray('.hm-door', section);
+        /* Opacity, not autoAlpha: autoAlpha hides the doors with
+           visibility, and a hidden link can't take focus, so Tab from the
+           hero skipped all four doors until a scroll had revealed them
+           (found 9 Oct 2026). Focus landing in a door also finishes the
+           reveal at once. */
         const tween = gsap.from(doors, {
           y: 26,
-          autoAlpha: 0,
+          opacity: 0,
           duration: 0.9,
           stagger: 0.09,
           ease: EASE,
-          clearProps: 'opacity,visibility,transform',
+          clearProps: 'opacity,transform',
           scrollTrigger: {
             trigger: section.querySelector('.hm-doors'),
             start: 'top 82%',
             once: true,
           },
         });
+        const finish = () => { if (tween.progress() < 1) tween.progress(1); };
+        section.addEventListener('focusin', finish);
         return () => {
+          section.removeEventListener('focusin', finish);
           tween.scrollTrigger?.kill();
           tween.kill();
         };
@@ -209,7 +249,7 @@ export default function FourDoors() {
             ref={h2Ref}
             className="hm-h2 max-w-[24ch] text-[clamp(1.7rem,3.4vw,2.7rem)]"
           >
-            Three services from one studio. Pick where to start.
+            Four services from one studio. Pick where to start.
           </h2>
           <p className="hm-sub max-w-[36ch] text-[13.5px]">
             Most clients start with one of these. Each card opens a short brief: fixed scope, transparent pricing, founder reply within a business day.
@@ -244,9 +284,11 @@ export default function FourDoors() {
               >
                 <DoorFaceArt kind={door.face} />
                 <span className="hm-door-tag">{door.tag}</span>
+                {/* The arrow is the same lucide icon the buttons use (it was a
+                    text glyph until 9 Oct 2026), held to the last word by a
+                    no-break space so it never wraps on its own. */}
                 <h3 className="hm-door-word">
-                  {door.word}
-                  <span className="hm-door-arrow" aria-hidden="true"> →</span>
+                  {door.word}{' '}<ArrowRight className="hm-door-arrow" strokeWidth={2.4} aria-hidden="true" />
                 </h3>
               </Link>
 

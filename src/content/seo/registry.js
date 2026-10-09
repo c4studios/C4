@@ -85,11 +85,15 @@ const PILLARS = [
       comparisons: ['do-small-businesses-need-seo', 'how-much-does-a-website-cost-perth'],
     },
   },
+  /* Retitled 9 Oct 2026 to lead with logos, when Logo Design became the
+     fourth arm with its own page at /logo-design. This stays its search
+     page, with the same slug and prices; the page file's header lists
+     what changed. */
   {
     slug: 'branding-perth', type: 'pillar', status: 'live', phase: 2,
-    name: 'Branding Perth', serviceType: 'Brand identity design',
-    title: 'Branding Perth — Logos to Full Identity | C4 Studios',
-    description: 'Brand design in Perth priced honestly: logos from $250, brand essentials at $1,200, full identity systems from $2,500. Fixed scope, files you own.',
+    name: 'Logo Design Perth', serviceType: 'Logo and brand identity design',
+    title: 'Logo Design Perth — Logos to Full Identity | C4 Studios',
+    description: 'Logo design in Perth priced honestly: logos from $250, brand essentials at $1,200, full identity systems from $2,500. Fixed scope, files you own.',
     priority: 0.9, changefreq: 'monthly',
     links: {
       pillars: ['web-design-perth', 'photo-video-perth'],

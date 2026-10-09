@@ -47,10 +47,12 @@ const makeLines = (coarse) => ({
   folio: 'Opening the work →',
 });
 
-/* The three arms, each a button through to its own page. The mark carries
-   a hint of that arm's identity (window / iris / magnifier), tinted in the
-   arm's accent via --arm. Names + destinations match the site. The C4i arm
-   went to C4Site on 9 Oct 2026; the sister line under the arms covers it. */
+/* The four arms, each a button through to its own page. The mark carries
+   a hint of that arm's identity (window / iris / magnifier / a vector
+   point with its handles), tinted in the arm's accent via --arm. Names +
+   destinations match the site. The C4i arm went to C4Site on 9 Oct 2026;
+   the sister line under the arms covers it. Logo Design joined the same
+   day, in the green of its cutting mat. */
 const ARMS = [
   {
     to: '/ServiceWeb',
@@ -69,7 +71,7 @@ const ARMS = [
   {
     to: '/Lens',
     name: 'C4 Lens',
-    line: 'Photography, short-form video and brand identity.',
+    line: 'Photography and short-form video.',
     color: '#e0a23a',
     mark: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
@@ -90,6 +92,21 @@ const ARMS = [
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
         <circle cx="10.5" cy="10.5" r="6.3" />
         <path d="M15.2 15.2L20 20" />
+      </svg>
+    ),
+  },
+  {
+    to: '/logo-design',
+    name: 'Logo Design',
+    line: 'Logos that hold up on a sign and in a browser tab.',
+    color: '#62c193',
+    mark: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
+        <path d="M3.5 18.5C7 5.5 17 5.5 20.5 18.5" />
+        <path d="M5.4 8.75h13.2" strokeWidth="1.2" />
+        <circle cx="5.2" cy="8.75" r="1.25" fill="currentColor" stroke="none" />
+        <circle cx="18.8" cy="8.75" r="1.25" fill="currentColor" stroke="none" />
+        <rect x="10.6" y="7.35" width="2.8" height="2.8" fill="currentColor" stroke="none" />
       </svg>
     ),
   },
@@ -374,13 +391,13 @@ export default function Welcome() {
           </div>
         </section>
 
-        {/* What C4 does now — the three arms, each a button through */}
+        {/* What C4 does now — the four arms, each a button through */}
         <section className="sec">
           <div className="inner">
             <div className="kick">what c4 does now</div>
-            <h2>One studio, three arms.</h2>
+            <h2>One studio, four arms.</h2>
             <p className="body">{`It began with websites and grew. Today each side of C4 is its own craft — all built and run by me, here in Perth. Tap through to whichever fits, or book a call and I’ll point you the right way.`}</p>
-            <nav className="arms" aria-label="The three arms of C4 Studios">
+            <nav className="arms" aria-label="The four arms of C4 Studios">
               {ARMS.map((arm) => (
                 <Link className="arm" key={arm.to} to={arm.to} style={{ '--arm': arm.color }}>
                   <span className="arm-mark">{arm.mark}</span>

@@ -31,14 +31,16 @@ const money = (n) => `$${Math.round(n).toLocaleString('en-AU')}`;
    place on a price rail or in a till. It joins its lane once it's priced. */
 const priced = (list) => list.filter((p) => typeof p.price === 'number');
 
-/* The lanes are the arms, in the order the site sells them. `service` is the
-   key /start already understands. The Automation lane went to C4Site with
-   C4i on 9 Oct 2026, and its packages left pricing.js with it. */
+/* The lanes are the arms, in the order the site sells them, then the extras.
+   `service` is the key /start already understands. The Automation lane went
+   to C4Site with C4i on 9 Oct 2026, and its packages left pricing.js with
+   it. The same day the Brand lane became Logo Design, the fourth arm, and
+   moved after SEO to match the menu (C1 to C4). */
 const LANES = [
   { key: 'web', label: 'Website', packages: priced(webDesignPackages), addOns: webDesignAddOns, service: 'web_design', payMonthly: true },
   { key: 'lens', label: 'Photography', packages: priced(c4LensPackages), service: 'lens' },
-  { key: 'brand', label: 'Brand', packages: priced(brandingPackages), service: 'brand_platform' },
   { key: 'seo', label: 'SEO', packages: priced(seoPackages), service: 'seo' },
+  { key: 'logo', label: 'Logo Design', packages: priced(brandingPackages), service: 'logo_design' },
   { key: 'social', label: 'Social', packages: priced(socialMediaPackages), service: 'social' },
   { key: 'care', label: 'Care plan', packages: priced(supportPlans), service: 'support' },
 ];

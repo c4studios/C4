@@ -2,13 +2,20 @@
  * Pillar — Branding Perth.
  * Unique detail: the honest defence of the $250 starter logo — when it's
  * the right amount of money and when it isn't.
+ *
+ * 9 Oct 2026: retitled to lead with logos, when Logo Design became C4
+ * Studios' fourth arm with its own page at /logo-design (Caleb). This stays
+ * the arm's search page. Slug and prices unchanged. The registry title,
+ * description and name, the hero label, the h1 and the intro's first line
+ * now say logo design, and one added sentence in "Honest tiers" links to
+ * /logo-design. The rest of the copy is as it was.
  */
 export default {
   hero: {
-    label: 'Branding Perth',
-    title: ['Branding in Perth, from', 'first logo to full system.'],
+    label: 'Logo Design Perth',
+    title: ['Logo design in Perth, from', 'first mark to full system.'],
     intro: [
-      'C4 Studios designs brand identities for Perth businesses at every honest price point: a starter logo at $250, a full logo package at $500, brand essentials at $1,200, and complete identity systems from $2,500. Fixed scope, named revision rounds, and final files you actually own.',
+      'C4 Studios designs logos and brand identities for Perth businesses at every honest price point: a starter logo at $250, a full logo package at $500, brand essentials at $1,200, and complete identity systems from $2,500. Fixed scope, named revision rounds, and final files you actually own.',
       'No brand-strategy theatre, no five-figure discovery phases — considered design work, priced the way a small business can actually buy it.',
     ],
   },
@@ -62,6 +69,7 @@ export default {
       body: [
         'It’s two considered concepts and one revision round — real design, tightly scoped. For a new trade, a market stall or a side venture still testing its name, it’s exactly the right amount of money. We’d rather you spend $250 now than nothing at all.',
         'But the moment you’re printing vehicle wraps, signage and uniforms, step up a tier. Redoing a cheap logo across a fleet costs far more than starting with the $500 or $1,200 package would have. We’ll tell you which side of that line you’re on before you pay for either.',
+        'The [Logo Design page](/logo-design) sets out every package side by side, and how a logo job runs from the brief to the hand-over.',
       ],
     },
     {
