@@ -52,7 +52,7 @@ export const ORG_INFO = {
     'software, with brand photography, videography and motion graphics, SEO ' +
     'and copywriting, and logo design for ambitious founders and businesses.',
   founder: 'Caleb Scott',
-  foundingDate: '2022',
+  foundingDate: '2025-12',
   email: 'caleb@c4studios.com.au',
   telephone: PHONE.e164,
   region: 'Perth, Western Australia',

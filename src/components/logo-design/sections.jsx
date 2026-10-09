@@ -11,7 +11,7 @@
 import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from '@/components/c4/SiteLink';
-import { brandingPackages, webDesignAddOns, GST_NOTE } from '@/data/pricing';
+import { brandingPackages, webDesignAddOns, GST_NOTE, logoTimeline } from '@/data/pricing';
 import { createPageUrl } from '@/utils';
 import guide from '@/content/seo/pages/branding-perth';
 import Mark, { roundelPath, lettersPath } from './Mark';
@@ -264,6 +264,7 @@ export function Prices() {
               <p className="lg-addon">
                 Having a website built as well? Branding can be added to the build for{' '}
                 <b className="lg-addon-fig" data-fig="">{money(ADDON.price)}</b>.{' '}
+                {ADDON.detail ? <>{ADDON.detail}{' '}</> : null}
                 <Link to="/ServiceWeb">See the web packages</Link>
               </p>
             </div>
@@ -280,10 +281,10 @@ export function Prices() {
 export function Process() {
   const range = CONCEPT_RANGE ? `${cap(word(CONCEPT_RANGE[0]))} to ${word(CONCEPT_RANGE[1])} directions, depending on the package, and each one is its own idea.` : 'Different directions, each its own idea.';
   const steps = [
-    { title: 'The brief', text: 'A short questionnaire and a call about who you serve and who you’re up against. The call takes about twenty minutes.' },
+    { title: 'The brief', text: 'A short questionnaire and a call about who you serve and who you’re up against.' },
     { title: 'Concepts', text: range },
     { title: 'Refining', text: 'You choose one, and we work your feedback through the revision rounds in your package.' },
-    { title: 'The hand-over', text: 'Every file arrives together, with your colours, and the type and guidelines in the bigger packages.' },
+    { title: 'The hand-over', text: `Every file arrives together, with your colours, and the type and guidelines in the bigger packages. Most logo jobs take ${logoTimeline} from the brief to here.` },
   ];
   return (
     <section className="lg-sec lg-process" aria-labelledby="lg-process-h">
