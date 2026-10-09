@@ -3,11 +3,16 @@
  * about guarantees, the price list, the writing, the questions people ask,
  * and the close.
  *
- * Prices come only from src/data/pricing.js: the SEO packages and the $500
+ * Prices come only from src/data/pricing.js: the SEO packages and the
  * copywriting add-on. Article counts are read from the plans' own feature
- * lists. The guarantee answer, the questions and the example answer are
+ * lists. The guarantee answer, the questions and the cost answer are
  * imported from the article files they live in, so they can't drift from
  * them. Anything else is quoted, and the page says so.
+ *
+ * Each section owns its screen in its own way: the guarantee is the answer
+ * itself, set large across the measure; the prices are a ledger; the
+ * writing is a ruled list beside the answer it practises; the close is the
+ * red field with your listing lying on it, first.
  */
 import { ArrowRight } from 'lucide-react';
 import { Link } from '@/components/c4/SiteLink';
@@ -15,10 +20,10 @@ import { seoPackages, webDesignAddOns, GST_NOTE } from '@/data/pricing';
 import { createPageUrl } from '@/utils';
 import seoGuide from '@/content/seo/pages/seo-perth';
 import costGuide from '@/content/seo/pages/how-much-does-a-website-cost-perth';
-import Board from './Board';
+import { FirstSheet } from './Results';
 import { EXAMPLES } from './examples';
-import { GRAPHITE, Graphite, ringPath } from './pencil';
 
+const START = createPageUrl('StartProject');
 const money = (n) => `$${Math.round(n).toLocaleString('en-AU')}`;
 const WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'];
 const word = (n) => WORDS[n] || String(n);
@@ -54,32 +59,30 @@ function priceParts(p) {
   return { figure: label, unit: '' };
 }
 
+/* B612 is monospaced, so its comma takes a full cell and "$1,000" reads as
+   "$1, 000" at display size. The comma is tucked in rather than the face
+   swapped. */
+const tight = (figure) => figure.split(',').map((part, i) => (
+  i === 0 ? part : <span key={i}><span className="sc-comma">,</span>{part}</span>
+));
+
 /* ── The straight answer ─────────────────────────────────────────────── */
 
 export function Guarantee() {
   const g = faq('Do you guarantee first place on Google?');
   return (
     <section className="sc-sec sc-promise" aria-labelledby="sc-promise-h">
-      <div className="sc-frame sc-promise-grid">
-        <div className="sc-promise-text">
-          <h2 className="sc-h2 sc-promise-h" id="sc-promise-h">
-            Nobody can promise you
-            <br />
-            <span className="sc-ringed">
-              first place
-              <svg viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                <g filter={`url(#${GRAPHITE})`}><Graphite d={ringPath(10, 10, 280, 80, 3)} pass={[0.9, 0.6]} /></g>
-              </svg>
-            </span>
-          </h2>
-          <p>
+      <div className="sc-frame">
+        <div className="sc-promise-head">
+          <h2 className="sc-promise-h" id="sc-promise-h">Nobody can promise you first&nbsp;place</h2>
+          <p className="sc-promise-say">
             What you just scrolled through takes months in real life, and some searches are much harder to win
             than others. So when people ask us for a guarantee, this is the answer, word for word from our SEO
             guide.
           </p>
         </div>
         {g ? (
-          <figure className="sc-proof">
+          <figure className="sc-proof sc-proof--wide">
             <span className="sc-proof-rule" aria-hidden="true" />
             <p className="sc-proof-q">{g.q}</p>
             <blockquote className="sc-proof-a"><p>{g.a}</p></blockquote>
@@ -95,19 +98,18 @@ export function Guarantee() {
 
 /* ── What it costs ───────────────────────────────────────────────────── */
 
-/* B612 is monospaced, so its comma takes a full cell and "$1,000" reads as
-   "$1, 000" at display size. The comma is tucked in rather than the face
-   swapped. */
-const tight = (figure) => figure.split(',').map((part, i) => (
-  i === 0 ? part : <span key={i}><span className="sc-comma">,</span>{part}</span>
-));
-
 function PriceRow({ p }) {
   const { figure, unit, tbc } = priceParts(p);
   return (
     <article className="sc-row" id={`price-${p.key}`} aria-labelledby={`price-${p.key}-h`}>
-      <div className="sc-row-head">
+      <div className="sc-row-id">
         <h4 className="sc-row-name" id={`price-${p.key}-h`}>{p.name}</h4>
+        {p.description ? <p className="sc-row-desc">{p.description}</p> : null}
+      </div>
+      <ul className="sc-row-list">
+        {(p.features || []).map((f) => <li key={f}>{f}</li>)}
+      </ul>
+      <div className="sc-row-buy">
         <p className="sc-row-price" data-fig="">
           <span className="sr-only">{tbc ? 'Price to be confirmed' : `${figure}${unit ? ` ${unit}` : ''}`}</span>
           <span aria-hidden="true">
@@ -116,16 +118,10 @@ function PriceRow({ p }) {
           </span>
         </p>
         {p.priceSuffix ? <p className="sc-row-term">{p.priceSuffix}</p> : null}
+        <Link to={`${START}?service=seo&package=${p.key}`} className="sc-row-go">
+          Start with {p.name}<ArrowRight size={14} strokeWidth={2} aria-hidden="true" />
+        </Link>
       </div>
-      <div className="sc-row-body">
-        {p.description ? <p className="sc-row-desc">{p.description}</p> : null}
-        <ul className="sc-row-list">
-          {(p.features || []).map((f) => <li key={f}>{f}</li>)}
-        </ul>
-      </div>
-      <Link to={`${createPageUrl('StartProject')}?service=seo&package=${p.key}`} className="sc-row-go">
-        Start with {p.name}<ArrowRight size={14} strokeWidth={2} aria-hidden="true" />
-      </Link>
     </article>
   );
 }
@@ -134,10 +130,11 @@ export function Prices() {
   const intro = `${cap(word(ONE_OFF.length))} one-off packages fix the foundations. ${cap(word(MONTHLY.length))} monthly plans keep the work going, from ${money(FROM_MONTHLY)} a month, and none of them locks you in past its minimum term.`;
   return (
     <section className="sc-sec sc-prices" id="prices" aria-labelledby="sc-prices-h">
-      <div className="sc-frame">
+      <div className="sc-frame sc-prices-grid">
         <div className="sc-prices-head">
           <h2 className="sc-h2" id="sc-prices-h">What it costs</h2>
           <p className="sc-prices-say">{intro}</p>
+          <p className="sc-fine">{GST_NOTE}</p>
         </div>
         <div className="sc-ledger">
           <div className="sc-ledger-group" aria-labelledby="sc-once-h">
@@ -149,7 +146,6 @@ export function Prices() {
             {MONTHLY.map((p) => <PriceRow key={p.key} p={p} />)}
           </div>
         </div>
-        <p className="sc-fine sc-fine--ink">{GST_NOTE}</p>
       </div>
     </section>
   );
@@ -173,6 +169,25 @@ export function Writing() {
             can check, so we leave them out. We write plainly and lead with what you do and where. A claim stays
             in only if it&rsquo;s true.
           </p>
+          <ul className="sc-rules">
+            <li><b>The answer goes first.</b> <span>If someone asks what it costs, the price is in the opening lines.</span></li>
+            <li><b>Every figure has a source.</b> <span>If a number can&rsquo;t be traced, it comes out.</span></li>
+            <li><b>Plain words.</b> <span>If a reader has seen a phrase on ten other sites, it comes out.</span></li>
+            <li><b>Australian English.</b> <span>Written for the person on the other end of the search.</span></li>
+          </ul>
+        </div>
+        <div className="sc-writing-side">
+          {answer ? (
+            <figure className="sc-proof sc-proof--answer">
+              <span className="sc-proof-rule" aria-hidden="true" />
+              <p className="sc-proof-q">How much does a website cost in Perth?</p>
+              <blockquote className="sc-proof-a"><p>{answer}</p></blockquote>
+              <figcaption className="sc-proof-src">
+                Our answer, word for word, from{' '}
+                <Link to="/how-much-does-a-website-cost-perth/">the page it lives on</Link>, where the number is the first thing you read.
+              </figcaption>
+            </figure>
+          ) : null}
           <dl className="sc-offers">
             <div className="sc-offer">
               <dt>Website copy</dt>
@@ -187,24 +202,7 @@ export function Writing() {
               <dd>Rewrites, service pages and one-off articles are quoted on the call.</dd>
             </div>
           </dl>
-          <ul className="sc-rules">
-            <li><b>The answer goes first.</b> If someone asks what it costs, the price is in the opening lines.</li>
-            <li><b>Every figure has a source.</b> If a number can&rsquo;t be traced, it comes out.</li>
-            <li><b>Plain words.</b> If a reader has seen a phrase on ten other sites, it comes out.</li>
-            <li><b>Australian English.</b> Written for the person on the other end of the search.</li>
-          </ul>
         </div>
-        {answer ? (
-          <figure className="sc-proof sc-proof--answer">
-            <span className="sc-proof-rule" aria-hidden="true" />
-            <p className="sc-proof-q">How much does a website cost in Perth?</p>
-            <blockquote className="sc-proof-a"><p>{answer}</p></blockquote>
-            <figcaption className="sc-proof-src">
-              Our answer, word for word, from{' '}
-              <Link to="/how-much-does-a-website-cost-perth/">the page it lives on</Link>, where the number is the first thing you read.
-            </figcaption>
-          </figure>
-        ) : null}
       </div>
     </section>
   );
@@ -258,18 +256,18 @@ export function Close() {
   return (
     <section className="sc-close" aria-labelledby="sc-close-h">
       <div className="sc-frame sc-close-grid">
-        <div>
+        <div className="sc-close-text">
           <h2 className="sc-close-h" id="sc-close-h">Start with what you&rsquo;ve got.</h2>
           <p className="sc-close-say">
             Send the address of your site, or describe the page you wish you had. We&rsquo;ll tell you what&rsquo;s
             worth fixing first, and what it costs.
           </p>
-          <Link to={`${createPageUrl('StartProject')}?service=seo`} className="sc-start">Start a project</Link>
-          <p className="sc-fine">{GST_NOTE}</p>
+          <Link to={`${START}?service=seo`} className="sc-start">Start a project</Link>
+          <p className="sc-fine sc-fine--onred">{GST_NOTE}</p>
         </div>
-        {/* the climb, finished: the example listing pinned at first */}
-        <div className="sc-close-pin" aria-hidden="true">
-          <Board ex={EXAMPLES[0]} step={5} still skeleton={PRERENDER} className="sc-board--pinned" />
+        {/* the climb, finished: the example listing alone, first */}
+        <div className="sc-close-sheet">
+          <FirstSheet ex={EXAMPLES[0]} skeleton={PRERENDER} />
         </div>
       </div>
     </section>
