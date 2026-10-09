@@ -39,7 +39,21 @@
  *           the finish review, the verdict, DESIGN.md, and every shipping
  *           raster carrying its provenance. (The DESIGN.md entry for this
  *           world went with the report for Caleb's review, to be added when
- *           the branch is merged. The page ships no rasters.)
+ *           the branch is merged. Since 10 Oct 2026 the page ships
+ *           photographs, each carrying its source in its EXIF.)
+ *
+ * 10 OCTOBER 2026, OUT OF THE EXAM ROOM
+ * Caleb, verbatim: "logo site needs to be a little more engaging. you can
+ * find real-life photos of etching, software and anything else relevant.
+ * this will make it look more reputable. again, need to reach the standards
+ * set by the web design page. doesnt need to be all about c4 studios logo."
+ * The eye test stays as the opening. After "One or two?" the page leaves the
+ * screen: "Most logos spend their life on things" (Run.jsx) is seven real
+ * processes in real photographs (photos.js holds every source and licence),
+ * each with our 4 drawn beside it the way that process would carry it.
+ * "How a logo job runs" gains a drawing app's window (Workfile.jsx) where
+ * our mark is built up from its real path data, step by step. The photos are
+ * other people's, captioned plainly; nothing claims them as our work.
  *
  * Built from published facts only. Prices, package lines and the timeline
  * come from pricing.js, the ownership answer is imported from
@@ -52,6 +66,7 @@ import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema, serviceSchema } from '@/lib/schema';
 import Exam from '@/components/logo-design/Exam';
 import OneOrTwo from '@/components/logo-design/OneOrTwo';
+import Run from '@/components/logo-design/Run';
 import Shapes from '@/components/logo-design/Shapes';
 import Colours from '@/components/logo-design/Colours';
 import {
@@ -131,6 +146,7 @@ export default function LogoDesign() {
         steps={STEPS}
       />
       <OneOrTwo />
+      <Run />
       <Colours />
       <Shapes />
       <Prices />

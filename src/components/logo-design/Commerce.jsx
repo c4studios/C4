@@ -7,11 +7,14 @@
  * in here. The ownership answer is imported from the guide it's published in
  * (src/content/seo/pages/branding-perth.js), so it can't drift from it.
  */
+import { useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from '@/components/c4/SiteLink';
 import { brandingPackages, webDesignAddOns, GST_NOTE, logoTimeline } from '@/data/pricing';
 import { createPageUrl } from '@/utils';
 import guide from '@/content/seo/pages/branding-perth';
+import Workfile from './Workfile';
+import useWide, { useReadingLine } from './useWide';
 
 export const START = createPageUrl('StartProject');
 export const money = (n) => `$${Math.round(n).toLocaleString('en-AU')}`;
@@ -119,22 +122,37 @@ export function Prices() {
 
 /* ── How a job runs, and who owns the result ─────────────────────────── */
 
+/* The file types the packages name, in the order they first appear:
+   "Final files: PNG + SVG", "Final files: SVG, PNG, PDF (colour + mono)". */
+const FORMATS = [...new Set(PRICED
+  .flatMap((p) => (p.features || []).filter((f) => /final files/i.test(f)))
+  .flatMap((f) => f.match(/\b(SVG|PNG|PDF|EPS|AI)\b/g) || []))];
+
 export function Process() {
+  const mode = useWide();
+  const wide = mode === 'wide';
+  const stepRefs = useRef([]);
+  const on = useReadingLine(wide, stepRefs, 0.62);
   const range = CONCEPT_RANGE ? `${cap(word(CONCEPT_RANGE[0]))} to ${word(CONCEPT_RANGE[1])} directions, depending on the package, and each one is its own idea.` : 'Different directions, each its own idea.';
   const steps = [
-    { title: 'The brief', text: 'A short questionnaire and a call about who you serve and who you’re up against.' },
-    { title: 'Concepts', text: range },
-    { title: 'Refining', text: 'You choose one, and we work your feedback through the revision rounds in your package.' },
-    { title: 'The hand-over', text: `Every file arrives together, with your colours, and the type and guidelines in the bigger packages. Most logo jobs take ${logoTimeline} from the brief to here.` },
+    { key: 'brief', title: 'The brief', text: 'A short questionnaire and a call about who you serve and who you’re up against.' },
+    { key: 'concepts', title: 'Concepts', text: range },
+    { key: 'refining', title: 'Refining', text: 'You choose one, and we work your feedback through the revision rounds in your package.' },
+    { key: 'handover', title: 'The hand-over', text: `Every file arrives together, with your colours, and the type and guidelines in the bigger packages. Most logo jobs take ${logoTimeline} from the brief to here.` },
   ];
+  const listed = FORMATS.length > 1 ? `${FORMATS.slice(0, -1).join(', ')} and ${FORMATS[FORMATS.length - 1]}` : FORMATS[0];
   return (
-    <section className="ld-sec ld-process" aria-labelledby="ld-process-h">
+    <section className={`ld-sec ld-process is-${mode}`} aria-labelledby="ld-process-h">
       <div className="ld-frame ld-process-grid">
-        <div>
+        <div className="ld-process-text">
           <h2 className="ld-h2" id="ld-process-h">How a logo job runs</h2>
           <ol className="ld-steps-list">
             {steps.map((s, i) => (
-              <li key={s.title} className="ld-runstep">
+              <li
+                key={s.key}
+                className={`ld-runstep${wide && i !== on ? ' is-quiet' : ''}`}
+                ref={(el) => { stepRefs.current[i] = el; }}
+              >
                 <span className="ld-runstep-n" aria-hidden="true">{i + 1}</span>
                 <div>
                   <h3 className="ld-runstep-h">{s.title}</h3>
@@ -148,7 +166,17 @@ export function Process() {
             <Link to="/branding-perth/">Logo Design Perth</Link>.
           </p>
         </div>
-        {OWN ? (
+        <figure className="ld-wf-frame">
+          <Workfile state={wide ? steps[on].key : 'all'} formats={FORMATS} />
+          <figcaption className="ld-wf-cap">
+            Our own logo&rsquo;s working file, drawn here from its real path data: every anchor point, and the
+            handles that bend the C. The window is a drawing too, not any particular app.
+            {listed ? ` Between them, the packages list ${listed} files.` : ''}
+          </figcaption>
+        </figure>
+      </div>
+      {OWN ? (
+        <div className="ld-frame ld-process-own">
           <figure className="ld-proof">
             <span className="ld-proof-rule" aria-hidden="true" />
             <p className="ld-proof-q">{OWN.q}</p>
@@ -157,8 +185,8 @@ export function Process() {
               Word for word from <Link to="/branding-perth/">Logo Design Perth</Link>, our guide to how we price and run logo work.
             </figcaption>
           </figure>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
     </section>
   );
 }

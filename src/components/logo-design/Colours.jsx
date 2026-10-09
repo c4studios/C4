@@ -20,6 +20,7 @@
  */
 import { DEEP, SCREEN } from './geometry';
 import { MarkG, widthAt } from './Pieces';
+import Photo, { Credit } from './Photo';
 
 const H = 120;
 const W = widthAt.mark(H) + 120;
@@ -109,15 +110,23 @@ export default function Colours() {
 
       <div className="ld-frame ld-colours-body">
         <div className="ld-colours-say">
-          <p className="ld-say">
-            Our red and green are almost the same lightness. Take the colour out and they&rsquo;re nearly the same
-            grey, and to someone with red-green colour blindness they look much alike too. The 4 still reads,
-            because the gap between its two pieces does the work.
-          </p>
-          <p className="ld-say">
-            They come in two strengths. The printed card uses the deep pair. Our profile picture uses a brighter
-            pair, which holds up better on a dark screen.
-          </p>
+          <div className="ld-colours-text">
+            <p className="ld-say">
+              Our red and green are almost the same lightness. Take the colour out and they&rsquo;re nearly the same
+              grey, and to someone with red-green colour blindness they look much alike too. The 4 still reads,
+              because the gap between its two pieces does the work.
+            </p>
+            <p className="ld-say">
+              They come in two strengths. The printed card uses the deep pair. Our profile picture uses a brighter
+              pair, which holds up better on a dark screen.
+            </p>
+          </div>
+          <figure className="ld-loupe">
+            <Photo k="loupe" alt="A black printer's loupe standing on a printed chart of cyan to magenta squares." sizes="(min-width: 900px) 22vw, 60vw" />
+            <figcaption className="ld-loupe-cap">
+              A printer&rsquo;s loupe on a printed colour chart, for checking colour on paper. <Credit k="loupe" />
+            </figcaption>
+          </figure>
         </div>
 
         <div className="ld-strip ld-strip--3">
