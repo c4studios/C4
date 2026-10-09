@@ -22,6 +22,7 @@ import seoGuide from '@/content/seo/pages/seo-perth';
 import costGuide from '@/content/seo/pages/how-much-does-a-website-cost-perth';
 import { FirstSheet } from './Results';
 import { EXAMPLES } from './examples';
+import { PHOTOS, Photo, Credit } from './photos';
 
 const START = createPageUrl('StartProject');
 const money = (n) => `$${Math.round(n).toLocaleString('en-AU')}`;
@@ -176,7 +177,17 @@ export function Writing() {
             <li><b>Australian English.</b> <span>Written for the person on the other end of the search.</span></li>
           </ul>
         </div>
-        <div className="sc-writing-side">
+        <figure className="sc-markup">
+          <div className="sc-markup-plate">
+            <Photo photo={PHOTOS.markup} sizes="(min-width: 900px) 40vw, 92vw" />
+          </div>
+          <figcaption className="sc-cap">
+            <Credit photo={PHOTOS.markup} />
+          </figcaption>
+        </figure>
+      </div>
+      <div className="sc-frame sc-writing-grid sc-writing-foot">
+        <div className="sc-writing-answer">
           {answer ? (
             <figure className="sc-proof sc-proof--answer">
               <span className="sc-proof-rule" aria-hidden="true" />
@@ -188,6 +199,9 @@ export function Writing() {
               </figcaption>
             </figure>
           ) : null}
+        </div>
+        <div className="sc-writing-side">
+          <h3 className="sc-h3">What the writing costs</h3>
           <dl className="sc-offers">
             <div className="sc-offer">
               <dt>Website copy</dt>
