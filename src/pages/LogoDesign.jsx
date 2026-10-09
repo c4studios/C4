@@ -1,67 +1,92 @@
 /*
  * /logo-design: Logo Design, the fourth arm of C4 Studios from 9 Oct 2026.
- * Caleb: "for c4 studios, we've been getting a lot of enquiries regarding
- * logo design. Please make that the 4 arms of c4 studios." The arm is called
- * Logo Design, it gets this page, and /branding-perth stays its search page.
+ *
+ * Rebuilt the same day to Caleb's brief, verbatim: "logo page needs some
+ * ingenuity too it, as well. looking really basic so far. maybe lead with
+ * the iconic '4'. include some phrasology like 'sometimes less is more' or
+ * something like thjat. really dive into identity and use ours as an
+ * example". The vinyl, the cutting mat, the weeding hook and the "Your
+ * Business" stand-in are gone. The example is our own logo.
  *
  * DIRECTION CONTRACT
- *  THESIS   A logo has to survive being used: cut in vinyl, stitched, shrunk
- *           to a 16-pixel tab. The page shows a stand-in mark passing those
- *           tests on a signwriter's mat. It refuses the logo-page default (a
- *           wall of client logos over three price cards) and the
- *           golden-circle construction grid.
- *  OWN-WORLD The bench, with its one red for start and proof stock for the
- *           prices and the verbatim answer. The arm's material: a green
- *           self-healing cutting mat with centimetre ruling and rulers in
- *           B612, an offcut of gloss black sign vinyl on white backing paper
- *           inside a weeding-box frame, the flap's matte underside, a
- *           yellow-handled weeding hook. Materials keep their colours in both
- *           themes.
- *  STORY    The visitor watches their stand-in logo weeded, sees it hold from
- *           a sign to a browser tab, sees a flat image redrawn as vector,
- *           reads five published prices, learns how a job runs and that the
- *           files are theirs, and starts a brief.
- *  FIRST VIEWPORT Left: the h1, a three-sentence lede, the red start button
- *           and a ghost "See the prices". Right (under the intro below
- *           1024px): the mat, the sheet mid-weed, its corner to pull, and the
- *           caption. The corner waits for the visitor; the clock takes it
- *           only after a real idle, and reduced motion keeps the pull.
- *  FORM     The redraw, seventh of seven structures; seed e8adeaff dealt 7, 2
- *           and 4, with 7 leading. The size run (2) is its proof section. The
- *           signwriter's docket counter (4) was declined, since proof stock
- *           already carries the prices. Every catalog challenger was
- *           declined; from the drawcord cape the page keeps one discipline:
- *           one pull moves the whole sheet.
+ *  THESIS   A logo has to read at every size it's used. The page puts our own
+ *           mark through an eye test: the chart's top line is the 4, and
+ *           stepping back reads the logo down to a 16-pixel browser tab,
+ *           where the C drops away. It refuses the logo-page default (a wall
+ *           of client logos over price cards) and the golden-circle grid.
+ *  OWN-WORLD The exam room: a dim charcoal room, a backlit chart with its
+ *           sizes in B612 in the margin and one line lit at a time, "one or
+ *           two?", then the red and green duochrome. Apart from the site's
+ *           start red on the buttons, the mark's own colours are the only
+ *           colours in the room. The bench, proof stock and the start red
+ *           carry the anatomy, the prices and the close.
+ *  STORY    The visitor sees our 4, reads our mark down the chart, picks
+ *           between two 16-pixel icons and sees them in real tabs, sees the
+ *           mark hold on its own red and green, learns the three shapes, the
+ *           gaps and the lockup, reads five published prices and starts a
+ *           brief.
+ *  FIRST VIEWPORT Left: the h1, the lede, the red start button and "See the
+ *           prices". Right (below the words under 1024px): the 4 at the full
+ *           height of the stage, on the dark chart.
+ *  FORM     The eye test: candidate 7 of 7 on the ordered list, seed
+ *           ff6c317a. Kept from the challengers: one line isolated at a time
+ *           (the event display), literal labels (the quote grammar), the
+ *           dark room (the neon circuit), the question before the answer
+ *           (the treasure map), every version registered at one scale (the
+ *           botanical folio), and the logo's own colours as the only inks
+ *           (the risograph).
  *  FINISH   unreviewed and undocumented is unfinished; this build ends with
  *           the finish review, the verdict, DESIGN.md, and every shipping
- *           raster carrying its provenance. The first review (9 Oct 2026)
- *           returned fix with eight points. The confirmation round passed six
- *           and called the stitching partial; the satin was rebuilt after it
- *           (DESIGN.md has the detail). The sixth point, the unsourced
- *           figures in the home page's lintel, is Caleb's call (brain
- *           site_issue 110), so the disposition stays fix until he decides.
+ *           raster carrying its provenance. (The DESIGN.md entry for this
+ *           world went with the report for Caleb's review, to be added when
+ *           the branch is merged. The page ships no rasters.)
  *
- * Built from published facts only: prices and package lines from pricing.js,
- * the ownership answer imported from branding-perth.js, and a mark that is a
- * labelled stand-in. No client logo appears: none was on record as delivered,
- * cleared and already named on /Portfolio when the page was built.
+ * Built from published facts only. Prices, package lines and the timeline
+ * come from pricing.js, the ownership answer is imported from
+ * branding-perth.js, and every shape is the real logo (geometry.js). What
+ * the page says about the logo is what can be measured or seen in it: its
+ * shapes, colours, sizes and uses. Nothing says what it means.
  */
 import { useMemo } from 'react';
-import { Link } from '@/components/c4/SiteLink';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema, serviceSchema } from '@/lib/schema';
-import { createPageUrl } from '@/utils';
-import Sheet from '@/components/logo-design/Sheet';
-import { MarkDefs } from '@/components/logo-design/Mark';
+import Exam from '@/components/logo-design/Exam';
+import OneOrTwo from '@/components/logo-design/OneOrTwo';
+import Shapes from '@/components/logo-design/Shapes';
+import Colours from '@/components/logo-design/Colours';
 import {
-  Family, Redraw, Prices, Process, Close, PRICED, FROM, REBUILD, FULL, ADDON,
-} from '@/components/logo-design/sections';
+  Prices, Process, Close, PRICED, FROM, REBUILD, FULL, ADDON, START, money,
+} from '@/components/logo-design/Commerce';
 import { brandingPackages } from '@/data/pricing';
 import '@/components/logo-design/logo-design.css';
 
 const PATH = '/logo-design';
-const money = (n) => `$${Math.round(n).toLocaleString('en-AU')}`;
+const TITLE = 'Logo Design in Perth — C4 Studios';
 const ESSENTIALS = brandingPackages.find((p) => p.key === 'brand-essentials');
+
+/* The chart's captions. Each one names where that line's size is used. */
+const STEPS = [
+  {
+    key: 'top',
+    title: 'Read it like an eye chart',
+    say: 'The top line is the 4 on its own, the one part that’s in every version of our logo. It’s drawn as vector, so it stays this sharp at any size.',
+  },
+  {
+    key: 'boot',
+    title: 'Loading screen',
+    say: 'Step back and the C is round it. That’s the whole mark: three shapes, the C and a 4 in two pieces. This is about the size it shows while our site loads.',
+  },
+  {
+    key: 'nav',
+    title: 'Nav bar',
+    say: 'Thirty-two pixels tall, the size it sits at in the bar at the top of this page. All three shapes still read.',
+  },
+  {
+    key: 'tab',
+    title: 'Browser tab',
+    say: 'Sixteen pixels. There’s no room for the C here, so it goes, and the 4 carries the logo on its own. It’s the icon on this page’s tab.',
+  },
+];
 
 export default function LogoDesign() {
   const jsonLd = useMemo(() => [
@@ -91,43 +116,23 @@ export default function LogoDesign() {
   ].filter(Boolean);
   const list = parts.length > 1 ? `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}` : parts[0];
   useDocumentHead({
-    title: 'Logo Design in Perth — C4 Studios',
+    title: TITLE,
     description: `Logo design for Perth businesses at published prices: ${list}.`,
     path: PATH,
     jsonLd,
   });
 
   return (
-    <div className="lg-page">
-      {/* the stand-in's outlines, once, for every copy of it further down,
-          and the thread for the stitched one */}
-      <MarkDefs stitch />
-      <section className="lg-hero" aria-labelledby="lg-h1">
-        <div className="lg-frame lg-hero-grid">
-          <header className="lg-intro">
-            <h1 className="lg-h1" id="lg-h1">Logo design in Perth</h1>
-            <p className="lg-lede">
-              Your logo ends up on the sign, the shirts, the invoices and a browser tab sixteen pixels wide. We
-              draw it to hold up in all of them, in colour and in one colour. Prices start at {money(FROM)}, fixed
-              before the work begins.
-            </p>
-            <div className="lg-actions">
-              <Link to={`${createPageUrl('StartProject')}?service=logo_design`} className="lg-btn-start">Start a logo brief</Link>
-              <a href="#prices" className="lg-btn-ghost">See the prices</a>
-            </div>
-          </header>
-          <figure className="lg-stage-col">
-            <Sheet />
-            <figcaption className="lg-stage-cap">
-              A stand-in for your logo, cut from one colour of sign vinyl. Peeling off the spare is called weeding.
-              The cutter follows vector lines, so a logo that only exists as an image has to be redrawn before it
-              can be cut.
-            </figcaption>
-          </figure>
-        </div>
-      </section>
-      <Family />
-      <Redraw />
+    <div className="ld-page">
+      <Exam
+        from={money(FROM)}
+        startHref={`${START}?service=logo_design`}
+        tabTitle={TITLE}
+        steps={STEPS}
+      />
+      <OneOrTwo />
+      <Colours />
+      <Shapes />
       <Prices />
       <Process />
       <Close />
