@@ -336,53 +336,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 .caleb-right p strong { color: var(--ink); font-weight: 500; }
 .caleb-right .caleb-base { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 14px; color: var(--ink-2); }
 
-/* ── PORTFOLIO ── */
-.portfolio-outer { position: relative; background: #000; height: calc(100vh + var(--pf-travel, 100vh)); }
-.portfolio-sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: flex; align-items: center; }
-.pf-track { display: flex; gap: 28px; padding: 0 10vw; will-change: transform; }
-.pf-card { flex: 0 0 auto; position: relative; background: #111; overflow: hidden; height: 68vh; align-self: center; }
-.pf-card.tall { width: 22vw; aspect-ratio: 3/4; }
-.pf-card.wide { width: 47vw; aspect-ratio: 16/9; }
-.pf-card.sq { width: 30vw; aspect-ratio: 1; }
-.pf-ph { position: absolute; inset: 0; background-image: repeating-linear-gradient(135deg, transparent 0 18px, rgba(245,245,240,.018) 18px 19px); }
-.pf-mask { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,.9) 100%); opacity: 0; transition: opacity .5s cubic-bezier(.4,0,.2,1); }
-.pf-card:hover .pf-mask { opacity: 1; }
-.pf-cap { position: absolute; left: 22px; right: 22px; bottom: 20px; display: flex; justify-content: space-between; align-items: end; transform: translateY(8px); opacity: 0; transition: opacity .45s cubic-bezier(.4,0,.2,1), transform .45s cubic-bezier(.4,0,.2,1); }
-.pf-card:hover .pf-cap { transform: translateY(0); opacity: 1; }
-.pf-cap .name { font-family: 'Bebas Neue', sans-serif; font-size: 28px; }
-.pf-cap .cat { font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .1em; color: var(--ink-2); text-transform: uppercase; }
-.pf-corner { position: absolute; font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .1em; color: var(--ink-2); text-transform: uppercase; top: 14px; left: 16px; }
-.pf-corner.r { left: auto; right: 16px; }
-.pf-bar-wrap { position: absolute; bottom: 7vh; left: 10vw; right: 10vw; height: 1px; background: var(--line); z-index: 5; }
-.pf-bar { height: 100%; width: 100%; background: var(--amber); transform: scaleX(0); transform-origin: left; transition: transform .05s linear; }
-.pf-top-row { position: absolute; top: 7vh; left: 10vw; right: 10vw; display: flex; justify-content: space-between; font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); z-index: 5; }
-.pf-top-row .t { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: .14em; color: var(--ink); }
-.pf-hint { position: absolute; bottom: calc(7vh + 14px); right: 10vw; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .06em; color: var(--ink-2); z-index: 5; }
-.pf-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-
-/* ── END OF REEL slate — leader punctuation, not a frame ── */
-.pf-slate {
-  flex: 0 0 auto; align-self: center;
-  display: flex; flex-direction: column; justify-content: center; gap: 18px;
-  padding: 0 6vw 0 3vw;
-  font-family: 'Geist Mono', monospace; text-transform: uppercase; white-space: nowrap;
-}
-.pf-slate-reel {
-  display: flex; align-items: center; gap: 14px;
-  font-size: 11px; letter-spacing: .14em; color: var(--ink-2);
-}
-.pf-slate-reel::before {
-  content: ''; width: 30px; height: 1px; background: var(--amber); flex-shrink: 0;
-}
-.pf-slate-next { font-size: 10.5px; letter-spacing: .12em; color: var(--ink-2); }
-.pf-slate-next a {
-  position: relative; display: inline-flex; align-items: center;
-  min-height: 44px; min-width: 44px; margin: -17px -4px; padding: 0 4px;
-  color: var(--amber); text-decoration: none;
-  transition: color .25s ease;
-}
-.pf-slate-next a:hover { color: #f2c98c; }
-.pf-slate-next a:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
 
 /* ── CASE STUDY ── */
 .case-study { background: #0a0a0a; border-top: 1px solid var(--line); }
@@ -550,16 +503,10 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 @media (max-width: 768px) {
   .lens-page .nav-links { display: none; }
   .lens-hamburger { display: flex; align-items: center; justify-content: center; }
-  /* Portfolio captions: show always since hover doesn't work on touch */
-  .pf-mask { opacity: .55; }
-  .pf-cap { opacity: 1; transform: translateY(0); }
 }
 @media (max-width: 640px) {
   .lens-page .svc-grid { grid-template-columns: 1fr; }
   .lens-page .pkg-grid { grid-template-columns: 1fr; }
-  .lens-page .pf-card.tall,
-  .lens-page .pf-card.wide,
-  .lens-page .pf-card.sq { width: 80vw; }
   .lens-page nav { padding: 16px 20px; }
   .lens-page section.slab { padding: 80px 20px; }
   .capture { padding: 80px 20px 100px; }
@@ -597,7 +544,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   .site-nav-drop { left: 20px; top: 60px; }
   .nav-left-wrap { gap: 10px; }
   .site-back-tail { display: none; } /* escape reads "← C4" on small screens */
-  .pf-slate { padding: 0 10vw 0 2vw; gap: 14px; }
 }
 
 /* ═══════════════════════════════════════════
@@ -691,15 +637,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 .svc-foot { transition: color .35s ease, border-color .35s ease; }
 .svc-card:hover .svc-foot { color: var(--amber); border-top-color: rgba(232,166,88,.28); }
 
-/* ── Portfolio: frame counter + media zoom ── */
-.pf-count {
-  position: absolute; bottom: calc(7vh + 14px); left: 10vw;
-  font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .06em;
-  color: var(--ink-2); z-index: 5;
-  font-variant-numeric: tabular-nums;
-}
-.pf-img { transition: transform .9s cubic-bezier(.22,1,.36,1); }
-.pf-card:hover .pf-img { transform: scale(1.035); }
 
 .cta-section { position: relative; overflow: hidden; }
 
@@ -847,8 +784,9 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   .lens-portal-kick { font-size: 12px; padding: 0 20px; }
 }
 
-/* ═══ MOTION — films in their clients' own colours (8 Oct 2026) ═══
-   LensMotion.jsx and MotionFilm.jsx. The films lead and the chrome stays in
+/* ═══ MOTION — the film player (8 Oct 2026) ═══
+   MotionFilm.jsx. Since 9 Oct 2026 it plays inside the case studies
+   (LensWork.jsx, styled in lens-work.css), which also set --mo-h. The films lead and the chrome stays in
    the page's own register: Bebas and Caveat for the words, Geist Mono for
    anything measured, amber as the one accent. Each film sits in the
    viewfinder's four corners, which lock on in amber while it plays; while it
@@ -856,19 +794,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
    locks. Under it runs its colour strip, every frame averaged to one column,
    and the strip is the scrubber: played at full colour, still to come darker
    and mostly grey. Nothing here hides before a script runs. */
-
-/* Height budget: a film and its transport fit one screen under the nav. The
-   heading and both films share one frame, so their edges line up. */
-.mo-inner { --mo-h: max(calc(100vh - 250px), 420px); max-width: 1400px; margin: 0 auto; }
-@supports (height: 100svh) { .mo-inner { --mo-h: max(calc(100svh - 250px), 420px); } }
-.mo-head {
-  display: grid; grid-template-columns: minmax(0, 1fr);
-  align-items: end; column-gap: 56px; row-gap: 26px;
-  max-width: calc(var(--mo-h) * 16 / 9); margin: 0 auto clamp(64px, 8vw, 112px);
-}
-@media (min-width: 1025px) { .mo-head { grid-template-columns: minmax(0, 1fr) minmax(0, 25rem); } }
-.lens-page .motion .mo-head h2 { margin-bottom: 0; }
-.mo-lede { margin: 0; max-width: 34rem; padding-bottom: .55em; font-size: 17px; line-height: 1.65; color: var(--ink-2); }
 
 .mo-film { margin: 0 auto; max-width: calc(var(--mo-h) * 16 / 9); }
 .mo-film + .mo-film { margin-top: clamp(120px, 14vw, 190px); }
@@ -883,6 +808,9 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 .mo-video { object-fit: contain; background: #000; }
 .mo-poster { z-index: 1; transition: opacity .45s cubic-bezier(.22,1,.36,1); }
 .mo-poster img { object-fit: cover; }
+/* The poster and strip get their files a screen early (MotionFilm.jsx); until
+   then an image paints Chrome's grey outline, so it stays hidden. */
+.mo-poster img:not([src]), .mo-strip-film img:not([src]) { visibility: hidden; }
 .mo-stage.is-started .mo-poster { opacity: 0; visibility: hidden; transition: opacity .45s cubic-bezier(.22,1,.36,1), visibility 0s linear .45s; }
 
 /* Waiting for frames: the lens hunts. */
@@ -1088,9 +1016,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 }
 
 @media (max-width: 767px) {
-  .mo-inner { --mo-h: max(calc(100vh - 240px), 420px); }
-  @supports (height: 100svh) { .mo-inner { --mo-h: max(calc(100svh - 240px), 420px); } }
-  .mo-lede { font-size: 16px; padding-bottom: 0; }
   .mo-film + .mo-film { margin-top: 104px; }
   .mo-deck { margin-left: 0; }
   .mo-corner--tl, .mo-corner--tr { top: -9px; }

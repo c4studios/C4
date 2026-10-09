@@ -1,5 +1,7 @@
-/* The films in the motion section of /Lens (LensMotion.jsx), and the
-   VideoObject entries the page's JSON-LD builds from them.
+/* Two films on /Lens, and the VideoObject entries the page's JSON-LD builds
+   from them. Since 9 Oct 2026 they play inside their case studies
+   (LensWork.jsx and lensStudies.js): Aqua-Safe's promo, and the DS Racing reel,
+   re-cut that day with the end card "Websites and software, built in Perth."
 
    The files are web cuts that scripts/lens-motion.mjs makes from masters kept
    outside this repo. After a master is re-rendered, re-run the script for that
@@ -129,7 +131,7 @@ export const MOTION_FILMS = [
       { t: 29, say: 'Couldn’t ask for better service - very happy & highly recommended. DS RACING KARTS · SYDNEY' },
       { t: 32, scene: 'A chequered flag, then the C4 Studios mark.' },
       { t: 35, say: 'DS Racing Karts. See the build.' },
-      { t: 36, say: 'Websites and AI systems, built in Perth.' },
+      { t: 36, say: 'Websites and software, built in Perth.' },
       { t: 36, say: 'Read the case study · c4studios.com.au/CaseStudy/ds-racing-karts' },
     ],
     caseStudy: '/CaseStudy/ds-racing-karts',

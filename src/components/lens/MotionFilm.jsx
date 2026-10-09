@@ -17,11 +17,21 @@
  * every frame of the film averaged to one column. The part already played
  * shows at full colour and the rest waits under a shade, so the strip is a
  * progress bar made of the film itself.
+ *
+ * Two switches for the case studies (LensWork.jsx, 9 Oct 2026). `bare` drops
+ * the slate, because the study around the film carries its own words; the
+ * film's "What's on screen" list stays unless `showWords` is false. `silent`
+ * is for a cut with no soundtrack: no sound button, and a click on the
+ * playing film pauses it. The poster and the strip are only given their
+ * files once the film is a screen away, so nothing here loads with the top of
+ * the page. The prerendered HTML carries neither: a browser parsing that HTML
+ * fetched a lazy poster near the top before the app took over (9 Oct 2026).
  */
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Maximize, Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { Link } from '@/components/c4/SiteLink';
 import useStaticMode from '@/hooks/useStaticMode';
+
 
 /* One film with sound at a time. Taking the sound mutes and pauses the others;
    letting it go lets them pick up again if they are still on screen. */
@@ -43,12 +53,35 @@ function wantsLessData() {
   try { return Boolean(navigator.connection && navigator.connection.saveData); } catch { return false; }
 }
 
+/* The film's text alternative: every word it shows, in order, with the second
+   it lands. Closed by default, and in the static HTML either way. Exported so
+   a study can set it beside the film instead of under it. */
+export function FilmWords({ film, className = '' }) {
+  if (!film.words || film.words.length === 0) return null;
+  return (
+    <details className={`mo-words ${className}`.trim()}>
+      <summary>
+        What&rsquo;s on screen<span className="lens-sr-only">: {film.short} film</span>
+      </summary>
+      <ol>
+        {film.words.map((w) => (
+          <li key={`${w.t}-${w.say || w.scene}`} className={w.scene ? 'is-scene' : undefined}>
+            <span className="mo-tc">{clock(w.t)}</span>
+            <span className="mo-line">{w.scene ? `[${w.scene}]` : w.say}</span>
+          </li>
+        ))}
+      </ol>
+    </details>
+  );
+}
+
 const STEP = 2;   // seconds per arrow key on the scrubber
 const PAGE = 10;  // seconds per Page Up / Page Down
 
-export default function MotionFilm({ film, layout = 'wide' }) {
+export default function MotionFilm({ film, layout = 'wide', bare = false, silent = false, showWords = true, label, describedBy }) {
   const staticMode = useStaticMode();
   const noAuto = useMemo(() => staticMode || wantsLessData(), [staticMode]);
+  const [near, setNear] = useState(false);           // within a screen: the poster and strip may load
   const [cutIndex, setCutIndex] = useState(() => pickCut(film.cuts));
   const cut = film.cuts[cutIndex] || film.cuts[0];
   const fallbackCut = film.cuts[film.cuts.length - 1];
@@ -252,6 +285,9 @@ export default function MotionFilm({ film, layout = 'wide' }) {
     /* Plays while half of it is on screen; fetches its header a screen early. */
     let near = null;
     const io = new IntersectionObserver(([entry]) => {
+      /* A fast jump can land here before the near observer has fired, so the
+         view observer hands over the poster file too. */
+      if (entry.isIntersecting) setNear(true);
       const vis = entry.isIntersecting && entry.intersectionRatio >= 0.5;
       if (vis === s.inView) return;
       s.inView = vis;
@@ -263,14 +299,13 @@ export default function MotionFilm({ film, layout = 'wide' }) {
       }
     }, { threshold: [0, 0.5, 1] });
     io.observe(stage);
-    if (!noAuto) {
-      near = new IntersectionObserver(([entry]) => {
-        if (!entry.isIntersecting) return;
-        if (v.preload === 'none') v.preload = 'metadata';
-        near.disconnect();
-      }, { rootMargin: '100% 0px' });
-      near.observe(stage);
-    }
+    near = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setNear(true);
+      if (!noAuto && v.preload === 'none') v.preload = 'metadata';
+      near.disconnect();
+    }, { rootMargin: '100% 0px' });
+    near.observe(stage);
 
     /* A hidden tab pauses the muted loop; a film being watched keeps playing. */
     const onVisibility = () => {
@@ -361,10 +396,11 @@ export default function MotionFilm({ film, layout = 'wide' }) {
   };
 
   /* A click or tap on the playing film: the muted loop takes the sound from
-     the top, and a film being watched pauses. Keyboards use the transport. */
+     the top, and a film being watched pauses. A silent cut just pauses.
+     Keyboards use the transport. */
   const onStageClick = () => {
     if (failed) return;
-    if (st.current.mode === 'watch') onPlayPause(); else enterWatch();
+    if (silent || st.current.mode === 'watch') onPlayPause(); else enterWatch();
   };
 
   const onFullscreen = () => {
@@ -425,99 +461,95 @@ export default function MotionFilm({ film, layout = 'wide' }) {
     waiting ? 'is-waiting' : '',
   ].filter(Boolean).join(' ');
 
-  return (
-    <article
-      className={`mo-film mo-film--${layout}`}
-      data-cuts={film.cuts.length > 1 ? 'dual' : 'tall'}
-      aria-labelledby={titleId}
-    >
-      <div className="mo-deck">
-        <div className={stageClass} ref={stageRef}>
-          <video
-            ref={videoRef}
-            className="mo-video"
-            src={cut.src}
-            preload="none"
-            muted
-            playsInline
-            disablePictureInPicture
-            disableRemotePlayback
-            tabIndex={-1}
-            aria-label={`${film.client}, ${film.kind.toLowerCase()}`}
-            aria-describedby={descId}
-          />
-          <picture className="mo-poster" aria-hidden="true">
-            {film.cuts.filter((c) => c.media).map((c) => (
-              <source key={c.poster} media={c.media} srcSet={c.poster} width={c.width} height={c.height} />
-            ))}
-            <img src={fallbackCut.poster} width={fallbackCut.width} height={fallbackCut.height} alt="" loading="lazy" decoding="async" />
-          </picture>
-          <span className="mo-corner mo-corner--tl" aria-hidden="true" />
-          <span className="mo-corner mo-corner--tr" aria-hidden="true" />
-          <span className="mo-corner mo-corner--bl" aria-hidden="true" />
-          <span className="mo-corner mo-corner--br" aria-hidden="true" />
-          {/* Big targets for a pointer or a finger: the whole film while it
-              plays, and the play mark while it is still. Keyboards and screen
-              readers use the transport under the strip, so these stay out of
-              the tab order. The play mark sits inside the viewfinder's own
-              four corners. */}
-          {playing && !failed && (
-            <button type="button" className="mo-hit" onClick={onStageClick} tabIndex={-1} aria-hidden="true" />
-          )}
-          {showPlay && (
-            <button type="button" className="mo-play" onClick={onPlayPause} tabIndex={-1} aria-hidden="true">
-              <svg viewBox="0 0 72 72" width="72" height="72" fill="none" focusable="false">
-                <path d="M1 17V1h16M55 1h16v16M71 55v16H55M17 71H1V55" stroke="currentColor" strokeWidth="1.5" />
-                <path d="M29 23.5 50 36 29 48.5Z" fill="currentColor" />
-              </svg>
-            </button>
-          )}
-        </div>
+  const deck = (
+    <div className="mo-deck">
+      <div className={stageClass} ref={stageRef}>
+        <video
+          ref={videoRef}
+          className="mo-video"
+          src={cut.src}
+          preload="none"
+          muted
+          playsInline
+          disablePictureInPicture
+          disableRemotePlayback
+          tabIndex={-1}
+          aria-label={label || `${film.client}, ${film.kind.toLowerCase()}`}
+          aria-describedby={bare ? describedBy : descId}
+        />
+        <picture className="mo-poster" aria-hidden="true">
+          {film.cuts.filter((c) => c.media).map((c) => (
+            <source key={c.poster} media={c.media} srcSet={near ? c.poster : undefined} width={c.width} height={c.height} />
+          ))}
+          <img src={near ? fallbackCut.poster : undefined} width={fallbackCut.width} height={fallbackCut.height} alt="" loading="lazy" decoding="async" />
+        </picture>
+        <span className="mo-corner mo-corner--tl" aria-hidden="true" />
+        <span className="mo-corner mo-corner--tr" aria-hidden="true" />
+        <span className="mo-corner mo-corner--bl" aria-hidden="true" />
+        <span className="mo-corner mo-corner--br" aria-hidden="true" />
+        {/* Big targets for a pointer or a finger: the whole film while it
+            plays, and the play mark while it is still. Keyboards and screen
+            readers use the transport under the strip, so these stay out of
+            the tab order. The play mark sits inside the viewfinder's own
+            four corners. */}
+        {playing && !failed && (
+          <button type="button" className="mo-hit" onClick={onStageClick} tabIndex={-1} aria-hidden="true" />
+        )}
+        {showPlay && (
+          <button type="button" className="mo-play" onClick={onPlayPause} tabIndex={-1} aria-hidden="true">
+            <svg viewBox="0 0 72 72" width="72" height="72" fill="none" focusable="false">
+              <path d="M1 17V1h16M55 1h16v16M71 55v16H55M17 71H1V55" stroke="currentColor" strokeWidth="1.5" />
+              <path d="M29 23.5 50 36 29 48.5Z" fill="currentColor" />
+            </svg>
+          </button>
+        )}
+      </div>
 
-        <div className="mo-transport" ref={transportRef} style={{ '--mo-t': 0 }}>
-          <div className="mo-strip">
-            <picture className="mo-strip-film" aria-hidden="true">
-              {film.cuts.filter((c) => c.media).map((c) => (
-                <source key={c.strip} media={c.media} srcSet={c.strip} />
-              ))}
-              <img src={fallbackCut.strip} alt="" loading="lazy" decoding="async" />
-            </picture>
-            <span className="mo-shade" aria-hidden="true" />
-            <input
-              ref={rangeRef}
-              className="mo-range"
-              type="range"
-              min="0"
-              max={duration}
-              step="any"
-              defaultValue="0"
-              disabled={failed}
-              aria-label={`${film.short} film timeline`}
-              aria-valuetext={`0:00 of ${clock(duration)}`}
-              onInput={(e) => seekTo(Number(e.currentTarget.value))}
-              onKeyDown={onKeyDown}
-              onPointerDown={() => { st.current.dragging = true; }}
-              onPointerUp={() => { st.current.dragging = false; paint(); }}
-              onPointerCancel={() => { st.current.dragging = false; }}
-            />
-          </div>
-          <div className="mo-controls">
-            <button
-              type="button"
-              className="mo-btn mo-btn--icon"
-              onClick={onPlayPause}
-              disabled={failed}
-              aria-label={playing ? `Pause the ${film.short} film` : `Play the ${film.short} film`}
-            >
-              {playing
-                ? <Pause aria-hidden="true" size={16} strokeWidth={1.5} fill="currentColor" />
-                : <Play aria-hidden="true" size={16} strokeWidth={1.5} fill="currentColor" />}
-            </button>
-            <span className="mo-time" aria-hidden="true">
-              <span ref={timeRef}>0:00</span>
-              <span className="mo-total">{` / ${clock(duration)}`}</span>
-            </span>
-            <span className="mo-gap" />
+      <div className="mo-transport" ref={transportRef} style={{ '--mo-t': 0 }}>
+        <div className="mo-strip">
+          <picture className="mo-strip-film" aria-hidden="true">
+            {film.cuts.filter((c) => c.media).map((c) => (
+              <source key={c.strip} media={c.media} srcSet={near ? c.strip : undefined} />
+            ))}
+            <img src={near ? fallbackCut.strip : undefined} alt="" loading="lazy" decoding="async" />
+          </picture>
+          <span className="mo-shade" aria-hidden="true" />
+          <input
+            ref={rangeRef}
+            className="mo-range"
+            type="range"
+            min="0"
+            max={duration}
+            step="any"
+            defaultValue="0"
+            disabled={failed}
+            aria-label={`${film.short} film timeline`}
+            aria-valuetext={`0:00 of ${clock(duration)}`}
+            onInput={(e) => seekTo(Number(e.currentTarget.value))}
+            onKeyDown={onKeyDown}
+            onPointerDown={() => { st.current.dragging = true; }}
+            onPointerUp={() => { st.current.dragging = false; paint(); }}
+            onPointerCancel={() => { st.current.dragging = false; }}
+          />
+        </div>
+        <div className="mo-controls">
+          <button
+            type="button"
+            className="mo-btn mo-btn--icon"
+            onClick={onPlayPause}
+            disabled={failed}
+            aria-label={playing ? `Pause the ${film.short} film` : `Play the ${film.short} film`}
+          >
+            {playing
+              ? <Pause aria-hidden="true" size={16} strokeWidth={1.5} fill="currentColor" />
+              : <Play aria-hidden="true" size={16} strokeWidth={1.5} fill="currentColor" />}
+          </button>
+          <span className="mo-time" aria-hidden="true">
+            <span ref={timeRef}>0:00</span>
+            <span className="mo-total">{` / ${clock(duration)}`}</span>
+          </span>
+          <span className="mo-gap" />
+          {!silent && (
             <button
               type="button"
               className={`mo-btn mo-btn--sound${watching ? ' is-on' : ''}`}
@@ -530,21 +562,47 @@ export default function MotionFilm({ film, layout = 'wide' }) {
               <span>{watching ? 'Sound off' : 'Watch with sound'}</span>
               <span className="lens-sr-only">: {film.short}</span>
             </button>
-            <button
-              type="button"
-              className="mo-btn mo-btn--icon"
-              onClick={onFullscreen}
-              disabled={failed}
-              aria-label={`Watch the ${film.short} film full screen`}
-            >
-              <Maximize aria-hidden="true" size={16} strokeWidth={1.5} />
-            </button>
-          </div>
-          {failed && (
-            <p className="mo-error" role="status">The film didn’t load. Refresh the page to try again.</p>
           )}
+          <button
+            type="button"
+            className="mo-btn mo-btn--icon"
+            onClick={onFullscreen}
+            disabled={failed}
+            aria-label={`Watch the ${film.short} film full screen`}
+          >
+            <Maximize aria-hidden="true" size={16} strokeWidth={1.5} />
+          </button>
         </div>
+        {failed && (
+          <p className="mo-error" role="status">The film didn’t load. Refresh the page to try again.</p>
+        )}
       </div>
+    </div>
+  );
+
+  const words = showWords && <FilmWords film={film} />;
+
+  if (bare) {
+    return (
+      <div
+        className="mo-film mo-film--bare"
+        data-cuts={film.cuts.length > 1 ? 'dual' : 'tall'}
+        role="group"
+        aria-label={label || `${film.client}, ${film.kind.toLowerCase()}`}
+      >
+        {deck}
+        {words}
+      </div>
+    );
+  }
+
+  return (
+    <article
+      className={`mo-film mo-film--${layout}`}
+      data-cuts={film.cuts.length > 1 ? 'dual' : 'tall'}
+      aria-labelledby={titleId}
+    >
+      {deck}
 
       <div className="mo-slate">
         <div className="mo-id">
@@ -563,23 +621,7 @@ export default function MotionFilm({ film, layout = 'wide' }) {
         </Link>
       </div>
 
-      {/* The film's text alternative: every word it shows, in order, with the
-          second it lands. Closed by default, and in the static HTML either way. */}
-      {film.words && film.words.length > 0 && (
-        <details className="mo-words">
-          <summary>
-            What&rsquo;s on screen<span className="lens-sr-only">: {film.short} film</span>
-          </summary>
-          <ol>
-            {film.words.map((w) => (
-              <li key={`${w.t}-${w.say || w.scene}`} className={w.scene ? 'is-scene' : undefined}>
-                <span className="mo-tc">{clock(w.t)}</span>
-                <span className="mo-line">{w.scene ? `[${w.scene}]` : w.say}</span>
-              </li>
-            ))}
-          </ol>
-        </details>
-      )}
+      {words}
     </article>
   );
 }

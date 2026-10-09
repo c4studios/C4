@@ -1,9 +1,15 @@
 /**
  * Industry — Websites for Gyms & Fitness Studios.
- * Proof: HVN Gym (full build per brief, plus Lens drone/full-show work),
- * Jurassic PT (Cannington studio, case study).
+ * Proof: HVN Gym (full build per brief, plus a C4 Lens home page film:
+ * aerial footage and a walk through the gym), Jurassic PT (Cannington
+ * studio, case study).
  * Unique detail: the timetable-as-screenshot pain and Jurassic PT's
  * dual timetable (image + structured weekly summary).
+ *
+ * Corrected 9 Oct 2026 (no figure added): HVN's line said "drone and
+ * full-show event coverage through C4 Lens". The work on file is the home
+ * page film, which shows aerial footage of the building and a walk through
+ * the gym, so the line says that. Do not add event coverage back.
  */
 export default {
   hero: {
@@ -40,7 +46,7 @@ export default {
       label: 'Proof',
       heading: 'Fitness work we can point to',
       cases: [
-        { name: 'HVN Gym', summary: 'A full website build, plus drone and full-show event coverage through C4 Lens — site and content from the same studio, so they match.', tag: 'Build + content' },
+        { name: 'HVN Gym', summary: 'A full website build, plus a home page film through C4 Lens: aerial footage of the building and a walk through the gym. Site and content came from the same studio, so they match.', tag: 'Build + content' },
         { name: 'Jurassic PT', summary: 'A Cannington fitness studio site covering memberships, classes, personal training and remedial massage — with direct booking and a dual-format timetable.', href: '/CaseStudy/jurassic-pt', tag: 'Live build' },
       ],
     },

@@ -1,9 +1,18 @@
 /**
  * Industry — Websites for Churches & Ministries.
- * Proof: The Rocks two-campus media system, Transform Fremantle,
+ * Proof: The Rocks' At the Movies motion graphics, Transform Fremantle,
  * Transform Hakea. Credibility: Caleb preaches occasionally.
  * Unique detail: the volunteer-handover documentation habit, and the
  * "visitors decide before Sunday" framing.
+ *
+ * Corrected 9 Oct 2026 (no figure added): The Rocks was "a two-campus media
+ * system: services captured, edited and published as a repeatable weekly
+ * pipeline — run as ongoing work", and the media answer said "the two-campus
+ * system we run for The Rocks" and "most churches start with us doing it".
+ * None of that is on file. C4 made the At the Movies motion graphics, built so
+ * the church's volunteer team can drop in its own videos each week
+ * (caseStudyData rocksstream), and that's what the page says now. Do not add
+ * back a claim that C4 runs any church's media, or a count of churches.
  */
 export default {
   hero: {
@@ -41,7 +50,7 @@ export default {
       label: 'Proof',
       heading: 'Ministry work we can point to',
       cases: [
-        { name: 'The Rocks', summary: 'A two-campus media system: services captured, edited and published as a repeatable weekly pipeline — run as ongoing work, not a one-off favour.', tag: 'Media system' },
+        { name: 'The Rocks', summary: 'Motion graphics for their At the Movies series: a streaming-style screen built so the volunteer team can refresh it each week by dropping in new videos.', href: '/CaseStudy/rocksstream', tag: 'Motion graphics' },
         { name: 'Transform Fremantle', summary: 'A purpose-built platform uniting churches across Fremantle — coordinated prayer, shared resources and events for a movement, not just one congregation.', href: '/CaseStudy/transform-fremantle', tag: 'Community platform' },
         { name: 'Transform Hakea', summary: 'A polished site for a prayer movement focused on Hakea Prison — quiet, purposeful design for a ministry that needed to be taken seriously.', href: '/CaseStudy/transform-hakea', tag: 'Ministry site' },
       ],
@@ -51,8 +60,8 @@ export default {
       label: 'Media',
       heading: 'Can the weekly media job actually be sustainable?',
       body: [
-        'Yes — if it’s designed as a pipeline instead of a weekly miracle. The two-campus system we run for The Rocks works because every step is defined: capture, edit, publish, archive, same way every week, documented well enough that the roster can change without the output changing. That’s the test worth applying to any media setup: would it survive your best volunteer moving to Melbourne?',
-        'Through C4 Lens we can run the pipeline for you, build it and train your team to run it, or land anywhere between — most churches start with us doing it and taper toward their own people as confidence grows.',
+        'Yes — if it’s designed as a pipeline instead of a weekly miracle. That means every step is defined: capture, edit, publish, archive, the same way every week, and written down well enough that the roster can change without the output changing. That’s the test worth applying to any media setup: would it survive your best volunteer moving to Melbourne?',
+        'Through C4 Lens we can run the pipeline for you, or build it and train your team to run it. For The Rocks we built their At the Movies screen so the volunteer team can refresh it each week by dropping in new videos, with no code involved.',
       ],
     },
     {
