@@ -45,18 +45,36 @@
  *   the tensegrity column: each piece of work marks the exact words it changes.
  *
  * Built from published facts only: prices from pricing.js, answers imported
- * from the site's own articles, and an example search labelled as one. No
- * raster ships with this page; everything on it is type and CSS.
+ * from the site's own articles, and an example search labelled as one.
+ *
+ * 10 Oct 2026, from Caleb's note: "seo and copywrite page looking better but
+ * could also do with some imagery and overal more components/impressive
+ * design". The climb stays the one moment. After it, the work is shown as
+ * objects: the example listing first on a real phone (OnPhone), the audit
+ * as a read-out (Audit), the rewrite on an example home page (Rewrite),
+ * three real sites' titles as published (OurWork), an example Google
+ * Business Profile (Profile) and six months of a plan (Months). Four real
+ * photographs (Unsplash and Pexels, sources in seo-copy/photos.jsx and
+ * each file's EXIF) and the portfolio's own captures; no generated images.
+ * Every example says it's an example; every plan line is read from
+ * pricing.js.
  */
 import { useMemo } from 'react';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema, serviceSchema } from '@/lib/schema';
 import { seoPackages } from '@/data/pricing';
 import Climb from '@/components/seo-copy/Climb';
+import OnPhone from '@/components/seo-copy/OnPhone';
+import Audit from '@/components/seo-copy/Audit';
+import Rewrite from '@/components/seo-copy/Rewrite';
+import OurWork from '@/components/seo-copy/OurWork';
+import Profile from '@/components/seo-copy/Profile';
+import Months from '@/components/seo-copy/Months';
 import {
   Guarantee, Prices, Writing, Questions, Close, COPY_ADDON, FROM_ONE_OFF, FROM_MONTHLY,
 } from '@/components/seo-copy/sections';
 import '@/components/seo-copy/seo-copy.css';
+import '@/components/seo-copy/seo-more.css';
 
 const PATH = '/seo-and-copywriting';
 const money = (n) => `$${Math.round(n).toLocaleString('en-AU')}`;
@@ -99,8 +117,14 @@ export default function SeoCopy() {
     <div className="sc-page">
       <Climb />
       <Guarantee />
-      <Prices />
+      <OnPhone />
+      <Audit />
       <Writing />
+      <Rewrite />
+      <OurWork />
+      <Profile />
+      <Months />
+      <Prices />
       <Questions />
       <Close />
     </div>
