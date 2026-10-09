@@ -59,8 +59,9 @@ const GLANCE = [
 
 const YEARS = [
   { y: '2022', t: 'C4 Studios begins', d: 'Founded in Perth as a one-person studio with one rule: the person you brief is the person who builds.' },
-  /* Private AI went to C4Site with C4i on 9 Oct 2026. */
-  { y: 'Today', t: 'Three services, still one person', d: 'Websites and apps, photography and video, SEO and copywriting.' },
+  /* Private AI went to C4Site with C4i on 9 Oct 2026, and logo design
+     became the fourth service the same day. */
+  { y: 'Today', t: 'Four services, still one person', d: 'Websites and apps, photography and video, SEO and copywriting, and logo design.' },
 ];
 
 /* The work on the bench: client sites from

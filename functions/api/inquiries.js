@@ -243,6 +243,9 @@ function formatServiceType(key) {
     web_design: 'Website Design',
     web_app: 'Web Application',
     ecommerce: 'E-Commerce',
+    // Logo Design is the fourth arm from 9 Oct 2026 and took the brand slot on
+    // the /start form. The old key keeps its label for old submissions.
+    logo_design: 'Logo Design',
     brand_platform: 'Branding & Identity',
     software: 'Custom Software',
     // 'automation' and 'training' left the /start form when C4i (9 Oct 2026)

@@ -126,6 +126,9 @@ function App() {
               }
             />
           ))}
+          {/* Logo Design (/logo-design, 9 Oct 2026) needs no line here: it's
+              in pages.config.js, eagerly imported, and the Pages map above
+              gives it its route through PAGE_URLS. */}
           {/* SEO & copywriting — service page (flat slug) */}
           <Route path="/seo-and-copywriting" element={
             <LayoutWrapper currentPageName="SeoCopy">

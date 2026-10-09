@@ -11,6 +11,8 @@ export const STATIC_ROUTES = [
   { path: '/ServiceWeb', priority: 0.85, changefreq: 'monthly' },
   { path: '/Lens', priority: 0.9, changefreq: 'monthly' },
   { path: '/seo-and-copywriting', priority: 0.85, changefreq: 'monthly' },
+  // Logo Design, the fourth arm from 9 Oct 2026.
+  { path: '/logo-design', priority: 0.85, changefreq: 'monthly' },
   // The C4Site pages (/Foresight, the three /ai-training-for-* pages,
   // /ai-training-enquiry and /c4sight-previews) moved to c4site.com.au on
   // 9 Oct 2026. public/_redirects sends their old paths there, so they are

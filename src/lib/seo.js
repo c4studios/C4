@@ -45,10 +45,12 @@ export const ORG_INFO = {
   legalName: 'C4 Studios',
   url: SITE_URL,
   logo: `${SITE_URL}/c4-logo.png`,
+  // The four arms since 9 Oct 2026: web and software, C4 Lens, SEO and
+  // copywriting, and logo design.
   description:
     'Founder-led Perth studio building custom high-performance websites and ' +
-    'software, and brand photography, videography and motion graphics for ' +
-    'ambitious founders and businesses.',
+    'software, with brand photography, videography and motion graphics, SEO ' +
+    'and copywriting, and logo design for ambitious founders and businesses.',
   founder: 'Caleb Scott',
   foundingDate: '2022',
   email: 'caleb@c4studios.com.au',

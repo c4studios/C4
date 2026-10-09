@@ -18,12 +18,13 @@ const serviceDropdown = [
     brief: 'Custom websites, web apps & SaaS platforms',
   },
   /* C4i went to C4Site with private AI and automation on 9 Oct 2026, so
-     the codes close up and run C1 to C3 in menu order. */
+     the codes close up and run in menu order. */
   {
     label: 'C4 Lens',
     code: 'C2',
     page: 'Lens',
-    brief: 'Photography, video & brand identity',
+    // "& brand identity" came off on 9 Oct 2026: Logo Design does that now.
+    brief: 'Photography & video',
   },
   /* C4Site is its own business now, so C4 Studios no longer lists it here
      (Caleb, 8 Oct 2026). SEO & Copywriting took its slot (D2). */
@@ -32,6 +33,14 @@ const serviceDropdown = [
     code: 'C3',
     page: 'SeoCopy',
     brief: 'Found in search, worth reading once found',
+  },
+  /* The fourth arm from 9 Oct 2026 (Caleb: "we've been getting a lot of
+     enquiries regarding logo design"). */
+  {
+    label: 'Logo Design',
+    code: 'C4',
+    page: 'LogoDesign',
+    brief: 'Logos, from one mark to a full identity',
   },
 ];
 
@@ -83,6 +92,11 @@ header[data-c4-chrome="header"] {
   --c4-border-light: rgba(236, 231, 222, 0.08);
   --c4-link-hover: #ffffff;
   --c4-ring: rgba(236, 231, 222, 0.4);
+  /* Focus too (9 Oct 2026): the site's ring is ink in the light theme, so
+     the links, the Services button and the start button showed no ring at
+     all on the dark bar. */
+  --c4-focus: #ECE7DE;
+  --c4-back-ring: rgba(236, 231, 222, 0.85);
   color-scheme: dark;
 }
 :root {

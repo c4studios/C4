@@ -123,10 +123,11 @@ export default function HeroSection() {
               </Link>
             </motion.div>
 
-            {/* The thesis line: the ONLY place the first fold names all three
+            {/* The thesis line: the ONLY place the first fold names all four
                 trades (hero audit: no arm vocabulary was visible before
                 scrolling). Quiet on purpose — the doors below do the selling.
-                Private AI came out on 9 Oct 2026; it's C4Site's now. */}
+                Private AI came out on 9 Oct 2026; it's C4Site's now. Logo
+                design came in the same day as the fourth arm. */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -134,8 +135,8 @@ export default function HeroSection() {
               className="mt-6 text-[13px] leading-relaxed md:mt-7"
               style={{ color: 'var(--c4-text-subtle)' }}
             >
-              Websites and apps, photography, SEO and copywriting.
-              Perth-built, all three doors below.
+              Websites and apps, photography, SEO and copywriting, and logo design.
+              Perth-built, all four doors below.
             </motion.p>
           </div>
         </div>

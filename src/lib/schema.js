@@ -64,11 +64,14 @@ export function localBusinessSchema() {
     areaServed: ORG_INFO.areaServed.map((name) => ({ '@type': 'Place', name })),
     founder: { '@type': 'Person', name: ORG_INFO.founder },
     foundingDate: ORG_INFO.foundingDate,
-    // AI and workflow automation went to C4Site with C4i on 9 Oct 2026.
+    // AI and workflow automation went to C4Site with C4i on 9 Oct 2026. Logo
+    // design came in the same day as the fourth arm, and brand identity moved
+    // to it from C4 Lens.
     knowsAbout: [
       'Web design',
       'Web development',
       'SaaS development',
+      'Logo design',
       'Branding',
       'SEO',
       'Photography',
@@ -76,8 +79,9 @@ export function localBusinessSchema() {
     ],
     makesOffer: [
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Web design and development' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'C4 Lens: photography, videography and brand identity' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'C4 Lens: photography and videography' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'SEO and copywriting' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Logo design: logos, brand essentials and full brand identities' } },
     ],
   };
 }
