@@ -433,7 +433,11 @@ const SUBURB_PAGES = SUBURB_SERVICES.flatMap((service) =>
 // their slugs under /articles/. Their entries came out of this list, and that
 // alone takes them out of the routes, the prerender, the sitemap, llms.txt and
 // the /insights index. public/_redirects sends each old address to its new
-// page. Their content modules stay in pages/ unused until the clean-up.
+// page. A clean-up the same day deleted their content modules, along with the
+// eleven AI drafts that were in this list. Ten of those drafts had bodies, and
+// each one is in c4site-website/src/content/articles/ under the same slug.
+// SeoPage.jsx lazy-loads every file in pages/, so a module there ships as a
+// public chunk whether or not its entry is live.
 const ARTICLES = [
   {
     slug: 'why-web-designers-hide-their-prices', type: 'article', status: 'live', phase: 7,
@@ -445,130 +449,6 @@ const ARTICLES = [
     published: '2026-08-03', updated: '2026-08-03', readMinutes: 6,
     priority: 0.65, changefreq: 'yearly',
     links: { pillars: ['how-much-does-a-website-cost-perth', 'web-design-perth', 'diy-website-vs-hiring-a-designer'] },
-  },
-  {
-    slug: 'private-ai-vs-chatgpt-subscriptions', type: 'article', status: 'draft', phase: 7,
-    name: 'Private AI vs ChatGPT Subscriptions',
-    title: 'Private AI vs ChatGPT Subscriptions | C4 Studios',
-    description: 'The honest cost comparison: what a per-seat subscription stack really costs a small team, what on-premise costs, and where each one wins.',
-    dek: 'The per-seat maths, run properly, including where subscriptions win.',
-    published: '2026-08-03', updated: '2026-08-03', readMinutes: 7,
-    priority: 0.65, changefreq: 'yearly',
-  },
-  {
-    // Draft. The "at this time" qualifier is the article. Never let an edit
-    // change it to abandoned, scrapped or paused; those are commentary words
-    // and the government did not use them.
-    slug: 'not-proceeding-at-this-time', type: 'article', status: 'draft', phase: 7,
-    name: 'Not Proceeding, At This Time',
-    title: 'Not Proceeding, At This Time | C4 Studios',
-    description: 'Australian AI advice still tells firms to prepare for incoming AI legislation. The government published its position in one sentence, qualifier included.',
-    dek: 'What the government actually said about mandatory AI guardrails.',
-    published: '2026-09-01', updated: '2026-09-01', verified: '2026-09-01', readMinutes: 7,
-    priority: 0.75, changefreq: 'monthly',
-  },
-  {
-    // Draft. Quotes Anthropic at length, and Anthropic is the vendor we build
-    // on. The section explaining WHY they are quoted most is load-bearing for
-    // fairness. Read the file header before editing.
-    slug: 'what-zero-retention-keeps', type: 'article', status: 'draft', phase: 7,
-    name: 'What Zero Retention Keeps',
-    title: 'What Zero Retention Keeps | C4 Studios',
-    description: 'Zero data retention is sold as nothing being kept. Read the clauses and something is always kept. What one vendor retains, in its own words.',
-    dek: 'The gap between nothing stored and nothing kept.',
-    published: '2026-09-01', updated: '2026-09-01', verified: '2026-09-01', readMinutes: 7,
-    priority: 0.7, changefreq: 'monthly',
-  },
-  {
-    // Draft. Highest legal-boundary risk in the library: it reports the
-    // regulatory perimeter and must never tell a reader which regulator covers
-    // them. Read the file header before editing.
-    slug: 'who-apra-actually-regulates', type: 'article', status: 'draft', phase: 7,
-    name: 'Who APRA Actually Regulates',
-    title: 'Who APRA Actually Regulates | C4 Studios',
-    description: 'Licensed firms are routinely sold compliance products built on APRA prudential standards. APRA publishes what it regulates, and the standards publish who they bind.',
-    dek: 'The published perimeter, and the CPS 230 version most commentary gets wrong.',
-    published: '2026-09-01', updated: '2026-09-01', verified: '2026-09-01', readMinutes: 7,
-    priority: 0.7, changefreq: 'monthly',
-  },
-  {
-    // Draft. Second article from a delegated pack. The Sinha paper is
-    // optimistic in its headline and the article says so; do not cut that.
-    slug: 'twenty-steps-at-ninety-five-per-cent', type: 'article', status: 'draft', phase: 7,
-    name: 'Twenty Steps at Ninety-Five Per Cent',
-    title: 'Twenty Steps at Ninety-Five Per Cent | C4 Studios',
-    description: 'An agent that gets each step right 95% of the time finishes a twenty-step job about a third of the time. The measured evidence says the real number is worse.',
-    dek: 'Why multi-step AI agents fail more than people expect.',
-    published: '2026-09-01', updated: '2026-09-01', verified: '2026-09-01', readMinutes: 7,
-    priority: 0.7, changefreq: 'yearly',
-  },
-  {
-    // Draft. First article assembled from a delegated research pack; every
-    // figure was re-verified against the primary source before assembly.
-    slug: 'what-the-window-actually-holds', type: 'article', status: 'draft', phase: 7,
-    name: 'What the Window Actually Holds',
-    title: 'What the Window Actually Holds | C4 Studios',
-    description: 'Vendors advertise million-token context windows. Published benchmarks measure what models can reliably find in a long document, and the gap is large.',
-    dek: 'Advertised context window against usable context window.',
-    published: '2026-08-31', updated: '2026-08-31', verified: '2026-08-31', readMinutes: 8,
-    priority: 0.7, changefreq: 'yearly',
-  },
-  {
-    // Draft until Caleb reads it. It calls out a named MIT report and corrects a
-    // widely-misreported figure about a Big Four firm, so it wants his sign-off.
-    slug: 'ninety-five-per-cent-of-what', type: 'article', status: 'draft', phase: 7,
-    name: 'Ninety-Five Per Cent of What?',
-    title: 'Ninety-Five Per Cent of What? | C4 Studios',
-    description: 'The most repeated statistic in AI is not a failure rate, and a Wharton professor could not work out how it was calculated. Here is the number that survives.',
-    dek: 'Tracing the AI failure statistics everyone quotes.',
-    published: '2026-08-29', updated: '2026-08-29', verified: '2026-08-29', readMinutes: 8,
-    priority: 0.7, changefreq: 'yearly',
-  },
-  {
-    // Draft until Caleb reads it. It names two vendors' products and quotes a
-    // regulator's action against a named-in-public solicitor, so it should
-    // carry his agreement rather than only his name.
-    slug: 'the-citation-that-checks-out', type: 'article', status: 'draft', phase: 7,
-    name: 'The Citation That Checks Out',
-    title: 'The Citation That Checks Out | C4 Studios',
-    description: 'The dangerous AI failure is not the invented source. It is the real one, correctly cited, that does not support the claim. Measured at 17 to 33 per cent.',
-    dek: 'Why a working citation is not the same as a checked one.',
-    published: '2026-08-29', updated: '2026-08-29', verified: '2026-08-29', readMinutes: 7,
-    priority: 0.7, changefreq: 'yearly',
-  },
-  {
-    // Draft until Caleb reads it. This one has a shelf life: it goes stale the
-    // day Microsoft switches on local inferencing for Australia, so it needs a
-    // recheck date rather than a set-and-forget publish.
-    slug: 'stored-here-processed-elsewhere', type: 'article', status: 'draft', phase: 7,
-    name: 'Stored Here, Processed Elsewhere',
-    title: 'Stored Here, Processed Elsewhere | C4 Studios',
-    description: 'Microsoft 365 Copilot keeps Australian data in Australia. Where it runs the model is a separate question, and Microsoft answers it plainly.',
-    dek: 'Copilot data residency and where inference actually happens.',
-    published: '2026-08-29', updated: '2026-08-29', verified: '2026-08-29', readMinutes: 6,
-    priority: 0.7, changefreq: 'monthly',
-  },
-  {
-    // Draft until Caleb has read it. It argues against the C4i line on cost, so
-    // he should agree with it in his own words before it carries his name.
-    slug: 'the-cost-nobody-quotes-you', type: 'article', status: 'draft', phase: 7,
-    name: 'The Cost Nobody Quotes You',
-    title: 'The Cost Nobody Quotes You | C4 Studios',
-    description: 'On-premise AI is usually sold as the cheaper option. The hardware and the power bill are the small numbers. Here is the one that decides it.',
-    dek: 'What running AI on your own hardware actually costs a small firm.',
-    published: '2026-08-29', updated: '2026-08-29', verified: '2026-08-29', readMinutes: 7,
-    priority: 0.65, changefreq: 'yearly',
-  },
-  {
-    // Live. Card + OG image still to be produced.
-    // When the image exists, add image: '/insights/when-the-model-has-seen-the-test-og.jpg'.
-    slug: 'when-the-model-has-seen-the-test', type: 'article', status: 'draft', phase: 7,
-    name: 'When the Model Has Seen the Test',
-    title: 'When the Model Has Seen the Test | C4 Studios',
-    description: 'AI vendors lead with benchmark scores. A published paper shows those scores can be inflated by memorisation. What to ask for instead.',
-    dek: 'Why a benchmark score tells you almost nothing about your documents.',
-    published: '2026-08-29', updated: '2026-08-29', verified: '2026-08-29', readMinutes: 6,
-    priority: 0.65, changefreq: 'yearly',
   },
 ];
 

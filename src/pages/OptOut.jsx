@@ -74,7 +74,7 @@ export default function OptOut() {
                 type="email"
                 required
                 autoComplete="email"
-                placeholder="you@yourschool.wa.edu.au"
+                placeholder="you@yourbusiness.com.au"
                 className="mt-3 w-full max-w-[420px] border-0 border-b-2 bg-transparent pb-2 text-[16px] outline-none focus:border-current"
                 style={{ borderColor: 'var(--c4-border)', color: 'var(--c4-text)' }}
               />

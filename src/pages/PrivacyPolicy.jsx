@@ -19,7 +19,7 @@ const sections = [
     items: [
       {
         term: 'Information you give us',
-        def: 'Your name, email address, business name, and the details you include when you submit an enquiry, project brief, support request, training enquiry, or venture idea; files or attachments you upload; and the contents of emails and messages you send us.',
+        def: 'Your name, email address, business name, and the details you include when you submit an enquiry, project brief, support request, or venture idea; files or attachments you upload; and the contents of emails and messages you send us.',
       },
       {
         term: 'Information collected automatically',
