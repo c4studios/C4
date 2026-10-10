@@ -11,9 +11,12 @@
 import { Globe, MapPin, Navigation, Phone, Clock, Share2 } from 'lucide-react';
 import { PHOTOS, Photo, Credit } from './photos';
 import { EXAMPLES, YOU } from './examples';
-import { has, whoDoes, list } from './plans';
+import { has, whoDoes, list, money } from './plans';
+import { webDesignAddOns } from '@/data/pricing';
 
 const EX = EXAMPLES[0];
+/* Caleb, 10 Oct 2026: mention the setup add-on. Read from pricing.js, so the sentence goes if the add-on does. */
+const SETUP = webDesignAddOns.find((a) => /google business profile/i.test(a.name));
 const AREA = 'Joondalup and the northern suburbs';
 
 const KEYS = [
@@ -38,6 +41,9 @@ export default function Profile() {
           </p>
           {managed && who.length ? (
             <p className="sc-step-who">{`${list(who)} manage${who.length > 1 ? '' : 's'} your profile as part of the plan.`}</p>
+          ) : null}
+          {SETUP ? (
+            <p className="sc-step-who">{`Setting one up from scratch is a ${money(SETUP.price)} add-on when we build your website.`}</p>
           ) : null}
           <dl className="sc-keys sc-keys--local">
             {KEYS.map((key) => (

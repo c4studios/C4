@@ -129,12 +129,6 @@ export default function Colours() {
           </figure>
         </div>
 
-        <div className="ld-strip ld-strip--3">
-          <Specimen ground="#141518" pair={DEEP} caption="In colour" />
-          <Specimen ground="#141518" pair={DEEP} filter="ld-f-grey" caption="No colour" />
-          <Specimen ground="#141518" pair={DEEP} filter="ld-f-deut" caption="Red-green colour blind, simulated" />
-        </div>
-
         <div className="ld-pair">
           <div>
             <h3 className="ld-h3">A C that needs the dark</h3>
