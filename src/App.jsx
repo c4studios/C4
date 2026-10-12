@@ -26,14 +26,17 @@ const Welcome = lazy(() => import('./pages/Welcome'));
 // sends their old paths there. The page files stay in src/ unimported until
 // a later cleanup deletes them.
 
-// How we use AI — the published position statement (flat slug).
-const HowWeUseAI = lazy(() => import('./pages/HowWeUseAI'));
-const Unsubscribed = lazy(() => import('./pages/Unsubscribed'));
-const OptOut = lazy(() => import('./pages/OptOut'));
-
+// How we use AI, Unsubscribed, Opt-out and Insights are imported eagerly for
+// the same reason as SeoCopy above: all four are prerendered, and as lazy()
+// chunks behind a null fallback each one blanked on load while its chunk
+// arrived, so the footer jumped to the top and back (CLS 0.98 measured on
+// /insights at 390 wide, 12 Oct 2026).
+import HowWeUseAI from './pages/HowWeUseAI';
+import Unsubscribed from './pages/Unsubscribed';
+import OptOut from './pages/OptOut';
 // Insights — index for the editorial articles. The articles themselves are
 // registry-driven and live at flat root slugs; this is their hub.
-const Insights = lazy(() => import('./pages/Insights'));
+import Insights from './pages/Insights';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -138,9 +141,7 @@ function App() {
           {/* How we use AI — the published position statement (flat slug) */}
           <Route path="/how-we-use-ai" element={
             <LayoutWrapper currentPageName="HowWeUseAI">
-              <Suspense fallback={null}>
-                <HowWeUseAI />
-              </Suspense>
+              <HowWeUseAI />
             </LayoutWrapper>
           } />
           {/* Generic opt-out form, for the link in Caleb's email signature.
@@ -148,25 +149,19 @@ function App() {
               carrying the tokenised links. */}
           <Route path="/opt-out" element={
             <LayoutWrapper currentPageName="OptOut">
-              <Suspense fallback={null}>
-                <OptOut />
-              </Suspense>
+              <OptOut />
             </LayoutWrapper>
           } />
           {/* Where the unsubscribe link in outreach emails lands. noindex. */}
           <Route path="/unsubscribed" element={
             <LayoutWrapper currentPageName="Unsubscribed">
-              <Suspense fallback={null}>
-                <Unsubscribed />
-              </Suspense>
+              <Unsubscribed />
             </LayoutWrapper>
           } />
           {/* Insights — article index (flat slug) */}
           <Route path="/insights" element={
             <LayoutWrapper currentPageName="Insights">
-              <Suspense fallback={null}>
-                <Insights />
-              </Suspense>
+              <Insights />
             </LayoutWrapper>
           } />
           {/* The canonical, prerendered, sitemap-listed detail URLs */}

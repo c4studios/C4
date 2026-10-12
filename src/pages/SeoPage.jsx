@@ -14,6 +14,19 @@ import ArticleTemplate from '@/components/seo/templates/ArticleTemplate';
 // template) are excluded.
 const contentModules = import.meta.glob(['../content/seo/pages/*.js', '!**/_*']);
 
+/* Content modules already loaded, by slug. main.jsx preloads the module for
+   the page being opened before the app's first render, so a prerendered
+   article goes straight from its HTML to the same article. Before 12 Oct 2026
+   it rendered a blank 60vh box first while the module arrived, and the footer
+   jumped to the top and back (CLS 0.64 on an article at 390 wide). */
+const loaded = new Map();
+
+export function preloadSeoContent(slug) {
+  const loader = contentModules[`../content/seo/pages/${slug}.js`];
+  if (!loader || loaded.has(slug)) return Promise.resolve();
+  return loader().then((mod) => { loaded.set(slug, mod.default); });
+}
+
 const TEMPLATES = {
   pillar: PillarTemplate,
   suburb: SuburbTemplate,
@@ -32,14 +45,21 @@ export default function SeoPage({ slug }) {
   const loader = contentModules[`../content/seo/pages/${slug}.js`];
   const isLive = Boolean(entry && entry.status === 'live' && loader);
 
-  const [content, setContent] = useState(null);
+  // Held with its slug, so a route change never renders the last page's content.
+  const [held, setHeld] = useState(() => ({ slug, content: loaded.get(slug) ?? null }));
+  const content = held.slug === slug ? held.content : (loaded.get(slug) ?? null);
 
   useEffect(() => {
     let cancelled = false;
-    setContent(null);
     if (!isLive) return undefined;
+    const ready = loaded.get(slug);
+    if (ready) {
+      setHeld((h) => (h.slug === slug && h.content === ready ? h : { slug, content: ready }));
+      return undefined;
+    }
     loader().then((mod) => {
-      if (!cancelled) setContent(mod.default);
+      loaded.set(slug, mod.default);
+      if (!cancelled) setHeld({ slug, content: mod.default });
     });
     return () => { cancelled = true; };
   }, [slug, isLive, loader]);
