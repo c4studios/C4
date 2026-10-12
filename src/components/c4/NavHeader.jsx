@@ -75,8 +75,9 @@ function resolveBackParent(pathLower) {
    file). Defines the back-ribbon and the crawlable index-sheet reveal.
    Tokens --c4-back-surface / --c4-back-ink are the ONLY handles arms may
    re-point under their marker class; the edge/elevation treatment per
-   chrome mode is nav's to own. Computed red/white pair: #C23030 on
-   #F7F5F2 → 5.13:1 (label legibility is internal to the ribbon). */
+   chrome mode is nav's to own. The label is foil #F8F0E3 on #C23030; measured
+   over the shaded satin it holds 5.6:1 at the median and 5.0:1 at the
+   lightest 5% of the cloth behind it (12 Oct 2026). */
 const NAV_CSS = `
 /* The bar is ink in both themes (14 Sep 2026): re-point the text and surface
    tokens inside it so everything it contains reads on dark. */
@@ -99,19 +100,28 @@ header[data-c4-chrome="header"] {
   --c4-back-ring: rgba(236, 231, 222, 0.85);
   color-scheme: dark;
 }
+/* --c4-back-elev is two shadows, contact and cast, the bench's pair at the
+   ribbon's scale. It sits on the link, not the band: a filter on the clipped
+   band is clipped away with it, which is why the flat ribbon before 12 Oct
+   2026 never showed a shadow at all. --c4-back-ink is the foil label. */
 :root {
   --c4-back-surface: #C23030;
-  --c4-back-ink: #F7F5F2;
+  --c4-back-ink: #F8F0E3;
   --c4-back-elev:
-    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.16))
-    drop-shadow(0 0 0.6px rgba(0, 0, 0, 0.42));
+    drop-shadow(0 1px 0.6px rgba(20, 8, 6, 0.42))
+    drop-shadow(0 5px 6px rgba(20, 8, 6, 0.26));
   --c4-back-ring: rgba(26, 26, 26, 0.55);
+}
+:root.dark-mode {
+  --c4-back-elev:
+    drop-shadow(0 1px 0.6px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 6px 8px rgba(0, 0, 0, 0.55));
 }
 :root.cw-on-board,
 :root.sg-on-board {
   --c4-back-elev:
-    drop-shadow(0 9px 18px rgba(0, 0, 0, 0.55))
-    drop-shadow(0 0 0.7px rgba(236, 231, 222, 0.32));
+    drop-shadow(0 1px 0.6px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 9px 18px rgba(0, 0, 0, 0.55));
   --c4-back-ring: rgba(236, 231, 222, 0.7);
 }
 
@@ -127,12 +137,23 @@ header[data-c4-chrome="header"] {
   outline: none;
   border-radius: 2px;
   -webkit-tap-highlight-color: transparent;
+  filter: var(--c4-back-elev);
   animation: c4-ribbon-reveal 0.25s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .c4-back-ribbon.is-static {
   animation: none;
 }
+/* The band is a satin bookmark ribbon, the marker sewn into a bound book
+   (12 Oct 2026; Caleb wanted it to read as a real object). Form does the
+   work at this size, not texture: the band curves a little across its width
+   (darker at both selvedges), folds over the top edge, takes one soft
+   ripple across its lower half, and carries a fine lengthwise fibre. All of
+   it is shading over --c4-back-surface, so an arm that re-points the token
+   still gets the same cloth. The sheen is the ::before layer. */
 .c4-back-ribbon-body {
+  --c4-back-notch: 14px;
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: flex-start;
   gap: 9px;
@@ -140,31 +161,48 @@ header[data-c4-chrome="header"] {
   min-height: 84px;
   padding: 22px 20px 26px;
   color: var(--c4-back-ink);
-  /* grosgrain — fine 2px transverse ribs across the woven band */
   background:
-    repeating-linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.11) 0px,
-      rgba(0, 0, 0, 0.11) 1px,
-      rgba(255, 255, 255, 0.055) 1px,
-      rgba(255, 255, 255, 0.055) 2px
-    ),
+    linear-gradient(180deg, rgba(28, 0, 0, 0.62) 0, rgba(28, 0, 0, 0.2) 3px, rgba(255, 226, 214, 0.12) 6px, rgba(255, 226, 214, 0) 11px),
+    linear-gradient(0deg, rgba(36, 0, 0, 0.16) 0, rgba(36, 0, 0, 0) 12px),
+    linear-gradient(166deg, rgba(36, 0, 0, 0) 44%, rgba(36, 0, 0, 0.16) 62%, rgba(255, 230, 220, 0.06) 74%, rgba(36, 0, 0, 0) 86%),
+    linear-gradient(90deg, rgba(36, 0, 0, 0.44) 0, rgba(36, 0, 0, 0.1) 9%, rgba(36, 0, 0, 0) 17%, rgba(36, 0, 0, 0) 54%, rgba(36, 0, 0, 0.12) 82%, rgba(36, 0, 0, 0.38) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.3 .035' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .09 0 0 0 0 0 0 0 0 0 0 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23f)'/%3E%3C/svg%3E"),
     var(--c4-back-surface);
-  filter: var(--c4-back-elev);
-  /* swallowtail: forked tail dipping below the header line */
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 11px), 0 100%);
+  box-shadow:
+    inset 1px 0 0 rgba(255, 228, 218, 0.16),
+    inset -1px 0 0 rgba(30, 0, 0, 0.3);
+  /* swallowtail: a clean dovetail cut, dipping below the header line */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - var(--c4-back-notch)), 0 100%);
   transform-origin: top center;
   animation: c4-ribbon-settle 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* The sheen: a soft catch-light down the near selvedge and one diagonal
+   lift below the label, kept clear of the type so the foil holds its
+   contrast. It runs 16px past the band so it can drift without an edge. */
+.c4-back-ribbon-body::before {
+  content: '';
+  position: absolute;
+  inset: -16px 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 238, 230, 0) 3%, rgba(255, 238, 230, 0.15) 11%, rgba(255, 238, 230, 0) 21%),
+    linear-gradient(158deg, rgba(255, 236, 228, 0) 50%, rgba(255, 236, 228, 0.17) 60%, rgba(255, 236, 228, 0.04) 67%, rgba(255, 236, 228, 0) 74%);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .c4-back-ribbon.is-static .c4-back-ribbon-body {
   animation: none;
 }
+/* Foil-stamped: the label is pressed into the cloth, so it carries a hard
+   1px shade below and a faint lip above. */
 .c4-back-ribbon-arrow {
-  font-size: 15px;
-  line-height: 1;
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  height: 14px;
+  filter: drop-shadow(0 1px 0 rgba(70, 6, 6, 0.55));
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
+.c4-back-ribbon-arrow svg { display: block; }
 .c4-back-ribbon-label {
   font-size: 14px;
   line-height: 1;
@@ -172,14 +210,32 @@ header[data-c4-chrome="header"] {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-feature-settings: "tnum" 1;
+  text-shadow: 0 1px 0 rgba(70, 6, 6, 0.55), 0 -0.5px 0 rgba(255, 246, 236, 0.25);
 }
 @media (hover: hover) {
   .c4-back-ribbon:hover .c4-back-ribbon-arrow { transform: translateX(-3px); }
-  .c4-back-ribbon:hover .c4-back-ribbon-body { filter: var(--c4-back-elev) brightness(1.05); }
+  .c4-back-ribbon:hover .c4-back-ribbon-body::before { transform: translateY(6px); }
 }
+/* The light drifts down the cloth as the page scrolls: about 14px over the
+   whole page, nothing under reduced motion. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .c4-back-ribbon:not(.is-static) .c4-back-ribbon-body::before {
+      animation: c4-ribbon-sheen linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+}
+@keyframes c4-ribbon-sheen {
+  from { translate: 0 -6px; }
+  to   { translate: 0 8px; }
+}
+/* The band sits on the dark bar in both themes, so the ring is the bar's
+   off-white, with an ink edge outside it for the part over the bench. */
 .c4-back-ribbon:focus-visible {
-  outline: 2px solid var(--c4-back-ring);
+  outline: 2px solid #ECE7DE;
   outline-offset: 3px;
+  box-shadow: 0 0 0 7px #1A1A1A;
 }
 @keyframes c4-ribbon-reveal {
   from { clip-path: inset(0 0 100% 0); }
@@ -200,8 +256,10 @@ header[data-c4-chrome="header"] {
 }
 @media (prefers-reduced-motion: reduce) {
   .c4-back-ribbon,
-  .c4-back-ribbon-body { animation: none !important; }
-  .c4-back-ribbon-arrow { transition: none !important; }
+  .c4-back-ribbon-body,
+  .c4-back-ribbon-body::before { animation: none !important; }
+  .c4-back-ribbon-arrow,
+  .c4-back-ribbon-body::before { transition: none !important; }
 }
 
 /* Header logo clears the top-left keep-out zone so it never sits beneath the
@@ -535,7 +593,11 @@ export default function NavHeader() {
           aria-label={`Back to ${backParent.label}`}
         >
           <span className="c4-back-ribbon-body">
-            <span className="c4-back-ribbon-arrow" aria-hidden="true">←</span>
+            <span className="c4-back-ribbon-arrow" aria-hidden="true">
+              <svg viewBox="0 0 14 10" width="14" height="10" fill="none" focusable="false">
+                <path d="M13 5H1.6M5.4 1.2 1.6 5l3.8 3.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
             <span className="c4-back-ribbon-label">{backParent.label}</span>
           </span>
         </Link>

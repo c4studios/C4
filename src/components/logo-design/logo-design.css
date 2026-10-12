@@ -131,7 +131,7 @@
    (The nav's own code isn't touched; this reads the state it sets.) */
 @media (max-width: 1023.98px) {
   html:has(.ld-page) .c4-back-ribbon { transition: transform 0.35s var(--ld-ease, ease); }
-  html:has(.ld-page):has(header[data-c4-chrome="header"][style*="-80px"]) .c4-back-ribbon { transform: translateY(-110%); }
+  html:has(.ld-page):has(header[data-c4-chrome="header"][style*="-80px"]) .c4-back-ribbon { transform: translateY(calc(-100% - 24px)); }
 }
 
 /* wide: the chart pinned full height beside the words */
