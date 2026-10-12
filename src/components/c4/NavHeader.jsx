@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Link } from '@/components/c4/SiteLink';
 import { motion, AnimatePresence, useMotionValueEvent, useScroll } from 'framer-motion';
 import { Menu, X, ChevronDown } from 'lucide-react';
@@ -54,30 +54,11 @@ const navLinks = [
   { label: 'Contact', page: 'Contact' },
 ];
 
-/* ── The back ribbon: hierarchical parent map ─────────────────────────
-   Keys are lowercased pathnames (React Router matches case-insensitively,
-   so /Lens and /lens both resolve here). The label always tells the truth
-   about where the ribbon leads. Everything unlisted falls through to the
-   home fallback — the "ALWAYS-back, never a dead end" guarantee. */
-// The C4Site pages that used to lead back to /Foresight moved to
-// c4site.com.au on 9 Oct 2026, so nothing has a parent other than home.
-const RIBBON_PARENTS = {};
-const RIBBON_DEFAULT = { to: '/', label: 'C4' };
-
-/* Resolve the ribbon's hierarchical parent from the lowercased pathname.
-   Everything unlisted falls through to the home default. */
-function resolveBackParent(pathLower) {
-  if (RIBBON_PARENTS[pathLower]) return RIBBON_PARENTS[pathLower];
-  return RIBBON_DEFAULT;
-}
-
 /* Injected once by NavHeader (nav owns NavHeader.jsx + Footer.jsx, no CSS
-   file). Defines the back-ribbon and the crawlable index-sheet reveal.
-   Tokens --c4-back-surface / --c4-back-ink are the ONLY handles arms may
-   re-point under their marker class; the edge/elevation treatment per
-   chrome mode is nav's to own. The label is foil #F8F0E3 on #C23030; measured
-   over the shaded satin it holds 5.6:1 at the median and 5.0:1 at the
-   lightest 5% of the cloth behind it (12 Oct 2026). */
+   file). Defines the dark bar's tokens, the crawlable index-sheet reveal
+   and the start button. The red back ribbon that hung top-left on every
+   sub-page was removed on 12 Oct 2026 (Caleb: "no ribbon"); the logo and
+   the Home link take people home. */
 const NAV_CSS = `
 /* The bar is ink in both themes (14 Sep 2026): re-point the text and surface
    tokens inside it so everything it contains reads on dark. */
@@ -97,200 +78,19 @@ header[data-c4-chrome="header"] {
      the links, the Services button and the start button showed no ring at
      all on the dark bar. */
   --c4-focus: #ECE7DE;
-  --c4-back-ring: rgba(236, 231, 222, 0.85);
+  --c4-cta-ring: rgba(236, 231, 222, 0.85);
   color-scheme: dark;
 }
-/* --c4-back-elev is two shadows, contact and cast, the bench's pair at the
-   ribbon's scale. It sits on the link, not the band: a filter on the clipped
-   band is clipped away with it, which is why the flat ribbon before 12 Oct
-   2026 never showed a shadow at all. --c4-back-ink is the foil label. */
+/* The start button's label and ring. These were the back ribbon's tokens
+   until it went (12 Oct 2026), kept at the values the button already had. */
 :root {
-  --c4-back-surface: #C23030;
-  --c4-back-ink: #F8F0E3;
-  --c4-back-elev:
-    drop-shadow(0 1px 0.6px rgba(20, 8, 6, 0.42))
-    drop-shadow(0 5px 6px rgba(20, 8, 6, 0.26));
-  --c4-back-ring: rgba(26, 26, 26, 0.55);
-}
-:root.dark-mode {
-  --c4-back-elev:
-    drop-shadow(0 1px 0.6px rgba(0, 0, 0, 0.7))
-    drop-shadow(0 6px 8px rgba(0, 0, 0, 0.55));
+  --c4-cta-ink: #F7F5F2;
+  --c4-cta-ring: rgba(26, 26, 26, 0.55);
 }
 :root.cw-on-board,
 :root.sg-on-board {
-  --c4-back-elev:
-    drop-shadow(0 1px 0.6px rgba(0, 0, 0, 0.7))
-    drop-shadow(0 9px 18px rgba(0, 0, 0, 0.55));
-  --c4-back-ring: rgba(236, 231, 222, 0.7);
+  --c4-cta-ring: rgba(236, 231, 222, 0.7);
 }
-
-/* Back ribbon — fixed inside the top-left keep-out zone, above the header,
-   persists when the header hides on scroll. A real crawlable <Link>. */
-.c4-back-ribbon {
-  position: fixed;
-  top: 0;
-  left: clamp(16px, 4vw, 40px);
-  z-index: 60;
-  display: inline-flex;
-  text-decoration: none;
-  outline: none;
-  border-radius: 2px;
-  -webkit-tap-highlight-color: transparent;
-  filter: var(--c4-back-elev);
-  animation: c4-ribbon-reveal 0.25s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.c4-back-ribbon.is-static {
-  animation: none;
-}
-/* The band is a satin bookmark ribbon, the marker sewn into a bound book
-   (12 Oct 2026; Caleb wanted it to read as a real object). Form does the
-   work at this size, not texture: the band curves a little across its width
-   (darker at both selvedges), folds over the top edge, takes one soft
-   ripple across its lower half, and carries a fine lengthwise fibre. All of
-   it is shading over --c4-back-surface, so an arm that re-points the token
-   still gets the same cloth. The sheen is the ::before layer. */
-.c4-back-ribbon-body {
-  --c4-back-notch: 14px;
-  position: relative;
-  isolation: isolate;
-  display: inline-flex;
-  align-items: flex-start;
-  gap: 9px;
-  min-width: 84px;
-  min-height: 84px;
-  padding: 22px 20px 26px;
-  color: var(--c4-back-ink);
-  background:
-    linear-gradient(180deg, rgba(28, 0, 0, 0.62) 0, rgba(28, 0, 0, 0.2) 3px, rgba(255, 226, 214, 0.12) 6px, rgba(255, 226, 214, 0) 11px),
-    linear-gradient(0deg, rgba(36, 0, 0, 0.16) 0, rgba(36, 0, 0, 0) 12px),
-    linear-gradient(166deg, rgba(36, 0, 0, 0) 44%, rgba(36, 0, 0, 0.16) 62%, rgba(255, 230, 220, 0.06) 74%, rgba(36, 0, 0, 0) 86%),
-    linear-gradient(90deg, rgba(36, 0, 0, 0.44) 0, rgba(36, 0, 0, 0.1) 9%, rgba(36, 0, 0, 0) 17%, rgba(36, 0, 0, 0) 54%, rgba(36, 0, 0, 0.12) 82%, rgba(36, 0, 0, 0.38) 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.3 .035' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .09 0 0 0 0 0 0 0 0 0 0 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23f)'/%3E%3C/svg%3E"),
-    var(--c4-back-surface);
-  box-shadow:
-    inset 1px 0 0 rgba(255, 228, 218, 0.16),
-    inset -1px 0 0 rgba(30, 0, 0, 0.3);
-  /* swallowtail: a clean dovetail cut, dipping below the header line */
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - var(--c4-back-notch)), 0 100%);
-  transform-origin: top center;
-  animation: c4-ribbon-settle 0.42s cubic-bezier(0.22, 1, 0.36, 1);
-}
-/* The sheen: a soft catch-light down the near selvedge and one diagonal
-   lift below the label, kept clear of the type so the foil holds its
-   contrast. It runs 16px past the band so it can drift without an edge. */
-.c4-back-ribbon-body::before {
-  content: '';
-  position: absolute;
-  inset: -16px 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(255, 238, 230, 0) 3%, rgba(255, 238, 230, 0.15) 11%, rgba(255, 238, 230, 0) 21%),
-    linear-gradient(158deg, rgba(255, 236, 228, 0) 50%, rgba(255, 236, 228, 0.17) 60%, rgba(255, 236, 228, 0.04) 67%, rgba(255, 236, 228, 0) 74%);
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.c4-back-ribbon.is-static .c4-back-ribbon-body {
-  animation: none;
-}
-/* Foil-stamped: the label is pressed into the cloth, so it carries a hard
-   1px shade below and a faint lip above. */
-.c4-back-ribbon-arrow {
-  display: inline-flex;
-  align-items: center;
-  height: 14px;
-  filter: drop-shadow(0 1px 0 rgba(70, 6, 6, 0.55));
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.c4-back-ribbon-arrow svg { display: block; }
-.c4-back-ribbon-label {
-  font-size: 14px;
-  line-height: 1;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-feature-settings: "tnum" 1;
-  text-shadow: 0 1px 0 rgba(70, 6, 6, 0.55), 0 -0.5px 0 rgba(255, 246, 236, 0.25);
-}
-@media (hover: hover) {
-  .c4-back-ribbon:hover .c4-back-ribbon-arrow { transform: translateX(-3px); }
-  .c4-back-ribbon:hover .c4-back-ribbon-body::before { transform: translateY(6px); }
-}
-/* The light drifts down the cloth as the page scrolls: about 14px over the
-   whole page, nothing under reduced motion. */
-@supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .c4-back-ribbon:not(.is-static) .c4-back-ribbon-body::before {
-      animation: c4-ribbon-sheen linear both;
-      animation-timeline: scroll(root block);
-    }
-  }
-}
-@keyframes c4-ribbon-sheen {
-  from { translate: 0 -6px; }
-  to   { translate: 0 8px; }
-}
-/* The band sits on the dark bar in both themes, so the ring is the bar's
-   off-white, with an ink edge outside it for the part over the bench. */
-.c4-back-ribbon:focus-visible {
-  outline: 2px solid #ECE7DE;
-  outline-offset: 3px;
-  box-shadow: 0 0 0 7px #1A1A1A;
-}
-@keyframes c4-ribbon-reveal {
-  from { clip-path: inset(0 0 100% 0); }
-  to   { clip-path: inset(0 -40px -40px -40px); }
-}
-@keyframes c4-ribbon-settle {
-  0%   { transform: rotate(0.8deg); }
-  60%  { transform: rotate(-0.35deg); }
-  100% { transform: rotate(0deg); }
-}
-@media (max-width: 640px) {
-  .c4-back-ribbon-body {
-    min-height: 76px;
-    padding: 19px 14px 22px;
-    gap: 7px;
-  }
-  .c4-back-ribbon-label { letter-spacing: 0.08em; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .c4-back-ribbon,
-  .c4-back-ribbon-body,
-  .c4-back-ribbon-body::before { animation: none !important; }
-  .c4-back-ribbon-arrow,
-  .c4-back-ribbon-body::before { transition: none !important; }
-}
-
-/* Header logo clears the top-left keep-out zone so it never sits beneath the
-   fixed back-ribbon (§3 — the ribbon owns that corner). Below lg the header
-   row is just the logo + menu button, so a flat clear works. From lg up the
-   row also carries the nav + Start-a-Project CTA, so the reserve is bounded
-   two ways: it grows with the width past the narrow-desktop row (so it never
-   eats that tightly-packed row and shoves the nav off), and tapers DOWN
-   again once the centred max-w container has itself carried the logo clear of
-   the ribbon on wide screens (no pointless mid-canvas drift). The reserve
-   always stays smaller than the width gained past 768px, so the nav/CTA are
-   never pushed off-canvas. Applied only while the ribbon is shown (sub-pages);
-   Home keeps its far-left logo. Padding, not transform — the nav must reflow
-   around the reserve — and left static (no layout animation) per the motion
-   budget. Two-class selector so it wins over the base .c4-header-logo-link.
-   The taper started at md, from before the nav moved to lg (2 Oct 2026),
-   and between 768 and about 1000px it left the logo under the ribbon on a
-   row that only holds the logo and the menu button (found 9 Oct 2026).
-   The 14px keeps the mark 12px clear of the ribbon at 1024, where it used
-   to touch; the row still has about 46px to spare there. */
-.c4-header-logo-link.c4-logo-cleared { padding-left: 120px; }
-@media (min-width: 1024px) {
-  .c4-header-logo-link.c4-logo-cleared {
-    padding-left: clamp(
-      0px,
-      min(calc((100vw - 768px) * 0.3 + 14px), calc(176px - max(0px, (100vw - 1400px) / 2))),
-      176px
-    );
-  }
-}
-
 /* Index-sheet (Services) — the panel is ALWAYS in the DOM so its anchors
    stay crawlable and prerender-visible; open state is a clip-path unfold,
    never a conditional unmount. */
@@ -362,7 +162,7 @@ header[data-c4-chrome="header"] {
    Tailwind classes, and this injected sheet sits later in the document
    at equal specificity, so a display value here used to win and show
    the CTA on phones, pushing the menu button past the right edge on
-   every page that carries the back ribbon (measured 8 Sep 2026: button
+   every sub-page (measured 8 Sep 2026: button
    at x 373 to 402 on a 375px viewport). The mobile-menu instance sets
    its own display class. */
 .c4-nav-cta {
@@ -376,7 +176,7 @@ header[data-c4-chrome="header"] {
   letter-spacing: 0.11em;
   text-transform: uppercase;
   text-decoration: none;
-  color: var(--c4-back-ink);
+  color: var(--c4-cta-ink);
   background: var(--c4-accent);
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
               background-color 0.3s ease, box-shadow 0.3s ease;
@@ -390,7 +190,7 @@ header[data-c4-chrome="header"] {
 }
 .c4-nav-cta:active { transform: translateY(0) scale(0.98); }
 .c4-nav-cta:focus-visible {
-  outline: 2px solid var(--c4-back-ring);
+  outline: 2px solid var(--c4-cta-ring);
   outline-offset: 3px;
 }
 `;
@@ -401,24 +201,12 @@ export default function NavHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
-  // Prerender crawler + reduced-motion users get the ribbon fully rendered,
-  // no reveal animation. Computed once; the ribbon's default state is already
-  // fully visible, so this only suppresses the entrance wipe.
-  const [staticMode] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    const ua = window.navigator?.userAgent || '';
-    const reduced = typeof window.matchMedia === 'function'
-      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    return /Prerender/i.test(ua) || reduced;
-  });
   const { scrollY } = useScroll();
   const location = useLocation();
-  const navigate = useNavigate();
   const triggerRef = useRef(null);
   const buttonRef = useRef(null);
   const panelRef = useRef(null);
   const closeTimer = useRef(null);
-  const prevPathRef = useRef(null);
   // True while the sheet is open because the pointer is over it. A click on
   // the trigger then keeps it open: it used to toggle it shut, so the items
   // vanished under the cursor, and a touch tap (which fires mouseenter first)
@@ -433,8 +221,6 @@ export default function NavHeader() {
      becomes /Lens/), so every route test here compares without it. */
   const pathLower = (location.pathname.replace(/\/+$/, '') || '/').toLowerCase();
   const isLens = pathLower === '/lens';
-  const isHome = location.pathname === '/';
-  const backParent = resolveBackParent(pathLower);
 
   // Lens locks the header visible (moot — the header is not rendered there —
   // but kept for parity with any case-variant path).
@@ -468,15 +254,6 @@ export default function NavHeader() {
     setServicesOpen(false);
     setMobileOpen(false);
     setMobileServicesOpen(false);
-  }, [location.pathname]);
-
-  // Track the previous in-app pathname so the ribbon can offer a history
-  // shortcut (navigate(-1) preserves scroll) when the mapped parent is
-  // exactly where the visitor just came from. The cleanup closure captures
-  // the path being LEFT, so during the next page's life this ref holds the
-  // prior location — exactly what the shortcut compares against at click time.
-  useEffect(() => {
-    return () => { prevPathRef.current = location.pathname; };
   }, [location.pathname]);
 
   // Dismiss the services index-sheet on Escape or a click/tap outside it.
@@ -529,16 +306,6 @@ export default function NavHeader() {
     setServicesOpen((o) => !o);
   };
 
-  // History shortcut: if the visitor arrived from the mapped parent, go back
-  // (preserving scroll); otherwise let the <Link> navigate to the parent.
-  const handleBack = (e) => {
-    const prev = prevPathRef.current;
-    if (prev && prev.toLowerCase() === backParent.to.toLowerCase()) {
-      e.preventDefault();
-      navigate(-1);
-    }
-  };
-
   const svcItems = () => (panelRef.current
     ? Array.from(panelRef.current.querySelectorAll('a[data-svc-item]'))
     : []);
@@ -574,34 +341,12 @@ export default function NavHeader() {
   };
 
   // Lens owns bespoke chrome and renders its own leader tab; the shared
-  // header (and its ribbon) must not appear there. Exact route check.
+  // header must not appear there. Exact route check.
   if (isLens) return null;
-
-  const showRibbon = !isHome && !mobileOpen;
 
   return (
     <>
       <style>{NAV_CSS}</style>
-
-      {showRibbon && (
-        <Link
-          key={location.pathname}
-          to={backParent.to}
-          onClick={handleBack}
-          data-c4-chrome="back-ribbon"
-          className={`c4-back-ribbon${staticMode ? ' is-static' : ''}`}
-          aria-label={`Back to ${backParent.label}`}
-        >
-          <span className="c4-back-ribbon-body">
-            <span className="c4-back-ribbon-arrow" aria-hidden="true">
-              <svg viewBox="0 0 14 10" width="14" height="10" fill="none" focusable="false">
-                <path d="M13 5H1.6M5.4 1.2 1.6 5l3.8 3.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-            <span className="c4-back-ribbon-label">{backParent.label}</span>
-          </span>
-        </Link>
-      )}
 
       {/* Below lg the bar slides away while you scroll down. Focus coming
           into it brings it back: Tab round from the footer used to land on
@@ -619,13 +364,10 @@ export default function NavHeader() {
         }}
       >
         <div className="max-w-[1400px] mx-auto px-5 md:px-12">
-          {/* Header content clears the top-left keep-out zone: the ribbon owns
-              that corner, so on sub-pages the logo reserves clearance via
-              .c4-logo-cleared (see NAV_CSS) rather than sitting under it. */}
           <div className="flex items-center justify-between h-[60px] md:h-[72px]">
             <Link
               to="/"
-              className={`c4-header-logo-link relative flex items-center justify-center py-1${showRibbon ? ' c4-logo-cleared' : ''}`}
+              className="c4-header-logo-link relative flex items-center justify-center py-1"
             >
               <C4Logo size={48} variant="full" context="header" className="c4-header-logo-lockup" />
             </Link>

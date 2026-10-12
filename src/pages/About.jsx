@@ -724,7 +724,7 @@ export default function About() {
 
     /* Keyboard focus never lands off screen or under the pinned band. Only
        the column needs it: the band never covers the close or the footer,
-       and the nav and ribbon are fixed. The band's clear line is its
+       and the nav is fixed. The band's clear line is its
        height, not its live bottom edge: coming back up from the close, the
        band is still scrolled away with the track, and its edge sat far above
        the screen (9 Oct 2026: Tab round from the footer on a phone put the

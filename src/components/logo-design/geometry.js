@@ -14,7 +14,8 @@
  * Colours:
  *  - DEEP: the lockup's red and green (C4Logo.jsx COLOURS.colour, the source
  *    SVGs, and the printed card, per the comment in welcome/C4Mark.jsx).
- *    public/favicon.png is the 4 alone in this pair, with no C.
+ *    public/favicon.png is the 4 alone in this pair, with no C, drawn from
+ *    MARK_SOURCE by scripts/draw-favicon.mjs to fill the square.
  *  - SCREEN: the brighter pair on the profile picture (brain work_log 602,
  *    7 Oct 2026: "#da2527, #248b2f, #f3f2f3 as on the current avatar").
  *  - The C is #F3F2F3 in both.

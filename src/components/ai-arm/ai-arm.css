@@ -344,8 +344,8 @@
 
 .cw-hero {
   position: relative;
-  /* Clears the top-left ribbon keep-out (mobile 120px zone) so the
-     hero legend never sits under the back affordance. */
+  /* Clears the fixed nav with room above the legend. (Sized for the back
+     ribbon's 120px tail, which was removed on 12 Oct 2026.) */
   padding-top: clamp(8.5rem, 20vw, 9.5rem);
   padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
   overflow: hidden;

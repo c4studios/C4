@@ -169,7 +169,7 @@
 }
 
 /* Narrow and armed: the page pins as a band across the top, under the nav
-   bar and clear of the back ribbon, and the steps pass under it. The band
+   bar, and the steps pass under it. The band
    sticks at the very top with the bar's height as padding, so when the bar
    slides away there's still bench above the page, never the words. */
 @media (max-width: 1023.98px) {

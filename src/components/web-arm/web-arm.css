@@ -279,7 +279,7 @@
 }
 
 /* ContainerScroll section: tall runway the card straightens across.
-   Top padding clears the 220×160 top-left keep-out (back ribbon). */
+   Top padding clears the fixed nav with room to breathe. */
 .lv-cs {
   position: relative;
   height: 76rem;
