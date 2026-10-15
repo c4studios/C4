@@ -12,6 +12,7 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from '@/components/c4/SiteLink';
 import { brandingPackages, webDesignAddOns, GST_NOTE, logoTimeline } from '@/data/pricing';
 import { createPageUrl } from '@/utils';
+import { tightFigure } from '@/components/c4/figure';
 import guide from '@/content/seo/pages/branding-perth';
 import Workfile from './Workfile';
 import useWide, { useReadingLine } from './useWide';
@@ -39,9 +40,7 @@ const CONCEPT_RANGE = CONCEPTS.length ? [Math.min(...CONCEPTS), Math.max(...CONC
 
 /* B612 is monospaced, so its comma takes a full cell and "$1,200" reads as
    "$1, 200" at display size. The comma is tucked in, as on the SEO page. */
-const tight = (figure) => figure.split(',').map((part, i) => (
-  i === 0 ? part : <span key={i}><span className="ld-comma">,</span>{part}</span>
-));
+const tight = (figure) => tightFigure(figure, 'ld-comma');
 
 /* ── What it costs: the ledger, on proof stock ───────────────────────── */
 

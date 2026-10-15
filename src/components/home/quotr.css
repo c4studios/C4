@@ -1,178 +1,352 @@
 /* ═══ Quotr — the estimator on the bench ═══
-   One frame on the ground, the till in the instrument face, the rail as a
-   real scale (log, so $200 and $5,000 both get room), the extras as a tray,
-   the estimate itself on proof stock because it is a checkable thing. Both
-   themes through the --c4 tokens; the only colour is the red that starts. */
-.qt { padding: clamp(3rem, 7vw, 6rem) 0; }
-.qt-frame {
-  max-width: 1400px; margin: 0 auto; padding: 0 1.5rem;
-}
-@media (min-width: 768px) { .qt-frame { padding: 0 3rem; } }
+   One question at a time on the left, the docket on the right. Answers are
+   ruled rows; the chosen one lifts onto proof stock, because a published
+   price you've picked up is evidence. The docket is proof stock too: each
+   line is a published price with a dotted leader to its figure, ruled off
+   with a double line above the total, as a docket is. The only red is the
+   button that starts. Both themes through the --c4 tokens.
 
-/* ── head: the name, the ask, the till ── */
-.qt-head {
-  display: grid; gap: 1.6rem; align-items: end;
-  padding-bottom: 1.6rem; border-bottom: 1px solid var(--c4-border);
+   The layout keys off the section's own width (a container query), so the
+   welcome sheet's narrow panel gets the phone layout at any window size. */
+.qt {
+  container: qt / inline-size;
+  padding: clamp(3rem, 7vw, 6rem) 0;
+  --qt-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --qt-gutter: 1.5rem;
 }
-@media (min-width: 900px) { .qt-head { grid-template-columns: minmax(0, 1.2fr) auto; gap: 3rem; } }
-.qt-name {
-  display: inline-flex; align-items: center; gap: .5rem; margin: 0 0 .7rem;
-  font-family: 'B612 Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: .04em; color: var(--c4-text-muted);
-}
-.qt-name-mark { width: 9px; height: 9px; border-radius: 1px; background: var(--c4-accent); transform: rotate(45deg); }
+.qt-frame { max-width: 1400px; margin: 0 auto; padding: 0 var(--qt-gutter); }
+@container qt (min-width: 768px) { .qt-frame { --qt-gutter: 3rem; } }
+
+/* ── head ── */
+.qt-head { max-width: 46rem; margin-bottom: clamp(1.6rem, 3vw, 2.4rem); }
 .qt-h2 {
   margin: 0; font-family: 'Archivo', sans-serif; font-weight: 680; font-stretch: 94%;
   font-size: clamp(1.9rem, 1.2rem + 2.4vw, 3rem); line-height: 1.04; letter-spacing: -.03em; color: var(--c4-text); text-wrap: balance;
 }
-.qt-sub { margin: .9rem 0 0; max-width: 52ch; font-size: 15px; line-height: 1.55; color: var(--c4-text-muted); text-wrap: pretty; }
+.qt-sub { margin: .9rem 0 0; max-width: 54ch; font-size: 15.5px; line-height: 1.55; color: var(--c4-text-muted); text-wrap: pretty; }
 
-.qt-till-wrap {
-  display: grid; justify-items: end; gap: .25rem;
-  padding: 1rem 1.2rem 1rem 1.4rem; border-radius: 4px;
-  background: var(--c4-text); color: var(--c4-bg);
+/* ── the desk: stage beside docket ── */
+.qt-desk { display: grid; gap: 2rem; align-items: start; }
+@container qt (min-width: 880px) {
+  .qt-desk { grid-template-columns: minmax(0, 1fr) minmax(300px, 25rem); gap: clamp(2.4rem, 4vw, 4rem); }
 }
-:root.dark-mode .qt-till-wrap { background: #06070a; color: var(--c4-text); box-shadow: inset 0 0 0 1px var(--c4-border); }
-.qt-till-label, .qt-till-note, .qt-till-second { font-family: 'B612 Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: .06em; opacity: .7; }
-.qt-till {
-  display: inline-flex; align-items: baseline;
-  font-family: 'B612 Mono', ui-monospace, monospace; font-weight: 700; font-variant-numeric: tabular-nums;
-  font-size: clamp(2.2rem, 1.4rem + 2.6vw, 3.6rem); line-height: 1; letter-spacing: -.02em;
-}
-.qt-digit { display: inline-block; height: 1em; overflow: hidden; }
-.qt-strip { display: flex; flex-direction: column; transition: transform .55s cubic-bezier(.22, 1, .36, 1); will-change: transform; }
-.qt-strip span { display: block; height: 1em; line-height: 1; }
-.qt-glyph { display: inline-block; margin: 0 -.16em 0 -.06em; }
-.qt-suffix { font-size: .42em; margin-left: .15em; opacity: .8; }
+.qt-stage { min-width: 0; scroll-margin-top: 6rem; }
 
-/* ── the lanes ── */
-.qt-lanes { display: flex; flex-wrap: wrap; gap: .4rem; padding: 1.2rem 0 1.4rem; }
-.qt-lane {
-  appearance: none; border: 1px solid var(--c4-border); background: transparent; color: var(--c4-text-muted);
-  padding: .55rem .95rem; border-radius: 999px; font: 600 12.5px/1 'Archivo', sans-serif; letter-spacing: .01em; cursor: pointer;
-  transition: color .2s ease, border-color .2s ease, background-color .2s ease;
+/* ── progress ── */
+.qt-progress { display: flex; align-items: center; gap: .9rem; min-height: 44px; }
+.qt-count {
+  margin: 0; font: 400 12px/1.2 'B612 Mono', ui-monospace, monospace; letter-spacing: .03em;
+  color: var(--c4-text-muted); white-space: nowrap;
 }
-.qt-lane:hover { color: var(--c4-text); border-color: var(--c4-text-subtle); }
-.qt-lane.is-on { color: var(--c4-bg); background: var(--c4-text); border-color: var(--c4-text); }
-:root.dark-mode .qt-lane.is-on { color: #06070a; background: var(--c4-text); }
+.qt-ticks { display: flex; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.qt-ticks li { position: relative; width: 26px; height: 3px; border-radius: 1px; background: var(--c4-border); overflow: hidden; }
+.qt-ticks li::after {
+  content: ''; position: absolute; inset: 0; background: var(--c4-text);
+  transform: scaleX(0); transform-origin: left; transition: transform .42s var(--qt-ease);
+}
+.qt-ticks li.is-done::after, .qt-ticks li.is-now::after { transform: scaleX(1); }
+.qt-ticks li.is-done::after { opacity: .45; }
+.qt-over {
+  margin-left: auto; min-height: 44px; padding: 0 .2rem; border: 0; background: none; cursor: pointer;
+  font: 600 13px/1 'Archivo', sans-serif; color: var(--c4-text-muted);
+  text-decoration: underline; text-decoration-color: var(--c4-border); text-underline-offset: 4px;
+}
+.qt-over:hover { color: var(--c4-text); text-decoration-color: currentColor; }
 
-/* ── the rail ── */
-.qt-rail-wrap { overflow-x: auto; overflow-y: hidden; padding: .2rem 0 .6rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-.qt-rail-wrap::-webkit-scrollbar { display: none; }
-.qt-rail { position: relative; height: 150px; min-width: 620px; }
-.qt-rail-line { position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: var(--c4-border); }
-.qt-stop {
-  position: absolute; left: var(--x); top: 50%; transform: translate(-50%, -50%);
-  appearance: none; background: none; border: 0; padding: 0; cursor: pointer; color: var(--c4-text-muted);
-  display: grid; justify-items: center; gap: 0; width: 44px; height: 44px; place-content: center;
+/* ── answers so far (narrow only; the docket does this wide) ── */
+.qt-chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0 0; padding: 0; list-style: none; }
+.qt-chip {
+  display: inline-flex; align-items: center; gap: .45rem; min-height: 44px; padding: 0 .95rem;
+  border: 1px solid var(--c4-border); border-radius: 999px; background: transparent; cursor: pointer;
+  font: 600 13px/1.1 'Archivo', sans-serif; color: var(--c4-text);
 }
-.qt-stop-tick {
-  width: 12px; height: 12px; border-radius: 50%; background: var(--c4-bg); border: 2px solid var(--c4-text-subtle);
-  transition: transform .25s cubic-bezier(.22, 1, .36, 1), border-color .2s ease, background-color .2s ease;
+.qt-chip::after {
+  content: ''; width: 6px; height: 6px; border-right: 1.5px solid var(--c4-text-subtle); border-bottom: 1.5px solid var(--c4-text-subtle);
+  transform: rotate(-45deg) translateY(-1px);
 }
-.qt-stop-label {
-  position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(100% - 2px);
-  display: grid; justify-items: center; gap: 2px; white-space: nowrap; pointer-events: none;
-}
-.qt-stop--below .qt-stop-label { bottom: auto; top: calc(100% - 2px); }
-.qt-stop-label b { font: 600 12.5px/1.1 'Archivo', sans-serif; color: var(--c4-text); letter-spacing: -.005em; }
-.qt-stop-label i { font: 400 11px/1 'B612 Mono', ui-monospace, monospace; font-style: normal; color: var(--c4-text-muted); letter-spacing: .03em; }
-.qt-stop:hover .qt-stop-tick { transform: scale(1.25); border-color: var(--c4-text); }
-.qt-stop.is-on .qt-stop-tick { background: var(--c4-accent); border-color: var(--c4-accent); transform: scale(1.35); }
-.qt-stop.is-on .qt-stop-label b { color: var(--c4-accent); }
-.qt-stop:focus-visible { outline: none; }
-.qt-stop:focus-visible .qt-stop-tick { outline: 2px solid var(--c4-focus, var(--c4-text)); outline-offset: 3px; }
+.qt-chip:hover { border-color: var(--c4-text); }
+.qt-chip:active { transform: scale(.97); }
+@container qt (min-width: 880px) { .qt-chips { display: none; } }
 
-/* ── body: the pick and the tray ── */
-.qt-body { display: grid; gap: 2rem; padding-top: 1rem; }
-@media (min-width: 900px) { .qt-body { grid-template-columns: minmax(0, 1fr) minmax(280px, .9fr); gap: 3rem; } }
-.qt-pick-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem 1.2rem; }
-.qt-pick-name { margin: 0; font: 680 clamp(1.3rem, 1rem + 1vw, 1.7rem)/1.1 'Archivo', sans-serif; letter-spacing: -.02em; color: var(--c4-text); }
-.qt-pick-price { font: 700 15px/1 'B612 Mono', ui-monospace, monospace; color: var(--c4-text); display: inline-flex; align-items: baseline; gap: .6rem; }
-.qt-pick-price em { font: 400 11px/1 'B612 Mono', ui-monospace, monospace; font-style: normal; color: var(--c4-accent); }
-.qt-pick-desc { margin: .8rem 0 0; font-size: 15px; line-height: 1.55; color: var(--c4-text-muted); max-width: 56ch; text-wrap: pretty; }
-.qt-pick-list { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: .35rem; }
-.qt-pick-list li { position: relative; padding-left: 1.1rem; font-size: 14px; line-height: 1.5; color: var(--c4-text); }
-.qt-pick-list li::before { content: ''; position: absolute; left: 0; top: .62em; width: 6px; height: 2px; background: var(--c4-text-subtle); }
-.qt-monthly { display: grid; grid-template-columns: 18px 1fr; gap: .7rem; align-items: start; margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--c4-border-light); font-size: 14px; line-height: 1.5; color: var(--c4-text); cursor: pointer; }
-.qt-monthly small { display: block; margin-top: .2rem; font-size: 12.5px; color: var(--c4-text-muted); }
-.qt-monthly input, .qt-extra input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-.qt-monthly-box, .qt-extra-box { width: 18px; height: 18px; margin-top: 2px; border: 1.5px solid var(--c4-text-subtle); border-radius: 3px; background: var(--c4-card-bg); transition: background-color .15s ease, border-color .15s ease; }
-.qt-monthly input:checked + .qt-monthly-box, .qt-extra input:checked + .qt-extra-box { background: var(--c4-accent); border-color: var(--c4-accent); box-shadow: inset 0 0 0 3px var(--c4-card-bg); }
-.qt-monthly input:focus-visible + .qt-monthly-box, .qt-extra input:focus-visible + .qt-extra-box { outline: 2px solid var(--c4-focus, var(--c4-text)); outline-offset: 2px; }
+/* ── the question ── */
+.qt-step { padding-top: clamp(1rem, 2vw, 1.5rem); }
+@container qt (min-width: 880px) { .qt-step { min-height: 30rem; } }
+.qt-q {
+  margin: 0; font: 680 clamp(1.55rem, 1.15rem + 1.5vw, 2.25rem)/1.08 'Archivo', sans-serif; font-stretch: 94%;
+  letter-spacing: -.028em; color: var(--c4-text); text-wrap: balance;
+}
+.qt-q:focus { outline: none; }
+.qt-q-sub { margin: .55rem 0 1.4rem; max-width: 56ch; font-size: 15px; line-height: 1.5; color: var(--c4-text-muted); text-wrap: pretty; }
 
-.qt-tray-label { margin: 0 0 .6rem; font-family: 'B612 Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: .06em; color: var(--c4-text-muted); }
+/* A step arrives from the side it was asked from, and only after a visitor
+   moves; the first question is simply there. */
+.qt-step--fwd { animation: qt-in-fwd .4s var(--qt-ease) both; }
+.qt-step--back { animation: qt-in-back .4s var(--qt-ease) both; }
+@keyframes qt-in-fwd { from { opacity: 0; transform: translate3d(28px, 0, 0); } }
+@keyframes qt-in-back { from { opacity: 0; transform: translate3d(-28px, 0, 0); } }
+
+/* ── answers: ruled rows; the chosen one on proof stock ── */
+.qt-choices { display: grid; gap: 0; border-bottom: 1px solid var(--c4-border); }
+@container qt (min-width: 620px) {
+  .qt-choices--lanes, .qt-choices--pkgs, .qt-choices--pay { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.25rem; }
+}
+.qt-opt {
+  position: relative; display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: .85rem; align-items: start;
+  width: 100%; min-height: 64px; margin: 0; padding: 1rem .9rem 1.05rem .8rem; text-align: left; cursor: pointer;
+  border: 1px solid transparent; border-top-color: var(--c4-border); border-radius: 2px; background: transparent; color: var(--c4-text);
+  font: inherit;
+  transition: background-color .18s ease, border-color .18s ease, transform .12s ease;
+}
+.qt-opt:hover { background: var(--c4-bg-alt); }
+.qt-opt:active { transform: scale(.985); transition-duration: .06s; }
+.qt-opt.is-on {
+  background: var(--c4-proof-surface, var(--c4-card-bg)); border-color: var(--c4-proof-border, var(--c4-border));
+  color: var(--c4-proof-text, var(--c4-text));
+}
+.qt-opt.is-on + .qt-opt { border-top-color: transparent; }
+@container qt (min-width: 620px) {
+  .qt-opt.is-on + .qt-opt { border-top-color: var(--c4-border); }
+}
+.qt-opt:focus-visible { outline-offset: 2px; z-index: 1; }
+
+/* The mark: a ring that takes an ink dot. It presses in when chosen. */
+.qt-opt-mark {
+  position: relative; width: 18px; height: 18px; margin-top: 3px; border-radius: 50%;
+  border: 1.5px solid var(--c4-text-subtle); background: var(--c4-card-bg);
+  transition: border-color .15s ease;
+}
+.qt-opt-mark::after {
+  content: ''; position: absolute; inset: 3px; border-radius: 50%; background: currentColor;
+  transform: scale(0); transition: transform .18s var(--qt-ease);
+}
+.qt-opt.is-on .qt-opt-mark { border-color: currentColor; }
+.qt-opt.is-on .qt-opt-mark::after { transform: scale(1); }
+.qt.is-live .qt-opt.is-on .qt-opt-mark::after { animation: qt-press .26s var(--qt-ease); }
+@keyframes qt-press { 0% { transform: scale(1.5); } 100% { transform: scale(1); } }
+
+.qt-opt-body { display: grid; gap: .3rem; min-width: 0; }
+.qt-opt-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .2rem 1rem; }
+.qt-opt-name { font: 640 17.5px/1.25 'Archivo', sans-serif; letter-spacing: -.012em; }
+.qt-opt-pop {
+  margin-left: .55rem; font: 400 11px/1 'B612 Mono', ui-monospace, monospace; font-style: normal; letter-spacing: .02em;
+  color: var(--c4-text-muted); white-space: nowrap;
+}
+.qt-opt.is-on .qt-opt-pop { color: var(--c4-proof-muted, var(--c4-text-muted)); }
+.qt-opt-fig { font: 700 15px/1.2 'B612 Mono', ui-monospace, monospace; white-space: nowrap; }
+.qt-opt-from, .qt-opt-or { font-weight: 400; font-size: 12px; color: var(--c4-text-muted); }
+.qt-opt-terms { font: 400 12px/1.3 'B612 Mono', ui-monospace, monospace; color: var(--c4-text-muted); margin-top: -.1rem; }
+.qt-opt-desc { font-size: 14px; line-height: 1.5; color: var(--c4-text-muted); text-wrap: pretty; }
+.qt-opt.is-on :is(.qt-opt-from, .qt-opt-or, .qt-opt-terms, .qt-opt-desc) { color: var(--c4-proof-muted, var(--c4-text-muted)); }
+.qt-opt-incl { display: flex; flex-wrap: wrap; gap: .15rem 0; font-size: 13px; line-height: 1.45; color: var(--c4-text); }
+.qt-opt-incl span:not(:last-child)::after { content: '·'; margin: 0 .45rem; color: var(--c4-text-subtle); }
+.qt-opt-notes { display: grid; gap: .25rem; font-size: 13.5px; line-height: 1.45; color: var(--c4-text-muted); }
+.qt-opt.is-on .qt-opt-notes { color: var(--c4-proof-muted, var(--c4-text-muted)); }
+
+/* ── extras: a short list, and the rest in a drawer ── */
 .qt-tray-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--c4-border); }
 .qt-extra {
-  position: relative; display: grid; grid-template-columns: 18px 1fr auto; gap: .7rem; align-items: center;
-  padding: .55rem 0; border-bottom: 1px solid var(--c4-border-light); cursor: pointer; font-size: 14px; color: var(--c4-text);
+  position: relative; display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: .8rem; align-items: center;
+  min-height: 48px; padding: .55rem .6rem; border-bottom: 1px solid var(--c4-border-light); border-radius: 2px;
+  cursor: pointer; font-size: 15px; color: var(--c4-text);
+  transition: background-color .15s ease, transform .12s ease;
 }
-.qt-extra-price { font: 400 12.5px/1 'B612 Mono', ui-monospace, monospace; color: var(--c4-text-muted); font-variant-numeric: tabular-nums; }
-.qt-extra.is-on .qt-extra-price { color: var(--c4-text); }
-.qt-tray--note .qt-tray-copy { margin: 0; font-size: 14px; line-height: 1.55; color: var(--c4-text-muted); max-width: 40ch; }
+.qt-extra:hover { background: var(--c4-bg-alt); }
+.qt-extra:active { transform: scale(.99); transition-duration: .06s; }
+.qt-extra.is-on { background: var(--c4-proof-surface, var(--c4-card-bg)); color: var(--c4-proof-text, var(--c4-text)); }
+.qt-extra input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.qt-extra-box {
+  position: relative; width: 18px; height: 18px; border: 1.5px solid var(--c4-text-subtle); border-radius: 2px; background: var(--c4-card-bg);
+  transition: border-color .15s ease, background-color .15s ease;
+}
+.qt-extra-box::after {
+  content: ''; position: absolute; left: 4.5px; top: 1px; width: 5px; height: 10px;
+  border-right: 2px solid var(--c4-bg); border-bottom: 2px solid var(--c4-bg); transform: rotate(45deg) scale(0);
+  transition: transform .16s var(--qt-ease);
+}
+.qt-extra input:checked + .qt-extra-box { background: var(--c4-text); border-color: var(--c4-text); }
+.qt-extra input:checked + .qt-extra-box::after { transform: rotate(45deg) scale(1); }
+.qt-extra input:focus-visible + .qt-extra-box { outline: 2px solid var(--c4-focus, var(--c4-text)); outline-offset: 3px; }
+.qt-extra-price { font: 400 13px/1 'B612 Mono', ui-monospace, monospace; color: var(--c4-text-muted); white-space: nowrap; }
+.qt-extra.is-on .qt-extra-price { color: inherit; font-weight: 700; }
 
-/* The drawer: the rest of the extras, sorted by kind and folded away until
-   asked for. Grid rows carry the height so nothing is measured; the groups
-   come out in order on the site ease and go back faster than they came. */
 .qt-more {
-  display: flex; align-items: center; gap: .7rem; width: 100%; min-height: 46px;
-  margin: 0; padding: .65rem 0; border: 0; border-bottom: 1px solid var(--c4-border); background: none;
-  font: 600 14px/1.2 'Archivo', sans-serif; letter-spacing: -.005em; color: var(--c4-text); text-align: left; cursor: pointer;
+  display: flex; align-items: center; gap: .7rem; width: 100%; min-height: 48px;
+  margin: 0; padding: .65rem .6rem; border: 0; border-bottom: 1px solid var(--c4-border); background: none;
+  font: 600 14.5px/1.2 'Archivo', sans-serif; letter-spacing: -.005em; color: var(--c4-text); text-align: left; cursor: pointer;
 }
 .qt-more-label { text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; transition: text-decoration-color .15s ease; }
 .qt-more:hover .qt-more-label { text-decoration-color: currentColor; }
-.qt-more:focus-visible { outline: 2px solid var(--c4-focus, var(--c4-text)); outline-offset: 3px; }
 .qt-more-count {
-  padding: .3rem .45rem .25rem; border: 1px solid var(--c4-accent); border-radius: 3px;
-  font: 400 11px/1 'B612 Mono', ui-monospace, monospace; color: var(--c4-accent); font-variant-numeric: tabular-nums;
+  padding: .3rem .45rem .25rem; border: 1px solid var(--c4-text-subtle); border-radius: 2px;
+  font: 400 11px/1 'B612 Mono', ui-monospace, monospace; color: var(--c4-text);
 }
 .qt-more-chev {
   flex: none; width: 8px; height: 8px; margin: 0 4px 0 auto;
   border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
-  transform: translateY(-2px) rotate(45deg); transition: transform .32s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(-2px) rotate(45deg); transition: transform .32s var(--qt-ease);
 }
 .qt-more.is-open .qt-more-chev { transform: translateY(2px) rotate(225deg); }
 .qt-more--foot { margin-top: 1.1rem; border-top: 1px solid var(--c4-border); border-bottom: 0; color: var(--c4-text-muted); }
-
 .qt-drawer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .26s cubic-bezier(0.4, 0, 1, 1); }
-.qt-drawer.is-open { grid-template-rows: 1fr; transition: grid-template-rows .52s cubic-bezier(0.22, 1, 0.36, 1); }
+.qt-drawer.is-open { grid-template-rows: 1fr; transition: grid-template-rows .52s var(--qt-ease); }
 .qt-drawer-inner { min-height: 0; overflow: hidden; }
 .qt-group { padding-top: 1.15rem; opacity: 0; transform: translateY(-10px); transition: opacity .14s ease, transform .2s ease; }
 .qt-drawer.is-open .qt-group {
   opacity: 1; transform: none;
-  transition: opacity .3s ease calc(70ms + var(--i, 0) * 45ms), transform .52s cubic-bezier(0.22, 1, 0.36, 1) calc(70ms + var(--i, 0) * 45ms);
+  transition: opacity .3s ease calc(70ms + var(--i, 0) * 45ms), transform .52s var(--qt-ease) calc(70ms + var(--i, 0) * 45ms);
 }
-.qt-group-label { margin: 0 0 .5rem; font: 400 11px/1.2 'B612 Mono', ui-monospace, monospace; letter-spacing: .06em; color: var(--c4-text-muted); }
+.qt-group-label { margin: 0 0 .5rem; font: 400 11.5px/1.2 'B612 Mono', ui-monospace, monospace; letter-spacing: .04em; color: var(--c4-text-muted); }
 
-/* ── foot: the estimate on proof stock, and the start ── */
-.qt-foot { margin-top: 2.2rem; display: grid; gap: 1.2rem; }
-@media (min-width: 900px) { .qt-foot { grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 2rem; } .qt-fine { grid-column: 1 / -1; } }
-.qt-summary {
-  margin: 0; padding: 1rem 1.2rem; white-space: pre-wrap;
-  font: 400 12.5px/1.6 'B612 Mono', ui-monospace, monospace; color: var(--c4-proof-text, var(--c4-text));
-  background: var(--c4-proof-surface, var(--c4-bg-alt)); border: 1px solid var(--c4-proof-border, var(--c4-border)); border-radius: 2px;
+/* ── Back and Next. On a narrow frame this is the bar at the foot, and it
+   carries the total. ── */
+.qt-nav {
+  display: flex; align-items: center; gap: .75rem;
+  margin-top: 1.6rem; padding-top: 1.1rem; border-top: 1px solid var(--c4-border-light);
 }
-.qt-actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.qt-back {
+  display: inline-flex; align-items: center; gap: .5rem; min-height: 48px; padding: 0 .9rem 0 .6rem;
+  border: 0; border-radius: 999px; background: none; cursor: pointer;
+  font: 600 14px/1 'Archivo', sans-serif; color: var(--c4-text);
+}
+.qt-back:hover { background: var(--c4-bg-alt); }
+.qt-back:disabled { visibility: hidden; }
+.qt-back-chev, .qt-next-chev {
+  width: 7px; height: 7px; border-left: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg);
+}
+.qt-next-chev { transform: rotate(-135deg); margin-left: .1rem; }
+.qt-next {
+  display: inline-flex; align-items: center; gap: .6rem; min-height: 48px; margin-left: auto; padding: 0 1.4rem;
+  border: 1px solid var(--c4-text); border-radius: 999px; background: var(--c4-text); color: var(--c4-bg); cursor: pointer;
+  font: 600 14px/1 'Archivo', sans-serif; letter-spacing: -.005em; white-space: nowrap;
+  transition: transform .2s var(--qt-ease), box-shadow .2s ease;
+}
+.qt-next:hover { transform: translateY(-1px); box-shadow: 0 12px 26px -16px rgba(0, 0, 0, .55); }
+.qt-next:active { transform: scale(.97); transition-duration: .06s; }
+.qt-bar-total { display: none; }
+
+@container qt (max-width: 879.98px) {
+  .qt-nav {
+    position: sticky; bottom: 0; z-index: 6;
+    margin: 1.4rem calc(-1 * var(--qt-gutter)) 0;
+    /* The right edge stays clear of the Support pill (44px at 14px in). */
+    padding: .55rem 64px calc(.55rem + env(safe-area-inset-bottom, 0px)) calc(var(--qt-gutter) - .4rem);
+    background: var(--c4-bg); border-top: 1px solid var(--c4-border);
+    gap: .5rem;
+  }
+  .qt-back { padding: 0 .55rem; min-width: 48px; justify-content: center; }
+  .qt-back-label { display: none; }
+  .qt-bar-total { display: grid; justify-items: start; gap: .1rem; min-width: 0; flex: 1 1 auto; }
+  .qt-bar-label { font: 400 10.5px/1 'B612 Mono', ui-monospace, monospace; letter-spacing: .04em; color: var(--c4-text-muted); }
+  .qt-bar-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .4rem; color: var(--c4-text); }
+  .qt-next { margin-left: 0; padding: 0 1.1rem; }
+  /* The estimate step shows the docket itself, so the bar stands down and
+     Back sits under the buttons instead of over them. */
+  .qt.is-final .qt-nav { position: static; border-top: 0; background: none; }
+  .qt.is-final .qt-bar-total { visibility: hidden; }
+}
+@container qt (max-width: 379.98px) {
+  .qt-next { padding: 0 .9rem; }
+}
+
+/* ── the till ── */
+/* Every cell is the same height and line box (1.2em: B612's ink runs past
+   a 1em box, and a 1em window showed a sliver of the next digit), so the
+   digits, the dollar and the comma share one baseline by construction. */
+.qt-till {
+  --qt-cell: 1.2em;
+  display: inline-flex; align-items: flex-start;
+  font-family: 'B612 Mono', ui-monospace, monospace; font-weight: 700; font-variant-numeric: tabular-nums;
+  line-height: var(--qt-cell); letter-spacing: -.02em;
+}
+.qt-till--docket { font-size: clamp(2.3rem, 1.6rem + 1.6vw, 3.1rem); }
+.qt-till--bar { font-size: 1.3rem; }
+.qt-digit { display: inline-block; height: var(--qt-cell); overflow: hidden; }
+.qt-strip { display: flex; flex-direction: column; transition: transform .55s var(--qt-ease); }
+.qt-strip span { display: block; height: var(--qt-cell); line-height: var(--qt-cell); }
+.qt-glyph { display: inline-block; height: var(--qt-cell); }
+.qt-suffix { align-self: flex-end; font-size: .42em; line-height: 1; margin: 0 0 .62em .15em; opacity: .8; }
+.qt-till-second { font: 400 12.5px/1.2 'B612 Mono', ui-monospace, monospace; color: inherit; opacity: .8; }
+.qt-docket .qt-till-second { display: block; margin-top: .35rem; font-size: 14px; }
+
+/* ── the docket ── */
+.qt-docket {
+  padding: 1.3rem 1.35rem 1.25rem; border-radius: 2px;
+  background: var(--c4-proof-surface, var(--c4-card-bg)); border: 1px solid var(--c4-proof-border, var(--c4-border));
+  color: var(--c4-proof-text, var(--c4-text));
+}
+.qt-docket--side { display: none; }
+@container qt (min-width: 880px) {
+  .qt-docket--side { display: block; position: sticky; top: 6.5rem; }
+  .qt-docket--inline { display: none; }
+}
+.qt-docket--inline { margin: 0 0 1.4rem; }
+.qt-lines { list-style: none; margin: 0; padding: 0; }
+.qt-line + .qt-line { margin-top: .1rem; }
+.qt-line-btn {
+  display: flex; align-items: baseline; gap: .5rem; width: 100%; min-height: 44px; margin: 0; padding: .55rem 0;
+  border: 0; background: none; cursor: pointer; color: inherit; text-align: left; font: inherit;
+}
+.qt-line-label { display: grid; gap: .15rem; min-width: 0; font: 500 15px/1.3 'Archivo', sans-serif; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; transition: text-decoration-color .15s ease; }
+.qt-line-btn:hover .qt-line-label { text-decoration-color: currentColor; }
+.qt-line-note { font: 400 11.5px/1.2 'B612 Mono', ui-monospace, monospace; color: var(--c4-proof-muted, var(--c4-text-muted)); }
+.qt-line-lead { flex: 1 1 1.5rem; min-width: 1.5rem; align-self: baseline; border-bottom: 1.5px dotted var(--c4-proof-border, var(--c4-border)); transform: translateY(-.25em); }
+.qt-line-fig { font: 700 14px/1.3 'B612 Mono', ui-monospace, monospace; white-space: nowrap; }
+.qt-line-fig.is-word { font-weight: 400; }
+.qt-line--service .qt-line-label { font: 680 19px/1.2 'Archivo', sans-serif; letter-spacing: -.015em; }
+.qt-line.is-dim { color: var(--c4-proof-muted, var(--c4-text-muted)); }
+/* A line that changes writes itself in, left to right. */
+.qt-line.is-new { animation: qt-write .46s var(--qt-ease) both; }
+@keyframes qt-write { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+.qt-total {
+  display: grid; gap: .3rem; margin-top: .9rem; padding-top: 1rem;
+  border-top: 3px double var(--c4-proof-text, var(--c4-text));
+}
+.qt-total-label { font: 400 11.5px/1 'B612 Mono', ui-monospace, monospace; letter-spacing: .04em; color: var(--c4-proof-muted, var(--c4-text-muted)); }
+.qt-total-fig { display: block; padding-top: .2rem; }
+.qt-total-note { font: 400 11.5px/1.3 'B612 Mono', ui-monospace, monospace; letter-spacing: .02em; color: var(--c4-proof-muted, var(--c4-text-muted)); }
+
+/* ── the estimate step ── */
+.qt-actions { display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; }
 .qt-start {
-  display: inline-flex; align-items: center; min-height: 46px; padding: 0 1.3rem; border-radius: 3px;
-  background: var(--c4-accent); color: #fff; text-decoration: none; font: 600 12px/1 'Archivo', sans-serif; letter-spacing: .08em; text-transform: uppercase;
-  transition: background-color .2s ease, transform .2s ease;
+  display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 0 2.1rem; border-radius: 999px;
+  background: var(--c4-accent); color: #fff; text-decoration: none;
+  font: 600 12.5px/1 'Archivo', sans-serif; letter-spacing: .14em; text-transform: uppercase;
+  transition: background-color .2s ease, transform .2s var(--qt-ease), box-shadow .2s ease;
 }
-.qt-start:hover { background: var(--c4-accent-hover); transform: translateY(-1px); }
+.qt-start:hover { background: var(--c4-accent-hover); transform: translateY(-2px); box-shadow: 0 18px 38px -16px rgba(194, 48, 48, .55); }
 .qt-copy {
-  appearance: none; min-height: 46px; padding: 0 1.1rem; border-radius: 3px; border: 1px solid var(--c4-border); background: transparent;
-  color: var(--c4-text); font: 600 12px/1 'Archivo', sans-serif; letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+  appearance: none; min-height: 56px; padding: 0 1.6rem; border-radius: 999px; border: 1px solid var(--c4-text); background: transparent;
+  color: var(--c4-text); font: 600 12.5px/1 'Archivo', sans-serif; letter-spacing: .12em; text-transform: uppercase; cursor: pointer;
+  transition: background-color .18s ease, color .18s ease;
 }
-.qt-copy:hover { border-color: var(--c4-text); }
-.qt-fine { margin: 0; font-size: 12px; line-height: 1.55; color: var(--c4-text-subtle); max-width: 90ch; }
+.qt-copy:hover { background: var(--c4-text); color: var(--c4-bg); }
+.qt-fine { margin: 1.3rem 0 0; font-size: 12.5px; line-height: 1.55; color: var(--c4-text-muted); max-width: 70ch; }
+@container qt (max-width: 479.98px) {
+  .qt-actions > * { flex: 1 1 100%; }
+}
 
 /* ── compact (the welcome sheet) ── */
 .qt--compact { padding: 0; }
-.qt--compact .qt-frame { padding: 0; }
+.qt--compact .qt-frame { padding: 0; --qt-gutter: 0px; }
 .qt--compact .qt-h2 { font-size: 1.5rem; }
 .qt--compact .qt-sub { font-size: 14px; }
+.qt--compact .qt-nav { margin-left: 0; margin-right: 0; padding-left: 0; }
 
+/* ── still: the prerenderer and reduced motion. Nothing travels or rolls;
+   colour and outline feedback keep their short fades (marks.css). ── */
+.qt.is-still .qt-strip,
+.qt.is-still .qt-ticks li::after,
+.qt.is-still .qt-opt-mark::after,
+.qt.is-still .qt-extra-box::after,
+.qt.is-still .qt-more-chev,
+.qt.is-still .qt-drawer,
+.qt.is-still .qt-drawer.is-open { transition: none; }
+.qt.is-still .qt-opt:active, .qt.is-still .qt-extra:active, .qt.is-still .qt-next:active, .qt.is-still .qt-chip:active { transform: none; }
+.qt.is-still .qt-group, .qt.is-still .qt-drawer.is-open .qt-group { transform: none; transition: none; }
 @media (prefers-reduced-motion: reduce) {
-  .qt-strip, .qt-more-chev, .qt-drawer, .qt-drawer.is-open { transition: none; }
-  /* The groups still fade, so the change reads; nothing travels. */
-  .qt-group, .qt-drawer.is-open .qt-group { transform: none; transition: opacity .18s ease; }
+  .qt-strip, .qt-ticks li::after, .qt-opt-mark::after, .qt-extra-box::after, .qt-more-chev, .qt-drawer, .qt-drawer.is-open { transition: none; }
+  .qt-step--fwd, .qt-step--back, .qt-line.is-new, .qt.is-live .qt-opt.is-on .qt-opt-mark::after { animation: none; }
+  .qt-opt:active, .qt-extra:active, .qt-next:active, .qt-chip:active, .qt-next:hover, .qt-start:hover { transform: none; }
+  .qt-group, .qt-drawer.is-open .qt-group { transform: none; transition: none; }
 }

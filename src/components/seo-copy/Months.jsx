@@ -19,12 +19,11 @@
  */
 import { useState } from 'react';
 import { includes, isMonthly, MONTHLY, minMonths, word, list } from './plans';
+import { tightFigure } from '@/components/c4/figure';
 
 const MONTHS = 6;
 /* B612 gives the comma a full cell; tuck it in, as the price ledger does */
-const tight = (figure) => figure.split(',').map((part, i) => (
-  i === 0 ? part : <span key={part}><span className="sc-comma">,</span>{part}</span>
-));
+const tight = (figure) => tightFigure(figure, 'sc-comma');
 const POSTS = /^(\d+)\b[^/]*\b(?:posts?|articles?)\b.*month/i;
 
 function classify(p, from = null) {

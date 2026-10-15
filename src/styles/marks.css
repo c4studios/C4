@@ -138,6 +138,13 @@ html :is([class*="outline-none"], [class*="outline-0"]):focus-visible {
 /* Slashed zero in the instrument face so 0 and O never confuse a
    phone number or a price. B612 carries it; other faces ignore it. */
 :where(.c4-fig, [data-fig]) { font-feature-settings: "tnum", "zero"; }
+/* The comma in a B612 price. Every glyph in the face takes a 0.65em
+   cell and the comma's ink sits at its left (0.07 to 0.23em at 400,
+   0.05 to 0.25em at 700), so "$1,500" reads as "$1, 500". These margins
+   leave about 0.04em before the comma and 0.1em after it at either
+   weight (measured in Chromium, 15 Oct 2026). `tightFigure` in
+   components/c4/figure.jsx wraps the commas; the text stays as it was. */
+.c4-comma { margin: 0 -0.37em 0 -0.09em; }
 
 /* ── reduced motion ─────────────────────────────────────────── */
 /* Not a blanket kill. Movement is removed; state feedback stays.

@@ -18,6 +18,7 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from '@/components/c4/SiteLink';
 import { seoPackages, webDesignAddOns, GST_NOTE } from '@/data/pricing';
 import { createPageUrl } from '@/utils';
+import { tightFigure } from '@/components/c4/figure';
 import seoGuide from '@/content/seo/pages/seo-perth';
 import costGuide from '@/content/seo/pages/how-much-does-a-website-cost-perth';
 import { FirstSheet } from './Results';
@@ -63,9 +64,7 @@ function priceParts(p) {
 /* B612 is monospaced, so its comma takes a full cell and "$1,000" reads as
    "$1, 000" at display size. The comma is tucked in rather than the face
    swapped. */
-const tight = (figure) => figure.split(',').map((part, i) => (
-  i === 0 ? part : <span key={i}><span className="sc-comma">,</span>{part}</span>
-));
+const tight = (figure) => tightFigure(figure, 'sc-comma');
 
 /* ── The straight answer ─────────────────────────────────────────────── */
 

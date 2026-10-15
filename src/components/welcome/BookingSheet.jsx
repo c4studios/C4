@@ -246,6 +246,7 @@ const QUOTR_LIGHT = {
   '--c4-proof-surface': '#FFF8F2',
   '--c4-proof-border': '#E7D7C9',
   '--c4-proof-text': '#241B18',
+  '--c4-proof-muted': '#6F5F57',
   '--c4-focus': '#1A1A1A',
   '--c4-caret': '#C23030',
 };
