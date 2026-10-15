@@ -3067,7 +3067,9 @@ export const CASE_STUDIES = {
     budget: '',
     role: 'Solo (concept, design, full-stack development, billing, deployment)',
     liveUrl: 'https://quotr.us',
-    year: '2025',
+    /* Was '2025' until 15 Oct 2026. The repo starts on 23 May 2026 and the
+       first deploy is below, so nothing on file supports 2025. */
+    year: '2026',
     /* GitHub deployments API, c4studios/quotr: Vercel Production, created
        2026-05-25 13:37 UTC, status success (two attempts from 13:32
        failed). The repo's initial commit is 23 May 2026. */

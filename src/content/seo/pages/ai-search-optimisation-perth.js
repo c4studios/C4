@@ -3,7 +3,9 @@
  * The newest pillar: getting a business cited by ChatGPT, Perplexity and
  * Google's AI Overviews. C4 practises this on its own site, so the page is
  * literally its own proof — prerendered HTML, Organization/Person/Service/FAQ
- * structured data, an llms.txt, and an answer-first 58-page build.
+ * structured data, an llms.txt, and an answer-first build. ("58-page" came
+ * out of the visible line on 15 Oct 2026: the registry holds 47 pages and the
+ * site prerenders 86. Don't put a page count back.)
  *
  * 15 Oct 2026: the $400 AI Visibility Check came off, at Caleb's call ("take
  * it off"). It was in the pricing section, the ChatGPT FAQ answer and
@@ -78,7 +80,7 @@ export default {
       label: 'Receipts',
       heading: 'We eat our own cooking',
       cases: [
-        { name: 'This website', summary: 'Every page here is prerendered to real HTML for GPTBot and ClaudeBot, carries Organization, Person, Service and FAQ structured data, ships an llms.txt, and is one of a 58-page answer-first build. We didn’t read about GEO — we run it on ourselves.', tag: 'Live experiment' },
+        { name: 'This website', summary: 'Every page here is prerendered to real HTML for GPTBot and ClaudeBot, carries Organization, Person, Service and FAQ structured data, ships an llms.txt, and is part of an answer-first build. We didn’t read about GEO — we run it on ourselves.', tag: 'Live experiment' },
         { name: 'The honest version', summary: 'There are tricks doing the rounds — fake “best-selling” press releases, keyword-stuffed titles — that game the AI for a while. We don’t sell those. They age badly and they’re the opposite of what we’re about. GEO done properly outlasts them.', tag: 'No smoke & mirrors' },
       ],
     },

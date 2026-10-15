@@ -1,7 +1,11 @@
 /**
  * Pillar — SEO Perth.
- * Unique detail: this very page is part of a 58-page programmatic build
+ * Unique detail: this very page is part of a programmatic build
  * C4 did for itself — the studio is its own SEO case study.
+ *
+ * 15 Oct 2026: "58-page" came out of the visible line below. The registry
+ * holds 47 pages and the site prerenders 86, so the number was stale. Don't
+ * put a page count back.
  */
 export default {
   hero: {
@@ -64,7 +68,7 @@ export default {
       cases: [
         { name: 'GoCC — Coaching & Counselling', summary: 'Performance and SEO consultancy for a counselling practice: faster load times, smoother interactions, wider reach through technical optimisation.', href: '/CaseStudy/gocc', tag: 'Consultancy' },
         { name: 'CIA Solutions', summary: 'One owner, two sites, the same searches — and the older one was winning. We rebuilt it around what only it does and redirected the overlapping pages to the sister firm, so thirty years of search history stopped competing with itself.', href: '/CaseStudy/cia-solutions', tag: 'Consolidation' },
-        { name: 'This page you’re reading', summary: 'It’s one of a 58-page SEO build we ran on our own site — structured data, prerendered HTML, honest content. We’re our own case study, and the rankings are the report card.', tag: 'Live experiment' },
+        { name: 'This page you’re reading', summary: 'It’s part of an SEO build we ran on our own site — structured data, prerendered HTML, honest content. We’re our own case study, and the rankings are the report card.', tag: 'Live experiment' },
       ],
     },
     {
