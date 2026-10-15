@@ -123,13 +123,15 @@
 # c4site-website/launch/private-ai-redirects.txt: /ServiceAI and /serviceai go
 # to AI automation, which carries that page's substance now, and the twelve
 # suburb pages, which weren't ported, share the pillar's landing. The query
-# string carries through, and /private-ai/ there still reads ?tier= and ?supply=.
+# string carries through.
 
-# Private AI (was the C4i offer)
-/private-ai                   https://c4site.com.au/private-ai/            301
-/private-ai/                  https://c4site.com.au/private-ai/            301
-/c4i                          https://c4site.com.au/private-ai/            301
-/c4i/                         https://c4site.com.au/private-ai/            301
+# Private AI (was the C4i offer). Caleb parked private AI on 10 Oct 2026, and
+# C4Site's /private-ai/ now 301s to its AI training for business page. So
+# these go straight there in one hop (C4Site session, 15 Oct 2026).
+/private-ai                   https://c4site.com.au/ai-training-for-business/   301
+/private-ai/                  https://c4site.com.au/ai-training-for-business/   301
+/c4i                          https://c4site.com.au/ai-training-for-business/   301
+/c4i/                         https://c4site.com.au/ai-training-for-business/   301
 
 # The cloud AI page: its substance is AI automation's
 /ServiceAI                    https://c4site.com.au/ai-automation-perth/   301
