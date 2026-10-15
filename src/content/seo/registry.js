@@ -7,7 +7,7 @@
  *
  * Each entry:
  *   slug         flat URL slug — page lives at `/${slug}`
- *   type         'pillar' | 'suburb' | 'industry' | 'comparison'
+ *   type         'pillar' | 'suburb' | 'industry' | 'comparison' | 'article'
  *   status       'draft' | 'live' — only live entries get a route, prerender
  *                and sitemap coverage. Flip to live when the content module
  *                at src/content/seo/pages/<slug>.js ships.
@@ -203,61 +203,95 @@ const INDUSTRIES = [
   },
 ];
 
-/* ── Comparisons (7) ───────────────────────────────────────────────── */
+/* ── Comparisons (6) ───────────────────────────────────────────────── */
+// Question-led pieces, live since 13 June 2026 (the date of the commits that
+// put them live: 80d329b for the cost guide, df6914d for the rest). Until
+// 15 Oct 2026 they rendered through the service-page shell and /insights
+// listed only `type: 'article'`, so the index showed one piece while seven
+// readable answers sat outside it. They're articles to a reader, so they now
+// render through ArticleTemplate and appear on /insights (liveArticles below).
+// The type stays 'comparison' so llms.txt keeps them under "Guides".
+//
+// Extra fields, as for articles: published / updated (ISO dates; `updated` is
+// the last commit that changed the piece's words), readMinutes (words / 200,
+// rounded up), dek (the /insights display line), photo (a key in
+// src/content/seo/photos.js, the hero and the index image) and image (the
+// share card, built from the photo by scripts/article-photos.mjs).
+//
+// Titles and deks rewritten 15 Oct 2026 (Caleb: "these titles need to be more
+// 'clickable'"). Each <title> keeps the phrase people search; each dek states
+// one thing the piece itself says. Don't put a claim in a dek that the piece
+// can't back.
 const COMPARISONS = [
   {
     slug: 'how-much-does-a-website-cost-perth', type: 'comparison', status: 'live', phase: 2,
-    name: 'How Much Does a Website Cost in Perth?',
+    name: 'How much does a website cost in Perth?',
     title: 'How Much Does a Website Cost in Perth? (2026) | C4 Studios',
     description: 'Perth website costs in 2026: landing pages from $500, business sites $1,500–$2,500, ecommerce from $3,500. What moves the price and what to avoid.',
+    dek: 'Our whole price list, from $500 for a landing page, and why two quotes for the same site can look nothing alike.',
+    photo: 'price-board',
+    image: '/insights/how-much-does-a-website-cost-perth-og.jpg',
+    published: '2026-06-13', updated: '2026-10-09', readMinutes: 6,
     priority: 0.85, changefreq: 'monthly',
     links: { pillars: ['web-design-perth'] },
   },
   {
     slug: 'wix-squarespace-vs-custom-website', type: 'comparison', status: 'live', phase: 4,
-    name: 'Wix or Squarespace vs a Custom-Built Website',
-    title: 'Wix or Squarespace vs Custom Website | C4 Studios',
+    name: 'Wix or Squarespace, or a custom-built website?',
+    title: 'Wix or Squarespace vs Custom: the 5-Year Maths | C4 Studios',
     description: 'The honest comparison: when a site builder is genuinely fine, when custom wins, and the five-year subscription maths nobody shows you.',
+    dek: 'At $40 a month, a site builder costs $2,400 over five years. Sometimes that’s still the right call.',
+    photo: 'estate',
+    image: '/insights/wix-squarespace-vs-custom-website-og.jpg',
+    published: '2026-06-13', updated: '2026-06-13', readMinutes: 4,
     priority: 0.7, changefreq: 'monthly',
     links: { pillars: ['web-design-perth'] },
   },
   {
     slug: 'wordpress-vs-nextjs', type: 'comparison', status: 'live', phase: 4,
-    name: 'WordPress vs Next.js for Business Websites',
-    title: 'WordPress vs Next.js for Business Sites | C4 Studios',
+    name: 'WordPress or Next.js for a business website?',
+    title: 'WordPress vs Next.js, From a Next.js Studio | C4 Studios',
     description: 'Declared bias, honest answer: where WordPress still earns its keep, where Next.js wins on speed and security, and what upkeep really costs.',
+    dek: 'We build in Next.js and say so in the first line. Then we wrote down where WordPress still wins.',
+    photo: 'power-boards',
+    image: '/insights/wordpress-vs-nextjs-og.jpg',
+    published: '2026-06-13', updated: '2026-06-13', readMinutes: 4,
     priority: 0.7, changefreq: 'monthly',
     links: { pillars: ['web-development-perth'] },
   },
   {
-    slug: 'website-redesign-vs-starting-again', type: 'comparison', status: 'live', phase: 4,
-    name: 'Website Redesign vs Starting Again',
-    title: 'Website Redesign vs Starting Again | C4 Studios',
-    description: 'Renovate or rebuild? The checklist we use to decide, the redirect map that protects your rankings, and when sunk cost is the real enemy.',
-    priority: 0.7, changefreq: 'monthly',
-    links: { pillars: ['web-design-perth'] },
-  },
-  {
     slug: 'diy-website-vs-hiring-a-designer', type: 'comparison', status: 'live', phase: 4,
-    name: 'DIY Website vs Hiring a Web Designer',
-    title: 'DIY Website vs Hiring a Web Designer | C4 Studios',
+    name: 'Build it yourself, or hire a web designer?',
+    title: 'DIY Website vs a Web Designer: Count Your Hours | C4 Studios',
     description: 'The honest maths on building it yourself — 40 to 60 hours at your hourly rate — plus a free checklist for doing DIY properly if that is your road.',
+    dek: 'Sometimes the right answer is to build it yourself. If it is, here’s the eight-point checklist we’d hand you.',
+    photo: 'table-saw',
+    image: '/insights/diy-website-vs-hiring-a-designer-og.jpg',
+    published: '2026-06-13', updated: '2026-06-13', readMinutes: 5,
     priority: 0.7, changefreq: 'monthly',
     links: { pillars: ['web-design-perth', 'branding-perth'] },
   },
   {
     slug: 'how-long-does-a-website-take', type: 'comparison', status: 'live', phase: 4,
-    name: 'How Long Does a Website Take to Build?',
+    name: 'How long does a website take to build?',
     title: 'How Long Does a Website Take to Build? | C4 Studios',
     description: 'Real timelines from a working studio: landing pages 1–2 weeks, business sites 3–5, stores 4–8. Where the time actually goes, and how to go faster.',
+    dek: 'Three to five weeks for a business site, and the build is only days of it. The rest is waiting on content.',
+    photo: 'calendar',
+    image: '/insights/how-long-does-a-website-take-og.jpg',
+    published: '2026-06-13', updated: '2026-06-13', readMinutes: 4,
     priority: 0.7, changefreq: 'monthly',
     links: { pillars: ['web-design-perth'] },
   },
   {
     slug: 'do-small-businesses-need-seo', type: 'comparison', status: 'live', phase: 4,
-    name: 'Do Small Businesses Actually Need SEO?',
-    title: 'Do Small Businesses Actually Need SEO? | C4 Studios',
+    name: 'Do small businesses actually need SEO?',
+    title: 'Do Small Businesses Need SEO? Not All of Them | C4 Studios',
     description: 'An honest answer from people who sell it: the last-ten-customers test, what to do free first, and when a retainer is just a donation.',
+    dek: 'From a studio that sells SEO: not every business needs it. Count where your last ten customers came from first.',
+    photo: 'dockets',
+    image: '/insights/do-small-businesses-need-seo-og.jpg',
+    published: '2026-06-13', updated: '2026-10-08', readMinutes: 4,
     priority: 0.7, changefreq: 'monthly',
     links: { pillars: ['seo-perth'] },
   },
@@ -430,8 +464,18 @@ const SUBURB_PAGES = SUBURB_SERVICES.flatMap((service) =>
 //
 // Extra fields beyond the standard entry:
 //   published / updated  ISO dates, required for Article JSON-LD
-//   readMinutes          shown on the index card
-//   dek                  one-line standfirst for the index card
+//   readMinutes          shown on the index card (words / 200, rounded up)
+//   dek                  the line /insights sets large: one thing the piece
+//                        says, worded to make someone want to read it
+//   photo                key in src/content/seo/photos.js: the hero on the
+//                        article and its image on /insights
+//   image                the share card (og:image), cut from the photo with
+//                        the title set in HTML by scripts/article-photos.mjs
+//   verified             ISO date every figure was last re-read at its source;
+//                        only set when that actually happened
+//
+// A new piece goes out every second week from 15 Oct 2026 (Caleb, that day:
+// "id say a NEW ARTICLE ONCE A FORTNIGHT").
 //
 // The six live AI articles moved to c4site.com.au on 9 Oct 2026, keeping
 // their slugs under /articles/. Their entries came out of this list, and that
@@ -443,12 +487,30 @@ const SUBURB_PAGES = SUBURB_SERVICES.flatMap((service) =>
 // SeoPage.jsx lazy-loads every file in pages/, so a module there ships as a
 // public chunk whether or not its entry is live.
 const ARTICLES = [
+  /* Written 15 Oct 2026 at the address of the June decision page it replaces,
+     so the URL keeps whatever it had earned. Every figure was re-read at its
+     source that day; the content module's header lists them and what must
+     not be added. If it ships later than 15 Oct, move `published`, `updated`
+     and `verified` to the day it goes live. */
+  {
+    slug: 'website-redesign-vs-starting-again', type: 'article', status: 'live', phase: 7,
+    name: 'Website redesign or start again?',
+    title: 'Website Redesign or Start Again? How to Decide | C4 Studios',
+    description: 'Redesign or rebuild your website? The two checks that decide it, and what Google’s own guide says happens to your rankings when your addresses change.',
+    dek: 'A rebuild can keep your Google rankings. Google’s own guide says the old addresses should redirect for at least a year.',
+    photo: 'demolition',
+    image: '/insights/website-redesign-vs-starting-again-og.jpg',
+    published: '2026-10-15', updated: '2026-10-15', verified: '2026-10-15', readMinutes: 8,
+    priority: 0.7, changefreq: 'monthly',
+    links: { pillars: ['web-design-perth', 'how-much-does-a-website-cost-perth', 'wordpress-vs-nextjs'] },
+  },
   {
     slug: 'why-web-designers-hide-their-prices', type: 'article', status: 'live', phase: 7,
-    name: 'Why Web Designers Hide Their Prices',
-    title: 'Why Web Designers Hide Their Prices | C4 Studios',
+    name: 'Why do web designers hide their prices?',
+    title: 'Why Web Designers Hide Their Prices (We Don’t) | C4 Studios',
     description: 'The three real reasons agencies quote on request, what "it depends" is actually protecting, and how to compare quotes when one is hiding the number.',
-    dek: 'Naming the reasons from inside the industry, then publishing ours anyway.',
+    dek: 'We put every price on our site. Fewer people got in touch, and more of the ones who did were serious.',
+    photo: 'tags',
     image: '/insights/why-web-designers-hide-their-prices-og.jpg',
     published: '2026-08-03', updated: '2026-08-03', readMinutes: 6,
     priority: 0.65, changefreq: 'yearly',
@@ -463,11 +525,22 @@ export function liveSeoPages() {
   return SEO_PAGES.filter((p) => p.status === 'live');
 }
 
-/** Live articles, newest first — drives the /insights index. */
+/** The types a reader would call an article. Both render through
+ *  ArticleTemplate, carry Article JSON-LD and are listed on /insights. */
+export const ARTICLE_TYPES = ['article', 'comparison'];
+
+export function isArticleLike(entry) {
+  return Boolean(entry) && ARTICLE_TYPES.includes(entry.type);
+}
+
+/** Live articles, newest first — drives the /insights index. Pieces published
+ *  the same day keep their order in this file. */
 export function liveArticles() {
   return SEO_PAGES
-    .filter((p) => p.type === 'article' && p.status === 'live')
-    .sort((a, b) => (b.published || '').localeCompare(a.published || ''));
+    .filter((p) => isArticleLike(p) && p.status === 'live')
+    .map((p, i) => [p, i])
+    .sort(([a, ai], [b, bi]) => (b.published || '').localeCompare(a.published || '') || ai - bi)
+    .map(([p]) => p);
 }
 
 export function seoPageBySlug(slug) {
@@ -500,10 +573,11 @@ export function validateSeoEntry(entry) {
   if (entry.description && entry.description.length > 155) problems.push(`description is ${entry.description.length} chars (max 155)`);
   // Article JSON-LD needs real dates; a live article without them would ship
   // structured data Google rejects, so fail the build instead.
-  if (entry.type === 'article') {
+  if (isArticleLike(entry)) {
     if (!entry.published) problems.push('missing published date');
     if (!entry.dek) problems.push('missing dek');
-    for (const field of ['published', 'updated']) {
+    if (entry.image && !/^\/insights\/[\w-]+-og\.jpg$/.test(entry.image)) problems.push('image is not /insights/<slug>-og.jpg');
+    for (const field of ['published', 'updated', 'verified']) {
       if (entry[field] && !/^\d{4}-\d{2}-\d{2}$/.test(entry[field])) {
         problems.push(`${field} is not an ISO date (YYYY-MM-DD)`);
       }

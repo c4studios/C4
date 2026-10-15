@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { seoPageBySlug } from '@/content/seo/registry';
+import { seoPageBySlug, isArticleLike } from '@/content/seo/registry';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { localBusinessSchema, serviceSchema, faqSchema, breadcrumbSchema, articleSchema, personSchema } from '@/lib/schema';
 import PageNotFound from '@/lib/PageNotFound';
 import PillarTemplate from '@/components/seo/templates/PillarTemplate';
 import SuburbTemplate from '@/components/seo/templates/SuburbTemplate';
 import IndustryTemplate from '@/components/seo/templates/IndustryTemplate';
-import ComparisonTemplate from '@/components/seo/templates/ComparisonTemplate';
 import ArticleTemplate from '@/components/seo/templates/ArticleTemplate';
 
 // Lazy map of every content module, code-split per page so the 58-page
@@ -27,11 +26,14 @@ export function preloadSeoContent(slug) {
   return loader().then((mod) => { loaded.set(slug, mod.default); });
 }
 
+/* Comparisons are question-led pieces a reader takes for articles, so since
+   15 Oct 2026 they render as articles too (and /insights lists them). Their
+   own template, built on the service-page shell, went the same day. */
 const TEMPLATES = {
   pillar: PillarTemplate,
   suburb: SuburbTemplate,
   industry: IndustryTemplate,
-  comparison: ComparisonTemplate,
+  comparison: ArticleTemplate,
   article: ArticleTemplate,
 };
 
@@ -72,10 +74,12 @@ export default function SeoPage({ slug }) {
       const pillar = seoPageBySlug(entry.pillar);
       if (pillar && pillar.status === 'live') crumbs.push({ name: pillar.name, path: `/${pillar.slug}` });
     }
+    // Same trail the article shows on the page.
+    if (isArticleLike(entry)) crumbs.push({ name: 'Insights', path: '/insights' });
     crumbs.push({ name: entry.name, path: `/${entry.slug}` });
 
     const blocks = [localBusinessSchema(), breadcrumbSchema(crumbs)];
-    if (entry.type === 'article') {
+    if (isArticleLike(entry)) {
       // personSchema() has to ship alongside it — articleSchema references the
       // founder by @id, and a dangling @id means Google drops the author.
       blocks.push(personSchema(), articleSchema(entry));
@@ -103,7 +107,7 @@ export default function SeoPage({ slug }) {
     path: entry ? `/${entry.slug}` : undefined,
     // og:type 'article' is what makes a share render as a piece of writing
     // rather than a generic page, and it is the hook for article:* meta.
-    type: entry && entry.type === 'article' ? 'article' : 'website',
+    type: isArticleLike(entry) ? 'article' : 'website',
     // Articles carry their own share image. Without this every article
     // shares the site-wide og-image.png, so a link posted to LinkedIn or
     // Facebook previews with a generic card unrelated to the piece.

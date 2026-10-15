@@ -78,12 +78,34 @@
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.5rem 0.9rem;
-  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
   font-size: var(--t-meta);
   letter-spacing: 0.04em;
   color: var(--prose-meta);
 }
-.article__byline .sep { opacity: 0.5; }
+/* Name, date, update and length with a dot between each. Every item carries
+   its dot in front; the run hangs one dot's width out to the left and clips
+   that strip, so a wrapped line never starts or ends on a dot (15 Oct 2026,
+   when the longer comparison bylines began wrapping on phones). */
+.article__bymeta {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  align-items: baseline;
+  row-gap: 0.5rem;
+  min-width: 0;
+  margin-left: -1.7em;
+  clip-path: inset(0 0 0 1.7em);
+}
+.article__bymeta > * { white-space: nowrap; }
+.article__bymeta > *::before {
+  content: '·';
+  content: '·' / '';
+  display: inline-block;
+  width: 1.7em;
+  text-align: center;
+  opacity: 0.5;
+}
 
 /* ── body ─────────────────────────────────────────────────────── */
 .article__body { padding-block: clamp(2.6rem, 5vw, 3.6rem) clamp(4rem, 8vw, 6rem); }
@@ -190,7 +212,7 @@
 .article__steps li:first-child { margin-top: 0; }
 .article__steps li::before {
   content: counter(step, decimal-leading-zero);
-  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
   font-size: var(--t-meta);
   line-height: 1.9;
   color: var(--c4-accent);
@@ -227,7 +249,7 @@
 .article__quotefig { margin: 0; }
 .article__quotefig figcaption {
   margin-top: 0.9rem;
-  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
   font-size: var(--t-meta);
   letter-spacing: 0.04em;
   color: var(--prose-meta);
@@ -247,7 +269,7 @@
 .article__table { width: 100%; border-collapse: collapse; }
 .article__table th {
   text-align: left;
-  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
   font-size: var(--t-meta);
   font-weight: 700;
   letter-spacing: 0.09em;
@@ -267,6 +289,46 @@
 }
 .article__table td:first-child { font-weight: 560; color: var(--c4-text); }
 .article__table .num { font-variant-numeric: tabular-nums; }
+/* A cell holding a web address can break inside it, so a narrow phone wraps
+   the address instead of scrolling the table sideways. */
+.article__table td { overflow-wrap: anywhere; }
+/* Room before the paragraph that follows a table, when no heading does. */
+.article__tablewrap { margin-bottom: 1.9rem; }
+.article__table caption {
+  caption-side: bottom;
+  text-align: left;
+  padding-top: 0.85rem;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  color: var(--prose-meta);
+}
+
+/* ── published price brackets (the cost guide) ────────────────── */
+.article__prices dt {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.2rem 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--prose-rule);
+}
+.article__price {
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
+  font-size: var(--t-small);
+  font-weight: 700;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--c4-text);
+}
+.article__body .article__finenote {
+  margin-top: 1.4rem;
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--prose-soft);
+}
 
 /* ── sources ──────────────────────────────────────────────────── */
 .article__sources { margin: 0; padding: 0; list-style: none; counter-reset: src; }
@@ -283,7 +345,7 @@
 .article__sources li:first-child { margin-top: 0; }
 .article__sources li::before {
   content: counter(src) '.';
-  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
   font-size: var(--t-meta);
   color: var(--prose-meta);
   font-variant-numeric: tabular-nums;
@@ -291,7 +353,7 @@
 
 /* ── section heading for the closing blocks ───────────────────── */
 .article__blockhead {
-  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
   font-size: var(--t-meta);
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -359,13 +421,52 @@
 }
 .article__figure figcaption {
   margin-top: 0.85rem;
-  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
   font-size: var(--t-meta);
   line-height: 1.55;
   letter-spacing: 0.02em;
   color: var(--prose-meta);
   max-width: var(--measure);
 }
+
+/* ── the hero photograph (15 Oct 2026) ─────────────────────────
+   A print laid on the bench above the text: wider than the reading column,
+   on the sheet radius, lifted by the evidence-frame shadow DESIGN.md gives
+   objects that could be picked up. The bench-alt ground shows only in the
+   moment before the file arrives; the width and height attributes hold the
+   box, so the text below never moves. */
+.article__hero {
+  max-width: 64rem;
+  margin: clamp(2.2rem, 4.5vw, 3.2rem) auto 0;
+  padding-inline: 1.5rem;
+}
+.article__hero img,
+.article__figure picture img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+  background: var(--c4-bg-alt, #F0EDE8);
+}
+.article__hero img { box-shadow: 0 18px 44px -24px rgba(0, 0, 0, 0.35); }
+.article__credit {
+  display: block;
+  margin-top: 0.8rem;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
+  font-size: var(--t-meta);
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  color: var(--prose-meta);
+}
+.article__figure figcaption .article__credit { display: inline; margin: 0; }
+.article__credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+}
+.article__credit a:hover { color: var(--c4-text); text-decoration-color: currentColor; }
 
 
 /* ── EVIDENCE — proof stock ───────────────────────────────────────
@@ -439,7 +540,7 @@
 }
 .article__evlabel {
   margin: 0 0 0.9rem;
-  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
   font-size: var(--t-meta);
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -480,7 +581,7 @@
 .article__srcmeta {
   display: block;
   margin-top: 0.4rem;
-  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
   font-size: var(--t-meta);
   line-height: 1.55;
   color: var(--c4-proof-muted);
@@ -597,7 +698,7 @@
 }
 .article__working-head {
   margin: 0;
-  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
   font-size: var(--t-meta);
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -636,7 +737,7 @@
 .article__working-jump {
   display: inline-block;
   margin-top: 1rem;
-  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
   font-size: var(--t-meta);
   color: var(--c4-proof-muted);
 }

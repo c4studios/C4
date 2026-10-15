@@ -1,29 +1,37 @@
 /* ═══════════════════════════════════════════════════════════════
    INSIGHTS — the articles index
    ═══════════════════════════════════════════════════════════════
-   Redrawn 9 September 2026 when the articles became the whole of
-   the section. The index is a wall of claims: every piece in this
-   library is written to make one checkable statement, and the dek
-   carries it, so the dek is what the index sets large. The newest
-   piece leads at display size; the rest sit as a two-column ledger
-   of statements on hairlines. No cards, no reveals, no eyebrows.
+   9 September 2026: a wall of claims. Every piece in this library is
+   written to make one checkable statement, and the dek carries it, so
+   the dek is what the index sets large.
+
+   15 October 2026: prints on the bench. Each piece now has a real
+   photograph, and the page lays them out the way you'd lay prints out
+   on a table to choose between them: the newest one big beside its
+   claim, the next two as an uneven pair (the second smaller and set
+   lower), and the older ones as a ruled ledger with a small print at
+   the end of each line. No identical card grid, no eyebrows, no
+   reveals. The photographs are objects, so they take the sheet radius
+   and the evidence-frame shadow; the bench itself stays flat.
+
    Sizes come from the reading ramp in globals.css and the inks from
    the prose ramp, so the index and the articles read as one system.
    ═══════════════════════════════════════════════════════════════ */
-.ins { --link: var(--c4-accent); }
+.ins { --link: var(--c4-accent); --ease: cubic-bezier(0.22, 1, 0.36, 1); }
 :root.dark-mode .ins { --link: var(--prose); }
 
-.ins__col {
-  max-width: var(--measure);
+.ins__wrap {
+  max-width: 72rem;
   margin-inline: auto;
   padding-inline: 1.5rem;
 }
-.ins__col--wide { max-width: 64rem; }
+@media (min-width: 48rem) { .ins__wrap { padding-inline: 2.5rem; } }
 
 /* ── masthead ─────────────────────────────────────────────────── */
 .ins__head { padding-block: clamp(7rem, 12vw, 9.5rem) 0; }
 .ins__title {
   margin: 0;
+  max-width: var(--measure);
   font-size: var(--t-h1);
   font-weight: 700;
   font-stretch: 92%;
@@ -34,6 +42,7 @@
 }
 .ins__intro {
   margin: 1.35rem 0 0;
+  max-width: var(--measure);
   font-size: var(--t-lead);
   line-height: 1.5;
   letter-spacing: -0.014em;
@@ -41,95 +50,63 @@
   text-wrap: pretty;
 }
 .ins__key {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 0.9rem;
+  max-width: var(--measure);
   margin: 2.2rem 0 0;
   padding-top: 1rem;
   border-top: 1px solid var(--prose-rule);
-  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
   font-size: var(--t-meta);
   letter-spacing: 0.04em;
   color: var(--prose-meta);
 }
-.ins__key .sep { opacity: 0.5; }
 
-/* ── the lead: the newest claim at display size ──────────────── */
-.ins__lead { padding-block: clamp(3rem, 6vw, 4.5rem) 0; }
-/* With one article there's no ledger below to close the page, so the lead
-   takes the ledger's bottom space and the meta line clears the footer. */
-.ins__lead:last-child { padding-bottom: clamp(5rem, 9vw, 7rem); }
-.ins__lead-dek {
-  margin: 0;
-  font-size: clamp(1.9rem, 1.1rem + 3.2vw, 3.4rem);
-  font-weight: 660;
-  font-stretch: 96%;
-  line-height: 1.08;
-  letter-spacing: -0.032em;
-  color: var(--c4-text);
-  text-wrap: balance;
-  max-width: 22ch;
+/* Items with a dot between them. Each item carries its dot in front; the
+   row hangs one dot's width out to the left and clips that strip, so the dot
+   that would start any line, wrapped or not, is cut off and a line never
+   begins or ends on one. The dot is decoration: the empty alt keeps screen
+   readers off it. */
+.ins-dots {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  row-gap: 0.35rem;
+  margin: 0 0 0 -1.7em;
+  clip-path: inset(0 0 0 1.7em);
 }
-/* The evidence rule: the same short red mark the article stylesheet puts
-   above a verbatim source. The lead is the library's newest claim, so it
-   takes the mark. */
-.ins__lead-dek::before {
-  content: '';
+.ins-dots > * { white-space: nowrap; }
+.ins-dots > *::before {
+  content: '·';
+  content: '·' / '';
+  display: inline-block;
+  width: 1.7em;
+  text-align: center;
+  opacity: 0.5;
+}
+.ins__empty { font-size: var(--t-small); color: var(--prose-meta); }
+
+/* ── the print: a photograph lying on the bench ──────────────── */
+.ins-print {
+  position: relative;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--c4-bg-alt);
+  box-shadow: 0 18px 44px -24px rgba(0, 0, 0, 0.35);
+  aspect-ratio: 3 / 2;
+  transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+}
+.ins-print picture,
+.ins-print img {
   display: block;
-  width: 2.6rem;
-  height: 2px;
-  margin-bottom: 1.2rem;
-  background: var(--c4-accent);
+  width: 100%;
+  height: 100%;
 }
-.ins__lead-title {
-  margin: 1.4rem 0 0;
-  font-size: var(--t-lead);
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.016em;
-  color: var(--c4-text);
-}
+.ins-print img { object-fit: cover; }
 
-/* ── the ledger of claims ─────────────────────────────────────── */
-.ins__list-wrap { padding-block: clamp(3rem, 6vw, 4.5rem) clamp(5rem, 9vw, 7rem); }
-.ins__list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 3rem;
-}
-@media (min-width: 60rem) {
-  .ins__list { grid-template-columns: 1fr 1fr; }
-}
-.ins__item {
-  padding: 1.5rem 0 1.9rem;
-  border-top: 1px solid var(--prose-rule);
-}
-.ins__dek {
-  margin: 0;
-  font-size: clamp(1.25rem, 1rem + 1.1vw, 1.65rem);
-  font-weight: 640;
-  font-stretch: 94%;
-  line-height: 1.22;
-  letter-spacing: -0.022em;
-  color: var(--c4-text);
-  text-wrap: pretty;
-}
-.ins__name {
-  margin: 0.8rem 0 0;
-  font-size: var(--t-small);
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
-  color: var(--c4-text);
-}
-
-/* Links: the title is the link, underlined from the font, the underline
-   takes the accent on hover. The dek is a statement, not a link. */
-.ins__lead-title a,
-.ins__name a {
+/* One click target per piece: the title's link stretches over its block,
+   so the photo and the dek take the click too, while the accessible name
+   stays the title alone. */
+.ins-item { position: relative; }
+.ins-link {
   color: inherit;
   text-decoration: underline;
   text-decoration-thickness: 1px;
@@ -137,23 +114,163 @@
   text-decoration-color: color-mix(in srgb, var(--link) 45%, transparent);
   transition: text-decoration-color 0.2s ease;
 }
-.ins__lead-title a:hover,
-.ins__name a:hover { text-decoration-color: var(--link); }
+.ins-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+}
+.ins-link:focus-visible { outline: none; }
+.ins-link:focus-visible::after {
+  outline: 2px solid var(--c4-text);
+  outline-offset: 6px;
+}
+.ins-item:hover .ins-link { text-decoration-color: var(--link); }
+.ins-item:hover .ins-print {
+  transform: translateY(-3px);
+  box-shadow: 0 26px 60px -30px rgba(0, 0, 0, 0.4);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ins-print { transition: none; }
+  .ins-item:hover .ins-print { transform: none; }
+}
+
+/* ── the lead: the newest piece as a spread ──────────────────── */
+.ins__lead { padding-block: clamp(3rem, 6vw, 4.75rem) 0; }
+.ins-spread { display: grid; gap: 1.75rem; }
+.ins-spread__dek {
+  margin: 0;
+  font-size: clamp(1.8rem, 1.2rem + 2.1vw, 2.65rem);
+  font-weight: 660;
+  font-stretch: 96%;
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  color: var(--c4-text);
+  text-wrap: balance;
+}
+/* The evidence rule: the same short red mark the article stylesheet puts
+   above a verbatim source. The lead is the library's newest claim, so it
+   takes the mark. */
+.ins-spread__dek::before {
+  content: '';
+  display: block;
+  width: 2.6rem;
+  height: 2px;
+  margin-bottom: 1.2rem;
+  background: var(--c4-accent);
+}
+.ins-spread__title {
+  margin: 1.3rem 0 0;
+  font-size: var(--t-lead);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.016em;
+  color: var(--c4-text);
+  text-wrap: balance;
+}
+@media (min-width: 60rem) {
+  .ins-spread {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(2.25rem, 4vw, 3.5rem);
+    align-items: end;
+  }
+  .ins-spread__text { padding-bottom: 0.4rem; }
+}
+
+/* ── the pair: two prints, one smaller and set lower ─────────── */
+.ins__pair { padding-block: clamp(4.5rem, 9vw, 7rem) 0; }
+.ins-pair { display: grid; gap: clamp(3rem, 7vw, 4rem); }
+.ins-pair__dek {
+  margin: 1.35rem 0 0;
+  font-size: clamp(1.3rem, 1rem + 1.1vw, 1.7rem);
+  font-weight: 640;
+  font-stretch: 94%;
+  line-height: 1.2;
+  letter-spacing: -0.024em;
+  color: var(--c4-text);
+  text-wrap: pretty;
+}
+.ins-pair__title {
+  margin: 0.85rem 0 0;
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.012em;
+  color: var(--c4-text);
+}
+@media (min-width: 60rem) {
+  .ins-pair {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+  .ins-pair__item--narrow { margin-top: clamp(4rem, 9vw, 7rem); }
+}
+
+/* ── the ledger: older pieces on hairlines ───────────────────── */
+.ins__ledger { padding-block: clamp(4.5rem, 9vw, 7rem) clamp(5rem, 9vw, 7rem); }
+.ins-ledger {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--prose-rule);
+}
+/* On a phone the print sits beside the dek and the ledger line runs the
+   full width under both; from 48rem the line moves under the title. */
+.ins-ledger__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 6.5rem;
+  grid-template-areas: 'text print' 'meta meta';
+  column-gap: 1.1rem;
+  align-items: start;
+  padding: 1.6rem 0 1.75rem;
+  border-top: 1px solid var(--prose-rule);
+}
+.ins-ledger__text { grid-area: text; }
+.ins-ledger__print { grid-area: print; }
+.ins-ledger__meta { grid-area: meta; }
+.ins-ledger__dek {
+  margin: 0;
+  font-size: clamp(1.15rem, 0.95rem + 0.9vw, 1.5rem);
+  font-weight: 640;
+  font-stretch: 94%;
+  line-height: 1.24;
+  letter-spacing: -0.022em;
+  color: var(--c4-text);
+  text-wrap: pretty;
+}
+.ins-ledger__title {
+  margin: 0.7rem 0 0;
+  font-size: var(--t-small);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--c4-text);
+}
+.ins-ledger__print { aspect-ratio: 4 / 3; box-shadow: 0 12px 30px -20px rgba(0, 0, 0, 0.35); }
+@media (min-width: 48rem) {
+  .ins-ledger__row {
+    grid-template-columns: minmax(0, 1fr) 12rem;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 'text print' 'meta print';
+    column-gap: 2.5rem;
+    padding: 2rem 0 2.2rem;
+  }
+  .ins-ledger__text,
+  .ins-ledger__meta { max-width: 44rem; }
+}
 
 /* ── the ledger line under each piece ─────────────────────────── */
 .ins-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.8rem;
   margin: 0.7rem 0 0;
-  font-family: 'B612 Mono', ui-monospace, monospace;
+  font-family: 'B612 Mono', 'B612 Mono Fallback', ui-monospace, monospace;
   font-size: var(--t-meta);
   letter-spacing: 0.04em;
   color: var(--prose-meta);
   font-variant-numeric: tabular-nums;
 }
-.ins-meta .sep { opacity: 0.5; }
+.ins-ledger__meta { margin-top: 0.85rem; }
+@media (min-width: 48rem) { .ins-ledger__meta { margin-top: 0.7rem; } }
 
 /* The verification stamp, as on the article page: renders only where the
    registry carries a verified date. */
@@ -161,6 +278,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  margin: 0.55rem 0 0;
   padding: 0.18rem 0.5rem;
   background: var(--c4-proof-surface);
   border: 1px solid var(--c4-proof-border);
@@ -170,11 +288,3 @@
 }
 .ins-stamp svg { width: 10px; height: 10px; flex: none; }
 .ins-stamp b { color: var(--c4-proof-text); font-weight: 700; }
-
-.ins__empty { font-size: var(--t-small); color: var(--prose-meta); }
-
-/* The masthead shares the wide column's left edge with the lead below it;
-   its text keeps the reading measure. */
-.ins__head .ins__title,
-.ins__head .ins__intro,
-.ins__head .ins__key { max-width: var(--measure); }

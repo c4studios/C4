@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { resolveLiveSlugs } from '@/content/seo/registry';
 import useStaticMode from '@/hooks/useStaticMode';
 import ArticleSections, { SourceList } from '@/components/seo/ArticleSections';
+import ArticlePhoto, { PhotoCredit } from '@/components/seo/ArticlePhoto';
 import SeoBreadcrumbs from '@/components/seo/SeoBreadcrumbs';
 import '@/components/seo/article.css';
 
@@ -35,6 +36,13 @@ function formatDate(iso) {
  * reveals on an article hide the next paragraph until you have scrolled to
  * it, which is precisely wrong for a reading surface — and it keeps the
  * prose out of any opacity:0 state a crawler could capture.
+ *
+ * Since 15 Oct 2026 the comparison pages render here too (they're articles
+ * to a reader), and every piece whose registry entry names a `photo` opens
+ * with it under the byline: wider than the reading column, loaded eagerly
+ * because it's usually the largest thing in the first screen, and outside
+ * the entrance so it never sits at opacity 0. The credit links to the
+ * photo's own page.
  */
 export default function ArticleTemplate({ entry, content }) {
   const staticMode = useStaticMode();
@@ -98,25 +106,14 @@ export default function ArticleTemplate({ entry, content }) {
           {dek && <p className="article__dek">{dek}</p>}
 
           <div className="article__byline">
-            <span>Caleb Scott</span>
-            {published && (
-              <>
-                <span className="sep" aria-hidden="true">·</span>
-                <time dateTime={entry.published}>{published}</time>
-              </>
-            )}
-            {updated && (
-              <>
-                <span className="sep" aria-hidden="true">·</span>
-                <span>Updated {updated}</span>
-              </>
-            )}
-            {entry.readMinutes && (
-              <>
-                <span className="sep" aria-hidden="true">·</span>
-                <span>{entry.readMinutes} min read</span>
-              </>
-            )}
+            {/* The dots are drawn by article.css so a wrapped byline never
+                starts or ends a line on one. */}
+            <span className="article__bymeta">
+              <span>Caleb Scott</span>
+              {published && <time dateTime={entry.published}>{published}</time>}
+              {updated && <span>Updated {updated}</span>}
+              {entry.readMinutes && <span>{entry.readMinutes} min read</span>}
+            </span>
             {/* Opt-in per article. Only renders where the registry carries a
                 `verified` date, so the stamp can never appear on a page whose
                 figures nobody has actually re-checked at the source. That
@@ -169,6 +166,17 @@ export default function ArticleTemplate({ entry, content }) {
             )}
           </div>
         </motion.div>
+
+        {entry.photo && (
+          <figure className="article__hero">
+            <ArticlePhoto
+              k={entry.photo}
+              eager
+              sizes="(min-width: 68rem) 64rem, calc(100vw - 3rem)"
+            />
+            <figcaption className="article__credit"><PhotoCredit k={entry.photo} /></figcaption>
+          </figure>
+        )}
       </header>
 
       <div className="article__body">

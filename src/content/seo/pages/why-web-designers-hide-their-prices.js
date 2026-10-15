@@ -13,6 +13,13 @@
  * 9 Oct 2026, when C4i moved to C4Site; pricing.js no longer carries either.
  * Do NOT add them back here, and do not relink them.
  * No industry averages, no invented benchmarks.
+ *
+ * 15 Oct 2026: the in-article image came out. It was an image-model picture of
+ * an invoice with the prices scribbled out (commits b42b757 and 35ea584, 4 Aug),
+ * and its invoice carried a GST line C4 Studios doesn't charge. The hero is now
+ * a real photograph of blank swing tags (Angèle Kamp on Unsplash, 'tags' in
+ * src/content/seo/photos.js), set by the registry entry's `photo`. Do NOT bring
+ * back a generated image, here or on the share card.
  */
 export default {
   hero: {
@@ -29,15 +36,6 @@ export default {
       body: [
         'Most agencies hide prices because knowing your budget first is worth money to them, because a public number invites comparison they would rather avoid, and because scope on a website genuinely is elastic. The first two are commercial choices dressed up as the third.',
       ],
-    },
-
-    {
-      kind: 'image',
-      src: '/insights/why-web-designers-hide-their-prices.jpg',
-      width: 1360,
-      height: 1700,
-      alt: 'A printed invoice on an office desk. Every line item is readable but every figure in the amount column, and the total, has been scribbled out in blue biro.',
-      caption: 'You can read every line. Just not what any of it costs.'
     },
 
     {

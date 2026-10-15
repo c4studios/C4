@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from '@/components/c4/SiteLink';
+import ArticlePhoto, { PhotoCredit } from '@/components/seo/ArticlePhoto';
+import { webPricingGuides, ASTERISK_CLAUSE } from '@/data/pricing';
 
 /**
  * Article section renderer.
@@ -126,8 +128,27 @@ function Process({ section }) {
 /* Figures. width/height are always emitted so the browser reserves the box
    and the page does not shift when the image decodes — CLS is one of the few
    things on this page Google measures directly. Lazy + async decode because
-   a lede image below the masthead is never the LCP element. */
+   a figure in the body is never the LCP element.
+
+   `photo` names a photograph in src/content/seo/photos.js (15 Oct 2026); it
+   renders at every cut width and carries its credit. `src` is the older form,
+   one file with its own width, height and alt. */
 function Figure({ section }) {
+  if (section.photo) {
+    return (
+      <figure className="article__figure">
+        <ArticlePhoto
+          k={section.photo}
+          alt={section.alt}
+          sizes="(min-width: 46rem) 42rem, calc(100vw - 3rem)"
+        />
+        <figcaption>
+          {section.caption && <span>{section.caption} </span>}
+          <span className="article__credit"><PhotoCredit k={section.photo} /></span>
+        </figcaption>
+      </figure>
+    );
+  }
   return (
     <figure className="article__figure">
       <img
@@ -140,6 +161,29 @@ function Figure({ section }) {
       />
       {section.caption && <figcaption>{section.caption}</figcaption>}
     </figure>
+  );
+}
+
+/* The published price brackets, read from src/data/pricing.js so the article
+   can never quote a number the price list doesn't. A definition list: the
+   bracket is the term, what it covers is the explanation. */
+function Pricing({ section }) {
+  return (
+    <>
+      <Heading>{section.heading}</Heading>
+      <dl className="article__list article__prices">
+        {webPricingGuides.map((g) => (
+          <div key={g.key}>
+            <dt>
+              <span>{g.label}</span>
+              <span className="article__price">{g.range}</span>
+            </dt>
+            <dd>{g.description}</dd>
+          </div>
+        ))}
+      </dl>
+      <p className="article__finenote">{ASTERISK_CLAUSE}</p>
+    </>
   );
 }
 
@@ -164,6 +208,7 @@ function Table({ section }) {
       <Heading>{section.heading}</Heading>
       <div className="article__tablewrap">
         <table className="article__table">
+          {section.caption && <caption>{section.caption}</caption>}
           {section.head && (
             <thead>
               <tr>{section.head.map((h, i) => <th key={i} scope="col">{h}</th>)}</tr>
@@ -232,6 +277,7 @@ const KINDS = {
   quote: Quote,
   image: Figure,
   table: Table,
+  pricing: Pricing,
   sources: Sources,
 };
 
