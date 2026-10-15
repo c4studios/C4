@@ -4,6 +4,7 @@ import { Headphones, X } from 'lucide-react';
 import { submitSupportRequest } from '@/api/submissions';
 import TurnstileWidget from './TurnstileWidget';
 import useStaticMode from '@/hooks/useStaticMode';
+import { PRERENDER, useHydrated } from '@/lib/hydration';
 import './livesupport.css';
 
 /**
@@ -23,7 +24,6 @@ import './livesupport.css';
  * prerenderer, which should capture the page without a modal in the tree.
  */
 const OPEN_EVENT = 'c4:live-support';
-const PRERENDER = typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent);
 
 function perthTime() {
   try {
@@ -38,6 +38,7 @@ function perthTime() {
 export default function LiveSupport() {
   const location = useLocation();
   const staticMode = useStaticMode();
+  const hydrated = useHydrated();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '', _gotcha: '' });
   const [state, setState] = useState('idle'); // idle | sending | sent | error
@@ -110,8 +111,10 @@ export default function LiveSupport() {
   /* Only the prerenderer goes without it, as the note above says. This was
      staticMode, which is reduced motion too, so a visitor who'd asked for
      less motion lost the drawer, and the Support page's "Live support" card
-     did nothing (found 9 Oct 2026). Reduced motion is handled in the CSS. */
-  if (PRERENDER || hiddenHere) return null;
+     did nothing (found 9 Oct 2026). Reduced motion is handled in the CSS.
+     A hydrating page renders the prerenderer's nothing too, and the button
+     arrives a moment later (src/lib/hydration.js). */
+  if (PRERENDER || !hydrated || hiddenHere) return null;
 
   return (
     <>

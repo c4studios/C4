@@ -135,7 +135,42 @@ async function prerenderRoute(page, baseUrl, routePath, outputPath) {
   // Wait a bit extra for animations/lazy content to settle
   await page.waitForTimeout(1500);
 
+  /* The browser hydrates this HTML in place (src/main.jsx, 15 Oct 2026), so
+     two things go into the capture for React to find.
+
+     React keeps the text of one element as separate nodes when JSX puts them
+     side by side ("© ", the year, " C4 Studios"); written out as HTML they
+     merge into one, and hydration then fails on the first such line. A
+     comment between them keeps them apart through the HTML, the way React's
+     own server rendering does, and React skips over comments.
+
+     And the record of what this render saw (src/lib/hydration.js): the route
+     it was rendered for, and every media query and value the app read, so
+     the visitor's first render can give the same answers. Every route after
+     the first is rendered on top of dist/index.html, which by then is the
+     prerendered home page, so the home page's record comes out first. */
+  const record = await page.evaluate((route) => {
+    document.querySelectorAll('script#c4-prerender').forEach((el) => el.remove());
+    const root = document.getElementById('root');
+    if (root) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const after = [];
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        if (node.previousSibling && node.previousSibling.nodeType === Node.TEXT_NODE) after.push(node);
+      }
+      for (const node of after) node.parentNode.insertBefore(document.createComment(' '), node);
+    }
+    const seen = window.__c4Prerender || { media: {}, values: {} };
+    return { route, media: seen.media, values: seen.values };
+  }, routePath);
+
   let html = await page.content();
+
+  const json = JSON.stringify(record).replace(/</g, '\\u003c');
+  const tag = `<script type="application/json" id="c4-prerender">${json}</script>`;
+  html = /<meta charset="utf-8">/i.test(html)
+    ? html.replace(/<meta charset="utf-8">/i, (m) => `${m}\n    ${tag}`)
+    : html.replace(/<head>/i, (m) => `${m}\n    ${tag}`);
 
   // Inject a meta tag so we can identify prerendered pages
   html = html.replace(

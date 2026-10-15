@@ -1,4 +1,6 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import useStaticMode from '@/hooks/useStaticMode';
+import { useWasPrerendered } from '@/lib/hydration';
 
 const DEFAULT_TYPE_SPEED = 78;
 const DEFAULT_DELETE_SPEED = 44;
@@ -6,27 +8,20 @@ const DEFAULT_HOLD_TIME = 1850;
 const DEFAULT_PAUSE_TIME = 420;
 const DEFAULT_START_DELAY = 0;
 
-/* staticMode — the house pattern (see homeMotion.js, ServiceWeb.jsx): the
-   Prerender UA or an OS reduced-motion preference, resolved SYNCHRONOUSLY in a
-   useMemo so it is correct on the very first render.
+/* staticMode — the house pattern: the Prerender UA, an OS reduced-motion
+   preference, or a prerendered page while it hydrates, resolved
+   SYNCHRONOUSLY so it is correct on the very first render.
 
    This must not be an effect-based hook. An effect returns false on first
    render, so the prerenderer captured this heading mid-animation and the
    homepage shipped its <h1> as a partially typed string with a trailing cursor
    glyph, followed by all six measure phrases. That string was the indexed
    heading of the site's priority-1.0 page. Resolving it synchronously means the
-   static HTML now carries one complete phrase and nothing else. */
-function useStaticMode() {
-  return useMemo(() => {
-    if (typeof window === 'undefined') return true;
-    const prerender =
-      typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent);
-    const reduced =
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    return prerender || reduced;
-  }, []);
-}
+   static HTML now carries one complete phrase and nothing else.
+
+   A heading that arrives with the prerendered page (15 Oct 2026) is already
+   on screen when the motion arms, so it doesn't erase itself to type the
+   first phrase again: it holds that phrase, then carries on round the rest. */
 
 export default function TypedHeading({
   lines = [],
@@ -43,6 +38,7 @@ export default function TypedHeading({
   const safeLines = useMemo(() => lines.filter(Boolean), [lines]);
   const firstLine = safeLines[0] || '';
   const reducedMotion = useStaticMode();
+  const prerendered = useWasPrerendered();
   const measureRef = useRef(null);
   const [lineIndex, setLineIndex] = useState(0);
   /* Seed with the complete first line so the very first paint (and therefore
@@ -58,9 +54,9 @@ export default function TypedHeading({
 
   useEffect(() => {
     setLineIndex(0);
-    setDisplayed(animateTyping ? '' : firstLine);
+    setDisplayed(animateTyping && !prerendered ? '' : firstLine);
     setPhase(animateTyping ? 'typing' : 'idle');
-  }, [animateTyping, firstLine]);
+  }, [animateTyping, firstLine, prerendered]);
 
   useEffect(() => {
     if (typeof onLineChange === 'function') onLineChange(lineIndex);

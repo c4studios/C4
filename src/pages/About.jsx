@@ -50,6 +50,7 @@ import Lenis from 'lenis';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import useStaticMode from '@/hooks/useStaticMode';
+import { useWasPrerendered } from '@/lib/hydration';
 import { breadcrumbSchema, entitySchemas, profilePageSchema } from '@/lib/schema';
 import { NOTEBOOK, CARD, SHEET, BIBLE } from '../components/about/plates';
 import { DANIEL_3, DANIEL_4 } from '../components/about/daniel';
@@ -471,6 +472,16 @@ export default function About() {
   const hotRef = useRef(-1);
   const objsRef = useRef([]);
   const [open, setOpen] = useState(staticMode ? -1 : 0);
+  /* A prerendered page hydrates flat (every promise open, no card on the
+     bench), so the first promise goes on the bench when the camera arms,
+     as it does for a page the app draws itself. */
+  const prerendered = useWasPrerendered();
+  const firstArm = useRef(prerendered);
+  useEffect(() => {
+    if (flat || !firstArm.current) return;
+    firstArm.current = false;
+    setOpen((o) => (o < 0 ? 0 : o));
+  }, [flat]);
   const [hot, setHot] = useState(-1);
   const [step, setStep] = useState(-1);
   const toggle = (i) => setOpen((o) => (o === i ? -1 : i));
@@ -538,6 +549,14 @@ export default function About() {
     const stage = stageRef.current;
     const world = worldRef.current;
     if (flat || !root || !stage || !world) return undefined;
+    /* A chapter hides until it scrolls in (is-in), and the camera arms after
+       a prerendered page has hydrated, so the words already on screen are
+       marked in first: they stay put instead of fading out and back. */
+    if (prerendered) {
+      root.querySelectorAll('[data-ch]').forEach((c) => {
+        if (c.getBoundingClientRect().top < window.innerHeight) c.classList.add('is-in');
+      });
+    }
     root.classList.add('bt-armed');
 
     let anchors = [];

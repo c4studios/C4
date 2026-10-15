@@ -2,7 +2,8 @@
  * 'wide' when the window has room to pin a scene beside the words (1024px
  * across and 600px tall, as the exam uses), otherwise 'flat'. Always 'flat'
  * under useStaticMode, decided on the first render, so the prerendered HTML
- * is the flat layout with every word in it.
+ * is the flat layout with every word in it. A prerendered page hydrates flat
+ * and takes its own mode once the app has mounted (15 Oct 2026).
  */
 import { useEffect, useState } from 'react';
 import useStaticMode from '@/hooks/useStaticMode';
@@ -21,6 +22,7 @@ export default function useWide() {
     if (staticMode || typeof window.matchMedia !== 'function') return undefined;
     const q = window.matchMedia(WIDE);
     const on = () => setMode(read(false));
+    on();
     q.addEventListener?.('change', on);
     return () => q.removeEventListener?.('change', on);
   }, [staticMode]);

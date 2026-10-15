@@ -6,6 +6,7 @@ import SubmissionSuccess from '@/components/c4/SubmissionSuccess';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
 import SubmitButton from '@/components/c4/SubmitButton';
 import useDocumentHead from '@/hooks/useDocumentHead';
+import usePrerenderOpen from '@/hooks/usePrerenderOpen';
 import { breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
@@ -124,18 +125,27 @@ const FAQ_ITEMS = [
 const labelClass = 'block text-[11px] uppercase tracking-[0.15em] font-medium mb-2';
 const fieldClass = 'w-full rounded-sm px-4 py-3 text-[14px] focus:outline-none transition-colors duration-300';
 
-/* ── FAQ Accordion Item ── */
+/* ── FAQ Accordion Item ──
+   A closed answer isn't in the page at all (it mounts when opened), so the
+   static HTML used to carry none of them. The prerenderer now renders every
+   answer open. A visitor's browser draws them closed from the first paint,
+   hydrates the open HTML, then closes them for real (usePrerenderOpen, and
+   data-faq-held in globals.css; the registry pages' FAQ does the same,
+   15 Oct 2026). That close swaps in a fresh AnimatePresence, so the held
+   answer is dropped at once instead of playing its exit. */
 function FaqItem({ question, answer }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen, held] = usePrerenderOpen();
 
   return (
     <div
+      data-faq-held={held ? '' : undefined}
       className="border-b transition-colors duration-300"
       style={{ borderColor: 'var(--c4-border)' }}
     >
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
         className="w-full flex items-center justify-between py-4 text-left gap-4 group"
       >
         <span
@@ -154,7 +164,7 @@ function FaqItem({ question, answer }) {
           }}
         />
       </button>
-      <AnimatePresence initial={false}>
+      <AnimatePresence key={held ? 'held' : 'live'} initial={false}>
         {open && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}

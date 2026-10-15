@@ -35,7 +35,7 @@ import { trackEvent } from '@/lib/track';
 import SeoDoorFace from '@/components/seo-copy/DoorFace';
 import LogoDoorFace from '@/components/logo-design/DoorFace';
 import { seoPackages, brandingPackages, logoTimeline } from '@/data/pricing';
-import { gsap, EASE, revealHeading, useStaticMode } from './homeMotion';
+import { gsap, EASE, onScreen, revealHeading, useStaticMode, useWasPrerendered } from './homeMotion';
 
 // The SEO door quotes the published card, so it follows pricing.js.
 const SEO_ONE_OFF_FROM = Math.min(...seoPackages.filter((p) => p.priceSuffix === 'one-off').map((p) => p.price));
@@ -168,6 +168,7 @@ export default function FourDoors() {
   const sectionRef = useRef(null);
   const h2Ref = useRef(null);
   const staticMode = useStaticMode();
+  const prerendered = useWasPrerendered();
 
   useLayoutEffect(() => {
     if (staticMode) return undefined;
@@ -177,7 +178,9 @@ export default function FourDoors() {
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
       mm.add('(prefers-reduced-motion: no-preference)', () => {
-        revealHeading(h2Ref.current);
+        revealHeading(h2Ref.current, {}, { prerendered });
+        /* Doors the visitor can already see stay put (see onScreen). */
+        if (prerendered && onScreen(section.querySelector('.hm-doors'))) return undefined;
         const doors = gsap.utils.toArray('.hm-door', section);
         /* Opacity, not autoAlpha: autoAlpha hides the doors with
            visibility, and a hidden link can't take focus, so Tab from the

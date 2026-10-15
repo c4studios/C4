@@ -650,3 +650,73 @@
   .ld-run-shot, .ld-run-plates .ld-run-plate, .ld-run-h, .ld-runstep, .ld-runstep-h,
   .ld-wf-paths, .ld-wf-fill, .ld-wf-anchors rect, .ld-wf-handles g, .ld-wf-export, .ld-wf-tool rect { transition: none; }
 }
+
+/* ── before the exam arms (15 Oct 2026) ──────────────────────────────────
+   The browser keeps the prerendered page, which is the flat layout, and the
+   exam arms once the app has hydrated it. In a window it will arm wide
+   (JavaScript on, motion allowed, 1024px wide and 600px tall, as useMode in
+   Exam.jsx reads it), the flat page takes the wide geometry from its first
+   paint, so the copy, the chart's frame and the captions don't jump when
+   it does (a layout shift of 0.44 at 1440 without this). The camera then
+   moves in on the 4 as it always has. Without JavaScript, with reduced
+   motion, or in a smaller window, the flat page is as it was. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-width: 1024px) and (min-height: 600px) {
+  .ld-exam.is-flat .ld-exam-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+    grid-template-areas: "copy stage" "steps stage";
+    column-gap: clamp(2rem, 4vw, 4.5rem);
+    align-items: stretch;
+  }
+  .ld-exam.is-flat .ld-copy {
+    grid-area: copy; min-height: 100vh; min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding-top: calc(var(--ld-nav) + 1.5rem); padding-bottom: 2rem;
+  }
+  .ld-exam.is-flat .ld-stage {
+    grid-area: stage; align-self: start;
+    position: sticky; top: var(--ld-nav);
+    height: calc(100vh - var(--ld-nav)); height: calc(100svh - var(--ld-nav));
+    margin-top: 0;
+    padding: clamp(1rem, 2.6vh, 1.75rem) 0;
+  }
+  /* the flat chart sets its own height inline */
+  .ld-exam.is-flat .ld-stage-in { height: 100% !important; }
+  .ld-exam.is-flat .ld-steps {
+    grid-area: steps; display: block; gap: 0;
+    padding-top: 15vh; padding-top: 15svh;
+  }
+  .ld-exam.is-flat .ld-step { min-height: 54vh; min-height: 54svh; padding-top: 0.25rem; opacity: 0.6; }
+  .ld-exam.is-flat .ld-step:last-child { min-height: 62vh; min-height: 62svh; }
+  .ld-exam.is-flat .ld-step-h { font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.3rem); }
+}
+
+/* The band, the same way: a window under 1024px wide and 560px tall arms
+   the exam as a band pinned under the nav (BAND in Exam.jsx). It measured a
+   layout shift of 0.16 on a 414 x 896 phone without this. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (max-width: 1023.98px) and (min-height: 560px) {
+  .ld-exam.is-flat { --ld-band: clamp(250px, 50vh, 440px); --ld-below: calc(100vh - var(--ld-nav) - var(--ld-band)); }
+  .ld-exam.is-flat .ld-exam-grid { display: block; }
+  .ld-exam.is-flat .ld-copy { padding-bottom: calc(var(--ld-nav) + 1rem); }
+  .ld-exam.is-flat .ld-stage {
+    position: sticky; top: var(--ld-nav); z-index: 2;
+    height: var(--ld-band);
+    margin: 0 -1.5rem; padding: 0.6rem 1.5rem; background: var(--ld-room);
+  }
+  .ld-exam.is-flat .ld-stage-in { height: 100% !important; }
+  .ld-exam.is-flat .ld-steps {
+    display: block; gap: 0;
+    padding-top: calc(var(--ld-below) * 0.55); padding-bottom: calc(var(--ld-below) * 0.12);
+  }
+  .ld-exam.is-flat .ld-step { min-height: calc(var(--ld-below) * 0.72); opacity: 0.6; }
+  .ld-exam.is-flat .ld-step:last-child { min-height: calc(var(--ld-below) * 0.82); }
+  .ld-exam.is-flat .ld-step-h { font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.3rem); }
+}
+@supports (height: 1svh) {
+  @media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (max-width: 1023.98px) and (min-height: 560px) {
+    .ld-exam.is-flat { --ld-band: clamp(250px, 50svh, 440px); --ld-below: calc(100svh - var(--ld-nav) - var(--ld-band)); }
+  }
+}
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-width: 768px) and (max-width: 1023.98px) and (min-height: 560px) {
+  .ld-exam.is-flat .ld-stage { margin: 0 -3rem; padding: 0.75rem 3rem; }
+}

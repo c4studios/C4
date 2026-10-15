@@ -22,7 +22,7 @@
  * is instant (useStaticMode, resolved on the first render). The prerendered
  * page is the first question with every service and its starting price.
  */
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import { tightFigure, money } from '@/components/c4/figure';
 import useStaticMode from '@/hooks/useStaticMode';
@@ -187,7 +187,12 @@ function Choices({ labelledBy, items, value, onSelect, onCommit, render, classNa
 }
 
 export default function Quotr({ compact = false, heading = 'Price it yourself.' }) {
-  const uid = useId();
+  /* Named, not useId(): the prerendered HTML keeps the ids its own render
+     made, which aren't the ones a hydrating page makes, and every question
+     after the first mounts later and points back at them (15 Oct 2026). One
+     Quotr per page: the full one on the home page, the compact one on
+     /welcome. */
+  const uid = compact ? 'qt-compact' : 'qt';
   const still = useStaticMode();
   const buzz = useBuzz(still);
 

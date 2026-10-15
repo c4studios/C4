@@ -48,11 +48,12 @@
  * sharpen, the way the lens hunts and locks. "Hide case studies" at the foot
  * folds them away and hands the visitor back to the button.
  */
-import React, { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { ArrowDown, ArrowUp, ArrowUpRight } from 'lucide-react';
 import { Link } from '@/components/c4/SiteLink';
 import useStaticMode from '@/hooks/useStaticMode';
+import { isHydrating, useMediaQuery, useWasPrerendered } from '@/lib/hydration';
 import MotionFilm, { FilmWords } from './MotionFilm';
 import LensLoop from './LensLoop';
 import { WORK_FILM, WORK_SITE, HVN, SHARP, DSR, AQUA, EA, TIDY, BRADY, GROVERZ, ROCKS } from './lensStudies';
@@ -82,20 +83,9 @@ function useNear(ref) {
 }
 
 /* A media query as state. The prerenderer renders at 1280 wide, so it gets
-   the wide layout; a phone re-renders on mount (the app renders from scratch). */
-function useQuery(query) {
-  const get = () => (typeof window === 'undefined' || typeof window.matchMedia !== 'function' ? true : window.matchMedia(query).matches);
-  const [match, setMatch] = useState(get);
-  useEffect(() => {
-    if (typeof window.matchMedia !== 'function') return undefined;
-    const mq = window.matchMedia(query);
-    const on = () => setMatch(mq.matches);
-    on();
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
-  }, [query]);
-  return match;
-}
+   the wide layout; a hydrating page answers the same, then a phone
+   re-renders with its own (src/lib/hydration.js). */
+const useQuery = useMediaQuery;
 
 function Still({ still, near, sizes, className }) {
   const set = (ext) => still.widths.filter((w) => w <= still.width).map((w) => `${still.base}-${w}.${ext} ${w}w`).join(', ');
@@ -258,7 +248,9 @@ function DsrStudy() {
   const s = DSR;
   const { ref, ids } = useStudy(s);
   const [racing, setRacing] = useState(false);
-  const reelNotes = useId();
+  /* Named, not useId(): React ids differ between a prerender and the page
+     that hydrates it, and the film that points here can mount later. */
+  const reelNotes = `${ids.article}-reel-notes`;
   const board = s.reel ? s.board : s.board.filter((row) => row.name !== 'Reel');
   return (
     <article className="lw-study lw-dsr" id={ids.article} aria-labelledby={ids.name} ref={ref}>
@@ -418,12 +410,19 @@ export default function LensWork() {
   const log = useMemo(() => [...WORK_FILM, ...WORK_SITE], []);
   const staticMode = useStaticMode();
   /* Open from the first render when the visitor arrived on #work, so the
-     studies never flash shut; the prerenderer has no hash, so its HTML is shut. */
-  const [open, setOpen] = useState(askedForStudies);
+     studies never flash shut; the prerenderer has no hash, so its HTML is shut.
+     A hydrating page renders shut to match that HTML, then opens before it
+     paints (the layout effect below). */
+  const prerendered = useWasPrerendered();
+  const [open, setOpen] = useState(() => !isHydrating() && askedForStudies());
   const [pulling, setPulling] = useState(false);
   const openRef = useRef(open);
   const regionRef = useRef(null);
   const toggleRef = useRef(null);
+
+  useLayoutEffect(() => {
+    if (prerendered && askedForStudies()) { openRef.current = true; setOpen(true); }
+  }, [prerendered]);
 
   /* React 18 can only write `hidden` as a boolean, so until-found is set here,
      before the browser paints. */

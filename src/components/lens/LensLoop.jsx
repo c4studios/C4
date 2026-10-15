@@ -23,10 +23,12 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pause, Play } from 'lucide-react';
 import useStaticMode from '@/hooks/useStaticMode';
+import { mediaMatches, useWasPrerendered } from '@/lib/hydration';
 
 function pickCut(cuts) {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return cuts.length - 1;
-  const i = cuts.findIndex((c) => !c.media || window.matchMedia(c.media).matches);
+  /* the prerenderer's cut while a prerendered page hydrates (see below) */
+  const i = cuts.findIndex((c) => !c.media || mediaMatches(c.media));
   return i < 0 ? cuts.length - 1 : i;
 }
 
@@ -38,6 +40,10 @@ export default function LensLoop({ clip, className = '', fit = 'cover', onPlayin
   const staticMode = useStaticMode();
   const noAuto = useMemo(() => staticMode || wantsLessData(), [staticMode]);
   const [cutIndex, setCutIndex] = useState(() => pickCut(clip.cuts));
+  /* A hydrating page starts on the cut the prerendered HTML has, then takes
+     the one for this screen. */
+  const prerendered = useWasPrerendered();
+  useEffect(() => { if (prerendered) setCutIndex(pickCut(clip.cuts)); }, [prerendered, clip.cuts]);
   const cut = clip.cuts[cutIndex] || clip.cuts[clip.cuts.length - 1];
   const fallback = clip.cuts[clip.cuts.length - 1];
   const wide = clip.cuts.find((c) => c.media) || fallback;

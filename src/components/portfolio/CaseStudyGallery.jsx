@@ -4,6 +4,7 @@ import { X, ChevronLeft, ChevronRight, Monitor, Smartphone } from 'lucide-react'
 import GallerySkeleton from './GallerySkeleton';
 import PortfolioMedia from './PortfolioMedia';
 import useStaticMode from '@/hooks/useStaticMode';
+import { isHydrating } from '@/lib/hydration';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -170,7 +171,9 @@ export default function CaseStudyGallery({ screenshots, desktopScreenshots, mobi
 
   const [device, setDevice] = useState('desktop');
   const [lightboxIndex, setLightboxIndex] = useState(null);
-  const [loading, setLoading] = useState(true);
+  /* The prerendered page already shows the gallery, so a hydrating page
+     starts without the half-second skeleton. */
+  const [loading, setLoading] = useState(() => !isHydrating());
 
   useEffect(() => {
     const timeoutId = setTimeout(() => setLoading(false), 500);

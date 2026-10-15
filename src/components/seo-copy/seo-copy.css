@@ -594,3 +594,55 @@
   .sc-results *, .sc-results *::before, .sc-results *::after { animation: none !important; }
   .sc-results .sc-tick, .sc-results .sc-sel, .sc-results .sc-ink { transition: none !important; }
 }
+
+/* ── before the climb arms (15 Oct 2026) ────────────────────────────────
+   The browser keeps the prerendered page, which is the flat climb, and the
+   climb arms once the app has hydrated it. In a window it will arm in
+   (JavaScript on, motion allowed, 560px tall, as Climb.jsx reads it), the
+   flat climb takes the armed geometry from its first paint: the results
+   page sits in the pinned frame it will have, and the steps take their
+   armed spacing without their stills. So nothing below the page moves when
+   the climb takes over; only the example inside the frame changes, from
+   the bars in the HTML to the live page. Without JavaScript, with reduced
+   motion, or in a short window, the flat climb is as it was. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-height: 560px) {
+  .sc-climb.is-flat .sc-stage { overflow: hidden; }
+  .sc-climb.is-flat .sc-still { display: none; }
+  .sc-climb.is-flat .sc-steps { display: block; gap: 0; margin-top: 0; }
+  .sc-climb.is-flat .sc-step { display: block; }
+  .sc-climb.is-flat .sc-where { color: var(--c4-text-muted); font-weight: 400; }
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-height: 560px) and (min-width: 1024px) {
+  .sc-climb.is-flat .sc-stage-col { grid-row: 1 / span 3; }
+  .sc-climb.is-flat .sc-steps { grid-column: 1; }
+  .sc-climb.is-flat .sc-stage {
+    position: sticky; top: 92px;
+    height: calc(100vh - var(--sc-top) - 28px); height: calc(100svh - var(--sc-top) - 28px); max-height: 900px;
+  }
+  .sc-climb.is-flat .sc-step { min-height: 84vh; min-height: 84svh; padding: 22vh 0 4vh; padding: 22svh 0 4svh; }
+  .sc-climb.is-flat .sc-step:first-child { padding-top: 26svh; }
+  .sc-climb.is-flat .sc-step:last-child { min-height: 132vh; min-height: 132svh; }
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-height: 560px) and (max-width: 1023.98px) {
+  .sc-climb.is-flat .sc-stage-col {
+    position: sticky; top: 0; z-index: 4;
+    margin: 0 calc(-1 * var(--sc-pad)) 0;
+    padding: 76px var(--sc-pad) 12px;
+    background: var(--c4-bg);
+    box-shadow: 0 1px 0 var(--c4-border);
+  }
+  .sc-climb.is-flat .sc-stage { height: min(38vh, 360px); height: min(38svh, 360px); }
+  .sc-climb.is-flat .sc-step { min-height: 72vh; min-height: 72svh; padding-top: 8svh; }
+  .sc-climb.is-flat .sc-step:last-child { min-height: 104vh; min-height: 104svh; }
+  .sc-climb.is-flat .sc-step-h { font-size: clamp(1.55rem, 1.1rem + 2vw, 2.1rem); }
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-height: 560px) and (min-width: 768px) and (max-width: 1023.98px) {
+  .sc-climb.is-flat .sc-stage-col { padding-top: 88px; }
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-height: 900px) and (max-width: 1023.98px) {
+  .sc-climb.is-flat .sc-stage { height: min(42vh, 460px); height: min(42svh, 460px); }
+}

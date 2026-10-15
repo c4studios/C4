@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import { ArrowUpRight } from 'lucide-react';
 import useDocumentHead from '@/hooks/useDocumentHead';
+import { isHydrating } from '@/lib/hydration';
 
 /* Where the unsubscribe link lands.
  *
@@ -15,12 +16,16 @@ import useDocumentHead from '@/hooks/useDocumentHead';
  * the URL resolves as a static file on Cloudflare Pages.
  *
  * The static snapshot renders the 'pending' state. A real visitor always
- * arrives with the query string, so the first client render is already correct. */
+ * arrives with the query string. The browser hydrates the snapshot now
+ * (15 Oct 2026), so its first render is 'pending' too ("One moment.
+ * Checking that link."), and the outcome replaces it once the app has
+ * mounted. */
 
 const FN = 'https://hauwhplevypinplfbbgh.supabase.co/functions/v1/unsubscribe';
+const PENDING = { s: 'pending', u: '', e: '' };
 
 function readState() {
-  if (typeof window === 'undefined') return { s: 'pending', u: '', e: '' };
+  if (typeof window === 'undefined') return PENDING;
   const q = new URLSearchParams(window.location.search);
   return { s: q.get('s') || 'pending', u: q.get('u') || '', e: q.get('e') || '' };
 }
@@ -57,7 +62,8 @@ const COPY = {
 };
 
 export default function Unsubscribed() {
-  const [{ s, u, e }] = React.useState(readState);
+  const [{ s, u, e }, setState] = React.useState(() => (isHydrating() ? PENDING : readState()));
+  React.useEffect(() => { setState(readState()); }, []);
   const copy = COPY[s] || COPY.badlink;
 
   useDocumentHead({

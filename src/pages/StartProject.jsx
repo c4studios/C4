@@ -17,6 +17,7 @@ import SubmissionSuccess from '@/components/c4/SubmissionSuccess';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
 import SubmitButton from '@/components/c4/SubmitButton';
 import useDocumentHead from '@/hooks/useDocumentHead';
+import { useHydrated, usePrerenderedState, useWasPrerendered } from '@/lib/hydration';
 import { breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
@@ -136,6 +137,7 @@ const SERVICES = [
 /* Old links that still carry a retired key: a brand link means logos now,
    so it opens Logo Design with its package filled in. */
 const SERVICE_ALIASES = { brand_platform: 'logo_design' };
+const NO_PARAMS = new URLSearchParams();
 
 const BUDGETS = [
   { key: 'under_1k', label: 'Under $1k' },
@@ -178,7 +180,13 @@ function PillSelect({ options, value, onChange }) {
 }
 
 export default function StartProject() {
-  const [searchParams] = useSearchParams();
+  /* A link in from a service page carries its choices (?service=,
+     ?package=). The prerendered page is the empty brief, so a hydrating
+     page renders that, and the choices fill in once the app has mounted. */
+  const hydrated = useHydrated();
+  const prerendered = useWasPrerendered();
+  const [urlParams] = useSearchParams();
+  const searchParams = hydrated ? urlParams : NO_PARAMS;
   const rawService = searchParams.get('service') || '';
   const preService = SERVICE_ALIASES[rawService] || rawService;
   const prePackage = searchParams.get('package') || '';
@@ -215,12 +223,25 @@ export default function StartProject() {
     attachments: [],
     _gotcha: '', // honeypot
   });
+  useEffect(() => {
+    if (!prerendered || !hydrated) return;
+    if (!preService && !preBudget && !preDescription) return;
+    setForm((f) => ({
+      ...f,
+      service: f.service || preService,
+      budget: f.budget || preBudget,
+      description: f.description || preDescription,
+    }));
+    // Once: when the hydrated page switches to the address's own choices.
+  }, [hydrated]);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [fileUploading, setFileUploading] = useState(false);
   const [formError, setFormError] = useState(null);
   // null while asking, then true or false. Anything but a clear yes means email.
-  const [uploadsEnabled, setUploadsEnabled] = useState(null);
+  // A hydrating page starts from the prerendered answer (the email line), so
+  // it doesn't blink out while /api/config answers again.
+  const [uploadsEnabled, setUploadsEnabled] = usePrerenderedState('start-uploads', null);
 
   useEffect(() => {
     let live = true;

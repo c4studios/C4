@@ -30,6 +30,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import useStaticMode from '@/hooks/useStaticMode';
+import { usePrerenderedState } from '@/lib/hydration';
 import { SCREEN, DEEP, bootMarkHeight, NAV_MARK_HEIGHT } from './geometry';
 import { FourG, MarkG, widthAt } from './Pieces';
 
@@ -49,6 +50,8 @@ function useMode(staticMode) {
     if (staticMode || typeof window.matchMedia !== 'function') return undefined;
     const qs = [window.matchMedia(WIDE), window.matchMedia(BAND)];
     const on = () => setMode(readMode(false));
+    /* A prerendered page hydrates flat, then takes its own mode here. */
+    on();
     qs.forEach((q) => q.addEventListener?.('change', on));
     return () => qs.forEach((q) => q.removeEventListener?.('change', on));
   }, [staticMode]);
@@ -97,6 +100,8 @@ const flatHeight = (w) => Math.round(Math.min(640, Math.max(380, w * 1.02)));
 
 const smoother = (t) => t * t * t * (t * (t * 6 - 15) + 10);
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
+
+const WRITTEN_BY_CAMERA = { __html: '' };
 
 function Chart({ L, svgRef, liveRef, lit, tabTitle }) {
   const [r1, r2, r3, r4] = L.rows;
@@ -152,7 +157,9 @@ function Chart({ L, svgRef, liveRef, lit, tabTitle }) {
 
       <g className={row(1)}>
         <FourG x={L.cx - widthAt.four(r1.h) / 2} y={r1.y} h={r1.h} pair={SCREEN} />
-        <text ref={liveRef} className="ld-fig" x={L.labelX} y={midY(r1)} textAnchor="end" dominantBaseline="middle" />
+        {/* The camera writes this figure itself (applyCamera), so React leaves the
+            text alone: a prerendered page keeps its figure when it hydrates. */}
+        <text ref={liveRef} className="ld-fig" x={L.labelX} y={midY(r1)} textAnchor="end" dominantBaseline="middle" dangerouslySetInnerHTML={WRITTEN_BY_CAMERA} suppressHydrationWarning />
       </g>
       <g className={row(2)}>
         <MarkG x={L.cx - widthAt.mark(r2.h) / 2} y={r2.y} h={r2.h} pair={SCREEN} />
@@ -186,7 +193,9 @@ export default function Exam({ from, startHref, tabTitle, steps }) {
   const stepRefs = useRef([]);
   const zRef = useRef(armed ? 1 : 0);
 
-  const [size, setSize] = useState({ w: 600, h: 640, vw: 1280 });
+  /* Measured after layout, so a hydrating page starts from the size the
+     prerendered chart was drawn at, then measures its own. */
+  const [size, setSize] = usePrerenderedState('exam-size', { w: 600, h: 640, vw: 1280 });
   const [lit, setLit] = useState(0);
 
   /* Measure the box the chart is drawn in. It's the stage's content box,

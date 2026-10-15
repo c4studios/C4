@@ -27,10 +27,11 @@
  * the page. The prerendered HTML carries neither: a browser parsing that HTML
  * fetched a lazy poster near the top before the app took over (9 Oct 2026).
  */
-import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Maximize, Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { Link } from '@/components/c4/SiteLink';
 import useStaticMode from '@/hooks/useStaticMode';
+import { mediaMatches, useWasPrerendered } from '@/lib/hydration';
 
 
 /* One film with sound at a time. Taking the sound mutes and pauses the others;
@@ -45,7 +46,8 @@ export function clock(t) {
 
 function pickCut(cuts) {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return 0;
-  const i = cuts.findIndex((c) => !c.media || window.matchMedia(c.media).matches);
+  /* the prerenderer's cut while a prerendered page hydrates (see below) */
+  const i = cuts.findIndex((c) => !c.media || mediaMatches(c.media));
   return i < 0 ? cuts.length - 1 : i;
 }
 
@@ -83,6 +85,10 @@ export default function MotionFilm({ film, layout = 'wide', bare = false, silent
   const noAuto = useMemo(() => staticMode || wantsLessData(), [staticMode]);
   const [near, setNear] = useState(false);           // within a screen: the poster and strip may load
   const [cutIndex, setCutIndex] = useState(() => pickCut(film.cuts));
+  /* A hydrating page starts on the cut the prerendered HTML has, then takes
+     the one for this screen. */
+  const prerendered = useWasPrerendered();
+  useEffect(() => { if (prerendered) setCutIndex(pickCut(film.cuts)); }, [prerendered, film.cuts]);
   const cut = film.cuts[cutIndex] || film.cuts[0];
   const fallbackCut = film.cuts[film.cuts.length - 1];
 
@@ -106,7 +112,9 @@ export default function MotionFilm({ film, layout = 'wide', bare = false, silent
     dragging: false, tabPaused: false, raf: 0, lastSec: -1, switchFrom: null,
   });
 
-  const uid = useId();
+  /* Named from the film, not useId(): React's ids differ between the
+     prerendered HTML and the page that hydrates it (15 Oct 2026). */
+  const uid = `${film.id}-${bare ? 'bare' : layout}`;
   const titleId = `mo-title-${uid}`;
   const descId = `mo-desc-${uid}`;
 

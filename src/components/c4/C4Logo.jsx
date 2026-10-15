@@ -1,4 +1,4 @@
-﻿import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+﻿import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import {
@@ -310,7 +310,11 @@ export default function C4Logo({
   const full = variant === 'full';
   const showBackdrop = full;
   const { dormant, mono, colour, backdrop, cShadow } = useLogoColours(context);
-  const uid = useId();
+  /* Named from where the logo sits, not useId(): the prerendered HTML keeps
+     the ids its own render made, and a hydrating page's differ (15 Oct
+     2026). One logo per context and size on a page: the nav's, the
+     footer's, the sent-message mark. */
+  const uid = `${context}-${variant}-${h}`;
 
   const viewBox = full ? FULL_VIEWBOX : MARK_VIEWBOX;
   const aspect = full ? FULL_ASPECT : MARK_ASPECT;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { usePrerendered } from '@/lib/hydration';
 import { useTheme } from './ThemeContext';
 
 const focusRingStyle = /** @type {import('react').CSSProperties} */ ({
@@ -34,8 +35,12 @@ function useChromeState() {
 
 export default function ThemeToggle({ compact = false }) {
   const { isDark, toggle } = useTheme();
-  const chrome = useChromeState();
-  const shownDark = chrome.forced ? chrome.dark : isDark;
+  const live = useChromeState();
+  /* The switch shows the prerendered page's state while it hydrates (the
+     prerenderer runs light, and a page that pins its own light had pinned
+     it by the time the page was captured), then the visitor's own. */
+  const chrome = usePrerendered('theme-switch', { forced: live.forced, dark: live.forced ? live.dark : isDark });
+  const shownDark = chrome.dark;
   const label = chrome.forced
     ? 'This page sets its own light. The theme switch is unavailable here.'
     : (shownDark ? 'Switch to light mode' : 'Switch to dark mode');

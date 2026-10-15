@@ -41,6 +41,8 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { Link } from '@/components/c4/SiteLink';
 import gsap from 'gsap';
 import useDocumentHead from '@/hooks/useDocumentHead';
+import useStaticMode from '@/hooks/useStaticMode';
+import { PRERENDER, isHydrating, useHydrated } from '@/lib/hydration';
 import { submitSupportRequest, SubmissionError } from '@/api/submissions';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
 import { PHONE, SITE_URL, absoluteUrl } from '@/lib/seo';
@@ -177,19 +179,10 @@ export default function Contact() {
   });
 
   /* staticMode — house pattern: prerenderer UA or reduced motion means the
-     at-rest DOM is the finished page and no animation ever arms. */
-  const prerender = useMemo(
-    () => typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent),
-    [],
-  );
-  const reduced = useMemo(
-    () =>
-      typeof window !== 'undefined' &&
-      window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    [],
-  );
-  const staticMode = reduced || prerender;
+     at-rest DOM is the finished page and no animation ever arms. A
+     prerendered page is static while it hydrates too (useStaticMode). */
+  const prerender = PRERENDER;
+  const staticMode = useStaticMode();
   const finePointer = useMemo(
     () =>
       typeof window !== 'undefined' &&
@@ -225,9 +218,12 @@ export default function Contact() {
         PRERENDER only, not reduced motion: reduced-motion humans keep the
         telemetry and the after-hours line. Prerender gets the static label
         (no frozen snapshot time). ── */
-  const [clock, setClock] = useState(() => (prerender ? null : perthParts()));
+  /* A hydrating page shows the prerendered label too, and the clock starts
+     once the app has mounted. */
+  const [clock, setClock] = useState(() => (prerender || isHydrating() ? null : perthParts()));
   useEffect(() => {
     if (prerender) return undefined;
+    setClock(perthParts());
     const id = setInterval(() => setClock(perthParts()), 60000);
     return () => clearInterval(id);
   }, [prerender]);
@@ -248,7 +244,12 @@ export default function Contact() {
   const stampRef = useRef(null);
   const sendBtnRef = useRef(null);
 
-  const [geom, setGeom] = useState(null);
+  const [measured, setGeom] = useState(null);
+  /* The wire is measured from the visitor's own layout, so the static HTML
+     carries none (the prerenderer's 1280px measurement would sit crooked on
+     a phone until the app arrived). It draws once the app has mounted. */
+  const hydrated = useHydrated();
+  const geom = PRERENDER || !hydrated ? null : measured;
   const geomRef = useRef(null);
 
   const measure = useCallback(() => {

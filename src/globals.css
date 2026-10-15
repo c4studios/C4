@@ -614,3 +614,27 @@ header a, header button {
   --prose-meta: #8F94A0;  /*  6.22:1 */
   --prose-rule: rgba(236, 231, 222, 0.14);
 }
+
+/* ── FAQ answers held closed until the app mounts ──
+   The prerenderer leaves every FAQ answer open (SEO audit M9, 15 Oct 2026),
+   so a crawler that reads the HTML without running it gets the answers as
+   visible text. A visitor's browser hydrates that open HTML and closes the
+   answers once the app has mounted (usePrerenderOpen). Until then each item
+   carries data-faq-held, and this draws it closed, so the page looks as it
+   always did from the first paint and nothing moves when the answers close
+   for real. Only where scripting is on: without JavaScript the answers stay
+   open. The selectors follow the item's shape in SeoFaq.jsx and Support.jsx:
+   the button's question and chevron, then the answer. */
+@media (scripting: enabled) {
+  [data-faq-held] > div {
+    display: none !important;
+  }
+
+  [data-faq-held] > button > span {
+    color: var(--c4-text-muted) !important;
+  }
+
+  [data-faq-held] > button > svg {
+    transform: rotate(0deg) !important;
+  }
+}

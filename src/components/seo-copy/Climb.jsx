@@ -22,12 +22,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import useStaticMode from '@/hooks/useStaticMode';
+import { PRERENDER, useHydrated, useMediaQuery } from '@/lib/hydration';
 import { seoPackages } from '@/data/pricing';
 import { createPageUrl } from '@/utils';
 import Results, { ordinal } from './Results';
 import { EXAMPLES, RANKS } from './examples';
 
-const PRERENDER = typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent);
 const TALL_ENOUGH = '(min-height: 560px)';
 const WIDE = '(min-width: 1024px)';
 const COMPACT = '(max-width: 639.98px)';
@@ -148,24 +148,19 @@ function WhoDoesIt({ step }) {
 }
 
 /* A media query as state, read synchronously on the first render so the
-   page lays out right before it paints. */
+   page lays out right before it paints. A prerendered page hydrates with
+   the prerenderer's answers (1280 wide), then takes the visitor's. */
 function useMedia(query, enabled = true) {
-  const read = () => enabled && typeof window !== 'undefined' && typeof window.matchMedia === 'function'
-    && window.matchMedia(query).matches;
-  const [on, setOn] = useState(read);
-  useEffect(() => {
-    if (!enabled || typeof window.matchMedia !== 'function') { setOn(false); return undefined; }
-    const mq = window.matchMedia(query);
-    const sync = () => setOn(mq.matches);
-    sync();
-    mq.addEventListener?.('change', sync);
-    return () => mq.removeEventListener?.('change', sync);
-  }, [query, enabled]);
-  return on;
+  const on = useMediaQuery(query);
+  return enabled && on;
 }
 
 export default function Climb() {
   const staticMode = useStaticMode();
+  const hydrated = useHydrated();
+  /* The illustration's words are bars in the static HTML (the results are
+     made up), and so while the page hydrates; then the words. */
+  const skeleton = PRERENDER || !hydrated;
   const armed = useMedia(TALL_ENOUGH, !staticMode);
   const wide = useMedia(WIDE);
   const compact = useMedia(COMPACT);
@@ -262,10 +257,14 @@ export default function Climb() {
 
         <div className="sc-stage-col">
           <figure className="sc-stage" ref={stageRef}>
+            {/* Keyed, so arming swaps in a fresh results page rather than
+                reshaping the still one in place: on a prerendered page the
+                still is on screen when the climb arms, and reshaping it counted
+                as a layout shift (15 Oct 2026). */}
             {armed ? (
-              <Results ref={stageApi} ex={ex} step={step} compact={compact} foot={wide} typing />
+              <Results key="armed" ref={stageApi} ex={ex} step={step} compact={compact} foot={wide} typing />
             ) : (
-              <Results ex={ex} step={0} still skeleton={PRERENDER} compact={compact} />
+              <Results key="still" ex={ex} step={0} still skeleton={skeleton} compact={compact} />
             )}
             <figcaption className="sr-only">
               {`An example search for “${ex.query}”. Your business starts ${ordinal(RANKS[0])}, at the top of page two, and each step below moves it up.`}
@@ -312,7 +311,7 @@ export default function Climb() {
                 </div>
                 {!armed ? (
                   <div className="sc-still">
-                    <Results ex={ex} step={i + 1} still skeleton={PRERENDER} compact={compact} windowH={compact ? 380 : 400} query={false} foot={false} />
+                    <Results ex={ex} step={i + 1} still skeleton={skeleton} compact={compact} windowH={compact ? 380 : 400} query={false} foot={false} />
                   </div>
                 ) : null}
               </li>

@@ -3,7 +3,6 @@
    gsap.matchMedia() with a reduced-motion guard, and nothing here
    runs at all under staticMode (Prerender UA / reduced motion) —
    the DOM default is always the finished end-state. */
-import { useMemo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
@@ -27,24 +26,27 @@ if (import.meta.env.DEV && typeof window !== 'undefined') {
 
 export const EASE = 'c4home';
 
-/* staticMode: the Prerender UA or an OS reduced-motion preference.
-   Computed once, synchronously, before any animation wiring. */
-export function useStaticMode() {
-  return useMemo(() => {
-    if (typeof window === 'undefined') return true;
-    const prerender =
-      typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent);
-    const reduced =
-      window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    return prerender || reduced;
-  }, []);
+/* staticMode: the Prerender UA, an OS reduced-motion preference, or a
+   prerendered page while it hydrates. The site's one hook since hydration
+   (15 Oct 2026); this copy computed it on its own and would have armed the
+   home page's motion during the hydration render. */
+export { default as useStaticMode } from '@/hooks/useStaticMode';
+export { useWasPrerendered } from '@/lib/hydration';
+
+/* Whether any of an element is on screen (or already scrolled past). A
+   prerendered page arms its reveals once it has hydrated, by which time the
+   visitor may be looking at what a reveal would hide first; those skip
+   their entrance. Below the fold they play as they always did. */
+export function onScreen(el) {
+  return Boolean(el) && el.getBoundingClientRect().top < window.innerHeight;
 }
 
 /* Masked line reveal for a heading — enhancement only; the text is
-   fully visible by default and SplitText reverts after play. */
-export function revealHeading(el, scrollerOpts = {}) {
+   fully visible by default and SplitText reverts after play. `prerendered`
+   (useWasPrerendered) leaves a heading that is already on screen alone. */
+export function revealHeading(el, scrollerOpts = {}, { prerendered = false } = {}) {
   if (!el) return null;
+  if (prerendered && onScreen(el)) return null;
   const split = SplitText.create(el, { type: 'lines', mask: 'lines', autoSplit: true });
   const tween = gsap.from(split.lines, {
     yPercent: 110,

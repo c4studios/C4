@@ -52,22 +52,71 @@
       })();
     </script>
 
-    <!-- The boot: a plain overlay that holds the page until the bundle has
-         mounted and the fonts are in, then hands over. It covers the moment
-         where a prerendered page used to flash, vanish and re-enter as the
-         app hydrated. It is the C4 mark and nothing else: the mark builds the
-         way the nav mark does (the C opens round its own centre, the 4 stands
-         up, the arm strikes across), a slow sheen crosses it while it waits,
-         then the sheet lifts. The viewBox holds the whole mark (x 44 to 639);
-         the old one began at 265 and cut the C in half. Inline so it exists
-         before any stylesheet arrives. -->
+    <!-- The boot overlay, decided before first paint. It shows on the first
+         page load of a visit only (Caleb, 15 Oct 2026: "keep it, but only
+         for that first load in"); sessionStorage remembers the visit. The
+         page underneath is the prerendered one and paints at once, and the
+         app hydrates it in place (src/main.jsx), so the overlay waits for
+         nothing but its own animation. A page whose HTML wasn't prerendered
+         for its own address (a 404, /welcome, the dev server) is drawn from
+         scratch over what's there, so on those the overlay still covers the
+         swap until the app has mounted, as it always did. No attribute, no
+         overlay: the prerenderer, a browser without JavaScript, and every
+         later load in the visit. -->
+    <script>
+      (function () {
+        try {
+          if (/Prerender/i.test(navigator.userAgent)) return;
+          var route = null;
+          var record = document.getElementById('c4-prerender');
+          if (record) route = JSON.parse(record.textContent).route;
+          var here = location.pathname.replace(/\/+$/, '') || '/';
+          var own = route !== null && (String(route).replace(/\/+$/, '') || '/') === here;
+          var first = false;
+          try {
+            first = !sessionStorage.getItem('c4_boot_seen');
+            sessionStorage.setItem('c4_boot_seen', '1');
+          } catch (e) { first = false; }
+          if (!own) document.documentElement.setAttribute('data-c4-boot', 'wait');
+          else if (first) document.documentElement.setAttribute('data-c4-boot', 'intro');
+          /* The stylesheets' @media (scripting: enabled) rules pose the
+             prerendered page for the app that's about to hydrate it: the
+             experience pages take their armed layout and the FAQ answers are
+             drawn closed. If the app's script fails to load, nothing will
+             take over, so drop those rules and leave the page as a browser
+             without JavaScript shows it. */
+          window.addEventListener('error', function (e) {
+            var s = e.target;
+            if (!s || s.tagName !== 'SCRIPT' || !/\/assets\/index-[^/]+\.js/.test(s.src || '')) return;
+            var strip = function (rules, owner) {
+              for (var i = rules.length - 1; i >= 0; i--) {
+                var r = rules[i];
+                if (r.media && /scripting:\s*enabled/.test(r.media.mediaText)) owner.deleteRule(i);
+                else if (r.cssRules) strip(r.cssRules, r);
+              }
+            };
+            for (var j = 0; j < document.styleSheets.length; j++) {
+              try { strip(document.styleSheets[j].cssRules, document.styleSheets[j]); } catch (err) {}
+            }
+          }, true);
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- The boot: the C4 mark and nothing else. The mark builds the way the
+         nav mark does (the C opens round its own centre, the 4 stands up, the
+         arm strikes across), a slow sheen crosses it, then the sheet lifts.
+         The viewBox holds the whole mark (x 44 to 639); the old one began at
+         265 and cut the C in half. Inline so it exists before any stylesheet
+         arrives. -->
     <style>
       #c4-boot {
         position: fixed; inset: 0; z-index: 1000;
-        display: grid; place-items: center;
+        display: none; place-items: center;
         background: #F7F5F2;
         --boot-c: #b7b5b2; --boot-body: #414243; --boot-arm: #6c6d6d; --boot-sheen: 0.55;
       }
+      html[data-c4-boot] #c4-boot { display: grid; }
       html.dark-mode #c4-boot {
         background: #0F1115;
         --boot-c: #d0cecc; --boot-body: #9a9b9c; --boot-arm: #8a8b8c; --boot-sheen: 0.4;
@@ -116,7 +165,14 @@
         if (!boot) return;
         /* The prerenderer must capture the boot in its resting state so that
            every static page carries it; nothing here runs under that UA. */
-        var prerender = /Prerender/i.test(navigator.userAgent);
+        if (/Prerender/i.test(navigator.userAgent)) return;
+        var mode = document.documentElement.getAttribute('data-c4-boot');
+        window.__c4BootReady = function () {};
+        /* Not this load's to show: take it out before it can ever paint. */
+        if (mode !== 'intro' && mode !== 'wait') {
+          boot.parentNode.removeChild(boot);
+          return;
+        }
         var t0 = Date.now();
         var finished = false;
         function finish() {
@@ -126,16 +182,27 @@
           var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
           setTimeout(function () {
             boot.classList.add('is-done');
-            setTimeout(function () { if (boot.parentNode) boot.parentNode.removeChild(boot); }, 600);
+            setTimeout(function () {
+              if (boot.parentNode) boot.parentNode.removeChild(boot);
+              document.documentElement.removeAttribute('data-c4-boot');
+            }, 600);
           }, reduce ? 60 : 640);
         }
+        /* The first load of a visit: the mark builds, holds, and lifts on the
+           same beats it always had when the app was quick (450 ms, then the
+           640 ms hold and the half-second fade), over a page that is already
+           there. It doesn't wait for the bundle. */
+        if (mode === 'intro') {
+          setTimeout(finish, 450);
+          return;
+        }
+        /* A page the app draws from scratch: hold until it has mounted and the
+           fonts are in (src/main.jsx calls this), at least 450 ms, at most 5 s. */
         window.__c4BootReady = function () {
-          if (prerender) return;
-          var minShow = 450;
-          var left = minShow - (Date.now() - t0);
+          var left = 450 - (Date.now() - t0);
           setTimeout(finish, left > 0 ? left : 0);
         };
-        if (!prerender) setTimeout(finish, 5000);
+        setTimeout(finish, 5000);
       })();
     </script>
     <!-- Cloudflare's Email Address Obfuscation rewrites every address in the

@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, ArrowUpRight, Pause } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { getCaseStudy } from '../portfolio/caseStudyData';
 import { WebpImg } from '../portfolio/PortfolioMedia';
+import { usePrerenderedState } from '@/lib/hydration';
 
 const AUTOPLAY_INTERVAL = 7000;
 const RING_SLOTS = 5;
@@ -87,7 +88,8 @@ function CrossfadeImage({ src, alt, sizes, className = '', imgClassName = '', re
 
 export default function TestimonialReel({ testimonials = [] }) {
   const reduced = usePrefersReducedMotion();
-  const [current, setCurrent] = useState(0);
+  /* A hydrating page starts on the slide the prerendered page showed. */
+  const [current, setCurrent] = usePrerenderedState('testimonial-reel', 0);
   const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState(0);

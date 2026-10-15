@@ -10,7 +10,7 @@ import React, { useLayoutEffect, useRef } from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import { ArrowRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
-import { revealHeading, useStaticMode } from './homeMotion';
+import { revealHeading, useStaticMode, useWasPrerendered } from './homeMotion';
 import { BODY, ARM } from '@/components/logo-design/DoorFace';
 import lensCorner from './assets/doors/lens-corner-360.webp';
 
@@ -55,10 +55,11 @@ function Chip({ kind }) {
 export default function FinalCTA() {
   const h2Ref = useRef(null);
   const staticMode = useStaticMode();
+  const prerendered = useWasPrerendered();
 
   useLayoutEffect(() => {
     if (staticMode) return undefined;
-    const reveal = revealHeading(h2Ref.current);
+    const reveal = revealHeading(h2Ref.current, {}, { prerendered });
     return () => {
       reveal?.tween?.scrollTrigger?.kill();
       reveal?.tween?.kill();

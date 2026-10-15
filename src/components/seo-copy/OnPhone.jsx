@@ -20,8 +20,8 @@
 import { Search } from 'lucide-react';
 import { PHOTOS, Photo, Credit } from './photos';
 import { EXAMPLES, YOU, YOU_SITE } from './examples';
+import { PRERENDER, useHydrated } from '@/lib/hydration';
 
-const PRERENDER = typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent);
 const EX = EXAMPLES[0];
 
 function Screen({ skeleton }) {
@@ -60,6 +60,9 @@ function Screen({ skeleton }) {
 }
 
 export default function OnPhone() {
+  /* Bars in the static HTML and while the page hydrates, then the words. */
+  const hydrated = useHydrated();
+  const skeleton = PRERENDER || !hydrated;
   return (
     <section className="sc-sec sc-phone" aria-labelledby="sc-phone-h">
       <div className="sc-frame sc-phone-grid">
@@ -91,7 +94,7 @@ export default function OnPhone() {
 
         <figure className="sc-phone-fig">
           <div className="sc-phone-plate">
-            <Screen skeleton={PRERENDER} />
+            <Screen skeleton={skeleton} />
             <Photo photo={PHOTOS.phone} sizes="(min-width: 1024px) 46vw, (min-width: 640px) 80vw, 100vw" className="sc-phone-photo" />
           </div>
           <figcaption className="sc-cap">

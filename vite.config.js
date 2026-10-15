@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, normalizePath } from 'vite'
 import path from 'path'
 import { execFileSync } from 'node:child_process'
 import { STATIC_ROUTES } from './src/lib/prerenderRoutes.js'
@@ -27,8 +27,26 @@ const PAGE_DATES = Object.fromEntries(
     .filter(([, date]) => date),
 )
 
+/* framer-motion, safe for hydration (15 Oct 2026). Every import of
+   'framer-motion' in the app resolves to src/lib/motion.jsx, which re-exports
+   the library with motion components that start at their finished state in
+   the prerenderer and while a prerendered page hydrates. That file imports
+   the real package, so it's left alone here. */
+const MOTION = normalizePath(path.resolve(__dirname, './src/lib/motion.jsx'))
+function hydrationSafeMotion() {
+  return {
+    name: 'c4:hydration-safe-motion',
+    enforce: 'pre',
+    resolveId(source, importer) {
+      if (source !== 'framer-motion' || !importer) return null
+      if (normalizePath(importer.split('?')[0]).toLowerCase() === MOTION.toLowerCase()) return null
+      return MOTION
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [hydrationSafeMotion(), react()],
   define: {
     __PAGE_DATES__: JSON.stringify(PAGE_DATES),
   },

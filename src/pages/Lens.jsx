@@ -19,6 +19,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import { createPageUrl } from '@/utils';
+import { usePrerendered } from '@/lib/hydration';
 import { c4LensPackages } from '@/data/pricing';
 import { createPaintStage } from '../components/lens/paintWord';
 import GlyphPortal from '../components/ui/glyph-portal';
@@ -131,8 +132,15 @@ const PKG_FEATURE_DISPLAY = {
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    COMPONENT
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* The focus ticks and the static word are drawn into these by the effect
+   below, so React leaves their insides alone: a prerendered page keeps the
+   ones it was captured with when it hydrates (15 Oct 2026), and a page the
+   app draws itself starts them empty, as before. */
+const FILLED_BY_EFFECT = { __html: '' };
+
 export default function Lens() {
   useForceDark();
+  const year = usePrerendered('year', new Date().getFullYear());
   useDocumentHead({
     title: 'C4 Lens — Photography, Videography & Brand Content in Perth',
     description:
@@ -308,7 +316,8 @@ export default function Lens() {
     /* â•â•â•â•â•â•â•â•â•â•â• FOCUS TICKS â•â•â•â•â•â•â•â•â•â•â• */
     const NS = 'http://www.w3.org/2000/svg';
     const ticksContainer = document.getElementById('focusTicks');
-    if (ticksContainer) {
+    /* the prerendered page arrives with them drawn */
+    if (ticksContainer && !ticksContainer.childNodes.length) {
       for (let i = 0; i < 180; i++) {
         const a = (i / 180) * Math.PI * 2 - Math.PI / 2;
         const maj = i % 15 === 0, mid = i % 5 === 0;
@@ -379,6 +388,12 @@ export default function Lens() {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     /* staticMode: prerender UA + reduced-motion both rest at the finished end state */
     const staticMode = prefersReduced || /Prerender/i.test(navigator.userAgent);
+    /* The hero is the exception (15 Oct 2026): the prerendered page now shows
+       until the app has hydrated it, so the prerenderer captures the hero
+       where a visitor's scroll starts it, out of focus, and it doesn't snap
+       from sharp to soft when the camera takes over. Reduced motion still
+       rests in focus. */
+    const heroStatic = prefersReduced;
     const finePointer = window.matchMedia('(pointer: fine)').matches;
     let plxX = 0, plxY = 0, plxTX = 0, plxTY = 0;
     const onLensParallax = (e) => {
@@ -402,6 +417,10 @@ export default function Lens() {
        threshold (lens.css) the hero stops pinning and rests in focus. */
     let pinned = true;
     const fitHero = () => {
+      /* Not for the prerendered HTML: fitted to the prerenderer's 1280 x 800,
+         it held a phone's lens far too big until the app took over. The
+         CSS default is close everywhere, and this fits it on load. */
+      if (/Prerender/i.test(navigator.userAgent)) return;
       if (!heroSticky || !lensWrap || !quoteBlock || !heroBottom) return;
       const H = heroSticky.clientHeight, W = heroSticky.clientWidth;
       const copyBottom = quoteBlock.offsetTop + quoteBlock.offsetHeight;
@@ -430,7 +449,7 @@ export default function Lens() {
        *   t = 0.90–1.00  hold: shutter
        */
       const focusRaw = clamp((t - 0.04) / 0.40, 0, 1);
-      const focusP = staticMode || !pinned ? 1 : eio(focusRaw);
+      const focusP = heroStatic || !pinned ? 1 : eio(focusRaw);
       const bladeRawT = clamp((t - 0.42) / 0.48, 0, 1);
       const bladeProgress = eio(bladeRawT);
 
@@ -826,25 +845,27 @@ export default function Lens() {
           {/* Rule-of-thirds grid */}
           <div className="hud-grid-overlay" id="gridOverlay"></div>
 
-          {/* HUD */}
+          {/* HUD. The camera effect writes these numbers straight into the page,
+              so the prerendered HTML holds whatever it last wrote; each span tells
+              React not to treat that as a hydration mismatch (15 Oct 2026). */}
           <div className="hud">
             <div className="hud-c tl">
               <span className="rec-wrap">
                 <span className="rec-dot"></span>
-                <span className="v">REC · <span id="hudTc">00:00:00:00</span></span>
+                <span className="v">REC · <span id="hudTc" suppressHydrationWarning>00:00:00:00</span></span>
               </span>
             </div>
             <div className="hud-c tr">
-              <span className="v">f/<span id="hudF">1.4</span> · 1/<span id="hudShutter">250</span> · ISO <span id="hudIso">400</span></span>
-              <span className="k" style={{ marginTop: '5px' }}><span id="hudFocal">35mm</span> · RAW · <span id="hudWb">5600K</span></span>
+              <span className="v">f/<span id="hudF" suppressHydrationWarning>1.4</span> · 1/<span id="hudShutter" suppressHydrationWarning>250</span> · ISO <span id="hudIso" suppressHydrationWarning>400</span></span>
+              <span className="k" style={{ marginTop: '5px' }}><span id="hudFocal" suppressHydrationWarning>35mm</span> · RAW · <span id="hudWb" suppressHydrationWarning>5600K</span></span>
             </div>
             <div className="hud-c bl">
               <span className="k">FOCUS</span>
-              <span className="v" id="hudFocus">MANUAL · ∞</span>
+              <span className="v" id="hudFocus" suppressHydrationWarning>MANUAL · 0.5M</span>
             </div>
             <div className="hud-c br">
               <span className="k">FRAME</span>
-              <span className="v" id="hudFrame">001 / 420</span>
+              <span className="v" id="hudFrame" suppressHydrationWarning>001 / 420</span>
             </div>
 
           </div>
@@ -898,7 +919,7 @@ export default function Lens() {
 
                   {/* Focus ring (rotates on scroll) */}
                   <g id="focusRing">
-                    <g id="focusTicks"></g>
+                    <g id="focusTicks" dangerouslySetInnerHTML={FILLED_BY_EFFECT} suppressHydrationWarning />
                     {/* Distance markings — computed on arc at r=468, tangent-rotated */}
                     {[['∞',-90],['30',-57],['10',-24],['5',9],['3',42],['1.5',75],['1',108],['0.7',141],['0.5',174]].map(([label, deg]) => {
                       const rad = deg * Math.PI / 180;
@@ -1034,7 +1055,7 @@ export default function Lens() {
                 {/* The painted word is drawn, so a screen reader would hear the
                     sentence with a hole in it; this fills the hole. */}
                 <span className="lens-sr-only">{WORDS[0].text}</span>
-                <svg id="wordSvg" className="word-svg" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+                <svg id="wordSvg" className="word-svg" preserveAspectRatio="xMidYMid meet" aria-hidden="true" dangerouslySetInnerHTML={FILLED_BY_EFFECT} suppressHydrationWarning />
               </div>
               <span className="cap-stmt-label">of your brand.</span>
             </div>
@@ -1165,7 +1186,7 @@ export default function Lens() {
         <div>
           <div className="foot-logo">C4 LENS</div>
           <div style={{ marginTop: '6px', color: 'var(--ink-2)' }}>
-            <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>C4 Studios</Link> · Perth W.A. · © {new Date().getFullYear()}
+            <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>C4 Studios</Link> · Perth W.A. · © {year}
           </div>
         </div>
         {/* Right-aligned in lens.css, so the phone rule there can centre it.

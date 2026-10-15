@@ -13,6 +13,7 @@ import PlayLayer from '../components/portfolio/PlayLayer';
 import { getMotion } from '../components/portfolio/portfolioMotion';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import useStaticMode from '@/hooks/useStaticMode';
+import { isHydrating } from '@/lib/hydration';
 import { breadcrumbSchema } from '@/lib/schema';
 
 const ease = [0.22, 1, 0.36, 1];
@@ -334,9 +335,12 @@ export default function Portfolio() {
   const [searchParams] = useSearchParams();
   const rawFilter = searchParams.get('filter') || 'all';
   const initialFilter = ['all', 'web', 'concept'].includes(rawFilter) ? rawFilter : 'all';
-  const [filter, setFilter] = useState(initialFilter);
+  /* A hydrating page renders what the prerenderer did: every project, no
+     skeleton. A ?filter= in the address applies once the app has mounted. */
+  const [filter, setFilter] = useState(() => (isHydrating() ? 'all' : initialFilter));
   const [sort, setSort] = useState('featured');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !isHydrating());
+  useEffect(() => { setFilter(initialFilter); }, [initialFilter]);
   const allStudies = getAllCaseStudies();
 
   const portfolioJsonLd = useMemo(() => [

@@ -2248,3 +2248,131 @@
     margin-bottom: 8px;
   }
 }
+
+/* ── Before the motion arms (15 Oct 2026) ──────────────────────────────
+   The browser keeps the prerendered page, which carries the static end
+   state above, and HeroFusion arms once the app has hydrated it. Where it
+   will arm (JavaScript on, motion allowed), the static scene takes the
+   armed scene's first frame from first paint, the iPad tilted on its pin,
+   so the hero doesn't swap from the flat record to the device when the
+   motion takes over. These are HeroFusion's own values at the top of the
+   scroll; the few it measures (the screen's rect, the scene's scale) are
+   worked out here from the same CSS sizes, and it corrects any rounding
+   itself when it arms. Without JavaScript or with reduced motion the
+   static end state stands. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .lv-fusion[data-static] {
+    --lvf-w: min(80vw, 1120px, 108svh);
+    --lvf-b: clamp(13px, 1.6vw, 21px);
+    --lvf-sw: calc(var(--lvf-w) - 2 * var(--lvf-b));
+    --lvf-sh: calc(var(--lvf-w) * 0.75 - 2 * var(--lvf-b));
+    --lvf-mini: 0.54;
+  }
+
+  .lv-fusion[data-static] .lv-fusion-pin {
+    height: 420vh;
+  }
+
+  .lv-fusion[data-static] .lv-fusion-sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    perspective: 1300px;
+  }
+
+  .lv-fusion[data-static] .lv-fusion-stage {
+    position: absolute;
+    inset: 0;
+    transform: translateY(-5.5%) scale(0.96) rotateX(26deg);
+  }
+
+  .lv-fusion[data-static] .lv-fusion-view {
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+    clip-path: inset(
+      calc((100% - var(--lvf-sh)) / 2) calc((100% - var(--lvf-sw)) / 2)
+      round max(10px, clamp(30px, 3.2vw, 44px) - var(--lvf-b))
+    );
+  }
+
+  .lv-fusion[data-static] .lv-fusion-scene {
+    position: absolute;
+    inset: 0;
+    perspective: 1000px;
+    transform: scale(var(--lvf-mini));
+    transform-origin: 50% 50%;
+  }
+
+  .lv-fusion[data-static] .lv-scene-head {
+    position: absolute;
+    top: clamp(6%, 8vh, 10%);
+    left: clamp(5%, 6vw, 8%);
+    padding: 0;
+  }
+
+  .lv-fusion[data-static] .lv-plx-group {
+    position: absolute;
+    inset: 0;
+    padding-block: 0;
+    opacity: 0.2;
+    transform: translateY(-48%) rotateX(15deg) rotateZ(20deg);
+  }
+
+  .lv-fusion[data-static] .lv-plx-row:nth-child(1) {
+    transform: translateX(-27.5vw);
+  }
+
+  .lv-fusion[data-static] .lv-plx-row:nth-child(2) {
+    transform: translateX(23.1vw);
+  }
+
+  .lv-fusion[data-static] .lv-plx-row:nth-child(3) {
+    transform: translateX(-25.3vw);
+  }
+
+  .lv-fusion[data-static] .lv-fusion-bezel,
+  .lv-fusion[data-static] .lv-fusion-ground,
+  .lv-fusion[data-static] .lv-fusion-glare {
+    display: block;
+  }
+
+  .lv-fusion[data-static] .lv-fusion-ground {
+    opacity: 0.5;
+  }
+}
+
+/* the scene's scale is its screen's width over the window's, capped: the
+   cap holds everywhere but on very wide or short windows */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-width: 900px) and (max-height: 700px) {
+  .lv-fusion[data-static] {
+    --lvf-mini: 0.48;
+  }
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-width: 2200px) {
+  .lv-fusion[data-static] {
+    --lvf-mini: 0.45;
+  }
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (min-width: 2560px) {
+  .lv-fusion[data-static] {
+    --lvf-mini: 0.4;
+  }
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) and (max-width: 899.98px) {
+  .lv-fusion[data-static] {
+    --lvf-w: min(92vw, 58svh);
+    --lvf-sh: calc(var(--lvf-w) * 4 / 3 - 2 * var(--lvf-b));
+  }
+
+  .lv-fusion[data-static] .lv-fusion-pin {
+    height: 260vh;
+  }
+
+  .lv-fusion[data-static] .lv-plx-group {
+    padding-block: 0;
+  }
+}

@@ -46,7 +46,7 @@
  * house pattern). The nav bar stays ink, as on every page.
  * Styles: src/components/web-arm/web-arm.css (.lv-root).
  */
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import gsap from 'gsap';
@@ -55,6 +55,8 @@ import { CustomEase } from 'gsap/CustomEase';
 import Lenis from 'lenis';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
+import useStaticMode from '@/hooks/useStaticMode';
+import { useWasPrerendered } from '@/lib/hydration';
 import { entitySchemas, serviceSchema, breadcrumbSchema } from '@/lib/schema';
 import {
   webPackageSections,
@@ -424,18 +426,12 @@ export default function ServiceWeb() {
   const [billing, setBilling] = useState('once');
   const isMonthly = billing === 'monthly';
 
-  const prerender = useMemo(
-    () => typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent),
-    [],
-  );
-  const reduced = useMemo(
-    () =>
-      typeof window !== 'undefined' &&
-      window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    [],
-  );
-  const staticMode = reduced || prerender;
+  /* Static for the prerenderer, reduced motion, and a prerendered page while
+     it hydrates (useStaticMode). The page arms a moment after that, over
+     content already on screen, so nothing the visitor can see is hidden to
+     play its arrival (onScreen below). */
+  const staticMode = useStaticMode();
+  const prerendered = useWasPrerendered();
 
   useDocumentHead({
     title: 'Web & Applications — C4 Studios Perth',
@@ -496,8 +492,12 @@ export default function ServiceWeb() {
         /* Pointer-listener cleanups (magnetic CTAs, the EA torch). */
         const magnetCleanups = [];
 
+        /* Already in view on a page that arrived prerendered: leave it be. */
+        const seen = (el) => prerendered && Boolean(el) && el.getBoundingClientRect().top < window.innerHeight;
+
         /* Quiet one-shot arrival: a short rise, nothing theatrical. */
         const rise = (el, vars = {}) => {
+          if (seen(vars.trigger || el)) return;
           gsap.fromTo(
             el,
             { y: 24, opacity: 0 },
@@ -529,7 +529,7 @@ export default function ServiceWeb() {
            the two reads feel like two people browsing, not one. */
         q('.lv-work').forEach((work) => {
           const stage = work.querySelector('.lv-work-stage');
-          if (stage) {
+          if (stage && !seen(work)) {
             gsap.fromTo(
               stage,
               { scale: 0.975, filter: 'blur(3px)' },

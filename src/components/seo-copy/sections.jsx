@@ -24,6 +24,7 @@ import costGuide from '@/content/seo/pages/how-much-does-a-website-cost-perth';
 import { FirstSheet } from './Results';
 import { EXAMPLES } from './examples';
 import { PHOTOS, Photo, Credit } from './photos';
+import { PRERENDER, useHydrated } from '@/lib/hydration';
 
 const START = createPageUrl('StartProject');
 const money = (n) => `$${Math.round(n).toLocaleString('en-AU')}`;
@@ -263,9 +264,10 @@ export function Questions() {
 
 /* ── The close ───────────────────────────────────────────────────────── */
 
-const PRERENDER = typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent);
-
 export function Close() {
+  /* Bars in the static HTML and while the page hydrates, then the words. */
+  const hydrated = useHydrated();
+  const skeleton = PRERENDER || !hydrated;
   return (
     <section className="sc-close" aria-labelledby="sc-close-h">
       <div className="sc-frame sc-close-grid">
@@ -280,7 +282,7 @@ export function Close() {
         </div>
         {/* the climb, finished: the example listing alone, first */}
         <div className="sc-close-sheet">
-          <FirstSheet ex={EXAMPLES[0]} skeleton={PRERENDER} />
+          <FirstSheet ex={EXAMPLES[0]} skeleton={skeleton} />
         </div>
       </div>
     </section>

@@ -4,6 +4,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { liveSeoPages } from '@/content/seo/registry';
 import { C4SITE, ORG_INFO, PROFILES, PHONE } from '@/lib/seo';
+import { usePrerendered } from '@/lib/hydration';
 import C4Logo from './C4Logo';
 
 const groups = [
@@ -52,6 +53,9 @@ const HAIRLINE = 'rgba(255, 255, 255, 0.08)';
 const HAIRLINE_FAINT = 'rgba(255, 255, 255, 0.06)';
 
 export default function Footer() {
+  // The year the page was prerendered while it hydrates, then today's.
+  const year = usePrerendered('year', new Date().getFullYear());
+
   // "Perth & WA" group: live SEO pillars + the cost guide. Suburb pages
   // interlink contextually on-page instead — three dozen footer links
   // would read as link spam. Hidden entirely until pages go live.
@@ -207,7 +211,7 @@ export default function Footer() {
         >
           {/* The ABN went public on 15 Oct 2026, at Caleb's say-so. */}
           <span className="text-[10.5px] tabular-nums" style={{ color: 'var(--c4-footer-text-muted)' }}>
-            © {new Date().getFullYear()} C4 Studios{' '}<span aria-hidden="true">·</span>{' '}
+            © {year} C4 Studios{' '}<span aria-hidden="true">·</span>{' '}
             <span className="whitespace-nowrap">ABN {ORG_INFO.abn}</span>
           </span>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">

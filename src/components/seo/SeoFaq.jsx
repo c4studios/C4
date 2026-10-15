@@ -1,26 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import SectionLabel from '@/components/c4/SectionLabel';
+import usePrerenderOpen from '@/hooks/usePrerenderOpen';
 
-// Visually the same accordion idiom as the Support page FAQ, with one
-// SEO-critical difference: answers stay mounted in the DOM (collapsed via
-// the 0fr/1fr grid trick) so crawlers and the prerenderer see the full
-// text — the Support version conditionally mounts and ships empty answers.
+// Visually the same accordion idiom as the Support page FAQ: answers stay
+// mounted in the DOM (collapsed via the 0fr/1fr grid trick) so crawlers and
+// the prerenderer see the full text.
 //
 // Mounted is not enough on its own. A collapsed answer is a zero-height row
 // at inline opacity 0, and every answer on the registry pages shipped that way
 // in the static HTML until 15 Oct 2026 (SEO audit M9): fine for Google, but
 // hidden text to a crawler that reads the page without running it. So the
-// prerenderer captures every answer open. A browser starts them all closed,
-// exactly as before: createRoot replaces the prerendered DOM instead of
-// hydrating it, so nothing visibly collapses when the app mounts.
-const PRERENDER = typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent);
-
+// prerenderer captures every answer open. A visitor's browser draws them
+// closed from the first paint, as before, and hydrates the open HTML before
+// closing them for real (usePrerenderOpen, and data-faq-held in globals.css).
 function FaqItem({ question, answer }) {
-  const [open, setOpen] = useState(PRERENDER);
+  const [open, setOpen, held] = usePrerenderOpen();
 
   return (
-    <div className="border-b transition-colors duration-300" style={{ borderColor: 'var(--c4-border)' }}>
+    <div data-faq-held={held ? '' : undefined} className="border-b transition-colors duration-300" style={{ borderColor: 'var(--c4-border)' }}>
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
