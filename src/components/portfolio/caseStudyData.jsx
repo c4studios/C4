@@ -1561,9 +1561,13 @@ export const CASE_STUDIES = {
   'hvn-gym': {
     slug: 'hvn-gym',
     name: 'HVN CrossFit',
-    oneLiner: 'A cinematic custom Next.js site for a Port Kennedy CrossFit gym — live class booking, coach profiles, and a scroll-driven mini-game.',
+    /* South Fremantle added 15 Oct 2026 at Caleb's word ("the site itself has
+       a large south freo section too"), from the live site as read that day:
+       the home page, /locations/port-kennedy, /locations/south-fremantle and
+       /contact. The Sth Freo gym's address is in Hamilton Hill. */
+    oneLiner: 'A cinematic custom Next.js site for a CrossFit gym in Port Kennedy and South Fremantle — live class booking at both gyms, coach profiles, and a scroll-driven mini-game.',
     client: 'The HVN (HVN CrossFit) — Kristy & Bryan Barr',
-    location: 'Port Kennedy, Western Australia, Australia',
+    location: 'Port Kennedy and South Fremantle (Hamilton Hill), Western Australia, Australia',
     timeline: 'April–June 2026 (~10 weeks, scaffold to launch)',
     budget: '$5k – $10k',
     role: 'Solo — design, development, SEO, third-party integrations & deployment',
@@ -1578,7 +1582,7 @@ export const CASE_STUDIES = {
     brandColor: '#000000',
     thumbnail: '/captures/thehvncrossfit-com/desktop/01-hero.png',
 
-    overview: 'The HVN is a community-first CrossFit gym in Port Kennedy, Western Australia, founded by Kristy and Bryan Barr. C4 Studios designed and built their website from the ground up as a fast, SEO-optimised Next.js application that channels the brand\'s "where the everyday meets the elite" ethos. The build pairs a cinematic video hero, a colour-coded class timetable, coach profiles, and clear membership pricing with real integrations — a Fitbox live-booking embed, a Resend-powered contact backend, and rich local-business structured data. Its signature flourish is the bespoke "Chin Up Championship": a scroll- and touch-driven physics mini-game with a persistent personal-best, turning the homepage into something members actually share. Hardened with a strict Content-Security-Policy, security headers, and accessibility throughout, and deployed on Vercel, it gives a local gym a digital presence that punches well above its weight.',
+    overview: 'The HVN is a community-first CrossFit gym in Western Australia, founded by Kristy and Bryan Barr. Port Kennedy has been its home since day one, and a second gym, HVN South Fremantle, now runs at Hamilton Hill. C4 Studios designed and built their website from the ground up as a fast, SEO-optimised Next.js application that channels the brand\'s "where the everyday meets the elite" ethos. The build pairs a cinematic video hero, a colour-coded class timetable, coach profiles, and clear membership pricing with real integrations — a Fitbox live-booking embed, a Resend-powered contact backend, and rich local-business structured data. Its signature flourish is the bespoke "Chin Up Championship": a scroll- and touch-driven physics mini-game with a persistent personal-best, turning the homepage into something members actually share. When the second gym opened, the site grew with it: each gym has its own page with its address, hours, weekly timetable, programs, pricing and live Fitbox booking, the home page timetable switches between the two, and the contact form asks which gym a message is about. Hardened with a strict Content-Security-Policy, security headers, and accessibility throughout, and deployed on Vercel, it gives a local gym a digital presence that punches well above its weight.',
 
     screenshots: [
       { url: '/captures/thehvncrossfit-com/desktop/01-hero.png', caption: 'Home — full-bleed video hero, "Welcome to the HVN" with CrossFit · Endurance · Barbell' },
@@ -1630,6 +1634,7 @@ export const CASE_STUDIES = {
       'Security hardening (CSP + full security-header set)',
       'Accessibility pass (skip link, focus styles, ARIA, reduced-motion)',
       'Deployment & hosting setup on Vercel (custom domain, env config)',
+      'The South Fremantle gym added: a page for each gym (address, hours, timetable, programs, pricing and live booking), a two-gym timetable switch on the home page, and a gym picker on the contact form',
     ],
 
     features: [
@@ -1671,7 +1676,7 @@ export const CASE_STUDIES = {
     integrations: [
       'Fitbox — live class booking & timetable embed + member registration',
       'Resend — transactional email for the contact form (/api/contact)',
-      'Google Maps — embedded gym location on the Contact page',
+      'Google Maps — both gyms on the Contact page, one tab each',
       'Instagram (@the.hvn, @thehvncrossfit), Linktree, CrossFit affiliate listing',
       'Vercel — deployment & hosting',
       'Stripe — payment SDK scaffolded for future shop checkout (not active)',

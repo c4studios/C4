@@ -10,16 +10,20 @@
  *
  * What the faces may say. Every face has a Live site link. Only a concept
  * with a real case study entry (caseStudyData.jsx) gets a Case study link:
- * the WA Police and S1XTEEN concepts have none. Each face carries its
- * standing as its own site words it ("unofficial", "not affiliated"). The
- * police face is cropped below the concept's header so the force's crest
- * is not on it; whether the crest may appear at all is Caleb's call.
+ * the WA Police and S1XTEEN concepts have none. Every face carries the
+ * same notice: "Unofficial concept. Not affiliated with…" (S1XTEEN's own
+ * site says "not made with or for", and its face keeps those words). Caleb
+ * asked for the notice on all five on 15 Oct 2026. The Wooster and IOPA
+ * concept sites don't carry one themselves yet; those are separate repos.
+ * The police face shows the concept's header with the force's crest, which
+ * Caleb asked for the same day ("yes crest can appear and should").
  *
  * Captures. Fresh 1440x900 screenshots of each live concept on
  * 15 Oct 2026, with installed Chrome (headless), cookie banners declined
  * and floating widgets hidden, reduced to 800x500 AVIF and WebP. The
- * police face is cut from the hero below the nav, with the photo's
- * CC BY 2.0 credit line kept in frame.
+ * police face is the content column from the top of the page: the
+ * concept banner, the crest and name, the hero panel and the photo's
+ * CC BY 2.0 credit line.
  *
  *   · Idles at a slow spin (3°/s), pauses under the pointer, and
  *     hands over to drag — pointer velocity carries through release
@@ -62,7 +66,7 @@ const CONCEPTS = [
     avif: cptWapfAvif,
     live: 'https://wapf-concept.vercel.app',
     caseStudy: null,
-    alt: 'The unofficial WA Police Force concept: a police motorcyclist at a street event, beside the line “Every way in, on one page.”',
+    alt: 'The unofficial WA Police Force concept: the concept banner and the force’s crest above a police motorcyclist at a street event, beside the line “Every way in, on one page.”',
   },
   {
     key: 'barrys',
@@ -80,13 +84,14 @@ const CONCEPTS = [
   {
     key: 'wooster',
     name: 'Wooster Core',
-    standing: 'Self-initiated concept.',
+    /* Arty Design makes the Wooster Core handle (the case study entry). */
+    standing: 'Unofficial concept. Not affiliated with Arty Design.',
     line: 'A storefront built as the product’s own box. The lid is the hero, and a live 3D print is its line drawing.',
     img: cptWooster,
     avif: cptWoosterAvif,
     live: 'https://wooster-henna.vercel.app',
     caseStudy: '/CaseStudy/wooster-core',
-    alt: 'The Wooster Core concept storefront: the kitesurf handle drawn as a 3D print in white lines on a charcoal box lid.',
+    alt: 'The unofficial Wooster Core concept storefront: the kitesurf handle drawn as a 3D print in white lines on a charcoal box lid.',
   },
   {
     key: 's1xteen',
@@ -102,13 +107,13 @@ const CONCEPTS = [
   {
     key: 'iopa',
     name: 'IOPA Apparel',
-    standing: 'Self-initiated concept.',
+    standing: 'Unofficial concept. Not affiliated with IOPA.',
     line: 'Streetwear staged as a live broadcast. A tuner along the bottom edge scrubs the whole site like a radio dial.',
     img: cptIopa,
     avif: cptIopaAvif,
     live: 'https://iopa-apparel.vercel.app',
     caseStudy: '/CaseStudy/iopa',
-    alt: 'The IOPA Apparel concept: “CHOP LIFE.” in bone type over a dithered transmission orb.',
+    alt: 'The unofficial IOPA Apparel concept: “CHOP LIFE.” in bone type over a dithered transmission orb.',
   },
 ];
 

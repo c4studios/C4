@@ -176,8 +176,12 @@ const WORK = [
     slug: 'aqua-safe-plumbing',
     key: 'aqua',
     place: 'Perth, WA',
-    desktop: { avif: aquaDAvif, webp: aquaD, w: 960, h: 3600 },
-    mobile: { avif: aquaMAvif, webp: aquaM, w: 400, h: 6059 },
+    /* Shot on the plumbing panel of the hero and ended where the page's
+       water filtration section starts: filtration is NextGen Water Systems'
+       until that launches (Caleb, 15 Oct 2026: "should just be the plumbing
+       until next gen launches"). */
+    desktop: { avif: aquaDAvif, webp: aquaD, w: 960, h: 2216 },
+    mobile: { avif: aquaMAvif, webp: aquaM, w: 400, h: 4388 },
     lens: {
       src: '/lens-motion/aquasafe-promo-16x9.webp',
       w: 1920,
@@ -189,7 +193,7 @@ const WORK = [
   {
     slug: 'hvn-gym',
     key: 'hvn',
-    place: 'Port Kennedy, WA',
+    place: 'Port Kennedy & South Fremantle, WA',
     desktop: { avif: hvnDAvif, webp: hvnD, w: 960, h: 3411 },
     mobile: { avif: hvnMAvif, webp: hvnM, w: 400, h: 6059 },
     lens: {

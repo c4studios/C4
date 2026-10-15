@@ -70,6 +70,8 @@ const MOBILE_UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (
  *   stepWait                ms between the priming scroll steps; default 260
  *   ready                   a JS expression to wait for before settling (e.g. preloader gone)
  *   hide                    extra selectors to hide in every capture
+ *   click                   selectors to press once the page has settled, before any shot (the
+ *                           first match of each), e.g. a hero carousel's dot to hold one panel
  *   keepInClip              selectors the floating-widget sweep must leave alone in the clip
  *   css                     extra CSS for captures only
  *   storage                 localStorage entries to seed before the page loads, for the site's own
@@ -103,7 +105,16 @@ const SITES = {
   'transform-fremantle': { url: 'https://transformfreo.com/', folder: 'transformfreo-com' },
   /* No before: the 2017-23 captures are a Caringbah (NSW) plumber, apparently not this business,
      and render with broken CSS. */
-  'aqua-safe-plumbing': { url: 'https://aquasafeplumbing.com.au/', folder: 'aquasafeplumbing-com-au' },
+  'aqua-safe-plumbing': {
+    url: 'https://aquasafeplumbing.com.au/',
+    folder: 'aquasafeplumbing-com-au',
+    /* The hero rotates every 7 s, and its second panel is whole-home water
+       filtration, which belongs to NextGen Water Systems until that launches.
+       Caleb, 15 Oct 2026: "should just be the plumbing until next gen
+       launches". Pressing the first dot shows the plumbing panel, and once a
+       visitor has picked a panel the site stops rotating for the session. */
+    click: ['.hero-dots .hero-dot'],
+  },
   'transform-hakea': { url: 'https://transformhakea.com', folder: 'transformhakea-com' },
   gocc: {
     url: 'https://gocc.com.au/',
@@ -229,6 +240,12 @@ async function load(page, site, slug) {
   await page.waitForTimeout(site.settle ?? 2500);
   await page.addStyleTag({ content: CAPTURE_CSS + (site.css || '') });
   for (const sel of site.hide || []) await page.locator(sel).evaluateAll((els) => els.forEach((el) => el.setAttribute('data-cm-float', 'site'))).catch(() => {});
+  /* Controls to press before anything is shot, e.g. a hero carousel's dot,
+     so every capture shows the panel the site's owner wants shown. */
+  for (const sel of site.click || []) {
+    await page.locator(sel).first().click({ timeout: 4000 }).catch((e) => log(slug, `click ${sel} failed:`, e.message.split('\n')[0]));
+    await page.waitForTimeout(600);
+  }
 }
 
 /** Click the site's own Decline/Reject button if a cookie banner offers one, then hide any banner left. */
