@@ -1,9 +1,14 @@
 import { useLocation } from 'react-router-dom';
 import { Link } from '@/components/c4/SiteLink';
+import useDocumentHead from '@/hooks/useDocumentHead';
 
 export default function PageNotFound() {
     const location = useLocation();
     const pageName = location.pathname.substring(1);
+
+    /* Its own title. Without one, dist/404.html (rendered from this page by
+       scripts/prerender.mjs) carried the home page's title on every 404. */
+    useDocumentHead({ title: 'Page not found · C4 Studios', noIndex: true });
 
     return (
         <div className="min-h-screen flex items-center justify-center p-6" style={{ backgroundColor: 'var(--c4-bg)' }}>

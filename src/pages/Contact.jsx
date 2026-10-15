@@ -44,7 +44,7 @@ import useDocumentHead from '@/hooks/useDocumentHead';
 import { submitSupportRequest, SubmissionError } from '@/api/submissions';
 import TurnstileWidget from '@/components/c4/TurnstileWidget';
 import { PHONE, SITE_URL, absoluteUrl } from '@/lib/seo';
-import { breadcrumbSchema } from '@/lib/schema';
+import { breadcrumbSchema, entitySchemas } from '@/lib/schema';
 import '../components/contact/contact.css';
 
 const EMAIL = 'caleb@c4studios.com.au';
@@ -157,8 +157,10 @@ export default function Contact() {
       'Talk to C4 Studios in Perth about a website, custom software, SEO or photography. A reply within one business day.',
     path: '/Contact',
     /* The page is about the business entity defined site-wide as
-       #localbusiness (address, phone, email live there, not here). */
+       #localbusiness (address, phone, email live there, not here). It ships
+       on this page too, or the two @id references below would dangle. */
     jsonLd: [
+      ...entitySchemas(),
       breadcrumbSchema([
         { name: 'Home', path: '/' },
         { name: 'Contact', path: '/Contact' },

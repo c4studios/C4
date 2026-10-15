@@ -20,6 +20,7 @@ import { fileURLToPath } from 'node:url';
 import { liveSeoPages, validateSeoEntry } from '../src/content/seo/registry.js';
 import { STATIC_ROUTES } from '../src/lib/prerenderRoutes.js';
 import { sitePath } from '../src/lib/sitePath.js';
+import { generateOgImage } from './og-card.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(__dirname, '..', 'dist');
@@ -279,9 +280,14 @@ async function main() {
     }
   }
 
-  // Generate the OG image (1200×630)
+  // The default share card (1200×630), drawn in Archivo from dist/fonts.
   console.log('  ⏳ og-image.png');
-  await generateOgImage(browser, path.join(DIST, 'og-image.png'));
+  {
+    const card = await generateOgImage(browser, baseUrl, path.join(DIST, 'og-image.png'));
+    if (!card.archivo) console.warn('  ⚠️  og-image.png: Archivo did not load, so the card used a fallback face.');
+    if (!card.fits) console.warn('  ⚠️  og-image.png: the text overran the card even at its smallest sizes.');
+    else if (card.h1Size !== 92 || card.subSize !== 22) console.warn(`  ⚠️  og-image.png: stepped the type down to fit (headline ${card.h1Size}px, paragraph ${card.subSize}px).`);
+  }
   console.log('  ✅ og-image.png');
 
   // Generate sitemap.xml from STATIC_ROUTES + case studies
@@ -302,10 +308,11 @@ const REPO_ROOT = path.resolve(__dirname, '..');
 // `fallback` when git history is unavailable (e.g. a shallow CI checkout — see
 // fetch-depth: 0 in .github/workflows/deploy.yml — or a non-git build). Stamping
 // the true content date instead of "today" on every build keeps <lastmod> a
-// trustworthy crawl signal rather than fake daily freshness.
-function gitLastmod(relPath, fallback) {
+// trustworthy crawl signal rather than fake daily freshness. `relPaths` is one
+// path or several (the newest commit to any of them).
+function gitLastmod(relPaths, fallback) {
   try {
-    const out = execFileSync('git', ['log', '-1', '--format=%cs', '--', relPath], {
+    const out = execFileSync('git', ['log', '-1', '--format=%cs', '--', ...[].concat(relPaths)], {
       cwd: REPO_ROOT,
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'ignore'],
@@ -335,11 +342,17 @@ async function writeSitemap(outputPath) {
 
   for (const r of [...STATIC_ROUTES, ...SEO_ROUTES]) {
     if (r.includeInSitemap === false) continue;
-    // Programmatic SEO pages each have their own content module → real date.
+    // Programmatic SEO pages each have their own content module, and static
+    // pages name their source files in prerenderRoutes.js, so every page gets
+    // the date its content last changed. Until 15 Oct 2026 the static pages got
+    // the build date on every deploy (SEO audit L9).
     const seoModule = `src/content/seo/pages${r.path}.js`;
-    const lastmod = existsSync(path.join(REPO_ROOT, seoModule))
-      ? gitLastmod(seoModule, today)
-      : today;
+    const sources = r.source || (existsSync(path.join(REPO_ROOT, seoModule)) ? [seoModule] : null);
+    const missing = (sources || []).filter((p) => !existsSync(path.join(REPO_ROOT, p)));
+    if (!sources || missing.length) {
+      throw new Error(`sitemap: ${r.path} needs a source file for its lastmod${missing.length ? ` (not found: ${missing.join(', ')})` : ''}. See src/lib/prerenderRoutes.js.`);
+    }
+    const lastmod = gitLastmod(sources, today);
     urls.push({
       loc: `${SITE_ORIGIN}${r.path === '/' ? '/' : sitemapPath(r.path)}`,
       lastmod,
@@ -372,66 +385,6 @@ async function writeSitemap(outputPath) {
   ].join('\n');
 
   await writeFile(outputPath, xml, 'utf-8');
-}
-
-// ── og-image.png — 1200×630 social share card ───────────────────────
-async function generateOgImage(browser, outputPath) {
-  const html = `<!doctype html>
-<html><head><meta charset="utf-8" /><style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: 1200px; height: 630px; }
-  body {
-    background: #0F1115;
-    color: #ECE7DE;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    position: relative;
-    overflow: hidden;
-  }
-  .grain { position: absolute; inset: 0; opacity: 0.06; pointer-events: none;
-    background-image: radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px);
-    background-size: 3px 3px; }
-  .glow { position: absolute; bottom: -200px; left: 50%; transform: translateX(-50%);
-    width: 900px; height: 600px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(179,58,58,0.18), transparent 60%);
-    filter: blur(60px); }
-  .frame { position: absolute; inset: 56px; border: 1px solid rgba(236,231,222,0.08); border-radius: 14px; }
-  .label { position: absolute; top: 88px; left: 88px;
-    font-size: 14px; letter-spacing: 0.32em; text-transform: uppercase;
-    color: rgba(236,231,222,0.45); font-weight: 500; }
-  .label::before { content: ""; display: inline-block; width: 36px; height: 1px;
-    background: #B33A3A; margin-right: 14px; transform: translateY(-4px); }
-  /* Raised from 200px on 9 Oct 2026: the g in "logos" hung into the line below. */
-  h1 { position: absolute; left: 88px; right: 88px; top: 178px;
-    font-size: 92px; font-weight: 600; letter-spacing: -0.045em; line-height: 0.98;
-    max-width: 980px; }
-  .accent { color: #B33A3A; }
-  .sub { position: absolute; left: 88px; right: 88px; bottom: 180px;
-    font-size: 22px; line-height: 1.45; color: rgba(236,231,222,0.65);
-    font-weight: 400; max-width: 820px; letter-spacing: -0.005em; }
-  .footer { position: absolute; left: 88px; right: 88px; bottom: 88px;
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: 16px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: rgba(236,231,222,0.5); font-weight: 500; }
-  .brand { font-size: 22px; letter-spacing: -0.02em; text-transform: none; color: #ECE7DE; font-weight: 600; }
-</style></head><body>
-  <div class="glow"></div>
-  <div class="grain"></div>
-  <div class="frame"></div>
-  <div class="label">C4 Studios — Perth</div>
-  <h1>Websites, photography, SEO <span class="accent">&amp;</span> logos.</h1>
-  <p class="sub">A Perth design and development studio building flagship websites and software, with brand-led photography, SEO and logo design, for ambitious founders.</p>
-  <div class="footer">
-    <span class="brand">c4studios.com.au</span>
-    <span>Founder-led · Est. 2022</span>
-  </div>
-</body></html>`;
-
-  const page = await browser.newPage();
-  await page.setViewportSize({ width: 1200, height: 630 });
-  await page.setContent(html, { waitUntil: 'load' });
-  await page.screenshot({ path: outputPath, fullPage: false, type: 'png', clip: { x: 0, y: 0, width: 1200, height: 630 } });
-  await page.close();
 }
 
 main().catch((err) => {

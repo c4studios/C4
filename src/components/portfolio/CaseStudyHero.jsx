@@ -5,8 +5,24 @@ import { ExternalLink, ArrowRight, ArrowLeft } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { getTestimonialForCaseStudy } from '../testimonials/testimonialData';
 import CaseStudyTestimonial from './CaseStudyTestimonial';
+import { WebpImg } from './PortfolioMedia';
+import IMAGE_MANIFEST from '@/data/imageManifest.json';
 
 const ease = [0.22, 1, 0.36, 1];
+
+/* The cover is contained in half the width and half the height of a 21:9
+   banner, so its own shape decides which edge binds: a wide logo fills half
+   the width, a square one half the height (9/42 of the width). The banner is
+   1004px at most (1100 less 48px a side), the viewport less 96px from md and
+   less 48px below. Telling the browser this lets a phone or a 1x screen take
+   the 800px WebP. Until 15 Oct 2026 the hero loaded the PNG itself, up to
+   3.6 MB (SEO audit M6). */
+function coverSizes(src) {
+  const m = IMAGE_MANIFEST[src];
+  const share = m ? Math.min(0.5, (9 / 42) * (m.w / m.h)) : 0.5;
+  const vw = Math.round(share * 1000) / 10;
+  return `(min-width: 1100px) ${Math.round(1004 * share)}px, (min-width: 768px) calc(${vw}vw - ${Math.round(96 * share)}px), calc(${vw}vw - ${Math.round(48 * share)}px)`;
+}
 
 export default function CaseStudyHero({ study }) {
   const testimonial = getTestimonialForCaseStudy(study.slug);
@@ -132,9 +148,11 @@ export default function CaseStudyHero({ study }) {
             className={`mt-10 aspect-[21/9] overflow-hidden rounded-[3px] flex items-center justify-center ${study.backdropClassName || ''}`}
             style={study.backdropStyle || { backgroundColor: study.brandColor || 'var(--c4-bg-alt)' }}
           >
-            <img
+            <WebpImg
               src={study.cover}
               alt={`${study.name} logo`}
+              sizes={coverSizes(study.cover)}
+              priority
               className="max-h-[50%] max-w-[50%] object-contain"
             />
           </motion.div>

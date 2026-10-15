@@ -2,13 +2,19 @@
  * Industry — Websites for Automotive & Motorsport.
  * Proof: DS Racing Karts (redesign, 499+ Square parts, Canvas mini-game,
  * header film). Unique detail: the playable racing game in a parts store.
+ *
+ * Corrected 15 Oct 2026 (no figure added): the intro called DSR "a 499-part
+ * online store". 499 is how many parts came across in the original Square
+ * migration, not the shop's size: the live shop listed 8,332 products on
+ * 4 Oct 2026 (site_issues 115). The lines about the migration keep the 499.
+ * Do not give the shop a size again without a dated check of the live store.
  */
 export default {
   hero: {
     label: 'Websites for Automotive & Motorsport',
     title: ['Automotive websites with', 'actual horsepower behind them.'],
     intro: [
-      'C4 Studios builds websites for Perth’s automotive and motorsport businesses — workshops, parts suppliers, detailers, race teams and the trades around them. We rebuilt DS Racing Karts into a 499-part online store with Square integration, so we’ve already done the hard version. Sites from $1,500; stores from $3,500.',
+      'C4 Studios builds websites for Perth’s automotive and motorsport businesses — workshops, parts suppliers, detailers, race teams and the trades around them. We rebuilt DS Racing Karts into an online parts store with Square integration, so we’ve already done the hard version. Sites from $1,500; stores from $3,500.',
     ],
   },
   sections: [

@@ -55,7 +55,7 @@ import { CustomEase } from 'gsap/CustomEase';
 import Lenis from 'lenis';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
-import { serviceSchema, breadcrumbSchema } from '@/lib/schema';
+import { entitySchemas, serviceSchema, breadcrumbSchema } from '@/lib/schema';
 import {
   webPackageSections,
   webPricingGuides,
@@ -283,8 +283,10 @@ const SECTIONS = webPackageSections.map((section, i) => ({
   guide: webPricingGuides[i],
 }));
 
-/* Stable module-level ref so the head hook doesn't re-run each render. */
+/* Stable module-level ref so the head hook doesn't re-run each render. The
+   service names its provider by @id, so the business ships with it. */
 const WEB_JSONLD = [
+  ...entitySchemas(),
   serviceSchema({
     name: 'Web Design & Development',
     description:

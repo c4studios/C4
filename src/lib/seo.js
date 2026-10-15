@@ -42,7 +42,6 @@ export const PHONE = { e164: '+61479000404', display: '0479 000 404' };
 
 export const ORG_INFO = {
   name: 'C4 Studios',
-  legalName: 'C4 Studios',
   url: SITE_URL,
   logo: `${SITE_URL}/c4-logo.png`,
   // The four arms since 9 Oct 2026: web and software, C4 Lens, SEO and
@@ -62,11 +61,10 @@ export const ORG_INFO = {
   // URL here must be a real, live, C4-owned profile — this is how a search/AI
   // engine confirms "C4 Studios" is one consistent entity across the web.
   // Sourced from PROFILES so these can never drift from the visible links.
-  // The two LinkedIn entries both stay: one anchors the founder, the other the
-  // business, and Google resolves them as related rather than duplicate.
+  // The business's own profiles only. Caleb's personal LinkedIn anchors the
+  // founder, so it sits on the Person node (personSchema), not here.
   sameAs: [
     PROFILES.instagram,
-    PROFILES.linkedinPersonal,
     PROFILES.linkedinCompany,
     PROFILES.googleBusiness,
     PROFILES.facebook,

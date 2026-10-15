@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import useDocumentHead from '@/hooks/useDocumentHead';
-import { breadcrumbSchema, localBusinessSchema } from '@/lib/schema';
+import { breadcrumbSchema, entitySchemas } from '@/lib/schema';
 import { liveArticles } from '@/content/seo/registry';
 import ArticlePhoto from '@/components/seo/ArticlePhoto';
 import { SITE_URL } from '@/lib/seo';
@@ -88,7 +88,7 @@ export default function Insights() {
       'Practical writing from a working Perth studio: what websites really cost, and the things the industry would rather not say.',
     path: '/insights',
     jsonLd: [
-      localBusinessSchema(),
+      ...entitySchemas(),
       breadcrumbSchema([
         { name: 'Home', path: '/' },
         { name: 'Insights', path: '/insights' },

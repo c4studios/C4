@@ -61,7 +61,7 @@
  */
 import { useMemo } from 'react';
 import useDocumentHead from '@/hooks/useDocumentHead';
-import { breadcrumbSchema, serviceSchema } from '@/lib/schema';
+import { breadcrumbSchema, entitySchemas, serviceSchema } from '@/lib/schema';
 import { seoPackages } from '@/data/pricing';
 import Climb from '@/components/seo-copy/Climb';
 import OnPhone from '@/components/seo-copy/OnPhone';
@@ -81,6 +81,7 @@ const money = (n) => `$${Math.round(n).toLocaleString('en-AU')}`;
 
 export default function SeoCopy() {
   const jsonLd = useMemo(() => [
+    ...entitySchemas(),
     breadcrumbSchema([
       { name: 'Home', path: '/' },
       { name: 'SEO & Copywriting', path: PATH },

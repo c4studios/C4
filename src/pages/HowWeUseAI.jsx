@@ -6,7 +6,7 @@ import { createPageUrl } from '@/utils';
 import PageHero from '@/components/c4/PageHero';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import useStaticMode from '@/hooks/useStaticMode';
-import { breadcrumbSchema } from '@/lib/schema';
+import { breadcrumbSchema, entitySchemas, FOUNDER_ID } from '@/lib/schema';
 import { ORG_INFO, SITE_URL } from '@/lib/seo';
 
 const ease = [0.22, 1, 0.36, 1];
@@ -66,6 +66,7 @@ export default function HowWeUseAI() {
       'The full C4 Studios position on AI: where the founder stands personally, the parenting rule the studio runs by, and five checkable commitments. Judgement stays human and AI use is disclosed.',
     path: '/how-we-use-ai',
     jsonLd: [
+      ...entitySchemas(),
       breadcrumbSchema([
         { name: 'Home', path: '/' },
         { name: 'How we use AI', path: '/how-we-use-ai' },
@@ -79,7 +80,7 @@ export default function HowWeUseAI() {
         headline: 'How we use AI',
         description:
           'The published position of C4 Studios on where AI is used, where it stops, and what stays human — including the founder’s personal stance in full.',
-        author: { '@type': 'Person', name: ORG_INFO.founder, url: SITE_URL },
+        author: { '@id': FOUNDER_ID },
         publisher: { '@id': `${SITE_URL}/#localbusiness` },
         dateModified: '2026-08-12',
         mainEntityOfPage: `${SITE_URL}/how-we-use-ai/`,

@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { getCaseStudy } from '../components/portfolio/caseStudyData';
-import { getTestimonialForCaseStudy } from '../components/testimonials/testimonialData';
 import CaseStudyHero from '../components/portfolio/CaseStudyHero';
 import CaseStudySection from '../components/portfolio/CaseStudySection';
 import CaseStudyBullets from '../components/portfolio/CaseStudyBullets';
@@ -12,7 +11,11 @@ import DeviceScroll from '../components/portfolio/DeviceScroll';
 import BeforeAfter from '../components/portfolio/BeforeAfter';
 import { getMotion } from '../components/portfolio/portfolioMotion';
 import useDocumentHead from '@/hooks/useDocumentHead';
-import { breadcrumbSchema, caseStudyArticleSchema } from '@/lib/schema';
+import { breadcrumbSchema, caseStudyArticleSchema, caseStudyCapture, entitySchemas } from '@/lib/schema';
+
+/* The share card. Facebook, LinkedIn and X don't render an SVG og:image, so a
+   vector cover (Barry's Drink) shares the study's first capture instead. */
+const shareImage = (study) => (/\.svg$/i.test(study.cover || '') ? caseStudyCapture(study) : study.cover);
 
 export default function CaseStudy() {
   /* /CaseStudy/<slug> is the real, canonical, prerendered URL. The legacy
@@ -33,12 +36,13 @@ export default function CaseStudy() {
   const studyJsonLd = useMemo(() => {
     if (!study) return null;
     return [
+      ...entitySchemas(),
       breadcrumbSchema([
         { name: 'Home', path: '/' },
         { name: 'Portfolio', path: '/Portfolio' },
         { name: study.name, path: `/CaseStudy/${study.slug}` },
       ]),
-      caseStudyArticleSchema(study, getTestimonialForCaseStudy(study.slug)),
+      caseStudyArticleSchema(study),
     ];
   }, [study]);
 
@@ -48,7 +52,7 @@ export default function CaseStudy() {
           title: `${study.name} — ${study.tags?.[0] || 'Case Study'} Case Study`,
           description: study.oneLiner,
           path: `/CaseStudy/${study.slug}`,
-          image: study.cover,
+          image: shareImage(study),
           type: 'article',
           jsonLd: studyJsonLd,
         }

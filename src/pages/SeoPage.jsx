@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { seoPageBySlug, isArticleLike } from '@/content/seo/registry';
 import useDocumentHead from '@/hooks/useDocumentHead';
-import { localBusinessSchema, serviceSchema, faqSchema, breadcrumbSchema, articleSchema, personSchema } from '@/lib/schema';
+import { entitySchemas, serviceSchema, faqSchema, breadcrumbSchema, articleSchema } from '@/lib/schema';
 import PageNotFound from '@/lib/PageNotFound';
 import PillarTemplate from '@/components/seo/templates/PillarTemplate';
 import SuburbTemplate from '@/components/seo/templates/SuburbTemplate';
@@ -78,11 +78,12 @@ export default function SeoPage({ slug }) {
     if (isArticleLike(entry)) crumbs.push({ name: 'Insights', path: '/insights' });
     crumbs.push({ name: entry.name, path: `/${entry.slug}` });
 
-    const blocks = [localBusinessSchema(), breadcrumbSchema(crumbs)];
+    // The business and the founder ship on every one of these pages: the
+    // business node names its founder by @id, and articleSchema names him as
+    // author. A dangling @id means Google drops the author.
+    const blocks = [...entitySchemas(), breadcrumbSchema(crumbs)];
     if (isArticleLike(entry)) {
-      // personSchema() has to ship alongside it — articleSchema references the
-      // founder by @id, and a dangling @id means Google drops the author.
-      blocks.push(personSchema(), articleSchema(entry));
+      blocks.push(articleSchema(entry));
     }
     if (entry.type === 'pillar' || entry.type === 'suburb') {
       blocks.push(serviceSchema({

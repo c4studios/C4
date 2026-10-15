@@ -5,13 +5,12 @@ import Quotr from '../components/home/Quotr';
 import TestimonialsProof from '../components/home/TestimonialsProof';
 import FinalCTA from '../components/home/FinalCTA';
 import useDocumentHead from '@/hooks/useDocumentHead';
-import { organizationSchema, localBusinessSchema, websiteSchema } from '@/lib/schema';
+import { entitySchemas, websiteSchema } from '@/lib/schema';
 import '../components/home/home.css';
 
 export default function Home() {
   const jsonLd = useMemo(() => [
-    organizationSchema(),
-    localBusinessSchema(),
+    ...entitySchemas(),
     websiteSchema(),
   ], []);
 

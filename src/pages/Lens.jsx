@@ -29,10 +29,12 @@ import { MOTION_FILMS } from '../components/lens/motionFilms';
 import { reassertStoredTheme } from '../components/c4/ThemeContext';
 import '../components/lens/lens.css';
 import useDocumentHead from '@/hooks/useDocumentHead';
-import { serviceSchema, breadcrumbSchema, videoObjectSchema } from '@/lib/schema';
+import { entitySchemas, serviceSchema, breadcrumbSchema, videoObjectSchema } from '@/lib/schema';
 
-// Stable module-level ref so the head hook doesn't re-run each render.
+// Stable module-level ref so the head hook doesn't re-run each render. The
+// service and every video name the business by @id, so it ships with them.
 const LENS_JSONLD = [
+  ...entitySchemas(),
   serviceSchema({
     name: 'C4 Lens — Photography & Videography',
     description:

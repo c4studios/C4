@@ -50,7 +50,7 @@ import Lenis from 'lenis';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import useStaticMode from '@/hooks/useStaticMode';
-import { breadcrumbSchema, organizationSchema, personSchema } from '@/lib/schema';
+import { breadcrumbSchema, entitySchemas, profilePageSchema } from '@/lib/schema';
 import { NOTEBOOK, CARD, SHEET, BIBLE } from '../components/about/plates';
 import { DANIEL_3, DANIEL_4 } from '../components/about/daniel';
 import '../components/about/bench-tour.css';
@@ -444,8 +444,8 @@ function Still({ still, open }) {
 
 export default function About() {
   const jsonLd = useMemo(() => [
-    organizationSchema(),
-    personSchema(),
+    ...entitySchemas(),
+    profilePageSchema('/About'),
     breadcrumbSchema([
       { name: 'Home', path: '/' },
       { name: 'About', path: '/About' },

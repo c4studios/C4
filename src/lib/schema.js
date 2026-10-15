@@ -4,53 +4,32 @@
  * Each function returns a plain JSON-LD object suitable for passing into
  * useDocumentHead's `jsonLd` prop. Combine multiple by passing an array.
  */
-import { ORG_INFO, SITE_URL, absoluteUrl } from '@/lib/seo';
+import { ORG_INFO, PROFILES, SITE_URL, absoluteUrl } from '@/lib/seo';
 
-export function organizationSchema() {
+/* The two entities every page's markup points back to. Each names the other
+   by @id, and an @id only resolves against a node on the same page, so a page
+   that references either one ships both: use entitySchemas(). A dangling @id
+   is dropped, and the author or publisher it named goes with it. */
+export const BUSINESS_ID = `${SITE_URL}/#localbusiness`;
+export const FOUNDER_ID = `${SITE_URL}/#founder`;
+
+/* One node for the business (SEO audit M2, 15 Oct 2026). It used to be two,
+   an Organization (#organization) and a ProfessionalService (#localbusiness)
+   with no link between them, so Google's Rich Results Test listed two separate
+   "C4 Studios". ProfessionalService is deprecated in schema.org, and
+   LocalBusiness is an Organization, so this one node carries what both said.
+   No legalName: C4 Studios is a registered business name, and the legal
+   entity behind it is a sole trader. */
+export function localBusinessSchema() {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
-    '@id': `${SITE_URL}/#organization`,
+    '@type': 'LocalBusiness',
+    '@id': BUSINESS_ID,
     name: ORG_INFO.name,
-    legalName: ORG_INFO.legalName,
     url: SITE_URL,
     logo: ORG_INFO.logo,
     image: ORG_INFO.logo,
     description: ORG_INFO.description,
-    foundingDate: ORG_INFO.foundingDate,
-    founder: { '@type': 'Person', name: ORG_INFO.founder },
-    email: ORG_INFO.email,
-    areaServed: ORG_INFO.areaServed.map((name) => ({ '@type': 'Place', name })),
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Perth',
-      addressRegion: 'WA',
-      addressCountry: ORG_INFO.country,
-    },
-    sameAs: ORG_INFO.sameAs,
-  };
-}
-
-export function personSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    '@id': `${SITE_URL}/#founder`,
-    name: ORG_INFO.founder,
-    jobTitle: 'Founder',
-    worksFor: { '@id': `${SITE_URL}/#organization` },
-    url: absoluteUrl('/About'),
-  };
-}
-
-export function localBusinessSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'ProfessionalService',
-    '@id': `${SITE_URL}/#localbusiness`,
-    name: ORG_INFO.name,
-    image: ORG_INFO.logo,
-    url: SITE_URL,
     email: ORG_INFO.email,
     telephone: ORG_INFO.telephone,
     sameAs: ORG_INFO.sameAs,
@@ -62,7 +41,7 @@ export function localBusinessSchema() {
       addressCountry: ORG_INFO.country,
     },
     areaServed: ORG_INFO.areaServed.map((name) => ({ '@type': 'Place', name })),
-    founder: { '@type': 'Person', name: ORG_INFO.founder },
+    founder: { '@id': FOUNDER_ID },
     foundingDate: ORG_INFO.foundingDate,
     // AI and workflow automation went to C4Site with C4i on 9 Oct 2026. Logo
     // design came in the same day as the fourth arm, and brand identity moved
@@ -83,6 +62,40 @@ export function localBusinessSchema() {
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'SEO and copywriting' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Logo design: logos, brand essentials and full brand identities' } },
     ],
+  };
+}
+
+/* The founder. The headshot is the one /About shows, captioned with his
+   name, and the personal LinkedIn is his profile, not the business's, so it
+   anchors this node rather than the business sameAs. */
+export function personSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': FOUNDER_ID,
+    name: ORG_INFO.founder,
+    jobTitle: 'Founder',
+    image: absoluteUrl('/founder-headshot.png'),
+    url: absoluteUrl('/About'),
+    worksFor: { '@id': BUSINESS_ID },
+    sameAs: [PROFILES.linkedinPersonal],
+  };
+}
+
+/** The business and its founder together. Spread it into any page's jsonLd
+ *  whose blocks point at either @id. */
+export function entitySchemas() {
+  return [localBusinessSchema(), personSchema()];
+}
+
+/* /About is the page that identifies the founder: the Person's url, and so
+   the author link behind every article and case study. */
+export function profilePageSchema(path) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    url: absoluteUrl(path),
+    mainEntity: { '@id': FOUNDER_ID },
   };
 }
 
@@ -135,38 +148,41 @@ export function breadcrumbSchema(items) {
   };
 }
 
-export function caseStudyArticleSchema(study, testimonial) {
-  const schema = {
+/** A case study's first capture of the site: the first desktop screenshot,
+ *  which for most studies is the home page hero. */
+export function caseStudyCapture(study) {
+  return study?.desktopScreenshots?.[0]?.url || study?.screenshots?.[0]?.url || study?.thumbnail || null;
+}
+
+/* The case-study write-up, by the founder, published by the business. Ship
+   entitySchemas() beside it so both @ids resolve.
+
+   The image is the first capture rather than the cover, because every study
+   has captures and ten have no cover.
+
+   No datePublished. caseStudyData.jsx holds no publication date for any study,
+   and the two exact dates it does hold are build windows (Sharp Bricklaying,
+   As He Leads), not the day the write-up went up: As He Leads went live on
+   4 Sep 2026 and its case study was added on 5 Oct. Add a real one per study,
+   or none.
+
+   No Review either (SEO audit L2, 15 Oct 2026). A testimonial about C4's own
+   work, marked up on C4's own site, is a self-serving review to Google. The
+   testimonial is still on the page, word for word; only the markup went. */
+export function caseStudyArticleSchema(study) {
+  const capture = caseStudyCapture(study);
+  return {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: `${study.name}: ${study.tags?.[0] || 'case study'}`,
     description: study.oneLiner,
-    image: study.cover ? absoluteUrl(study.cover) : undefined,
-    author: { '@type': 'Organization', name: ORG_INFO.name, url: SITE_URL },
-    publisher: { '@id': `${SITE_URL}/#localbusiness` },
+    image: capture ? absoluteUrl(capture) : undefined,
+    author: { '@id': FOUNDER_ID },
+    publisher: { '@id': BUSINESS_ID },
     about: study.client,
     keywords: (study.tags || []).join(', '),
     mainEntityOfPage: absoluteUrl(`/CaseStudy/${study.slug}`),
   };
-
-  // Attach the matching client testimonial as a Review of the delivered work.
-  // No numeric ratingValue is invented — the testimonials are unqualified
-  // praise but were never given as star ratings, so we publish the review body
-  // and author only. (Star rich-result snippets come from Google Business
-  // Profile reviews, not self-published testimonials.)
-  if (testimonial?.quote) {
-    schema.review = {
-      '@type': 'Review',
-      reviewBody: testimonial.quote,
-      author: { '@type': 'Person', name: testimonial.name },
-      itemReviewed: {
-        '@type': 'CreativeWork',
-        name: `${study.name} — website by C4 Studios`,
-      },
-    };
-  }
-
-  return schema;
 }
 
 /**

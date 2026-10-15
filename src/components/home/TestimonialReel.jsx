@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ArrowUpRight, Pause } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { getCaseStudy } from '../portfolio/caseStudyData';
+import { WebpImg } from '../portfolio/PortfolioMedia';
 
 const AUTOPLAY_INTERVAL = 7000;
 const RING_SLOTS = 5;
@@ -202,9 +203,12 @@ export default function TestimonialReel({ testimonials = [] }) {
               >
                 {media.centerSrc && (
                   media.centerIsLogo ? (
-                    <img
+                    /* The cover at about 100px, so the 800px WebP rather than
+                       the PNG (the Transform Fremantle cover was 1.2 MB). */
+                    <WebpImg
                       src={media.centerSrc}
                       alt={`${media.name} logo`}
+                      sizes="108px"
                       className="max-h-[62%] max-w-[68%] select-none object-contain"
                       draggable={false}
                     />

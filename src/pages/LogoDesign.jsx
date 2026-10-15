@@ -63,7 +63,7 @@
  */
 import { useMemo } from 'react';
 import useDocumentHead from '@/hooks/useDocumentHead';
-import { breadcrumbSchema, serviceSchema } from '@/lib/schema';
+import { breadcrumbSchema, entitySchemas, serviceSchema } from '@/lib/schema';
 import Exam from '@/components/logo-design/Exam';
 import OneOrTwo from '@/components/logo-design/OneOrTwo';
 import Run from '@/components/logo-design/Run';
@@ -105,6 +105,7 @@ const STEPS = [
 
 export default function LogoDesign() {
   const jsonLd = useMemo(() => [
+    ...entitySchemas(),
     breadcrumbSchema([
       { name: 'Home', path: '/' },
       { name: 'Logo Design', path: PATH },

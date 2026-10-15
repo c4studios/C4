@@ -141,7 +141,9 @@ const INDUSTRIES = [
     slug: 'websites-for-churches', type: 'industry', status: 'live', phase: 3,
     name: 'Websites for Churches & Ministries',
     title: 'Church Websites & Media Systems Perth | C4 Studios',
-    description: 'Websites for churches and ministries by an occasional pastor: service times visitors find fast, sustainable sermon libraries, giving that works.',
+    // Not "pastor": that's a title Caleb doesn't hold. He preaches occasionally,
+    // as the page itself says (15 Oct 2026).
+    description: 'Church and ministry websites by a founder who preaches occasionally: service times visitors find fast, sustainable sermon libraries, giving that works.',
     priority: 0.8, changefreq: 'monthly',
     links: { pillars: ['web-design-perth', 'photo-video-perth'], comparisons: ['how-much-does-a-website-cost-perth'] },
   },
@@ -157,7 +159,9 @@ const INDUSTRIES = [
     slug: 'websites-for-automotive', type: 'industry', status: 'live', phase: 4,
     name: 'Websites for Automotive & Motorsport',
     title: 'Websites for Automotive & Motorsport | C4 Studios',
-    description: 'Websites and stores for Perth workshops, parts suppliers and race teams — from the studio behind a 499-part karting store with Square integration.',
+    // No product count. 499 was the original Square migration, and the live
+    // DS Racing shop listed 8,332 products on 4 Oct 2026 (site_issues 115).
+    description: 'Websites and stores for Perth workshops, parts suppliers and race teams — from the studio behind a karting parts store with Square integration.',
     priority: 0.8, changefreq: 'monthly',
     links: { pillars: ['web-design-perth', 'web-development-perth'], comparisons: ['how-much-does-a-website-cost-perth'] },
   },
