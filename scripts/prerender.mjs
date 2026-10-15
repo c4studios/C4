@@ -160,13 +160,23 @@ async function main() {
   const { server, port } = await createStaticServer(DIST);
   const baseUrl = `http://127.0.0.1:${port}`;
 
-  // CI environments (e.g. Cloudflare Pages builds) don't ship Playwright
-  // browser binaries. The SPA still works without prerendered HTML, so
-  // degrade to sitemap-only instead of failing the whole build.
+  // Some CI builds (the Vercel preview) don't ship Playwright browser
+  // binaries. The SPA still works without prerendered HTML, so they degrade
+  // to sitemap-only instead of failing the whole build.
   let browser;
   try {
     browser = await chromium.launch({ headless: true });
   } catch (err) {
+    // Cloudflare Pages' own git build is the exception. Its shell went live
+    // in production for a few minutes on every push until the GitHub Actions
+    // deploy replaced it (site_issues 146). Failing here keeps the last good
+    // deployment live; .github/workflows/deploy.yml deploys production.
+    if (process.env.CF_PAGES === '1') {
+      console.error('❌ No Playwright browser in the Cloudflare Pages build. Refusing to ship the unprerendered shell; the GitHub Actions workflow deploys production.');
+      console.error(`    (${String(err).split('\n')[0]})`);
+      server.close();
+      process.exit(1);
+    }
     console.warn('⚠️  No Playwright browser available — skipping HTML prerender + OG image.');
     console.warn(`    (${String(err).split('\n')[0]})`);
     console.log('  ⏳ sitemap.xml');
