@@ -3,6 +3,13 @@
  * Proof: Arty Design (maker/engraving studio, per brief) + DS Racing
  * Karts (499 Square products). Unique detail: the product-data-readiness
  * truth — the spreadsheet is the real project.
+ *
+ * 15 Oct 2026: the DS Racing proof card called it "a 499-product store". 499
+ * is how many came across in the original Square migration, and the intro and
+ * the Square answer keep it because they're about that migration. The live
+ * shop (www.dsracingkarts.com.au/shop, public page) showed 8,330 products on
+ * 15 Oct 2026, so the card says "over 8,000", which stays true as the
+ * catalogue grows. Check the live shop before raising it.
  */
 export default {
   hero: {
@@ -41,7 +48,7 @@ export default {
       heading: 'Stores and product work we can point to',
       cases: [
         { name: 'Arty Design', summary: 'Ecommerce work for a maker and engraving studio — personalised products with the variant and customisation handling that makers actually need.', tag: 'Maker store' },
-        { name: 'DS Racing Karts', summary: 'A 499-product store migrated from a Square catalogue with full checkout — proof the data-heavy version is a solved problem here.', href: '/CaseStudy/ds-racing-karts', tag: 'Catalogue migration' },
+        { name: 'DS Racing Karts', summary: 'A store with full checkout, migrated from a Square catalogue and now listing over 8,000 products — proof the data-heavy version is a solved problem here.', href: '/CaseStudy/ds-racing-karts', tag: 'Catalogue migration' },
       ],
     },
     {

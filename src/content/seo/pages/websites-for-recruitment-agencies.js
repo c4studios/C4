@@ -2,7 +2,9 @@
  * Industry — Websites for Recruitment Agencies.
  * Unique detail: the dual-audience (candidates AND clients) structure.
  *
- * 9 Oct 2026: Lead Engine moved to the sister company, C4Site, with C4i.
+ * 9 Oct 2026: Lead Engine moved to the sister business, C4Site, with C4i.
+ * (15 Oct 2026: the pointer said "sister company". C4Site is a sister
+ * business, never a company, on this site.)
  * Out came the Lead Engine pitch, its FAQ entry (the FAQ schema is built
  * from `faqs`, so it went from there too) with its $1,950 setup and $250 a
  * month, the "tell you straight if Lead Engine fits" CTA line, and both
@@ -55,7 +57,7 @@ export default {
       label: 'Beyond the site',
       heading: 'What about the outbound side?',
       body: [
-        'A website converts the demand that finds you. Recruitment mostly runs on demand you go and find, and for that side our sister company, C4Site, runs [Lead Engine](https://c4site.com.au/lead-engine/).',
+        'A website converts the demand that finds you. Recruitment mostly runs on demand you go and find, and for that side our sister business, C4Site, runs [Lead Engine](https://c4site.com.au/lead-engine/).',
       ],
     },
     {

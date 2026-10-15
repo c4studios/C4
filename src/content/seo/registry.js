@@ -159,9 +159,11 @@ const INDUSTRIES = [
     slug: 'websites-for-automotive', type: 'industry', status: 'live', phase: 4,
     name: 'Websites for Automotive & Motorsport',
     title: 'Websites for Automotive & Motorsport | C4 Studios',
-    // No product count. 499 was the original Square migration, and the live
-    // DS Racing shop listed 8,332 products on 4 Oct 2026 (site_issues 115).
-    description: 'Websites and stores for Perth workshops, parts suppliers and race teams — from the studio behind a karting parts store with Square integration.',
+    // 499 was the original Square migration (site_issues 115). The live DS
+    // Racing shop (www.dsracingkarts.com.au/shop, public page) showed 8,330
+    // products on 15 Oct 2026, and "over 8,000" stays true as it grows.
+    // Check the live shop before raising it.
+    description: 'Websites and stores for Perth workshops, parts suppliers and race teams — from the studio behind a karting parts store that lists over 8,000 products.',
     priority: 0.8, changefreq: 'monthly',
     links: { pillars: ['web-design-perth', 'web-development-perth'], comparisons: ['how-much-does-a-website-cost-perth'] },
   },

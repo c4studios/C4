@@ -50,24 +50,36 @@ function useReelMedia(testimonial) {
   };
 }
 
-/** Cross-fades whenever `src` changes, keeping the frame size fixed. */
-function CrossfadeImage({ src, alt, className = '', imgClassName = '', reduced }) {
+/* What each frame measures, for the WebP set's `sizes` (15 Oct 2026). The
+   ring tiles are clamp(88px, 25vw, 128px) wide and the centre disc
+   clamp(116px, 32vw, 158px), so even at 3x the 800px WebP covers them. They
+   used to load the full PNG captures, up to 2.9 MB each. */
+const RING_SIZES = '(min-width: 512px) 128px, (min-width: 352px) 25vw, 88px';
+const CENTRE_SIZES = '(min-width: 494px) 158px, (min-width: 363px) 32vw, 116px';
+
+/** Cross-fades whenever `src` changes, keeping the frame size fixed. The
+ *  fade runs on a wrapper because WebpImg's <picture> is display: contents,
+ *  which has no box to fade. */
+function CrossfadeImage({ src, alt, sizes, className = '', imgClassName = '', reduced }) {
   return (
     <div className={`relative overflow-hidden ${className}`}>
       <AnimatePresence initial={false}>
-        <motion.img
+        <motion.div
           key={src}
-          src={src}
-          alt={alt}
-          loading="lazy"
-          decoding="async"
-          draggable={false}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: reduced ? 0.001 : 0.7, ease }}
-          className={`absolute inset-0 h-full w-full select-none ${imgClassName}`}
-        />
+          className="absolute inset-0"
+        >
+          <WebpImg
+            src={src}
+            alt={alt}
+            sizes={sizes}
+            draggable={false}
+            className={`h-full w-full select-none ${imgClassName}`}
+          />
+        </motion.div>
       </AnimatePresence>
     </div>
   );
@@ -172,6 +184,7 @@ export default function TestimonialReel({ testimonials = [] }) {
                       <CrossfadeImage
                         src={src}
                         alt=""
+                        sizes={RING_SIZES}
                         reduced={reduced}
                         className="h-[clamp(58px,17vw,84px)] w-[clamp(88px,25vw,128px)] rounded-[6px]"
                         imgClassName="object-cover"
@@ -216,6 +229,7 @@ export default function TestimonialReel({ testimonials = [] }) {
                     <CrossfadeImage
                       src={media.centerSrc}
                       alt={`${media.name}`}
+                      sizes={CENTRE_SIZES}
                       reduced={reduced}
                       className="h-full w-full"
                       imgClassName="object-cover"

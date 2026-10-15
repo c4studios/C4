@@ -2,6 +2,12 @@
  * Suburb — Web Design in Victoria Park.
  * Local grounding: the Albany Highway dining strip's density and
  * multicultural character; the differentiation problem; the motor mile.
+ *
+ * 15 Oct 2026: the motor-mile answer called DS Racing "a 499-product parts
+ * store". 499 is how many came across in the original Square migration. The
+ * live shop (www.dsracingkarts.com.au/shop, public page) showed 8,330 products
+ * on 15 Oct 2026, so the answer says "over 8,000", which stays true as the
+ * catalogue grows. Check the live shop before raising it.
  */
 export default {
   hero: {
@@ -56,7 +62,7 @@ export default {
     },
     {
       q: 'What about the car yards and workshops up the highway?',
-      a: 'Same studio, different playbook: automotive sites from $1,500 with inventory, booking and trade-in enquiry flows handled properly. We’ve built a 499-product parts store for the karting world, so the motor mile’s stock-driven needs are familiar ground.',
+      a: 'Same studio, different playbook: automotive sites from $1,500 with inventory, booking and trade-in enquiry flows handled properly. We’ve built a parts store for the karting world that now lists over 8,000 products, so the motor mile’s stock-driven needs are familiar ground.',
     },
   ],
   cta: {

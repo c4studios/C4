@@ -8,13 +8,19 @@
  * migration, not the shop's size: the live shop listed 8,332 products on
  * 4 Oct 2026 (site_issues 115). The lines about the migration keep the 499.
  * Do not give the shop a size again without a dated check of the live store.
+ *
+ * Later on 15 Oct 2026 Caleb asked for the current figure, so the intro has
+ * one again, from a dated check: the live shop (www.dsracingkarts.com.au/shop,
+ * public page) showed 8,330 products on 15 Oct 2026. It says "over 8,000",
+ * which stays true as the catalogue grows. Check the live shop before raising
+ * it. The registry description carries the same figure.
  */
 export default {
   hero: {
     label: 'Websites for Automotive & Motorsport',
     title: ['Automotive websites with', 'actual horsepower behind them.'],
     intro: [
-      'C4 Studios builds websites for Perth’s automotive and motorsport businesses — workshops, parts suppliers, detailers, race teams and the trades around them. We rebuilt DS Racing Karts into an online parts store with Square integration, so we’ve already done the hard version. Sites from $1,500; stores from $3,500.',
+      'C4 Studios builds websites for Perth’s automotive and motorsport businesses — workshops, parts suppliers, detailers, race teams and the trades around them. We rebuilt DS Racing Karts into an online parts store with Square integration. It now lists over 8,000 products, so we’ve already done the hard version. Sites from $1,500; stores from $3,500.',
     ],
   },
   sections: [

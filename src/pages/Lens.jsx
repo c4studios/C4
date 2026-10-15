@@ -30,6 +30,7 @@ import { reassertStoredTheme } from '../components/c4/ThemeContext';
 import '../components/lens/lens.css';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { entitySchemas, serviceSchema, breadcrumbSchema, videoObjectSchema } from '@/lib/schema';
+import { ORG_INFO } from '@/lib/seo';
 
 // Stable module-level ref so the head hook doesn't re-run each render. The
 // service and every video name the business by @id, so it ships with them.
@@ -761,7 +762,6 @@ export default function Lens() {
           <a href="#work">Our Work</a>
           <a href="#services">Services</a>
           <a href="#packages">Packages</a>
-          <a href="#caleb">About</a>
           <a href="#contact" className="book">Book <span className="btn-arrow">→</span></a>
         </div>
         <button
@@ -786,7 +786,6 @@ export default function Lens() {
           <a href="#work" onClick={() => setMobileMenuOpen(false)}>Our Work</a>
           <a href="#services" onClick={() => setMobileMenuOpen(false)}>Services</a>
           <a href="#packages" onClick={() => setMobileMenuOpen(false)}>Packages</a>
-          <a href="#caleb" onClick={() => setMobileMenuOpen(false)}>About</a>
           <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="book">Book a Call</a>
         </div>
       )}
@@ -1119,37 +1118,11 @@ export default function Lens() {
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â• CALEB — WITH PHOTO â•â•â•â•â•â•â•â• */}
-      <section className="slab dark caleb" id="caleb">
-        <div className="caleb-inner">
-          <div className="caleb-left lr lr-wipe">
-            <div className="caleb-photo-wrap">
-              <img
-                src="/Caleb%20Walker%20-%20C4%20Lens%20Profile.jpeg"
-                alt="Caleb Walker — Lead Photographer & Videographer at C4 Lens"
-                loading="lazy"
-              />
-              <div className="caleb-photo-meta">
-                <span className="role">Lead Photographer &amp; Videographer</span>
-                <span className="loc">Perth, W.A.</span>
-              </div>
-            </div>
-          </div>
-          <div className="caleb-right">
-            <h2 className="lr" style={{ '--lr-delay': '70ms' }}>CALEB<br /><em>Walker.</em></h2>
-            <blockquote className="caleb-quote lr" style={{ '--lr-delay': '140ms' }}>&ldquo;If the brand has weight,<br />the visuals should too.&rdquo;</blockquote>
-            <p className="lr" style={{ '--lr-delay': '200ms' }}>Caleb leads C4 Lens, the photography, videography and editing arm of C4 Studios. Commercial brand shoots, corporate headshots, events and social content, <strong>shot and edited by the same person</strong>.</p>
-            <p className="lr" style={{ '--lr-delay': '250ms' }}>His drone work shows the site, the building or the event from the angle nobody on the ground gets. His editing turns the raw footage into <strong>brand films, reels and launch content</strong>.</p>
-            <p className="lr" style={{ '--lr-delay': '300ms' }}>Businesses bring Caleb in to replace stock imagery with pictures of their own people and premises, so a client feels they know the place before the first meeting.</p>
-            <p className="lr caleb-base" style={{ '--lr-delay': '350ms' }}>
-              Based in Perth, Western Australia. Available nationally.
-            </p>
-            <div className="lr" style={{ '--lr-delay': '400ms', marginTop: '24px' }}>
-              <a href="#contact" className="btn primary"><span className="d"></span>Work with Caleb <span className="btn-arrow">→</span></a>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* A profile section stood here until 15 Oct 2026. It came off at
+          Caleb's call with no profile in its place, so the page names no
+          one; the studio's About page says who does the work. Its About
+          links in the nav and its styles went with it, and the ending below
+          says "Tell us" where it said "Tell Caleb". */}
 
       {/* The ending: the word LENS, and a camera that goes through it. */}
       <div id="contact" className="lens-ending">
@@ -1168,7 +1141,7 @@ export default function Lens() {
           >
             <div className="lens-portal-content">
               <h2>READY TO BE<br /><em>seen</em>?</h2>
-              <p className="sub">Tell Caleb what you&rsquo;re making and where the pictures need to end up.</p>
+              <p className="sub">Tell us what you&rsquo;re making and where the pictures need to end up.</p>
               <Link to={createPageUrl('StartProject') + '?service=lens'} className="btn lens-portal-btn">
                 <span className="d"></span>Get in touch <span className="btn-arrow">→</span>
               </Link>
@@ -1177,7 +1150,7 @@ export default function Lens() {
         ) : (
           <section className="cta-section">
             <h2 className="lr" style={{ '--lr-delay': '80ms' }}>READY TO BE<br /><em>seen</em>?</h2>
-            <div className="sub lr" style={{ '--lr-delay': '150ms' }}>Tell Caleb what you&rsquo;re making and where the pictures need to end up.</div>
+            <div className="sub lr" style={{ '--lr-delay': '150ms' }}>Tell us what you&rsquo;re making and where the pictures need to end up.</div>
             <div className="cta-btns lr" style={{ '--lr-delay': '220ms' }}>
               <Link to={createPageUrl('StartProject') + '?service=lens'} className="btn primary">
                 <span className="d"></span>Get in touch <span className="btn-arrow">→</span>
@@ -1195,8 +1168,12 @@ export default function Lens() {
             <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>C4 Studios</Link> · Perth W.A. · © {new Date().getFullYear()}
           </div>
         </div>
-        <div style={{ textAlign: 'right' }}>
-          <div>ABN AVAILABLE ON REQUEST</div>
+        {/* Right-aligned in lens.css, so the phone rule there can centre it.
+            It was an inline style, which beat that rule. That didn't show
+            while both lines were 24 characters; the ABN line is shorter. */}
+        <div>
+          {/* Published 15 Oct 2026, at Caleb's say-so (src/lib/seo.js). */}
+          <div>ABN {ORG_INFO.abn}</div>
           <div style={{ marginTop: '6px', color: 'var(--ink-2)' }}>Perth, Western Australia</div>
         </div>
       </footer>

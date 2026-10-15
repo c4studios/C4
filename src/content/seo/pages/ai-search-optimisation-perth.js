@@ -4,6 +4,19 @@
  * Google's AI Overviews. C4 practises this on its own site, so the page is
  * literally its own proof — prerendered HTML, Organization/Person/Service/FAQ
  * structured data, an llms.txt, and an answer-first 58-page build.
+ *
+ * 15 Oct 2026: the $400 AI Visibility Check came off, at Caleb's call ("take
+ * it off"). It was in the pricing section, the ChatGPT FAQ answer and
+ * llms.txt, and pricing.js never listed it. The closing call to action offered
+ * a free first look at what the assistants say, the same check in miniature;
+ * it now points at the SEO packages and the start form. Don't add the check
+ * back unless pricing.js lists it. The SEO one-off from $400 is a different
+ * offer (pricing.js seoPackages, Core) and stays.
+ *
+ * The same day the pricing section gained a pointer to C4Site, the sister
+ * business, in C4Site's own words (c4site-website src/data/site.ts,
+ * SITE.description). Say nothing else about C4Site here, and call it a
+ * sister business, never a company.
  */
 export default {
   hero: {
@@ -83,8 +96,8 @@ export default {
       label: 'What it costs',
       heading: 'How we price it',
       body: [
-        'For most Perth businesses GEO isn’t a separate invoice — it’s built into the SEO work, because the foundations overlap almost entirely. Our SEO packages start at $400 for a one-off or $249 a month for ongoing work, and the AI-search foundations come baked in.',
-        'If you just want to know where you stand, an AI Visibility Check is a $400 one-off: we prompt the major assistants as your customers would, show you exactly what they say about your business today, and hand back a prioritised list of what would move it. No retainer required, and it credits toward ongoing work if you decide to go further.',
+        'For most Perth businesses GEO isn’t a separate invoice — it’s built into the SEO work, because the foundations overlap almost entirely. Our [SEO packages](/seo-and-copywriting#prices) start at $400 for a one-off or $249 a month for ongoing work, and the AI-search foundations come baked in.',
+        'For AI training or automation, talk to our sister business. [C4Site](https://c4site.com.au/) runs hands-on AI training for Perth schools and workplaces, and sets up AI automation for businesses.',
       ],
     },
   ],
@@ -103,7 +116,7 @@ export default {
     },
     {
       q: 'How do I check whether my business appears in ChatGPT?',
-      a: 'Ask it the way a customer would — “best [what you do] in Perth”, “who should I hire for X in [suburb]” — across ChatGPT, Perplexity and Gemini, and note whether you’re named and what it says. Repeat monthly to track movement. Our AI Visibility Check does this for you and hands back a plan.',
+      a: 'Ask it the way a customer would — “best [what you do] in Perth”, “who should I hire for X in [suburb]” — across ChatGPT, Perplexity and Gemini, and note whether you’re named and what it says. Repeat monthly to track movement.',
     },
     {
       q: 'How long does AI search optimisation take to work?',
@@ -115,7 +128,7 @@ export default {
     },
   ],
   cta: {
-    heading: 'Want to know what ChatGPT says about you?',
-    text: 'Send your web address. We’ll ask the major AI assistants what they tell customers about your business today — and where the gaps are. First look is free.',
+    heading: 'Want ChatGPT to know who you are?',
+    text: 'That work sits inside our SEO packages, from $400 one-off or $249 a month. Send your web address and what you sell, and we’ll come back with the one that fits.',
   },
 };

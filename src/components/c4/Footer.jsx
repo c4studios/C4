@@ -3,7 +3,7 @@ import { Link } from '@/components/c4/SiteLink';
 import { ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { liveSeoPages } from '@/content/seo/registry';
-import { PROFILES, PHONE } from '@/lib/seo';
+import { C4SITE, ORG_INFO, PROFILES, PHONE } from '@/lib/seo';
 import C4Logo from './C4Logo';
 
 const groups = [
@@ -27,11 +27,10 @@ const groups = [
       { label: 'SEO & Copywriting', page: 'SeoCopy' },
       // The fourth arm from 9 Oct 2026.
       { label: 'Logo Design', page: 'LogoDesign' },
-      // C4i, Private AI and Lead Engine went to C4Site on 9 Oct 2026; the
-      // sister link below is the way there.
-      // C4Site is its own business (8 Oct 2026) on its own domain (live
-      // 9 Oct). One sister link, worded per D2, kept last.
-      { label: 'C4Site, by C4', href: 'https://c4site.com.au/' },
+      // C4i, Private AI and Lead Engine went to C4Site on 9 Oct 2026. The
+      // "C4Site, by C4" link (D2) sat here until 15 Oct 2026; it's the
+      // Sister business entry at the end of the index now, so this list is
+      // only what C4 Studios sells.
     ]
   },
   {
@@ -64,9 +63,9 @@ export default function Footer() {
     ? [...groups, { title: 'Perth & WA', links: seoLinks }]
     : groups;
 
-  // Index columns adapt to the live group count. Literal classes so the
-  // Tailwind JIT keeps them.
-  const n = footerGroups.length;
+  // Index columns adapt to the live group count, plus one for the Sister
+  // business entry. Literal classes so the Tailwind JIT keeps them.
+  const n = footerGroups.length + 1;
   const lgCols = n >= 5 ? 'lg:grid-cols-5' : n === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
 
   const renderLink = (l) => {
@@ -177,6 +176,25 @@ export default function Footer() {
               </ul>
             </div>
           ))}
+
+          {/* The sister business, last in the index (15 Oct 2026, Caleb: the
+              site can point to C4Site's work and link to it). The link keeps
+              its D2 wording. The sentence is C4Site's own, from C4SITE in
+              src/lib/seo.js, and nothing else is said about it. It takes
+              the full width on a phone so the sentence doesn't run down a
+              half column. */}
+          <div className="col-span-2 sm:col-span-1 pt-4" style={{ borderTop: `1px solid ${HAIRLINE}` }}>
+            <h4
+              className="text-[10.5px] uppercase tracking-[0.22em] font-medium mb-4"
+              style={{ color: 'var(--c4-footer-text-muted)' }}
+            >
+              Sister business
+            </h4>
+            {renderLink({ label: 'C4Site, by C4', href: C4SITE.url })}
+            <p className="mt-3 max-w-[46ch] text-[12px] leading-[1.6]" style={{ color: 'var(--c4-footer-text-dim)' }}>
+              {C4SITE.description}
+            </p>
+          </div>
         </div>
 
         {/* Bottom bar. Its foot keeps clear of the fixed Support pill
@@ -187,8 +205,10 @@ export default function Footer() {
           className="pt-5 pb-[76px] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
           style={{ borderTop: `1px solid ${HAIRLINE_FAINT}` }}
         >
+          {/* The ABN went public on 15 Oct 2026, at Caleb's say-so. */}
           <span className="text-[10.5px] tabular-nums" style={{ color: 'var(--c4-footer-text-muted)' }}>
-            © {new Date().getFullYear()} C4 Studios
+            © {new Date().getFullYear()} C4 Studios{' '}<span aria-hidden="true">·</span>{' '}
+            <span className="whitespace-nowrap">ABN {ORG_INFO.abn}</span>
           </span>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
             <Link to={createPageUrl('PrivacyPolicy')} className="text-[10.5px] transition-colors duration-300 hover:brightness-150" style={{ color: 'var(--c4-footer-text)' }}>

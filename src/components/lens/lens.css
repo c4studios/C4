@@ -1,7 +1,6 @@
 /*
  * C4 Lens — Page-scoped styles (v3 — faithful port + enhancements)
  * Ported directly from working C4-Lens-Landing.html with additions for:
- *   - Caleb photo section
  *   - Premium interactive buttons
  *   - Viewfinder brackets, histogram, EV scale, grid overlay
  *   - Shutter flash
@@ -359,34 +358,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 .pkg-note { margin-top: 44px; padding: 24px 28px; border: 1px solid var(--line); font-size: 13px; color: var(--ink-2); line-height: 1.65; }
 .pkg-note strong { color: var(--ink); }
 
-/* ── CALEB (with photo) ── */
-.caleb-inner { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: .55fr 1fr; gap: 80px; align-items: center; }
-.caleb-photo-wrap {
-  position: relative; border-radius: 12px; overflow: hidden;
-  aspect-ratio: 3/4; background: #111;
-  border: 1px solid var(--line);
-}
-.caleb-photo-wrap img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  filter: grayscale(.15) contrast(1.04);
-  transition: filter .6s ease;
-}
-.caleb-photo-wrap:hover img { filter: grayscale(0) contrast(1.08); }
-.caleb-photo-meta {
-  position: absolute; bottom: -1px; left: -1px; right: -1px;
-  padding: 16px 18px; backdrop-filter: blur(14px);
-  background: rgba(5,5,5,.8); border-top: 1px solid var(--line);
-  display: flex; justify-content: space-between; align-items: center;
-}
-.caleb-photo-meta .role { font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--amber); }
-.caleb-photo-meta .loc { font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
-.caleb h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px, 6.5vw, 100px); line-height: .9; margin-bottom: 22px; }
-.caleb h2 em { font-family: 'Caveat', cursive; font-style: normal; color: var(--amber); font-weight: 400; }
-.caleb-quote { font-family: 'Caveat', cursive; font-style: normal; font-size: clamp(19px, 2vw, 28px); line-height: 1.38; color: var(--ink); padding-left: 34px; position: relative; margin-bottom: 28px; }
-.caleb-right p { font-size: 16px; line-height: 1.7; color: var(--ink-2); margin-bottom: 16px; }
-.caleb-right p strong { color: var(--ink); font-weight: 500; }
-.caleb-right .caleb-base { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 14px; color: var(--ink-2); }
-
 
 /* ── CASE STUDY ── */
 .case-study { background: #0a0a0a; border-top: 1px solid var(--line); }
@@ -436,6 +407,8 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
   color: var(--ink-2); border-top: 1px solid var(--line);
 }
+/* Here, not inline, so the phone rule below can centre it (15 Oct 2026). */
+.lens-page > footer > div:last-child { text-align: right; }
 .foot-logo { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: .14em; color: var(--ink-2); }
 
 /* ── Hamburger (hidden on desktop) ── */
@@ -547,7 +520,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 @media (max-width: 1024px) {
   .lens-page .svc-grid { grid-template-columns: repeat(2, 1fr); }
   .lens-page .pkg-grid { grid-template-columns: repeat(2, 1fr); }
-  .lens-page .caleb-inner { gap: 48px; }
   .cs-grid { grid-template-columns: 1fr; gap: 48px; }
   .cs-takeaway { grid-template-columns: 1fr; gap: 24px; }
 }
@@ -558,12 +530,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   .lens-page .pkg-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .lens-page .svc-card:last-child:nth-child(odd) .desc { max-width: 58ch; }
   .lens-page .pkg-card:last-child:nth-child(odd) .pkg-ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 32px; }
-}
-/* The portrait stays beside the words down to a tablet; stacked, it keeps a
-   portrait's size instead of filling the column (it ran 1,260px tall at 1024). */
-@media (max-width: 767px) {
-  .lens-page .caleb-inner { grid-template-columns: 1fr; }
-  .lens-page .caleb-left { width: 100%; max-width: 420px; }
 }
 @media (max-width: 768px) {
   .lens-page .nav-links { display: none; }
@@ -645,21 +611,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 .lens-page .lr-fade { transform: none; }
 .lens-page .lr-fade.in { transform: none; }
 
-/* Cinematic wipe — Caleb portrait.
-   The observed wrapper stays unclipped (a fully clip-pathed element reports
-   intersectionRatio 0 in Chromium, so the reveal would never fire);
-   the clip lives on the child. */
-.lens-page .lr-wipe { transform: none; transition: opacity .4s ease; }
-.lens-page .lr-wipe.in { transform: none; }
-.lens-page .lr-wipe .caleb-photo-wrap {
-  clip-path: inset(0 100% 0 0);
-  transition: clip-path 1.15s cubic-bezier(.22,1,.36,1) .1s;
-}
-.lens-page .lr-wipe.in .caleb-photo-wrap { clip-path: inset(0 0 0 0); }
-.lens-page .lr-wipe .caleb-photo-wrap img { transform: scale(1.07); }
-.lens-page .lr-wipe.in .caleb-photo-wrap img { transform: scale(1); }
-.caleb-photo-wrap img { transition: filter .6s ease, transform 1.5s cubic-bezier(.22,1,.36,1) .1s; }
-
 /* ── Anamorphic glass flare — fades as the iris closes ── */
 .lens-flare {
   position: absolute; top: 50%; left: 50%; z-index: 4;
@@ -707,8 +658,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 @media (prefers-reduced-motion: reduce) {
   .lens-page .lr,
   .lens-page .lr-fade { opacity: 1; transform: none; transition: none; }
-  .lens-page .lr-wipe .caleb-photo-wrap { clip-path: none; transition: none; }
-  .lens-page .lr-wipe .caleb-photo-wrap img { transform: none; }
   .lens-page .sec-num .bar { transform: scaleX(1); transition: none; }
   .lens-flare { display: none; }
   .site-back::after { transition: none; }
@@ -777,7 +726,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
    gets a nudge; weight 600 keeps it legible on black. ═══ */
 .lens-page .slab h2 em,
 .cap-kicker em,
-.caleb h2 em,
 .cs-intro h2 em,
 .cs-text-col h3 em,
 .cta-section h2 em {
@@ -786,17 +734,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   letter-spacing: 0;
 }
 .svc-card .svc-tagline { font-size: 20px; font-weight: 500; }
-.caleb-quote { font-size: clamp(23px, 2.4vw, 33px); font-weight: 500; }
-.caleb-quote::before {
-  content: '\201C';
-  position: absolute;
-  left: 0;
-  top: -0.08em;
-  font-family: 'Caveat', cursive;
-  font-size: 1.5em;
-  color: var(--amber);
-  line-height: 1;
-}
 .cs-insight blockquote { font-size: clamp(23px, 3.2vw, 32px); font-weight: 500; }
 
 /* Mobile touch-up — tighter rhythm, same content. */
@@ -804,7 +741,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   .lens-page .sec-num { margin-bottom: 28px; }
   .svc-card { padding: 30px 22px 26px; }
   .svc-card h3 { font-size: 30px; }
-  .caleb-quote { padding-left: 28px; }
   .pkg-card { padding: 28px 20px 24px; }
 }
 

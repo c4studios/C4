@@ -32,6 +32,8 @@ export function localBusinessSchema() {
     description: ORG_INFO.description,
     email: ORG_INFO.email,
     telephone: ORG_INFO.telephone,
+    // The ABN of the sole trader who trades as C4 Studios (src/lib/seo.js).
+    taxID: ORG_INFO.abn,
     sameAs: ORG_INFO.sameAs,
     priceRange: '$$',
     address: {
@@ -160,11 +162,12 @@ export function caseStudyCapture(study) {
    The image is the first capture rather than the cover, because every study
    has captures and ten have no cover.
 
-   No datePublished. caseStudyData.jsx holds no publication date for any study,
-   and the two exact dates it does hold are build windows (Sharp Bricklaying,
-   As He Leads), not the day the write-up went up: As He Leads went live on
-   4 Sep 2026 and its case study was added on 5 Oct. Add a real one per study,
-   or none.
+   datePublished is the project's first deployment, `firstDeployed` in
+   caseStudyData.jsx. Caleb chose that date on 15 Oct 2026 ("use each
+   project's first deployment date"); for most studies it's earlier than the
+   day the write-up went up. Each entry names the deployment record its date
+   came from. A study with no deployment record on file (GoCC, The Rocks) has no
+   firstDeployed, and its markup carries no date rather than a guessed one.
 
    No Review either (SEO audit L2, 15 Oct 2026). A testimonial about C4's own
    work, marked up on C4's own site, is a self-serving review to Google. The
@@ -179,6 +182,7 @@ export function caseStudyArticleSchema(study) {
     image: capture ? absoluteUrl(capture) : undefined,
     author: { '@id': FOUNDER_ID },
     publisher: { '@id': BUSINESS_ID },
+    datePublished: study.firstDeployed || undefined,
     about: study.client,
     keywords: (study.tags || []).join(', '),
     mainEntityOfPage: absoluteUrl(`/CaseStudy/${study.slug}`),

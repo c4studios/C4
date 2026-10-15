@@ -7,7 +7,8 @@ import PageHero from '@/components/c4/PageHero';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import useStaticMode from '@/hooks/useStaticMode';
 import { breadcrumbSchema, entitySchemas, FOUNDER_ID } from '@/lib/schema';
-import { ORG_INFO, SITE_URL } from '@/lib/seo';
+import { C4SITE, ORG_INFO, SITE_URL } from '@/lib/seo';
+import { PAGE_DATES } from '@/lib/pageDates';
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -82,7 +83,11 @@ export default function HowWeUseAI() {
           'The published position of C4 Studios on where AI is used, where it stops, and what stays human — including the founder’s personal stance in full.',
         author: { '@id': FOUNDER_ID },
         publisher: { '@id': `${SITE_URL}/#localbusiness` },
-        dateModified: '2026-08-12',
+        /* From git at build time: the last commit to this file, the same
+           date the sitemap's <lastmod> gives the page. It said 2026-08-12
+           until 15 Oct 2026, though the page changed on 9 Oct. With no git
+           history at build time the field is left out. */
+        dateModified: PAGE_DATES['/how-we-use-ai'],
         mainEntityOfPage: `${SITE_URL}/how-we-use-ai/`,
         about: ['Responsible AI', 'AI ethics', 'AI transparency'],
       },
@@ -211,15 +216,27 @@ export default function HowWeUseAI() {
               </p>
             </motion.div>
 
-            <motion.div {...reveal(4)}>
-              <Link
-                to="/insights"
-                className="mt-7 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.14em] font-semibold transition-opacity duration-200 hover:opacity-70"
+            {/* The writing about AI moved to C4Site with the AI articles on
+                9 Oct 2026, so this used to send readers to /insights, which
+                is about websites now. Since 15 Oct 2026 it says where the
+                writing is and goes there. C4Site is described only in its
+                own words (c4site-website src/data/site.ts), and only as a
+                sister business. */}
+            <motion.div {...reveal(4)} className="mt-6 max-w-[64ch]">
+              <p className="text-[15.5px] leading-[1.85]" style={{ color: 'var(--c4-text-muted)' }}>
+                The writing goes up on C4Site, our sister business. {C4SITE.description}
+              </p>
+              <a
+                href={C4SITE.articles}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.14em] font-semibold transition-opacity duration-200 hover:opacity-70"
                 style={{ color: 'var(--c4-accent)' }}
               >
                 The writing, as it lands
-                <ArrowUpRight size={12} strokeWidth={2.4} />
-              </Link>
+                <span className="sr-only"> (on c4site.com.au, opens in a new tab)</span>
+                <ArrowUpRight size={12} strokeWidth={2.4} aria-hidden="true" />
+              </a>
             </motion.div>
           </div>
         </div>

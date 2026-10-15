@@ -8,6 +8,14 @@
  *   - Set `thumbnail` to '' to show a styled "Thumbnail pending" state
  *   - Set screenshot `url` to '' to show a numbered placeholder tile
  *   - Replace with real URLs when assets are ready
+ *
+ * firstDeployed (added 15 Oct 2026) is the date the project was first
+ * deployed, and the case study's markup gives it as datePublished (Caleb's
+ * call that day). Each one names the record it was read from: the oldest
+ * deployment on the project's Vercel project, or GitHub's deployments API
+ * where Vercel no longer keeps the early ones. A failed first attempt doesn't
+ * count. Times are UTC, and every date is the same in Perth. With no
+ * deployment record there's no date: GoCC and The Rocks have none.
  */
 
 export const CASE_STUDIES = {
@@ -22,6 +30,11 @@ export const CASE_STUDIES = {
     role: 'Solo (brand, design, development, 3D / WebGL, motion, SEO)',
     liveUrl: 'https://evidenceadvisory.com.au',
     year: '2026',
+    /* Vercel project evidence-advisory-motion-prototype, oldest deployment
+       dpl_CLMJCJdiNAiQ3Wqo956dqP8b4e9M, 2026-06-11 12:49 UTC. It serves the
+       whole site. The live copy is on HostPapa cPanel, which keeps no
+       deployment record. */
+    firstDeployed: '2026-06-11',
     category: 'web_design',
     tags: ['Web Design', 'Web Development', '3D / WebGL', 'Branding', 'SEO'],
     featured: true,
@@ -138,6 +151,11 @@ export const CASE_STUDIES = {
     role: 'Solo (design, development, hosting migration, SEO consolidation)',
     liveUrl: 'https://ciasolutions.com.au',
     year: '2026',
+    /* Vercel project cia-solutions-preview, oldest deployment
+       dpl_GnyEYkyWW8X9uxgcSARFeRX6nNk4, 2026-09-17 05:50 UTC. The rebuild
+       went onto HostPapa cPanel after that (live by 24 Sep, brain clients
+       row evidence), which keeps no deployment record. */
+    firstDeployed: '2026-09-17',
     category: 'web_design',
     tags: ['Web Design', 'Web Development', 'Hosting Migration', 'SEO'],
     featured: true,
@@ -228,6 +246,12 @@ export const CASE_STUDIES = {
     role: 'Solo (design, development, deployment)',
     liveUrl: 'https://transformfreo.com/',
     year: '2026',
+    /* GitHub deployments API, c4studios/transformfreo: Vercel Production,
+       2025-12-16 10:34 UTC, status success. Vercel itself keeps nothing
+       before 16 Jan 2026. Cloudflare Pages project transformfreo holds an
+       upload from 9 Dec 2025, but it's the unbuilt source: its index.html
+       loads /src/main.jsx as text/jsx, so that page was blank. */
+    firstDeployed: '2025-12-16',
     category: 'web_design',
     tags: ['Website', 'Community', 'Non-Profit'],
     featured: false,
@@ -353,6 +377,10 @@ export const CASE_STUDIES = {
     role: 'Solo (design, development, deployment)',
     liveUrl: 'https://aquasafeplumbing.com.au/',
     year: '2026',
+    /* GitHub deployments API, c4studios/aqua-safe-plumbing: github-pages,
+       2026-06-26 14:29 UTC, from a successful "Deploy to GitHub Pages" run
+       (commit 305f2d0). The Vercel project came later, on 26 Jul. */
+    firstDeployed: '2026-06-26',
     category: 'web_design',
     tags: ['Website', 'Trades & Services', 'Local SEO', 'Next.js', 'Perth', 'Local Business'],
     featured: true,
@@ -488,6 +516,10 @@ export const CASE_STUDIES = {
     role: 'Solo (design, development, deployment)',
     liveUrl: 'https://transformhakea.com',
     year: '2026',
+    /* GitHub deployments API, c4studios/transformhakea.com: Vercel
+       Production, 2026-03-09 07:18 UTC, status success (an attempt at 07:01
+       failed). */
+    firstDeployed: '2026-03-09',
     category: 'web_design',
     tags: ['Website', 'Community', 'Non-Profit'],
     featured: false,
@@ -604,6 +636,10 @@ export const CASE_STUDIES = {
     role: 'Solo (design, development, deployment)',
     liveUrl: 'https://www.jurassicpt.com/',
     year: '2026',
+    /* GitHub deployments API, c4studios/jurassic-pt: Vercel Production,
+       created 2026-03-02 05:57 UTC, status success. That's the original
+       site, before the October 2026 redesign. */
+    firstDeployed: '2026-03-02',
     category: 'web_design',
     tags: ['Website', 'Fitness', 'Local Business', 'Redesign'],
     featured: false,
@@ -738,6 +774,9 @@ export const CASE_STUDIES = {
     role: 'Solo (design, development, print, deployment)',
     liveUrl: 'https://www.asheleads.com.au',
     year: '2026',
+    /* GitHub deployments API, c4studios/as-he-leads: Vercel Production,
+       2026-09-02 07:05 UTC, status success. */
+    firstDeployed: '2026-09-02',
     category: 'web_design',
     tags: ['Website', 'Ministry', 'Print', 'Typography', 'Static HTML'],
     featured: false,
@@ -985,6 +1024,8 @@ export const CASE_STUDIES = {
     role: 'Consultant (performance audit, optimisation, SEO strategy)',
     liveUrl: 'https://gocc.com.au/',
     year: '2026',
+    /* No firstDeployed. The site is on Netlify, C4 has never held its source,
+       and no deployment record is on file. */
     category: 'brand_platform',
     tags: ['Consultancy', 'Optimisation', 'SEO'],
     featured: false,
@@ -1081,7 +1122,13 @@ export const CASE_STUDIES = {
   'ds-racing-karts': {
     slug: 'ds-racing-karts',
     name: 'DS Racing Karts',
-    oneLiner: 'Full e-commerce platform with 499+ go kart parts, Square payment integration, and a custom-built Canvas 2D racing mini-game.',
+    /* The shop's size, read from the public page www.dsracingkarts.com.au/shop
+       on 15 Oct 2026: "8330 Products", "Showing 1 – 24 of 8330". (The 11-shop
+       capture shows 8,422; brain site_issues 115 has 8,332 on 4 Oct.) The copy
+       says "over 8,000" so it stays true as the catalogue moves; check the live
+       shop again before raising it. 499 is how many came across in the
+       original Square migration, and the lines about that migration keep it. */
+    oneLiner: 'Full e-commerce platform with over 8,000 products, Square payment integration, and a custom-built Canvas 2D racing mini-game.',
     client: 'Dion Scott / DS Racing Karts',
     location: 'Long Reef Crescent, Woodbine, NSW, Australia',
     timeline: 'Approx. 3–4 months (late 2025 – early 2026)',
@@ -1089,6 +1136,11 @@ export const CASE_STUDIES = {
     role: 'Solo — design, development, deployment, backend migration, analytics setup, copywriting, SEO, error tracking',
     liveUrl: 'https://www.dsracingkarts.com.au/',
     year: '2025–2026',
+    /* GitHub deployments API, c4studios/dsracingkarts: Vercel Production,
+       created 2026-04-18 07:27 UTC, status success (an attempt at 07:23
+       failed). The build ran off git before that; the repo's initial
+       commit is the same day. */
+    firstDeployed: '2026-04-18',
     category: 'ecommerce',
     tags: ['E-Commerce', 'Web Application', 'Square Integration', 'Go Karting', 'Motorsport', 'Product Catalogue', 'Game Design'],
     featured: true,
@@ -1111,7 +1163,7 @@ export const CASE_STUDIES = {
       { url: '/captures/dsracingkarts-com-au/desktop/08-race-animation.png', caption: 'Scroll-pinned SVG race animation — two detailed top-down karts with exhaust glow' },
       { url: '/captures/dsracingkarts-com-au/desktop/09-latest-products.png', caption: 'Latest Products carousel with live pricing from Supabase' },
       { url: '/captures/dsracingkarts-com-au/desktop/10-newsletter.png', caption: '"Stay in the Fast Lane" newsletter signup with chequered background' },
-      { url: '/captures/dsracingkarts-com-au/desktop/11-shop.png', caption: 'Shop page — 499+ products with category sidebar, sort, pagination, and search' },
+      { url: '/captures/dsracingkarts-com-au/desktop/11-shop.png', caption: 'Shop page — over 8,000 products with category sidebar, sort, pagination, and search' },
       { url: '/captures/dsracingkarts-com-au/desktop/12-product.png', caption: 'Product detail page with image gallery, SKU, pricing, stock status, and add-to-cart' },
       { url: '/captures/dsracingkarts-com-au/desktop/13-cart.png', caption: 'Shopping cart — live line item, quantity controls, GST calculation, and estimated total' },
       { url: '/captures/dsracingkarts-com-au/desktop/14-checkout.png', caption: 'Checkout — customer details, shipping address, and live order summary with GST (Square Web Payments)' },
@@ -1165,7 +1217,7 @@ export const CASE_STUDIES = {
       'Complete e-commerce website — full design, development, and deployment',
       'Square payment integration with PCI-compliant card tokenisation and server-side payment processing',
       '4-stage data migration pipeline — Square CSV → Supabase import (2-pass category/product) → category deduplication → image migration (Square Catalog API → Supabase Storage) → AI description generation',
-      'Product catalogue system with 499+ go kart parts synced from Square',
+      'Product catalogue system, synced from Square, that now lists over 8,000 products',
       'Individual product pages with image gallery, SKUs, pricing, stock status indicators, breadcrumb navigation, and Product structured data schema',
       'Shopping cart with add/remove/quantity management, GST calculation, and localStorage persistence',
       'Custom checkout flow with Square Web Payments SDK, customer details, shipping address with Australian state dropdown',
@@ -1218,7 +1270,7 @@ export const CASE_STUDIES = {
     ],
 
     features: [
-      'Full e-commerce platform with 499+ go kart parts, synced from Square\'s product catalogue via a 4-stage migration pipeline',
+      'Full e-commerce platform with over 8,000 products, synced from Square\'s product catalogue',
       'Custom-built "DSR Grand Prix" slot-car racing mini-game — 4,863 lines of Canvas 2D code with curvature-based physics, 4-tier AI difficulty, 4 tracks including a "Campbelltown GP" local Easter egg, F1-style 5-light countdown with false start detection, persistent skid marks, and mobile touch controls',
       'Square payment integration — client-side PCI-compliant card tokenisation via Web Payments SDK, server-side createPayment() with idempotency keys and BigInt AUD amounts',
       'GSAP 3.14 + ScrollTrigger-powered 3D scroll animations — history timeline with SVG trunk growth, RPM tachometer with rev-limiter bounce, scroll-pinned SVG kart race, 3D perspective video container',
@@ -1321,7 +1373,7 @@ export const CASE_STUDIES = {
       'Game state managed via useRef (not useState) in rAF loop to avoid React re-renders during gameplay',
       'Scenery generation uses seeded random (sin hash) for deterministic caching across frames',
       'Skid marks capped at 300 with batch purge of 50 to prevent memory accumulation',
-      'Product pagination (24/page) prevents loading all 499+ products at once',
+      'Product pagination (24/page) keeps the shop from loading all 8,000-plus products at once',
       'Loading skeleton states for shop, product, and admin pages to prevent CLS',
       'Supabase queries use select with specific columns (no SELECT *) for minimal payload',
       'Admin dashboard runs 5 parallel Supabase queries via Promise.all for fast dashboard load',
@@ -1364,6 +1416,9 @@ export const CASE_STUDIES = {
     role: 'Solo (design, development, deployment, photography, drone, video)',
     liveUrl: 'https://www.sharpbricklaying.com.au/',
     year: '2026',
+    /* GitHub deployments API, c4studios/Sharp-Bricklaying: Vercel
+       Production, 2026-04-25 10:49 UTC, status success. */
+    firstDeployed: '2026-04-25',
     category: 'web_design',
     tags: ['Website', 'Trades', 'Construction', 'Local Business', 'Perth', 'Photography', 'Drone'],
     featured: true,
@@ -1573,6 +1628,10 @@ export const CASE_STUDIES = {
     role: 'Solo — design, development, SEO, third-party integrations & deployment',
     liveUrl: 'https://thehvncrossfit.com',
     year: '2026',
+    /* GitHub deployments API, c4studios/hvn-website: Vercel Production,
+       created 2026-04-07 15:49 UTC, status success (two attempts from 15:24
+       failed). */
+    firstDeployed: '2026-04-07',
     category: 'web_design',
     tags: ['Website', 'CrossFit', 'Gym & Fitness', 'Local Business', 'Booking Integration', 'Next.js'],
     featured: true,
@@ -1721,6 +1780,10 @@ export const CASE_STUDIES = {
     role: 'Solo (concept, design, development, deployment)',
     liveUrl: 'https://wooster-henna.vercel.app',
     year: '2026',
+    /* GitHub deployments API, c4studios/Wooster: Vercel Production,
+       2026-04-07 15:53 UTC, status success. The store as described here is
+       the redesign begun on 2 Oct 2026 and first deployed on 4 Oct. */
+    firstDeployed: '2026-04-07',
     category: 'ecommerce',
     tags: ['E-Commerce', 'Concept', '3D / WebGL', 'Watersports', 'Next.js', 'Storefront'],
     featured: false,
@@ -1826,6 +1889,9 @@ export const CASE_STUDIES = {
     role: 'Solo (concept, design, development, deployment)',
     liveUrl: 'https://barrys-drink-concept.vercel.app',
     year: '2026',
+    /* Vercel project barrys-drink-concept, oldest deployment
+       dpl_GfY9fghpy3SE2t8m9jXkzagbAwEB, 2026-06-21 15:45 UTC. */
+    firstDeployed: '2026-06-21',
     category: 'web_design',
     tags: ['Website', 'Concept', 'Beverage / RTD', '3D / WebGL', 'Physics', 'Brand'],
     featured: false,
@@ -1961,6 +2027,11 @@ export const CASE_STUDIES = {
     role: 'Solo (concept, design, development, deployment)',
     liveUrl: 'https://jk-plumbing-tau.vercel.app',
     year: '2026',
+    /* Vercel project jk-plumbing, oldest deployment
+       dpl_BfmM79BmguQLmhNj347VAfnBaDsg, 2026-06-22 08:05 UTC. The repo's
+       first commits are from 11 May 2026; no earlier deployment is on
+       record. */
+    firstDeployed: '2026-06-22',
     category: 'web_design',
     tags: ['Website', 'Concept', 'Trades & Services', 'Typography', 'Next.js'],
     featured: false,
@@ -2069,6 +2140,9 @@ export const CASE_STUDIES = {
     role: 'Solo (design, development, deployment)',
     liveUrl: 'https://groverztax.com.au',
     year: '2026',
+    /* GitHub deployments API, c4studios/Groverz: Vercel Production, created
+       2026-04-04 06:30 UTC, status success. */
+    firstDeployed: '2026-04-04',
     category: 'web_design',
     tags: ['Website', 'Tax & Accounting', 'Small Business', 'Local Service'],
     featured: true,
@@ -2211,6 +2285,11 @@ export const CASE_STUDIES = {
     role: 'Solo (design, development, domain recovery & migration, deployment)',
     liveUrl: 'https://tidygardens.com.au',
     year: '2026',
+    /* Vercel project tidy-gardens-australia (deployed from the CLI, no
+       GitHub record), oldest deployment dpl_8WZKuxXeYcV6tNPjqbDGvU9jYjuJ,
+       2026-06-23 06:44 UTC. The project was created on 21 Jun, and no
+       deployment from before the 23rd is kept. */
+    firstDeployed: '2026-06-23',
     category: 'web_design',
     tags: ['Website', 'Landscaping', 'Scroll Animation', 'Next.js', 'Local Business', 'SEO'],
     featured: true,
@@ -2324,6 +2403,8 @@ export const CASE_STUDIES = {
     role: 'Solo (concept, UX/UI, interactive front-end, motion, media system)',
     liveUrl: '',
     year: '2026',
+    /* No firstDeployed. It has no live URL and no host on record (brain
+       clients row rocks), so there's no deployment record to read. */
     category: 'web_app',
     tags: ['Interactive Experience', 'Custom Build', 'Church / Non-Profit', 'Motion', 'Streaming-Style UI'],
     featured: false,
@@ -2421,6 +2502,9 @@ export const CASE_STUDIES = {
     role: 'Solo (concept, design, development, deployment)',
     liveUrl: 'https://iopa-apparel.vercel.app',
     year: '2026',
+    /* Vercel project iopa-apparel, oldest deployment
+       dpl_CsNsy6sz7eHWeYu7njJ21SX8PaDj, 2026-07-03 07:46 UTC. */
+    firstDeployed: '2026-07-03',
     category: 'web_design',
     tags: ['Website', 'Concept', 'Fashion / Streetwear', 'WebGL / Canvas', 'Motion Design', 'Brand'],
     featured: false,
@@ -2514,6 +2598,11 @@ export const CASE_STUDIES = {
     role: 'Solo (design, development, deployment)',
     liveUrl: 'https://bradyelectrical.com.au',
     year: '2026',
+    /* Vercel project brady-electrical, oldest deployment
+       dpl_5adAu7phCeSBkuZUYXiAKeGB54SV, 2026-07-23 09:21 UTC. The project
+       was created on 28 Jun with no deployment kept from before the 23rd;
+       GitHub's first record for c4studios/brady-electrical is 30 Jul. */
+    firstDeployed: '2026-07-23',
     category: 'web_design',
     tags: ['Website', 'Trades & Services', 'Local SEO', 'Next.js', 'Perth', 'Local Business'],
     featured: true,
@@ -2642,6 +2731,9 @@ export const CASE_STUDIES = {
     role: 'Solo (audit, design, development, deployment)',
     liveUrl: 'https://cmc-lawns-concept.vercel.app',
     year: '2026',
+    /* Vercel project cmc-lawns-concept, oldest deployment
+       dpl_5HKTVdjGRuK1RNz9Ks7gMebi3HDw, 2026-08-11 11:28 UTC. */
+    firstDeployed: '2026-08-11',
     category: 'web_design',
     tags: ['Website', 'Concept', 'Lawn Care', 'Trades', 'Accessibility', 'React'],
     featured: false,
@@ -2743,6 +2835,9 @@ export const CASE_STUDIES = {
     role: 'Solo (audit, design, development, generated hero sequence, deployment)',
     liveUrl: 'https://sgr-prestige-concept.vercel.app',
     year: '2026',
+    /* Vercel project sgr-prestige-concept, oldest deployment
+       dpl_7eUywYFy1N35yk8feZHXJsnh2jaK, 2026-08-11 11:14 UTC. */
+    firstDeployed: '2026-08-11',
     category: 'web_design',
     tags: ['Website', 'Concept', 'Logistics', 'Automotive', 'Motion Design', 'React'],
     featured: false,
@@ -2866,6 +2961,10 @@ export const CASE_STUDIES = {
     role: 'Solo (audit, data extraction, design, development, deployment)',
     liveUrl: 'https://eurochem-concept.vercel.app',
     year: '2026',
+    /* Vercel project eurochem-concept (named eurochem on its first deploy),
+       oldest deployment dpl_BG4mf1jg6GUMUmxMitJYDvcr17ar, 2026-08-19
+       06:24 UTC. */
+    firstDeployed: '2026-08-19',
     category: 'web_design',
     tags: ['Website', 'Concept', 'Agriculture', 'Catalogue', 'Compliance', 'React'],
     featured: false,
@@ -2969,6 +3068,10 @@ export const CASE_STUDIES = {
     role: 'Solo (concept, design, full-stack development, billing, deployment)',
     liveUrl: 'https://quotr.us',
     year: '2025',
+    /* GitHub deployments API, c4studios/quotr: Vercel Production, created
+       2026-05-25 13:37 UTC, status success (two attempts from 13:32
+       failed). The repo's initial commit is 23 May 2026. */
+    firstDeployed: '2026-05-25',
     category: 'saas',
     status: 'Live',
     tags: ['Software', 'SaaS', 'Next.js'],

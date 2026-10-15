@@ -35,6 +35,22 @@ export const PROFILES = {
 };
 
 /**
+ * C4Site, the sister business (its own business since 8 Oct 2026). On
+ * 15 Oct 2026 Caleb said this site can point to C4Site's work and link to it.
+ * Describe it only in its own words, word for word from c4site-website
+ * src/data/site.ts (SITE.description), and call it a sister business, never
+ * a company. The footer and /how-we-use-ai read it from here;
+ * public/llms.txt and the /ai-search-optimisation-perth content module carry
+ * the same sentence as text.
+ */
+export const C4SITE = {
+  url: 'https://c4site.com.au/',
+  articles: 'https://c4site.com.au/articles/',
+  description:
+    'C4Site runs hands-on AI training for Perth schools and workplaces, and sets up AI automation for businesses.',
+};
+
+/**
  * The studio phone, shown on the site since 15 Sep 2026 at Caleb's say-so so the
  * site, the schema and the Google Business Profile carry the same number.
  */
@@ -52,6 +68,12 @@ export const ORG_INFO = {
     'and copywriting, and logo design for ambitious founders and businesses.',
   founder: 'Caleb Scott',
   foundingDate: '2025-12',
+  // Published at Caleb's say-so on 15 Oct 2026. ABN Lookup, read the same
+  // day (abr.business.gov.au/ABN/View?abn=26477523297): active from
+  // 27 May 2026, Individual/Sole Trader, not registered for GST, WA 6147,
+  // business name C4 Studios from 24 Jul 2026. The footers show it in this
+  // form, and the business node carries it as taxID.
+  abn: '26 477 523 297',
   email: 'caleb@c4studios.com.au',
   telephone: PHONE.e164,
   region: 'Perth, Western Australia',
