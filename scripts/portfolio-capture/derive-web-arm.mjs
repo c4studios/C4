@@ -13,6 +13,15 @@
  *
  * Run:  node scripts/portfolio-capture/derive-web-arm.mjs
  *       node scripts/portfolio-capture/derive-web-arm.mjs aqua-safe-plumbing
+ *       node scripts/portfolio-capture/derive-web-arm.mjs --from <dir> hvn-gym ds-racing-karts
+ *
+ * --from reads the sources from another folder laid out like public/captures
+ * (<dir>/<site>/desktop/01-hero.png). Use it to refresh a tile from a fresh
+ * capture of the live site without overwriting the case study's own
+ * screenshot, whose caption describes the page as it was shot. On 15 Oct 2026
+ * the HVN, DS Racing, Sharp, Aqua-Safe, Evidence Advisory and Groverz tiles
+ * were refreshed this way from 1440x900 captures taken with installed Chrome,
+ * cookie banners declined and floating widgets hidden.
  */
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, statSync } from 'node:fs';
@@ -79,7 +88,10 @@ export const KEY = {
   'cmc-lawns': 'cmc',
 };
 
-const CAPTURES = path.resolve('public/captures');
+const args = process.argv.slice(2);
+const fromAt = args.indexOf('--from');
+const FROM = fromAt >= 0 ? args.splice(fromAt, 2)[1] : null;
+const CAPTURES = path.resolve(FROM || 'public/captures');
 const OUT = path.resolve('src/components/web-arm/assets');
 const W = 1200;
 const H = 750;
@@ -100,13 +112,13 @@ while q >= 60:
 print(round(os.path.getsize(out) / 1024), q)
 `;
 
-const only = process.argv[2];
+const only = args.length ? new Set(args) : null;
 mkdirSync(OUT, { recursive: true });
 
 let made = 0;
 let skipped = 0;
 for (const [slug, rel] of Object.entries(DERIVE)) {
-  if (only && slug !== only) continue;
+  if (only && !only.has(slug)) continue;
   const src = path.join(CAPTURES, rel);
   const out = path.join(OUT, `plx-${KEY[slug]}.webp`);
   if (!existsSync(src)) {

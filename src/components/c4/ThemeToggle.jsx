@@ -39,7 +39,13 @@ export default function ThemeToggle({ compact = false }) {
   const label = chrome.forced
     ? 'This page sets its own light. The theme switch is unavailable here.'
     : (shownDark ? 'Switch to light mode' : 'Switch to dark mode');
-  const disabledStyle = chrome.forced ? { opacity: 0.5, cursor: 'not-allowed' } : null;
+  /* Only the switch itself dims where the page owns the light. The labels
+     used to dim with it, to about 2:1 on the bar, so LIGHT and DARK all but
+     disappeared on /ServiceWeb (15 Oct 2026). */
+  const disabledStyle = chrome.forced ? { opacity: 0.55, cursor: 'not-allowed' } : null;
+  /* The track's resting colour is a token, so the dark bar can lift it
+     (NavHeader sets --c4-switch-track); a fixed ink tint vanished on the bar. */
+  const track = shownDark ? 'rgba(236,231,222,0.14)' : 'var(--c4-switch-track, rgba(26,26,26,0.08))';
 
   if (compact) {
     return (
@@ -56,7 +62,7 @@ export default function ThemeToggle({ compact = false }) {
           ...disabledStyle,
           width: 44,
           height: 24,
-          backgroundColor: shownDark ? 'rgba(236,231,222,0.14)' : 'rgba(26,26,26,0.08)',
+          backgroundColor: track,
         }}
       >
         <motion.div
@@ -86,7 +92,7 @@ export default function ThemeToggle({ compact = false }) {
 
   // Full labeled toggle
   return (
-    <div className="flex items-center gap-2.5" style={disabledStyle || undefined}>
+    <div className="flex items-center gap-2.5" style={chrome.forced ? { cursor: 'not-allowed' } : undefined}>
       <span
         className="text-[10px] uppercase tracking-[0.12em] select-none transition-all duration-300"
         style={{
@@ -111,9 +117,10 @@ export default function ThemeToggle({ compact = false }) {
         className="relative flex items-center rounded-full transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2"
         style={{
           ...focusRingStyle,
+          ...disabledStyle,
           width: 44,
           height: 24,
-          backgroundColor: shownDark ? 'rgba(236,231,222,0.14)' : 'rgba(26,26,26,0.08)',
+          backgroundColor: track,
         }}
       >
         <motion.div

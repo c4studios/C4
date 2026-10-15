@@ -67,9 +67,22 @@ header[data-c4-chrome="header"] {
   --c4-bg-alt: #1b1d21;
   --c4-card-bg: #1b1d21;
   --c4-tag-bg: #202329;
+  /* The bar's own ground, set here and not inherited (15 Oct 2026). A page
+     pin used to re-point --c4-nav-idle and --c4-nav-scrolled on :root, so on
+     /ServiceWeb the bar and the Services sheet turned pale and see-through
+     while the words inside stayed light: the titles all but vanished over
+     the white page. Declared on the header, these beat any :root pin. The
+     sheet is solid, so nothing behind it can show through its words. */
+  --c4-nav-idle: rgba(20, 21, 24, 0.92);
+  --c4-nav-idle-border: rgba(255, 255, 255, 0.08);
+  --c4-nav-scrolled: rgba(20, 21, 24, 0.97);
+  --c4-nav-panel: #17181b;
+  --c4-switch-track: rgba(236, 231, 222, 0.18);
   --c4-text: #ECE7DE;
   --c4-text-muted: #B9BCC3;
-  --c4-text-subtle: #8f93a0;
+  /* Lifted from #8f93a0, which held only 4.5:1 on the idle bar over a white
+     page. It carries the theme switch's resting label. */
+  --c4-text-subtle: #A3A7B2;
   --c4-border: rgba(236, 231, 222, 0.14);
   --c4-border-light: rgba(236, 231, 222, 0.08);
   --c4-link-hover: #ffffff;
@@ -80,6 +93,28 @@ header[data-c4-chrome="header"] {
   --c4-focus: #ECE7DE;
   --c4-cta-ring: rgba(236, 231, 222, 0.85);
   color-scheme: dark;
+}
+/* The service codes (C1 to C4) are red text. The start red reads at 5:1
+   on the light page, but measured 3.2:1 on the dark page and under 3:1 on
+   the ink sheet (15 Oct 2026), so on dark grounds they take the lighter
+   red DESIGN.md keeps for the dark caret: 5.4:1 on the sheet. */
+:root {
+  --c4-accent-text: var(--c4-accent);
+}
+:root.dark-mode,
+header[data-c4-chrome="header"] {
+  --c4-accent-text: #E06A5F;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not(.light-mode):not(.dark-mode) {
+    --c4-accent-text: #E06A5F;
+  }
+}
+/* The dark theme's bar is a shade deeper, as globals.css had it. */
+:root.dark-mode header[data-c4-chrome="header"] {
+  --c4-nav-idle: rgba(12, 13, 16, 0.92);
+  --c4-nav-scrolled: rgba(12, 13, 16, 0.97);
+  --c4-nav-panel: #121317;
 }
 /* The start button's label and ring. These were the back ribbon's tokens
    until it went (12 Oct 2026), kept at the values the button already had. */
@@ -102,10 +137,9 @@ header[data-c4-chrome="header"] {
   transform: translateX(-50%);
   border-radius: 3px;
   overflow: hidden;
-  background: var(--c4-nav-scrolled);
-  backdrop-filter: blur(16px) saturate(130%);
-  border: 1px solid var(--c4-border-light);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+  background: var(--c4-nav-panel);
+  border: 1px solid var(--c4-border);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18), 0 22px 48px -12px rgba(0, 0, 0, 0.4);
   clip-path: inset(0 0 100% 0);
   opacity: 0;
   visibility: hidden;
@@ -145,8 +179,9 @@ header[data-c4-chrome="header"] {
 .c4-svc-wrap.is-open .c4-svc-item:nth-child(3) { transition-delay: 0.12s; }
 .c4-svc-wrap.is-open .c4-svc-item:nth-child(4) { transition-delay: 0.16s; }
 .c4-svc-item-link:focus-visible {
-  outline: 2px solid var(--c4-ring);
+  outline: 2px solid var(--c4-focus);
   outline-offset: -2px;
+  background-color: var(--c4-tag-bg);
 }
 /* The clip-path unfold honours reduced-motion (memo §6): open/close is
    instant, anchors stay present and crawlable either way. The framer-motion
@@ -427,12 +462,12 @@ export default function NavHeader() {
                             tabIndex={servicesOpen ? 0 : -1}
                             className="c4-svc-item-link group flex items-start gap-4 px-5 py-4 transition-colors duration-200"
                             style={{ borderBottom: i < serviceDropdown.length - 1 ? '1px solid var(--c4-border)' : 'none' }}
-                            onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--c4-bg-alt)'}
+                            onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--c4-tag-bg)'}
                             onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
                           >
                             <span
                               className="mt-0.5 text-[10px] tabular-nums font-semibold w-6 shrink-0"
-                              style={{ color: 'var(--c4-accent)' }}
+                              style={{ color: 'var(--c4-accent-text)' }}
                             >
                               {s.code}
                             </span>
@@ -557,7 +592,7 @@ export default function NavHeader() {
                                     onClick={() => setMobileOpen(false)}
                                     className="flex items-center gap-3"
                                   >
-                                    <span className="text-[10px] font-semibold tabular-nums w-5" style={{ color: 'var(--c4-accent)' }}>{s.code}</span>
+                                    <span className="text-[10px] font-semibold tabular-nums w-5" style={{ color: 'var(--c4-accent-text)' }}>{s.code}</span>
                                     <span className="text-[1rem] font-medium" style={{ color: 'var(--c4-text-muted)' }}>{s.label}</span>
                                   </Link>
                                 </motion.div>

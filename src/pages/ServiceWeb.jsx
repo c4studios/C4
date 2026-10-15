@@ -23,26 +23,34 @@
  * "Websites built to convert and scale." verbatim, styled as the
  * refined supporting claim beneath the display line. One h1 only.
  *
- * Below the fold, GSAP (ScrollTrigger + Flip + CustomEase) keeps the
- * proof drives (DSR desktop→phone handoff, Groverz pan), the case
- * grid with click-time FLIP morph dialogs, focus-in frame entrances,
- * subtle capture parallax, the odometer rate card, and the magnetic
- * primaries. Everything arms inside gsap.matchMedia(); nothing arms
- * under prefers-reduced-motion or the Prerender UA (staticMode) — the
- * DOM default IS the finished state everywhere, so the prerender
- * ships the built page for free.
+ * Below the fold, GSAP (ScrollTrigger + CustomEase) drives the five
+ * portfolio pieces (each a laptop and a phone whose screens scroll the
+ * live site top to bottom on the piece's own transit), focus-in
+ * entrances, the odometer rate card, and the magnetic primaries.
+ * Everything arms inside gsap.matchMedia(); nothing arms under
+ * prefers-reduced-motion or the Prerender UA (staticMode) — the DOM
+ * default IS the finished state everywhere, so the prerender ships the
+ * built page for free.
  *
- * Chrome: forced LIGHT. `.lv-on-stage` (same marker class) now pins
- * the --c4-* token set to the light chrome for the life of the page
- * (guarded MutationObserver, cleanup restore — house pattern).
+ * The portfolio section, 15 Oct 2026. Caleb: only his best work, each
+ * shown the way DS Racing was (the laptop and the phone), no mixed
+ * tiles. DS Racing Karts, Evidence Advisory, Aqua-Safe Plumbing, HVN
+ * CrossFit and Sharp Bricklaying, in his order. Every line about a site
+ * comes from its caseStudyData.jsx entry. Four of them carry a print of
+ * C4 Lens work from lensStudies.js; the credit says "with C4 Lens"
+ * because Caleb doesn't want to take all the credit.
+ *
+ * Chrome: forced LIGHT page. `.lv-on-stage` (same marker class) pins
+ * the page ground, the menu sheet and the footer to the light set for
+ * the life of the page (guarded MutationObserver, cleanup restore —
+ * house pattern). The nav bar stays ink, as on every page.
  * Styles: src/components/web-arm/web-arm.css (.lv-root).
  */
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
-import { ArrowRight, X } from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Flip } from 'gsap/Flip';
 import { CustomEase } from 'gsap/CustomEase';
 import Lenis from 'lenis';
 import { createPageUrl } from '@/utils';
@@ -61,29 +69,38 @@ import GradientText from '../components/web-arm/GradientText';
 import HeroFusion from '../components/web-arm/HeroFusion';
 import ConceptCarousel from '../components/web-arm/ConceptCarousel';
 import { reassertStoredTheme } from '../components/c4/ThemeContext';
+import { getCaseStudy } from '../components/portfolio/caseStudyData';
+import { tightFigure } from '@/components/c4/figure';
 import '../components/web-arm/web-arm.css';
 
-/* Derived capture assets — generated from public/captures (read-only)
-   via scripts/portfolio-capture/derive-web-arm.mjs; webp throughout.
-   The DSR pair is the REAL full-page home capture (900×7808 desktop,
-   480×14200 mobile) — the device drive scrubs the actual page. */
-import sharpHero from '../components/web-arm/assets/sharp-hero.webp';
-import dsrHomeD from '../components/web-arm/assets/dsr-home-d.webp';
-import dsrHomeM from '../components/web-arm/assets/dsr-home-m.webp';
-import gzD1 from '../components/web-arm/assets/gz-d1.webp';
-import hvnF1 from '../components/web-arm/assets/hvn-f1.webp';
-import hvnF2 from '../components/web-arm/assets/hvn-f2.webp';
-import hvnF3 from '../components/web-arm/assets/hvn-f3.webp';
-import hvnF4 from '../components/web-arm/assets/hvn-f4.webp';
-import hvnF5 from '../components/web-arm/assets/hvn-f5.webp';
-import hvnF6 from '../components/web-arm/assets/hvn-f6.webp';
-import eaHero from '../components/web-arm/assets/ea-hero.webp';
-import tidyHero from '../components/web-arm/assets/tidy-hero.webp';
-import tidyF2 from '../components/web-arm/assets/tidy-f2.webp';
-import tidyF3 from '../components/web-arm/assets/tidy-f3.webp';
-import jptHero from '../components/web-arm/assets/jpt-hero.webp';
+/* The device screens. Each is a scroll strip of the live home page, shot
+   on 15 Oct 2026 by scripts/capture-motion.mjs (installed Chrome, cookie
+   banners declined, floating widgets hidden; DS Racing stitched so its
+   history photos stay in), then reduced for the screens: desktop 1440 ->
+   960 wide (six screens of the page), phone 390 @2x -> 400 wide (seven
+   screens). AVIF first, WebP behind it. */
+import dsrDAvif from '../components/web-arm/assets/wk-dsr-d.avif';
+import dsrD from '../components/web-arm/assets/wk-dsr-d.webp';
+import dsrMAvif from '../components/web-arm/assets/wk-dsr-m.avif';
+import dsrM from '../components/web-arm/assets/wk-dsr-m.webp';
+import eaDAvif from '../components/web-arm/assets/wk-ea-d.avif';
+import eaD from '../components/web-arm/assets/wk-ea-d.webp';
+import eaMAvif from '../components/web-arm/assets/wk-ea-m.avif';
+import eaM from '../components/web-arm/assets/wk-ea-m.webp';
+import aquaDAvif from '../components/web-arm/assets/wk-aqua-d.avif';
+import aquaD from '../components/web-arm/assets/wk-aqua-d.webp';
+import aquaMAvif from '../components/web-arm/assets/wk-aqua-m.avif';
+import aquaM from '../components/web-arm/assets/wk-aqua-m.webp';
+import hvnDAvif from '../components/web-arm/assets/wk-hvn-d.avif';
+import hvnD from '../components/web-arm/assets/wk-hvn-d.webp';
+import hvnMAvif from '../components/web-arm/assets/wk-hvn-m.avif';
+import hvnM from '../components/web-arm/assets/wk-hvn-m.webp';
+import sharpDAvif from '../components/web-arm/assets/wk-sharp-d.avif';
+import sharpD from '../components/web-arm/assets/wk-sharp-d.webp';
+import sharpMAvif from '../components/web-arm/assets/wk-sharp-m.avif';
+import sharpM from '../components/web-arm/assets/wk-sharp-m.webp';
 
-gsap.registerPlugin(ScrollTrigger, Flip, CustomEase);
+gsap.registerPlugin(ScrollTrigger, CustomEase);
 
 /* One shared house ease for every non-scrub tween on the page. */
 if (!CustomEase.get('c4')) CustomEase.create('c4', 'M0,0 C0.2,0 0.1,1 1,1');
@@ -123,129 +140,137 @@ const PROCESS = [
   { label: 'Launch', desc: 'Deployment, DNS, analytics, and a handover guide.' },
 ];
 
-/* ── The proof reel ────────────────────────────────────────────────
-   All six pass-1 clients preserved (scope lines + alt text are SEO
-   contract copy). DS Racing Karts is the featured drive — now the
-   REAL full-page home capture driven end to end inside drawn devices.
-   HVN, Tidy Gardens and Evidence Advisory each hold their own display;
-   Sharp, Groverz and Jurassic sit in the record grid with the
-   click-time FLIP morph. */
-const DSR = {
-  key: 'dsr',
-  name: 'DS Racing Karts',
-  url: 'dsracingkarts.com.au',
-  place: 'Perth, WA',
-  year: '2026',
-  scope:
-    'Ecommerce platform for a Sydney-based karting supplier — full shop and checkout, race results, team pages and a custom admin.',
-  home: {
-    desktop: {
-      src: dsrHomeD,
-      w: 900,
-      h: 7808,
-      alt: 'DS Racing Karts home page, end to end — dark motorsport hero, kart categories, latest products and newsletter.',
-    },
-    mobile: {
-      src: dsrHomeM,
-      w: 480,
-      h: 14200,
-      alt: 'DS Racing Karts mobile home page — the same build, phone-first, hero to footer.',
+/* ── The work ──────────────────────────────────────────────────────
+   Caleb's five, in his order (15 Oct 2026). The name, the one-line
+   scope, the year and the live address come from each site's
+   caseStudyData.jsx entry, so the copy can't drift from the portfolio.
+   `place` is the short form of the entry's location. `lens` is a print
+   of C4 Lens work for that client, from lensStudies.js and the files
+   it lists under public/; Evidence Advisory has none. */
+const LENS_CREDIT = 'Photography and videography with';
+
+const WORK = [
+  {
+    slug: 'ds-racing-karts',
+    key: 'dsr',
+    place: 'Woodbine, NSW',
+    desktop: { avif: dsrDAvif, webp: dsrD, w: 960, h: 3600 },
+    mobile: { avif: dsrMAvif, webp: dsrM, w: 400, h: 6059 },
+    lens: {
+      src: '/lens-motion/dsr-header-desktop.webp',
+      w: 1280,
+      h: 720,
+      alt: 'The DSR logo over red and blue streaks of light, a frame from the film at the top of their home page.',
+      caption: 'A frame from the film at the top of their home page.',
     },
   },
-};
-
-/* The three feature displays — each client staged in its own world. */
-const HVN_SHOW = {
-  key: 'hvn',
-  name: 'HVN CrossFit',
-  place: 'Port Kennedy, WA',
-  year: '2026',
-  scope: 'Cinematic Next.js gym site with live class booking and a scroll-driven mini-game.',
-  frames: [
-    { src: hvnF1, alt: 'HVN CrossFit home page — a dark, cinematic hero for a Port Kennedy gym.' },
-    { src: hvnF2, alt: 'HVN CrossFit — training value props over dark photography.' },
-    { src: hvnF3, alt: 'HVN CrossFit — the scroll-driven chin-up mini-game.' },
-    { src: hvnF4, alt: 'HVN CrossFit — live class timetable.' },
-    { src: hvnF5, alt: 'HVN CrossFit — gym gallery.' },
-    { src: hvnF6, alt: 'HVN CrossFit — pro shop.' },
-  ],
-};
-
-const TIDY_SHOW = {
-  key: 'tidy',
-  name: 'Tidy Gardens Australia',
-  place: 'Perth, WA',
-  year: '2026',
-  scope: 'Motion-led site for a garden & reticulation business, with a living scroll motif.',
-  frames: [
-    { src: tidyHero, w: 900, h: 563, alt: 'Tidy Gardens Australia home page — the headline over a backyard lawn, for a Perth garden-care business.' },
-    { src: tidyF2, w: 900, h: 563, alt: 'Tidy Gardens — the scroll-driven lawnmower motif cutting tall grass into a striped lawn.' },
-    { src: tidyF3, w: 900, h: 563, alt: 'Tidy Gardens — reticulation repairs, installations and controller replacement.' },
-  ],
-};
-
-const EA_SHOW = {
-  key: 'evidence',
-  name: 'Evidence Advisory',
-  place: 'Perth, WA',
-  year: '2026',
-  scope: 'Digital-forensics brand site anchored by a scroll-solved 3D crime-scene reconstruction.',
-  img: eaHero,
-  w: 900,
-  h: 563,
-  alt: 'Evidence Advisory home page — a shattered, evidence-tagged smartphone suspended in zero gravity with yellow forensic markers.',
-  tags: [
-    'The evidence-tagged smartphone, suspended mid-shatter',
-    'Yellow forensic markers pacing the scroll',
-    'A scroll-solved 3D reconstruction as the hero',
-  ],
-};
-
-const GROVERZ = {
-  key: 'groverz',
-  name: 'Groverz Tax & Accounting',
-  url: 'groverztax.com.au',
-  place: 'East Cannington, WA',
-  year: '2026',
-  scope: 'Tax-practice site with an interactive refund estimator and a physics-driven hero.',
-  frame: { src: gzD1, w: 900, h: 434, alt: 'Groverz Tax & Accounting home page — a professional accounting-practice website hero.' },
-};
-
-const CASES = [
   {
-    key: 'sharp',
-    name: 'Sharp Bricklaying',
+    slug: 'evidence-advisory',
+    key: 'ea',
     place: 'Perth, WA',
-    year: '2026',
-    scope: 'Premium bricklayer’s site built from drone aerials and a multi-job gallery.',
-    img: sharpHero,
-    w: 900,
-    h: 563,
-    alt: 'Sharp Bricklaying home page — a drone aerial of finished brickwork behind the studio wordmark.',
+    desktop: { avif: eaDAvif, webp: eaD, w: 960, h: 3600 },
+    mobile: { avif: eaMAvif, webp: eaM, w: 400, h: 6059 },
+    lens: null,
   },
   {
-    key: 'groverz',
-    name: GROVERZ.name,
-    place: GROVERZ.place,
-    year: GROVERZ.year,
-    scope: GROVERZ.scope,
-    img: GROVERZ.frame.src,
-    w: GROVERZ.frame.w,
-    h: GROVERZ.frame.h,
-    alt: GROVERZ.frame.alt,
+    slug: 'aqua-safe-plumbing',
+    key: 'aqua',
+    place: 'Perth, WA',
+    desktop: { avif: aquaDAvif, webp: aquaD, w: 960, h: 3600 },
+    mobile: { avif: aquaMAvif, webp: aquaM, w: 400, h: 6059 },
+    lens: {
+      src: '/lens-motion/aquasafe-promo-16x9.webp',
+      w: 1920,
+      h: 1080,
+      alt: 'A chrome pipe on a dark tiled wall with one drop falling, beside the words “It always starts small.”',
+      caption: 'A frame from their promo film, which is made from their own site.',
+    },
   },
   {
-    key: 'jurassic',
-    name: 'Jurassic PT',
-    place: 'Cannington, WA',
-    year: '2026',
-    scope: 'Conversion-focused fitness studio site — memberships, timetable and direct booking.',
-    img: jptHero,
-    w: 900,
-    h: 563,
-    alt: 'Jurassic PT home page — a dark, lime-accented hero for a Cannington personal-training studio.',
+    slug: 'hvn-gym',
+    key: 'hvn',
+    place: 'Port Kennedy, WA',
+    desktop: { avif: hvnDAvif, webp: hvnD, w: 960, h: 3411 },
+    mobile: { avif: hvnMAvif, webp: hvnM, w: 400, h: 6059 },
+    lens: {
+      base: '/lens-work/hvn/coach-b',
+      widths: [360, 720],
+      w: 1250,
+      h: 1563,
+      focus: '50% 22%',
+      alt: 'An HVN coach smiling, arms folded, in the black team shirt.',
+      caption: 'One of the coach portraits on their About page.',
+    },
   },
-];
+  {
+    slug: 'sharp-bricklaying',
+    key: 'sharp',
+    place: 'Perth, WA',
+    desktop: { avif: sharpDAvif, webp: sharpD, w: 960, h: 3600 },
+    mobile: { avif: sharpMAvif, webp: sharpM, w: 400, h: 6059 },
+    lens: {
+      base: '/lens-work/sharp/aerial-oblique',
+      widths: [640, 1280],
+      w: 2048,
+      h: 1152,
+      alt: 'A brick house shell from the air, walls up, late sun throwing long shadows.',
+      caption: 'One of the aerials of their jobs in the site’s gallery.',
+    },
+  },
+].map((w) => {
+  const study = getCaseStudy(w.slug);
+  return {
+    ...w,
+    name: study.name,
+    scope: study.oneLiner,
+    year: study.year,
+    live: study.liveUrl,
+    host: study.liveUrl.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''),
+    caseStudy: `/CaseStudy/${w.slug}`,
+  };
+});
+
+/* A print of C4 Lens work: one still, srcset where the Lens page keeps
+   several widths, a plain WebP where it keeps one (the film frames). */
+function LensPrint({ lens, client }) {
+  const img = lens.base ? (
+    <picture>
+      <source
+        type="image/avif"
+        srcSet={lens.widths.map((x) => `${lens.base}-${x}.avif ${x}w`).join(', ')}
+        sizes="(min-width: 900px) 300px, 60vw"
+      />
+      <img
+        src={`${lens.base}-${lens.widths[0]}.webp`}
+        srcSet={lens.widths.map((x) => `${lens.base}-${x}.webp ${x}w`).join(', ')}
+        sizes="(min-width: 900px) 300px, 60vw"
+        width={lens.w}
+        height={lens.h}
+        loading="lazy"
+        decoding="async"
+        alt={lens.alt}
+        style={lens.focus ? { objectPosition: lens.focus } : undefined}
+      />
+    </picture>
+  ) : (
+    <img src={lens.src} width={lens.w} height={lens.h} loading="lazy" decoding="async" alt={lens.alt} />
+  );
+  return (
+    <figure className="lv-print">
+      <div className="lv-print-photo">{img}</div>
+      <figcaption>
+        {lens.caption}{' '}
+        <span className="lv-print-credit">
+          {LENS_CREDIT}{' '}
+          <Link to="/Lens" aria-label={`C4 Lens, which worked on ${client}’s photography and videography`}>
+            C4 Lens
+          </Link>
+          .
+        </span>
+      </figcaption>
+    </figure>
+  );
+}
 
 /* Sections zipped with their pricing guides (parallel arrays in
    pricing.js — base / ecommerce / apps). */
@@ -322,7 +347,7 @@ function PriceOdometer({ label, animate }) {
     }
   }, [label, animate]);
 
-  if (!m) return <span className="lv-price-text">{label}</span>;
+  if (!m) return <span className="lv-price-text">{tightFigure(label)}</span>;
   const [, prefix, digits, suffix] = m;
   return (
     <span className="lv-odo" ref={hostRef}>
@@ -341,7 +366,9 @@ function PriceOdometer({ label, animate }) {
               </span>
             </span>
           ) : (
-            <span className="lv-odo-fix" key={i}>
+            /* B612 gives the comma a full cell, so "$1,500" read as
+               "$1, 500"; .c4-comma (marks.css) pulls it in. */
+            <span className={ch === ',' ? 'lv-odo-fix c4-comma' : 'lv-odo-fix'} key={i}>
               {ch}
             </span>
           ),
@@ -354,8 +381,9 @@ function PriceOdometer({ label, animate }) {
 }
 
 /* ── Chrome pin — forced light gallery ─────────────────────────────
-   `.lv-on-stage` (marker class unchanged) pins the full --c4-* set
-   LIGHT (web-arm.css) for the life of the page. ThemeProvider
+   `.lv-on-stage` (marker class unchanged) pins the --c4-* set LIGHT
+   (web-arm.css) for the life of the page, all but the nav bar, which
+   stays ink. ThemeProvider
    re-applies its own tokens from a parent effect, so a guarded
    MutationObserver re-asserts (house pattern: ServiceAI/Foresight). */
 function useForceLight() {
@@ -386,13 +414,9 @@ export default function ServiceWeb() {
   useForceLight();
   const rootRef = useRef(null);
   const lenisRef = useRef(null);
-  const openerRef = useRef(null);
-  const flipStateRef = useRef(null);
-  const panelRef = useRef(null);
 
   const [billing, setBilling] = useState('once');
   const isMonthly = billing === 'monthly';
-  const [openCase, setOpenCase] = useState(null);
 
   const prerender = useMemo(
     () => typeof navigator !== 'undefined' && /Prerender/i.test(navigator.userAgent),
@@ -492,240 +516,52 @@ export default function ServiceWeb() {
         /* Reel head. */
         q('.lv-reel-head').forEach((el) => rise(el, { start: 'top 82%' }));
 
-        /* ── DSR featured drive — the REAL home page, driven end to end
-           inside the drawn laptop and phone. Both devices scrub the
-           full-page capture; the phone leads slightly so the two reads
-           feel independent, like a desk with both screens alive. */
-        const real = q('.lv-drive--real')[0];
-        if (real && desk) {
-          const dImg = real.querySelector('.lv-mac-view img');
-          const dView = real.querySelector('.lv-mac-view');
-          const mImg = real.querySelector('.lv-cell-view img');
-          const mView = real.querySelector('.lv-cell-view');
-          /* Entrance: the stage focuses in (soft blur + scale) before
-             the pin engages — one short pass, filter cleared after. */
-          gsap.fromTo(
-            real.querySelector('.lv-drive-stage'),
-            { scale: 0.975, filter: 'blur(3px)' },
-            {
-              scale: 1,
-              filter: 'blur(0px)',
-              duration: 0.8,
-              ease: 'power2.out',
-              clearProps: 'filter',
-              scrollTrigger: { trigger: real, start: 'top 85%', once: true },
-            },
-          );
-          const driveTl = gsap.timeline({
-            scrollTrigger: {
-              trigger: real,
-              start: 'top top',
-              end: 'bottom bottom',
-              scrub: 1,
-              invalidateOnRefresh: true,
-            },
-          });
-          driveTl.fromTo(
-            real.querySelector('.lv-drive-id'),
-            { y: 30 },
-            { y: -30, ease: 'none', duration: 1 },
-            0,
-          );
-          /* The whole page, hero to footer — a genuine walkthrough. */
-          driveTl.to(dImg, {
-            y: () => -Math.max(0, dImg.offsetHeight - dView.clientHeight),
-            ease: 'none',
-            duration: 0.92,
-          }, 0.04);
-          driveTl.to(mImg, {
-            y: () => -Math.max(0, mImg.offsetHeight - mView.clientHeight),
-            ease: 'none',
-            duration: 0.88,
-          }, 0);
-        }
-        /* Mobile: the same walkthrough on the section's own transit —
-           no pin, both devices still drive the real page. */
-        if (real && !desk) {
+        /* ── The work — each piece arrives, then its two screens scroll
+           the live site top to bottom across the piece's own transit.
+           No pin: five pinned drives would be thirteen screens of
+           scrolling. The phone starts a beat later than the laptop, so
+           the two reads feel like two people browsing, not one. */
+        q('.lv-work').forEach((work) => {
+          const stage = work.querySelector('.lv-work-stage');
+          if (stage) {
+            gsap.fromTo(
+              stage,
+              { scale: 0.975, filter: 'blur(3px)' },
+              {
+                scale: 1,
+                filter: 'blur(0px)',
+                duration: 0.8,
+                ease: 'power2.out',
+                clearProps: 'filter,transform',
+                scrollTrigger: { trigger: work, start: 'top 88%', once: true },
+              },
+            );
+          }
+          const id = work.querySelector('.lv-work-id');
+          if (id) rise(id, { trigger: work, start: 'top 80%' });
           [
-            ['.lv-mac-view', '.lv-mac-view img'],
-            ['.lv-cell-view', '.lv-cell-view img'],
-          ].forEach(([viewSel, imgSel]) => {
-            const view = real.querySelector(viewSel);
-            const img = real.querySelector(imgSel);
-            if (!view || !img) return;
+            ['.lv-mac-view', desk ? 'top 82%' : 'top 88%'],
+            ['.lv-cell-view', desk ? 'top 70%' : 'top 80%'],
+          ].forEach(([viewSel, start]) => {
+            const view = work.querySelector(viewSel);
+            const img = view && view.querySelector('img');
+            if (!img) return;
             gsap.to(img, {
               y: () => -Math.max(0, img.offsetHeight - view.clientHeight),
               ease: 'none',
               scrollTrigger: {
-                trigger: real,
-                start: 'top 80%',
-                end: 'bottom 20%',
-                scrub: 1,
-                invalidateOnRefresh: true,
-              },
-            });
-          });
-        }
-
-        /* ── HVN — the dark cinema strip pans horizontally across its
-           own transit; the film keeps a slow constant burn. */
-        const hvn = q('.lv-show--hvn')[0];
-        if (hvn) {
-          const strip = hvn.querySelector('.lv-hvn-strip');
-          const viewport = hvn.querySelector('.lv-hvn-viewport');
-          if (strip && viewport) {
-            gsap.to(strip, {
-              x: () => -Math.max(0, strip.scrollWidth - viewport.clientWidth),
-              ease: 'none',
-              scrollTrigger: {
-                trigger: hvn,
-                start: 'top 80%',
+                trigger: work,
+                start,
                 end: 'bottom 12%',
                 scrub: 1,
                 invalidateOnRefresh: true,
               },
             });
-            /* The playhead tracks the reel on the same transit. */
-            const scrub = hvn.querySelector('.lv-hvn-scrub i');
-            if (scrub) {
-              gsap.fromTo(scrub, { scaleX: 0 }, {
-                scaleX: 1,
-                ease: 'none',
-                scrollTrigger: { trigger: hvn, start: 'top 80%', end: 'bottom 12%', scrub: 1 },
-              });
-            }
-          }
-        }
-
-        /* ── Tidy — the vine draws itself as the plot crosses the
-           viewport; leaves unfurl at their nodes. Static default is the
-           fully-drawn vine (GSAP owns the pre-state at arm time). */
-        const tidy = q('.lv-show--tidy')[0];
-        if (tidy) {
-          const stem = tidy.querySelector('.lv-tidy-stem');
-          if (stem && typeof stem.getTotalLength === 'function') {
-            const len = stem.getTotalLength();
-            gsap.fromTo(
-              stem,
-              { strokeDasharray: len, strokeDashoffset: len },
-              {
-                strokeDashoffset: 0,
-                ease: 'none',
-                scrollTrigger: {
-                  trigger: tidy,
-                  start: 'top 78%',
-                  end: 'bottom 30%',
-                  scrub: 1,
-                },
-              },
-            );
-          }
-          tidy.querySelectorAll('.lv-tidy-leaf').forEach((leaf, i) => {
-            gsap.fromTo(
-              leaf,
-              { opacity: 0, scale: 0.6, transformOrigin: 'left center' },
-              {
-                opacity: 1,
-                scale: 1,
-                duration: 0.5,
-                ease: 'c4',
-                scrollTrigger: { trigger: tidy, start: `top ${72 - i * 14}%`, once: true },
-              },
-            );
           });
-          tidy.querySelectorAll('.lv-tidy-frames figure').forEach((fig, i) => {
-            rise(fig, { delay: i * 0.08, start: 'top 88%' });
-          });
-        }
-
-        /* ── Evidence Advisory — the wall assembles: photo focuses in,
-           the three evidence chips land one by one. */
-        const ea = q('.lv-show--ea')[0];
-        if (ea) {
-          gsap.fromTo(
-            ea.querySelector('.lv-ea-fig'),
-            { scale: 0.97, filter: 'blur(3px)', opacity: 0.4 },
-            {
-              scale: 1,
-              filter: 'blur(0px)',
-              opacity: 1,
-              duration: 0.8,
-              ease: 'power2.out',
-              clearProps: 'filter',
-              scrollTrigger: { trigger: ea, start: 'top 82%', once: true },
-            },
-          );
-          gsap.fromTo(
-            ea.querySelectorAll('.lv-ea-tag'),
-            { y: 16, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.55,
-              stagger: 0.14,
-              ease: 'c4',
-              scrollTrigger: { trigger: ea, start: 'top 70%', once: true },
-            },
-          );
-          /* The UV torch — a forensic light that follows the cursor
-             over the evidence photo (fine pointers only). */
-          const fig = ea.querySelector('.lv-ea-fig');
-          if (fig && desk && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-            const torchMove = (e) => {
-              const r = fig.getBoundingClientRect();
-              fig.style.setProperty('--tx', `${(((e.clientX - r.left) / r.width) * 100).toFixed(2)}%`);
-              fig.style.setProperty('--ty', `${(((e.clientY - r.top) / r.height) * 100).toFixed(2)}%`);
-              fig.setAttribute('data-torch', '');
-            };
-            const torchLeave = () => fig.removeAttribute('data-torch');
-            fig.addEventListener('pointermove', torchMove);
-            fig.addEventListener('pointerleave', torchLeave);
-            magnetCleanups.push(() => {
-              fig.removeEventListener('pointermove', torchMove);
-              fig.removeEventListener('pointerleave', torchLeave);
-            });
-          }
-        }
-
-        /* Static case frames: staggered arrivals, focus-in, and a
-           subtle counter-rate drift inside each cropped frame. */
-        q('.lv-case').forEach((el, i) => {
-          rise(el, { start: 'top 90%', delay: (i % 2) * 0.08 });
-          const fig = el.querySelector('.lv-case-fig');
-          if (!fig) return;
-          /* Frame focuses in — short soft blur/scale. Transform AND
-             filter cleared on completion: nothing keeps compositing,
-             and the CSS hover lift gets its transform slot back. */
-          gsap.fromTo(
-            fig,
-            { scale: 0.97, filter: 'blur(3px)' },
-            {
-              scale: 1,
-              filter: 'blur(0px)',
-              duration: 0.7,
-              delay: (i % 2) * 0.08,
-              ease: 'power2.out',
-              clearProps: 'transform,filter',
-              scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-            },
-          );
-          const img = fig.querySelector('img');
-          if (img) {
-            gsap.fromTo(
-              img,
-              { yPercent: i % 2 ? 3.2 : -3.2, scale: 1.07 },
-              {
-                yPercent: i % 2 ? -3.2 : 3.2,
-                scale: 1.07,
-                ease: 'none',
-                scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 1 },
-              },
-            );
-          }
         });
 
-        /* Decode capture sets just ahead of their entrance so drive
-           swaps never jank. */
+        /* Decode the screens just ahead of their entrance so the first
+           scrubbed frame never janks. */
         const decodeIO = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
@@ -738,7 +574,7 @@ export default function ServiceWeb() {
           },
           { rootMargin: '140% 0px' },
         );
-        q('.lv-drive, .lv-cases').forEach((el) => decodeIO.observe(el));
+        q('.lv-work-stage').forEach((el) => decodeIO.observe(el));
 
         /* Rate card rows rise in. */
         q('.lv-line').forEach((row) => rise(row, { start: 'top 92%' }));
@@ -799,90 +635,6 @@ export default function ServiceWeb() {
     };
   }, [staticMode]);
 
-  /* ── Case morph: click-time Flip (the one place Flip is allowed).
-     The overlay is an enhancement over the always-rendered captions
-     and links; static mode gets a plain conditional render. */
-  const activeCase = openCase ? CASES.find((c) => c.key === openCase) : null;
-
-  const handleOpenCase = (key, event) => {
-    openerRef.current = event.currentTarget;
-    if (!staticMode) {
-      const img = event.currentTarget.querySelector('img');
-      if (img) flipStateRef.current = Flip.getState(img);
-    }
-    setOpenCase(key);
-  };
-
-  const handleCloseCase = () => {
-    const panel = panelRef.current;
-    const finish = () => {
-      setOpenCase(null);
-      if (openerRef.current) openerRef.current.focus();
-    };
-    if (!staticMode && panel) {
-      gsap.to(panel, { opacity: 0, scale: 0.985, duration: 0.24, ease: 'power1.in', onComplete: finish });
-    } else {
-      finish();
-    }
-  };
-
-  useLayoutEffect(() => {
-    if (!openCase) return undefined;
-    const panel = panelRef.current;
-    if (panel && !staticMode && flipStateRef.current) {
-      const img = panel.querySelector('img');
-      if (img) {
-        Flip.from(flipStateRef.current, {
-          targets: img,
-          absolute: true,
-          duration: 0.65,
-          ease: 'c4',
-        });
-      }
-      flipStateRef.current = null;
-      gsap.fromTo(
-        panel.querySelectorAll('.lv-panel-copy > *'),
-        { y: 18, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.4, stagger: 0.05, delay: 0.3, ease: 'c4' },
-      );
-    }
-    const closeBtn = panel ? panel.querySelector('.lv-panel-close') : null;
-    if (closeBtn) closeBtn.focus();
-    const lenis = lenisRef.current;
-    if (lenis) lenis.stop();
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    const onKey = (e) => {
-      if (e.key === 'Escape') {
-        handleCloseCase();
-        return;
-      }
-      /* Contain Tab inside the dialog: aria-modal announces the page
-         as hidden to AT, so sighted keyboard focus must not walk into
-         the scroll-locked background either. */
-      if (e.key === 'Tab' && panel) {
-        const focusables = panel.querySelectorAll('a[href], button:not([disabled])');
-        if (!focusables.length) return;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        const inside = panel.contains(document.activeElement);
-        if (e.shiftKey && (!inside || document.activeElement === first)) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && (!inside || document.activeElement === last)) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    };
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prevOverflow;
-      if (lenis) lenis.start();
-    };
-  }, [openCase, staticMode]);
-
   /* Smooth-jump to the rate card (Lenis owns scroll when armed). */
   const skipToPricing = () => {
     const target = document.getElementById('lv-pricing');
@@ -940,15 +692,15 @@ export default function ServiceWeb() {
         </div>
       </section>
 
-      {/* ══ The proof reel ══════════════════════════════════════════ */}
-      <section className="lv-reel">
+      {/* ══ The work — five sites, one way of showing them ═════════ */}
+      <section className="lv-reel" aria-labelledby="lv-reel-h">
         <div className="lv-frame">
           <div className="lv-reel-head">
             <div>
-              <h2 className="lv-h2">Live sites, browsing themselves.</h2>
+              <h2 className="lv-h2" id="lv-reel-h">Live sites, browsing themselves.</h2>
               <p className="lv-sub">
-                Real client work, driving itself as you scroll. Every frame opens the
-                wider record.
+                Five client sites as they stand today. Each one scrolls itself, top to
+                bottom, as you go past.
               </p>
             </div>
             <Link className="lv-link" to={PORTFOLIO}>
@@ -958,24 +710,25 @@ export default function ServiceWeb() {
           </div>
         </div>
 
-        {/* Featured drive — DSR's REAL home page inside real devices:
-            a laptop and a phone, both driven hero → footer. */}
-        <div className="lv-drive lv-drive--real">
-          <div className="lv-drive-sticky">
-            <div className="lv-frame lv-drive-grid">
-              <div className="lv-drive-stage lv-real-stage">
+        <div className="lv-frame lv-works">
+          {WORK.map((w) => (
+            <article className={`lv-work lv-work--${w.key}`} key={w.key} aria-labelledby={`lv-work-${w.key}`}>
+              <div className="lv-work-stage lv-real-stage">
                 <div className="lv-mac">
                   <div className="lv-mac-lid">
                     <span className="lv-mac-cam" aria-hidden="true" />
                     <div className="lv-mac-view">
-                      <img
-                        src={DSR.home.desktop.src}
-                        width={DSR.home.desktop.w}
-                        height={DSR.home.desktop.h}
-                        loading="lazy"
-                        decoding="async"
-                        alt={DSR.home.desktop.alt}
-                      />
+                      <picture>
+                        <source type="image/avif" srcSet={w.desktop.avif} />
+                        <img
+                          src={w.desktop.webp}
+                          width={w.desktop.w}
+                          height={w.desktop.h}
+                          loading="lazy"
+                          decoding="async"
+                          alt={`${w.name}, the live home page on a laptop, top to bottom.`}
+                        />
+                      </picture>
                     </div>
                   </div>
                   <div className="lv-mac-base" aria-hidden="true">
@@ -985,212 +738,51 @@ export default function ServiceWeb() {
                 <div className="lv-cell">
                   <span className="lv-cell-island" aria-hidden="true" />
                   <div className="lv-cell-view">
-                    <img
-                      src={DSR.home.mobile.src}
-                      width={DSR.home.mobile.w}
-                      height={DSR.home.mobile.h}
-                      loading="lazy"
-                      decoding="async"
-                      alt={DSR.home.mobile.alt}
-                    />
+                    <picture>
+                      <source type="image/avif" srcSet={w.mobile.avif} />
+                      <img
+                        src={w.mobile.webp}
+                        width={w.mobile.w}
+                        height={w.mobile.h}
+                        loading="lazy"
+                        decoding="async"
+                        alt={`${w.name} on a phone, the same build laid out for a small screen.`}
+                      />
+                    </picture>
                   </div>
                 </div>
               </div>
-              <div className="lv-drive-id">
-                <p className="lv-client">{DSR.name}</p>
-                <p className="lv-scope">{DSR.scope}</p>
+
+              <div className="lv-work-id">
+                <h3 className="lv-client" id={`lv-work-${w.key}`}>
+                  {w.name}
+                </h3>
+                <p className="lv-scope">{w.scope}</p>
                 <p className="lv-cap">
-                  {DSR.place} · {DSR.year} · {DSR.url} — the live home page, driven end to end
+                  {w.place} · {w.year} · {w.host}
                 </p>
-                <Link className="lv-link lv-link--small" to={PORTFOLIO}>
-                  View in portfolio
-                  <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ── HVN CrossFit — the dark cinema strip. ─────────────────── */}
-        <div className="lv-show lv-show--hvn">
-          <div className="lv-frame">
-            <div className="lv-hvn-head">
-              <div>
-                <div className="lv-hvn-rule" aria-hidden="true" />
-                <p className="lv-client">{HVN_SHOW.name}</p>
-                <p className="lv-scope">{HVN_SHOW.scope}</p>
-                <p className="lv-cap">
-                  {HVN_SHOW.place} · {HVN_SHOW.year}
-                </p>
-              </div>
-              <Link className="lv-link lv-link--small" to={PORTFOLIO}>
-                View in portfolio
-                <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
-              </Link>
-            </div>
-          </div>
-          <div className="lv-hvn-viewport">
-            <div className="lv-hvn-strip">
-              {HVN_SHOW.frames.map((f) => (
-                <div className="lv-hvn-frame" key={f.src}>
-                  <img src={f.src} width={900} height={563} loading="lazy" decoding="async" alt={f.alt} />
-                </div>
-              ))}
-            </div>
-          </div>
-          {/* The playhead — scroll scrubs the reel; this is its timecode. */}
-          <div className="lv-frame">
-            <div className="lv-hvn-scrub" aria-hidden="true">
-              <i />
-            </div>
-            <p className="lv-cap lv-hvn-count">6 frames · scroll to scrub</p>
-          </div>
-        </div>
-
-        {/* ── Tidy Gardens — its own vine, drawn by the scroll. ─────── */}
-        <div className="lv-show lv-show--tidy">
-          <div className="lv-frame lv-tidy-grid">
-            <div className="lv-tidy-copy">
-              <svg className="lv-tidy-vine" viewBox="0 0 40 600" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
-                <path
-                  className="lv-tidy-stem"
-                  d="M20 592 C 13 528, 27 476, 20 408 C 14 350, 26 300, 20 236 C 15 180, 25 122, 19 58 C 17 38, 19 22, 21 8"
-                />
-                <path className="lv-tidy-leaf" d="M20 470 C 8 462, 4 448, 7 438 C 18 442, 22 456, 20 470 Z" fill="#4a7c43" stroke="none" />
-                <path className="lv-tidy-leaf" d="M20 300 C 32 292, 36 278, 33 268 C 22 272, 18 286, 20 300 Z" fill="#4a7c43" stroke="none" />
-                <path className="lv-tidy-leaf" d="M19 130 C 7 122, 3 108, 6 98 C 17 102, 21 116, 19 130 Z" fill="#4a7c43" stroke="none" />
-              </svg>
-              <p className="lv-client">{TIDY_SHOW.name}</p>
-              <p className="lv-scope">{TIDY_SHOW.scope}</p>
-              <p className="lv-cap">
-                {TIDY_SHOW.place} · {TIDY_SHOW.year} · the vine is theirs — it grows down their site too
-              </p>
-              <Link className="lv-link lv-link--small" to={PORTFOLIO}>
-                View in portfolio
-                <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
-              </Link>
-            </div>
-            <div className="lv-tidy-frames">
-              {TIDY_SHOW.frames.map((f) => (
-                <figure key={f.src}>
-                  <img src={f.src} width={f.w} height={f.h} loading="lazy" decoding="async" alt={f.alt} />
-                </figure>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ── Evidence Advisory — the evidence wall. ────────────────── */}
-        <div className="lv-show lv-show--ea">
-          <div className="lv-frame lv-ea-grid">
-            <figure className="lv-ea-fig">
-              <img src={EA_SHOW.img} width={EA_SHOW.w} height={EA_SHOW.h} loading="lazy" decoding="async" alt={EA_SHOW.alt} />
-              <span className="lv-ea-torch" aria-hidden="true" />
-            </figure>
-            <div>
-              <p className="lv-client">{EA_SHOW.name}</p>
-              <p className="lv-scope">{EA_SHOW.scope}</p>
-              <p className="lv-cap">
-                {EA_SHOW.place} · {EA_SHOW.year}
-              </p>
-              <ul className="lv-ea-tags">
-                {EA_SHOW.tags.map((tag, i) => (
-                  <li className="lv-ea-tag" key={tag}>
-                    <span className="lv-ea-chip" aria-hidden="true">0{i + 1}</span>
-                    {tag}
-                  </li>
-                ))}
-              </ul>
-              <Link className="lv-link lv-link--small" to={PORTFOLIO} style={{ marginTop: 22 }}>
-                View in portfolio
-                <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* The record — static frames, click-time FLIP case morphs. */}
-        <div className="lv-frame">
-          <div className="lv-cases">
-            {CASES.map((c) => (
-              <div className={`lv-case lv-case--${c.key}`} key={c.key} data-open={openCase === c.key || undefined}>
-                <button
-                  type="button"
-                  className="lv-case-fig"
-                  onClick={(e) => handleOpenCase(c.key, e)}
-                  aria-haspopup="dialog"
-                  aria-label={`Open the ${c.name} case panel`}
-                >
-                  <img
-                    src={c.img}
-                    width={c.w}
-                    height={c.h}
-                    loading="lazy"
-                    decoding="async"
-                    alt={c.alt}
-                    data-flip-id={`case-${c.key}`}
-                  />
-                </button>
-                <div className="lv-case-tb">
-                  <span className="lv-cap">
-                    {c.name} · {c.year}
-                  </span>
-                  <span className="lv-case-scope">{c.scope}</span>
-                  <Link className="lv-link lv-link--small" to={PORTFOLIO}>
-                    View in portfolio
+                <div className="lv-work-links">
+                  <Link className="lv-link lv-link--small" to={w.caseStudy}>
+                    Case study
                     <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
                   </Link>
+                  <a
+                    className="lv-link lv-link--small"
+                    href={w.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Open the live ${w.name} site in a new tab`}
+                  >
+                    Live site
+                    <ArrowUpRight size={12} strokeWidth={2.5} aria-hidden="true" />
+                  </a>
                 </div>
+                {w.lens && <LensPrint lens={w.lens} client={w.name} />}
               </div>
-            ))}
-          </div>
+            </article>
+          ))}
         </div>
       </section>
-
-      {/* Case panel — the FLIP destination. */}
-      {activeCase && (
-        <div className="lv-panel-backdrop" onClick={handleCloseCase} role="presentation">
-          <div
-            className="lv-panel"
-            ref={panelRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label={`${activeCase.name} — case detail`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button type="button" className="lv-panel-close" onClick={handleCloseCase} aria-label="Close case panel">
-              <X size={18} strokeWidth={2.5} aria-hidden="true" />
-            </button>
-            <div className="lv-browser lv-panel-browser">
-              <div className="lv-browser-bar" aria-hidden="true">
-                <span className="lv-dot" />
-                <span className="lv-dot" />
-                <span className="lv-dot" />
-              </div>
-              <div className="lv-browser-view">
-                <img
-                  src={activeCase.img}
-                  width={activeCase.w}
-                  height={activeCase.h}
-                  alt={activeCase.alt}
-                  data-flip-id={`case-${activeCase.key}`}
-                />
-              </div>
-            </div>
-            <div className="lv-panel-copy">
-              <p className="lv-client">{activeCase.name}</p>
-              <p className="lv-scope">{activeCase.scope}</p>
-              <p className="lv-cap">
-                {activeCase.place} · {activeCase.year}
-              </p>
-              <Link className="lv-btn lv-btn--ghostline" to={PORTFOLIO}>
-                View in portfolio
-                <ArrowRight size={14} strokeWidth={2.5} aria-hidden="true" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ══ Concepts — built before any brief existed ═══════════════ */}
       <section className="lv-concepts" aria-labelledby="lv-concepts-h">
@@ -1199,8 +791,8 @@ export default function ServiceWeb() {
             <div>
               <h2 className="lv-h2" id="lv-concepts-h">Concepts. Built before any brief existed.</h2>
               <p className="lv-sub">
-                Five self-initiated builds, fully deployed — what the studio ships when
-                nobody&rsquo;s asking. Drag the shelf; every face opens the real thing.
+                Five self-initiated builds, each one live. Nobody asked for these, so they
+                show what we make when we set the brief. Drag the shelf to turn it.
               </p>
             </div>
             <Link className="lv-link" to="/Portfolio?filter=concept">
@@ -1212,8 +804,8 @@ export default function ServiceWeb() {
         <ConceptCarousel staticMode={staticMode} />
         <div className="lv-frame lv-concepts-foot">
           <p className="lv-concepts-note">
-            Barry&rsquo;s Drink, Wooster Core, JK Plumbing and IOPA Apparel are each a live
-            deployment, available to license or commission.
+            None of these was commissioned by the business it imagines. Each one is live
+            at its own address.
           </p>
         </div>
       </section>
@@ -1280,7 +872,7 @@ export default function ServiceWeb() {
               <header className="lv-group-head">
                 <div className="lv-group-title">
                   <h3>{section.heading}</h3>
-                  {section.guide && <span className="lv-range">{section.guide.range}</span>}
+                  {section.guide && <span className="lv-range">{tightFigure(section.guide.range)}</span>}
                 </div>
                 <p className="lv-group-desc">{section.description}</p>
                 {section.guide && <p className="lv-group-guide">{section.guide.description}</p>}
