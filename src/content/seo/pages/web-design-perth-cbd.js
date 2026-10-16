@@ -38,13 +38,13 @@ export default {
       label: 'Pricing',
       heading: 'What does it cost?',
       mode: 'anchor',
-      note: 'Professional-services firms (legal, finance, medical) carry our published 15–20% compliance surcharge — itemised in the quote. Larger corporate builds and portals are scoped from the $2,500–$4,500 tiers.',
+      note: 'Professional-services firms (legal, financial, medical) may incur our published 15–20% surcharge for compliance and regulatory requirements, which we talk through on the discovery call. Larger corporate builds and portals are scoped from the $2,500–$4,500 tiers.',
     },
   ],
   faqs: [
     {
       q: 'How much does a website cost for a CBD professional firm?',
-      a: 'From $1,500 for the business tier, plus the 15–20% professional-services surcharge if you’re in legal, finance or medical — so most firm sites land between $1,750 and $2,900. Portals and client-facing tools are scoped separately from $4,500.',
+      a: 'From $1,500 for the business tier. Legal, financial and medical firms may incur the published 15–20% surcharge on top, which we talk through on the discovery call. Portals and client-facing tools are scoped separately from $4,500.',
     },
     {
       q: 'Can you meet in person in the city?',

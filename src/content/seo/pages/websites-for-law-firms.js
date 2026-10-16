@@ -54,7 +54,7 @@ export default {
         ['Search', 'Competes on nothing', 'Practice-area pages that rank for real questions'],
         ['Intake', 'A contact form named “Submit”', 'Filtered enquiries with matter type and urgency attached'],
         ['Maintenance', 'Plugin roulette every month', 'Hand-coded, nothing to patch'],
-        ['Cost', '$300–$800 now, rebuilt within two years', 'From $1,500 plus the professional-services margin below'],
+        ['Cost', 'A builder plan or a one-off template fee', 'From $1,500, plus the professional-services surcharge below where it applies'],
       ],
     },
     {
@@ -62,13 +62,13 @@ export default {
       label: 'Pricing',
       heading: 'What does a law firm website cost?',
       mode: 'anchor',
-      note: 'One thing we publish that most won’t: legal, financial and medical sites carry a 15–20% surcharge, because compliance review and careful wording take real hours. You’ll see it itemised in the quote, not discovered in an invoice.',
+      note: 'One thing we publish up front: legal, financial and medical sites may incur a 15–20% surcharge, because compliance review and careful wording take real hours. We talk it through on the discovery call, so it never turns up as a surprise on an invoice.',
     },
   ],
   faqs: [
     {
       q: 'How much does a law firm website cost in Perth?',
-      a: 'From $1,500 plus a 15–20% professional-services surcharge that covers compliance care in the wording and review cycles — itemised in the quote up front. A six-page firm site with practice areas, profiles and filtered intake typically lands around $2,000–$2,900 all-in.',
+      a: 'From $1,500, plus a 15–20% professional-services surcharge that may apply for the compliance care in the wording and review cycles. We talk it through on the discovery call, and bigger firm sites are quoted by scope.',
     },
     {
       q: 'Do you understand the rules around legal advertising?',

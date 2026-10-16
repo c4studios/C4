@@ -83,7 +83,7 @@ export default {
     },
     {
       q: 'Who keeps the timetable up to date?',
-      a: 'Whoever you nominate — we build it so a coach can update times without touching code, or fold updates into a $79-a-month care plan. The screenshot-timetable era ends either way.',
+      a: 'Whoever you nominate — we build it so a coach can update times without touching code, or fold updates into a care plan from $99 a month. The screenshot-timetable era ends either way.',
     },
     {
       q: 'Can you shoot photos and video of our gym?',

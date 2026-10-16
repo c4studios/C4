@@ -79,7 +79,7 @@ export default {
     },
     {
       q: 'Can our volunteers update it themselves?',
-      a: 'That’s the design goal. Events, times and notices are editable without touching code, and every build ships with a plain-English handover guide so the next volunteer inherits a system, not a mystery. A $79-a-month care plan exists if you’d rather we handle updates.',
+      a: 'That’s the design goal. Events, times and notices are editable without touching code, and every build ships with a plain-English handover guide so the next volunteer inherits a system, not a mystery. Care plans start at $99 a month if you’d rather we handle updates.',
     },
     {
       q: 'How should we host our sermons?',

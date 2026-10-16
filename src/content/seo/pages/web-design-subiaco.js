@@ -38,13 +38,13 @@ export default {
       label: 'Pricing',
       heading: 'What does it cost?',
       mode: 'anchor',
-      note: 'Medical and specialist sites carry the published 15–20% professional-services surcharge for compliance care. Boutique and hospitality builds price at the standard tiers.',
+      note: 'Medical and specialist sites may incur the published 15–20% professional-services surcharge for compliance and regulatory requirements. Boutique and hospitality builds price at the standard tiers.',
     },
   ],
   faqs: [
     {
       q: 'How much does a specialist practice website cost?',
-      a: 'From $1,500 plus the published 15–20% medical surcharge — typically $1,750–$2,900 with booking integration. That covers the compliance-careful wording and review cycles practice sites genuinely need; it’s itemised in the quote, never discovered later.',
+      a: 'From $1,500, and medical practices may incur the published 15–20% professional-services surcharge on top. It covers the compliance-careful wording and review cycles practice sites need, and we talk it through on the discovery call so it’s never a surprise.',
     },
     {
       q: 'Our patients are referred — does the website still matter?',

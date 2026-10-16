@@ -38,7 +38,7 @@ export default {
       label: 'Pricing',
       heading: 'What does it cost?',
       mode: 'anchor',
-      note: 'Most Claremont rebuilds land at $1,500–$2,500 with redirects handled properly. Boutique stores start at $3,500; health and professional practices carry the published 15–20% surcharge.',
+      note: 'Rebuilds start at $1,500, or $2,500 for a custom site, with redirects handled properly. Boutique stores start at $3,500, and health and professional practices may incur the published 15–20% surcharge.',
     },
   ],
   faqs: [

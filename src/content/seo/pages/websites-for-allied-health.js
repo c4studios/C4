@@ -58,13 +58,13 @@ export default {
       label: 'Pricing',
       heading: 'What does a practice website cost?',
       mode: 'anchor',
-      note: 'Medical and allied health sites carry a 15–20% professional-services surcharge — compliance-careful wording and review cycles take real hours, and we’d rather publish that than surprise you. It’s itemised in every quote.',
+      note: 'Medical and allied health sites may incur a 15–20% professional-services surcharge. Compliance-careful wording and review cycles take real hours, and we’d rather publish that than surprise you. We talk it through on the discovery call.',
     },
   ],
   faqs: [
     {
       q: 'How much does an allied health website cost?',
-      a: 'From $1,500 plus a published 15–20% professional-services surcharge covering compliance care — so most practice sites land between $1,750 and $2,900 with booking integration. Multi-practitioner clinics with deeper service libraries are quoted by scope.',
+      a: 'From $1,500, plus the published 15–20% professional-services surcharge where it applies for compliance care. Online booking is a $400 add-on. Multi-practitioner clinics with deeper service libraries are quoted by scope.',
     },
     {
       q: 'Can you integrate our practice management software?',
