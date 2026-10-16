@@ -243,15 +243,17 @@ const COMPARISONS = [
   },
   {
     slug: 'wix-squarespace-vs-custom-website', type: 'comparison', status: 'live', phase: 4,
+    // Rewritten 16 Oct 2026 with Wix's and Squarespace's own prices, read
+    // from Perth that day. The content module's header lists every source.
     name: 'Wix or Squarespace, or a custom-built website?',
     title: 'Wix or Squarespace vs Custom: the 5-Year Maths | C4 Studios',
-    description: 'The honest comparison: when a site builder is genuinely fine, when custom wins, and the five-year subscription maths nobody shows you.',
-    dek: 'A builder’s monthly fee never stops, so run the five-year maths before you call it cheap. Sometimes it’s still the right call.',
+    description: 'Five years of Wix and Squarespace at today’s Australian prices, set against a custom build: when a builder is the better buy, and when it isn’t.',
+    dek: 'Five years of Wix or Squarespace on their cheapest paid plans costs less than our business website. Here’s when a builder stops being the better buy.',
     photo: 'estate',
     image: '/insights/wix-squarespace-vs-custom-website-og.jpg',
-    published: '2026-06-13', updated: '2026-06-13', readMinutes: 4,
+    published: '2026-06-13', updated: '2026-10-16', verified: '2026-10-16', readMinutes: 7,
     priority: 0.7, changefreq: 'monthly',
-    links: { pillars: ['web-design-perth'] },
+    links: { pillars: ['web-design-perth', 'diy-website-vs-hiring-a-designer', 'website-redesign-vs-starting-again'] },
   },
   {
     slug: 'wordpress-vs-nextjs', type: 'comparison', status: 'live', phase: 4,
@@ -267,15 +269,17 @@ const COMPARISONS = [
   },
   {
     slug: 'diy-website-vs-hiring-a-designer', type: 'comparison', status: 'live', phase: 4,
+    // Rewritten 16 Oct 2026. The June "40 to 60 hours" had no source and is
+    // gone; the content module's header lists every source and what not to add.
     name: 'Build it yourself, or hire a web designer?',
     title: 'DIY Website vs a Web Designer: Count Your Hours | C4 Studios',
-    description: 'The honest maths on building it yourself — 40 to 60 hours at your hourly rate — plus a free checklist for doing DIY properly if that is your road.',
-    dek: 'Sometimes the right answer is to build it yourself. If it is, here’s the eight-point checklist we’d hand you.',
+    description: 'Building your own website is cheaper in cash. Whether it’s cheaper overall depends on your hours, so here’s how to count them, plus a DIY checklist.',
+    dek: 'Doing it yourself is cheaper in cash, and sometimes it’s the right call. Whether it’s cheaper overall comes down to hours only you can count.',
     photo: 'table-saw',
     image: '/insights/diy-website-vs-hiring-a-designer-og.jpg',
-    published: '2026-06-13', updated: '2026-06-13', readMinutes: 5,
+    published: '2026-06-13', updated: '2026-10-16', verified: '2026-10-16', readMinutes: 7,
     priority: 0.7, changefreq: 'monthly',
-    links: { pillars: ['web-design-perth', 'branding-perth'] },
+    links: { pillars: ['wix-squarespace-vs-custom-website', 'web-design-perth', 'how-much-does-a-website-cost-perth'] },
   },
   {
     slug: 'how-long-does-a-website-take', type: 'comparison', status: 'live', phase: 4,

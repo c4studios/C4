@@ -72,6 +72,9 @@ function Print({ a, sizes, eager = false, className = '' }) {
  * states one specific, checkable thing from the piece, and the title under it
  * carries the phrase people search for.
  *
+ * 16 October 2026: the intro says a new piece goes up every fortnight, the
+ * pace Caleb set on 15 October and said yes to printing here on the 16th.
+ *
  * A Read surface: no reveals, nothing gated behind scrolling or hydration.
  * The lead photo loads eagerly; every other one is lazy and its frame is
  * sized before it arrives.
@@ -117,7 +120,8 @@ export default function Insights() {
           <p className="ins__intro">
             What we end up explaining to clients often enough that it may as well
             be written down. Mostly about websites and what things actually
-            cost. Everything here is free to read and free to disagree with.
+            cost. A new piece goes up every fortnight. Everything here is free
+            to read and free to disagree with.
           </p>
           <div className="ins__key">
             <p className="ins-dots">
