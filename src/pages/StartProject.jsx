@@ -134,6 +134,15 @@ const SERVICES = [
   { key: 'other', label: 'Something Else' },
 ];
 
+/* A bundle priced in the home page's Quotr (16 Oct 2026) arrives as
+   ?service=bundle&package=<key>. The registry above already fills the brief
+   with the bundle and everything it includes; this pill shows it as the
+   answer to "What do you need?". The form doesn't offer bundles from
+   scratch, so the pill only appears for a brief that came with one, just
+   before Something Else, and it stays there if they switch answers. */
+const BUNDLE_SERVICE = { key: 'bundle', label: 'Bundle' };
+const WITH_BUNDLE = [...SERVICES.slice(0, -1), BUNDLE_SERVICE, SERVICES[SERVICES.length - 1]];
+
 /* Old links that still carry a retired key: a brand link means logos now,
    so it opens Logo Design with its package filled in. */
 const SERVICE_ALIASES = { brand_platform: 'logo_design' };
@@ -383,7 +392,7 @@ export default function StartProject() {
             transition={{ duration: 0.55, delay: 0.36, ease }}
           >
             <label className={labelClass} style={{ color: 'var(--c4-text-subtle)' }}>What do you need? *</label>
-            <PillSelect options={SERVICES} value={form.service} onChange={v => { update('service', v); update('addOns', []); }} />
+            <PillSelect options={preService === BUNDLE_SERVICE.key || form.service === BUNDLE_SERVICE.key ? WITH_BUNDLE : SERVICES} value={form.service} onChange={v => { update('service', v); update('addOns', []); }} />
           </motion.div>
 
           {/* Add-ons (contextual) */}

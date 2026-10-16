@@ -30,7 +30,9 @@
 @container qt (min-width: 880px) {
   .qt-desk { grid-template-columns: minmax(0, 1fr) minmax(300px, 25rem); gap: clamp(2.4rem, 4vw, 4rem); }
 }
-.qt-stage { min-width: 0; scroll-margin-top: 6rem; }
+/* The stage is a container too, so a bundle's contents can lay out by the
+   room the questions actually get (it narrows a lot beside the docket). */
+.qt-stage { min-width: 0; scroll-margin-top: 6rem; container: qt-stage / inline-size; }
 
 /* ── progress ── */
 .qt-progress { display: flex; align-items: center; gap: .9rem; min-height: 44px; }
@@ -142,6 +144,35 @@
 .qt-opt-notes { display: grid; gap: .25rem; font-size: 13.5px; line-height: 1.45; color: var(--c4-text-muted); }
 .qt-opt.is-on .qt-opt-notes { color: var(--c4-proof-muted, var(--c4-text-muted)); }
 
+/* ── bundles ──
+   On the first question the bundle runs the width of the desk, under the
+   six single services, because it's several of them priced as one. Its own
+   question lists the three a row each (each carries more than a package
+   does), and every row lists what the bundle includes: the service on the
+   left, what you get on the right, in pricing.js order, so the three read
+   down the page against each other. */
+@container qt (min-width: 620px) {
+  .qt-choices--lanes .qt-opt--wide { grid-column: 1 / -1; }
+  .qt-choices--bundles .qt-opt.is-on + .qt-opt { border-top-color: transparent; }
+}
+.qt-kit {
+  display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .3rem 1rem;
+  margin-top: .45rem; padding-top: .7rem; border-top: 1px solid var(--c4-border-light);
+  font-size: 13.5px; line-height: 1.4;
+}
+.qt-kit-row { display: contents; }
+.qt-kit-svc { color: var(--c4-text-muted); }
+.qt-kit-what { color: var(--c4-text); text-wrap: pretty; }
+.qt-opt.is-on .qt-kit { border-top-color: var(--c4-proof-border, var(--c4-border)); }
+.qt-opt.is-on .qt-kit-svc { color: var(--c4-proof-muted, var(--c4-text-muted)); }
+.qt-opt.is-on .qt-kit-what { color: inherit; }
+/* Two pairs a line once the stage has room: an even row's label starts the
+   right-hand pair, so it takes a wider gap before it. */
+@container qt-stage (min-width: 600px) {
+  .qt-kit { grid-template-columns: max-content minmax(0, 1fr) max-content minmax(0, 1fr); }
+  .qt-kit-row:nth-child(even) .qt-kit-svc { padding-left: 1.1rem; }
+}
+
 /* ── extras: a short list, and the rest in a drawer ── */
 .qt-tray-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--c4-border); }
 .qt-extra {
@@ -247,6 +278,14 @@
 @container qt (max-width: 379.98px) {
   .qt-next { padding: 0 .9rem; }
 }
+/* Under 360px of stage (phones narrower than about 410px, and the welcome
+   sheet on a phone) the long label left the total too little room: measured
+   16 Oct 2026, $14,000+ sat 3px from it at 390 and under it at 360. */
+.qt-next-short { display: none; }
+@container qt-stage (max-width: 359.98px) {
+  .qt-next-long { display: none; }
+  .qt-next-short { display: inline; }
+}
 
 /* ── the till ── */
 /* Every cell is the same height and line box (1.2em: B612's ink runs past
@@ -294,6 +333,14 @@
 .qt-line-fig.is-word { font-weight: 400; }
 .qt-line--service .qt-line-label { font: 680 19px/1.2 'Archivo', sans-serif; letter-spacing: -.015em; }
 .qt-line.is-dim { color: var(--c4-proof-muted, var(--c4-text-muted)); }
+/* A bundle's contents, under its line: listed, not priced, so no leaders. */
+.qt-line-kit {
+  display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .3rem .9rem;
+  margin: -.1rem 0 .55rem; padding: 0; list-style: none;
+  font: 400 13.5px/1.35 'Archivo', sans-serif;
+}
+.qt-line-kit li { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; }
+.qt-line-kit-svc { color: var(--c4-proof-muted, var(--c4-text-muted)); }
 /* A line that changes writes itself in, left to right. */
 .qt-line.is-new { animation: qt-write .46s var(--qt-ease) both; }
 @keyframes qt-write { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
@@ -331,7 +378,8 @@
 .qt--compact .qt-frame { padding: 0; --qt-gutter: 0px; }
 .qt--compact .qt-h2 { font-size: 1.5rem; }
 .qt--compact .qt-sub { font-size: 14px; }
-.qt--compact .qt-nav { margin-left: 0; margin-right: 0; padding-left: 0; }
+/* /welcome has no site chrome, so no Support pill to keep clear of. */
+.qt--compact .qt-nav { margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
 
 /* ── still: the prerenderer and reduced motion. Nothing travels or rolls;
    colour and outline feedback keep their short fades (marks.css). ── */

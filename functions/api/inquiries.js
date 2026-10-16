@@ -256,6 +256,9 @@ function formatServiceType(key) {
     seo: 'SEO & Copywriting',
     training: 'AI training',
     rebuild: 'Software Rebuild',
+    // A bundle priced in the home page's Quotr (16 Oct 2026). Which bundle
+    // it was is in the brief, filled in from pricing.js.
+    bundle: 'Bundle',
     other: 'Other',
   };
   return map[key] || key;

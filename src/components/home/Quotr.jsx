@@ -21,6 +21,18 @@
  * Under the prerenderer or reduced motion none of it runs and every change
  * is instant (useStaticMode, resolved on the first render). The prerendered
  * page is the first question with every service and its starting price.
+ *
+ * Bundles (16 October 2026). Asked whether a visitor should be able to price
+ * a website and a logo together, Caleb said "bundles probably best". So the
+ * first question has a seventh answer that runs the width of the desk, and
+ * it leads to the three published bundles: each one's price, its saving and
+ * everything it includes, all read from bundlePackages. A bundle is priced
+ * as one, so it skips the extras (pricing.js lists them as website add-ons
+ * and doesn't offer them on a bundle) and the pay question (no bundle has a
+ * monthly price). On the docket its contents sit under its line, unpriced,
+ * the way an invoice lists what a package covers. No bundle is marked "most
+ * chosen": no invoice in the brain is for a bundle (checked 16 October
+ * 2026), so nothing would back it.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
@@ -28,7 +40,7 @@ import { tightFigure, money } from '@/components/c4/figure';
 import useStaticMode from '@/hooks/useStaticMode';
 import {
   webDesignPackages, webDesignAddOns, brandingPackages, c4LensPackages, seoPackages,
-  socialMediaPackages, supportPlans, subscriptionInfo, webScopeNotes,
+  socialMediaPackages, supportPlans, bundlePackages, subscriptionInfo, webScopeNotes,
   GST_NOTE, ASTERISK_CLAUSE,
 } from '@/data/pricing';
 import { createPageUrl } from '@/utils';
@@ -50,6 +62,11 @@ const LANES = [
   { key: 'logo', label: 'Logo Design', blurb: 'A logo on its own, or the kit around it.', ask: 'Which logo package fits?', packages: priced(brandingPackages), service: 'logo_design' },
   { key: 'social', label: 'Social', blurb: 'Posts designed and managed for you each month.', ask: 'Which plan fits?', packages: priced(socialMediaPackages), service: 'social' },
   { key: 'care', label: 'Care plan', blurb: 'Looking after your site once it’s live.', ask: 'Which plan fits?', packages: priced(supportPlans), service: 'support' },
+  /* Every bundle has a website, a logo (Logo Only, or the logo inside Brand
+     Essentials or Full Brand Identity), SEO and social posts, so the blurb
+     names those four and no more. 'bundle' is the key /start registers the
+     bundles under. */
+  { key: 'bundle', label: 'Bundle', blurb: 'A website and a logo together, with SEO and social posts included.', ask: 'Which bundle fits?', packages: priced(bundlePackages), service: 'bundle', bundle: true, wide: true },
 ];
 
 /* "from $500", or "from $400, or $249/mo" for a lane that sells both. */
@@ -174,7 +191,7 @@ function Choices({ labelledBy, items, value, onSelect, onCommit, render, classNa
             role="radio"
             aria-checked={on}
             tabIndex={on ? 0 : -1}
-            className={`qt-opt${on ? ' is-on' : ''}`}
+            className={`qt-opt${it.wide ? ' qt-opt--wide' : ''}${on ? ' is-on' : ''}`}
             onClick={() => onCommit(it.key)}
           >
             <span className="qt-opt-mark" aria-hidden="true" />
@@ -238,17 +255,19 @@ export default function Quotr({ compact = false, heading = 'Price it yourself.' 
   const spoken = `${oneOff ? money(oneOff) : ''}${oneOff && monthly ? ' plus ' : ''}${monthly ? `${money(monthly)} a month` : ''}`;
 
   const summary = [
-    `${lane.label} · ${pkg.name} · ${pkg.priceLabel}${paidMonthly && pkg.monthlyLabel ? ` (paying ${pkg.monthlyLabel})` : ''}`,
+    `${lane.label} · ${pkg.name} · ${pkg.priceLabel}${pkg.savings ? ` · ${pkg.savings}` : ''}${paidMonthly && pkg.monthlyLabel ? ` (paying ${pkg.monthlyLabel})` : ''}`,
+    ...(pkg.includes || []).map((i) => `  • ${i.service}: ${i.detail}`),
     ...extraItems.map((a) => `+ ${a.name} · ${money(a.price)}${a.suffix || ''}`),
     `Estimate: ${oneOff ? money(oneOff) : ''}${oneOff && monthly ? ' + ' : ''}${monthly ? `${money(monthly)}/mo` : ''}${open ? ' (starting price)' : ''} · no GST added`,
   ].join('\n');
 
   const startUrl = `${createPageUrl('StartProject')}?service=${lane.service}&package=${pkg.key}${paidMonthly ? '&pricing=subscription' : ''}`;
 
-  /* The docket: every line the total sums, and nothing else. */
+  /* The docket: every line the total sums, and nothing else. A bundle's
+     line carries its saving as its note and lists what it covers under it. */
   const lines = [
     { id: `what:${lane.key}`, step: 'what', label: lane.label, kind: 'service' },
-    { id: `size:${pkg.key}:${paidMonthly ? 'mo' : 'once'}`, step: 'size', label: pkg.name, value: paidMonthly ? pkg.monthlyLabel : pkg.priceLabel, note: paidMonthly ? null : pkg.priceSuffix },
+    { id: `size:${pkg.key}:${paidMonthly ? 'mo' : 'once'}`, step: 'size', label: pkg.name, value: paidMonthly ? pkg.monthlyLabel : pkg.priceLabel, note: paidMonthly ? null : (pkg.priceSuffix || pkg.savings), kit: pkg.includes },
     ...extraItems.map((a) => ({ id: `x:${a.name}`, step: 'extras', label: a.name, value: `+${money(a.price)}${a.suffix || ''}` })),
     ...(lane.addOns && !extraItems.length ? [{ id: 'x:none', step: 'extras', label: 'No extras', dim: true }] : []),
     ...(lane.payMonthly ? [{ id: `pay:${paidMonthly ? 'mo' : 'once'}`, step: 'pay', label: 'Paying', value: paidMonthly ? 'monthly' : 'up front', word: true }] : []),
@@ -382,11 +401,21 @@ export default function Quotr({ compact = false, heading = 'Price it yourself.' 
             <button type="button" className="qt-line-btn" onClick={() => jump(l.step)} aria-label={`${l.label}${l.value ? `, ${l.value}` : ''}. Change this answer`}>
               <span className="qt-line-label">
                 {l.label}
-                {l.note ? <span className="qt-line-note">{l.note}</span> : null}
+                {l.note ? <span className="qt-line-note">{tightFigure(l.note)}</span> : null}
               </span>
               {l.value ? <span className="qt-line-lead" aria-hidden="true" /> : null}
               {l.value ? <span className={`qt-line-fig${l.word ? ' is-word' : ''}`} data-fig="">{tightFigure(l.value)}</span> : null}
             </button>
+            {l.kit ? (
+              <ul className="qt-line-kit" aria-label={`${l.label} includes`}>
+                {l.kit.map((i) => (
+                  <li key={`${i.service}:${i.detail}`}>
+                    <span className="qt-line-kit-svc">{i.service}</span>
+                    <span className="qt-line-kit-what">{i.detail}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </li>
         ))}
       </ul>
@@ -420,36 +449,58 @@ export default function Quotr({ compact = false, heading = 'Price it yourself.' 
               </span>
             </span>
             <span className="qt-opt-desc">{l.blurb}</span>
+            {l.bundle ? (
+              <span className="qt-opt-incl">
+                {l.packages.map((p) => <span key={p.key}>{p.name}</span>)}
+              </span>
+            ) : null}
           </span>
         )}
       />
     );
   } else if (step === 'size') {
+    /* A package shows its terms (one-off, a minimum, or the monthly
+       alternative) and three of its features. A bundle shows its saving
+       where the terms go and every line it includes. */
     body = (
       <Choices
         labelledBy={qId}
-        className="qt-choices--pkgs"
+        className={lane.bundle ? 'qt-choices--bundles' : 'qt-choices--pkgs'}
         items={lane.packages}
         value={pkg.key}
         onSelect={pickPkg}
         onCommit={(k) => { pickPkg(k); later(() => go(stepIdx + 1, 'fwd')); }}
-        render={(p) => (
-          <span className="qt-opt-body">
-            <span className="qt-opt-top">
-              <span className="qt-opt-name">{p.name}{p.popular ? <em className="qt-opt-pop">most chosen</em> : null}</span>
-              <span className="qt-opt-fig" data-fig="">{tightFigure(p.priceLabel)}</span>
-            </span>
-            {p.priceSuffix || (lane.payMonthly && p.monthlyLabel) ? (
-              <span className="qt-opt-terms" data-fig="">
-                {p.priceSuffix || <>or {tightFigure(p.monthlyLabel)}</>}
+        render={(p) => {
+          const terms = p.priceSuffix || p.savings;
+          return (
+            <span className="qt-opt-body">
+              <span className="qt-opt-top">
+                <span className="qt-opt-name">{p.name}{p.popular && !lane.bundle ? <em className="qt-opt-pop">most chosen</em> : null}</span>
+                <span className="qt-opt-fig" data-fig="">{tightFigure(p.priceLabel)}</span>
               </span>
-            ) : null}
-            {p.description ? <span className="qt-opt-desc">{p.description}</span> : null}
-            <span className="qt-opt-incl">
-              {(p.features || []).slice(0, 3).map((f) => <span key={f}>{f}</span>)}
+              {terms || (lane.payMonthly && p.monthlyLabel) ? (
+                <span className="qt-opt-terms" data-fig="">
+                  {terms ? tightFigure(terms) : <>or {tightFigure(p.monthlyLabel)}</>}
+                </span>
+              ) : null}
+              {p.description ? <span className="qt-opt-desc">{p.description}</span> : null}
+              {p.includes ? (
+                <span className="qt-kit">
+                  {p.includes.map((i) => (
+                    <span className="qt-kit-row" key={`${i.service}:${i.detail}`}>
+                      <span className="qt-kit-svc">{i.service}</span>
+                      <span className="qt-kit-what">{i.detail}</span>
+                    </span>
+                  ))}
+                </span>
+              ) : (
+                <span className="qt-opt-incl">
+                  {(p.features || []).slice(0, 3).map((f) => <span key={f}>{f}</span>)}
+                </span>
+              )}
             </span>
-          </span>
-        )}
+          );
+        }}
       />
     );
   } else if (step === 'extras' && tray) {
@@ -538,7 +589,9 @@ export default function Quotr({ compact = false, heading = 'Price it yourself.' 
 
   const sub = {
     what: 'Pick one. You can change any answer later.',
-    size: 'Each price is the published starting price.',
+    size: lane.bundle
+      ? 'Each price is the published starting price and covers everything listed under it.'
+      : 'Each price is the published starting price.',
     extras: `A few that suit a ${pkg.name}. Skip this if you don’t need any.`,
     pay: 'Pay for the build up front, or monthly while we host and look after it.',
     total: 'It’s a starting price. The fixed quote comes after a call.',
@@ -602,9 +655,16 @@ export default function Quotr({ compact = false, heading = 'Price it yourself.' 
                 <span className="qt-bar-fig">{totalBlock('qt-till--bar')}</span>
                 <span className="sr-only">{spoken}</span>
               </span>
+              {/* The last question's button says where it goes, except in
+                  a narrow bar, where "See the estimate" left the total no
+                  room (quotr.css has the numbers): there it says Next, like
+                  every other step. CSS shows one; the other is display:
+                  none, so it isn't read out either. */}
               {!isFinal ? (
                 <button type="button" className="qt-next" onClick={() => go(stepIdx + 1, 'fwd')}>
-                  {steps[stepIdx + 1] === 'total' ? 'See the estimate' : 'Next'}
+                  {steps[stepIdx + 1] === 'total'
+                    ? <><span className="qt-next-long">See the estimate</span><span className="qt-next-short">Next</span></>
+                    : 'Next'}
                   <span className="qt-next-chev" aria-hidden="true" />
                 </button>
               ) : null}
