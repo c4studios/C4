@@ -632,13 +632,18 @@ export const socialMediaPackages = [
 ];
 
 /* ── Bundle Deals ── */
+/* No "Save $X" badges (Caleb, 16 Oct 2026: "drop the badges"). Two of the
+   three savings didn't add up from published prices: the Launch Bundle's
+   priced parts come to $2,100, below its $2,300, and the Business Builder's
+   to $4,150, so both savings rested on social posts that have no published
+   price (site_issues 173). Don't add a saving back unless every part of the
+   bundle has a published price that shows it. */
 export const bundlePackages = [
   {
     key: 'launch',
     name: 'The Launch Bundle',
     price: 2300,
     priceLabel: '$2,300',
-    savings: 'Save $300',
     popular: false,
     description: 'Everything you need to launch your online presence.',
     includes: [
@@ -654,7 +659,6 @@ export const bundlePackages = [
     name: 'The Business Builder',
     price: 4800,
     priceLabel: '$4,800',
-    savings: 'Save $650+',
     popular: true,
     description: 'A complete business package with branding and photography.',
     includes: [
@@ -671,7 +675,6 @@ export const bundlePackages = [
     name: 'The Full C4',
     price: 14000,
     priceLabel: '$14,000+',
-    savings: 'Save $2,300+',
     popular: false,
     description: 'The complete C4 Studios experience for ambitious brands.',
     includes: [

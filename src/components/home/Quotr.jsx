@@ -25,8 +25,9 @@
  * Bundles (16 October 2026). Asked whether a visitor should be able to price
  * a website and a logo together, Caleb said "bundles probably best". So the
  * first question has a seventh answer that runs the width of the desk, and
- * it leads to the three published bundles: each one's price, its saving and
- * everything it includes, all read from bundlePackages. A bundle is priced
+ * it leads to the three published bundles: each one's price and everything
+ * it includes, all read from bundlePackages (no "Save $X" badges since
+ * 16 Oct 2026; see the note above bundlePackages). A bundle is priced
  * as one, so it skips the extras (pricing.js lists them as website add-ons
  * and doesn't offer them on a bundle) and the pay question (no bundle has a
  * monthly price). On the docket its contents sit under its line, unpriced,
@@ -460,8 +461,8 @@ export default function Quotr({ compact = false, heading = 'Price it yourself.' 
     );
   } else if (step === 'size') {
     /* A package shows its terms (one-off, a minimum, or the monthly
-       alternative) and three of its features. A bundle shows its saving
-       where the terms go and every line it includes. */
+       alternative) and three of its features. A bundle shows every line it
+       includes. It carries no saving, so its terms line stays empty. */
     body = (
       <Choices
         labelledBy={qId}
