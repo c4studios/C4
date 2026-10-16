@@ -36,6 +36,9 @@ lerna-debug.log*
 reports/
 **/edge-profile/
 **/edge-profile-*/
+# An old .git directory, committed by mistake on 10 Jun 2026 and removed from
+# the repo and its history on 16 Oct 2026 (brain site_issues 155).
+.git_disabled/
 
 # Nested legacy clone of the GitHub repo — not part of this tree
 /C4-main/
