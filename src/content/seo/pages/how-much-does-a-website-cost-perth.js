@@ -68,10 +68,18 @@
  *  - A domain or hosting price. The old "$20–$40 a year", "a few dollars to
  *    $50-plus a month" and "$60–$500 a year" had no source. pricing.js lists
  *    both as third-party costs.
- *  - The $79/mo maintenance line. pricing.js carries maintenanceRate 79 but
- *    never says what it buys, no page renders it, and the c4-pricing skill
- *    lists it as a known gap beside $99 Basic Care. Ask Caleb before it
- *    comes back.
+ *  - $79 a month, under any name, and above all as a "care plan". The June
+ *    page offered it twice, as maintenance. It is
+ *    subscriptionInfo.maintenanceRate, which sits with the pay-monthly terms
+ *    (we build, host and maintain while you pay), so it isn't a care plan:
+ *    the published care plans start at $99 (Basic Care). It renders on no page, and pricing.js
+ *    doesn't say how it relates to the per-package monthly prices this page
+ *    quotes ($49 to $499, the ones /ServiceWeb shows). Brain site_issues 38.
+ *    Ask Caleb before it comes back.
+ *  - A bundle saving, or any "cheaper than buying separately" line. Caleb
+ *    dropped the bundle "Save" badges on 16 Oct 2026, and two of the three
+ *    savings didn't add up from published prices (brain site_issues 173). If
+ *    bundles are ever added here, give their prices only.
  *  - "Our most popular package". `popular: true` in pricing.js is a display
  *    flag, not a count of sales.
  *  - "usually carry a 15–20% surcharge". The published note says "may incur".
