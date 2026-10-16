@@ -507,6 +507,25 @@ const SUBURB_PAGES = SUBURB_SERVICES.flatMap((service) =>
 // SeoPage.jsx lazy-loads every file in pages/, so a module there ships as a
 // public chunk whether or not its entry is live.
 const ARTICLES = [
+  /* Written 16 Oct 2026, the second fortnightly piece and a new address: Caleb
+     ruled that day that a rewrite at an old address doesn't count as the
+     fortnight's new piece. Every quote was re-read at Google's and the ACCC's
+     pages that day; the content module's header lists them and what must not
+     be added. If it ships later than 16 Oct, move `published`, `updated` and
+     `verified` to the day it goes live. readMinutes is the reading text (hero,
+     sections bar the source list, FAQs and CTA) over 200, rounded up. */
+  {
+    slug: 'google-business-profile-rules', type: 'article', status: 'live', phase: 7,
+    name: 'What should go in your Google Business Profile?',
+    title: 'Google Business Profile: Leave the Keywords Out | C4 Studios',
+    description: 'The rules for a Google Business Profile, quoted from Google. Why keywords in the name can get it suspended, and when to hide your home address.',
+    dek: 'Add your suburb or trade to the name on your Business Profile and Google says it could be suspended. The rest of its rules are just as specific.',
+    photo: 'groceries-sign',
+    image: '/insights/google-business-profile-rules-og.jpg',
+    published: '2026-10-16', updated: '2026-10-16', verified: '2026-10-16', readMinutes: 10,
+    priority: 0.7, changefreq: 'monthly',
+    links: { pillars: ['seo-perth', 'do-small-businesses-need-seo', 'diy-website-vs-hiring-a-designer'] },
+  },
   /* Written 15 Oct 2026 at the address of the June decision page it replaces,
      so the URL keeps whatever it had earned. Every figure was re-read at its
      source that day; the content module's header lists them and what must

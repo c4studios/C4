@@ -159,6 +159,25 @@ export const PHOTOS = [
     ogPosition: 'centre',
     use: 'the hero of /do-small-businesses-need-seo/',
   },
+  /* Added 16 October 2026 for the Business Profile article. Its page was read
+     that day: "Free to use under the Unsplash License", and the page's own data
+     marks it plus: false and premium: false, so it isn't an Unsplash+ photo. The
+     page gives no place. The sign carries no business name, so nothing is
+     blurred. */
+  {
+    ...UNSPLASH,
+    key: 'groceries-sign',
+    master: 'unsplash-JDKT8pRAvM8-kring-groceries.jpg',
+    page: 'https://unsplash.com/photos/groceries-and-snacks-sign-on-wooden-wall-JDKT8pRAvM8',
+    photographer: 'Adam Kring',
+    profile: 'https://unsplash.com/@adamkring',
+    subject: 'A hand-painted sign reading "Groceries" and "Snacks" on a weatherboard wall.',
+    alt: 'A hand-painted sign on a white weatherboard wall beside a downpipe, with “Groceries” in black script and “Snacks” in capitals on a dark green board.',
+    crop: { left: 0, top: 0, width: 5419, height: 3613 },
+    ogPosition: 'left',
+    use: 'the hero of /google-business-profile-rules/',
+    downloaded: '16 October 2026',
+  },
 ].map((p) => ({ downloaded: DOWNLOADED, widths: WIDTHS, size: [p.crop.width, p.crop.height], ...p }));
 
 export function photo(key) {
