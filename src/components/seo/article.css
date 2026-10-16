@@ -289,9 +289,12 @@
 }
 .article__table td:first-child { font-weight: 560; color: var(--c4-text); }
 .article__table .num { font-variant-numeric: tabular-nums; }
-/* A cell holding a web address can break inside it, so a narrow phone wraps
-   the address instead of scrolling the table sideways. */
-.article__table td { overflow-wrap: anywhere; }
+/* A web address in a cell can break anywhere, so a narrow phone wraps it
+   instead of scrolling the table sideways. Ordinary words break only if they
+   can't fit: "anywhere" on the whole cell let the table squeeze columns down
+   to single letters ("C as h up fr on t" at 390px, site_issues 174 and 176). */
+.article__table td { overflow-wrap: break-word; }
+.article__table td a { overflow-wrap: anywhere; }
 /* Room before the paragraph that follows a table, when no heading does. */
 .article__tablewrap { margin-bottom: 1.9rem; }
 .article__table caption {

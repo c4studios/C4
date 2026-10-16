@@ -53,7 +53,7 @@ export default {
       label: 'Pricing',
       heading: 'What does it cost?',
       mode: 'anchor',
-      note: 'Allied health and medical practices around the campus carry the published 15–20% professional-services surcharge. Gyms, trades and family services land at the standard $1,500 tier.',
+      note: 'Allied health and medical practices around the campus may incur the published 15–20% professional-services surcharge. Gyms, trades and family services start at the standard $1,500 tier.',
     },
   ],
   faqs: [
@@ -67,7 +67,7 @@ export default {
     },
     {
       q: 'How much does a website cost for a Joondalup business?',
-      a: 'The standard published tiers: $1,500 for most business sites, $800 where a brochure genuinely covers it, plus booking integration from $400 for appointment-run operations. Health practices add the 15–20% surcharge, itemised in the quote.',
+      a: 'The standard published tiers: $1,500 for most business sites, $800 where a brochure genuinely covers it, plus online booking at $400 for appointment-run operations. Health practices may incur the 15–20% surcharge, which we talk through on the discovery call.',
     },
     {
       q: 'Do you work with new businesses opening up here?',

@@ -72,7 +72,7 @@ export default {
       label: 'Where it lives',
       heading: 'Print isn’t dead in Perth — it drives past you daily',
       body: [
-        'For WA trades and local services, the highest-mileage brand asset isn’t the website — it’s the ute. Vehicle wraps, site signage, embroidered hi-vis and the magnet on a fridge do years of unpaid advertising, which is exactly why the mono version of your logo matters as much as the full-colour one. A mark that only works as a glowing gradient on a dark website falls apart on a sign printed in one colour at the local shop.',
+        'For WA trades and local services, the brand gets more mileage on the ute than on the website. Vehicle wraps, site signage, embroidered hi-vis and the magnet on a fridge do years of unpaid advertising, which is exactly why the mono version of your logo matters as much as the full-colour one. A mark that only works as a glowing gradient on a dark website falls apart on a sign printed in one colour at the local shop.',
         'Every identity we ship is tested against those surfaces before you ever see it, and the file pack includes the formats signwriters and embroiderers actually ask for.',
       ],
     },
@@ -123,8 +123,8 @@ export default {
       label: 'Timing',
       heading: 'When is it worth rebranding?',
       body: [
-        'Three honest triggers: the business has outgrown what the name and mark promise (the “& Sons” problem), the materials are so inconsistent that customers can’t tell your quote and your invoice came from the same company, or you’re about to spend real money — fit-out, fleet, campaign — pushing an identity you already know is weak. Amplifying a bad brand is the only thing dearer than fixing one.',
-        'If none of those apply, keep your money. A brand that’s merely a bit dated but recognised is an asset, not a problem.',
+        'Three good reasons: the business has outgrown what the name and mark promise (the “& Sons” problem), the materials are so inconsistent that customers can’t tell your quote and your invoice came from the same company, or you’re about to spend real money — fit-out, fleet, campaign — pushing an identity you already know is weak.',
+        'If none of those apply, keep your money. A brand that’s a bit dated but recognised is still worth keeping.',
       ],
     },
     {
@@ -167,6 +167,6 @@ export default {
   ],
   cta: {
     heading: 'Naming the business was hard enough.',
-    text: 'Send us the name and what you do. We’ll recommend the right-sized package — not the biggest one.',
+    text: 'Send us the name and what you do. We’ll recommend the package that fits, and say so if a smaller one will do.',
   },
 };
