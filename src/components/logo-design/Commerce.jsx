@@ -6,6 +6,11 @@
  * (the logo packages, the Branding add-on and logoTimeline); nothing is typed
  * in here. The ownership answer is imported from the guide it's published in
  * (src/content/seo/pages/branding-perth.js), so it can't drift from it.
+ *
+ * Since 16 Oct 2026 that guide is the branding page, "Branding Perth", and
+ * this page owns "logo design Perth" (SEO audit H4). The two links to it
+ * below name it that way, so they stop telling search engines it's the logo
+ * design page.
  */
 import { useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
@@ -161,8 +166,8 @@ export function Process() {
             ))}
           </ol>
           <p className="ld-more">
-            The long version, including when a {money(FROM)} logo is enough:{' '}
-            <Link to="/branding-perth/">Logo Design Perth</Link>.
+            When a {money(FROM)} logo is enough, and when you need a brand identity:{' '}
+            <Link to="/branding-perth/">Branding Perth</Link>.
           </p>
         </div>
         <figure className="ld-wf-frame">
@@ -181,7 +186,7 @@ export function Process() {
             <p className="ld-proof-q">{OWN.q}</p>
             <blockquote className="ld-proof-a"><p>{OWN.a}</p></blockquote>
             <figcaption className="ld-proof-src">
-              Word for word from <Link to="/branding-perth/">Logo Design Perth</Link>, our guide to how we price and run logo work.
+              Word for word from <Link to="/branding-perth/">Branding Perth</Link>, our guide to how we price and run branding work.
             </figcaption>
           </figure>
         </div>

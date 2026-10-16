@@ -2,6 +2,12 @@
  * Suburb — SEO in Joondalup.
  * Local grounding: "near me" residential search behaviour, the health
  * precinct competition, multi-suburb corridor strategy.
+ *
+ * 16 Oct 2026: added the local proof that exists (SEO audit M1): CIA
+ * Solutions in Joondalup and Brady Electrical in Neerabup, both real case
+ * studies. Every fact in the two cards is from
+ * src/components/portfolio/caseStudyData.jsx. Don't add a traffic, ranking
+ * or enquiry figure for either; none is on file.
  */
 export default {
   hero: {
@@ -30,6 +36,15 @@ export default {
       body: [
         'With genuine service-area structure: pages for the suburbs you truly serve, each saying something real about that work — not a find-and-replace template Google learned to ignore years ago. Paired with a tuned profile and steady reviews, a corridor business can be the map-pack answer from Edgewater to Iluka within a couple of seasons.',
         'The health precinct deserves its own word: competition around the campus is the corridor’s sharpest, and for registered practitioners the advertising rules constrain the usual tricks. That’s actually good news — compliant, useful content is the strategy AHPRA leaves open, and it happens to be the one Google rewards anyway.',
+      ],
+    },
+    {
+      kind: 'proof',
+      label: 'Local work',
+      heading: 'Search work on two sites in Joondalup and Neerabup',
+      cases: [
+        { name: 'CIA Solutions', tag: 'Joondalup', summary: 'Its old site and its sister firm’s were chasing the same searches. We rebuilt it and sent the old service pages to the sister firm’s matching pages with permanent redirects, so the search history CIA had built up now points at the firm that does that work.', href: '/CaseStudy/cia-solutions' },
+        { name: 'Brady Electrical', tag: 'Neerabup', summary: 'The new site replaced an old WordPress one on the same domain, so the old addresses were mapped to permanent redirects before the switch. It carries Electrician and FAQ structured data, and its hero map shows each suburb the business covers.', href: '/CaseStudy/brady-electrical' },
       ],
     },
     {

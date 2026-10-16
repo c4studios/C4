@@ -20,24 +20,42 @@
  *   - DS Racing's header film was "shot". It was made, as a motion graphic.
  *   - The $650 package was renamed from "Business Branding" to "Brand Shoot"
  *     (pricing.js) so it can't be read as logo work. Same price and contents.
+ *
+ * 16 Oct 2026: made the plain buyer's page for "photographer" and
+ * "videographer Perth" searches, distinct from /Lens, which is the brand and
+ * the work (SEO audit H4; the registry entry has the Search Console
+ * figures). Changed: the hero, whose intro had described C4 Lens the way
+ * /Lens does; "Do you need video, or just photos?" in place of "Why does
+ * real imagery outperform stock photos?", the argument /Lens opens on; and
+ * "Where can you see the work?" in place of the three-card reel, which
+ * repeated /Lens's case studies. It links /Lens and two shoots, with facts
+ * from src/components/lens/lensStudies.js (confirmed as C4 Lens work by
+ * Caleb on 9 Oct 2026).
+ * Also: "full-show coverage" came out of "What we shoot", since the note
+ * above and DESIGN.md say this file stopped claiming it. The $750 add-on
+ * has its pricing.js name and lost "the cheapest way to get both done
+ * properly", which nothing on file shows. The cost FAQ calls the $650
+ * package Brand Shoot.
+ * Still no person named, no "licensed", and no pipeline or coverage claim.
  */
 export default {
   hero: {
-    label: 'C4 Lens — Photo & Video Perth',
-    title: ['Photo and video in Perth that', 'replaces stock imagery for good.'],
+    label: 'Photo & Video Perth',
+    // Three lines so it breaks cleanly from 375 to 1440 wide (measured 16 Oct).
+    title: ['Photography and video', 'in Perth, with the prices', 'on the page.'],
     intro: [
-      'C4 Lens is the photography and videography arm of C4 Studios: commercial shoots for Perth businesses, from a $200 headshot session to full-day productions with 60-plus edited photos, short and long-form video, drone work and motion graphics.',
-      'Every C4 Lens package includes the edit, so what comes back is a finished library that’s ready to use.',
+      'C4 Lens shoots photos and video for Perth businesses, mostly on site, and every package has a published price. A 30-minute shoot with five edited photos is $200. A full day of photo and video, with 60-plus edited photos and five finished videos, starts at $2,500.',
+      'The edit is included in every package, and each one says how many files you’ll get back.',
     ],
   },
   sections: [
     {
       kind: 'prose',
-      label: 'Why it matters',
-      heading: 'Why does real imagery outperform stock photos?',
+      label: 'Photo or video',
+      heading: 'Do you need video, or just photos?',
       body: [
-        'Because people can smell stock from across the room. The handshake photo, the headset woman, the laptop on the spotless desk — visitors scroll straight past them, because those images say nothing true about you.',
-        'Your actual workshop. Your team mid-job. Your food, your gym floor at 6am, your congregation on a Sunday. That’s visual proof you exist and are good at what you do — and it makes clients feel like they already know you before the first phone call. That feeling closes work, and no stock library sells it.',
+        'If it’s photos for a website or a Google Business Profile, one of the first three packages will cover it. They’re photography only, from a 30-minute session at $200 to a two-hour Brand Shoot at $650 with 30 edited images.',
+        'Video starts with Content Creation at $1,200: a half-day shoot with 40 edited photos and two short videos cut for social. For a longer film as well, Full Production is a full day from $2,500, with four short videos and a long-form film of up to three minutes.',
       ],
     },
     {
@@ -48,7 +66,7 @@ export default {
         { title: 'Headshots and team', text: 'Individual and group portraits that make the “About” page feel like real people work here. Because they do.' },
         { title: 'Brand and workspace', text: 'Your premises, process and people, shot for websites, proposals and Google Business Profile.' },
         { title: 'Products', text: 'Clean catalogue shots through to styled lifestyle imagery for stores and socials.' },
-        { title: 'Events and services', text: 'Launches, conferences, church services and full-show coverage — captured without getting in the way.' },
+        { title: 'Events and services', text: 'Launches, conferences, church services and other events — captured without getting in the way.' },
         { title: 'Short-form content', text: 'Reels and vertical video shot and cut for social, in batches that keep your feed alive for months.' },
         { title: 'Drone and aerial', text: 'Aerial photo and video — sites, venues, fleets and the establishing shot nothing on the ground can get.' },
       ],
@@ -67,13 +85,12 @@ export default {
       ],
     },
     {
-      kind: 'proof',
-      label: 'On the reel',
-      heading: 'Recent work through the lens',
-      cases: [
-        { name: 'HVN', summary: 'A film for the top of their home page, with aerial footage of the building and a walk through the gym.', href: '/CaseStudy/hvn-gym', tag: 'Aerial & film' },
-        { name: 'The Rocks', summary: 'Motion graphics for The Rocks Church’s At the Movies series: a streaming-style screen made to play before the service at both campuses.', href: '/CaseStudy/rocksstream', tag: 'Motion graphics' },
-        { name: 'DS Racing Karts', summary: 'Motion graphics made to match a brand built around speed, including the film that opens their home page.', href: '/CaseStudy/ds-racing-karts', tag: 'Motorsport' },
+      kind: 'prose',
+      label: 'The work',
+      heading: 'Where can you see the work?',
+      body: [
+        'The [C4 Lens page](/Lens) has it, films included, and links each case study.',
+        'Two shoots to start with. For [HVN CrossFit](/CaseStudy/hvn-gym) we made the film at the top of their home page, which starts above the building and walks through the gym, and we shot their coach portraits. For [Sharp Bricklaying](/CaseStudy/sharp-bricklaying) we photographed their jobs from the air and on the ground, and cut footage of two sites into short films.',
       ],
     },
     {
@@ -110,14 +127,14 @@ export default {
       label: 'Pair it',
       heading: 'Shot for the places it’ll live',
       body: [
-        'Because the same studio builds websites and brands, Lens shoots are planned around where the images will actually sit — hero banners shot with space for headlines, team photos framed for the layouts they’ll fill, verticals cut for reels. A $750 photography add-on can also ride along with any website build, which is the cheapest way to get both done properly.',
+        'Because the same studio builds websites and brands, Lens shoots are planned around where the images will actually sit — hero banners shot with space for headlines, team photos framed for the layouts they’ll fill, verticals cut for reels. A $750 photography and videography add-on can also ride along with any website build.',
       ],
     },
   ],
   faqs: [
     {
       q: 'What does commercial photography cost in Perth?',
-      a: 'Lens packages run from $200 for a 30-minute session with 5 edited images, through $650 for a two-hour business branding shoot with 30 images, up to full-day productions from $2,500. Every package lists exactly how many edited files you receive.',
+      a: 'Lens packages run from $200 for a 30-minute session with 5 edited images, through $650 for a two-hour Brand Shoot with 30 images, up to full-day productions from $2,500. Every package lists exactly how many edited files you receive.',
     },
     {
       q: 'How many photos do we actually get?',

@@ -24,7 +24,7 @@ person building it.
 - [About](https://c4studios.com.au/About): The studio, its founder and how it works.
 - [Web design & development](https://c4studios.com.au/ServiceWeb): Custom websites and web apps built for speed, SEO and conversion.
 - [C4 Lens — photography & video](https://c4studios.com.au/Lens): Brand photography, videography, drone work and motion graphics.
-- [SEO & copywriting](https://c4studios.com.au/seo-and-copywriting): SEO packages from $400 one-off or $249 a month, and website copy at $500 with a build.
+- [SEO & copywriting](https://c4studios.com.au/seo-and-copywriting): Website copy at $500 with a build, articles on monthly SEO plans from $249, and one-off SEO packages from $400.
 - [Logo design](https://c4studios.com.au/logo-design): Core $250, Logo Rebuild $450, Logo Only $500, Brand Essentials $1,200 and Full Brand Identity from $2,500, with branding added to a website build for $400. Most logo jobs take 1 to 2 weeks.
 - [Portfolio](https://c4studios.com.au/Portfolio): Selected client work and case studies.
 - [Insights](https://c4studios.com.au/insights): Articles on websites and what they cost.
@@ -39,8 +39,8 @@ person building it.
 - [Web design Perth](https://c4studios.com.au/web-design-perth): Custom-coded websites from $1,500 with fixed quotes.
 - [Web development Perth](https://c4studios.com.au/web-development-perth): Online stores, web apps, portals and integrations.
 - [SEO Perth](https://c4studios.com.au/seo-perth): One-off fixes from $400 or monthly plans from $249.
-- [Logo Design Perth — Logos to Full Identity](https://c4studios.com.au/branding-perth): Logos from $250 to full identity systems.
-- [Photo & video Perth](https://c4studios.com.au/photo-video-perth): Headshots, brand shoots, drone and short-form content.
+- [Branding Perth — Brand Identity Packages](https://c4studios.com.au/branding-perth): Brand Essentials at $1,200 and Full Brand Identity from $2,500.
+- [Photographer & videographer Perth](https://c4studios.com.au/photo-video-perth): What each shoot costs and delivers, from $200 for photos and $1,200 for photo and video.
 
 <!-- The build inserts Guides, Articles, Industries and Suburbs here from the SEO registry, and rewrites every link to the address the server serves. -->
 

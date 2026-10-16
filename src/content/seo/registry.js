@@ -85,15 +85,25 @@ const PILLARS = [
       comparisons: ['do-small-businesses-need-seo', 'how-much-does-a-website-cost-perth'],
     },
   },
-  /* Retitled 9 Oct 2026 to lead with logos, when Logo Design became the
-     fourth arm with its own page at /logo-design. This stays its search
-     page, with the same slug and prices; the page file's header lists
-     what changed. */
+  /* Re-angled 16 Oct 2026 to branding and brand identity (SEO audit H4,
+     brain site_issues 167). On 9 Oct it had been retitled "Logo Design
+     Perth" when Logo Design became the fourth arm with its own page at
+     /logo-design, and that left the two pages chasing the same search.
+     Search Console (web, 27 Aug to 13 Oct 2026, exported 16 Oct) settled
+     which keeps what. This page had 466 impressions at an average position
+     of 37.7, and /logo-design 15 at 60.3, though it only launched on 9 Oct.
+     The export doesn't split searches by page, but the branding ones are
+     the bigger set: "perth branding" (96), "branding perth" (84), "brand
+     identity perth" (30) and "branding studio perth" (19), against "perth
+     logo design" (29). So /logo-design owns "logo design Perth", and this
+     page is about Brand Essentials and Full Brand Identity, with "logo
+     design" linked to /logo-design. Same slug and prices; the page file's
+     header lists what changed. */
   {
     slug: 'branding-perth', type: 'pillar', status: 'live', phase: 2,
-    name: 'Logo Design Perth', serviceType: 'Logo and brand identity design',
-    title: 'Logo Design Perth — Logos to Full Identity | C4 Studios',
-    description: 'Logo design in Perth priced honestly: logos from $250, brand essentials at $1,200, full identity systems from $2,500. Fixed scope, files you own.',
+    name: 'Branding Perth', serviceType: 'Brand identity design',
+    title: 'Branding Perth — Brand Identity Packages | C4 Studios',
+    description: 'Branding and brand identity for Perth businesses: Brand Essentials at $1,200 and Full Brand Identity from $2,500. Fixed scope, and every file is yours.',
     priority: 0.9, changefreq: 'monthly',
     links: {
       pillars: ['web-design-perth', 'photo-video-perth'],
@@ -101,11 +111,21 @@ const PILLARS = [
       comparisons: ['diy-website-vs-hiring-a-designer', 'how-much-does-a-website-cost-perth'],
     },
   },
+  /* Retitled 16 Oct 2026 as the plain buyer's page for "photographer" and
+     "videographer Perth" searches (SEO audit H4). /Lens is the brand and the
+     work, so this page leads with prices and what each shoot delivers.
+     Search Console (web, 27 Aug to 13 Oct 2026): 261 impressions here at an
+     average position of 39.1, and 54 for /Lens at 10.3 ("c4 lens" had 14;
+     the export doesn't split searches by page). The generic searches were
+     "360 videography perth" (30), "in-studio videography" (19),
+     "videography perth" (11) and "product videographer in perth" (8).
+     Nothing on file says C4 Lens shoots 360 video or works from a studio,
+     so the page claims neither. */
   {
     slug: 'photo-video-perth', type: 'pillar', status: 'live', phase: 2,
     name: 'Photo & Video Perth', serviceType: 'Commercial photography and videography',
-    title: 'Photo & Video Perth — C4 Lens | C4 Studios',
-    description: 'Commercial photography and videography in Perth: headshots, brand shoots, drone and short-form content with exact deliverables, from $200.',
+    title: 'Photographer & Videographer Perth — Prices | C4 Studios',
+    description: 'Commercial photographer and videographer in Perth: photos from $200, photo and video from $1,200. Each package says how many edited files you get.',
     priority: 0.9, changefreq: 'monthly',
     links: {
       pillars: ['branding-perth', 'web-design-perth'],

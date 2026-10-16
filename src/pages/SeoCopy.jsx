@@ -105,11 +105,17 @@ export default function SeoCopy() {
   ], []);
 
   /* Every figure in the description is read from pricing.js, so it moves
-     when a price does. */
-  const copyLine = COPY_ADDON ? `, website copy ${money(COPY_ADDON.price)} with a build` : '';
+     when a price does.
+     Since 16 Oct 2026 the title and description lead with copywriting, so
+     this page stops competing with /seo-perth/ for "SEO Perth", which that
+     page keeps (SEO audit H4). Search Console, web, 27 Aug to 13 Oct 2026:
+     159 impressions here at an average position of 41.0, and 126 for
+     /seo-perth/ at 50.3. "seo content writing perth" (43) and "copywriting
+     perth" (44) are writing searches. */
+  const copyLine = COPY_ADDON ? `website copy at ${money(COPY_ADDON.price)} with a build, and ` : '';
   useDocumentHead({
-    title: 'SEO & Copywriting in Perth — C4 Studios',
-    description: `SEO and copywriting for Perth businesses at published prices: one-off SEO from ${money(FROM_ONE_OFF)}, monthly plans from ${money(FROM_MONTHLY)}${copyLine}.`,
+    title: 'Copywriting & SEO Content Writing in Perth — C4 Studios',
+    description: `Copywriting for Perth businesses: ${copyLine}articles on monthly SEO plans from ${money(FROM_MONTHLY)}. One-off SEO work starts at ${money(FROM_ONE_OFF)}.`,
     path: PATH,
     jsonLd,
   });

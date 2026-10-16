@@ -2,6 +2,12 @@
  * Suburb — Web Design in Joondalup.
  * Local grounding: the northern-corridor catchment reality, health and
  * education precinct, family-services economy.
+ *
+ * 16 Oct 2026: added the local proof that exists (SEO audit M1): Brady
+ * Electrical in Neerabup and CIA Solutions in Joondalup, both real case
+ * studies. Every fact in the two cards is from
+ * src/components/portfolio/caseStudyData.jsx. Don't add a traffic, ranking
+ * or enquiry figure for either; none is on file.
  */
 export default {
   hero: {
@@ -31,6 +37,15 @@ export default {
         { title: 'Practice-grade compliance', text: 'For the corridor’s many allied health businesses: AHPRA-aware wording as standard, surcharge published.' },
         { title: 'Mobile speed', text: 'Parents searching from school pickup are the customer — pages built to load on a phone in a carpark.' },
         { title: 'Fixed quote, fast launch', text: 'Most builds live in three to five weeks, scoped in writing before a dollar moves.' },
+      ],
+    },
+    {
+      kind: 'proof',
+      label: 'Local work',
+      heading: 'Sites we’ve built in Joondalup and Neerabup',
+      cases: [
+        { name: 'Brady Electrical', tag: 'Neerabup', summary: 'An electrician working out of Neerabup. The home page opens on a diagram of the Perth metro, with feeders running out from the depot to each suburb Brady covers, so it doubles as the service-area map.', href: '/CaseStudy/brady-electrical' },
+        { name: 'CIA Solutions', tag: 'Joondalup', summary: 'A Joondalup practice that has taught digital forensics since 1996 and builds forensic labs. We rebuilt the site as three doors, with investigation enquiries handed to its sister firm, and kept each page to about 8 KB of hand-written HTML, so it opens quickly on a phone in a classroom.', href: '/CaseStudy/cia-solutions' },
       ],
     },
     {
