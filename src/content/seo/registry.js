@@ -229,17 +229,22 @@ const INDUSTRIES = [
 // one thing the piece itself says. Don't put a claim in a dek that the piece
 // can't back.
 const COMPARISONS = [
+  /* Rewritten 16 Oct 2026 to the article standard: every price re-read in
+     src/data/pricing.js that day, and the market figures cut for want of a
+     source (the content module's header lists both). The description and dek
+     now say these are our prices, since the piece only quotes ours. If it
+     ships later than 16 Oct, move `updated` and `verified` to that day. */
   {
     slug: 'how-much-does-a-website-cost-perth', type: 'comparison', status: 'live', phase: 2,
     name: 'How much does a website cost in Perth?',
     title: 'How Much Does a Website Cost in Perth? (2026) | C4 Studios',
-    description: 'Perth website costs in 2026: landing pages from $500, business sites $1,500–$2,500, ecommerce from $3,500. What moves the price and what to avoid.',
-    dek: 'Our whole price list, from $500 for a landing page, and why two quotes for the same site can look nothing alike.',
+    description: 'Our 2026 Perth website prices: landing pages are $500 and business sites $1,500 to $2,500, plus the add-ons and running costs that change the total.',
+    dek: 'Every website package we sell, from $500 for a landing page, and why two quotes for the same site can look nothing alike.',
     photo: 'price-board',
     image: '/insights/how-much-does-a-website-cost-perth-og.jpg',
-    published: '2026-06-13', updated: '2026-10-09', readMinutes: 6,
+    published: '2026-06-13', updated: '2026-10-16', verified: '2026-10-16', readMinutes: 7,
     priority: 0.85, changefreq: 'monthly',
-    links: { pillars: ['web-design-perth'] },
+    links: { pillars: ['web-design-perth', 'why-web-designers-hide-their-prices'] },
   },
   {
     slug: 'wix-squarespace-vs-custom-website', type: 'comparison', status: 'live', phase: 4,
@@ -255,17 +260,22 @@ const COMPARISONS = [
     priority: 0.7, changefreq: 'monthly',
     links: { pillars: ['web-design-perth', 'diy-website-vs-hiring-a-designer', 'website-redesign-vs-starting-again'] },
   },
+  /* Rewritten 16 Oct 2026 to the article standard, every figure read at
+     WordPress.org, the Next.js docs or Vercel's docs that day (the content
+     module's header lists them). The old description promised speed, security
+     and upkeep-cost verdicts the piece no longer makes, so it changed with it.
+     If it ships later than 16 Oct, move `updated` and `verified` to that day. */
   {
     slug: 'wordpress-vs-nextjs', type: 'comparison', status: 'live', phase: 4,
     name: 'WordPress or Next.js for a business website?',
     title: 'WordPress vs Next.js, From a Next.js Studio | C4 Studios',
-    description: 'Declared bias, honest answer: where WordPress still earns its keep, where Next.js wins on speed and security, and what upkeep really costs.',
-    dek: 'We build in Next.js and say so in the first line. Then we wrote down where WordPress still wins.',
+    description: 'From a studio that builds in Next.js: when WordPress is the better choice for a business site, and why both need security updates.',
+    dek: 'We build in Next.js and say so up front. Then we read both projects’ own documentation, and WordPress still wins for some sites.',
     photo: 'power-boards',
     image: '/insights/wordpress-vs-nextjs-og.jpg',
-    published: '2026-06-13', updated: '2026-06-13', readMinutes: 4,
+    published: '2026-06-13', updated: '2026-10-16', verified: '2026-10-16', readMinutes: 7,
     priority: 0.7, changefreq: 'monthly',
-    links: { pillars: ['web-development-perth'] },
+    links: { pillars: ['web-development-perth', 'website-redesign-vs-starting-again'] },
   },
   {
     slug: 'diy-website-vs-hiring-a-designer', type: 'comparison', status: 'live', phase: 4,

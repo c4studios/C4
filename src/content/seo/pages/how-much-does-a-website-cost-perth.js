@@ -1,127 +1,234 @@
 /**
  * Comparison — How much does a website cost in Perth? (2026 guide)
- * The honest-range page: full pricing from src/data/pricing.js, what moves
- * the number, ongoing costs, and the pay-monthly path.
- * Unique details: the 15–20% professional-services compliance surcharge,
- * and the "why quotes vary" freelancer/studio/agency breakdown.
  *
- * 9 Oct 2026: the AI chatbot add-on came off C4 Studios (Caleb's answer 2A,
- * brain site_issue 148), so "AI chatbots $1,500" left the features line in
- * "What actually moves the price?". That line is now two sentences. No
- * figure was added: the three left ($400 booking, $600 payment gateway,
- * $1,000 client portal) still match webDesignAddOns in src/data/pricing.js.
- * Do NOT add a chatbot or any other AI add-on back.
+ * Rewritten 16 Oct 2026 to the article standard, at the same address. Caleb
+ * chose that day to rewrite the older comparison pages rather than only cut
+ * their numbers. The straight-numbers opening stays. Every price was checked
+ * against src/data/pricing.js that day, and the market comparisons came out
+ * because none of them had a source (see DO NOT ADD).
+ *
+ * The answer block's first paragraph is also shown word for word on
+ * /seo-and-copywriting: src/components/seo-copy/sections.jsx imports this file
+ * and prints it under "How much does a website cost in Perth?". Keep it a
+ * complete answer on its own, with its numbers in it.
+ *
+ * SOURCES, read 16 Oct 2026. Every price is from src/data/pricing.js:
+ *  - webDesignPackages: Landing Page $500 ($49/mo, "Client-supplied copy and
+ *    images"); Brochure Site $800 ($69/mo, "2-5 simple brochure pages");
+ *    Business Website $1,500 ($99/mo, "Up to 6 pages"); Custom Website $2,500
+ *    ($149/mo, "Up to 8 pages", "Blog or CMS foundation"); Ecommerce Store
+ *    $3,500 ($199/mo, "Up to 20 products loaded"); Web App Starter $4,500
+ *    ($249/mo, "One core app workflow"); Growth Build $7,500 ($399/mo, "Up to
+ *    12 pages or key screens"); Custom Platform "$10,000+" ($499/mo,
+ *    "Proposal-scoped platform build"). Revision rounds run from 1 (Landing
+ *    Page) to 5 (Custom Platform), launch warranties from 14 to 90 days.
+ *  - webPricingGuides and ASTERISK_CLAUSE, printed by the `pricing` section
+ *    straight from the file.
+ *  - webScopeNotes: "$100 additional page pricing means a simple matching
+ *    content page. New custom layouts or complex sections are quoted
+ *    separately." "$500 landing pages and $800 brochure sites assume approved
+ *    copy, images, and brand assets are supplied before build." "POS sync,
+ *    subscriptions, memberships, advanced shipping, large catalogues, or custom
+ *    product logic move into add-ons or larger tiers." Third-party costs:
+ *    "Domain renewals, hosting/platform subscriptions, paid plugins/apps,
+ *    payment processing fees, stock assets, email hosting, and ad spend".
+ *  - webDesignAddOns: Additional page $100, 3-page pack $250, 5-page pack $400,
+ *    Copywriting package $500, Online booking / appointments $400, Payment
+ *    gateway setup $600, Client portal / login area $1,000, Custom API
+ *    integration $1,000+, Inventory or POS sync $1,200+, Extra product batch
+ *    (up to 25) $300.
+ *  - subscriptionInfo: "We build, host, and maintain your site while you pay
+ *    monthly."; whatsIncluded "Hosting, SSL, security, uptime monitoring, 1
+ *    content update/month."; ownership "generally around 2x the outright price.
+ *    Or buy out early."; "6-month minimum, then 30 days notice.";
+ *    monthsToOwnership.business 31 (the home quote builder prints "Own it after
+ *    about 31 months."). 31 x $99 = $3,069.
+ *  - supportPlans: Basic Care $99/mo ("Hosting monitoring", "Security patches",
+ *    "1 minor update/month (15 min)", "Email support"), Standard Care $179/mo,
+ *    Premium Care $299/mo.
+ *  - supportTickets: "Minor update (text/image swap, < 15 min)" $75.
+ *    boosterPacks: "Page Add" $250, "1 new page designed and built to match
+ *    existing site". Neither list renders on any other page, so this guide is
+ *    the only place they're published.
+ *  - INDUSTRY_SURCHARGE_NOTE, quoted whole (it also prints on /ServiceWeb):
+ *    "Professional services industries (legal, financial, medical) may incur a
+ *    15–20% surcharge due to compliance and regulatory requirements. This will
+ *    be discussed during your discovery call."
+ *  - GST_NOTE: "All prices in AUD. No GST is added, as C4 Studios isn’t
+ *    registered for GST."
+ * And /About: "C4 Studios is Caleb Scott, founder and sole operator" and "The
+ * person you brief is the person who builds."
+ *
+ * DO NOT ADD:
+ *  - Any market price. The old "$300–$800" marketplace jobs, "$10,000–$50,000"
+ *    agencies, "$8,000 for the same site" and quotes "$7,000 apart" had no
+ *    source. Searched 16 Oct 2026: every Australian figure found came from
+ *    agencies or quote-comparison sites with work to sell, and none from
+ *    government or published research.
+ *  - A domain or hosting price. The old "$20–$40 a year", "a few dollars to
+ *    $50-plus a month" and "$60–$500 a year" had no source. pricing.js lists
+ *    both as third-party costs.
+ *  - The $79/mo maintenance line. pricing.js carries maintenanceRate 79 but
+ *    never says what it buys, no page renders it, and the c4-pricing skill
+ *    lists it as a known gap beside $99 Basic Care. Ask Caleb before it
+ *    comes back.
+ *  - "Our most popular package". `popular: true` in pricing.js is a display
+ *    flag, not a count of sales.
+ *  - "usually carry a 15–20% surcharge". The published note says "may incur".
+ *  - "about $100" a page, inventory "around $1,000", "around $250" a page and
+ *    "well past $10,000". The prices are $100, $1,200+, $250 and "$10,000+".
+ *  - "every invoice says so" about GST. Brain site_issue 39 found invoices
+ *    without the statement.
+ *  - A chatbot or any other AI add-on. It came off C4 Studios on 9 Oct 2026
+ *    (Caleb's answer 2A, brain site_issue 148).
  */
 export default {
   hero: {
-    label: 'Cost Guide — 2026',
-    title: ['How much does a website', 'cost in Perth in 2026?'],
+    title: 'How much does a website cost in Perth in 2026?',
     intro: [
-      'Straight numbers: a single-page landing site costs about $500, a small brochure site $800, a proper business website $1,500 to $2,500, an online store from $3,500, and custom web apps from $4,500 to well past $10,000. Those are our actual published prices, not industry averages — and this guide breaks down what moves the number, what keeps costing money after launch, and why two quotes for “the same site” can be $7,000 apart.',
+      'Straight numbers, from our own price list. A one-page landing site is $500, and a brochure site of two to five pages is $800. A business website is $1,500, or $2,500 for a custom site. Online stores start at $3,500 and web apps at $4,500. A custom platform starts at $10,000 and is scoped by proposal.',
     ],
   },
+
   sections: [
     {
       kind: 'answer',
       body: [
-        'Most Perth small businesses should budget $1,500–$2,500 for a website that earns its keep, plus a few hundred dollars a year to run it — or from $99 a month with hosting and maintenance handled. Pay much less and you’re usually buying a template with your name dropped in; pay much more only when the scope genuinely demands it.',
+        'With us, a business website of up to six pages is $1,500, and a custom site of up to eight is $2,500. A one-page site is $500 if you supply the words and photos. If paying upfront is the hard part, the business website is also $99 a month with hosting and maintenance included, and it’s yours after about 31 months.',
       ],
     },
+
     {
       kind: 'pricing',
-      label: 'The ranges',
-      heading: 'The honest version, in three brackets',
+      heading: 'Our prices in three brackets',
       mode: 'range',
     },
+
     {
       kind: 'table',
-      label: 'Full price list',
       heading: 'Every package, every price',
-      head: ['Package', 'Price', 'What it’s for'],
+      /* "Outright" rather than "Price": the column header's width is what
+         keeps "$10,000+" on one line at 390px, and it names the price the
+         monthly section is set against. The soft hyphen lets "Ecommerce"
+         break as Ecom-merce in the narrow first column instead of being
+         split at an arbitrary letter (article.css breaks table cells
+         anywhere). Both checked at 390 and 1440 on 16 Oct 2026. */
+      head: ['Package', 'Outright', 'What it covers'],
       rows: [
-        ['Landing Page', '$500', 'One focused page for a new offer, campaign or simple service business. You supply the copy and images.'],
-        ['Brochure Site', '$800', 'Two to five straightforward pages — the essentials online, done properly.'],
-        ['Business Website', '$1,500', 'Up to six pages with conversion-focused structure, enquiry routing and analytics. Our most popular package.'],
-        ['Custom Website', '$2,500', 'Up to eight pages, custom sections, stronger SEO and a blog or CMS foundation.'],
-        ['Ecommerce Store', '$3,500', 'A practical storefront: up to 20 products, standard checkout, shipping and tax rules.'],
-        ['Web App Starter', '$4,500', 'An MVP web application built around one core workflow — portal, dashboard or tool.'],
-        ['Growth Build', '$7,500', 'Larger ecommerce, content or app builds with integrations and more moving parts.'],
-        ['Custom Platform', '$10,000+', 'Serious platforms, advanced stores, SaaS-style products and complex rebuilds, scoped by proposal.'],
+        ['Landing Page', '$500', 'One focused page for a new offer or a simple service business. You supply the copy and images.'],
+        ['Brochure Site', '$800', 'Two to five simple pages sharing one design. You supply the copy and images.'],
+        ['Business Website', '$1,500', 'Up to six pages built around getting enquiries, with enquiry routing and analytics.'],
+        ['Custom Website', '$2,500', 'Up to eight pages, with custom sections and a blog or CMS foundation.'],
+        ['Ecom­merce Store', '$3,500', 'A starter store with up to 20 products loaded, standard checkout, basic shipping and tax rules, and order emails.'],
+        ['Web App Starter', '$4,500', 'A first version of a web app built around one core workflow, such as a customer portal or a dashboard.'],
+        ['Growth Build', '$7,500', 'A larger store or web app with more integrations, up to 12 pages or key screens.'],
+        ['Custom Platform', '$10,000+', 'Large stores and SaaS-style products, scoped by proposal.'],
       ],
+      caption: 'Checked against our price list on 16 October 2026. All prices in AUD. No GST is added, as C4 Studios isn’t registered for GST.',
     },
+
     {
       kind: 'prose',
-      label: 'Variables',
-      heading: 'What actually moves the price?',
+      heading: 'What changes the price',
       body: [
-        'Pages and layouts: a simple matching page adds about $100; a new custom layout is quoted separately. Features: online booking adds $400 and payment gateways $600. Client portals are $1,000. Content readiness matters more than people expect — entry prices assume you supply approved copy and images, and professional copywriting adds $500 if you’d rather hand us a rough doc.',
-        'Integrations move numbers too: connecting accounting software, CRMs or inventory starts around $1,000 because someone has to make two systems agree. And one most guides won’t tell you: legal, financial and medical websites usually carry a 15–20% surcharge, because compliance review, disclaimers and regulatory wording take real hours.',
+        'Every extra page adds to it. While we’re building, a page that matches the design is $100, and packs of three or five pages are $250 and $400. A new custom layout gets its own quote.',
+        'So do features. Online booking adds $400 and a payment gateway adds $600. A client login area is $1,000.',
+        'Our $500 and $800 sites assume you hand over approved copy and images before we start. If you’d rather we wrote the words, copywriting is $500.',
+        'Connecting your site to other software costs more, because two systems have to be made to agree. A custom API integration starts at $1,000, and syncing your inventory or point-of-sale system starts at $1,200.',
+        'Some industries may pay a surcharge. Here’s our published note on it, word for word.',
       ],
     },
+
+    {
+      kind: 'quote',
+      quote: 'Professional services industries (legal, financial, medical) may incur a 15–20% surcharge due to compliance and regulatory requirements. This will be discussed during your discovery call.',
+      attribution: 'C4 Studios pricing note, as published on our web design page',
+    },
+
     {
       kind: 'list',
-      label: 'After launch',
-      heading: 'The ongoing costs nobody mentions',
+      heading: 'What it costs after launch',
       items: [
-        { title: 'Domain', text: 'Roughly $20–$40 a year for a .com.au through any registrar. Yours, not your developer’s — make sure of it.' },
-        { title: 'Hosting', text: 'From a few dollars to $50-plus a month depending on the build. Fast static hosting for business sites costs very little.' },
-        { title: 'Maintenance', text: 'Optional but sensible: $79 a month covers hosting, SSL, monitoring and a content update. DIY is fine if you’ll actually do it.' },
-        { title: 'Care plans', text: 'Active support runs $99–$299 a month depending on response times and included updates.' },
-        { title: 'Third-party tools', text: 'Booking systems, email platforms and payment processing carry their own subscriptions and fees — budget for them honestly.' },
-        { title: 'Changes', text: 'One-off updates from $75, a new matching page around $250. Sites that never change slowly stop ranking and converting.' },
+        { title: 'Domain', text: 'You renew it through a domain registrar, and the fee is theirs. Make sure it’s registered in your name.' },
+        { title: 'Hosting', text: 'If you own the site outright, the host bills you for it. On a pay-monthly plan, it’s included while you pay.' },
+        { title: 'Care plans', text: 'If you’d like us looking after the site, plans run from $99 to $299 a month. Basic Care at $99 covers hosting monitoring, security patches, one minor update a month and email support.' },
+        { title: 'Other tools', text: 'Paid apps, payment processing fees, stock photos and email hosting are billed by whoever provides them.' },
+        { title: 'Changes', text: 'A small one-off update is $75. A new page added after launch, built to match, is $250, against $100 a page while we’re building, so it pays to plan your pages up front.' },
       ],
     },
+
     {
       kind: 'prose',
-      label: 'Cashflow option',
       heading: 'Can you pay for a website monthly?',
       body: [
-        'Yes — we offer every package as a subscription: $49 a month for a landing page, $99 for a business website, up to $499 for platform builds. We build, host and maintain the site while you pay monthly, you own it outright after a defined period (roughly twice the outright price, all-up), or buy it out early. Six-month minimum, then 30 days’ notice.',
-        'It costs more over the full term — that’s the trade for starting at $99 instead of $1,500. For a cashflow-tight launch it’s often the right call, and we’ll show you both totals side by side so you’re choosing with your eyes open.',
+        'Yes. Every package can be paid monthly instead, from $49 a month for a landing page to $499 for a custom platform. The business website is $99. We host and look after the site while you pay, and it’s yours once you’ve paid roughly twice the outright price. You can buy it out earlier if you like. There’s a six-month minimum, then 30 days’ notice.',
+        'It costs more over the full term. The business website comes to about $3,069 over the roughly 31 months it takes to own, against $1,500 upfront, with hosting and maintenance included along the way. For a tight launch it can still be the right call. Ask us for both totals and compare them.',
       ],
     },
+
     {
       kind: 'prose',
-      label: 'Context',
-      heading: 'Why do Perth website quotes vary so wildly?',
+      heading: 'Why do website quotes vary so much?',
       body: [
-        'Because you’re quoting three different products. A $300–$800 marketplace job typically gets you a template filled in offshore — fine until you need a change and the seller has vanished. Studios like us sit in the $500–$10,000 range doing custom work with the person you spoke to. Larger agencies quote $10,000–$50,000 for similar builds plus account managers, meetings and overhead you’re also paying for.',
-        'None of those are scams; they’re different cost structures. The question worth asking any quote: who actually does the work, and will they answer the phone in a year? Here, the person quoting is the person building — that’s most of why our overhead, and therefore our pricing, stays where it is.',
+        'Two quotes for “the same site” are often priced on different jobs. One includes copywriting and photography, and the other assumes you’ll supply both. Revision rounds and launch warranties move the number too. Ours are listed with each package, from one round and a 14-day warranty on a landing page to five rounds and 90 days on a custom platform.',
+        'Ask each studio to put in writing what’s excluded, and compare those lists. Our piece on [why web designers hide their prices](/why-web-designers-hide-their-prices) goes through comparing quotes when one of them won’t give a number.',
+        'With us, the person who quotes is the person who builds. C4 Studios is one person, so there’s no account manager to pay for.',
+      ],
+    },
+
+    {
+      kind: 'prose',
+      heading: 'What we couldn’t establish',
+      body: [
+        'We looked for an independent figure for what a website costs in Perth, or anywhere in Australia. Every one we found came from web agencies or quote-comparison sites, which sell or broker the work. We didn’t find one from government or published research, so the only prices in this guide are ours.',
+      ],
+    },
+
+    {
+      kind: 'sources',
+      heading: 'Sources',
+      items: [
+        { title: 'Web design packages, monthly prices and pricing notes', publisher: 'C4 Studios', year: 'Read 16 October 2026', url: 'https://c4studios.com.au/ServiceWeb/' },
+        { title: 'Quote builder, with the add-ons, care plans and months to ownership', publisher: 'C4 Studios home page', year: 'Read 16 October 2026', url: 'https://c4studios.com.au/' },
+        { title: 'About C4 Studios', publisher: 'C4 Studios', year: 'Read 16 October 2026', url: 'https://c4studios.com.au/About/' },
+        { title: 'Our price list, the file those pages are built from', publisher: 'C4 Studios', year: 'Read 16 October 2026' },
       ],
     },
   ],
+
   faqs: [
     {
       q: 'Is a $500 website worth it?',
-      a: 'If you need one focused page, supply your own content, and want it done properly — yes, genuinely. It’s the same hand-coded quality as our larger builds, just tightly scoped. It’s not worth it if you actually need six pages and a booking system; underbuying costs more later.',
+      a: 'If one page covers what you need and you can supply the words and photos, yes. You get one focused page with a contact form, basic SEO setup, analytics and a revision round. If you actually need six pages and a booking system, start with the business website, because pages added after launch cost more than pages built in.',
     },
     {
-      q: 'Why did another agency quote $8,000 for the same site?',
-      a: 'Probably account management, meetings and overhead rather than more website. Compare quotes on scope — pages, features, revisions, who does the work — not the headline number. Sometimes the $8,000 quote is justified by scope; often it’s the same six pages with more people invoicing around them.',
+      q: 'Why do two quotes for the same site differ so much?',
+      a: 'They’re usually priced on different scope. Ask each studio to list what’s excluded. Copywriting and photography are the usual gaps, and so is loading the content.',
     },
     {
       q: 'Do these prices include GST?',
-      a: 'There’s no GST to add. C4 Studios isn’t registered for GST, so the prices here, in Australian dollars, are what you pay, and every invoice says so.',
+      a: 'There’s no GST to add. C4 Studios isn’t registered for GST, so the prices here, in Australian dollars, are what you pay.',
     },
     {
-      q: 'How much does an ecommerce website cost in Perth?',
-      a: 'From $3,500 for a practical store with up to 20 products and standard checkout. Bigger catalogues, POS sync, subscriptions or custom product logic push into the $7,500 growth tier or platform territory. Product data readiness is the hidden cost — clean spreadsheets save real money.',
+      q: 'How much does an online store cost in Perth?',
+      a: 'With us, from $3,500 for a starter store with up to 20 products loaded, standard checkout and basic shipping and tax rules. More products are $300 for each batch of up to 25. Bigger catalogues, POS sync, subscriptions or custom product logic move into add-ons or the larger tiers, such as the $7,500 growth build.',
     },
     {
-      q: 'What does a website cost to run per year?',
-      a: 'Self-managed: roughly $60–$500 a year covering domain and hosting, depending on the build. Managed: $79 a month covers hosting, SSL, monitoring and a monthly content update. Add any third-party tools you choose — booking systems and email platforms bill separately.',
+      q: 'What does a website cost to run each year?',
+      a: 'Your domain and hosting are billed by whoever provides them, so we haven’t put a number on them. If you’d like us looking after the site, care plans start at $99 a month. On a pay-monthly plan, hosting and maintenance are included while you pay.',
     },
     {
       q: 'Are pay-monthly websites a rip-off?',
-      a: 'Not inherently — they’re financing plus a service bundle, and over the term you pay roughly double the outright price in exchange for starting near-free with maintenance included. The rip-off version is the one where you never own anything; ours converts to full ownership on a defined schedule.',
+      a: 'They cost more over the full term, roughly twice the outright price with ours. In return you start without the upfront cost, with hosting and maintenance included while you pay. The thing to check with anyone is whether you ever own the site. Ours is yours once the term is paid, or earlier if you buy it out.',
     },
     {
       q: 'How accurate is this guide?',
-      a: 'These are our actual published prices as of 2026, pulled from the same data that renders our pricing pages — not estimates of what “the market” charges. Other providers will differ, but you can hold us to every number on this page.',
+      a: 'Every price here was checked against our own price list on 16 October 2026, the same list our web design page is built from. They’re starting prices for the scope each package lists. Other studios will charge differently.',
     },
   ],
+
   cta: {
     heading: 'Want a number for your actual project?',
-    text: 'Describe it in two sentences. You’ll get a real range back — not a “book a strategy call to find out” runaround.',
+    text: 'Describe it in a couple of sentences and we’ll send back a range. You won’t need a call to find out what it costs.',
   },
 };
