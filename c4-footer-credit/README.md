@@ -95,7 +95,7 @@ import C4FooterCredit from './components/c4-footer-credit/C4FooterCredit';
 | `className` | `string` | `''` | Additional CSS class(es) on the root `<a>` element |
 | `openInNewTab` | `boolean` | `true` | Opens link in new tab with `rel="noopener noreferrer"` |
 | `showText` | `boolean` | `true` | Show credit text below the logo |
-| `colorScheme` | `string` | `'auto'` | `'dark'` \| `'light'` \| `'auto'` — controls logo colour palette. Auto mode samples the rendered parent/background colour so the "Studios" text turns light on dark/black backgrounds. |
+| `colorScheme` | `string` | `'auto'` | `'dark'` \| `'light'` \| `'auto'` — controls logo colour palette. Auto mode samples the rendered parent/background colour so the "Studios" text turns light on dark/black backgrounds. Since 17 Oct 2026 it reads any CSS colour (oklch, lab, color(), as Tailwind v4 sets them); before that it read only rgb(), and an oklch footer fell back to the visitor's OS theme. |
 
 ## Animation Behaviour
 
@@ -138,7 +138,7 @@ It is a drop-in, one-file replacement. Only `C4FooterCredit.jsx` changed. Its pr
 For each site, one deploy each:
 
 1. Find the site's copy (usually `src/components/c4-footer-credit/C4FooterCredit.jsx`; search the repo for `C4FooterCredit`).
-2. Check it has no local edits. The site's copy should match one of the earlier masters in C4-main: `657fe053` (24 Jun 2026, current until 17 Oct), `a329ed27` (5 May) or `ecd06c40` (19 Mar). Get each with `git show <commit>:c4-footer-credit/C4FooterCredit.jsx` and compare ignoring line endings (`git diff --no-index --ignore-cr-at-eol old.jsx site.jsx`). If it matches one, overwrite the site's file with this one. If it matches none, the site changed something (colours, sizes, the label, the link): copy this file over and carry those edits across by hand.
+2. Check it has no local edits. The site's copy should match one of the earlier masters in C4-main: `02bd8ad0` (17 Oct, the new build before the colour-reading fix below), `657fe053` (24 Jun 2026, current until 17 Oct), `a329ed27` (5 May) or `ecd06c40` (19 Mar). Get each with `git show <commit>:c4-footer-credit/C4FooterCredit.jsx` and compare ignoring line endings (`git diff --no-index --ignore-cr-at-eol old.jsx site.jsx`). If it matches one, overwrite the site's file with this one. If it matches none, the site changed something (colours, sizes, the label, the link): copy this file over and carry those edits across by hand.
    A copy from 19 Mar defaults to `colorScheme="dark"` and links to c4studios.com. This file defaults to `"auto"` and c4studios.com.au, so pass `colorScheme="dark"` where that site's footer needs the old palette.
 3. Build the site, then look at it in a browser before deploying. Hover the badge twice. The second hover should draw the 4 as one stroke with straight ends and wipe the C on with a straight front; no circle opens on the C. The finished 4's T stem is as wide as the stem above it and sits right under it. The third hover fades it back to grey. With reduced motion turned on, each hover fades. The console should be clean.
 4. Deploy, then check the live footer the same way. A 200 doesn't mean the new bundle is live; check the badge itself.

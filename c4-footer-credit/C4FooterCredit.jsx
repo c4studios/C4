@@ -362,20 +362,58 @@ function getFixedLetterHinge(letterNode, hingeOrigin) {
    INTERNAL HOOKS — replaces site-wide ThemeContext dependency
    ================================================================= */
 
-function parseCssRgb(value) {
+/* A computed background colour as sRGB 0 to 255, or null when it's
+   transparent or can't be read. Browsers report legacy colours as rgb(), but
+   a colour set in a newer space comes back in that space: oklch(), lab(),
+   color(). Tailwind v4's whole palette is oklch. So anything that isn't rgb()
+   is painted onto a 1 x 1 canvas and read back as sRGB.
+   Before 17 Oct 2026 only rgb() was read. An oklch footer was skipped as if
+   it were transparent, the badge fell back to the visitor's OS theme, and
+   "Studios" came out near-black on a dark footer (brain site_issues 177). */
+let colourProbe;
+
+function parseCssColour(value) {
   if (!value || value === 'transparent') return null;
-  const match = value.match(/rgba?\(([^)]+)\)/i);
-  if (!match) return null;
 
-  const [r, g, b, a = 1] = match[1]
-    .split(',')
-    .map((part) => Number.parseFloat(part.trim()));
+  const legacy = value.match(/^rgba?\(([^)]+)\)$/i);
+  if (legacy) {
+    const [r, g, b, a = 1] = legacy[1]
+      .split(/[\s,/]+/)
+      .filter(Boolean)
+      .map((part) => Number.parseFloat(part));
 
-  if (![r, g, b].every(Number.isFinite) || !Number.isFinite(a) || a === 0) {
-    return null;
+    if (![r, g, b].every(Number.isFinite) || !Number.isFinite(a) || a === 0) {
+      return null;
+    }
+
+    return { r, g, b };
   }
 
-  return { r, g, b };
+  if (typeof document === 'undefined') return null;
+  if (typeof CSS !== 'undefined' && CSS.supports && !CSS.supports('color', value)) return null;
+
+  try {
+    if (colourProbe === undefined) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1;
+      canvas.height = 1;
+      colourProbe = canvas.getContext('2d', { willReadFrequently: true }) || null;
+    }
+    if (!colourProbe) return null;
+
+    colourProbe.clearRect(0, 0, 1, 1);
+    /* a value the canvas can't take leaves fillStyle as it was, so start
+       from transparent: an unreadable colour then reads as no colour */
+    colourProbe.fillStyle = 'rgba(0, 0, 0, 0)';
+    colourProbe.fillStyle = value;
+    colourProbe.fillRect(0, 0, 1, 1);
+    const [r, g, b, a] = colourProbe.getImageData(0, 0, 1, 1).data;
+    if (a === 0) return null;
+
+    return { r, g, b };
+  } catch {
+    return null;
+  }
 }
 
 function isDarkBackground(element) {
@@ -383,7 +421,7 @@ function isDarkBackground(element) {
 
   let node = element?.parentElement || document.body;
   while (node && node !== document.documentElement) {
-    const rgb = parseCssRgb(window.getComputedStyle(node).backgroundColor);
+    const rgb = parseCssColour(window.getComputedStyle(node).backgroundColor);
     if (rgb) {
       const luminance = (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255;
       return luminance < 0.45;
@@ -391,7 +429,7 @@ function isDarkBackground(element) {
     node = node.parentElement;
   }
 
-  const bodyRgb = parseCssRgb(window.getComputedStyle(document.body).backgroundColor);
+  const bodyRgb = parseCssColour(window.getComputedStyle(document.body).backgroundColor);
   if (bodyRgb) {
     const luminance = (0.2126 * bodyRgb.r + 0.7152 * bodyRgb.g + 0.0722 * bodyRgb.b) / 255;
     return luminance < 0.45;
