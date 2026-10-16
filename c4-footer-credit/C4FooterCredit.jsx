@@ -24,16 +24,28 @@ const MARK_CENTER_SHIFT = 0.187;
 
 const LOCKUP_TRANSFORM = 'translate(18 -273) scale(1.5)';
 
+/* Light-footer values; the isDark branch of useFooterColours replaces them.
+   NOTE the resting arc is painted with mono.cArc (cBaseRef sits at opacity 1
+   from rest), not dormant.cArc — dormant.cArc is unused. Tune mono.cArc to
+   change the arc at rest.
+
+   The light tuning comes from Brady Electrical's copy (9 and 10 Sep 2026),
+   taken into the master on 17 Oct 2026 after NextGen's light footer showed
+   the same fault. On white the C at rest is 8.52:1 and the 4 sits a step back
+   at 3.26:1 (body) and 3.98:1 (arm), the way the C leads on dark. The values
+   before put the C at 1.27:1 and the 4 at 1.97:1 and 1.71:1, so the mark read
+   as a pale smudge and the C all but vanished. (WCAG ratios, recomputed
+   17 Oct.) */
 const COLOURS = {
   dormant: {
-    fourBody: '#b8b9ba',
-    fourArm: '#c5c6c7',
-    cArc: '#e6e4e2',
+    fourBody: '#8b8f92',
+    fourArm: '#7c8083',
+    cArc: '#4a4d4f',
   },
   mono: {
     fourBody: '#414243',
     fourArm: '#6c6d6d',
-    cArc: '#e6e4e2',
+    cArc: '#4a4d4f',
     text: '#1a1a1b',
   },
   colour: {
@@ -474,6 +486,7 @@ function useFooterColours(colorScheme, rootRef) {
   return useMemo(() => {
     const dormant = { ...COLOURS.dormant };
     const mono = { ...COLOURS.mono };
+    const colour = { ...COLOURS.colour };
 
     if (isDark) {
       dormant.fourBody = '#606264';
@@ -483,9 +496,17 @@ function useFooterColours(colorScheme, rootRef) {
       mono.fourArm = '#8a8b8c';
       mono.cArc = '#d0cecc';
       mono.text = '#e8e6e3';
+    } else {
+      // The near-white colour-state arc is 1.12:1 on white, so hovering used
+      // to delete the C and leave "4 Studios". Hold the arc dark (9.38:1); the
+      // red and green 4 still leads the colour state.
+      colour.cArc = '#43474a';
     }
 
-    return { dormant, mono, colour: COLOURS.colour };
+    // The soft #555 bubble behind the mark reads as a glow on a dark footer and
+    // as a dirty smudge on a light one, where it sits behind the C and eats the
+    // local contrast that makes the letterform legible. Dark only.
+    return { dormant, mono, colour, haze: isDark ? 0.15 : 0 };
   }, [isDark]);
 }
 
@@ -590,7 +611,7 @@ export default function C4FooterCredit({
   const backdropRef = useRef(null);
 
   const h = typeof size === 'number' ? size : (SIZES[size] || SIZES.default);
-  const { dormant, mono, colour } = useFooterColours(colorScheme, rootRef);
+  const { dormant, mono, colour, haze } = useFooterColours(colorScheme, rootRef);
   const uid = useId();
 
   const w = Math.round(h * FULL_ASPECT);
@@ -644,7 +665,10 @@ export default function C4FooterCredit({
 
     gsap.set(wordGroupRef.current, { y: 0, opacity: 1 });
     if (backdropRef.current) {
-      gsap.set(backdropRef.current, { attr: { cx: 206, cy: 389, rx: 165, ry: 120 }, opacity: 0.15 });
+      // opacity deliberately left to the JSX attribute (haze): the auto
+      // light/dark probe resolves after mount, and an inline style written here
+      // would freeze the initial value.
+      gsap.set(backdropRef.current, { attr: { cx: 206, cy: 389, rx: 165, ry: 120 } });
     }
 
     /* Reduced motion keeps every stage, with the movement taken out: the
@@ -960,7 +984,7 @@ export default function C4FooterCredit({
             cx="206" cy="389"
             rx="165" ry="120"
             fill="#555"
-            opacity="0.15"
+            opacity={haze}
             filter={`url(#${backdropBlurId})`}
           />
 
