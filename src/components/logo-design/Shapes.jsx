@@ -5,9 +5,11 @@
  * the same scale and standing on one line, the foot of the green T, so the
  * eye can check that nothing changes between them except what's added.
  * Everything on the plate is measured in x, the width of the green T's stem:
- *  - the gaps: the C's top cut runs alongside the 4's diagonal, 1.26x off
- *    it, and the two pieces of the 4 are 0.31x apart at the cut (worked out
- *    from the points in geometry.js, FACTS);
+ *  - the gaps: the C's top cut runs alongside the 4's diagonal, 0.93x off
+ *    it, and the two pieces of the 4 are 0.23x apart at the cut (worked out
+ *    from the points in geometry.js, FACTS; since the 4 was trued on 17 Oct
+ *    2026 the T's stem is as wide as the upper stem, so x grew and the
+ *    figures went down from 1.26x and 0.31x);
  *  - the slant: the 4's diagonal and the C's top cut drawn on up out of the
  *    mark side by side;
  *  - the lockup: two guides at the top of the T and at its foot, which the
@@ -104,8 +106,8 @@ function across(it, { from, a, b }) {
   return { x1, y1, x2, y2, mx: (x1 + x2) / 2, my: (y1 + y2) / 2 };
 }
 
-/* B612 Mono sets its point at the left of a full cell, so "1.26" reads as
-   "1. 26"; the figures after the point are pulled back by the gap it leaves
+/* B612 Mono sets its point at the left of a full cell, so "0.93" reads as
+   "0. 93"; the figures after the point are pulled back by the gap it leaves
    (measured on the font, 9 Oct 2026: ink 0.06 to 0.24em in a 0.65em cell). */
 function Fig({ value }) {
   const [whole, part] = String(value).split('.');

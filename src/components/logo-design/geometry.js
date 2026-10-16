@@ -5,9 +5,16 @@
  * LOCKUP_TRANSFORM are copied number for number from
  * src/components/c4/C4Logo.jsx (the nav and footer logo), which doesn't
  * export them; src/components/welcome/C4Mark.jsx lifts MARK_SOURCE the same
- * way. MARK_SOURCE also matches source-logo-svg/"original logo -
- * transparent.svg" point for point. If the logo is ever redrawn, change it
- * in C4Logo.jsx first and copy it here.
+ * way. If the logo is ever redrawn, change it in C4Logo.jsx first and copy
+ * it here.
+ *
+ * The 4 was trued on 17 Oct 2026 (Caleb: "Cuts 15.81, stem lines up"). Its
+ * stem's foot rose from y 300.21 to 292.91, so the channel under the stem
+ * is as wide as the slanted cut, the stem's right edge went vertical, and
+ * the T's stem widened to the upper stem's left edge (x 503.71 to 485.93).
+ * The C didn't change. So MARK_SOURCE no longer matches
+ * source-logo-svg/"original logo - transparent.svg" at those four points;
+ * that file is kept as the supplied original.
  *
  * The word "Studios" is imported, not copied, from the wordmark's own source.
  *
@@ -29,15 +36,15 @@ import { C4_WORDMARK_UPRIGHT_PATHS } from '@/components/c4/c4WordmarkMorphSource
 
 /* C4Logo.jsx, MARK_SOURCE */
 export const MARK_SOURCE = {
-  fourBody: '554.78 94.43 554.76 300.21 485.93 300.21 485.93 177.58 395.65 308.72 485.93 308.72 453.55 357.3 304.78 357.3 304.78 323.95 470.27 94.43 554.78 94.43',
-  fourArm: '639.36 308.72 606.98 357.3 554.78 357.3 554.78 469.58 503.71 469.58 503.71 357.3 472.55 357.3 504.93 308.72 639.36 308.72',
+  fourBody: '554.78 94.43 554.78 292.91 485.93 292.91 485.93 177.58 395.65 308.72 485.93 308.72 453.55 357.3 304.78 357.3 304.78 323.95 470.27 94.43 554.78 94.43',
+  fourArm: '639.36 308.72 606.98 357.3 554.78 357.3 554.78 469.58 485.93 469.58 485.93 357.3 472.55 357.3 504.93 308.72 639.36 308.72',
   cArc: 'M393.33,381.58l46.14.22c-37.51,42.67-88.07,71.58-143.72,82.18-89.37,18.53-180.59-21.95-227.2-100.84-38.21-64.03-30.59-145.6,18.81-201.36,33.03-37.88,79.33-61.47,129.25-65.83,54.95-7.69,110.91-3.19,163.94,13.2l-37.35,52.04c-31.06-6.51-62.95-8.01-94.47-4.41-43.91,2.38-84.08,25.62-108.21,62.59-14,27.78-16.89,59.9-8.08,89.75,13.18,47.07,49.8,83.83,96.63,97.01,55.92,11.27,114.01,2.59,164.26-24.56Z',
 };
 
 /* C4Logo.jsx, FULL_UPRIGHT: the same mark at the lockup's scale */
 export const FULL_UPRIGHT = {
-  fourBody: '303.88 303.92 303.87 401.82 271.12 401.82 271.12 343.47 228.18 405.86 271.12 405.86 255.72 428.97 184.95 428.97 184.95 413.1 263.67 303.92 303.88 303.92',
-  fourArm: '344.11 405.86 328.71 428.97 303.88 428.97 303.88 482.39 279.58 482.39 279.58 428.97 264.76 428.97 280.17 405.86 344.11 405.86',
+  fourBody: '303.88 303.92 303.88 398.34 271.12 398.34 271.12 343.47 228.18 405.86 271.12 405.86 255.72 428.97 184.95 428.97 184.95 413.1 263.67 303.92 303.88 303.92',
+  fourArm: '344.11 405.86 328.71 428.97 303.88 428.97 303.88 482.39 271.12 482.39 271.12 428.97 264.76 428.97 280.17 405.86 344.11 405.86',
   cArc: 'M227.07,440.52l21.95.11c-17.85,20.3-41.9,34.05-68.37,39.1-42.51,8.81-85.9-10.45-108.08-47.97-18.17-30.46-14.55-69.27,8.95-95.79,15.71-18.02,37.74-29.24,61.48-31.32,26.14-3.66,52.76-1.51,77.99,6.28l-17.77,24.76c-14.77-3.1-29.94-3.81-44.94-2.11-20.89,1.13-40,12.19-51.48,29.78-6.66,13.21-8.03,28.49-3.84,42.69,6.27,22.39,23.69,39.88,45.96,46.15,26.61,5.37,54.24,1.23,78.14-11.68Z',
 };
 
@@ -82,6 +89,7 @@ const pts = (s) => {
 };
 const BODY = pts(MARK_SOURCE.fourBody);
 const ARM = pts(MARK_SOURCE.fourArm);
+const FULL_ARM = pts(FULL_UPRIGHT.fourArm);
 /* how far an edge leans from the horizontal, in degrees, 0 to 90 */
 const lean = (a, b) => {
   const d = Math.abs((Math.atan2(b[1] - a[1], b[0] - a[0]) * 180) / Math.PI) % 180;
@@ -107,8 +115,9 @@ const offLine = (p, a, b) => {
   const dy = b[1] - a[1];
   return Math.abs((p[0] - a[0]) * dy - (p[1] - a[1]) * dx) / Math.hypot(dx, dy);
 };
-/* x, the measuring unit on the plate: the width of the green T's stem */
-const X = ARM[2][0] - ARM[4][0]; // 554.78 - 503.71 = 51.07
+/* x, the measuring unit on the plate: the width of the green T's stem.
+   Since the trueing (17 Oct 2026) it is also the upper stem's width. */
+const X = ARM[2][0] - ARM[4][0]; // 554.78 - 485.93 = 68.85 (51.07 before the trueing)
 /* the C's top cut runs alongside the 4's diagonal; how far apart, at the
    cut's outer corner (the inner corner gives the same to a tenth) */
 const C_TO_FOUR = offLine([380.55, 109.15], BODY[9], BODY[8]); // 64.2
@@ -125,10 +134,10 @@ export const FACTS = {
   fourTallWithC: Math.round(BOX.four.h * markScale16),  // 10
   fourTallAlone: Math.round(BOX.four.h * fourScale16),  // 16
   /* the green T's stem, the unit for clear space, in lockup units */
-  tStem: 303.88 - 279.58,
-  /* the gaps, in x */
-  cToFour: Math.round((C_TO_FOUR / X) * 100) / 100, // 1.26
-  cutGap: Math.round((CUT_GAP / X) * 100) / 100,    // 0.31
+  tStem: FULL_ARM[2][0] - FULL_ARM[4][0], // 303.88 - 271.12 = 32.76
+  /* the gaps, in x (1.26 and 0.31 before the trueing widened x) */
+  cToFour: Math.round((C_TO_FOUR / X) * 100) / 100, // 0.93
+  cutGap: Math.round((CUT_GAP / X) * 100) / 100,    // 0.23
 };
 
 /* where the plate draws its gap measures, in mark units: from the middle of

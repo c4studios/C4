@@ -5,6 +5,9 @@ import {
   C4_WORDMARK_MORPH_PAIRS,
 } from './c4WordmarkMorphData';
 import { useTheme } from './ThemeContext';
+import {
+  BUILD, IMPACT_AT, LOCKUP_MATRIX, MARK_C, REDUCED_FADE, drawBuildFrame, site,
+} from './markBuild';
 
 gsap.registerPlugin(useGSAP);
 
@@ -42,33 +45,25 @@ const COLOURS = {
   },
 };
 
+/* The mark, trued on 17 Oct 2026 to "Cuts 15.81, stem lines up" (Caleb):
+   the stem's foot (points 1 and 2) rises from y 300.21 to 292.91 and its
+   right edge goes vertical (x 554.76 to 554.78), and the T's stem (arm
+   points 4 and 5) widens from x 503.71 to the upper stem's 485.93. The C is
+   unchanged. markBuild.js carries the same points and the build. */
 const MARK_SOURCE = {
-  fourBody: '554.78 94.43 554.76 300.21 485.93 300.21 485.93 177.58 395.65 308.72 485.93 308.72 453.55 357.3 304.78 357.3 304.78 323.95 470.27 94.43 554.78 94.43',
-  fourArm: '639.36 308.72 606.98 357.3 554.78 357.3 554.78 469.58 503.71 469.58 503.71 357.3 472.55 357.3 504.93 308.72 639.36 308.72',
-  cArc: 'M393.33,381.58l46.14.22c-37.51,42.67-88.07,71.58-143.72,82.18-89.37,18.53-180.59-21.95-227.2-100.84-38.21-64.03-30.59-145.6,18.81-201.36,33.03-37.88,79.33-61.47,129.25-65.83,54.95-7.69,110.91-3.19,163.94,13.2l-37.35,52.04c-31.06-6.51-62.95-8.01-94.47-4.41-43.91,2.38-84.08,25.62-108.21,62.59-14,27.78-16.89,59.9-8.08,89.75,13.18,47.07,49.8,83.83,96.63,97.01,55.92,11.27,114.01,2.59,164.26-24.56Z',
+  fourBody: '554.78 94.43 554.78 292.91 485.93 292.91 485.93 177.58 395.65 308.72 485.93 308.72 453.55 357.3 304.78 357.3 304.78 323.95 470.27 94.43 554.78 94.43',
+  fourArm: '639.36 308.72 606.98 357.3 554.78 357.3 554.78 469.58 485.93 469.58 485.93 357.3 472.55 357.3 504.93 308.72 639.36 308.72',
+  cArc: MARK_C,
 };
 
+/* The same mark at the lockup's scale. The trued points went through the
+   transform the two copies share (markBuild.js LOCKUP_MATRIX: x 0.4757183
+   + 39.958, y 0.4757183 + 258.997, fitted to their 18 common corners):
+   292.91 lands on 398.34, 554.78 on 303.88 and 485.93 on 271.12. */
 const FULL_UPRIGHT = {
-  fourBody: '303.88 303.92 303.87 401.82 271.12 401.82 271.12 343.47 228.18 405.86 271.12 405.86 255.72 428.97 184.95 428.97 184.95 413.1 263.67 303.92 303.88 303.92',
-  fourArm: '344.11 405.86 328.71 428.97 303.88 428.97 303.88 482.39 279.58 482.39 279.58 428.97 264.76 428.97 280.17 405.86 344.11 405.86',
+  fourBody: '303.88 303.92 303.88 398.34 271.12 398.34 271.12 343.47 228.18 405.86 271.12 405.86 255.72 428.97 184.95 428.97 184.95 413.1 263.67 303.92 303.88 303.92',
+  fourArm: '344.11 405.86 328.71 428.97 303.88 428.97 303.88 482.39 271.12 482.39 271.12 428.97 264.76 428.97 280.17 405.86 344.11 405.86',
   cArc: 'M227.07,440.52l21.95.11c-17.85,20.3-41.9,34.05-68.37,39.1-42.51,8.81-85.9-10.45-108.08-47.97-18.17-30.46-14.55-69.27,8.95-95.79,15.71-18.02,37.74-29.24,61.48-31.32,26.14-3.66,52.76-1.51,77.99,6.28l-17.77,24.76c-14.77-3.1-29.94-3.81-44.94-2.11-20.89,1.13-40,12.19-51.48,29.78-6.66,13.21-8.03,28.49-3.84,42.69,6.27,22.39,23.69,39.88,45.96,46.15,26.61,5.37,54.24,1.23,78.14-11.68Z',
-};
-
-const FOUR_SEGMENTS = {
-  stemUpper: '303.88 303.92 303.87 401.82 271.12 401.82 271.12 343.47 263.67 303.92',
-  diagonal: '263.67 303.92 271.12 343.47 228.18 405.86 271.12 405.86 255.72 428.97 184.95 428.97 184.95 413.1',
-  stemLower: '303.88 428.97 303.88 482.39 279.58 482.39 279.58 428.97',
-  crossArm: '344.11 405.86 328.71 428.97 264.76 428.97 280.17 405.86',
-};
-
-const FOUR_BUILD = {
-  stemLower: { at: 0.18, duration: 0.26, origin: '291.73px 482.39px' },
-  stemUpper: { at: 0.44, duration: 0.28, origin: '287.5px 401.82px' },
-  diagonal: { at: 0.74, duration: 0.32, junctionX: 263.67, junctionY: 303.92, angle: 32.2 },
-  bodySealAt: 1.06,
-  crossArm: { at: 1.07, duration: 0.15, origin: '264.76px 417.42px' },
-  impactAt: 1.22,
-  armSealAt: 1.52,
 };
 
 /* --- Spring model for letter dynamics --- */
@@ -232,6 +227,24 @@ function useLogoColours(context) {
   }, [context, isDark]);
 }
 
+/* Read for the timelines only, never for what renders, so a hydrating page
+   draws exactly what was prerendered whatever the visitor's setting. */
+function usePrefersReducedMotion() {
+  const query = '(prefers-reduced-motion: reduce)';
+  const [reduced, setReduced] = useState(
+    () => typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia(query).matches,
+  );
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return undefined;
+    const mq = window.matchMedia(query);
+    const update = () => setReduced(mq.matches);
+    update();
+    mq.addEventListener?.('change', update);
+    return () => mq.removeEventListener?.('change', update);
+  }, []);
+  return reduced;
+}
+
 function MorphWordPaths({ pairs, fill, refs }) {
   return (
     <>
@@ -287,29 +300,29 @@ export default function C4Logo({
 
   /* Element refs */
   const cBaseRef = useRef(null);
-  const cColourRef = useRef(null);
+  const cSealRef = useRef(null);
   const bodyDormantRef = useRef(null);
   const armDormantRef = useRef(null);
   const bodyBaseRef = useRef(null);
   const armBaseRef = useRef(null);
   const bodySealRef = useRef(null);
   const armSealRef = useRef(null);
-  const stemUpperRef = useRef(null);
-  const diagonalGrowthRef = useRef(null);
-  const stemLowerRef = useRef(null);
-  const crossArmRef = useRef(null);
-  const cClipRectRef = useRef(null);
+  /* build B: the C's wipe (the polygon inside its clipPath) and the 4's two
+     colours, each one path whose subpaths are the strokes so far */
+  const cBuildRef = useRef(null);
+  const buildRef = useRef(null);
+  const cWipeRef = useRef(null);
+  const buildRedRef = useRef(null);
+  const buildGreenRef = useRef(null);
   const morphLetterRefs = useRef([]);
   const wordGroupRef = useRef(null);
   const backdropRef = useRef(null);
-
-  /* Stable computed values (set once in useGSAP) */
-  const computedRef = useRef(null);
 
   const h = typeof size === 'number' ? size : (SIZES[size] || SIZES.default);
   const full = variant === 'full';
   const showBackdrop = full;
   const { dormant, mono, colour, backdrop, cShadow } = useLogoColours(context);
+  const reducedMotion = usePrefersReducedMotion();
   /* Named from where the logo sits, not useId(): the prerendered HTML keeps
      the ids its own render made, and a hydrating page's differ (15 Oct
      2026). One logo per context and size on a page: the nav's, the
@@ -320,11 +333,7 @@ export default function C4Logo({
   const aspect = full ? FULL_ASPECT : MARK_ASPECT;
   const w = Math.round(h * aspect);
 
-  const cClipId = `c4-c-clip-${uid}`;
-  const stemUpperClipId = `c4-four-stem-upper-${uid}`;
-  const diagonalClipId = `c4-four-diagonal-${uid}`;
-  const stemLowerClipId = `c4-four-stem-lower-${uid}`;
-  const crossArmClipId = `c4-four-cross-arm-${uid}`;
+  const cWipeId = `c4-c-wipe-${uid}`;
   const cPresenceId = `c4-c-presence-${uid}`;
   const backdropBlurId = `c4-backdrop-blur-${uid}`;
 
@@ -340,18 +349,13 @@ export default function C4Logo({
     if (dormantTlRef.current) { dormantTlRef.current.kill(); dormantTlRef.current = null; }
     stageRef.current = 0;
 
-    if (!full) {
-      computedRef.current = null;
-      return undefined;
-    }
+    if (!full) return undefined;
 
-    const cBox = cBaseRef.current.getBBox();
     const wordLetters = morphLetterRefs.current.filter(Boolean);
-    const impactTimes = computeImpactChain(FOUR_BUILD.impactAt);
-    const cCenter = { x: cBox.x + cBox.width * 0.38, y: cBox.y + cBox.height * 0.5 };
-    const cFullRadius = Math.sqrt(cBox.width ** 2 + cBox.height ** 2) * 0.65;
-
-    computedRef.current = { cCenter, cFullRadius, wordLetters, impactTimes };
+    const impactTimes = computeImpactChain(IMPACT_AT);
+    /* the site's ease, for the hand-overs and the reduced-motion fades */
+    const siteEase = site;
+    const buildEls = { cClip: cWipeRef.current, red: buildRedRef.current, green: buildGreenRef.current };
 
     /* -- Set dormant initial state -- */
 
@@ -362,29 +366,12 @@ export default function C4Logo({
     gsap.set(bodyBaseRef.current, { opacity: 0 });
     gsap.set(armBaseRef.current, { opacity: 0 });
 
-    gsap.set(cColourRef.current, { opacity: 0 });
+    gsap.set(cSealRef.current, { opacity: 0 });
     gsap.set(bodySealRef.current, { opacity: 0 });
     gsap.set(armSealRef.current, { opacity: 0 });
 
-    gsap.set(stemLowerRef.current, {
-      opacity: 0, scaleY: 0,
-      transformOrigin: FOUR_BUILD.stemLower.origin,
-      svgOrigin: FOUR_BUILD.stemLower.origin.replaceAll('px', ''),
-    });
-    gsap.set(stemUpperRef.current, {
-      opacity: 0, scaleY: 0,
-      transformOrigin: FOUR_BUILD.stemUpper.origin,
-      svgOrigin: FOUR_BUILD.stemUpper.origin.replaceAll('px', ''),
-    });
-    const diagJunction = `${FOUR_BUILD.diagonal.junctionX} ${FOUR_BUILD.diagonal.junctionY}`;
-    gsap.set(diagonalGrowthRef.current, { opacity: 0, scaleY: 0, svgOrigin: diagJunction });
-    gsap.set(crossArmRef.current, {
-      opacity: 0, scaleX: 0,
-      transformOrigin: FOUR_BUILD.crossArm.origin,
-      svgOrigin: FOUR_BUILD.crossArm.origin.replaceAll('px', ''),
-    });
-
-    gsap.set(cClipRectRef.current, { attr: { cx: cCenter.x, cy: cCenter.y, r: 0 } });
+    gsap.set([cBuildRef.current, buildRef.current], { autoAlpha: 0 });
+    drawBuildFrame(0, buildEls);
 
     gsap.set(wordLetters, { x: 0, y: 0, opacity: 0, rotation: 0, scaleY: 1, force3D: false });
     wordLetters.forEach((letter, index) => {
@@ -414,10 +401,10 @@ export default function C4Logo({
     });
 
     if (showBackdrop && backdropRef.current) {
-      monoTl.to(backdropRef.current, {
-        attr: { cx: 255, cy: 398, rx: 215, ry: 132 },
-        duration: 0.5, ease: 'power2.out',
-      }, 0);
+      const room = { attr: { cx: 255, cy: 398, rx: 215, ry: 132 } };
+      /* reduced motion: the halo takes its new size at once */
+      if (reducedMotion) monoTl.set(backdropRef.current, room, 0);
+      else monoTl.to(backdropRef.current, { ...room, duration: 0.5, ease: 'power2.out' }, 0);
     }
 
     monoTl.to(bodyDormantRef.current, { opacity: 0, duration: 0.4, ease: 'power2.inOut' }, 0.05);
@@ -428,7 +415,7 @@ export default function C4Logo({
     wordLetters.forEach((letter, i) => {
       const delay = 0.18 + i * 0.04;
       monoTl.fromTo(letter,
-        { opacity: 0, y: 8 },
+        { opacity: 0, y: reducedMotion ? 0 : 8 },
         { opacity: 1, y: 0, duration: 0.38, ease: 'power3.out' },
         delay,
       );
@@ -446,91 +433,89 @@ export default function C4Logo({
       onReverseComplete: () => { stageRef.current = 1; },
     });
 
-    /* ── Mono "ghost scaffold" ─────────────────────────────────────
-       Instead of letting the mono 4 vanish before the colour build
-       has materialised, hold it at low opacity throughout construction
-       so the eye keeps its anchor on the silhouette. Each ghost layer
-       then cross-dissolves out exactly as its colour seal completes. */
-    const GHOST_OPACITY = 0.32;
+    if (reducedMotion) {
+      /* Reduced motion (Caleb, 17 Oct 2026): no build. The finished colour
+         mark fades in over the grey one in 0.2 s, and the grey goes once it
+         is covered. The word stays upright where it is. */
+      colourTl.to([cSealRef.current, bodySealRef.current, armSealRef.current], { opacity: 1, duration: REDUCED_FADE, ease: siteEase }, 0);
+      colourTl.to([cBaseRef.current, bodyBaseRef.current, armBaseRef.current], { opacity: 0, duration: REDUCED_FADE, ease: siteEase }, REDUCED_FADE);
+    } else {
+      /* ── Mono "ghost scaffold" ─────────────────────────────────────
+         Instead of letting the mono mark vanish before the colour build
+         has materialised, hold it at low opacity throughout construction
+         so the eye keeps its anchor on the silhouette. */
+      const GHOST_OPACITY = 0.32;
 
-    colourTl.to(cBaseRef.current, { opacity: GHOST_OPACITY, duration: 0.30, ease: 'power2.out' }, 0);
-    colourTl.to(bodyBaseRef.current, { opacity: GHOST_OPACITY, duration: 0.30, ease: 'power2.out' }, 0);
-    colourTl.to(armBaseRef.current, { opacity: GHOST_OPACITY, duration: 0.30, ease: 'power2.out' }, 0);
+      colourTl.to(cBaseRef.current, { opacity: GHOST_OPACITY, duration: 0.30, ease: 'power2.out' }, 0);
+      colourTl.to(bodyBaseRef.current, { opacity: GHOST_OPACITY, duration: 0.30, ease: 'power2.out' }, 0);
+      colourTl.to(armBaseRef.current, { opacity: GHOST_OPACITY, duration: 0.30, ease: 'power2.out' }, 0);
 
-    colourTl.set(cClipRectRef.current, { attr: { cx: cCenter.x, cy: cCenter.y, r: 0 } }, 0);
-    colourTl.to(cColourRef.current, { opacity: 1, duration: 0.01 }, 0);
-    colourTl.to(cClipRectRef.current, { attr: { r: cFullRadius }, duration: 0.65, ease: 'power2.out' }, 0.02);
+      /* -- Build B, "Stroke" (Caleb, 17 Oct 2026) --
+         The C is wiped on by a straight front at its top cut's angle. The 4
+         is drawn as one stroke: the stem and the diagonal leave the apex
+         together, the diagonal turns into the crossbar, the crossbar runs
+         right through the cut into the green, and the T's stem drops last.
+         Every front lies parallel to the edge its stroke ends on, so each
+         frame is straight-edged polygons with their true ends: no iris, no
+         pivot, no wedge. markBuild.js draws the frames; this tween is only
+         their clock, so a hover that ends early runs the stroke backwards. */
+      const build = { t: 0 };
+      colourTl.set([cBuildRef.current, buildRef.current], { autoAlpha: 1 }, 0);
+      colourTl.fromTo(build, { t: 0 }, {
+        t: BUILD.end,
+        duration: BUILD.end,
+        ease: 'none',
+        onUpdate: () => { drawBuildFrame(build.t, buildEls); },
+      }, 0);
 
-    // C ghost retires once the colour clip-bloom is mostly through
-    colourTl.to(cBaseRef.current, { opacity: 0, duration: 0.30, ease: 'power2.inOut' }, 0.50);
+      /* Each part hands over to the finished mark as it lands, the C at
+         0.48 s and the 4 at 0.96 s, and its ghost fades after it (the C's
+         takes its soft shadow with it). The build's last frame covers
+         exactly what the finished mark covers, and the ghost under both is
+         the same, so the hand-over can't be seen. */
+      colourTl.set(cSealRef.current, { opacity: 1 }, BUILD.c[1]);
+      colourTl.set(cBuildRef.current, { autoAlpha: 0 }, BUILD.c[1]);
+      colourTl.to(cBaseRef.current, { opacity: 0, duration: 0.24, ease: siteEase }, BUILD.c[1]);
+      colourTl.set([bodySealRef.current, armSealRef.current], { opacity: 1 }, BUILD.end);
+      colourTl.set(buildRef.current, { autoAlpha: 0 }, BUILD.end);
+      colourTl.to([bodyBaseRef.current, armBaseRef.current], { opacity: 0, duration: 0.24, ease: siteEase }, BUILD.end);
 
-    /* -- 4 structural build -- */
+      /* -- Per-letter domino chain --
+         Rebuilt 9 September 2026. The old chain sampled a spring into sixty
+         linear keyframes per letter, which read as jitter. Each letter now
+         has three continuous tweens: a hair of tension as the push arrives,
+         the knock over to its peak angle on a decelerating fall, and one
+         elastic recovery back to upright whose period lengthens down the
+         word, so the wobble softens as the energy runs out. The italic morph
+         rides the swing. The timing of each impact still comes from the
+         spring model, so the chain keeps its cadence. The first knock is the
+         crossbar landing on the T's right end (IMPACT_AT, 17 Oct 2026). */
+      const KNOCK = 0.16;
+      LETTER_SPRINGS.forEach((spring, index) => {
+        const letter = wordLetters[index];
+        const pair = C4_WORDMARK_MORPH_PAIRS[index];
+        if (!letter || !pair.normalized.normalizedPaths) return;
 
-    colourTl.set(stemLowerRef.current, { opacity: 1, scaleY: 0 }, FOUR_BUILD.stemLower.at);
-    colourTl.set(stemUpperRef.current, { opacity: 1, scaleY: 0 }, FOUR_BUILD.stemUpper.at);
-    colourTl.set(diagonalGrowthRef.current, { opacity: 1, scaleY: 0 }, FOUR_BUILD.diagonal.at);
-    colourTl.set(crossArmRef.current, { opacity: 1, scaleX: 0 }, FOUR_BUILD.crossArm.at);
+        const impactAt = impactTimes[index];
+        const hingeHeight = letter.getBBox().height;
+        const swing = Math.abs(spring.peakAngle);
+        const fall = KNOCK + swing * 0.004;
+        const dip = hingeTranslationY(spring.peakAngle, hingeHeight);
+        const period = (0.34 + index * 0.05).toFixed(2);
 
-    /* Each stroke of the 4 is drawn, not extruded: fast off the mark and
-       decelerating into its end, the way a pen stroke lands. The three
-       strokes overlap slightly so the eye reads one continuous hand. */
-    colourTl.to(stemLowerRef.current, { scaleY: 1, duration: FOUR_BUILD.stemLower.duration + 0.06, ease: 'power3.out' }, FOUR_BUILD.stemLower.at);
-    colourTl.to(stemUpperRef.current, { scaleY: 1, duration: FOUR_BUILD.stemUpper.duration + 0.06, ease: 'power3.out' }, FOUR_BUILD.stemUpper.at - 0.04);
-    colourTl.to(diagonalGrowthRef.current, { scaleY: 1, duration: FOUR_BUILD.diagonal.duration + 0.04, ease: 'power2.inOut' }, FOUR_BUILD.diagonal.at - 0.06);
+        colourTl.to(letter, { rotation: spring.tensionAngle, duration: 0.05, ease: 'power1.in' }, impactAt);
+        colourTl.to(letter, { rotation: -swing, y: dip, duration: fall, ease: 'power2.out' }, impactAt + 0.05);
+        colourTl.to(letter, { rotation: 0, y: 0, duration: spring.totalDuration, ease: `elastic.out(1, ${period})` }, impactAt + 0.05 + fall);
+        colourTl.to(letter, { attr: { d: pair.normalized.normalizedPaths.italicPath }, duration: 0.3, ease: 'sine.inOut' }, impactAt + 0.06);
+      });
 
-    /* Body cross-dissolve: colour seal in, mono ghost out, construction
-       strokes out — all on the same 0.20s window so it reads as one motion. */
-    const BODY_DISSOLVE = 0.20;
-    const ARM_DISSOLVE = 0.20;
-
-    colourTl.to(bodySealRef.current, { opacity: 1, duration: BODY_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.bodySealAt - 0.04);
-    colourTl.to(bodyBaseRef.current, { opacity: 0, duration: BODY_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.bodySealAt - 0.04);
-    colourTl.to(stemUpperRef.current, { opacity: 0, duration: BODY_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.bodySealAt - 0.04);
-    colourTl.to(diagonalGrowthRef.current, { opacity: 0, duration: BODY_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.bodySealAt - 0.04);
-
-    /* The cross arm is the one stroke that strikes: it lands with a small
-       overshoot, which is what knocks the first letter over. */
-    colourTl.to(crossArmRef.current, { scaleX: 1, duration: FOUR_BUILD.crossArm.duration + 0.07, ease: 'back.out(1.7)' }, FOUR_BUILD.crossArm.at);
-
-    colourTl.to(armSealRef.current, { opacity: 1, duration: ARM_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.armSealAt - 0.04);
-    colourTl.to(armBaseRef.current, { opacity: 0, duration: ARM_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.armSealAt - 0.04);
-    colourTl.to(stemLowerRef.current, { opacity: 0, duration: ARM_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.armSealAt - 0.04);
-    colourTl.to(crossArmRef.current, { opacity: 0, duration: ARM_DISSOLVE, ease: 'power2.out' }, FOUR_BUILD.armSealAt - 0.04);
-
-    /* -- Per-letter domino chain --
-       Rebuilt 9 September 2026. The old chain sampled a spring into sixty
-       linear keyframes per letter, which read as jitter. Each letter now
-       has three continuous tweens: a hair of tension as the push arrives,
-       the knock over to its peak angle on a decelerating fall, and one
-       elastic recovery back to upright whose period lengthens down the
-       word, so the wobble softens as the energy runs out. The italic morph
-       rides the swing. The timing of each impact still comes from the
-       spring model, so the chain keeps its cadence. */
-    const KNOCK = 0.16;
-    LETTER_SPRINGS.forEach((spring, index) => {
-      const letter = wordLetters[index];
-      const pair = C4_WORDMARK_MORPH_PAIRS[index];
-      if (!letter || !pair.normalized.normalizedPaths) return;
-
-      const impactAt = impactTimes[index];
-      const hingeHeight = letter.getBBox().height;
-      const swing = Math.abs(spring.peakAngle);
-      const fall = KNOCK + swing * 0.004;
-      const dip = hingeTranslationY(spring.peakAngle, hingeHeight);
-      const period = (0.34 + index * 0.05).toFixed(2);
-
-      colourTl.to(letter, { rotation: spring.tensionAngle, duration: 0.05, ease: 'power1.in' }, impactAt);
-      colourTl.to(letter, { rotation: -swing, y: dip, duration: fall, ease: 'power2.out' }, impactAt + 0.05);
-      colourTl.to(letter, { rotation: 0, y: 0, duration: spring.totalDuration, ease: `elastic.out(1, ${period})` }, impactAt + 0.05 + fall);
-      colourTl.to(letter, { attr: { d: pair.normalized.normalizedPaths.italicPath }, duration: 0.3, ease: 'sine.inOut' }, impactAt + 0.06);
-    });
-
-    const lockTime = Math.max(
-      ...LETTER_SPRINGS.map((sp, i) => impactTimes[i] + 0.05 + KNOCK + Math.abs(sp.peakAngle) * 0.004 + sp.totalDuration)
-    );
-    wordLetters.forEach((letter) => {
-      if (letter) colourTl.set(letter, { rotation: 0, y: 0, x: 0 }, lockTime);
-    });
+      const lockTime = Math.max(
+        ...LETTER_SPRINGS.map((sp, i) => impactTimes[i] + 0.05 + KNOCK + Math.abs(sp.peakAngle) * 0.004 + sp.totalDuration)
+      );
+      wordLetters.forEach((letter) => {
+        if (letter) colourTl.set(letter, { rotation: 0, y: 0, x: 0 }, lockTime);
+      });
+    }
 
     colourTlRef.current = colourTl;
 
@@ -548,8 +533,10 @@ export default function C4Logo({
        upright letter by letter, then lifts off the baseline and fades, the
        way type is picked up off a bench; it no longer crushes to zero
        height. The 4 and the C do not un-draw themselves stroke by stroke:
-       the colour cross-dissolves back to the dormant greys while the C's
-       iris closes, so the whole mark settles in one motion. */
+       the dormant greys come up under the colour and the colour fades off
+       them, so the whole mark settles in one motion without dimming
+       halfway. Since 17 Oct 2026 the C does the same; its iris close went
+       with the round reveal. Reduced motion: the word fades where it is. */
     wordLetters.forEach((letter, i) => {
       const pair = C4_WORDMARK_MORPH_PAIRS[i];
       if (!pair.normalized.normalizedPaths) return;
@@ -557,29 +544,20 @@ export default function C4Logo({
       dormantTl.to(letter, { attr: { d: uprightPath }, duration: 0.26, ease: 'power2.inOut' }, i * 0.02);
     });
     wordLetters.forEach((letter, i) => {
-      dormantTl.to(letter, { y: -7, opacity: 0, duration: 0.3, ease: 'power2.in' }, 0.16 + i * 0.03);
+      dormantTl.to(letter, { y: reducedMotion ? 0 : -7, opacity: 0, duration: 0.3, ease: 'power2.in' }, 0.16 + i * 0.03);
     });
 
-    dormantTl.to([bodySealRef.current, armSealRef.current], { opacity: 0, duration: 0.42, ease: 'power2.inOut' }, 0.3);
-    dormantTl.to([bodyDormantRef.current, armDormantRef.current], { opacity: 1, duration: 0.42, ease: 'power2.inOut' }, 0.3);
-    dormantTl.set([stemLowerRef.current, stemUpperRef.current, diagonalGrowthRef.current, crossArmRef.current], { opacity: 0 }, 0.3);
+    dormantTl.to([bodyDormantRef.current, armDormantRef.current], { opacity: 1, duration: 0.36, ease: 'power2.inOut' }, 0.3);
+    dormantTl.to(cBaseRef.current, { opacity: 1, duration: 0.36, ease: 'power2.inOut' }, 0.3);
     dormantTl.to([bodyBaseRef.current, armBaseRef.current], { opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 0.3);
-
-    dormantTl.to(cClipRectRef.current, { attr: { r: 0 }, duration: 0.56, ease: 'power3.inOut' }, 0.3);
-    dormantTl.to(cBaseRef.current, { opacity: 1, duration: 0.36, ease: 'power2.inOut' }, 0.42);
-    dormantTl.to(cColourRef.current, { opacity: 0, duration: 0.06 }, 0.86);
+    dormantTl.to([cSealRef.current, bodySealRef.current, armSealRef.current], { opacity: 0, duration: 0.42, ease: 'power2.inOut' }, 0.42);
 
     if (showBackdrop && backdropRef.current) {
-      dormantTl.to(backdropRef.current, {
-        attr: { cx: 206, cy: 389, rx: 165, ry: 120 },
-        duration: 0.45, ease: 'power2.inOut',
-      }, 0.5);
+      const rest = { attr: { cx: 206, cy: 389, rx: 165, ry: 120 } };
+      if (reducedMotion) dormantTl.set(backdropRef.current, rest, 0.5);
+      else dormantTl.to(backdropRef.current, { ...rest, duration: 0.45, ease: 'power2.inOut' }, 0.5);
     }
 
-    dormantTl.set(stemLowerRef.current, { scaleY: 0 }, 0.9);
-    dormantTl.set(stemUpperRef.current, { scaleY: 0 }, 0.9);
-    dormantTl.set(diagonalGrowthRef.current, { scaleY: 0 }, 0.9);
-    dormantTl.set(crossArmRef.current, { scaleX: 0 }, 0.9);
     dormantTl.set(wordLetters, { y: 0, rotation: 0, x: 0, scaleY: 1, opacity: 0 }, 0.95);
 
     dormantTlRef.current = dormantTl;
@@ -589,7 +567,7 @@ export default function C4Logo({
       if (colourTlRef.current) { colourTlRef.current.kill(); colourTlRef.current = null; }
       if (dormantTlRef.current) { dormantTlRef.current.kill(); dormantTlRef.current = null; }
     };
-  }, { scope: rootRef, dependencies: [full, showBackdrop] });
+  }, { scope: rootRef, dependencies: [full, showBackdrop, reducedMotion] });
 
   /* =================================================================
      HOVER + TOUCH HANDLERS — staged progressive animation
@@ -675,7 +653,7 @@ export default function C4Logo({
   return (
     <span
       ref={rootRef}
-      className={`inline-flex items-center select-none ${className}`}
+      className={`c4-logo inline-flex items-center select-none ${className}`}
       onMouseEnter={handleHoverStart}
       onMouseLeave={handleHoverEnd}
       onTouchStart={handleTouchStart}
@@ -702,91 +680,71 @@ export default function C4Logo({
           </filter>
         </defs>
         {full ? (
-          <>
-            <defs>
-              <clipPath id={cClipId} clipPathUnits="userSpaceOnUse">
-                <circle ref={cClipRectRef} />
-              </clipPath>
-              <clipPath id={stemUpperClipId} clipPathUnits="userSpaceOnUse">
-                <polygon points={FOUR_SEGMENTS.stemUpper} />
-              </clipPath>
-              <clipPath id={diagonalClipId} clipPathUnits="userSpaceOnUse">
-                <polygon points={FOUR_SEGMENTS.diagonal} />
-              </clipPath>
-              <clipPath id={stemLowerClipId} clipPathUnits="userSpaceOnUse">
-                <polygon points={FOUR_SEGMENTS.stemLower} />
-              </clipPath>
-              <clipPath id={crossArmClipId} clipPathUnits="userSpaceOnUse">
-                <polygon points={FOUR_SEGMENTS.crossArm} />
-              </clipPath>
-            </defs>
+          <g transform={LOCKUP_TRANSFORM}>
+            {/* Backdrop — soft dark-grey translucent bubble */}
+            {showBackdrop ? (
+              <ellipse
+                ref={backdropRef}
+                cx="206" cy="389"
+                rx="165" ry="120"
+                fill={backdrop.fill}
+                opacity={backdrop.opacity}
+                filter={`url(#${backdropBlurId})`}
+              />
+            ) : null}
 
-            <g transform={LOCKUP_TRANSFORM}>
-              {/* Backdrop — soft dark-grey translucent bubble */}
-              {showBackdrop ? (
-                <ellipse
-                  ref={backdropRef}
-                  cx="206" cy="389"
-                  rx="165" ry="120"
-                  fill={backdrop.fill}
-                  opacity={backdrop.opacity}
-                  filter={`url(#${backdropBlurId})`}
-                />
-              ) : null}
+            {/* C — dormant/mono base (always rendered, opacity-controlled) */}
+            <path ref={cBaseRef} d={FULL_UPRIGHT.cArc} fill={mono.cArc} filter={`url(#${cPresenceId})`} />
 
-              {/* C — dormant/mono base (always rendered, opacity-controlled) */}
-              <path ref={cBaseRef} d={FULL_UPRIGHT.cArc} fill={mono.cArc} filter={`url(#${cPresenceId})`} />
-
-              {/* C — colour layer (clipped by iris bloom) */}
-              <g ref={cColourRef}>
-                <path d={FULL_UPRIGHT.cArc} fill={colour.cArc} clipPath={`url(#${cClipId})`} />
-              </g>
-
-              {/* 4 body — dormant palette */}
-              <polygon ref={bodyDormantRef} points={FULL_UPRIGHT.fourBody} fill={dormant.fourBody} />
-
-              {/* 4 body — mono base (hidden in dormant state) */}
-              <polygon ref={bodyBaseRef} points={FULL_UPRIGHT.fourBody} fill={mono.fourBody} />
-
-              {/* 4 body — colour seal */}
-              <polygon ref={bodySealRef} points={FULL_UPRIGHT.fourBody} fill={colour.fourBody} />
-
-              {/* Colour build segments */}
-              <g ref={stemUpperRef} clipPath={`url(#${stemUpperClipId})`}>
-                <polygon points={FULL_UPRIGHT.fourBody} fill={colour.fourBody} />
-              </g>
-              <g ref={diagonalGrowthRef} transform={`rotate(${FOUR_BUILD.diagonal.angle} ${FOUR_BUILD.diagonal.junctionX} ${FOUR_BUILD.diagonal.junctionY})`}>
-                <g transform={`rotate(${-FOUR_BUILD.diagonal.angle} ${FOUR_BUILD.diagonal.junctionX} ${FOUR_BUILD.diagonal.junctionY})`} clipPath={`url(#${diagonalClipId})`}>
-                  <polygon points={FULL_UPRIGHT.fourBody} fill={colour.fourBody} />
-                </g>
-              </g>
-
-              {/* Arm group */}
-              <g>
-                {/* Arm — dormant palette */}
-                <g ref={armDormantRef}>
-                  <polygon points={FULL_UPRIGHT.fourArm} fill={dormant.fourArm} />
-                </g>
-                {/* Arm — mono base */}
-                <g ref={armBaseRef}>
-                  <polygon points={FULL_UPRIGHT.fourArm} fill={mono.fourArm} />
-                </g>
-                {/* Colour build segments */}
-                <g ref={stemLowerRef} clipPath={`url(#${stemLowerClipId})`}>
-                  <polygon points={FULL_UPRIGHT.fourArm} fill={colour.fourArm} />
-                </g>
-                <g ref={crossArmRef} clipPath={`url(#${crossArmClipId})`}>
-                  <polygon points={FULL_UPRIGHT.fourArm} fill={colour.fourArm} />
-                </g>
-                <polygon ref={armSealRef} points={FULL_UPRIGHT.fourArm} fill={colour.fourArm} />
-              </g>
-
-              {/* Word "Studios" — letters individually animated */}
-              <g ref={wordGroupRef}>
-                <MorphWordPaths pairs={C4_WORDMARK_MORPH_PAIRS} fill={mono.text} refs={morphLetterRefs} />
-              </g>
+            {/* C — the build's straight wipe, in the mark's own units (markBuild.js).
+                Empty until stage 2 starts; the finished C takes over at 0.48 s. */}
+            <g ref={cBuildRef} transform={LOCKUP_MATRIX}>
+              <defs>
+                <clipPath id={cWipeId} clipPathUnits="userSpaceOnUse">
+                  <polygon ref={cWipeRef} points="" />
+                </clipPath>
+              </defs>
+              <path d={MARK_C} fill={colour.cArc} clipPath={`url(#${cWipeId})`} />
             </g>
-          </>
+
+            {/* C — colour, finished */}
+            <path ref={cSealRef} d={FULL_UPRIGHT.cArc} fill={colour.cArc} />
+
+            {/* 4 body — dormant palette */}
+            <polygon ref={bodyDormantRef} points={FULL_UPRIGHT.fourBody} fill={dormant.fourBody} />
+
+            {/* 4 body — mono base (hidden in dormant state) */}
+            <polygon ref={bodyBaseRef} points={FULL_UPRIGHT.fourBody} fill={mono.fourBody} />
+
+            {/* 4 body — colour seal */}
+            <polygon ref={bodySealRef} points={FULL_UPRIGHT.fourBody} fill={colour.fourBody} />
+
+            {/* Arm group */}
+            <g>
+              {/* Arm — dormant palette */}
+              <g ref={armDormantRef}>
+                <polygon points={FULL_UPRIGHT.fourArm} fill={dormant.fourArm} />
+              </g>
+              {/* Arm — mono base */}
+              <g ref={armBaseRef}>
+                <polygon points={FULL_UPRIGHT.fourArm} fill={mono.fourArm} />
+              </g>
+              <polygon ref={armSealRef} points={FULL_UPRIGHT.fourArm} fill={colour.fourArm} />
+            </g>
+
+            {/* 4 — the build's strokes, one path per colour whose subpaths are
+                the strokes so far, so no seam shows where two meet. Empty
+                until stage 2 starts; the finished 4 takes over at 0.96 s. */}
+            <g ref={buildRef} transform={LOCKUP_MATRIX}>
+              <path ref={buildRedRef} d="" fill={colour.fourBody} />
+              <path ref={buildGreenRef} d="" fill={colour.fourArm} />
+            </g>
+
+            {/* Word "Studios" — letters individually animated */}
+            <g ref={wordGroupRef}>
+              <MorphWordPaths pairs={C4_WORDMARK_MORPH_PAIRS} fill={mono.text} refs={morphLetterRefs} />
+            </g>
+          </g>
         ) : (
           <>
             <path d={MARK_SOURCE.cArc} fill={mono.cArc} filter={`url(#${cPresenceId})`} />

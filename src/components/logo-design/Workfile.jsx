@@ -142,7 +142,8 @@ export default function Workfile({ state = 'all', formats = [] }) {
       <g className="ld-wf-guides">
         <line x1={ART.x} x2={ART.x + ART.w} y1={P([0, 308.72])[1]} y2={P([0, 308.72])[1]} />
         <line x1={ART.x} x2={ART.x + ART.w} y1={P([0, 469.58])[1]} y2={P([0, 469.58])[1]} />
-        <line y1={ART.y} y2={ART.y + ART.h} x1={P([503.71, 0])[0]} x2={P([503.71, 0])[0]} />
+        {/* the stem's left edge, which the T's stem has lined up with since the 4 was trued (17 Oct 2026) */}
+        <line y1={ART.y} y2={ART.y + ART.h} x1={P([485.93, 0])[0]} x2={P([485.93, 0])[0]} />
       </g>
 
       <g className={`ld-wf-fill${filled ? ' is-shown' : ''}`} transform={T}>

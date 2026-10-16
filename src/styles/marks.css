@@ -164,4 +164,9 @@ html :is([class*="outline-none"], [class*="outline-0"]):focus-visible {
     scroll-behavior: auto !important;
   }
   html { scroll-behavior: auto !important; }
+  /* The logo's layers are driven frame by frame by GSAP (C4Logo.jsx),
+     which already fades them; a transition on top drags every step
+     behind it and slows the start of the finished mark's 0.2 s fade
+     (17 Oct 2026). */
+  .c4-logo svg, .c4-logo svg * { transition: none !important; }
 }
