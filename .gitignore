@@ -39,6 +39,10 @@ reports/
 # An old .git directory, committed by mistake on 10 Jun 2026 and removed from
 # the repo and its history on 16 Oct 2026 (brain site_issues 155).
 .git_disabled/
+# Another stray git directory (an outer repo from 6 Apr 2026, committed on
+# 11 Jun 2026). It held the same browser-profile copies and was purged from
+# the history on 16 Oct 2026. Never commit a .git-like folder.
+.git_accidental_outer_repo_*/
 
 # Nested legacy clone of the GitHub repo — not part of this tree
 /C4-main/
