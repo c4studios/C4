@@ -11,19 +11,21 @@
  * (LensWork.jsx), beside "See our case studies", and its code and its type
  * load only when that button is pressed.
  *
- * Direction: the plate page. The work fills the screen, edge to edge, and the
- * white card over it is set like a plate page in a photobook: the plate
- * number, the plate, and its caption. One book face, Petrona, in three
- * weights: the number big and light in tabular lining figures, the client in
- * the medium weight, the words in the text weight, all in sentence case, and
- * no rules. The plate shows each photograph whole, on its own tone, where
- * the screen behind shows it cropped. As frames pass, the card changes in
- * step with them, and a line whose value doesn't change holds still, the way
- * a counter turns only the wheels that move: the plate number's figures and
- * the one-line facts roll like a counter's wheels, the longer lines (the
- * client, the caption) and the year fade across, and the client's name stays
- * put through Sharp's four frames and changes when the reel reaches HVN.
- * lens-reel.css has the grid and how it's measured.
+ * The card. Pure white with black ink, laid over the frame in its lower part
+ * and in the same place on every frame: the plate number, the kind of work
+ * and the caption on the left, a window onto the picture in the middle, and
+ * who it was for, where and when on the right. It comes in two finished type
+ * settings so Caleb can choose; `data-card` on the dialog picks one, and
+ * ?card=b in the address previews B.
+ *   A, "a wall label, set by an architecture studio": Mona Sans, the client
+ *     expanded, the plate number expanded and very light.
+ *   B, "the plate page": Petrona, the client locked to the number's height.
+ * Either way, as frames pass the card changes in step with them, and a line
+ * whose value doesn't change holds still, the way a counter turns only the
+ * wheels that move: the plate number's figures roll like a counter's wheels,
+ * the words that change fade across, and the client's name and the caption
+ * stay put through Sharp's four frames and change when the reel reaches HVN.
+ * lens-reel.css has the grids and how they're measured.
  *
  * Mechanics, from the reference (the "argent loop" slider): a virtualised,
  * endless column of full-screen frames moved by lerped wheel, drag and keys,
@@ -40,7 +42,10 @@
  * and Shift+Space step; Home and End go to the first and last frames; Escape
  * closes; Tab stays inside; Back closes it too (one history entry while it's
  * open). The moving lines are hidden from screen readers, and a polite status
- * line reads each frame once it settles.
+ * line reads each frame once it settles. The card's lines grow with their
+ * words under a reader's own text spacing, and at 400% zoom the card turns to
+ * one scrolling column (lens-reel.css). Over the reel the page's reticle
+ * cursor gives way to the system pointer.
  *
  * Content rules: reelFrames.js (what's in, what's out, and why).
  */
@@ -81,11 +86,11 @@ let resumeAt = 0;
 
 /* What each line on the card shows for frame k. A line whose value is the
    same for two neighbouring frames doesn't move between them. Each layout
-   shows some of them: a wide screen has the kind under the number and the
-   place over the year under the client, each in its own window, so a place
-   holds while only the year changes; a phone stacks the kind over the place
-   and year in one window; a phone on its side runs all three along one
-   line. */
+   shows some of them: a wide screen has the kind of work, the place and the
+   year each in its own window, so a place holds while only the year
+   changes; a phone, upright or on its side, has the kind over the place and
+   year run together on one line, so the kind can change while the place
+   holds. */
 const LINES = {
   tens: (f, k) => pad(k + 1)[0],
   units: (f, k) => pad(k + 1)[1],
@@ -94,24 +99,36 @@ const LINES = {
   client: (f) => f.study.client,
   place: (f) => f.study.place,
   year: (f) => f.year || '',
-  facts: (f) => `${f.kind}\n${run([f.study.place, f.year])}`,
-  meta: (f) => run([f.kind, f.study.place, f.year]),
+  where: (f) => run([f.study.place, f.year]),
 };
-/* Lines that can run to more than one line fade across instead of rolling:
-   rolled a whole window's height, half a caption would sit legible beside
-   half of the next job's name. The year fades too: it sits right under the
-   place, and two windows rolling against each other read as one garbled
-   line. */
-const FADES = new Set(['client', 'note', 'facts', 'meta', 'year']);
+/* Only the plate number's figures roll. Every line of words fades across: a
+   word rolled through a one-line window leaves specks of its letters on the
+   way, half a caption would sit legible beside half of the next job's name,
+   and two windows rolling against each other read as one garbled line. */
+const FADES = new Set(['kind', 'client', 'note', 'place', 'year', 'where']);
 
 /* Size hints for the browser's pick from a srcset. A frame covers the screen,
    so it's as wide as the screen, or wider when the screen is taller than the
-   picture. The plate is given the same hint, so it shows the file the frame
-   already fetched rather than fetching a smaller one. */
-const frameSizes = (pic) => {
-  const w = pic.type === 'art' ? pic.wide.width : pic.width ?? pic.files[0].width;
-  const h = pic.type === 'art' ? pic.wide.height : pic.height ?? pic.files[0].height;
-  return `(min-aspect-ratio: ${w}/${h}) 100vw, calc(100vh * ${(w / h).toFixed(3)})`;
+   picture. The window on the card is given the same hint, so it shows the
+   file the frame already fetched rather than fetching a smaller one. */
+const sizesFor = (s) => `(min-aspect-ratio: ${s.width}/${s.height}) 100vw, calc(100vh * ${(s.width / s.height).toFixed(3)})`;
+const setFor = (s, ext) => s.widths.filter((w) => w <= s.width).map((w) => `${s.base}-${w}.${ext} ${w}w`).join(', ');
+
+/* While a picture loads, its frame and the window show a grey of the
+   picture's own brightness: the frame's tone (reelFrames.js, the picture
+   averaged to one colour) with its colour taken out, so nothing opens on
+   black and nothing flashes a block of colour. */
+const grey = (hex) => {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  const y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  const v = Math.round(255 * (y <= 0.0031308 ? 12.92 * y : 1.055 * y ** (1 / 2.4) - 0.055));
+  return `rgb(${v} ${v} ${v})`;
+};
+
+/* Which card: A unless the address asks for B (?card=b). */
+const whichCard = () => {
+  try { return new URLSearchParams(window.location.search).get('card') === 'b' ? 'b' : 'a'; } catch { return 'a'; }
 };
 
 function developed(e) { e.currentTarget.classList.add('is-loaded'); }
@@ -121,37 +138,40 @@ function settleImg(el) {
   if (el && el.complete && el.naturalWidth) requestAnimationFrame(() => el.classList.add('is-loaded'));
 }
 
-function Picture({ pic, sizes, imgRef, priority, focus }) {
+/* A still at several widths, AVIF first; a frame with a wide and a tall cut
+   picks by the window's orientation, the same switch the film players make.
+   Its focal points go to the stylesheet, which picks the short-screen one on
+   a phone held sideways. */
+function Picture({ pic, imgRef, priority, focus, focusShort }) {
   const setRef = useCallback((el) => {
     settleImg(el);
     if (imgRef) imgRef(el);
   }, [imgRef]);
   const common = {
     alt: '', decoding: 'async', draggable: false, ref: setRef, onLoad: developed, onError: failed,
-    fetchpriority: priority, style: focus ? { objectPosition: focus } : undefined,
+    fetchpriority: priority,
+    style: focus ? { '--focus': focus, '--focus-short': focusShort || focus } : undefined,
   };
-  if (pic.type === 'still') {
-    const set = (ext) => pic.widths.filter((w) => w <= pic.width).map((w) => `${pic.base}-${w}.${ext} ${w}w`).join(', ');
-    const mid = pic.widths[Math.min(1, pic.widths.length - 1)];
+  const fallback = (s) => `${s.base}-${s.widths[Math.min(1, s.widths.length - 1)]}.webp`;
+  if (pic.type === 'art-stills') {
+    const { wide, tall } = pic;
     return (
       <picture>
-        <source type="image/avif" srcSet={set('avif')} sizes={sizes} />
-        <source type="image/webp" srcSet={set('webp')} sizes={sizes} />
-        <img src={`${pic.base}-${mid}.webp`} width={pic.width} height={pic.height} {...common} />
+        <source media="(orientation: landscape)" type="image/avif" srcSet={setFor(wide, 'avif')} sizes={sizesFor(wide)} width={wide.width} height={wide.height} />
+        <source media="(orientation: landscape)" type="image/webp" srcSet={setFor(wide, 'webp')} sizes={sizesFor(wide)} width={wide.width} height={wide.height} />
+        <source type="image/avif" srcSet={setFor(tall, 'avif')} sizes={sizesFor(tall)} />
+        <source type="image/webp" srcSet={setFor(tall, 'webp')} sizes={sizesFor(tall)} />
+        <img src={fallback(tall)} width={tall.width} height={tall.height} {...common} />
       </picture>
     );
   }
-  if (pic.type === 'art') {
-    return (
-      <picture>
-        <source media="(orientation: landscape)" srcSet={pic.wide.src} width={pic.wide.width} height={pic.wide.height} />
-        <img src={pic.tall.src} width={pic.tall.width} height={pic.tall.height} {...common} />
-      </picture>
-    );
-  }
-  const largest = pic.files.reduce((a, b) => (b.width > a.width ? b : a));
-  const srcSet = pic.files.length > 1 ? pic.files.map((f) => `${f.src} ${f.width}w`).join(', ') : undefined;
-  return <img src={largest.src} srcSet={srcSet} sizes={srcSet ? sizes : undefined} width={largest.width} height={largest.height} {...common} />;
+  return (
+    <picture>
+      <source type="image/avif" srcSet={setFor(pic, 'avif')} sizes={sizesFor(pic)} />
+      <source type="image/webp" srcSet={setFor(pic, 'webp')} sizes={sizesFor(pic)} />
+      <img src={fallback(pic)} width={pic.width} height={pic.height} {...common} />
+    </picture>
+  );
 }
 
 /* What a screen reader hears when a frame settles. */
@@ -181,6 +201,7 @@ export default function LensReel({ onClose }) {
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
   const [nearest, setNearest] = useState(() => resumeAt);
+  const [card] = useState(whichCard);
 
   /* Everything the loop and the listeners share, made once. P is the frames'
      step (the overlay's height) and ph the plate's. */
@@ -546,12 +567,21 @@ export default function LensReel({ onClose }) {
     const { s } = e;
     const root = rootRef.current;
 
+    /* At the smallest sizes (a phone at 400% zoom) the card scrolls its own
+       words (lens-reel.css). A wheel or a finger on it scrolls them first. */
+    const scrollingCard = (target) => {
+      const card = target instanceof Element ? target.closest('.reel-card') : null;
+      return card && card.scrollHeight > card.clientHeight + 1 ? card : null;
+    };
+
     const onWheel = (ev) => {
       if (ev.ctrlKey) return; // a trackpad pinch: let the browser zoom
-      ev.preventDefault();
       let dy = ev.deltaY;
       if (ev.deltaMode === 1) dy *= 16;
       else if (ev.deltaMode === 2) dy *= s.P;
+      const card = scrollingCard(ev.target);
+      if (card && dy && (dy > 0 ? card.scrollTop + card.clientHeight < card.scrollHeight - 1 : card.scrollTop > 0)) return;
+      ev.preventDefault();
       if (!dy) return;
       const now = performance.now();
       if (s.still) {
@@ -578,7 +608,7 @@ export default function LensReel({ onClose }) {
         e.kick();
         return;
       }
-      if (ev.button !== 0 || (ev.target instanceof Element && ev.target.closest('a, button'))) return;
+      if (ev.button !== 0 || (ev.target instanceof Element && ev.target.closest('a, button')) || scrollingCard(ev.target)) return;
       s.pointer = ev.pointerId;
       s.dragY0 = ev.clientY;
       s.samples = [[ev.timeStamp, ev.clientY]];
@@ -637,9 +667,10 @@ export default function LensReel({ onClose }) {
       e.kick();
     };
 
-    /* iOS can still scroll what's behind on a drag; a pinch stays a pinch. */
+    /* iOS can still scroll what's behind on a drag; a pinch stays a pinch,
+       and a card that scrolls its words keeps its own swipe. */
     const onTouchMove = (ev) => {
-      if (ev.touches.length === 1 && ev.cancelable) ev.preventDefault();
+      if (ev.touches.length === 1 && ev.cancelable && !scrollingCard(ev.target)) ev.preventDefault();
     };
 
     const focusables = () => [...root.querySelectorAll('a[href], button:not([disabled])')]
@@ -708,6 +739,7 @@ export default function LensReel({ onClose }) {
     <div
       ref={rootRef}
       className={`reel${still ? ' is-still' : ''}`}
+      data-card={card}
       role="dialog"
       aria-modal="true"
       aria-labelledby="reel-title"
@@ -715,20 +747,20 @@ export default function LensReel({ onClose }) {
       tabIndex={-1}
     >
       <h2 id="reel-title" className="reel-sr">Photos and film stills from C4 Lens</h2>
-      <p id="reel-help" className="reel-sr">Move between pictures with the arrow keys or by scrolling. Escape closes.</p>
+      <p id="reel-help" className="reel-sr">Move between pictures with the Previous and Next picture buttons, the arrow keys, or by scrolling. Escape closes.</p>
 
       <div className="reel-stage" aria-hidden="true">
         {indices.map((i) => {
           const f = REEL_FRAMES[wrap(i)];
           return (
             <div key={i} ref={e.refFor('box', i)} className={`reel-box${i === nearest ? ' is-current' : ''}`}>
-              <div className="reel-img" style={{ '--tone': f.tone }}>
+              <div className="reel-img" style={{ '--tone': grey(f.tone) }}>
                 <Picture
                   pic={f.picture}
-                  sizes={frameSizes(f.picture)}
                   imgRef={e.refFor('img', i)}
                   priority={Math.abs(i - nearest) <= 1 ? 'high' : 'low'}
                   focus={f.focus}
+                  focusShort={f.focusShort}
                 />
               </div>
             </div>
@@ -737,7 +769,7 @@ export default function LensReel({ onClose }) {
       </div>
 
       <p className="reel-hint" aria-hidden="true">
-        <span className="reel-hint-fine"><span>Scroll for the next picture</span><ArrowDown size={15} strokeWidth={1.5} /></span>
+        <span className="reel-hint-fine"><span>Scroll<span className="reel-hint-more"> for the next picture</span></span><ArrowDown size={15} strokeWidth={1.5} /></span>
         <span className="reel-hint-touch"><span>Swipe up<span className="reel-hint-more"> for the next picture</span></span><ArrowUp size={15} strokeWidth={1.5} /></span>
       </p>
 
@@ -746,11 +778,11 @@ export default function LensReel({ onClose }) {
         <X aria-hidden="true" size={16} strokeWidth={1.5} />
       </button>
 
-      {/* The plate page, one grid so every row lines up across it. Left: the
-          plate number, the kind of work and the caption. Centre: the plate,
-          the picture whole on its own tone. Right: who it was for, where, and
-          when. Each layout in the CSS is the same pieces in different grid
-          areas. */}
+      {/* The card, one grid so every row lines up across it. Left: the plate
+          number, the kind of work and the caption. Centre: the window onto
+          the picture, cropped as the screen behind it is. Right: who it was
+          for, where, and when. Each variant and each layout in the CSS is the
+          same pieces in different grid areas. */}
       <div className="reel-card">
         <p className="reel-number" aria-hidden="true">
           <Line name="tens" lineRef={e.lineRef('tens')} />
@@ -758,8 +790,6 @@ export default function LensReel({ onClose }) {
           <span className="reel-of">/{pad(N)}</span>
         </p>
         <Line name="kind" lineRef={e.lineRef('kind')} />
-        <Line name="facts" lineRef={e.lineRef('facts')} />
-        <Line name="meta" lineRef={e.lineRef('meta')} />
         <Line name="note" lineRef={e.lineRef('note')} />
         <a className="reel-case" href={studyHash} onClick={toStudy} aria-label={`Read about this job: ${current.study.client}`}>
           Read about this job
@@ -770,8 +800,8 @@ export default function LensReel({ onClose }) {
           {indices.map((i) => {
             const f = REEL_FRAMES[wrap(i)];
             return (
-              <div key={i} ref={e.refFor('print', i)} className={`reel-print${i === nearest ? ' is-current' : ''}`} style={{ background: f.tone }}>
-                <Picture pic={f.picture} sizes={frameSizes(f.picture)} priority="low" />
+              <div key={i} ref={e.refFor('print', i)} className={`reel-print${i === nearest ? ' is-current' : ''}`} style={{ background: grey(f.tone) }}>
+                <Picture pic={f.picture} priority="low" focus={f.focus} focusShort={f.focusShort} />
               </div>
             );
           })}
@@ -780,6 +810,7 @@ export default function LensReel({ onClose }) {
         <Line name="client" lineRef={e.lineRef('client')} />
         <Line name="place" lineRef={e.lineRef('place')} />
         <Line name="year" lineRef={e.lineRef('year')} />
+        <Line name="where" lineRef={e.lineRef('where')} />
         <div className="reel-steps">
           <button type="button" className="reel-step" aria-label="Previous picture" onClick={() => e.step(-1)}>
             <ChevronUp aria-hidden="true" size={20} strokeWidth={1.5} />

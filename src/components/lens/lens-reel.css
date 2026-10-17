@@ -1,41 +1,65 @@
 /* ═══ THE REEL — "Flick through the pictures" on /Lens ═══
    LensReel.jsx, loaded with it only when the button is pressed (17 Oct 2026;
-   the plate page, 18 Oct 2026). The overlay is portalled to <body>, outside
+   redesigned 18 Oct 2026). The overlay is portalled to <body>, outside
    .lens-page, so it carries its own tokens.
 
    Every frame fills the screen, cropped on its own focal point (reelFrames.js
-   `focus`). Over it lies the plate page: a sheet of the page's white, the
-   /Lens ink on it, set in one book face. The plate number is the big light
-   figure top left, the plate sits in the middle and shows the photograph
-   whole, on the frame's own tone, where the screen behind shows it cropped;
-   the caption is split either side of it: what and why on the left, who,
-   where and when on the right.
+   `focus`, and `focusShort` for a phone on its side). Over it lies the card:
+   pure white, black ink, a crisp edge, in the lower part of the screen and in
+   the same place on every frame, so the top half and more of every picture
+   stays clear. Its middle is a window onto the picture, cropped the same way
+   as the screen behind it, a third of the card wide and the card's full
+   height inside its margin; as the reel moves, the picture in the window
+   slides up and the next comes in under it.
 
-   Type. Petrona (The Petrona Project Authors, SIL OFL: public/fonts/
-   Petrona-OFL.txt; the latin files of @fontsource/petrona 5.3.0), in three
-   weights: 200 for the figures, 500 for the client, 400 for the words. Its
-   files load with this stylesheet, so the page itself never pays for them.
-   Figures are lining everywhere and tabular where they count.
+   Two finished type settings, picked by data-card on the dialog:
+   A, "a wall label, set by an architecture studio": Mona Sans (GitHub, SIL
+     OFL: public/fonts/MonaSans-OFL.txt; @fontsource-variable/mona-sans 5.3.0,
+     the latin file with the width axis). The plate number expanded (wdth 125)
+     at weight 200 and very large; the client expanded at weight 400; the
+     details at wdth 95, weight 400, 15 px. The number keeps the tabular
+     figures' pitch, each figure in a window one tabular zero wide, so one
+     that stays the same between two frames stays still, like a counter's
+     wheel. The figures drawn in those windows are the face's plain ones: its
+     tabular set has a slashed zero and a slab-footed one, which read as code
+     beside the round figures. Every figure on the card is from that one set.
+   B, "the plate page": Petrona (The Petrona Project Authors, SIL OFL:
+     public/fonts/Petrona-OFL.txt; @fontsource/petrona 5.3.0), 200 for the
+     figures (tabular lining), 500 for the client, 400 for the words.
+   Only the variant on screen loads its files, and only once the reel opens.
 
-   The grid is set from the face's own measurements, taken in Chrome on
-   18 Oct 2026 (per em: ascent .86, descent .27, figures and capitals .65
-   tall). With those, a line box of height L puts its baseline L/2 + .295 below
-   its top and its capitals' tops L/2 - .355 below it, which is how these
-   rules line things up rather than by eye:
-   - the number's figures, the client's capitals and the plate share a top;
-   - a client set on two lines fills exactly the number's height, its last
-     line on the number's baseline (hence the client's size, .3757 of the
-     number's: .65 / 1.73);
-   - the plate's foot and the caption's last line share a baseline (on a
-     phone on its side, so does the line of facts).
-   The number is the only display figure; the year is a fact like the place,
-   set under it at the same size.
+   The grids are set from each face's own measurements, taken in Chrome on
+   18 Oct 2026. Per em: Petrona ascent .86, descent .27, figures and capitals
+   .65; Mona Sans ascent 1.09, descent .32, figures .73, capitals .74. So a
+   line box of height L puts its capitals' tops L/2 - .355 below its top in
+   both faces, and its baseline L/2 + .295 (Petrona) or L/2 + .385 (Mona Sans)
+   below it.
+   - In both, the number's figures and the window share a top line, and so
+     does a client set on two lines (a one-line client sits lower, below).
+   - B: a client set on two lines fills exactly the number's height, its last
+     line on the number's baseline (the client is .3757 of the number:
+     .65 / 1.73); a one-line client sits on that baseline.
+   - A: the client's last line sits on the line above the kind of work, and
+     the kind of work's baseline is the number's baseline; place and year
+     follow under it.
+   A reader's own text spacing, or a large zoom, can make any line longer than
+   its window; the windows then grow with their words, so nothing is cut off.
 
-   No rules or keylines: the plate's tone is its edge. Measured in Chrome on
-   18 Oct 2026, ink on the paper is 18:1, the second ink 7.7:1 and the link
-   (the page's amber taken dark) 6.8:1. Focus rings are ink on the paper and
-   ink edged with paper over a picture, so they hold on any frame. */
+   Colour: ink #111 on white is 18.9:1 and the grey #666 is 5.7:1. Links are
+   ink with a hairline underline; focus rings are a 2 px ink ring (edged with
+   white over a picture, so they show on dark frames too). No rules or
+   keylines inside the card. While a picture loads its frame shows a grey of
+   the picture's brightness (LensReel.jsx), never a flat colour. */
 
+@font-face {
+  font-family: 'Mona Sans';
+  font-style: normal;
+  font-weight: 200 900;
+  font-stretch: 75% 125%;
+  font-display: block;
+  src: url(/fonts/mona-sans-latin-wdth.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 @font-face {
   font-family: 'Petrona';
   font-style: normal;
@@ -62,42 +86,16 @@
 }
 
 .reel {
-  --paper: #f5f5f0;
-  --ink: #0b0b0a;
-  --ink-2: #4f4d48;
-  --link: #7a4a0e;
-  --link-hover: #4e2e06;
-  --pressed: rgba(11, 11, 10, .1);
-  /* The bench's smallest radius (DESIGN.md): paper with its corners just
-     taken off. */
-  --radius: 2px;
+  --paper: #ffffff;
+  --ink: #111111;
+  --ink-2: #666666;
+  --pressed: rgba(17, 17, 17, .08);
   --ease: cubic-bezier(.22, 1, .36, 1);
   --c4-focus: var(--ink);
-
-  /* The scale: the number, the client (tied to the number), the caption, the
-     facts and the small type of the tabs and the link. */
-  --t-num: clamp(64px, 6.4vw, 96px);
-  --t-client: calc(var(--t-num) * .3757);
-  --t-note: clamp(17px, 1.3vw, 19px);
-  --t-text: 16px;
-  --t-meta: 16px;
-  --t-link: 16px;
-  --lh-note: 1.38;
-  --lh-meta: 1.42;
-  --lh-client: 1.08;
-  --note-lines: 3;
-
-  /* The sheet: its margin, the gutter between columns, and the plate's share
-     of the width. */
-  --pad: clamp(22px, 1.95vw, 30px);
-  --gutter: var(--pad);
-  --plate: .9fr;
 
   position: fixed; inset: 0; z-index: 900;
   overflow: hidden;
   background: #000; color: var(--ink);
-  font-family: 'Petrona', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
-  font-weight: 400;
   font-variant-numeric: lining-nums;
   font-kerning: normal;
   -webkit-font-smoothing: antialiased;
@@ -106,9 +104,54 @@
   user-select: none; -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
+/* The words are sized in rem, so a reader's larger default text size carries
+   into the card; the number and the client are display sizes. If a face
+   fails to load, the card falls back to the face the page itself is set in
+   (Geist, lens.css), or to Georgia. */
+.reel[data-card='a'] {
+  --face: 'Mona Sans', 'Geist', 'Helvetica Neue', Helvetica, sans-serif;
+  /* The scale: the number, the client, the details. */
+  --t-num: clamp(72px, 7.8vw, 120px);
+  --t-client: clamp(18px, 2.05vw, 30px);
+  --t-text: .9375rem;
+  --t-meta: .9375rem;
+  --t-note: .9375rem;
+  --t-link: .9375rem;
+  --lh-client: 1.08;
+  --lh-meta: 1.4;
+  --lh-note: 1.45;
+  --note-lines: 3;
+  --pad: clamp(24px, 2.2vw, 34px);
+  --gutter: var(--pad);
+  --plate: 1fr;
+  font-family: var(--face); font-stretch: 95%; font-weight: 400;
+}
+.reel[data-card='b'] {
+  --face: 'Petrona', Georgia, serif;
+  --t-num: clamp(60px, 5.8vw, 88px);
+  --t-client: calc(var(--t-num) * .3757);
+  --t-text: 1rem;
+  --t-meta: 1rem;
+  --t-note: clamp(1rem, 1.2vw, 1.125rem);
+  --t-link: 1rem;
+  --lh-client: 1.08;
+  --lh-meta: 1.42;
+  --lh-note: 1.38;
+  --note-lines: 3;
+  --pad: clamp(22px, 2vw, 30px);
+  --gutter: var(--pad);
+  --plate: 1fr;
+  font-family: var(--face); font-weight: 400;
+}
 /* The dialog itself takes focus on open so the keys work at once; the
    controls inside carry the visible rings. */
 .reel:focus, .reel:focus-visible { outline: none; }
+/* The page's reticle cursor (lens.css, Lens.jsx) is the page's own camera
+   instrument. Over the reel the system pointer comes back, so a reader's
+   enlarged or high-contrast pointer does too, and the reticle steps aside. */
+body.cursor-on .reel, body.cursor-on .reel * { cursor: auto !important; }
+body.cursor-on .reel :is(a, button) { cursor: pointer !important; }
+body:has(.reel) .reticle { display: none !important; }
 
 .reel-sr {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
@@ -129,7 +172,7 @@
 .reel-img { position: absolute; inset: 0; background: var(--tone, #111); }
 .reel-img img {
   position: absolute; inset: 0; display: block; width: 100%; height: 100%;
-  object-fit: cover;
+  object-fit: cover; object-position: var(--focus, 50% 50%);
   will-change: transform;
   -webkit-user-drag: none;
   /* It arrives soft and sharpens: the focus pull the page opens its case
@@ -141,27 +184,25 @@
 .reel-img img.is-failed { visibility: hidden; }
 
 /* ── Over the picture: one line of help, and the way out ──
-   Small sheets of the same paper, so they read on any frame without a
-   shade laid over the picture. */
+   Small white tabs in black ink, so they read on any frame without a shade
+   laid over the picture. */
 .reel-hint, .reel-close {
   position: absolute; z-index: 4;
   top: max(16px, env(safe-area-inset-top));
   display: inline-flex; align-items: center; gap: 10px;
   min-height: 44px; margin: 0;
-  background: var(--paper);
-  border-radius: var(--radius);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, .28), 0 6px 16px -8px rgba(0, 0, 0, .6);
-  font-size: var(--t-text); line-height: 1;
+  background: var(--paper); color: var(--ink);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 6px 16px -8px rgba(0, 0, 0, .55);
+  font-family: var(--face); font-size: var(--t-text); line-height: 1;
 }
 .reel-hint {
   left: max(16px, env(safe-area-inset-left));
   padding: 0 16px;
-  color: var(--ink-2);
   pointer-events: none;
   transition: opacity .45s ease, translate .45s var(--ease);
 }
 .reel-hint > span { display: inline-flex; align-items: center; gap: 10px; }
-.reel-hint svg { flex: none; color: var(--ink); }
+.reel-hint svg { flex: none; }
 .reel-hint-touch { display: none !important; }
 @media (pointer: coarse) {
   .reel-hint-touch { display: inline-flex !important; }
@@ -172,172 +213,222 @@
 .reel-close {
   right: max(16px, env(safe-area-inset-right));
   padding: 0 14px 0 16px;
-  font-family: inherit; font-weight: 500; color: var(--ink);
-  border: 0;
+  font-weight: 500;
+  border: 0; border-radius: 0;
   cursor: pointer;
   transition: background-color .2s ease, color .2s ease;
 }
+.reel[data-card='a'] .reel-close { font-stretch: 95%; }
 .reel-close svg { flex: none; }
 .reel-close:focus-visible { outline: 2px solid var(--ink); outline-offset: 0; box-shadow: 0 0 0 4px var(--paper); }
 .reel-close:active { background-image: linear-gradient(var(--pressed), var(--pressed)); }
 
-/* ── The plate page ──
-   Centred across, and a little below the middle down, so the subject of a
-   tall frame stays clear above it (the focus points are set for this). */
+/* ── The card ──
+   Centred across, and a fixed margin above the foot of the screen, so the
+   top half and more of every frame stays clear of it: each frame's subject
+   (a face, a logo, the film's words) was chosen to sit up there. Three equal
+   columns, so the window is a third of the card inside its margin. At 80% of
+   the screen's width the right-hand third holds the longest client name in
+   two lines ("Aqua-Safe Plumbing", then "& Maintenance") down to 900 px,
+   where the narrow layout takes over. */
 .reel-card {
   position: absolute; z-index: 3;
-  left: 0; right: 0; top: 20%; bottom: 0;
-  width: min(76vw, 1160px); height: fit-content;
-  min-height: clamp(280px, 35vh, 350px);
-  margin: auto;
+  left: 0; right: 0; bottom: max(clamp(20px, 5vh, 56px), env(safe-area-inset-bottom));
+  width: min(80vw, 1200px);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, var(--plate)) minmax(0, 1fr);
+  column-gap: var(--gutter);
+  padding: var(--pad);
+  background: var(--paper); color: var(--ink);
+  border-radius: 0;
+  /* Paper lifted off the photo by a hair: a close shadow, no glow. */
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .18), 0 10px 24px -16px rgba(0, 0, 0, .48);
+}
+.reel[data-card='a'] .reel-card {
+  grid-template-rows: auto auto auto auto 1fr auto;
+  grid-template-areas:
+    "num  plate client"
+    "num  plate kind"
+    "note plate place"
+    "note plate year"
+    "note plate ."
+    "case plate steps";
+}
+.reel[data-card='b'] .reel-card {
   grid-template-rows: auto auto auto 1fr auto;
   grid-template-areas:
     "num  plate client"
     "kind plate place"
-    ".    plate year"
+    "note plate year"
     "note plate ."
-    "case .     steps";
-  column-gap: var(--gutter);
-  /* The foot's controls are 44 px boxes; the bottom margin is cut by most of
-     their slack, so the link's baseline sits as far from the sheet's foot as
-     the number's top does from its head. */
-  padding: var(--pad) var(--pad) calc(var(--pad) - 16px);
-  background: var(--paper); color: var(--ink);
-  border-radius: var(--radius);
-  /* A sheet lying on the picture, not floating over it: a close, soft shadow. */
-  box-shadow: 0 1px 1px rgba(0, 0, 0, .3), 0 10px 26px -12px rgba(0, 0, 0, .62);
+    "case plate steps";
 }
 
 /* A line on the card: a window with this frame's value in it and the next
-   one waiting, moved between by the loop. One-line values wait below and
-   roll up, like a counter's wheels; the longer lines (client, caption,
-   facts) and the year wait unseen and fade across. clip-path rather than
-   overflow, so a window in a line of text keeps that line's baseline. */
+   one waiting, moved between by the loop. The plate number's figures wait
+   below and roll up, like a counter's wheels; every other line waits unseen
+   and fades across (a word rolled through a one-line window leaves specks of
+   letters on the way). Both values share the window's one grid cell, so the
+   window is as tall as its longer value: its designed size is a minimum, and
+   a reader's own text spacing or a large zoom grows the card instead of
+   cutting words off. clip-path rather than overflow, so a window in a line of
+   text keeps that line's baseline. */
 .reel-line {
-  position: relative; display: block; min-width: 0;
+  position: relative; display: grid; min-width: 0;
   clip-path: inset(0);
 }
-.reel-line-a, .reel-line-b {
-  position: absolute; left: 0; right: 0; top: 0; height: 100%;
-  white-space: inherit;
-  will-change: transform;
-}
-.reel-line-b { transform: translate3d(0, 101%, 0); }
-.reel-line--client .reel-line-b, .reel-line--note .reel-line-b,
-.reel-line--facts .reel-line-b, .reel-line--meta .reel-line-b,
-.reel-line--year .reel-line-b { transform: none; opacity: 0; }
+.reel-line-a, .reel-line-b { grid-area: 1 / 1; min-width: 0; will-change: transform; }
+.reel-line-b { opacity: 0; }
 /* Lines that sit on their window's floor, so a short one keeps the baseline
    a long one ends on. */
 .reel-line--client .reel-line-a, .reel-line--client .reel-line-b,
 .reel-line--note .reel-line-a, .reel-line--note .reel-line-b {
   display: flex; flex-direction: column; justify-content: flex-end;
 }
-.reel-line--facts, .reel-line--meta { display: none; }
+/* Mona Sans's descenders reach .18 em below the baseline, past the client's
+   1.08 line, so the client's window lets them hang below it. */
+.reel-line--client { clip-path: inset(-.3em -.1em); }
+/* The place and year on one line: the phone layouts only. */
+.reel-line--where { display: none; }
 
-/* The plate number, its figures' tops on the sheet's top margin. Each figure
-   has a window of its own, one tabular figure wide, so a figure that stays
-   the same between two frames stays still while its neighbour turns. */
+/* The plate number, its figures' tops on the card's top margin. Each figure
+   has a window of its own, one tabular zero wide (the hidden '0' sizes it),
+   so a figure that stays the same between two frames stays still while its
+   neighbour turns. Each figure is centred both ways in its window, so a
+   reader's own line height can't push it out of the window. */
 .reel-number {
   grid-area: num; align-self: start;
-  margin: calc(-.045 * var(--t-num)) 0 0;
-  font-size: var(--t-num); font-weight: 200; line-height: .8;
-  font-variant-numeric: lining-nums tabular-nums;
-  letter-spacing: -.01em;
+  margin: 0;
+  font-size: var(--t-num); font-weight: 200;
   white-space: nowrap;
 }
-.reel-number .reel-line { display: inline-block; height: .8em; vertical-align: top; }
+.reel-number .reel-line { display: inline-block; vertical-align: top; }
 .reel-number .reel-line::before { content: '0'; visibility: hidden; }
+.reel-number .reel-line-a, .reel-number .reel-line-b {
+  position: absolute; inset: 0;
+  display: flex; justify-content: center; align-items: center;
+}
+.reel-number .reel-line-b { opacity: 1; transform: translate3d(0, 101%, 0); }
 .reel-of {
-  margin-left: .3em;
   font-size: var(--t-text); font-weight: 400; letter-spacing: 0;
   color: var(--ink-2);
 }
+/* A: the windows have the tabular pitch (.72 em) and the figures in them
+   are the plain, proportional ones, centred: the round zero is .734 em, a
+   hair wider than its window, and flex centring lets it overhang evenly (the
+   window's clip lets it). The number starts .024 em back, which puts a
+   zero's left edge on the column's; the count beside it is set in the same
+   plain figures. */
+.reel[data-card='a'] .reel-number {
+  margin-top: calc(-.08 * var(--t-num));
+  margin-left: -.024em;
+  line-height: .85;
+  font-stretch: 125%;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.reel[data-card='a'] .reel-number .reel-line { height: .85em; clip-path: inset(0 -.05em); }
+.reel[data-card='a'] .reel-number .reel-line-a,
+.reel[data-card='a'] .reel-number .reel-line-b,
+.reel[data-card='a'] .reel-of { font-variant-numeric: lining-nums proportional-nums; }
+.reel[data-card='a'] .reel-of { margin-left: .5em; font-stretch: 95%; }
+.reel[data-card='b'] .reel-number {
+  margin-top: calc(-.045 * var(--t-num));
+  line-height: .8;
+  letter-spacing: -.01em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.reel[data-card='b'] .reel-number .reel-line { height: .8em; }
+.reel[data-card='b'] .reel-of { margin-left: .3em; }
 
-/* Who it was for. Two lines fill the number's height exactly; one line sits
-   on the number's baseline. */
+/* Who it was for: its capitals on the top line, set in a window two lines
+   tall that it sits at the foot of. */
 .reel-line--client {
   grid-area: client; align-self: start;
-  height: calc(2 * var(--lh-client) * 1em);
-  margin-top: calc(-.185 * var(--t-client));
-  font-size: var(--t-client); font-weight: 500; line-height: var(--lh-client);
-  letter-spacing: -.012em;
+  min-height: calc(2 * var(--lh-client) * 1em);
+  font-size: var(--t-client); line-height: var(--lh-client);
   text-wrap: balance;
 }
+/* A: expanded, and the line under it is the kind of work, whose baseline is
+   the number's. */
+.reel[data-card='a'] .reel-line--client {
+  margin-top: calc(-.185 * var(--t-client));
+  margin-bottom: calc(.73 * var(--t-num) - 1.975 * var(--t-client) - (var(--lh-meta) / 2 + .385) * var(--t-meta));
+  font-stretch: 125%; font-weight: 400;
+  letter-spacing: -.005em;
+}
+/* B: two lines fill the number's height; one line sits on its baseline. */
+.reel[data-card='b'] .reel-line--client {
+  margin-top: calc(-.185 * var(--t-client));
+  font-weight: 500;
+  letter-spacing: -.012em;
+}
 
-.reel-line--kind, .reel-line--place {
-  height: calc(var(--lh-meta) * 1em);
-  margin-top: calc(.105 * var(--t-num) * -1 + 22px);
+.reel-line--kind, .reel-line--place, .reel-line--year {
+  min-height: calc(var(--lh-meta) * 1em);
   font-size: var(--t-meta); line-height: var(--lh-meta);
-  white-space: nowrap;
 }
 .reel-line--kind { grid-area: kind; }
 .reel-line--place { grid-area: place; color: var(--ink-2); }
-/* The year, a fact like the place, on the line under it. Frames nothing on
-   file dates leave it empty. */
-.reel-line--year {
-  grid-area: year;
-  height: calc(var(--lh-meta) * 1em);
-  font-size: var(--t-meta); line-height: var(--lh-meta);
-  font-variant-numeric: lining-nums tabular-nums;
-  color: var(--ink-2);
-  white-space: nowrap;
-}
+.reel-line--year { grid-area: year; color: var(--ink-2); font-variant-numeric: lining-nums tabular-nums; }
+.reel[data-card='a'] .reel-line--year { font-variant-numeric: lining-nums proportional-nums; }
+.reel[data-card='b'] .reel-line--kind,
+.reel[data-card='b'] .reel-line--place { margin-top: calc(.105 * var(--t-num) * -1 + 18px); }
 
-/* What it is and what it was made for: the one sentence on the card, set a
-   step above the facts, ending on the plate's foot. */
+/* What it is and what it was made for: the one sentence on the card. */
 .reel-line--note {
   grid-area: note; align-self: end;
-  height: calc(var(--note-lines) * var(--lh-note) * 1em);
-  margin-top: 16px;
+  min-height: calc(var(--note-lines) * var(--lh-note) * 1em);
+  margin-top: 14px;
   font-size: var(--t-note); line-height: var(--lh-note);
   text-wrap: pretty;
   hanging-punctuation: first;
 }
 
-/* The plate: the photograph whole, on the frame's own tone, where the screen
-   behind shows it cropped. It hands over to the next in step with the
-   frames, and its foot is on the caption's last baseline. The picture sizes
-   itself to fit, no wider or taller than the plate and its own shape kept. */
+/* The window: the frame on screen, cropped on the same focal point, the full
+   height of the card inside its margin. It hands over to the next in step
+   with the frames. Until a picture arrives it shows the frame's grey. */
 .reel-plate {
   grid-area: plate;
   position: relative; overflow: hidden;
-  margin-bottom: calc((var(--lh-note) / 2 - .295) * var(--t-note));
   background: var(--ink);
 }
 .reel-print { position: absolute; inset: 0; will-change: transform; }
 .reel-print img {
-  position: absolute; inset: 0; display: block; margin: auto;
-  width: auto; height: auto; max-width: 100%; max-height: 100%;
+  position: absolute; inset: 0; display: block; width: 100%; height: 100%;
+  object-fit: cover; object-position: var(--focus, 50% 50%);
   -webkit-user-drag: none;
   opacity: 0; transition: opacity .35s ease;
 }
 .reel-print img.is-loaded { opacity: 1; }
 .reel-print img.is-failed { visibility: hidden; }
 
-/* The foot of the sheet: the way to this job's case study, and the steps. */
+/* The foot of the card: the way to this job's case study, and the steps.
+   Their 44 px boxes reach a little into the bottom margin, so the link's
+   text sits as far from the card's foot as the number's top does from its
+   head, while the window keeps an even margin. */
 .reel-case {
-  grid-area: case; justify-self: start; align-self: center;
+  grid-area: case; justify-self: start; align-self: end;
   display: inline-flex; align-items: center; gap: 8px;
-  min-height: 44px; margin-top: 10px;
-  font-size: var(--t-link); font-weight: 500; line-height: 1;
-  color: var(--link);
+  min-height: 44px; margin: 14px 0 -12px;
+  border-radius: 0; /* the site's focus mark rounds links' rings by 2 px */
+  font-size: var(--t-link); font-weight: 400; line-height: 1;
+  color: var(--ink);
   text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .28em;
-  text-decoration-color: transparent;
   white-space: nowrap;
-  transition: color .2s ease, text-decoration-color .2s ease;
+  transition: text-decoration-thickness .15s ease;
 }
+.reel[data-card='b'] .reel-case { font-weight: 500; }
 .reel-case svg { flex: none; transition: transform .35s var(--ease); }
-.reel-case:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: var(--radius); }
+.reel-case:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
 .reel-steps {
-  grid-area: steps; justify-self: end; align-self: center;
-  display: flex; margin: 10px -12px 0 0;
+  grid-area: steps; justify-self: end; align-self: end;
+  display: flex; margin: 14px -12px -12px 0;
 }
 .reel-step {
   display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
-  color: var(--ink); background: transparent; border: 0; border-radius: var(--radius);
+  color: var(--ink); background: transparent; border: 0; border-radius: 0;
   cursor: pointer;
   transition: background-color .2s ease, color .2s ease;
 }
@@ -346,69 +437,75 @@
 
 @media (hover: hover) {
   .reel-close:hover { background: var(--ink); color: var(--paper); }
-  .reel-case:hover { color: var(--link-hover); text-decoration-color: currentColor; }
+  .reel-case:hover { text-decoration-thickness: 2px; }
   .reel-case:hover svg { transform: translateX(3px); }
   .reel-step:hover { background: var(--ink); color: var(--paper); }
 }
 
 /* ── Narrow and upright: phones, and tablets held upright ──
-   The sheet lies along the bottom. The number and the client lock up across
-   the top, the same way; the plate stands at the left under the number, with
-   the kind of work, the place and year, and the caption beside it. */
+   The card lies along the bottom. The number and the client share the top
+   row; the window stands at the left under the number, with the kind of work,
+   the place and year, and the caption beside it. */
 @media (max-width: 899px) and (min-height: 501px) {
-  .reel {
-    --t-num: 64px;
-    --t-note: 16px;
-    --lh-note: 1.42;
-    --t-text: 16px;
-    --t-meta: 15px;
+  .reel[data-card] {
+    --t-text: .9375rem;
+    --t-meta: .9375rem;
     --lh-meta: 1.35;
-    --t-link: 16px;
+    --t-link: .9375rem;
     --note-lines: 3;
     --pad: 24px;
     --gutter: 18px;
     --plate: 38%;
   }
+  .reel[data-card='a'] { --t-num: 64px; --t-client: 20px; --t-note: .9375rem; --lh-note: 1.42; }
+  .reel[data-card='b'] { --t-num: 64px; --t-note: 1rem; --lh-note: 1.42; }
   .reel-card {
-    top: auto; left: 24px; right: 24px; bottom: max(24px, env(safe-area-inset-bottom));
-    width: auto; max-width: 600px; min-height: 0;
+    left: 24px; right: 24px; bottom: max(24px, env(safe-area-inset-bottom));
+    width: auto; max-width: 600px;
     grid-template-columns: var(--plate) minmax(0, 1fr) auto;
-    grid-template-rows: auto auto 1fr auto;
+  }
+  .reel[data-card] .reel-card {
+    grid-template-rows: auto auto auto 1fr auto;
     grid-template-areas:
       "num   client client"
-      "plate facts  facts"
+      "plate kind   kind"
+      "plate where  where"
       "plate note   note"
       "case  case   steps";
   }
-  .reel-number, .reel-line--client { margin-bottom: 14px; }
-  .reel-line--kind, .reel-line--place, .reel-line--year { display: none; }
-  /* The kind of work over the place and year, in one window. */
-  .reel-line--facts {
-    display: block; grid-area: facts;
-    height: calc(2 * var(--lh-meta) * 1em);
+  .reel[data-card] .reel-number, .reel[data-card] .reel-line--client { margin-bottom: 14px; }
+  /* A: the client's last line on the number's baseline. */
+  .reel[data-card='a'] .reel-line--client {
+    margin-top: calc(-.185 * var(--t-client) + .73 * var(--t-num) - 1.82 * var(--t-client));
+    font-weight: 450;
+  }
+  /* The kind of work, and under it the place and year on one line. */
+  .reel-line--place, .reel-line--year { display: none; }
+  .reel[data-card] .reel-line--kind { margin-top: 0; }
+  .reel-line--where {
+    display: grid; grid-area: where;
+    min-height: calc(var(--lh-meta) * 1em);
     font-size: var(--t-meta); line-height: var(--lh-meta);
-    white-space: pre-line;
     color: var(--ink-2);
   }
-  .reel-line--facts .reel-line-a::first-line,
-  .reel-line--facts .reel-line-b::first-line { color: var(--ink); }
   .reel-line--note { margin-top: 10px; }
-  /* The plate's top on the kind of work's capitals, its foot on the
+  /* The window's top on the kind of work's capitals, and its foot on the
      caption's last baseline. */
   .reel-plate { margin-top: calc((var(--lh-meta) / 2 - .355) * var(--t-meta)); }
+  .reel[data-card='a'] .reel-plate { margin-bottom: calc((var(--lh-note) / 2 - .385) * var(--t-note)); }
+  .reel[data-card='b'] .reel-plate { margin-bottom: calc((var(--lh-note) / 2 - .295) * var(--t-note)); }
 }
 @media (max-width: 599px) and (min-height: 501px) {
-  .reel {
-    --t-num: 50px;
-    --t-note: 15px;
-    --lh-note: 1.4;
-    --t-text: 15px;
-    --t-meta: 14px;
-    --t-link: 15px;
+  .reel[data-card] {
+    --t-text: .875rem;
+    --t-meta: .875rem;
+    --t-link: .9375rem;
     --note-lines: 4;
     --pad: 16px;
     --gutter: 14px;
   }
+  .reel[data-card='a'] { --t-num: 52px; --t-client: 16px; --t-note: .875rem; --lh-note: 1.42; }
+  .reel[data-card='b'] { --t-num: 50px; --t-note: .9375rem; --lh-note: 1.4; }
   .reel-hint, .reel-close { top: max(10px, env(safe-area-inset-top)); }
   .reel-hint { left: max(10px, env(safe-area-inset-left)); padding: 0 14px; }
   .reel-close { right: max(10px, env(safe-area-inset-right)); }
@@ -416,81 +513,127 @@
     left: max(10px, env(safe-area-inset-left)); right: max(10px, env(safe-area-inset-right));
     bottom: max(10px, env(safe-area-inset-bottom));
   }
-  .reel-number, .reel-line--client { margin-bottom: 12px; }
+  .reel[data-card] .reel-number, .reel[data-card] .reel-line--client { margin-bottom: 12px; }
   .reel-line--note { margin-top: 8px; }
 }
 /* The narrowest phones: a smaller number, so the longest client name still
-   breaks into two lines, and a shorter line of help, so it clears Close. */
+   breaks into two lines (in A, a narrower window too, since its client is
+   set wide). */
 @media (max-width: 359px) and (min-height: 501px) {
-  .reel { --t-num: 44px; --gutter: 12px; --pad: 14px; }
+  .reel[data-card] { --gutter: 12px; --pad: 14px; }
+  .reel[data-card='a'] { --t-num: 46px; --t-client: 15px; --plate: 34%; }
+  .reel[data-card='b'] { --t-num: 44px; }
+}
+/* Anything narrower than 360, upright or not: a shorter line of help, so it
+   clears Close. */
+@media (max-width: 359px) {
   .reel-hint-more { display: none; }
 }
 
 /* ── Short windows: a phone on its side ──
-   A strip along the bottom: the number over the caption, the plate, then the
-   client over what, where and when. */
+   A strip along the bottom: the number over the caption, the window, then
+   the client over the kind of work and the place and year. The strip takes
+   two fifths of the height, so a film frame whose words would sit behind it
+   takes its short-screen focal point (reelFrames.js `focusShort`). */
 @media (max-height: 500px) {
-  .reel {
-    --t-num: 46px;
-    --t-note: 14px;
-    --lh-note: 1.38;
-    --t-text: 14px;
-    --t-meta: 14px;
+  .reel[data-card] {
+    --t-text: .875rem;
+    --t-meta: .875rem;
     --lh-meta: 1.38;
-    --t-link: 14px;
+    --t-note: .875rem;
+    --lh-note: 1.38;
+    --t-link: .875rem;
     --note-lines: 2;
     --pad: 14px;
     --gutter: 16px;
     --plate: .62fr;
   }
+  .reel-img img, .reel-print img { object-position: var(--focus-short, var(--focus, 50% 50%)); }
+  .reel[data-card='a'] { --t-num: 46px; --t-client: 17px; }
+  .reel[data-card='b'] { --t-num: 46px; }
   .reel-hint, .reel-close { top: max(8px, env(safe-area-inset-top)); min-height: 40px; }
   .reel-hint { left: max(10px, env(safe-area-inset-left)); padding: 0 12px; }
   .reel-close { right: max(10px, env(safe-area-inset-right)); }
   .reel-card {
-    top: auto; left: max(10px, env(safe-area-inset-left)); right: max(10px, env(safe-area-inset-right));
+    left: max(10px, env(safe-area-inset-left)); right: max(10px, env(safe-area-inset-right));
     bottom: max(8px, env(safe-area-inset-bottom));
-    width: auto; max-width: 860px; min-height: 0;
-    grid-template-rows: auto auto auto;
+    width: auto; max-width: 860px;
+  }
+  /* The caption's last two lines share their baselines with the kind of work
+     and the place and year: the row above the last takes up whatever more
+     the caption needs. */
+  .reel[data-card] .reel-card {
+    grid-template-rows: auto 1fr auto auto;
     grid-template-areas:
       "num  plate client"
-      "note plate meta"
-      "case .     steps";
-    padding-bottom: 2px;
+      "note plate kind"
+      "note plate where"
+      "case plate steps";
   }
-  .reel-line--kind, .reel-line--place, .reel-line--year { display: none; }
-  /* What, where and when, on the same baseline as the caption's last line
-     and the plate's foot. */
-  .reel-line--meta {
-    display: block; grid-area: meta; align-self: end;
-    height: calc(var(--lh-meta) * 1em);
-    margin-top: 10px;
+  /* A: the client's last line on the number's baseline. */
+  .reel[data-card='a'] .reel-line--client {
+    margin-top: calc(-.185 * var(--t-client) + .73 * var(--t-num) - 1.82 * var(--t-client));
+    margin-bottom: 0;
+    font-weight: 450;
+  }
+  .reel-line--place, .reel-line--year { display: none; }
+  .reel[data-card] .reel-line--kind { align-self: end; margin-top: 10px; }
+  .reel-line--where {
+    display: grid; grid-area: where; align-self: end;
+    min-height: calc(var(--lh-meta) * 1em);
     font-size: var(--t-meta); line-height: var(--lh-meta);
     color: var(--ink-2);
-    white-space: nowrap;
   }
   .reel-line--note { margin-top: 10px; }
-  .reel-case { min-height: 40px; margin-top: 2px; }
-  .reel-steps { margin-top: 2px; }
+  .reel-case { min-height: 40px; margin: 4px 0 -10px; }
+  .reel-steps { margin: 4px -10px -10px 0; }
   .reel-step { width: 40px; height: 40px; }
 }
-/* The narrowest phones on their side (640 to 735 wide): the columns are too
-   narrow for the longest caption in two lines or the longest facts in one,
-   so the caption gets three lines and the facts may wrap onto a second, its
-   last line still on the shared baseline. */
+/* The narrowest phones on their side (560 to 735 wide): three columns would
+   leave the longest caption three lines and the strip tall enough to cover a
+   film's words, so the window steps aside (it repeats the picture behind it)
+   and the words take two columns, the caption's the wider. */
 @media (max-height: 500px) and (max-width: 735px) {
-  .reel { --note-lines: 3; }
-  .reel-line--meta {
-    height: calc(2 * var(--lh-meta) * 1em);
-    white-space: normal;
-    text-wrap: balance;
+  .reel[data-card] .reel-card {
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    grid-template-areas:
+      "num  client"
+      "note kind"
+      "note where"
+      "case steps";
   }
-  .reel-line--meta .reel-line-a, .reel-line--meta .reel-line-b {
-    display: flex; flex-direction: column; justify-content: flex-end;
+  .reel-plate { display: none; }
+}
+
+/* ── The smallest windows: a phone at 400% zoom, or the smallest phones on
+   their side ──
+   One column with no window, the card kept below the tabs, and if its words
+   need more room than the screen has, the card scrolls: a wheel or a finger
+   on it scrolls its words first (LensReel.jsx) and moves the reel once they
+   reach their end. */
+@media (max-height: 300px), (max-height: 500px) and (max-width: 559px) {
+  .reel[data-card] .reel-card {
+    max-height: calc(100% - 56px - max(8px, env(safe-area-inset-bottom)) - env(safe-area-inset-top));
+    overflow-y: auto; overscroll-behavior: contain;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: none;
+    grid-template-areas:
+      "num    num"
+      "client client"
+      "kind   kind"
+      "where  where"
+      "note   note"
+      "case   steps";
   }
+  .reel-plate { display: none; }
+  .reel[data-card] .reel-line--client { margin-top: 8px; margin-bottom: 0; }
+  .reel[data-card] .reel-line--kind { align-self: start; margin-top: 8px; }
+  .reel-line--where { align-self: start; }
+  .reel-line--note { margin-top: 8px; }
 }
 
 /* ── Reduced motion ──
-   Nothing drifts, rolls or travels: the frame and the plate crossfade in
+   Nothing drifts, rolls or travels: the frame and the window crossfade in
    160 ms, each line of words fades to its next value, and the picture sits
    whole. (.is-still is set from useStaticMode; the media query covers a
    preference changed mid-visit.) */
