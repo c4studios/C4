@@ -89,10 +89,21 @@ const poster = (cuts, alt) => {
   return { type: 'poster', files, ratio: largest.width / largest.height, alt };
 };
 
-/* The opening of the HVN film, from public/lens-posters (extracted with ffmpeg
-   on 12 July 2026 from public/hvn.mp4, the same 30-second home page film as
-   the study's cut: both 720 x 1280 at 25 fps). */
-const HVN_INSIDE = { poster: '/lens-posters/hvn.jpg', width: 1280, height: 2276 };
+/* Inside the gym, a frame at 13.8 s of the HVN film: public/hvn.mp4, the same
+   30-second home page film as the study's cut (both 720 x 1280 at 25 fps),
+   and byte for byte the hero-1.mp4 the HVN site serves, so no sharper master
+   is on file. Taken at native size with ffmpeg on 18 Oct 2026 and encoded with
+   the settings in scripts/lens-work.mjs (AVIF q52, WebP q76). It replaced
+   /lens-posters/hvn.jpg, a mid-move frame scaled up to 1280 wide, which read
+   soft. 13.8 s was the sharpest steady frame of the walk-through (Laplacian
+   variance 302, against 7 to 68 for the frames around 2 to 4 s). */
+const HVN_INSIDE = {
+  base: '/lens-work/hvn/inside',
+  width: 720,
+  height: 1280,
+  widths: [360, 720],
+  alt: 'Inside the HVN gym: pull-up rigs and rings along a black wall with a teal stripe, the bike row behind.',
+};
 
 const sharpStill = (key) => SHARP.bricks[key].still;
 const fromAir = 'From the air, for the gallery on their site.';
@@ -120,9 +131,9 @@ export const REEL_FRAMES = [
     id: 'hvn-inside',
     study: HVN,
     kind: VIDEO,
-    tone: '#2c3127',
+    tone: '#434238',
     note: 'Inside the gym, from the same film.',
-    picture: poster([HVN_INSIDE], 'Inside the HVN gym, the teal stripe running along the wall, blurred as the camera moves through.'),
+    picture: still(HVN_INSIDE),
   },
   {
     id: 'hvn-coach-d',
