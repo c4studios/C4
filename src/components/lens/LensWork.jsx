@@ -47,10 +47,20 @@
  * all open them. Opening is a focus pull: the first frames arrive soft and
  * sharpen, the way the lens hunts and locks. "Hide case studies" at the foot
  * folds them away and hands the visitor back to the button.
+ *
+ * A second way in (17 Oct 2026, a prototype). "Flick through the pictures",
+ * beside the case-study button, opens the reel: C4 Lens's own photos and film
+ * stills, full screen, one at a time (LensReel.jsx, frames in reelFrames.js).
+ * Its code loads only when the button is pressed, and nothing of it is in the
+ * prerendered HTML. Closing hands focus back to the button. A frame's "Read
+ * about this job" link is a #work-<id> link: the click handling below opens
+ * the studies, the reel gives the address to the hash handling below, which
+ * jumps to that study, and focus follows to its name. The disclosure itself
+ * is unchanged.
  */
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { flushSync } from 'react-dom';
-import { ArrowDown, ArrowUp, ArrowUpRight } from 'lucide-react';
+import React, { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { createPortal, flushSync } from 'react-dom';
+import { ArrowDown, ArrowUp, ArrowUpRight, GalleryVerticalEnd } from 'lucide-react';
 import { Link } from '@/components/c4/SiteLink';
 import useStaticMode from '@/hooks/useStaticMode';
 import { isHydrating, useMediaQuery, useWasPrerendered } from '@/lib/hydration';
@@ -65,6 +75,37 @@ const INTO_STUDIES = /^#(work|in-the-site)(-|$)/;
 const askedForStudies = () => typeof window !== 'undefined' && INTO_STUDIES.test(window.location.hash);
 
 const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+
+/* The reel's code, fetched on the first press. A failed fetch is forgotten,
+   so the next press tries again (React.lazy would otherwise keep the error). */
+const loadReel = () => import('./LensReel');
+let LensReel = lazy(loadReel);
+
+/* Black at once, while the reel's code arrives. */
+function ReelCurtain() {
+  return createPortal(<div className="lw-reel-curtain" aria-hidden="true" />, document.body);
+}
+
+/* If the reel can't load, the page stays as it was and the button works again. */
+class ReelBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { failed: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  componentDidCatch() {
+    LensReel = lazy(loadReel);
+    this.props.onFail();
+  }
+
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
 
 /* True once the element is within a screen of the viewport. False in the
    prerendered HTML as well, so a browser parsing that HTML has no file to
@@ -503,6 +544,38 @@ export default function LensWork() {
     return () => clearTimeout(t);
   }, [pulling]);
 
+  /* The reel. Shut on the first render everywhere, so the button hydrates as
+     prerendered; it only exists once pressed. */
+  const [reelOpen, setReelOpen] = useState(false);
+  const reelBtnRef = useRef(null);
+  const reelLanding = useRef(null);
+  const reelWasOpen = useRef(false);
+  const closeReel = useCallback((studyHash) => {
+    reelLanding.current = typeof studyHash === 'string' ? studyHash : null;
+    setReelOpen(false);
+  }, []);
+  useEffect(() => {
+    if (reelOpen) { reelWasOpen.current = true; return undefined; }
+    if (!reelWasOpen.current) return undefined;
+    reelWasOpen.current = false;
+    const hash = reelLanding.current;
+    reelLanding.current = null;
+    if (!hash) {
+      reelBtnRef.current?.focus({ preventScroll: true });
+      return undefined;
+    }
+    /* "Read about this job": the click opened the studies and the hash
+       handling has started the jump. Focus goes to the study's name. */
+    const t = window.setTimeout(() => {
+      const name = document.getElementById(`${hash.slice(1)}-name`);
+      if (!name) return;
+      name.setAttribute('tabindex', '-1');
+      name.addEventListener('blur', () => name.removeAttribute('tabindex'), { once: true });
+      name.focus({ preventScroll: true });
+    }, 0);
+    return () => window.clearTimeout(t);
+  }, [reelOpen]);
+
   return (
     <section className="slab dark lw" id="work" aria-labelledby="work-title">
       <header className="lw-head">
@@ -511,21 +584,41 @@ export default function LensWork() {
         </h2>
         <div className="lw-head-side">
           <p className="lw-lede">These are examples of what C4 Lens can do. Each was made for a client, and each one says where it runs.</p>
-          <button
-            ref={toggleRef}
-            type="button"
-            className="lw-reveal"
-            aria-expanded={open}
-            aria-controls={STUDIES_ID}
-            onClick={() => (open ? fold(false) : reveal())}
-          >
-            <span className="lw-reveal-label">{open ? 'Hide case studies' : 'See our case studies'}</span>
-            {open
-              ? <ArrowUp aria-hidden="true" size={16} strokeWidth={1.5} />
-              : <ArrowDown aria-hidden="true" size={16} strokeWidth={1.5} />}
-          </button>
+          <div className="lw-actions">
+            <button
+              ref={toggleRef}
+              type="button"
+              className="lw-reveal"
+              aria-expanded={open}
+              aria-controls={STUDIES_ID}
+              onClick={() => (open ? fold(false) : reveal())}
+            >
+              <span className="lw-reveal-label">{open ? 'Hide case studies' : 'See our case studies'}</span>
+              {open
+                ? <ArrowUp aria-hidden="true" size={16} strokeWidth={1.5} />
+                : <ArrowDown aria-hidden="true" size={16} strokeWidth={1.5} />}
+            </button>
+            <button
+              ref={reelBtnRef}
+              type="button"
+              className="lw-reveal lw-reveal--reel"
+              aria-haspopup="dialog"
+              onClick={() => setReelOpen(true)}
+            >
+              <span className="lw-reveal-label">Flick through the pictures</span>
+              <GalleryVerticalEnd aria-hidden="true" size={16} strokeWidth={1.5} />
+            </button>
+          </div>
         </div>
       </header>
+
+      {reelOpen && (
+        <ReelBoundary onFail={closeReel}>
+          <Suspense fallback={<ReelCurtain />}>
+            <LensReel onClose={closeReel} />
+          </Suspense>
+        </ReelBoundary>
+      )}
 
       <div id={STUDIES_ID} ref={regionRef} className={`lw-studies${pulling ? ' is-pulling' : ''}`}>
         <nav className="lw-log" aria-label="The case studies">

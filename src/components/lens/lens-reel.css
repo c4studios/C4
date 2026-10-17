@@ -1,0 +1,364 @@
+/* ═══ THE REEL — "Flick through the pictures" on /Lens (17 Oct 2026) ═══
+   LensReel.jsx, loaded with it only when the button is pressed. The overlay is
+   portalled to <body>, outside .lens-page, so it carries its own copy of the
+   page's tokens (lens.css): the black, the ink, the amber, Bebas, Geist and
+   Geist Mono. Frames are sized from the overlay itself (container units), so
+   nothing is measured to lay them out.
+
+   The card never covers a picture. On a wide screen it stands in its own
+   column at the left and the frame takes the room beside it; on a tall screen
+   it lies along the bottom and the frame takes the room above it. The frames
+   travel through that room (the stage clips them there) with a thin line
+   between them.
+
+   The white card is the one light object: a slip of contact sheet in the
+   page's ink white (#f5f5f0), a strip of black film inset in its margin. Ink
+   on it is near-black; the link is the page's amber taken dark enough to read
+   on paper (#7a4a0e, 6.8:1). Focus rings are amber on the black and ink on the
+   paper, because amber on paper is under 3:1. */
+
+.reel {
+  --reel-ink: #f5f5f0;
+  --reel-ink-2: #9a9a95;
+  --reel-amber: #e8a658;
+  --reel-line: rgba(245, 245, 240, .2);
+  --reel-paper: #f5f5f0;
+  --reel-paper-ink: #0b0b0a;
+  --reel-paper-ink-2: #4a4945;
+  --reel-paper-line: rgba(11, 11, 10, .16);
+  --reel-link: #7a4a0e;
+  --reel-rebate: #0b0b0b;
+  --reel-rebate-ink: #a3a39d;
+  --reel-ease: cubic-bezier(.22, 1, .36, 1);
+  --c4-focus: var(--reel-amber);
+
+  /* The frame's room: below the top bar, above the bottom margin, right of
+     the card's column. --gate is how far the stage runs past the room, so a
+     frame's corners show at rest while its neighbours stay out of sight. */
+  --top: 76px;
+  --bottom: 76px;
+  --gate: 18px;
+  --inset: 28px;
+  --gap: 32px;
+  --card-w: 360px;
+  --left: calc(var(--inset) + var(--card-w) + var(--gap));
+  --right: 48px;
+  --corner: 13px;
+  --lock: 6px;
+  /* The card: its paper margin, the film strip's width, the window both
+     tracks move in, the colour strip and the foot. */
+  --pad: 10px;
+  --film: 104px;
+  --win: 184px;
+  --tones: 30px;
+  --foot: 48px;
+
+  position: fixed; inset: 0; z-index: 900;
+  overflow: hidden;
+  background: #000; color: var(--reel-ink);
+  font-family: 'Geist', system-ui, sans-serif; font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  container-type: size;
+  overscroll-behavior: contain;
+  touch-action: pinch-zoom;
+  user-select: none; -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+/* The dialog itself takes focus on open so the keys work at once; the
+   controls inside carry the visible rings. */
+.reel:focus, .reel:focus-visible { outline: none; }
+
+.reel-sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+/* ── The frames ──
+   Each frame is as large as its room allows at its own aspect, centred in
+   it, and never cropped or covered at rest. The loop moves it with a
+   transform; the picture inside drifts and leans in a little while it
+   travels, and sits whole once it lands. */
+.reel-stage {
+  position: absolute; left: 0; right: 0;
+  top: calc(var(--top) - var(--gate));
+  bottom: calc(var(--bottom) - var(--gate));
+  overflow: hidden;
+}
+.reel-box {
+  --ar: var(--r);
+  position: absolute; top: 50%;
+  left: calc(var(--left) + (100cqw - var(--left) - var(--right)) / 2);
+  width: min(100cqw - var(--left) - var(--right), (100cqh - var(--top) - var(--bottom)) * var(--ar));
+  aspect-ratio: var(--ar);
+  translate: -50% -50%;
+  will-change: transform;
+}
+/* The Aqua-Safe film has a wide cut and a tall one: the wide in a landscape
+   window, the tall in a portrait one, the same switch its <picture> makes. */
+@media (orientation: landscape) { .reel-box[data-art] { --ar: var(--r-wide); } }
+
+.reel-img { position: absolute; inset: 0; overflow: hidden; background: #0d0d0d; }
+.reel-img img {
+  position: absolute; inset: 0; display: block; width: 100%; height: 100%;
+  object-fit: cover;
+  will-change: transform;
+  -webkit-user-drag: none;
+  /* It arrives soft and sharpens: the focus pull the page opens its case
+     studies with, and the way the films' corners hunt before they lock. */
+  opacity: 0; filter: blur(12px);
+  transition: opacity .5s var(--reel-ease), filter .75s var(--reel-ease);
+}
+.reel-img img.is-loaded { opacity: 1; filter: none; }
+.reel-img img.is-failed { visibility: hidden; }
+
+/* The viewfinder: grey and open while the reel moves, amber and closed in on
+   the frame once it settles, as the film players' corners lock when a film
+   plays. */
+.reel-corner {
+  position: absolute; width: 18px; height: 18px; pointer-events: none;
+  border: 0 solid rgba(245, 245, 240, .34);
+  transition: transform .5s var(--reel-ease), border-color .3s ease;
+}
+.reel-corner--tl { top: calc(-1 * var(--corner)); left: calc(-1 * var(--corner)); border-top-width: 1px; border-left-width: 1px; }
+.reel-corner--tr { top: calc(-1 * var(--corner)); right: calc(-1 * var(--corner)); border-top-width: 1px; border-right-width: 1px; }
+.reel-corner--bl { bottom: calc(-1 * var(--corner)); left: calc(-1 * var(--corner)); border-bottom-width: 1px; border-left-width: 1px; }
+.reel-corner--br { bottom: calc(-1 * var(--corner)); right: calc(-1 * var(--corner)); border-bottom-width: 1px; border-right-width: 1px; }
+.reel.is-locked .reel-box.is-current .reel-corner { border-color: var(--reel-amber); }
+.reel.is-locked .reel-box.is-current .reel-corner--tl { transform: translate(var(--lock), var(--lock)); }
+.reel.is-locked .reel-box.is-current .reel-corner--tr { transform: translate(calc(-1 * var(--lock)), var(--lock)); }
+.reel.is-locked .reel-box.is-current .reel-corner--bl { transform: translate(var(--lock), calc(-1 * var(--lock))); }
+.reel.is-locked .reel-box.is-current .reel-corner--br { transform: translate(calc(-1 * var(--lock)), calc(-1 * var(--lock))); }
+
+/* ── The top bar: one line of help, and the way out ── */
+.reel-hint {
+  position: absolute; top: 18px; left: 22px; z-index: 4;
+  display: flex; align-items: center; min-height: 44px; margin: 0;
+  font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .06em; color: var(--reel-ink-2);
+  pointer-events: none;
+  transition: opacity .5s ease;
+}
+.reel-hint span { display: inline-flex; align-items: center; gap: 10px; }
+.reel-hint svg { flex: none; color: var(--reel-amber); }
+.reel-hint-touch { display: none !important; }
+@media (pointer: coarse) {
+  .reel-hint-touch { display: inline-flex !important; }
+  .reel-hint-fine { display: none !important; }
+}
+.reel.has-moved .reel-hint { opacity: 0; }
+
+.reel-close {
+  position: absolute; top: 18px; right: 18px; z-index: 4;
+  display: inline-flex; align-items: center; gap: 10px;
+  min-height: 44px; padding: 0 14px 0 16px;
+  font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--reel-ink); background: rgba(0, 0, 0, .55); border: 1px solid var(--reel-line); border-radius: 0;
+  cursor: pointer;
+  transition: background-color .25s ease, border-color .25s ease, color .25s ease;
+}
+.reel-close svg { flex: none; color: var(--reel-amber); transition: color .25s ease; }
+.reel-close:focus-visible { outline: 2px solid var(--reel-amber); outline-offset: 4px; }
+.reel-close:active { background: rgba(245, 245, 240, .1); }
+
+/* ── The white card ──
+   Its foot sits on the frame's room's lower edge, so the card and a tall
+   frame finish on one line. */
+.reel-card {
+  --c4-focus: var(--reel-paper-ink);
+  position: absolute; left: var(--inset); bottom: var(--bottom); z-index: 3;
+  width: var(--card-w); padding: var(--pad) var(--pad) 0;
+  background: var(--reel-paper); color: var(--reel-paper-ink);
+  border-radius: 2px;
+  box-shadow: 0 1px 1.5px rgba(0, 0, 0, .45), 0 28px 54px -24px rgba(0, 0, 0, .95);
+}
+.reel-window {
+  position: relative; height: var(--win);
+  display: grid; grid-template-columns: var(--film) minmax(0, 1fr);
+}
+
+/* The strip of film, inset in the paper's margin. The print in the middle is
+   the frame on screen; the strip's ends cut off the frames either side, at
+   half strength, the way a contact strip runs on past the one you're
+   looking at. Each print carries its number, as the film's edge does. */
+.reel-film { position: relative; overflow: hidden; background: var(--reel-rebate); border-radius: 1px; }
+.reel-print {
+  position: absolute; top: 0; left: 0; width: 100%; height: var(--pp, 114px);
+  padding: 8px 8px 22px;
+  opacity: .42; transition: opacity .3s ease;
+  will-change: transform;
+}
+.reel-print.is-current { opacity: 1; }
+.reel-print-img { position: relative; width: 100%; height: 100%; }
+.reel-print-img img {
+  position: absolute; inset: 0; display: block; width: 100%; height: 100%;
+  object-fit: contain; -webkit-user-drag: none;
+  opacity: 0; transition: opacity .35s ease;
+}
+.reel-print-img img.is-loaded { opacity: 1; }
+.reel-print-img img.is-failed { visibility: hidden; }
+.reel-print-no {
+  position: absolute; left: 8px; bottom: 6px;
+  font-family: 'Geist Mono', monospace; font-size: 9.5px; line-height: 1; letter-spacing: .08em;
+  color: var(--reel-rebate-ink); font-variant-numeric: tabular-nums;
+}
+.reel-print.is-current .reel-print-no { color: var(--reel-paper); }
+
+/* The details: who it was for, what and where in the page's mono, then the
+   one line on what it was made for, straight after. */
+.reel-info { position: relative; overflow: hidden; }
+.reel-note {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  padding: 4px 4px 8px 14px;
+  will-change: transform;
+}
+.reel-client {
+  margin: 0; font-family: 'Bebas Neue', sans-serif; font-weight: 400;
+  font-size: 28px; line-height: .9; letter-spacing: .01em; color: var(--reel-paper-ink);
+  text-wrap: balance;
+}
+/* Two lines, so a wrap never strands a year: the kind of work, then where
+   and (when a file dates it) the year. */
+.reel-facts {
+  margin: 8px 0 0; font-family: 'Geist Mono', monospace; font-size: 10.5px; line-height: 1.5;
+  letter-spacing: .09em; text-transform: uppercase; color: var(--reel-paper-ink-2);
+}
+.reel-facts span { display: block; }
+.reel-text {
+  margin: 10px 0 0;
+  font-size: 14px; line-height: 1.45; color: #22221f; text-wrap: pretty;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
+}
+
+/* The reel's twelve frames, each averaged to one colour (reelFrames.js), the
+   films' colour strip turned into the reel's readout. The frame on screen
+   stands taller. */
+.reel-tones { display: flex; align-items: center; gap: 12px; height: var(--tones); }
+.reel-tones ol {
+  flex: 1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2px; align-items: end;
+  height: 12px; margin: 0; padding: 0; list-style: none;
+}
+.reel-tones li { height: 5px; background: var(--tone); transition: height .3s var(--reel-ease); }
+.reel-tones li.is-current { height: 12px; }
+.reel-count {
+  margin: 0; font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .08em;
+  color: var(--reel-paper-ink-2); font-variant-numeric: tabular-nums;
+}
+.reel-count b { font-weight: 600; color: var(--reel-paper-ink); }
+
+/* The foot doesn't move: the way to this job's case study, and the steps. */
+.reel-foot {
+  display: flex; align-items: center; gap: 8px;
+  height: var(--foot); margin: 0 calc(-1 * var(--pad)); padding: 0 4px 0 calc(var(--pad) + 8px);
+  border-top: 1px solid var(--reel-paper-line);
+}
+.reel-case {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin-right: auto;
+  font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--reel-link); text-decoration: none; white-space: nowrap;
+  transition: color .25s ease;
+}
+.reel-case-arrow { display: inline-block; transition: transform .35s ease; }
+.reel-case:focus-visible { outline: 2px solid var(--reel-paper-ink); outline-offset: 2px; }
+.reel-steps { display: flex; }
+.reel-step {
+  display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
+  color: var(--reel-paper-ink); background: transparent; border: 0; border-radius: 0;
+  cursor: pointer;
+  transition: background-color .2s ease, color .2s ease;
+}
+.reel-step:focus-visible { outline: 2px solid var(--reel-paper-ink); outline-offset: -3px; }
+.reel-step:active { background: rgba(11, 11, 10, .1); }
+
+@media (hover: hover) {
+  .reel-close:hover { background: var(--reel-ink); color: #000; border-color: var(--reel-ink); }
+  .reel-close:hover svg { color: #000; }
+  .reel-case:hover { color: #4e2e06; }
+  .reel-case:hover .reel-case-arrow { transform: translateX(3px); }
+  .reel-step:hover { background: var(--reel-paper-ink); color: var(--reel-paper); }
+}
+
+/* A narrower landscape window: a narrower card, so the frame keeps its room. */
+@media (orientation: landscape) and (max-width: 1199px) {
+  .reel { --inset: 20px; --gap: 24px; --card-w: 316px; --right: 28px; --film: 92px; }
+  .reel-client { font-size: 26px; }
+}
+
+/* ── Held upright (phones and tablets) ──
+   The card lies along the bottom and the frame takes the room above it. */
+@media (orientation: portrait) {
+  .reel {
+    --top: 64px;
+    --inset: 12px;
+    --left: 14px;
+    --right: 14px;
+    --corner: 9px;
+    --lock: 4px;
+    --pad: 8px;
+    --film: 80px;
+    --win: 144px;
+    --tones: 26px;
+    --foot: 46px;
+    /* The room ends where the card begins, gate included. */
+    --bottom: calc(var(--pad) + var(--win) + var(--tones) + var(--foot) + 1px + var(--inset) + var(--gate));
+  }
+  .reel-hint { top: 10px; left: 14px; }
+  .reel-close { top: 10px; right: 10px; }
+  .reel-card { left: var(--inset); right: var(--inset); bottom: var(--inset); width: auto; max-width: 440px; margin-inline: auto; }
+  .reel-print { padding: 6px 6px 19px; }
+  .reel-print-no { left: 6px; bottom: 5px; font-size: 9px; }
+  .reel-note { padding: 2px 2px 6px 12px; }
+  .reel-client { font-size: 26px; }
+  .reel-facts { margin-top: 6px; font-size: 10px; letter-spacing: .08em; }
+  .reel-text { margin-top: 8px; font-size: 13px; line-height: 1.4; }
+  .reel-foot { padding-left: calc(var(--pad) + 6px); }
+  .reel-case { font-size: 10.5px; letter-spacing: .08em; }
+}
+@media (orientation: portrait) and (min-width: 600px) {
+  .reel { --top: 76px; --inset: 24px; --left: 32px; --right: 32px; --corner: 13px; --lock: 6px; --pad: 10px; --film: 104px; --win: 184px; --tones: 30px; --foot: 48px; }
+  .reel-hint { top: 18px; left: 22px; }
+  .reel-close { top: 18px; right: 18px; }
+  .reel-print { padding: 8px 8px 22px; }
+  .reel-print-no { left: 8px; bottom: 6px; font-size: 9.5px; }
+  .reel-note { padding: 4px 4px 8px 14px; }
+  .reel-client { font-size: 28px; }
+  .reel-text { font-size: 14px; }
+}
+
+/* ── A short landscape window (a phone on its side) ──
+   The card keeps its column at the left, down to its details. */
+@media (orientation: landscape) and (max-height: 540px) {
+  .reel { --top: 58px; --bottom: 14px; --inset: 12px; --gap: 18px; --card-w: 252px; --right: 18px; --corner: 9px; --lock: 4px; --pad: 8px; --win: 136px; --tones: 24px; --foot: 44px; }
+  .reel-window { grid-template-columns: minmax(0, 1fr); }
+  .reel-film { display: none; }
+  .reel-hint { top: 8px; left: 14px; }
+  .reel-close { top: 8px; right: 8px; }
+  .reel-card { bottom: var(--inset); }
+  .reel-note { padding: 2px 4px 6px 4px; }
+  .reel-client { font-size: 24px; }
+  .reel-facts { margin-top: 5px; font-size: 10px; }
+  .reel-text { margin-top: 6px; font-size: 13px; line-height: 1.35; -webkit-line-clamp: 2; }
+  .reel-foot { gap: 4px; padding-left: calc(var(--pad) + 4px); }
+  .reel-case { gap: 8px; font-size: 10.5px; letter-spacing: .06em; }
+  .reel-step { width: 40px; }
+}
+
+/* ── Reduced motion ──
+   Nothing drifts or travels: every frame and line of details crossfades in
+   160 ms, the strip of film jumps a print, the picture sits whole, and the
+   corners only change colour. (.is-still is set from useStaticMode; the
+   media query covers a preference changed mid-visit.) */
+.reel.is-still .reel-box { transform: none !important; opacity: 0; visibility: hidden; will-change: auto; transition: opacity .16s linear, visibility 0s linear .16s; }
+.reel.is-still .reel-box.is-current { opacity: 1; visibility: visible; transition: opacity .16s linear; }
+/* The strip of film keeps its neighbours and jumps a print per step. */
+.reel.is-still .reel-print { will-change: auto; transition: opacity .12s linear; }
+.reel.is-still .reel-note { transform: none !important; opacity: 0; will-change: auto; transition: opacity .16s linear; }
+.reel.is-still .reel-note.is-current { opacity: 1; }
+.reel.is-still .reel-img img { transform: none !important; filter: none; transition: opacity .12s linear; }
+.reel.is-still .reel-corner { transition: border-color .12s ease; }
+.reel.is-still.is-locked .reel-box.is-current .reel-corner { transform: none; }
+.reel.is-still .reel-tones li { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reel-img img { filter: none; transition: opacity .12s linear; }
+  .reel-corner { transition: border-color .12s ease; }
+  .reel-tones li { transition: none; }
+  .reel-hint, .reel-case-arrow, .reel-case:hover .reel-case-arrow { transition: none; transform: none; }
+}

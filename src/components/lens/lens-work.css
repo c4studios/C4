@@ -51,6 +51,17 @@
 .lw-reveal:active { background: rgba(245,245,240,.08); }
 .lw-head-side .lw-reveal { display: flex; width: max-content; max-width: 100%; }
 
+/* The second way in (17 Oct 2026): "Flick through the pictures" opens the
+   reel full screen (LensReel.jsx, styled in lens-reel.css, which loads with
+   it). The same box and corners as the case-study button, so the two read as
+   a pair: they share one column, as wide as the wider label, so their icons
+   and corners stack. Its icon is a stack of frames, and on hover it lifts,
+   the way the frames move. The curtain is the black the reel opens on while
+   its code arrives. */
+.lw-actions { display: grid; row-gap: 16px; width: max-content; max-width: 100%; margin-top: 30px; }
+.lw-actions .lw-reveal { margin-top: 0; width: auto; justify-content: space-between; }
+.lw-reel-curtain { position: fixed; inset: 0; z-index: 900; background: #000; }
+
 /* ── The studies, behind it ──
    hidden="until-found" keeps them in the page for crawlers and find-in-page.
    No display rule here: a browser without until-found treats it as plain
@@ -468,6 +479,7 @@
   .lw-reveal:hover::after { transform: translate(-4px, -4px); }
   .lw-reveal[aria-expanded="false"]:hover svg { transform: translateY(2px); }
   .lw-reveal[aria-expanded="true"]:hover svg { transform: translateY(-2px); }
+  .lw-reveal--reel:hover svg { transform: translateY(-2px); }
   .lw-log a:hover { color: var(--amber); }
   .lw-out:hover { text-decoration-color: currentColor; }
   .lw-case:hover { color: #f2c98c; }
@@ -487,6 +499,7 @@
   .lw-site { margin-top: 112px; padding-top: 80px; }
   .lw-foot { margin-top: 96px; }
   .lw-head-side .lw-reveal { width: 100%; justify-content: space-between; }
+  .lw-actions { width: 100%; }
   .lw-aqua { padding: 52px 0; }
   .lw-exhibit { margin-bottom: 30px; }
   .lw-sharp-line { margin: 48px 4px 24px; }
