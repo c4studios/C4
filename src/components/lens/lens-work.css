@@ -61,6 +61,26 @@
 .lw-actions { display: grid; row-gap: 16px; width: max-content; max-width: 100%; margin-top: 30px; }
 .lw-actions .lw-reveal { margin-top: 0; width: auto; justify-content: space-between; }
 .lw-reel-curtain { position: fixed; inset: 0; z-index: 900; background: #000; }
+/* On a slow connection the wait gets a line of its own, after a beat, so a
+   fast load never shows it. */
+.lw-reel-curtain::after {
+  content: 'Loading the pictures';
+  position: absolute; left: 50%; top: 50%; translate: -50% -50%;
+  font: 400 15px/1 'Geist', system-ui, sans-serif; color: var(--ink-2, #9a9a95);
+  opacity: 0;
+  animation: lw-curtain-note .4s ease .6s forwards;
+}
+@keyframes lw-curtain-note { to { opacity: 1; } }
+/* If the reel's code didn't arrive: one line under the buttons, and a reload. */
+.lw-reel-note { margin: 18px 0 0; max-width: 34rem; font-size: 15px; line-height: 1.6; color: var(--ink-2); }
+.lw-reel-reload {
+  display: inline; min-height: 0; margin: 0; padding: 0;
+  font: inherit; color: var(--amber);
+  background: none; border: 0;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em;
+  cursor: pointer;
+}
+.lw-reel-reload:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
 
 /* ── The studies, behind it ──
    hidden="until-found" keeps them in the page for crawlers and find-in-page.

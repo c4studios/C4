@@ -76,17 +76,23 @@ const askedForStudies = () => typeof window !== 'undefined' && INTO_STUDIES.test
 
 const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
-/* The reel's code, fetched on the first press. A failed fetch is forgotten,
-   so the next press tries again (React.lazy would otherwise keep the error). */
+/* The reel's code, fetched on the first press. After a failure the next press
+   asks again (React.lazy would otherwise keep the error), but browsers also
+   remember a module that failed to load, so that usually fails too: the
+   button then says so and offers a reload (checked on 18 Oct 2026 with the
+   chunk blocked in Chrome). */
 const loadReel = () => import('./LensReel');
 let LensReel = lazy(loadReel);
+/* Set by the reload offered after a failure, read once after it. */
+const REEL_AGAIN = 'c4-lens-reel-again';
 
 /* Black at once, while the reel's code arrives. */
 function ReelCurtain() {
   return createPortal(<div className="lw-reel-curtain" aria-hidden="true" />, document.body);
 }
 
-/* If the reel can't load, the page stays as it was and the button works again. */
+/* If the reel can't load, the page stays as it was, focus goes back to the
+   button, and a line under it says what happened. */
 class ReelBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -554,6 +560,26 @@ export default function LensWork() {
     reelLanding.current = typeof studyHash === 'string' ? studyHash : null;
     setReelOpen(false);
   }, []);
+  const [reelFailed, setReelFailed] = useState(false);
+  const failReel = useCallback(() => {
+    setReelFailed(true);
+    closeReel();
+  }, [closeReel]);
+  /* The reload comes back to this section and opens the reel by itself. Not
+     through a #work address: that opens the case studies, and their films
+     would start loading on the connection that just failed. */
+  const reloadForReel = () => {
+    try { window.sessionStorage.setItem(REEL_AGAIN, '1'); } catch { /* the reload still works; press the button again */ }
+    window.location.reload();
+  };
+  useEffect(() => {
+    let again = false;
+    try {
+      again = window.sessionStorage.getItem(REEL_AGAIN) === '1';
+      window.sessionStorage.removeItem(REEL_AGAIN);
+    } catch { /* no storage: nothing to resume */ }
+    if (again) setReelOpen(true);
+  }, []);
   useEffect(() => {
     if (reelOpen) { reelWasOpen.current = true; return undefined; }
     if (!reelWasOpen.current) return undefined;
@@ -561,7 +587,14 @@ export default function LensWork() {
     const hash = reelLanding.current;
     reelLanding.current = null;
     if (!hash) {
-      reelBtnRef.current?.focus({ preventScroll: true });
+      /* Focus back on the button, and the button on screen: after the reload
+         that reopens the reel, the page behind it starts at the top. */
+      const btn = reelBtnRef.current;
+      if (btn) {
+        btn.focus({ preventScroll: true });
+        const r = btn.getBoundingClientRect();
+        if (r.top < 0 || r.bottom > window.innerHeight) btn.scrollIntoView({ block: 'center', behavior: 'instant' });
+      }
       return undefined;
     }
     /* "Read about this job": the click opened the studies and the hash
@@ -603,17 +636,25 @@ export default function LensWork() {
               type="button"
               className="lw-reveal lw-reveal--reel"
               aria-haspopup="dialog"
+              aria-describedby={reelFailed ? 'work-reel-note' : undefined}
               onClick={() => setReelOpen(true)}
             >
               <span className="lw-reveal-label">Flick through the pictures</span>
               <GalleryVerticalEnd aria-hidden="true" size={16} strokeWidth={1.5} />
             </button>
           </div>
+          {reelFailed && (
+            <p id="work-reel-note" className="lw-reel-note" role="status">
+              The pictures didn’t load.{' '}
+              <button type="button" className="lw-reel-reload" onClick={reloadForReel}>Reload the page</button>
+              {' '}to try again.
+            </p>
+          )}
         </div>
       </header>
 
       {reelOpen && (
-        <ReelBoundary onFail={closeReel}>
+        <ReelBoundary onFail={failReel}>
           <Suspense fallback={<ReelCurtain />}>
             <LensReel onClose={closeReel} />
           </Suspense>

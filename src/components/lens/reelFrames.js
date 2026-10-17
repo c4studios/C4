@@ -1,11 +1,12 @@
 /* The frames in the Lens reel: the full-screen "Flick through the pictures"
    overlay that opens from the head of the work section on /Lens
-   (LensReel.jsx). 17 October 2026, a prototype for Caleb.
+   (LensReel.jsx). 17 October 2026, a prototype for Caleb; redesigned on
+   18 October 2026 with every frame full bleed.
 
    What's in it. Only C4 Lens's own photography and film, from the four film
    and photography studies (WORK_FILM in lensStudies.js): their stills, coach
-   portraits and film posters in public/lens-work, public/lens-posters and
-   public/lens-motion. Every frame was looked at before it went in.
+   portraits and film frames in public/lens-work and public/lens-motion. Every
+   frame was looked at before it went in.
 
    What's left out, and why.
    - The "Built into the site" studies (WORK_SITE). Their recordings show the
@@ -17,10 +18,14 @@
      the seconds of the Aqua-Safe film that show the van photo. The Aqua-Safe
      frame here is the film's opening, the pipe it draws.
    - The two Sharp drone-film posters (464 px wide, soft at full screen, and the
-     aerial stills show the same jobs), and the old DS Racing and Sharp posters
-     in public/lens-posters (blurred, and the films' own posters show more).
+     aerial stills show the same jobs), and the old posters in
+     public/lens-posters (blurred or scaled up).
      Coach portraits b and c and three more Sharp stills stay in their studies,
      to keep the reel to twelve frames.
+   - The speedometer that opens the DS Racing header film. It's the strongest
+     moment of that film for a full-bleed frame, but nothing on file says
+     whether the dial footage was made or licensed for it, so the frame stays
+     on the film's own poster, the logo.
 
    Words. Names, places, captions and alt text come from lensStudies.js and
    motionFilms.js, read at build time, so a change there reaches the reel. The
@@ -39,10 +44,24 @@
 
    Kinds are the service names in "Five ways to be unforgettable" (Lens.jsx).
 
+   Order. Each job's frames stay together, so the card's client line holds
+   still while you're inside a job. Sharp opens because its masters are the
+   sharpest at full screen (2048 and 1152 px wide), where the HVN film frames
+   are 720 px and read soft on a wide screen. HVN starts on a coach portrait,
+   and its gym frame follows the film's opening, since its caption says it's
+   from the same film.
+
    Tones. Each frame's `tone` is its file averaged to one colour (sharp's
    channel means, 17 Oct 2026), the way the film players' strips average each
-   frame to a column. The card lays the twelve out as the reel's own strip.
-   Re-measure if a frame's file changes. */
+   frame to a column. The frame shows it while its file loads, so a frame
+   never opens on black. Re-measure if a frame's file changes.
+
+   Focus. Every frame fills the screen and is cropped to it, so `focus` is the
+   point of the picture the crop keeps: an object-position, x then y. On a
+   wide screen a tall frame is cropped top and bottom, and the card sits a
+   little below the middle, so the y puts the subject above it (HVN's sign,
+   each coach's face). On a phone a wide frame is cropped at the sides, so the
+   x keeps the subject. Checked by eye at 1280 x 800, 1440 x 900 and 375 x 812. */
 import { HVN, SHARP, DSR, AQUA } from './lensStudies';
 import { MOTION_FILMS } from './motionFilms';
 
@@ -110,28 +129,35 @@ const fromAir = 'From the air, for the gallery on their site.';
 const onGround = 'On the ground, for the gallery on their site.';
 
 export const REEL_FRAMES = [
-  {
-    id: 'hvn-air',
-    study: HVN,
-    kind: VIDEO,
-    tone: '#a2a4a9',
-    note: firstSentence(HVN.made),
-    picture: poster(HVN.film.cuts, 'HVN CrossFit’s building from the air, its name in teal across the front wall.'),
-  },
+  { id: 'sharp-oblique', study: SHARP, kind: AERIAL, year: '2026', tone: '#786c5b', focus: '45% 50%', note: fromAir, picture: still(sharpStill('oblique')) },
+  { id: 'sharp-corner', study: SHARP, kind: PHOTO, year: '2026', tone: '#766461', focus: '40% 40%', note: onGround, picture: still(sharpStill('corner')) },
+  { id: 'sharp-plan', study: SHARP, kind: AERIAL, year: '2026', tone: '#827264', focus: '50% 50%', note: fromAir, picture: still(sharpStill('plan')) },
+  { id: 'sharp-dusk', study: SHARP, kind: PHOTO, year: '2026', tone: '#785b48', focus: '45% 18%', note: onGround, picture: still(sharpStill('dusk')) },
   {
     id: 'hvn-coach-a',
     study: HVN,
     kind: PHOTO,
     year: '2026',
     tone: '#322f29',
+    focus: '50% 33%',
     note: HVN.coaches.caption,
     picture: still(HVN.coaches.stills[0]),
+  },
+  {
+    id: 'hvn-air',
+    study: HVN,
+    kind: VIDEO,
+    tone: '#a2a4a9',
+    focus: '50% 51%',
+    note: firstSentence(HVN.made),
+    picture: poster(HVN.film.cuts, 'HVN CrossFit’s building from the air, its name in teal across the front wall.'),
   },
   {
     id: 'hvn-inside',
     study: HVN,
     kind: VIDEO,
     tone: '#434238',
+    focus: '55% 40%',
     note: 'Inside the gym, from the same film.',
     picture: still(HVN_INSIDE),
   },
@@ -141,18 +167,16 @@ export const REEL_FRAMES = [
     kind: PHOTO,
     year: '2026',
     tone: '#2c2a26',
+    focus: '50% 29%',
     note: HVN.coaches.caption,
     picture: still(HVN.coaches.stills[3]),
   },
-  { id: 'sharp-oblique', study: SHARP, kind: AERIAL, year: '2026', tone: '#786c5b', note: fromAir, picture: still(sharpStill('oblique')) },
-  { id: 'sharp-corner', study: SHARP, kind: PHOTO, year: '2026', tone: '#766461', note: onGround, picture: still(sharpStill('corner')) },
-  { id: 'sharp-plan', study: SHARP, kind: AERIAL, year: '2026', tone: '#827264', note: fromAir, picture: still(sharpStill('plan')) },
-  { id: 'sharp-dusk', study: SHARP, kind: PHOTO, year: '2026', tone: '#785b48', note: onGround, picture: still(sharpStill('dusk')) },
   {
     id: 'dsr-header',
     study: DSR,
     kind: MOTION,
     tone: '#852e3d',
+    focus: '50% 50%',
     note: `${DSR.header.caption} It opens their home page.`,
     picture: poster(DSR.header.clip.cuts, 'The DSR logo and the line The Original & The Best, over red and blue lightning.'),
   },
@@ -161,6 +185,7 @@ export const REEL_FRAMES = [
     study: DSR,
     kind: MOTION,
     tone: '#110c10',
+    focus: '50% 45%',
     note: `${DSR.chassis.caption} It plays on their Predator chassis and services pages.`,
     picture: poster(DSR.chassis.clip.cuts, 'The DSR logo above the words DSR Predator, on black.'),
   },
@@ -170,6 +195,7 @@ export const REEL_FRAMES = [
     kind: MOTION,
     year: yearOf(DSR_REEL),
     tone: '#dd1828',
+    focus: '30% 22%',
     note: firstSentence(DSR_REEL.description),
     picture: poster(DSR_REEL.cuts, 'The reel’s title card in DS Racing red: DS Racing Karts, Sydney’s go kart specialists.'),
   },
@@ -179,6 +205,7 @@ export const REEL_FRAMES = [
     kind: MOTION,
     year: yearOf(AQUASAFE),
     tone: '#0e2f3f',
+    focus: '40% 40%',
     note: firstSentence(AQUASAFE.description),
     picture: poster(
       AQUASAFE.cuts,
