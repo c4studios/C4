@@ -37,6 +37,12 @@
  * properly", which nothing on file shows. The cost FAQ calls the $650
  * package Brand Shoot.
  * Still no person named, no "licensed", and no pipeline or coverage claim.
+ *
+ * 17 Oct 2026: "Where can you see the work?" said "we shot their coach
+ * portraits" (HVN) and "we photographed their jobs" (Sharp). Caleb doesn't
+ * want either ("i dont wanna take all the credit", as on the posts), so it
+ * now says what the work is: the portraits are "part of the work", Sharp's is
+ * "high-quality photography", his own wording. Don't put "we shot" back.
  */
 export default {
   hero: {
@@ -90,7 +96,7 @@ export default {
       heading: 'Where can you see the work?',
       body: [
         'The [C4 Lens page](/Lens) has it, films included, and links each case study.',
-        'Two shoots to start with. For [HVN CrossFit](/CaseStudy/hvn-gym) we made the film at the top of their home page, which starts above the building and walks through the gym, and we shot their coach portraits. For [Sharp Bricklaying](/CaseStudy/sharp-bricklaying) we photographed their jobs from the air and on the ground, and cut footage of two sites into short films.',
+        'Two shoots to start with. For [HVN CrossFit](/CaseStudy/hvn-gym) we made the film at the top of their home page, which starts above the building and walks through the gym. Their coach portraits are part of the work too. For [Sharp Bricklaying](/CaseStudy/sharp-bricklaying) the work is high-quality photography of their jobs from the air and on the ground, with footage of two sites cut into short films.',
       ],
     },
     {

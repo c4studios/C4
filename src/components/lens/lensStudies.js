@@ -7,7 +7,9 @@
    says were made from scratch. His instruction was to stay broad and name no
    one: "these are examples of what c4 lens can do". So no line here, no
    caption and no schema names a person as the one who shot or made anything.
-   "We" and "C4 Lens" are the studio.
+   "We" and "C4 Lens" are the studio. And no "we shot" or "we photographed"
+   (Caleb, 17 Oct 2026, as on the posts: "i dont wanna take all the credit").
+   Say what the work is, as in HVN's line about its coach portraits.
 
    What may not be added. No figures about results (views, enquiries, "x%
    more"). No client opinion except The Rocks' published review, quoted word
@@ -64,7 +66,7 @@ export const HVN = {
   place: 'Port Kennedy, WA',
   site: { href: 'https://thehvncrossfit.com', label: 'thehvncrossfit.com' },
   caseStudy: '/CaseStudy/hvn-gym',
-  made: 'A 30-second film for the top of their home page. It starts above the building and walks you through the gym before the logo lands. We also shot the coach portraits for their site, and built the chin-up game on the home page.',
+  made: 'A 30-second film for the top of their home page. It starts above the building and walks you through the gym before the logo lands. The coach portraits on their site are part of the work too, and so is the chin-up game on the home page.',
   runs: 'The film and the game are on the home page at {site}. The portraits are on their About page.',
   fits: 'A gym sells the room and the people in it, so the site shows both before anyone books a class.',
   film: {
