@@ -49,11 +49,13 @@
  * folds them away and hands the visitor back to the button.
  *
  * A second way in (17 Oct 2026, a prototype). "Flick through the pictures",
- * beside the case-study button, opens the reel: C4 Lens's own photos and film
- * stills, full screen, one at a time (LensReel.jsx, frames in reelFrames.js).
- * Its code loads only when the button is pressed, and nothing of it is in the
- * prerendered HTML. Closing hands focus back to the button. A frame's "Read
- * about this job" link is a #work-<id> link: the click handling below opens
+ * beside the case-study button, opens the reel: one full-screen slide per
+ * project, each moving through that project's best pictures, C4's own and
+ * the client's, the client's marked as theirs (LensReel.jsx, projects in
+ * reelProjects.js). Its code loads only when the button is pressed, and
+ * nothing of it is in the prerendered HTML. Closing hands focus back to the
+ * button. A slide's "Read about this job" link is a #work-<id> link: the
+ * click handling below opens
  * the studies, the reel gives the address to the hash handling below, which
  * jumps to that study, and focus follows to its name. The disclosure itself
  * is unchanged.

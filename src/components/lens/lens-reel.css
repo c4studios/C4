@@ -1,16 +1,20 @@
 /* ═══ THE REEL — "Flick through the pictures" on /Lens ═══
    LensReel.jsx, loaded with it only when the button is pressed (17 Oct 2026;
-   redesigned 18 Oct 2026). The overlay is portalled to <body>, outside
-   .lens-page, so it carries its own tokens.
+   rebuilt 18 Oct 2026 as one slide per project). The overlay is portalled to
+   <body>, outside .lens-page, so it carries its own tokens.
 
-   Every frame fills the screen, cropped on its own focal point (reelFrames.js
-   `focus`, and `focusShort` for a phone on its side). Over it lies the card:
-   pure white, black ink, a crisp edge, in the lower part of the screen and in
-   the same place on every frame, so the top half and more of every picture
-   stays clear. Its middle is a window onto the picture, cropped the same way
-   as the screen behind it, a third of the card wide and the card's full
-   height inside its margin; as the reel moves, the picture in the window
-   slides up and the next comes in under it.
+   Every slide is one project and fills the screen with the picture on show,
+   cropped on its own focal point (reelProjects.js `focus`, and `focusShort`
+   for a phone on its side); the project's other pictures wait in layers
+   under it and crossfade in. Over it lies the card: pure white, black ink, a
+   crisp edge, in the lower part of the screen and in the same place on every
+   slide, so the top half and more of every picture stays clear. Its middle
+   is the window, a third of the card wide and the card's full height inside
+   its margin: a strip of the project's pictures like frames on a contact
+   sheet, paper between them and each frame's number under it, the frames
+   either side showing at its edges. The strip is drawn one frame along as
+   the picture behind changes. As the reel moves between projects, the strip
+   slides up and the next project's comes in under it.
 
    The type is "a wall label, set by an architecture studio" (Caleb chose it,
    18 Oct 2026): Mona Sans (GitHub, SIL OFL: public/fonts/MonaSans-OFL.txt;
@@ -100,7 +104,7 @@
    instrument. Over the reel the system pointer comes back, so a reader's
    enlarged or high-contrast pointer does too, and the reticle steps aside. */
 body.cursor-on .reel, body.cursor-on .reel * { cursor: auto !important; }
-body.cursor-on .reel :is(a, button) { cursor: pointer !important; }
+body.cursor-on .reel :is(a, button, .reel-plate) { cursor: pointer !important; }
 body:has(.reel) .reticle { display: none !important; }
 
 .reel-sr {
@@ -108,30 +112,41 @@ body:has(.reel) .reticle { display: none !important; }
   clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
 }
 
-/* ── The frames ──
+/* ── The slides ──
    Each one is the whole screen. The loop moves it a screen's height per
-   frame; the picture inside drifts against it and is drawn in a little while
-   it travels, so it covers its frame all the way, and sits still and exactly
-   cropped once it lands. Until its file arrives the frame shows its grey. */
+   project; its pictures drift against it and are drawn in a little while it
+   travels, so they cover the slide all the way, and sit still and exactly
+   cropped once it lands. The pictures are layers: the one on show is opaque,
+   the next fades in over it, and while a picture is on show it settles from
+   a little closer to exactly cropped, scaled from its own focal point
+   (LensReel.jsx). Until its file arrives a layer shows its grey. */
 .reel-stage { position: absolute; inset: 0; }
 .reel-box {
   position: absolute; inset: 0;
   overflow: hidden;
   will-change: transform;
 }
-.reel-img { position: absolute; inset: 0; background: var(--tone, #111); }
-.reel-img img {
+.reel-img { position: absolute; inset: 0; background: #111; }
+.reel-drift { position: absolute; inset: 0; will-change: transform; }
+.reel-layer {
+  position: absolute; inset: 0; overflow: hidden;
+  background: var(--tone, #111);
+  opacity: 0;
+  transform-origin: var(--focus, 50% 50%);
+}
+.reel-layer[data-on="1"] { opacity: 1; }
+.reel-layer[data-top="1"] { z-index: 1; }
+.reel-layer img {
   position: absolute; inset: 0; display: block; width: 100%; height: 100%;
   object-fit: cover; object-position: var(--focus, 50% 50%);
-  will-change: transform;
   -webkit-user-drag: none;
   /* It arrives soft and sharpens: the focus pull the page opens its case
      studies with. */
   opacity: 0; filter: blur(10px);
   transition: opacity .5s var(--ease), filter .7s var(--ease);
 }
-.reel-img img.is-loaded { opacity: 1; filter: none; }
-.reel-img img.is-failed { visibility: hidden; }
+.reel-layer img.is-loaded { opacity: 1; filter: none; }
+.reel-layer img.is-failed { visibility: hidden; }
 
 /* ── Over the picture: one line of help, and the way out ──
    Small white tabs in black ink, so they read on any frame without a shade
@@ -192,7 +207,7 @@ body:has(.reel) .reticle { display: none !important; }
     "num  plate kind"
     "note plate place"
     "note plate year"
-    "note plate ."
+    "note plate fine"
     "case plate steps";
   column-gap: var(--gutter);
   padding: var(--pad);
@@ -292,23 +307,79 @@ body:has(.reel) .reticle { display: none !important; }
   hanging-punctuation: first;
 }
 
-/* The window: the frame on screen, cropped on the same focal point, the full
-   height of the card inside its margin. It hands over to the next in step
-   with the frames. Until a picture arrives it shows the frame's grey. */
+/* The window: the project's pictures in a strip, the full height of the card
+   inside its margin. Each frame is cropped on the same focal point as the
+   screen behind it, with the card's own paper between frames and a rebate
+   under them where each frame's number is printed, lining up with the foot
+   of the card's text; the frames either side show at the edges. The strip
+   moves sideways through a project and up into the next one. A hairline
+   along the top of the current frame's rebate fills while the picture waits
+   for the strip to move on (LensReel.jsx). Until a picture arrives its frame
+   shows the picture's grey. */
 .reel-plate {
+  --rebate: 22px;
   grid-area: plate;
   position: relative; overflow: hidden;
-  background: var(--ink);
+  background: var(--paper);
+  cursor: grab;
+  touch-action: pinch-zoom;
 }
 .reel-print { position: absolute; inset: 0; will-change: transform; }
-.reel-print img {
+.reel-strip {
+  position: absolute; top: 0; bottom: 0; left: 0; width: 100%;
+  display: flex; gap: var(--frame-gap, 4px);
+  will-change: transform;
+}
+.reel-frame {
+  position: relative;
+  flex: 0 0 calc((1 - 2 * var(--peek, .07)) * 100%);
+  display: flex; flex-direction: column; min-width: 0;
+}
+.reel-frame-pic { position: relative; flex: 1 1 auto; overflow: hidden; }
+.reel-frame-pic img {
   position: absolute; inset: 0; display: block; width: 100%; height: 100%;
   object-fit: cover; object-position: var(--focus, 50% 50%);
   -webkit-user-drag: none;
   opacity: 0; transition: opacity .35s ease;
 }
-.reel-print img.is-loaded { opacity: 1; }
-.reel-print img.is-failed { visibility: hidden; }
+.reel-frame-pic img.is-loaded { opacity: 1; }
+.reel-frame-pic img.is-failed { visibility: hidden; }
+/* Each frame's number travels with it, and shows only while its frame is
+   the one in the window, so no number is ever cut off at the window's
+   edge. */
+.reel-frame-no {
+  flex: 0 0 var(--rebate);
+  display: flex; align-items: flex-end;
+  font-size: .75rem; line-height: 1; letter-spacing: .01em;
+  font-variant-numeric: lining-nums proportional-nums;
+  color: var(--ink-2);
+  white-space: nowrap; overflow: hidden;
+  opacity: 0;
+  transition: opacity .3s linear;
+}
+.reel-frame.is-on .reel-frame-no { opacity: 1; transition-delay: .25s; }
+.reel-strip.no-fade .reel-frame-no { transition: none; }
+.reel-plate:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 0; }
+.reel-frame-time {
+  position: absolute; left: 0; right: 0; bottom: var(--rebate);
+  height: 1px; margin-bottom: -1px;
+  background: var(--ink);
+  transform: scaleX(0); transform-origin: 0 50%;
+}
+
+/* Only while a picture the client supplied is on screen: one line of fine
+   print, under the place and year. It's always laid out and only fades, so
+   its room stays when it isn't showing and the card never jumps. */
+.reel-fine {
+  grid-area: fine; align-self: end;
+  margin: 12px 0 0;
+  font-size: .75rem; line-height: 1.4;
+  color: var(--ink-2);
+  text-wrap: pretty;
+  opacity: 0;
+  transition: opacity .2s linear;
+}
+.reel-fine.is-on { opacity: 1; }
 
 /* The foot of the card: the way to this job's case study, and the steps.
    Their 44 px boxes reach a little into the bottom margin, so the link's
@@ -328,9 +399,20 @@ body:has(.reel) .reticle { display: none !important; }
 .reel-case svg { flex: none; transition: transform .35s var(--ease); }
 .reel-case:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
+/* The steps: Pause or Play for the strip, then the previous and next
+   projects. Where the card has no window, the picture's number sits before
+   them. */
 .reel-steps {
   grid-area: steps; justify-self: end; align-self: end;
-  display: flex; margin: 14px -12px -12px 0;
+  display: flex; align-items: center; margin: 14px -12px -12px 0;
+}
+.reel-count {
+  display: none;
+  margin-right: 6px;
+  font-size: .75rem; line-height: 1;
+  font-variant-numeric: lining-nums proportional-nums;
+  color: var(--ink-2);
+  white-space: nowrap;
 }
 .reel-step {
   display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
@@ -351,9 +433,10 @@ body:has(.reel) .reticle { display: none !important; }
 /* ── Narrow and upright: phones, and tablets held upright ──
    The card lies along the bottom. The number and the client share the top
    row, the client's last line on the number's baseline; the window stands at
-   the left under the number, with the kind of work, the place and year, and
-   the caption beside it, the window's top on the kind's capitals and its
-   foot on the caption's last baseline. */
+   the left under the number, with the kind of work, the place and year, the
+   caption and the fine print's room beside it, the window's top on the
+   kind's capitals and its foot on the fine print's last baseline. On a phone
+   the fine print takes the card's full width under the window instead. */
 @media (max-width: 899px) and (min-height: 501px) {
   .reel {
     --t-num: 64px;
@@ -373,12 +456,13 @@ body:has(.reel) .reticle { display: none !important; }
     left: 24px; right: 24px; bottom: max(24px, env(safe-area-inset-bottom));
     width: auto; max-width: 600px;
     grid-template-columns: var(--plate) minmax(0, 1fr) auto;
-    grid-template-rows: auto auto auto 1fr auto;
+    grid-template-rows: auto auto auto 1fr auto auto;
     grid-template-areas:
       "num   client client"
       "plate kind   kind"
       "plate where  where"
       "plate note   note"
+      "plate fine   fine"
       "case  case   steps";
   }
   .reel-number { margin-bottom: 14px; }
@@ -395,9 +479,11 @@ body:has(.reel) .reticle { display: none !important; }
     color: var(--ink-2);
   }
   .reel-line--note { margin-top: 10px; }
+  .reel-fine { margin-top: 10px; }
   .reel-plate {
+    --rebate: 20px;
     margin-top: calc((var(--lh-meta) / 2 - .355) * var(--t-meta));
-    margin-bottom: calc((var(--lh-note) / 2 - .385) * var(--t-note));
+    margin-bottom: calc((1.4 / 2 - .385) * .75rem);
   }
 }
 @media (max-width: 599px) and (min-height: 501px) {
@@ -418,14 +504,26 @@ body:has(.reel) .reticle { display: none !important; }
   .reel-card {
     left: max(10px, env(safe-area-inset-left)); right: max(10px, env(safe-area-inset-right));
     bottom: max(10px, env(safe-area-inset-bottom));
+    grid-template-areas:
+      "num   client client"
+      "plate kind   kind"
+      "plate where  where"
+      "plate note   note"
+      "fine  fine   fine"
+      "case  case   steps";
   }
   .reel-number, .reel-line--client { margin-bottom: 12px; }
   .reel-line--note { margin-top: 8px; }
+  .reel-plate { --rebate: 18px; margin-bottom: calc((var(--lh-note) / 2 - .385) * var(--t-note)); }
+  .reel-fine { margin-top: 12px; }
 }
 /* The narrowest phones: a smaller number and client and a narrower window,
-   so the longest client name still breaks into two lines. */
+   so the longest client name still breaks into two lines, and a smaller
+   link and steps so the foot of the card still holds all four. */
 @media (max-width: 359px) and (min-height: 501px) {
-  .reel { --t-num: 46px; --t-client: 15px; --gutter: 12px; --pad: 14px; --plate: 34%; }
+  .reel { --t-num: 46px; --t-client: 15px; --gutter: 12px; --pad: 14px; --plate: 34%; --t-link: .875rem; }
+  .reel-case { gap: 6px; }
+  .reel-step { width: 40px; }
 }
 /* Anything narrower than 360, upright or not: a shorter line of help, so it
    clears Close. */
@@ -435,12 +533,12 @@ body:has(.reel) .reticle { display: none !important; }
 
 /* ── Short windows: a phone on its side ──
    A strip along the bottom: the number over the caption, the window, then
-   the client over the kind of work and the place and year. The strip takes
-   two fifths of the height, so a frame whose subject would sit behind it
-   takes its short-screen focal point (reelFrames.js `focusShort`). The
-   caption's last two lines share their baselines with the kind of work and
-   the place and year: the row above the last takes up whatever more the
-   caption needs. */
+   the client over the kind of work and the place and year, and the fine
+   print in one line across the foot. The strip takes about two fifths of the
+   height, so a picture whose subject would sit behind it takes its
+   short-screen focal point (reelProjects.js `focusShort`). The caption's
+   last two lines share their baselines with the kind of work and the place
+   and year: the row above takes up whatever more the caption needs. */
 @media (max-height: 500px) {
   .reel {
     --t-num: 46px;
@@ -456,7 +554,8 @@ body:has(.reel) .reticle { display: none !important; }
     --gutter: 16px;
     --plate: .62fr;
   }
-  .reel-img img, .reel-print img { object-position: var(--focus-short, var(--focus, 50% 50%)); }
+  .reel-layer img, .reel-frame-pic img { object-position: var(--focus-short, var(--focus, 50% 50%)); }
+  .reel-layer { transform-origin: var(--focus-short, var(--focus, 50% 50%)); }
   .reel-hint, .reel-close { top: max(8px, env(safe-area-inset-top)); min-height: 40px; }
   .reel-hint { left: max(10px, env(safe-area-inset-left)); padding: 0 12px; }
   .reel-close { right: max(10px, env(safe-area-inset-right)); }
@@ -464,13 +563,16 @@ body:has(.reel) .reticle { display: none !important; }
     left: max(10px, env(safe-area-inset-left)); right: max(10px, env(safe-area-inset-right));
     bottom: max(8px, env(safe-area-inset-bottom));
     width: auto; max-width: 860px;
-    grid-template-rows: auto 1fr auto auto;
+    grid-template-rows: auto 1fr auto auto auto;
     grid-template-areas:
       "num  plate client"
       "note plate kind"
       "note plate where"
-      "case plate steps";
+      "case plate steps"
+      "fine fine  fine";
   }
+  .reel-plate { --rebate: 16px; }
+  .reel-fine { margin-top: 8px; }
   .reel-line--client {
     margin-top: calc(-.185 * var(--t-client) + .73 * var(--t-num) - 1.82 * var(--t-client));
     margin-bottom: 0;
@@ -500,9 +602,11 @@ body:has(.reel) .reticle { display: none !important; }
       "num  client"
       "note kind"
       "note where"
-      "case steps";
+      "case steps"
+      "fine fine";
   }
   .reel-plate { display: none; }
+  .reel-count { display: inline-block; }
 }
 
 /* ── The smallest windows: a phone at 400% zoom, or the smallest phones on
@@ -523,29 +627,37 @@ body:has(.reel) .reticle { display: none !important; }
       "kind   kind"
       "where  where"
       "note   note"
+      "fine   fine"
       "case   steps";
   }
   .reel-plate { display: none; }
+  .reel-count { display: inline-block; }
   .reel-line--client { margin-top: 8px; margin-bottom: 0; }
   .reel-line--kind { align-self: start; margin-top: 8px; }
   .reel-line--where { align-self: start; }
   .reel-line--note { margin-top: 8px; }
+  .reel-fine { margin-top: 8px; }
 }
 
 /* ── Reduced motion ──
-   Nothing drifts, rolls or travels: the frame and the window crossfade in
-   160 ms, each line of words fades to its next value, and the picture sits
-   whole. (.is-still is set from useStaticMode; the media query covers a
-   preference changed mid-visit.) */
+   Nothing drifts, rolls, travels or moves on by itself: a project and the
+   window crossfade in 160 ms, a picture changes only when asked, in a
+   crossfade as quick (LensReel.jsx), each line of words fades to its next
+   value, and the picture sits whole. There's no Pause, since nothing plays.
+   (.is-still is set from useStaticMode; the media query covers a preference
+   changed mid-visit.) */
 .reel.is-still .reel-box { transform: none !important; opacity: 0; visibility: hidden; will-change: auto; transition: opacity .16s linear, visibility 0s linear .16s; }
 .reel.is-still .reel-box.is-current { opacity: 1; visibility: visible; transition: opacity .16s linear; }
-.reel.is-still .reel-img img { transform: none !important; filter: none; will-change: auto; transition: opacity .12s linear; }
+.reel.is-still .reel-drift, .reel.is-still .reel-layer { transform: none !important; will-change: auto; }
+.reel.is-still .reel-layer img { filter: none; transition: opacity .12s linear; }
 .reel.is-still .reel-print { transform: none !important; opacity: 0; will-change: auto; transition: opacity .16s linear; }
 .reel.is-still .reel-print.is-current { opacity: 1; }
+.reel.is-still .reel-strip { will-change: auto; }
+.reel.is-still .reel-frame-time { display: none; }
 .reel.is-still .reel-line-a { transform: none !important; will-change: auto; }
 .reel.is-still .reel-line-b { visibility: hidden; }
 .reel.is-still .reel-of { transform: none !important; will-change: auto; }
 @media (prefers-reduced-motion: reduce) {
-  .reel-img img { filter: none; transition: opacity .12s linear; }
+  .reel-layer img { filter: none; transition: opacity .12s linear; }
   .reel-hint, .reel-case svg, .reel-case:hover svg { transition: none; translate: none; transform: none; }
 }

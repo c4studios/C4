@@ -12,6 +12,8 @@
        --hvn <hvn-website/frontend/public> \
        --sharp "<Sharp Bricklaying/images>" \
        --dsr <dsracingkarts/public> \
+       --aqua <Clients/Aqua> --tidy "<Clients/Tidy Gardens Australia>" \
+       --brady "<Clients/Bradey Electrical>" \
        [--only hvn-film,sharp-aerial-plan]
 
    Where each folder is on Caleb's PC (9 Oct 2026):
@@ -24,8 +26,16 @@
      --sharp     the Sharp Bricklaying site repo's images/ folder. Only the
                  21 to 27 April 2026 media is used, and only files the site's own
                  gallery shows (gallery/index.html), so every still is live there.
+                 The one exception is the Lens reel's breeze-block wall, a hero
+                 photo the client supplied, which is marked as theirs.
      --dsr       the DS Racing Karts site repo's public/ folder (the header
                  film and the Predator chassis clip).
+     --aqua, --tidy, --brady
+                 the Aqua-Safe, Tidy Gardens and Brady Electrical client
+                 folders, for the photos those clients supplied that the Lens
+                 reel shows (src/components/lens/reelProjects.js). A still
+                 the client supplied says so in its EXIF ImageDescription
+                 instead of "C4 Lens", and so does the reel, on screen.
 
    What it writes:
      public/lens-motion/<id>[-desktop|-phone].mp4
@@ -83,12 +93,12 @@ const JOBS = [
   { kind: 'still', id: 'hvn-coach-b', study: 'hvn', name: 'coach-b', root: 'hvn', src: 'Coaches/DSC07557.jpg', widths: [360, 720, 1080], crop: { x: 0.53, aspect: 4 / 5 }, about: 'HVN CrossFit coach portrait, shot 2026. C4 Lens.' },
   { kind: 'still', id: 'hvn-coach-c', study: 'hvn', name: 'coach-c', root: 'hvn', src: 'Coaches/DSC07563.jpg', widths: [360, 720, 1080], crop: { x: 0.52, aspect: 4 / 5 }, about: 'HVN CrossFit coach portrait, shot 2026. C4 Lens.' },
   { kind: 'still', id: 'hvn-coach-d', study: 'hvn', name: 'coach-d', root: 'hvn', src: 'Coaches/DSC09590.jpg', widths: [360, 720, 1080], crop: { x: 0.52, aspect: 4 / 5 }, about: 'HVN CrossFit coach portrait, shot 2026. C4 Lens.' },
-  /* For the Lens reel (src/components/lens/reelFrames.js), 18 Oct 2026: the
+  /* For the Lens reel (src/components/lens/reelProjects.js), 18 Oct 2026: the
      coach-c portrait whole and uncropped, so it can fill a screen. The file is
      byte for byte the master in C4-Internal/c4-social/motion/public/hvn/src. */
   { kind: 'still', id: 'hvn-coach-full', study: 'hvn', name: 'coach-full', root: 'hvn', src: 'Coaches/DSC07563.jpg', widths: [720, 1440, 1819], about: 'HVN CrossFit coach portrait, shot 2026. C4 Lens.' },
 
-  /* Sharp Bricklaying: two films, twelve stills from April 2026, the loader
+  /* Sharp Bricklaying: two films, seven stills from April 2026, the loader
      (cut at 3.1 s, before the site's hero photo, which the client supplied in
      September, comes up behind it).
      The stills are files the site's own gallery shows, so every one is live. */
@@ -107,15 +117,30 @@ const JOBS = [
   { kind: 'still', id: 'sharp-aerial-rhonda', study: 'sharp', name: 'aerial-rhonda', root: 'sharp', src: 'Additional photos for rhonda/WhatsApp Image 2026-04-26 at 11.55.12 PM.jpeg', widths: [480, 960, 1152], about: 'Sharp Bricklaying job on Rhonda Ave, Willetton, from the air, April 2026. C4 Lens.' },
   { kind: 'still', id: 'sharp-aerial-rhonda-close', study: 'sharp', name: 'aerial-rhonda-close', root: 'sharp', src: 'Additional photos for rhonda/WhatsApp Image 2026-04-26 at 11.55.10 PM.jpeg', widths: [480, 960, 1152], about: 'Sharp Bricklaying walls on Rhonda Ave, Willetton, from just above, April 2026. C4 Lens.' },
   { kind: 'still', id: 'sharp-dusk', study: 'sharp', name: 'dusk', root: 'sharp', src: 'number 5/WhatsApp Image 2026-04-26 at 1.44.26 AM.jpeg', widths: [480, 960, 1152], about: 'Sharp Bricklaying block wall at dusk, April 2026. C4 Lens.' },
-  /* Five more for the Lens reel (src/components/lens/reelFrames.js), 18 Oct
-     2026, from the same two jobs and the same April batches as the stills
-     above, and like them shown in the site's gallery: the Rhonda Ave panel
-     (the number 4 and Willeton folders) and the Huon St panel (number 5). */
-  { kind: 'still', id: 'sharp-aerial-granny-flat', study: 'sharp', name: 'aerial-granny-flat', root: 'sharp', src: 'Willeton Double Rendered House with Granny Flat/WhatsApp Image 2026-04-26 at 1.02.15 AM.jpeg', widths: [640, 1280, 1600], about: 'Sharp Bricklaying house and granny flat on Rhonda Ave, Willetton, from the air, April 2026. C4 Lens.' },
-  { kind: 'still', id: 'sharp-walls-ground', study: 'sharp', name: 'walls-ground', root: 'sharp', src: 'Willeton Double Rendered House with Granny Flat/WhatsApp Image 2026-04-26 at 1.02.15 AM (2).jpeg', widths: [480, 960, 1200], about: 'Sharp Bricklaying walls on Rhonda Ave, Willetton, April 2026. C4 Lens.' },
-  { kind: 'still', id: 'sharp-aerial-rear', study: 'sharp', name: 'aerial-rear', root: 'sharp', src: 'number 4/WhatsApp Image 2026-04-26 at 1.41.26 AM (1).jpeg', widths: [640, 1280, 2048], about: 'The back of a Sharp Bricklaying job on Rhonda Ave, Willetton, from the air, April 2026. C4 Lens.' },
-  { kind: 'still', id: 'sharp-rooms-top', study: 'sharp', name: 'rooms-top', root: 'sharp', src: 'number 4/WhatsApp Image 2026-04-26 at 1.41.26 AM.jpeg', widths: [480, 960, 1152], about: 'Sharp Bricklaying rooms on Rhonda Ave, Willetton, from above, April 2026. C4 Lens.' },
-  { kind: 'still', id: 'sharp-rooms-evening', study: 'sharp', name: 'rooms-evening', root: 'sharp', src: 'number 5/WhatsApp Image 2026-04-26 at 1.44.27 AM.jpeg', widths: [640, 1280, 2048], about: 'Inside the walls of a Sharp Bricklaying job on Huon St, Willetton, at dusk, April 2026. C4 Lens.' },
+
+  /* The Lens reel (src/components/lens/reelProjects.js), 18 Oct 2026: the
+     photos the clients supplied that the reel shows beside C4's own, each
+     one marked as the client's in its EXIF and, on screen, in the reel's
+     fine print. The breeze-block wall is one of the hero photos Sharp
+     supplied in September. */
+  { kind: 'still', id: 'sharp-breeze-block', study: 'sharp', name: 'breeze-block', root: 'sharp', src: 'hero/hero-01-carnaval-breeze-block.jpeg', widths: [640, 1440, 2048], about: 'A Sharp Bricklaying breeze-block wall against the sky. Photo supplied by the client.' },
+  { kind: 'still', id: 'hvn-gym-lift', study: 'hvn', name: 'gym-lift', root: 'hvn', src: 'gallery/hvn-space-24.jpg', widths: [640, 1286], about: 'An overhead squat at HVN CrossFit. Photo supplied by the client.' },
+  { kind: 'still', id: 'hvn-gym-team', study: 'hvn', name: 'gym-team', root: 'hvn', src: 'gallery/hvn-space-08.jpg', widths: [640, 1440, 1600], about: 'Four members after a workout at HVN CrossFit. Photo supplied by the client.' },
+  { kind: 'still', id: 'hvn-gym-coach', study: 'hvn', name: 'gym-coach', root: 'hvn', src: 'gallery/hvn-space-13.jpg', widths: [640, 1440, 1600], about: 'A coach with a member at HVN CrossFit. Photo supplied by the client.' },
+  { kind: 'still', id: 'tidy-lawn-before', study: 'tidy', name: 'lawn-before', root: 'tidy', src: 'Lawn before.jpeg', widths: [640, 1440, 1920], about: 'A Tidy Gardens backyard dug over before the new lawn. Photo supplied by the client.' },
+  { kind: 'still', id: 'tidy-lawn-during', study: 'tidy', name: 'lawn-during', root: 'tidy', src: 'Lawn during 1.jpeg', widths: [640, 1440, 1920], about: 'A Tidy Gardens mini loader levelling a backyard. Photo supplied by the client.' },
+  { kind: 'still', id: 'tidy-lawn-after', study: 'tidy', name: 'lawn-after', root: 'tidy', src: 'Lawn After.jpeg', widths: [640, 1440, 1920], about: 'A Tidy Gardens backyard with its new lawn. Photo supplied by the client.' },
+  { kind: 'still', id: 'tidy-site-manager', study: 'tidy', name: 'site-manager', root: 'tidy', src: 'Site manager.jpeg', widths: [640, 1440, 1920], about: 'A dog on a stump at a Tidy Gardens job. Photo supplied by the client.' },
+  { kind: 'still', id: 'aqua-fleet', study: 'aquasafe', name: 'fleet', root: 'aqua', src: 'public/brand/hero-fleet.jpg', widths: [640, 1440, 1672], about: 'Aqua-Safe Plumbing vans parked by the sea. Photo supplied by the client.' },
+  { kind: 'still', id: 'aqua-bathroom', study: 'aquasafe', name: 'bathroom', root: 'aqua', src: 'bathroom renovation/IMG_4507.jpeg', widths: [640, 1440, 1920], about: 'A bathroom Aqua-Safe Plumbing renovated. Photo supplied by the client.' },
+  { kind: 'still', id: 'aqua-gas', study: 'aquasafe', name: 'gas', root: 'aqua', src: 'gas fitting/IMG_1306.jpeg', widths: [640, 1440, 1920], about: 'A gas burner lit after an Aqua-Safe gas fit. Photo supplied by the client.' },
+  { kind: 'still', id: 'dsr-kart-333', study: 'dsr', name: 'kart-333', root: 'dsr', src: 'images/history/header 4.jpg', widths: [640, 1440, 1920], about: 'A driver in kart 333 in the pits. Photo supplied by the client, DS Racing Karts.' },
+  { kind: 'still', id: 'dsr-kart-blur', study: 'dsr', name: 'kart-blur', root: 'dsr', src: 'images/history/new-history.jpeg', widths: [640, 1440, 1600], about: 'A kart at speed, the tyre wall blurred behind it. Photo supplied by the client, DS Racing Karts.' },
+  { kind: 'still', id: 'dsr-car-49', study: 'dsr', name: 'car-49', root: 'dsr', src: 'WhatsApp Image 2026-05-18 at 3.43.35 AM.jpeg', widths: [640, 1440, 1600], about: 'Car 49 through a corner. Photo supplied by the client, DS Racing Karts.' },
+  { kind: 'still', id: 'brady-conveyor', study: 'brady', name: 'conveyor', root: 'brady', src: 'public/images/home-hero-bg.jpg', widths: [640, 1440, 1900], about: 'A conveyor stacker on a Brady Electrical job. Photo supplied by the client.' },
+  { kind: 'still', id: 'brady-underground', study: 'brady', name: 'underground', root: 'brady', src: 'public/images/work-underground.jpg', widths: [640, 1350], about: 'A switchboard lit up underground, a Brady Electrical job. Photo supplied by the client.' },
+  { kind: 'still', id: 'brady-workshop', study: 'brady', name: 'workshop', root: 'brady', src: 'OneDrive_2026-07-23/new webpage photos july 2026/new format photos/20240430_081941388_iOS.jpg', widths: [640, 1440, 1920], about: 'Red machinery in a workshop, a Brady Electrical job. Photo supplied by the client.' },
+  { kind: 'still', id: 'brady-platform', study: 'brady', name: 'platform', root: 'brady', src: 'OneDrive_2026-07-23/new webpage photos july 2026/new format photos/20240103_020101665_iOS.jpg', widths: [640, 1440, 1920], about: 'An electrician on a steel platform, a Brady Electrical job. Photo supplied by the client.' },
 
   /* DS Racing Karts: the header film, the chassis clip, the game, the tachometer. */
   { id: 'dsr-header', root: 'dsr', src: 'videos/Site Header.mp4', poster: 6.4, crf: 30, tune: 'film',
@@ -294,7 +319,7 @@ for (let i = 0; i < args.length; i += 2) {
   const value = args[i + 1];
   if (!value) { console.error(`Missing value for ${args[i]}`); process.exit(1); }
   if (key === 'only') { only = new Set(value.split(',')); continue; }
-  if (!['captures', 'hvn', 'sharp', 'dsr'].includes(key)) { console.error(`Unknown flag ${args[i]}. Flags: --captures --hvn --sharp --dsr --only`); process.exit(1); }
+  if (!['captures', 'hvn', 'sharp', 'dsr', 'aqua', 'tidy', 'brady'].includes(key)) { console.error(`Unknown flag ${args[i]}. Flags: --captures --hvn --sharp --dsr --aqua --tidy --brady --only`); process.exit(1); }
   if (!fs.existsSync(value)) { console.error(`No such folder: ${value}`); process.exit(1); }
   roots[key] = value;
 }
