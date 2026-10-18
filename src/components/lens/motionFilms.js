@@ -27,7 +27,7 @@ export const MOTION_FILMS = [
     client: 'Aqua-Safe Plumbing & Maintenance',
     short: 'Aqua-Safe',
     kind: 'Promo film',
-    place: 'Perth',
+    place: 'Perth, WA',
     duration: 59.669,
     posterTime: 4,
     /* Widescreen from 768px, the phone cut below it. The poster, the strip and
@@ -100,7 +100,7 @@ export const MOTION_FILMS = [
     client: 'DS Racing Karts',
     short: 'DS Racing Karts',
     kind: 'Portfolio reel',
-    place: 'Sydney',
+    place: 'Sydney, NSW',
     duration: 39.3,
     posterTime: 100 / 30,
     cuts: [

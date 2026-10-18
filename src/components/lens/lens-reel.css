@@ -12,36 +12,29 @@
    height inside its margin; as the reel moves, the picture in the window
    slides up and the next comes in under it.
 
-   Two finished type settings, picked by data-card on the dialog:
-   A, "a wall label, set by an architecture studio": Mona Sans (GitHub, SIL
-     OFL: public/fonts/MonaSans-OFL.txt; @fontsource-variable/mona-sans 5.3.0,
-     the latin file with the width axis). The plate number expanded (wdth 125)
-     at weight 200 and very large; the client expanded at weight 400; the
-     details at wdth 95, weight 400, 15 px. The number keeps the tabular
-     figures' pitch, each figure in a window one tabular zero wide, so one
-     that stays the same between two frames stays still, like a counter's
-     wheel. The figures drawn in those windows are the face's plain ones: its
-     tabular set has a slashed zero and a slab-footed one, which read as code
-     beside the round figures. Every figure on the card is from that one set.
-   B, "the plate page": Petrona (The Petrona Project Authors, SIL OFL:
-     public/fonts/Petrona-OFL.txt; @fontsource/petrona 5.3.0), 200 for the
-     figures (tabular lining), 500 for the client, 400 for the words.
-   Only the variant on screen loads its files, and only once the reel opens.
+   The type is "a wall label, set by an architecture studio" (Caleb chose it,
+   18 Oct 2026): Mona Sans (GitHub, SIL OFL: public/fonts/MonaSans-OFL.txt;
+   @fontsource-variable/mona-sans 5.3.0, the latin file with the width axis).
+   The plate number expanded (wdth 125) at weight 200 and very large; the
+   client expanded at weight 400; the details at wdth 95, weight 400, 15 px.
+   The number is set as type, in the face's plain proportional figures with
+   its own kerning, so 01, 10 and 11 read as numbers: LensReel.jsx measures
+   the figures once the face has loaded and puts each in a box of its own at
+   the place set type would put it, and only a figure that changes rolls. The
+   count beside the number slides as the number's width changes. The face's
+   tabular figures were tried first: their zero is slashed and their one has
+   a slab foot, which read as code beside the round figures.
+   The face's file loads only once the reel opens.
 
-   The grids are set from each face's own measurements, taken in Chrome on
-   18 Oct 2026. Per em: Petrona ascent .86, descent .27, figures and capitals
-   .65; Mona Sans ascent 1.09, descent .32, figures .73, capitals .74. So a
-   line box of height L puts its capitals' tops L/2 - .355 below its top in
-   both faces, and its baseline L/2 + .295 (Petrona) or L/2 + .385 (Mona Sans)
-   below it.
-   - In both, the number's figures and the window share a top line, and so
-     does a client set on two lines (a one-line client sits lower, below).
-   - B: a client set on two lines fills exactly the number's height, its last
-     line on the number's baseline (the client is .3757 of the number:
-     .65 / 1.73); a one-line client sits on that baseline.
-   - A: the client's last line sits on the line above the kind of work, and
-     the kind of work's baseline is the number's baseline; place and year
-     follow under it.
+   The grid is set from the face's own measurements, taken in Chrome on
+   18 Oct 2026. Per em: ascent 1.09, descent .32, figures .73, capitals .74.
+   So a line box of height L puts its capitals' tops L/2 - .355 below its top
+   and its baseline L/2 + .385 below it.
+   - The number's figures and the window share a top line, and so does a
+     client set on two lines (a one-line client sits lower, below).
+   - The client's last line sits on the line above the kind of work, and the
+     kind of work's baseline is the number's baseline; place and year follow
+     under it.
    A reader's own text spacing, or a large zoom, can make any line longer than
    its window; the windows then grow with their words, so nothing is cut off.
 
@@ -60,31 +53,11 @@
   src: url(/fonts/mona-sans-latin-wdth.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-@font-face {
-  font-family: 'Petrona';
-  font-style: normal;
-  font-weight: 200;
-  font-display: block;
-  src: url(/fonts/petrona-latin-200.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Petrona';
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url(/fonts/petrona-latin-400.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Petrona';
-  font-style: normal;
-  font-weight: 500;
-  font-display: block;
-  src: url(/fonts/petrona-latin-500.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
 
+/* The words are sized in rem, so a reader's larger default text size carries
+   into the card; the number and the client are display sizes. If the face
+   fails to load, the card falls back to the face the page itself is set in
+   (Geist, lens.css). */
 .reel {
   --paper: #ffffff;
   --ink: #111111;
@@ -92,23 +65,6 @@
   --pressed: rgba(17, 17, 17, .08);
   --ease: cubic-bezier(.22, 1, .36, 1);
   --c4-focus: var(--ink);
-
-  position: fixed; inset: 0; z-index: 900;
-  overflow: hidden;
-  background: #000; color: var(--ink);
-  font-variant-numeric: lining-nums;
-  font-kerning: normal;
-  -webkit-font-smoothing: antialiased;
-  overscroll-behavior: contain;
-  touch-action: pinch-zoom;
-  user-select: none; -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-/* The words are sized in rem, so a reader's larger default text size carries
-   into the card; the number and the client are display sizes. If a face
-   fails to load, the card falls back to the face the page itself is set in
-   (Geist, lens.css), or to Georgia. */
-.reel[data-card='a'] {
   --face: 'Mona Sans', 'Geist', 'Helvetica Neue', Helvetica, sans-serif;
   /* The scale: the number, the client, the details. */
   --t-num: clamp(72px, 7.8vw, 120px);
@@ -124,24 +80,18 @@
   --pad: clamp(24px, 2.2vw, 34px);
   --gutter: var(--pad);
   --plate: 1fr;
+
+  position: fixed; inset: 0; z-index: 900;
+  overflow: hidden;
+  background: #000; color: var(--ink);
   font-family: var(--face); font-stretch: 95%; font-weight: 400;
-}
-.reel[data-card='b'] {
-  --face: 'Petrona', Georgia, serif;
-  --t-num: clamp(60px, 5.8vw, 88px);
-  --t-client: calc(var(--t-num) * .3757);
-  --t-text: 1rem;
-  --t-meta: 1rem;
-  --t-note: clamp(1rem, 1.2vw, 1.125rem);
-  --t-link: 1rem;
-  --lh-client: 1.08;
-  --lh-meta: 1.42;
-  --lh-note: 1.38;
-  --note-lines: 3;
-  --pad: clamp(22px, 2vw, 30px);
-  --gutter: var(--pad);
-  --plate: 1fr;
-  font-family: var(--face); font-weight: 400;
+  font-variant-numeric: lining-nums;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: contain;
+  touch-action: pinch-zoom;
+  user-select: none; -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 /* The dialog itself takes focus on open so the keys work at once; the
    controls inside carry the visible rings. */
@@ -162,7 +112,7 @@ body:has(.reel) .reticle { display: none !important; }
    Each one is the whole screen. The loop moves it a screen's height per
    frame; the picture inside drifts against it and is drawn in a little while
    it travels, so it covers its frame all the way, and sits still and exactly
-   cropped once it lands. Until its file arrives the frame shows its tone. */
+   cropped once it lands. Until its file arrives the frame shows its grey. */
 .reel-stage { position: absolute; inset: 0; }
 .reel-box {
   position: absolute; inset: 0;
@@ -213,12 +163,11 @@ body:has(.reel) .reticle { display: none !important; }
 .reel-close {
   right: max(16px, env(safe-area-inset-right));
   padding: 0 14px 0 16px;
-  font-weight: 500;
+  font-weight: 500; font-stretch: 95%;
   border: 0; border-radius: 0;
   cursor: pointer;
   transition: background-color .2s ease, color .2s ease;
 }
-.reel[data-card='a'] .reel-close { font-stretch: 95%; }
 .reel-close svg { flex: none; }
 .reel-close:focus-visible { outline: 2px solid var(--ink); outline-offset: 0; box-shadow: 0 0 0 4px var(--paper); }
 .reel-close:active { background-image: linear-gradient(var(--pressed), var(--pressed)); }
@@ -226,11 +175,10 @@ body:has(.reel) .reticle { display: none !important; }
 /* ── The card ──
    Centred across, and a fixed margin above the foot of the screen, so the
    top half and more of every frame stays clear of it: each frame's subject
-   (a face, a logo, the film's words) was chosen to sit up there. Three equal
-   columns, so the window is a third of the card inside its margin. At 80% of
-   the screen's width the right-hand third holds the longest client name in
-   two lines ("Aqua-Safe Plumbing", then "& Maintenance") down to 900 px,
-   where the narrow layout takes over. */
+   was chosen to sit up there. Three equal columns, so the window is a third
+   of the card inside its margin. At 80% of the screen's width the right-hand
+   third holds the longest client name in two lines down to 900 px, where the
+   narrow layout takes over. */
 .reel-card {
   position: absolute; z-index: 3;
   left: 0; right: 0; bottom: max(clamp(20px, 5vh, 56px), env(safe-area-inset-bottom));
@@ -238,14 +186,6 @@ body:has(.reel) .reticle { display: none !important; }
   margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, var(--plate)) minmax(0, 1fr);
-  column-gap: var(--gutter);
-  padding: var(--pad);
-  background: var(--paper); color: var(--ink);
-  border-radius: 0;
-  /* Paper lifted off the photo by a hair: a close shadow, no glow. */
-  box-shadow: 0 1px 1px rgba(0, 0, 0, .18), 0 10px 24px -16px rgba(0, 0, 0, .48);
-}
-.reel[data-card='a'] .reel-card {
   grid-template-rows: auto auto auto auto 1fr auto;
   grid-template-areas:
     "num  plate client"
@@ -254,15 +194,12 @@ body:has(.reel) .reticle { display: none !important; }
     "note plate year"
     "note plate ."
     "case plate steps";
-}
-.reel[data-card='b'] .reel-card {
-  grid-template-rows: auto auto auto 1fr auto;
-  grid-template-areas:
-    "num  plate client"
-    "kind plate place"
-    "note plate year"
-    "note plate ."
-    "case plate steps";
+  column-gap: var(--gutter);
+  padding: var(--pad);
+  background: var(--paper); color: var(--ink);
+  border-radius: 0;
+  /* Paper lifted off the photo by a hair: a close shadow, no glow. */
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .18), 0 10px 24px -16px rgba(0, 0, 0, .48);
 }
 
 /* A line on the card: a window with this frame's value in it and the next
@@ -286,82 +223,55 @@ body:has(.reel) .reticle { display: none !important; }
 .reel-line--note .reel-line-a, .reel-line--note .reel-line-b {
   display: flex; flex-direction: column; justify-content: flex-end;
 }
-/* Mona Sans's descenders reach .18 em below the baseline, past the client's
-   1.08 line, so the client's window lets them hang below it. */
-.reel-line--client { clip-path: inset(-.3em -.1em); }
 /* The place and year on one line: the phone layouts only. */
 .reel-line--where { display: none; }
 
-/* The plate number, its figures' tops on the card's top margin. Each figure
-   has a window of its own, one tabular zero wide (the hidden '0' sizes it),
-   so a figure that stays the same between two frames stays still while its
-   neighbour turns. Each figure is centred both ways in its window, so a
-   reader's own line height can't push it out of the window. */
+/* The plate number, its figures' tops on the card's top margin and a zero's
+   left edge on the column's (it starts .031 em in). The figures' box is as
+   wide as the number set as type (LensReel.jsx sets it); each figure sits in
+   a box of its own inside it, centred on the line so a reader's own line
+   height can't push it out, and the window clips only above and below. */
 .reel-number {
   grid-area: num; align-self: start;
-  margin: 0;
-  font-size: var(--t-num); font-weight: 200;
+  position: relative;
+  margin: calc(-.08 * var(--t-num)) 0 0 -.031em;
+  font-size: var(--t-num); font-weight: 200; font-stretch: 125%;
+  line-height: .85;
+  font-variant-numeric: lining-nums proportional-nums;
   white-space: nowrap;
 }
-.reel-number .reel-line { display: inline-block; vertical-align: top; }
-.reel-number .reel-line::before { content: '0'; visibility: hidden; }
+.reel-figures { position: relative; display: inline-block; vertical-align: top; width: 1.44em; height: .85em; }
+.reel-number .reel-line { position: absolute; inset: 0; display: block; clip-path: inset(0 -1em); }
 .reel-number .reel-line-a, .reel-number .reel-line-b {
-  position: absolute; inset: 0;
-  display: flex; justify-content: center; align-items: center;
+  position: absolute; top: 0; left: 0; height: 100%;
+  display: flex; align-items: center;
 }
 .reel-number .reel-line-b { opacity: 1; transform: translate3d(0, 101%, 0); }
+.reel-measure { position: absolute; left: 0; top: 0; visibility: hidden; white-space: nowrap; }
+/* The count stands .32 of the number's size clear of it. The widest step from
+   one number to the next (01 to 02, 11 to 12) is .31 em, so a wider figure
+   rolling in never reaches the count while the count slides along. */
 .reel-of {
-  font-size: var(--t-text); font-weight: 400; letter-spacing: 0;
+  display: inline-block; margin-left: calc(.32 * var(--t-num));
+  font-size: var(--t-text); font-weight: 400; font-stretch: 95%; letter-spacing: 0;
   color: var(--ink-2);
+  will-change: transform;
 }
-/* A: the windows have the tabular pitch (.72 em) and the figures in them
-   are the plain, proportional ones, centred: the round zero is .734 em, a
-   hair wider than its window, and flex centring lets it overhang evenly (the
-   window's clip lets it). The number starts .024 em back, which puts a
-   zero's left edge on the column's; the count beside it is set in the same
-   plain figures. */
-.reel[data-card='a'] .reel-number {
-  margin-top: calc(-.08 * var(--t-num));
-  margin-left: -.024em;
-  line-height: .85;
-  font-stretch: 125%;
-  font-variant-numeric: lining-nums tabular-nums;
-}
-.reel[data-card='a'] .reel-number .reel-line { height: .85em; clip-path: inset(0 -.05em); }
-.reel[data-card='a'] .reel-number .reel-line-a,
-.reel[data-card='a'] .reel-number .reel-line-b,
-.reel[data-card='a'] .reel-of { font-variant-numeric: lining-nums proportional-nums; }
-.reel[data-card='a'] .reel-of { margin-left: .5em; font-stretch: 95%; }
-.reel[data-card='b'] .reel-number {
-  margin-top: calc(-.045 * var(--t-num));
-  line-height: .8;
-  letter-spacing: -.01em;
-  font-variant-numeric: lining-nums tabular-nums;
-}
-.reel[data-card='b'] .reel-number .reel-line { height: .8em; }
-.reel[data-card='b'] .reel-of { margin-left: .3em; }
 
-/* Who it was for: its capitals on the top line, set in a window two lines
-   tall that it sits at the foot of. */
+/* Who it was for: expanded, its capitals on the top line, set in a window two
+   lines tall that it sits at the foot of; the line under it is the kind of
+   work, whose baseline is the number's. Mona Sans's descenders reach .18 em
+   below the baseline, past the 1.08 line, so the window lets them hang. */
 .reel-line--client {
   grid-area: client; align-self: start;
   min-height: calc(2 * var(--lh-client) * 1em);
-  font-size: var(--t-client); line-height: var(--lh-client);
-  text-wrap: balance;
-}
-/* A: expanded, and the line under it is the kind of work, whose baseline is
-   the number's. */
-.reel[data-card='a'] .reel-line--client {
   margin-top: calc(-.185 * var(--t-client));
   margin-bottom: calc(.73 * var(--t-num) - 1.975 * var(--t-client) - (var(--lh-meta) / 2 + .385) * var(--t-meta));
+  font-size: var(--t-client); line-height: var(--lh-client);
   font-stretch: 125%; font-weight: 400;
   letter-spacing: -.005em;
-}
-/* B: two lines fill the number's height; one line sits on its baseline. */
-.reel[data-card='b'] .reel-line--client {
-  margin-top: calc(-.185 * var(--t-client));
-  font-weight: 500;
-  letter-spacing: -.012em;
+  text-wrap: balance;
+  clip-path: inset(-.3em -.1em);
 }
 
 .reel-line--kind, .reel-line--place, .reel-line--year {
@@ -370,10 +280,7 @@ body:has(.reel) .reticle { display: none !important; }
 }
 .reel-line--kind { grid-area: kind; }
 .reel-line--place { grid-area: place; color: var(--ink-2); }
-.reel-line--year { grid-area: year; color: var(--ink-2); font-variant-numeric: lining-nums tabular-nums; }
-.reel[data-card='a'] .reel-line--year { font-variant-numeric: lining-nums proportional-nums; }
-.reel[data-card='b'] .reel-line--kind,
-.reel[data-card='b'] .reel-line--place { margin-top: calc(.105 * var(--t-num) * -1 + 18px); }
+.reel-line--year { grid-area: year; color: var(--ink-2); }
 
 /* What it is and what it was made for: the one sentence on the card. */
 .reel-line--note {
@@ -418,7 +325,6 @@ body:has(.reel) .reticle { display: none !important; }
   white-space: nowrap;
   transition: text-decoration-thickness .15s ease;
 }
-.reel[data-card='b'] .reel-case { font-weight: 500; }
 .reel-case svg { flex: none; transition: transform .35s var(--ease); }
 .reel-case:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
@@ -444,27 +350,29 @@ body:has(.reel) .reticle { display: none !important; }
 
 /* ── Narrow and upright: phones, and tablets held upright ──
    The card lies along the bottom. The number and the client share the top
-   row; the window stands at the left under the number, with the kind of work,
-   the place and year, and the caption beside it. */
+   row, the client's last line on the number's baseline; the window stands at
+   the left under the number, with the kind of work, the place and year, and
+   the caption beside it, the window's top on the kind's capitals and its
+   foot on the caption's last baseline. */
 @media (max-width: 899px) and (min-height: 501px) {
-  .reel[data-card] {
+  .reel {
+    --t-num: 64px;
+    --t-client: 20px;
     --t-text: .9375rem;
     --t-meta: .9375rem;
-    --lh-meta: 1.35;
+    --t-note: .9375rem;
     --t-link: .9375rem;
+    --lh-meta: 1.35;
+    --lh-note: 1.42;
     --note-lines: 3;
     --pad: 24px;
     --gutter: 18px;
     --plate: 38%;
   }
-  .reel[data-card='a'] { --t-num: 64px; --t-client: 20px; --t-note: .9375rem; --lh-note: 1.42; }
-  .reel[data-card='b'] { --t-num: 64px; --t-note: 1rem; --lh-note: 1.42; }
   .reel-card {
     left: 24px; right: 24px; bottom: max(24px, env(safe-area-inset-bottom));
     width: auto; max-width: 600px;
     grid-template-columns: var(--plate) minmax(0, 1fr) auto;
-  }
-  .reel[data-card] .reel-card {
     grid-template-rows: auto auto auto 1fr auto;
     grid-template-areas:
       "num   client client"
@@ -473,15 +381,13 @@ body:has(.reel) .reticle { display: none !important; }
       "plate note   note"
       "case  case   steps";
   }
-  .reel[data-card] .reel-number, .reel[data-card] .reel-line--client { margin-bottom: 14px; }
-  /* A: the client's last line on the number's baseline. */
-  .reel[data-card='a'] .reel-line--client {
+  .reel-number { margin-bottom: 14px; }
+  .reel-line--client {
     margin-top: calc(-.185 * var(--t-client) + .73 * var(--t-num) - 1.82 * var(--t-client));
+    margin-bottom: 14px;
     font-weight: 450;
   }
-  /* The kind of work, and under it the place and year on one line. */
   .reel-line--place, .reel-line--year { display: none; }
-  .reel[data-card] .reel-line--kind { margin-top: 0; }
   .reel-line--where {
     display: grid; grid-area: where;
     min-height: calc(var(--lh-meta) * 1em);
@@ -489,23 +395,23 @@ body:has(.reel) .reticle { display: none !important; }
     color: var(--ink-2);
   }
   .reel-line--note { margin-top: 10px; }
-  /* The window's top on the kind of work's capitals, and its foot on the
-     caption's last baseline. */
-  .reel-plate { margin-top: calc((var(--lh-meta) / 2 - .355) * var(--t-meta)); }
-  .reel[data-card='a'] .reel-plate { margin-bottom: calc((var(--lh-note) / 2 - .385) * var(--t-note)); }
-  .reel[data-card='b'] .reel-plate { margin-bottom: calc((var(--lh-note) / 2 - .295) * var(--t-note)); }
+  .reel-plate {
+    margin-top: calc((var(--lh-meta) / 2 - .355) * var(--t-meta));
+    margin-bottom: calc((var(--lh-note) / 2 - .385) * var(--t-note));
+  }
 }
 @media (max-width: 599px) and (min-height: 501px) {
-  .reel[data-card] {
+  .reel {
+    --t-num: 52px;
+    --t-client: 16px;
     --t-text: .875rem;
     --t-meta: .875rem;
+    --t-note: .875rem;
     --t-link: .9375rem;
     --note-lines: 4;
     --pad: 16px;
     --gutter: 14px;
   }
-  .reel[data-card='a'] { --t-num: 52px; --t-client: 16px; --t-note: .875rem; --lh-note: 1.42; }
-  .reel[data-card='b'] { --t-num: 50px; --t-note: .9375rem; --lh-note: 1.4; }
   .reel-hint, .reel-close { top: max(10px, env(safe-area-inset-top)); }
   .reel-hint { left: max(10px, env(safe-area-inset-left)); padding: 0 14px; }
   .reel-close { right: max(10px, env(safe-area-inset-right)); }
@@ -513,16 +419,13 @@ body:has(.reel) .reticle { display: none !important; }
     left: max(10px, env(safe-area-inset-left)); right: max(10px, env(safe-area-inset-right));
     bottom: max(10px, env(safe-area-inset-bottom));
   }
-  .reel[data-card] .reel-number, .reel[data-card] .reel-line--client { margin-bottom: 12px; }
+  .reel-number, .reel-line--client { margin-bottom: 12px; }
   .reel-line--note { margin-top: 8px; }
 }
-/* The narrowest phones: a smaller number, so the longest client name still
-   breaks into two lines (in A, a narrower window too, since its client is
-   set wide). */
+/* The narrowest phones: a smaller number and client and a narrower window,
+   so the longest client name still breaks into two lines. */
 @media (max-width: 359px) and (min-height: 501px) {
-  .reel[data-card] { --gutter: 12px; --pad: 14px; }
-  .reel[data-card='a'] { --t-num: 46px; --t-client: 15px; --plate: 34%; }
-  .reel[data-card='b'] { --t-num: 44px; }
+  .reel { --t-num: 46px; --t-client: 15px; --gutter: 12px; --pad: 14px; --plate: 34%; }
 }
 /* Anything narrower than 360, upright or not: a shorter line of help, so it
    clears Close. */
@@ -533,10 +436,15 @@ body:has(.reel) .reticle { display: none !important; }
 /* ── Short windows: a phone on its side ──
    A strip along the bottom: the number over the caption, the window, then
    the client over the kind of work and the place and year. The strip takes
-   two fifths of the height, so a film frame whose words would sit behind it
-   takes its short-screen focal point (reelFrames.js `focusShort`). */
+   two fifths of the height, so a frame whose subject would sit behind it
+   takes its short-screen focal point (reelFrames.js `focusShort`). The
+   caption's last two lines share their baselines with the kind of work and
+   the place and year: the row above the last takes up whatever more the
+   caption needs. */
 @media (max-height: 500px) {
-  .reel[data-card] {
+  .reel {
+    --t-num: 46px;
+    --t-client: 17px;
     --t-text: .875rem;
     --t-meta: .875rem;
     --lh-meta: 1.38;
@@ -549,8 +457,6 @@ body:has(.reel) .reticle { display: none !important; }
     --plate: .62fr;
   }
   .reel-img img, .reel-print img { object-position: var(--focus-short, var(--focus, 50% 50%)); }
-  .reel[data-card='a'] { --t-num: 46px; --t-client: 17px; }
-  .reel[data-card='b'] { --t-num: 46px; }
   .reel-hint, .reel-close { top: max(8px, env(safe-area-inset-top)); min-height: 40px; }
   .reel-hint { left: max(10px, env(safe-area-inset-left)); padding: 0 12px; }
   .reel-close { right: max(10px, env(safe-area-inset-right)); }
@@ -558,11 +464,6 @@ body:has(.reel) .reticle { display: none !important; }
     left: max(10px, env(safe-area-inset-left)); right: max(10px, env(safe-area-inset-right));
     bottom: max(8px, env(safe-area-inset-bottom));
     width: auto; max-width: 860px;
-  }
-  /* The caption's last two lines share their baselines with the kind of work
-     and the place and year: the row above the last takes up whatever more
-     the caption needs. */
-  .reel[data-card] .reel-card {
     grid-template-rows: auto 1fr auto auto;
     grid-template-areas:
       "num  plate client"
@@ -570,14 +471,13 @@ body:has(.reel) .reticle { display: none !important; }
       "note plate where"
       "case plate steps";
   }
-  /* A: the client's last line on the number's baseline. */
-  .reel[data-card='a'] .reel-line--client {
+  .reel-line--client {
     margin-top: calc(-.185 * var(--t-client) + .73 * var(--t-num) - 1.82 * var(--t-client));
     margin-bottom: 0;
     font-weight: 450;
   }
   .reel-line--place, .reel-line--year { display: none; }
-  .reel[data-card] .reel-line--kind { align-self: end; margin-top: 10px; }
+  .reel-line--kind { align-self: end; margin-top: 10px; }
   .reel-line--where {
     display: grid; grid-area: where; align-self: end;
     min-height: calc(var(--lh-meta) * 1em);
@@ -591,10 +491,10 @@ body:has(.reel) .reticle { display: none !important; }
 }
 /* The narrowest phones on their side (560 to 735 wide): three columns would
    leave the longest caption three lines and the strip tall enough to cover a
-   film's words, so the window steps aside (it repeats the picture behind it)
-   and the words take two columns, the caption's the wider. */
+   frame's subject, so the window steps aside (it repeats the picture behind
+   it) and the words take two columns, the caption's the wider. */
 @media (max-height: 500px) and (max-width: 735px) {
-  .reel[data-card] .reel-card {
+  .reel-card {
     grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
     grid-template-areas:
       "num  client"
@@ -612,7 +512,7 @@ body:has(.reel) .reticle { display: none !important; }
    on it scrolls its words first (LensReel.jsx) and moves the reel once they
    reach their end. */
 @media (max-height: 300px), (max-height: 500px) and (max-width: 559px) {
-  .reel[data-card] .reel-card {
+  .reel-card {
     max-height: calc(100% - 56px - max(8px, env(safe-area-inset-bottom)) - env(safe-area-inset-top));
     overflow-y: auto; overscroll-behavior: contain;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -626,8 +526,8 @@ body:has(.reel) .reticle { display: none !important; }
       "case   steps";
   }
   .reel-plate { display: none; }
-  .reel[data-card] .reel-line--client { margin-top: 8px; margin-bottom: 0; }
-  .reel[data-card] .reel-line--kind { align-self: start; margin-top: 8px; }
+  .reel-line--client { margin-top: 8px; margin-bottom: 0; }
+  .reel-line--kind { align-self: start; margin-top: 8px; }
   .reel-line--where { align-self: start; }
   .reel-line--note { margin-top: 8px; }
 }
@@ -644,6 +544,7 @@ body:has(.reel) .reticle { display: none !important; }
 .reel.is-still .reel-print.is-current { opacity: 1; }
 .reel.is-still .reel-line-a { transform: none !important; will-change: auto; }
 .reel.is-still .reel-line-b { visibility: hidden; }
+.reel.is-still .reel-of { transform: none !important; will-change: auto; }
 @media (prefers-reduced-motion: reduce) {
   .reel-img img { filter: none; transition: opacity .12s linear; }
   .reel-hint, .reel-case svg, .reel-case:hover svg { transition: none; translate: none; transform: none; }

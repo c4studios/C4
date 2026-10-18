@@ -12,20 +12,24 @@
  * load only when that button is pressed.
  *
  * The card. Pure white with black ink, laid over the frame in its lower part
- * and in the same place on every frame: the plate number, the kind of work
- * and the caption on the left, a window onto the picture in the middle, and
- * who it was for, where and when on the right. It comes in two finished type
- * settings so Caleb can choose; `data-card` on the dialog picks one, and
- * ?card=b in the address previews B.
- *   A, "a wall label, set by an architecture studio": Mona Sans, the client
- *     expanded, the plate number expanded and very light.
- *   B, "the plate page": Petrona, the client locked to the number's height.
- * Either way, as frames pass the card changes in step with them, and a line
- * whose value doesn't change holds still, the way a counter turns only the
- * wheels that move: the plate number's figures roll like a counter's wheels,
- * the words that change fade across, and the client's name and the caption
- * stay put through Sharp's four frames and change when the reel reaches HVN.
- * lens-reel.css has the grids and how they're measured.
+ * and in the same place on every frame: the plate number and the caption on
+ * the left, a window onto the picture in the middle, and who it was for, the
+ * kind of work, where and when on the right. Set as "a wall label, set by an
+ * architecture studio" in Mona Sans, the client expanded, the plate number
+ * expanded and very light (Caleb chose it over a Petrona setting, 18 Oct
+ * 2026: "go A"). As frames pass the card changes in step with them, and a
+ * line whose value doesn't change holds still, the way a counter turns only
+ * the wheels that move: the plate number's figures roll like a counter's
+ * wheels, the words that change fade across, and the client's name stays put
+ * while the reel is inside one job. lens-reel.css has the grid and how it's
+ * measured.
+ *
+ * The number is set as type: the face's proportional figures with its own
+ * kerning, so 01, 10 and 11 read as numbers, not spaced letters. Each figure
+ * has a box of its own, placed where set type would put it (measured from
+ * the face once its file has loaded), so during a roll only the figure that
+ * changes moves, and the count beside the number slides as its width
+ * changes.
  *
  * Mechanics, from the reference (the "argent loop" slider): a virtualised,
  * endless column of full-screen frames moved by lerped wheel, drag and keys,
@@ -90,16 +94,18 @@ let resumeAt = 0;
    year each in its own window, so a place holds while only the year
    changes; a phone, upright or on its side, has the kind over the place and
    year run together on one line, so the kind can change while the place
-   holds. */
+   holds. A frame's own place, where it has one, is narrower than its
+   study's (reelFrames.js). */
+const placeOf = (f) => f.place || f.study.place;
 const LINES = {
   tens: (f, k) => pad(k + 1)[0],
   units: (f, k) => pad(k + 1)[1],
   kind: (f) => f.kind,
   note: (f) => f.note,
   client: (f) => f.study.client,
-  place: (f) => f.study.place,
+  place: placeOf,
   year: (f) => f.year || '',
-  where: (f) => run([f.study.place, f.year]),
+  where: (f) => run([placeOf(f), f.year]),
 };
 /* Only the plate number's figures roll. Every line of words fades across: a
    word rolled through a one-line window leaves specks of its letters on the
@@ -124,11 +130,6 @@ const grey = (hex) => {
   const y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
   const v = Math.round(255 * (y <= 0.0031308 ? 12.92 * y : 1.055 * y ** (1 / 2.4) - 0.055));
   return `rgb(${v} ${v} ${v})`;
-};
-
-/* Which card: A unless the address asks for B (?card=b). */
-const whichCard = () => {
-  try { return new URLSearchParams(window.location.search).get('card') === 'b' ? 'b' : 'a'; } catch { return 'a'; }
 };
 
 function developed(e) { e.currentTarget.classList.add('is-loaded'); }
@@ -177,7 +178,7 @@ function Picture({ pic, imgRef, priority, focus, focusShort }) {
 /* What a screen reader hears when a frame settles. */
 function describe(idx) {
   const f = REEL_FRAMES[wrap(idx)];
-  const where = [f.kind, f.study.place, f.year].filter(Boolean).join(', ');
+  const where = [f.kind, placeOf(f), f.year].filter(Boolean).join(', ');
   const alt = f.picture.alt && f.picture.alt !== f.note ? ` ${f.picture.alt}` : '';
   return `${wrap(idx) + 1} of ${N}. ${f.study.client}. ${where}. ${f.note}${alt}`;
 }
@@ -201,7 +202,6 @@ export default function LensReel({ onClose }) {
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
   const [nearest, setNearest] = useState(() => resumeAt);
-  const [card] = useState(whichCard);
 
   /* Everything the loop and the listeners share, made once. P is the frames'
      step (the overlay's height) and ph the plate's. */
@@ -247,6 +247,38 @@ export default function LensReel({ onClose }) {
       return fn;
     };
 
+    /* The plate number set as type. `adv` is each figure's advance and
+       `pair` each number's width, in ems of the number, measured from the
+       face once its file has loaded (until then, a tabular guess). The units
+       figure starts where set type would put it: the pair's width less its
+       own advance, which keeps the face's kerning. The figures' box takes the
+       number's width at each frame, and the count beside it is slid by the
+       difference while the reel moves between two frames. */
+    const fig = { adv: {}, pair: {}, px: 0, box: null, of: null, shift: 0, at: null };
+    e.fig = fig;
+    e.figBoxRef = (el) => { fig.box = el; s.lineBase = null; };
+    e.figOfRef = (el) => { fig.of = el; };
+    e.geo = (k) => {
+      const label = pad(k + 1);
+      const W = fig.pair[label] ?? 1.44;
+      return { W, x: W - (fig.adv[label[1]] ?? 0.72) };
+    };
+    e.measureFigures = () => {
+      const host = fig.box?.parentElement;
+      if (!host) return;
+      const px = parseFloat(getComputedStyle(host).fontSize);
+      if (!px) return;
+      const probe = document.createElement('span');
+      probe.className = 'reel-measure';
+      host.appendChild(probe);
+      const width = (text) => { probe.textContent = text; return probe.getBoundingClientRect().width / px; };
+      for (const d of '0123456789') fig.adv[d] = width(d);
+      for (let k = 0; k < N; k += 1) fig.pair[pad(k + 1)] = width(pad(k + 1));
+      probe.remove();
+      fig.px = px;
+      s.lineBase = null;
+    };
+
     /* The lines: when a frame is crossed, each window gets the values either
        side of it; between frames, the ones that differ roll or fade. A fade
        lets the old value go by the time the frames are 45% across and brings
@@ -269,7 +301,27 @@ export default function LensReel({ onClose }) {
           ln.value = A;
           ln.still = A === B;
         });
+        /* The figures where set type puts them, either side of the move. */
+        const gA = e.geo(wrap(base));
+        const gB = e.geo(wrap(base + 1));
+        const units = lines.get('units');
+        if (units) {
+          units.a.style.left = `${gA.x.toFixed(4)}em`;
+          units.b.style.left = `${gB.x.toFixed(4)}em`;
+          /* The same figure at a new place (the wrap from 21 or 11 to 01)
+             rolls over itself rather than sliding. */
+          if (units.still && Math.abs(gA.x - gB.x) > 1e-3) units.still = false;
+        }
+        if (fig.box) fig.box.style.width = `${gA.W.toFixed(4)}em`;
+        fig.shift = (gB.W - gA.W) * fig.px;
+        fig.at = null;
         s.lineBase = base;
+      }
+      /* The count slides with the number's width. */
+      const ofAt = s.still ? 0 : t;
+      if (fig.of && ofAt !== fig.at) {
+        fig.at = ofAt;
+        fig.of.style.transform = ofAt && fig.shift ? `translate3d(${(fig.shift * ofAt).toFixed(2)}px,0,0)` : '';
       }
       /* Only lines whose place changed are written. */
       lines.forEach((ln) => {
@@ -501,12 +553,20 @@ export default function LensReel({ onClose }) {
     };
   }, []);
 
-  /* Measure once on open, place everything, take focus. */
+  /* Measure once on open, place everything, take focus. The number's figures
+     are measured again once the face has loaded (until then the text is
+     hidden, font-display: block, and set on a tabular guess). */
   useLayoutEffect(() => {
     const { s } = e;
+    let alive = true;
+    e.measureFigures();
     e.measure();
+    e.write();
     rootRef.current.focus({ preventScroll: true });
+    const again = () => { if (alive) { e.measureFigures(); e.write(); } };
+    if (document.fonts?.load) document.fonts.load('200 100px "Mona Sans"').then(again, again);
     return () => {
+      alive = false;
       if (s.raf) cancelAnimationFrame(s.raf);
       s.raf = 0;
     };
@@ -517,7 +577,9 @@ export default function LensReel({ onClose }) {
   useLayoutEffect(() => { e.write(); }, [e, nearest]);
 
   useEffect(() => {
-    const ro = new ResizeObserver(() => e.measure());
+    /* A resize can change the number's size with the screen's width, so the
+       figures are measured again too. */
+    const ro = new ResizeObserver(() => { e.measure(); e.measureFigures(); e.write(); });
     if (rootRef.current) ro.observe(rootRef.current);
     if (plateRef.current) ro.observe(plateRef.current);
     return () => ro.disconnect();
@@ -739,7 +801,6 @@ export default function LensReel({ onClose }) {
     <div
       ref={rootRef}
       className={`reel${still ? ' is-still' : ''}`}
-      data-card={card}
       role="dialog"
       aria-modal="true"
       aria-labelledby="reel-title"
@@ -779,15 +840,17 @@ export default function LensReel({ onClose }) {
       </button>
 
       {/* The card, one grid so every row lines up across it. Left: the plate
-          number, the kind of work and the caption. Centre: the window onto
-          the picture, cropped as the screen behind it is. Right: who it was
-          for, where, and when. Each variant and each layout in the CSS is the
-          same pieces in different grid areas. */}
+          number and the caption. Centre: the window onto the picture, cropped
+          as the screen behind it is. Right: who it was for, the kind of work,
+          where, and when. Each layout in the CSS is the same pieces in
+          different grid areas. */}
       <div className="reel-card">
         <p className="reel-number" aria-hidden="true">
-          <Line name="tens" lineRef={e.lineRef('tens')} />
-          <Line name="units" lineRef={e.lineRef('units')} />
-          <span className="reel-of">/{pad(N)}</span>
+          <span className="reel-figures" ref={e.figBoxRef}>
+            <Line name="tens" lineRef={e.lineRef('tens')} />
+            <Line name="units" lineRef={e.lineRef('units')} />
+          </span>
+          <span className="reel-of" ref={e.figOfRef}>/{pad(N)}</span>
         </p>
         <Line name="kind" lineRef={e.lineRef('kind')} />
         <Line name="note" lineRef={e.lineRef('note')} />

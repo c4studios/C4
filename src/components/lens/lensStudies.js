@@ -74,7 +74,7 @@ export const HVN = {
     client: 'HVN CrossFit',
     short: 'HVN',
     kind: 'Home page film',
-    place: 'Port Kennedy',
+    place: 'Port Kennedy, WA',
     duration: 30.32,
     posterTime: 1.4,
     cuts: [{ src: `${M}hvn-film.mp4`, poster: `${M}hvn-film.webp`, strip: `${M}hvn-film-strip.webp`, width: 720, height: 1280 }],
@@ -132,7 +132,7 @@ export const SHARP = {
 export const DSR = {
   id: 'dsr',
   client: 'DS Racing Karts',
-  place: 'Sydney',
+  place: 'Sydney, NSW',
   site: { href: 'https://www.dsracingkarts.com.au', label: 'dsracingkarts.com.au' },
   caseStudy: '/CaseStudy/ds-racing-karts',
   made: 'The film that opens their home page, made from scratch as a motion graphic, and a second one for their Predator chassis. We also built the racing game on the home page, and the tachometer that revs as you scroll.',
@@ -159,7 +159,7 @@ export const DSR = {
 export const AQUA = {
   id: 'aquasafe',
   client: 'Aqua-Safe Plumbing & Maintenance',
-  place: 'Perth',
+  place: 'Perth, WA',
   site: { href: 'https://aquasafeplumbing.com.au/', label: 'aquasafeplumbing.com.au' },
   caseStudy: '/CaseStudy/aqua-safe-plumbing',
   made: AQUASAFE.description,

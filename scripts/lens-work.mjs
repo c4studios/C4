@@ -83,8 +83,12 @@ const JOBS = [
   { kind: 'still', id: 'hvn-coach-b', study: 'hvn', name: 'coach-b', root: 'hvn', src: 'Coaches/DSC07557.jpg', widths: [360, 720, 1080], crop: { x: 0.53, aspect: 4 / 5 }, about: 'HVN CrossFit coach portrait, shot 2026. C4 Lens.' },
   { kind: 'still', id: 'hvn-coach-c', study: 'hvn', name: 'coach-c', root: 'hvn', src: 'Coaches/DSC07563.jpg', widths: [360, 720, 1080], crop: { x: 0.52, aspect: 4 / 5 }, about: 'HVN CrossFit coach portrait, shot 2026. C4 Lens.' },
   { kind: 'still', id: 'hvn-coach-d', study: 'hvn', name: 'coach-d', root: 'hvn', src: 'Coaches/DSC09590.jpg', widths: [360, 720, 1080], crop: { x: 0.52, aspect: 4 / 5 }, about: 'HVN CrossFit coach portrait, shot 2026. C4 Lens.' },
+  /* For the Lens reel (src/components/lens/reelFrames.js), 18 Oct 2026: the
+     coach-c portrait whole and uncropped, so it can fill a screen. The file is
+     byte for byte the master in C4-Internal/c4-social/motion/public/hvn/src. */
+  { kind: 'still', id: 'hvn-coach-full', study: 'hvn', name: 'coach-full', root: 'hvn', src: 'Coaches/DSC07563.jpg', widths: [720, 1440, 1819], about: 'HVN CrossFit coach portrait, shot 2026. C4 Lens.' },
 
-  /* Sharp Bricklaying: two films, seven stills from April 2026, the loader
+  /* Sharp Bricklaying: two films, twelve stills from April 2026, the loader
      (cut at 3.1 s, before the site's hero photo, which the client supplied in
      September, comes up behind it).
      The stills are files the site's own gallery shows, so every one is live. */
@@ -103,6 +107,15 @@ const JOBS = [
   { kind: 'still', id: 'sharp-aerial-rhonda', study: 'sharp', name: 'aerial-rhonda', root: 'sharp', src: 'Additional photos for rhonda/WhatsApp Image 2026-04-26 at 11.55.12 PM.jpeg', widths: [480, 960, 1152], about: 'Sharp Bricklaying job on Rhonda Ave, Willetton, from the air, April 2026. C4 Lens.' },
   { kind: 'still', id: 'sharp-aerial-rhonda-close', study: 'sharp', name: 'aerial-rhonda-close', root: 'sharp', src: 'Additional photos for rhonda/WhatsApp Image 2026-04-26 at 11.55.10 PM.jpeg', widths: [480, 960, 1152], about: 'Sharp Bricklaying walls on Rhonda Ave, Willetton, from just above, April 2026. C4 Lens.' },
   { kind: 'still', id: 'sharp-dusk', study: 'sharp', name: 'dusk', root: 'sharp', src: 'number 5/WhatsApp Image 2026-04-26 at 1.44.26 AM.jpeg', widths: [480, 960, 1152], about: 'Sharp Bricklaying block wall at dusk, April 2026. C4 Lens.' },
+  /* Five more for the Lens reel (src/components/lens/reelFrames.js), 18 Oct
+     2026, from the same two jobs and the same April batches as the stills
+     above, and like them shown in the site's gallery: the Rhonda Ave panel
+     (the number 4 and Willeton folders) and the Huon St panel (number 5). */
+  { kind: 'still', id: 'sharp-aerial-granny-flat', study: 'sharp', name: 'aerial-granny-flat', root: 'sharp', src: 'Willeton Double Rendered House with Granny Flat/WhatsApp Image 2026-04-26 at 1.02.15 AM.jpeg', widths: [640, 1280, 1600], about: 'Sharp Bricklaying house and granny flat on Rhonda Ave, Willetton, from the air, April 2026. C4 Lens.' },
+  { kind: 'still', id: 'sharp-walls-ground', study: 'sharp', name: 'walls-ground', root: 'sharp', src: 'Willeton Double Rendered House with Granny Flat/WhatsApp Image 2026-04-26 at 1.02.15 AM (2).jpeg', widths: [480, 960, 1200], about: 'Sharp Bricklaying walls on Rhonda Ave, Willetton, April 2026. C4 Lens.' },
+  { kind: 'still', id: 'sharp-aerial-rear', study: 'sharp', name: 'aerial-rear', root: 'sharp', src: 'number 4/WhatsApp Image 2026-04-26 at 1.41.26 AM (1).jpeg', widths: [640, 1280, 2048], about: 'The back of a Sharp Bricklaying job on Rhonda Ave, Willetton, from the air, April 2026. C4 Lens.' },
+  { kind: 'still', id: 'sharp-rooms-top', study: 'sharp', name: 'rooms-top', root: 'sharp', src: 'number 4/WhatsApp Image 2026-04-26 at 1.41.26 AM.jpeg', widths: [480, 960, 1152], about: 'Sharp Bricklaying rooms on Rhonda Ave, Willetton, from above, April 2026. C4 Lens.' },
+  { kind: 'still', id: 'sharp-rooms-evening', study: 'sharp', name: 'rooms-evening', root: 'sharp', src: 'number 5/WhatsApp Image 2026-04-26 at 1.44.27 AM.jpeg', widths: [640, 1280, 2048], about: 'Inside the walls of a Sharp Bricklaying job on Huon St, Willetton, at dusk, April 2026. C4 Lens.' },
 
   /* DS Racing Karts: the header film, the chassis clip, the game, the tachometer. */
   { id: 'dsr-header', root: 'dsr', src: 'videos/Site Header.mp4', poster: 6.4, crf: 30, tune: 'film',
