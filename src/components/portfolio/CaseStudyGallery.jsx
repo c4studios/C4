@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Monitor, Smartphone } from 'lucide-react';
 import GallerySkeleton from './GallerySkeleton';
@@ -43,9 +43,47 @@ function GalleryTile({ shot, index, onClick }) {
 
 function Lightbox({ screenshots, activeIndex, onClose, onPrev, onNext }) {
   const shot = screenshots[activeIndex];
+  const boxRef = useRef(null);
+  const closeRef = useRef(null);
+  const latest = useRef({ onClose, onPrev, onNext, count: screenshots.length });
+  latest.current = { onClose, onPrev, onNext, count: screenshots.length };
+
+  /* The keyboard runs it too (found on the Genesis keyboard pass, 28 Oct
+     2026): focus lands on Close when it opens, Escape closes it, the arrow
+     keys page through, and Tab stays among its own buttons while it's open.
+     The gallery hands focus back to the tile that opened it. */
+  useEffect(() => {
+    closeRef.current?.focus();
+    const onKey = (event) => {
+      const { onClose: close, onPrev: prev, onNext: next, count } = latest.current;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+      } else if (event.key === 'ArrowLeft' && count > 1) {
+        event.preventDefault();
+        prev();
+      } else if (event.key === 'ArrowRight' && count > 1) {
+        event.preventDefault();
+        next();
+      } else if (event.key === 'Tab') {
+        const items = [...(boxRef.current?.querySelectorAll('button') || [])];
+        if (!items.length) return;
+        event.preventDefault();
+        const at = items.indexOf(document.activeElement);
+        const to = event.shiftKey ? (at <= 0 ? items.length - 1 : at - 1) : (at === items.length - 1 ? 0 : at + 1);
+        items[to].focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
 
   return (
     <motion.div
+      ref={boxRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Image viewer"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -55,6 +93,9 @@ function Lightbox({ screenshots, activeIndex, onClose, onPrev, onNext }) {
       onClick={onClose}
     >
       <button
+        ref={closeRef}
+        type="button"
+        aria-label="Close"
         onClick={onClose}
         className="absolute right-5 top-5 z-10 flex h-11 w-11 items-center justify-center rounded-full transition-colors"
         style={{ backgroundColor: 'var(--c4-lightbox-control)' }}
@@ -71,6 +112,8 @@ function Lightbox({ screenshots, activeIndex, onClose, onPrev, onNext }) {
       {screenshots.length > 1 && (
         <>
           <button
+            type="button"
+            aria-label="Previous image"
             onClick={(event) => {
               event.stopPropagation();
               onPrev();
@@ -87,6 +130,8 @@ function Lightbox({ screenshots, activeIndex, onClose, onPrev, onNext }) {
             <ChevronLeft size={16} style={{ color: 'var(--c4-lightbox-text)' }} />
           </button>
           <button
+            type="button"
+            aria-label="Next image"
             onClick={(event) => {
               event.stopPropagation();
               onNext();
@@ -171,6 +216,12 @@ export default function CaseStudyGallery({ screenshots, desktopScreenshots, mobi
 
   const [device, setDevice] = useState('desktop');
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  /* The tile that opened the viewer gets focus back when it closes. */
+  const opener = useRef(null);
+  const closeLightbox = () => {
+    setLightboxIndex(null);
+    opener.current?.focus();
+  };
   /* The prerendered page already shows the gallery, so a hydrating page
      starts without the half-second skeleton. */
   const [loading, setLoading] = useState(() => !isHydrating());
@@ -210,7 +261,10 @@ export default function CaseStudyGallery({ screenshots, desktopScreenshots, mobi
             key={`${device}-${shot.url}-${index}`}
             shot={shot}
             index={index}
-            onClick={() => setLightboxIndex(index)}
+            onClick={(event) => {
+              opener.current = event.currentTarget;
+              setLightboxIndex(index);
+            }}
           />
         ))}
       </div>
@@ -220,7 +274,7 @@ export default function CaseStudyGallery({ screenshots, desktopScreenshots, mobi
           <Lightbox
             screenshots={activeScreenshots}
             activeIndex={lightboxIndex}
-            onClose={() => setLightboxIndex(null)}
+            onClose={closeLightbox}
             onPrev={() => setLightboxIndex((index) => (index === 0 ? activeScreenshots.length - 1 : index - 1))}
             onNext={() => setLightboxIndex((index) => (index === activeScreenshots.length - 1 ? 0 : index + 1))}
           />

@@ -18,6 +18,7 @@ import { Link } from '@/components/c4/SiteLink';
 import { brandingPackages, webDesignAddOns, GST_NOTE, logoTimeline } from '@/data/pricing';
 import { createPageUrl } from '@/utils';
 import { tightFigure } from '@/components/c4/figure';
+import { getAllCaseStudies } from '@/components/portfolio/caseStudyData';
 import guide from '@/content/seo/pages/branding-perth';
 import Workfile from './Workfile';
 import useWide, { useReadingLine } from './useWide';
@@ -54,6 +55,28 @@ const GROUPS = [
   { key: 'have', title: 'A logo you already have', keys: ['logo-rebuild'] },
   { key: 'kit', title: 'The logo and the kit around it', keys: ['brand-essentials', 'full-brand'] },
 ];
+
+/* Client work on /Portfolio sold as one of these packages (`logoPackage` in
+   caseStudyData.jsx), linked under its package's group. Since 28 Oct 2026
+   that's Genesis Realty Group, a Logo Rebuild. A hidden study drops out. */
+const DONE = getAllCaseStudies().filter((s) => s.logoPackage);
+
+function Done({ keys }) {
+  const studies = DONE.filter((s) => keys.includes(s.logoPackage));
+  if (!studies.length) return null;
+  return (
+    <p className="ld-addon">
+      {studies.length === 1 ? 'One we’ve done: ' : 'Some we’ve done: '}
+      {studies.map((s, i) => (
+        <span key={s.slug}>
+          {i > 0 ? (i === studies.length - 1 ? ' and ' : ', ') : null}
+          <Link to={createPageUrl(`CaseStudy/${s.slug}`)}>{s.name}’s logo</Link>
+        </span>
+      ))}
+      .
+    </p>
+  );
+}
 
 function PriceRow({ p }) {
   const spoken = /\+$/.test(p.priceLabel) ? `From ${p.priceLabel.replace(/\+$/, '')}` : p.priceLabel;
@@ -104,6 +127,7 @@ export function Prices() {
             <div className="ld-ledger-group" key={g.key} role="group" aria-labelledby={`ld-g-${g.key}`}>
               <h3 className="ld-ledger-h" id={`ld-g-${g.key}`}>{g.title}</h3>
               {g.items.map((p) => <PriceRow key={p.key} p={p} />)}
+              <Done keys={g.items.map((p) => p.key)} />
             </div>
           ))}
           {ADDON ? (

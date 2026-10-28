@@ -225,11 +225,13 @@ function ProjectCard({ study, index }) {
   );
 }
 
-// Three top-level buckets used by the category chooser and the section layout.
+// The top-level buckets used by the category chooser and the section layout.
+// Logo Design joined on 28 Oct 2026, the fourth arm's first client entry.
 const BROWSE = [
   { key: 'all', label: 'All Work' },
   { key: 'web', label: 'Web & Apps' },
   { key: 'software', label: 'Software' },
+  { key: 'logo', label: 'Logo Design' },
   { key: 'concept', label: 'Concepts' },
 ];
 
@@ -244,6 +246,11 @@ const SECTION_META = {
     blurb: 'Products the studio built and runs itself.',
     accent: false,
   },
+  logo: {
+    label: 'Logo Design',
+    blurb: 'Logos for clients, including redraws of logos they already have, handed over as true vector files.',
+    accent: false,
+  },
   concept: {
     label: 'Concepts',
     blurb: 'Self-initiated showcase builds — not client commissions. Each is a fully deployed concept, available to license or commission.',
@@ -254,20 +261,27 @@ const SECTION_META = {
 function matchCategory(study, key) {
   if (key === 'concept') return Boolean(study.concept);
   if (key === 'software') return study.category === 'saas';
-  if (key === 'web') return !study.concept && study.category !== 'saas';
+  if (key === 'logo') return !study.concept && study.category === 'logo_design';
+  if (key === 'web') return !study.concept && study.category !== 'saas' && study.category !== 'logo_design';
   return true;
 }
 
 function CategoryChooser({ active, onChange, counts }) {
   return (
-    <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4">
+    /* Five buckets: on a phone, All Work takes the top row and the four
+       categories sit two by two under it; from md they run in one row. The
+       padding stays at 16px until lg, so "Logo Design" (86px at 15px) holds
+       one line in a 768 window with a scrollbar. */
+    <div className="grid grid-cols-2 gap-2.5 md:grid-cols-5">
       {BROWSE.map((cat) => {
         const isActive = active === cat.key;
         return (
           <button
             key={cat.key}
+            type="button"
+            aria-pressed={isActive}
             onClick={() => onChange(cat.key)}
-            className="group flex flex-col items-start gap-1.5 rounded-[3px] border px-4 py-3.5 text-left transition-colors duration-300 md:px-5 md:py-4"
+            className={`group flex flex-col items-start gap-1.5 rounded-[3px] border px-4 py-3.5 text-left transition-colors duration-300 md:py-4 lg:px-5${cat.key === 'all' ? ' col-span-2 md:col-span-1' : ''}`}
             style={{
               borderColor: isActive ? 'var(--c4-text)' : 'var(--c4-border-light)',
               backgroundColor: isActive ? 'var(--c4-text)' : 'transparent',
@@ -334,7 +348,7 @@ function CategoryGroup({ groupKey, studies, showHeader }) {
 export default function Portfolio() {
   const [searchParams] = useSearchParams();
   const rawFilter = searchParams.get('filter') || 'all';
-  const initialFilter = ['all', 'web', 'concept'].includes(rawFilter) ? rawFilter : 'all';
+  const initialFilter = ['all', 'web', 'logo', 'concept'].includes(rawFilter) ? rawFilter : 'all';
   /* A hydrating page renders what the prerenderer did: every project, no
      skeleton. A ?filter= in the address applies once the app has mounted. */
   const [filter, setFilter] = useState(() => (isHydrating() ? 'all' : initialFilter));
@@ -376,10 +390,11 @@ export default function Portfolio() {
     all: allStudies.length,
     web: allStudies.filter((study) => matchCategory(study, 'web')).length,
     software: allStudies.filter((study) => matchCategory(study, 'software')).length,
+    logo: allStudies.filter((study) => matchCategory(study, 'logo')).length,
     concept: allStudies.filter((study) => matchCategory(study, 'concept')).length,
   }), [allStudies]);
-  // 'all' lays out three distinct sections; a specific filter shows just that bucket.
-  const groups = filter === 'all' ? ['web', 'software', 'concept'] : [filter];
+  // 'all' lays out each bucket as its own section; a specific filter shows just that bucket.
+  const groups = filter === 'all' ? ['web', 'software', 'logo', 'concept'] : [filter];
   const visibleCount = groups.reduce(
     (total, groupKey) => total + sorted.filter((study) => matchCategory(study, groupKey)).length,
     0,

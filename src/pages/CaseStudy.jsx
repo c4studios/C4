@@ -14,8 +14,10 @@ import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema, caseStudyArticleSchema, caseStudyCapture, entitySchemas } from '@/lib/schema';
 
 /* The share card. Facebook, LinkedIn and X don't render an SVG og:image, so a
-   vector cover (Barry's Drink) shares the study's first capture instead. */
-const shareImage = (study) => (/\.svg$/i.test(study.cover || '') ? caseStudyCapture(study) : study.cover);
+   vector cover (Barry's Drink) shares the study's first capture instead. A
+   study whose cover is a transparent logo brings its own card (Genesis). */
+const shareImage = (study) => study.shareImage
+  || (/\.svg$/i.test(study.cover || '') ? caseStudyCapture(study) : study.cover);
 
 export default function CaseStudy() {
   /* /CaseStudy/<slug> is the real, canonical, prerendered URL. The legacy
@@ -82,6 +84,14 @@ export default function CaseStudy() {
   const motion = getMotion(study.slug);
   const hasDevices = Boolean(motion?.scroll?.desktop && motion?.scroll?.mobile);
   const hasBefore = Boolean(motion?.before?.approved && motion.before.src && motion.before.after);
+  /* A study can also bring its own before and after (a logo's Canva file
+     against its redraw). It shows on the same terms: approved, both files. */
+  const ownBefore = study.compare?.approved && study.compare.src && study.compare.after ? study.compare : null;
+  const compare = hasBefore ? motion.before : ownBefore;
+
+  /* A study can rename a stock section where its title doesn't fit the work
+     (a logo has versions, not screenshots): sectionTitles: { features: '…' }. */
+  const titled = (id, title) => study.sectionTitles?.[id] || title;
 
   const hasScreenshots = (study.screenshots?.length || 0) > 0
     || (study.desktopScreenshots?.length || 0) > 0
@@ -108,16 +118,16 @@ export default function CaseStudy() {
       title: 'In motion',
       content: <DeviceScroll study={study} motion={motion} />,
     },
-    hasBefore && {
+    compare && {
       id: 'before-after',
       navLabel: 'Before & after',
       title: 'Before and after',
-      content: <BeforeAfter study={study} before={motion.before} capturedOn={motion.capturedOn} />,
+      content: <BeforeAfter study={study} before={compare} capturedOn={motion?.capturedOn} />,
     },
     hasScreenshots && {
       id: 'screenshots',
-      navLabel: 'Screenshots',
-      title: 'Screenshots',
+      navLabel: titled('screenshots', 'Screenshots'),
+      title: titled('screenshots', 'Screenshots'),
       content: (
         <CaseStudyGallery
           screenshots={study.screenshots}
@@ -134,8 +144,8 @@ export default function CaseStudy() {
     },
     study.features?.length > 0 && {
       id: 'features',
-      navLabel: 'Features',
-      title: 'Key Features',
+      navLabel: titled('features', 'Features'),
+      title: titled('features', 'Key Features'),
       content: <CaseStudyBullets items={study.features} />,
     },
     study.stack?.length > 0 && {

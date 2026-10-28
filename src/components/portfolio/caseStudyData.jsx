@@ -3137,6 +3137,128 @@ export const CASE_STUDIES = {
     challenges: [],
     improvements: [],
   },
+
+  /* Logo Design, the fourth arm (9 Oct 2026). Caleb asked for this entry on
+     28 Oct 2026. Every fact here comes from the brain (clients row
+     genesis-realty-group; work_log 926, 943 and 998) or from the files in
+     Projects/Clients/Genesis Realty Group, which is never committed:
+     work/ref/measurements.json measures the Canva file (measure_canva_art.py)
+     and work/masters/geometry.json the redraw (build_masters.py), both in px
+     on the Canva file's 2000 px design space. The pack is finals/Genesis
+     Realty Group logo files and its read-me, counted and checked on 28 Oct
+     2026: 92 files and the read-me, and all 12 print PDFs use only the four
+     CMYK values, with no fonts or pictures inside. No testimonial has been
+     approved for publishing, so there isn't one, and no person is named.
+     The pictures are made by scripts/genesis-case-study.mjs. */
+  'genesis-realty-group': {
+    slug: 'genesis-realty-group',
+    name: 'Genesis Realty Group',
+    oneLiner: 'A Perth real estate agency\'s Canva logo, measured and redrawn as true vector so it prints sharp at any size, in the agency\'s own colours.',
+    client: 'Genesis Realty Group, a real estate agency',
+    /* The office address in the agency's own 2026 profile booklet, sent with
+       its booklet enquiry on 22 Oct 2026, is in Mount Hawthorn WA. */
+    location: 'Perth, WA',
+    timeline: 'Six days from go-ahead to final files (19 – 25 Oct 2026)',
+    budget: '',
+    role: 'Solo (measurement, redraw, lettering, print files)',
+    liveUrl: '',
+    year: '2026',
+    /* A logo isn't deployed. This is the day the final files went to the
+       client (brain, clients row: the final logo files were sent on 25 Oct),
+       which the case study's markup gives as datePublished. */
+    firstDeployed: '2026-10-25',
+    category: 'logo_design',
+    /* The published package the job was sold as (brain, 22 Oct 2026: the
+       logo rebuild only). /logo-design links the study from that package. */
+    logoPackage: 'logo-rebuild',
+    tags: ['Logo Design', 'Vector Redraw', 'Print Files', 'Real Estate', 'Perth'],
+    featured: false,
+    budgetOrder: 0,
+
+    /* The stacked logo in white and light blue on the agency's navy, the
+       ground the pack's read-me gives the white versions. A transparent PNG
+       can't be a share card, so the card is its own file. */
+    cover: '/covers/genesis-realty-group.png',
+    brandColor: '#031F4F',
+    backdropStyle: { backgroundColor: '#031F4F' },
+    shareImage: '/covers/genesis-realty-group-share.jpg',
+    thumbnail: '/captures/genesis-realty-group/versions/01-stacked-full-colour.png',
+    sectionTitles: { screenshots: 'Every version', features: 'What changed' },
+
+    overview: 'Genesis Realty Group is a real estate agency in Perth. Its logo was a Canva design the agency was happy with, and the job was to keep that logo and make it ready for print and screens in the agency\'s own colour codes. In the Canva file the lettering was live Century Gothic text, but the G and the R were pictures about 1,250 pixels across, so they go soft when the logo is printed large. C4 measured the file on its 2,000-pixel canvas and redrew the mark as true geometry, with one ring weight all the way round. GENESIS and REALTY GROUP were re-set in Century Gothic at the Canva sizes and letter spacing, then turned into outlines so nobody needs the font to use the files. At a glance it\'s the same logo. Up close, the gaps around the R are even and the white outline that sat behind it is gone. The blues now match the agency\'s codes, where the Canva pictures were a shade off. The final pack is three layouts in four colourways, 92 files in all, with print PDFs in the agency\'s CMYK values. The fourth colourway, white with the light blue R and lines, was added when the agency asked for it.',
+
+    /* The before and after (BeforeAfter.jsx): one close-up of the mark, the
+       Canva file and then the redraw, on one grey so the white outline shows.
+       It puts the client's own artwork on show, so it's on only while
+       `approved` is true. Caleb asked for this entry on 28 Oct 2026, and the
+       client saw the same comparison in the round-one proof (21 Oct). */
+    compare: {
+      approved: true,
+      src: '/captures/genesis-realty-group/redraw/canva.webp',
+      after: '/captures/genesis-realty-group/redraw/redrawn.webp',
+      w: 2000,
+      h: 1250,
+      tagBefore: 'Canva file',
+      tagAfter: 'Redrawn',
+      altBefore: 'Close-up of the Canva logo on grey. A white outline shows round the R, and the gaps between the R and the G are uneven.',
+      altAfter: 'The same close-up of the redrawn logo. There is no white outline, and the gaps are even.',
+      rangeLabel: 'Drag between the Canva file and the redraw',
+      valueBefore: 'Canva file',
+      valueAfter: 'redraw',
+      captionBefore: 'Before: the Canva file, its own pictures of the G and R',
+      captionAfter: 'After: the redraw, on the same grey so the white outline shows',
+    },
+
+    screenshots: [
+      { url: '/captures/genesis-realty-group/versions/01-stacked-full-colour.png', caption: 'The stacked logo in full colour, on white' },
+      { url: '/captures/genesis-realty-group/versions/02-horizontal-full-colour.png', caption: 'The horizontal logo in full colour, on white' },
+      { url: '/captures/genesis-realty-group/versions/03-icon-full-colour.png', caption: 'The GR icon in full colour, on white' },
+      { url: '/captures/genesis-realty-group/versions/04-stacked-navy.png', caption: 'The stacked logo in navy, for one-colour printing' },
+      { url: '/captures/genesis-realty-group/versions/05-horizontal-navy.png', caption: 'The horizontal logo in navy, for one-colour printing' },
+      { url: '/captures/genesis-realty-group/versions/06-icon-navy.png', caption: 'The GR icon in navy, for one-colour printing' },
+      { url: '/captures/genesis-realty-group/versions/07-stacked-white.png', caption: 'The stacked logo in white, on the agency\'s navy' },
+      { url: '/captures/genesis-realty-group/versions/08-horizontal-white.png', caption: 'The horizontal logo in white, on the agency\'s navy' },
+      { url: '/captures/genesis-realty-group/versions/09-icon-white.png', caption: 'The GR icon in white, on the agency\'s navy' },
+      { url: '/captures/genesis-realty-group/versions/10-stacked-white-blue.png', caption: 'The stacked logo in white and light blue, on the agency\'s navy' },
+      { url: '/captures/genesis-realty-group/versions/11-horizontal-white-blue.png', caption: 'The horizontal logo in white and light blue, on the agency\'s navy' },
+      { url: '/captures/genesis-realty-group/versions/12-icon-white-blue.png', caption: 'The GR icon in white and light blue, on the agency\'s navy' },
+    ],
+
+    delivered: [
+      'The agency\'s Canva logo redrawn as true vector, with the lettering converted to outlines',
+      'Three layouts: stacked, horizontal, and the GR mark on its own as an icon',
+      'Four colourways: full colour, navy, white, and white with the light blue R and lines',
+      'Every version as an SVG, a PDF for screens, a print PDF in the agency\'s CMYK values and a JPEG',
+      'See-through PNGs: three sizes of each lockup, up to 4,000 pixels wide, and five of the icon, from 32 to 2,000 pixels',
+      '92 files in all, with a plain-English read-me that says which file to use where',
+      'A round-one proof before anything was final: three A3 sheets with the Canva file and the redraw side by side, and the changes shown up close',
+    ],
+
+    features: [
+      'The ring of the G ran from 68 px thick at the top to 85 px at the lower left, measured on the Canva file\'s 2,000 px canvas. It\'s 78 px all the way round now.',
+      'The gaps between the R and the G were 63 px and 36 px either side of the R\'s leg, and 46 px at the end of the crossbar. All three are 48 px now.',
+      'The gap round the R was a white copy of the R sitting behind it, so it showed as a white outline on anything darker than white. It\'s a real gap now.',
+      'The G\'s crossbar and the curve under it were two pieces, with a patch between them that left a step on the inside edge. They\'re one shape now.',
+      'The ends of the G are squared off. The top end finishes square to the curve, where the Canva cut sat about 6° off, and the bottom ends run parallel to the R\'s leg.',
+      'The Canva pictures had the G at #002055 and the R at #6ABDED. The redraw uses the agency\'s own codes, #031F4F and #77C4ED.',
+      'REALTY GROUP sat 15 px right of centre, with its blue lines 51 px and 43 px away. It\'s centred now, 47 px from each line, and the lines finish level with the ends of GENESIS.',
+      'The horizontal version has the same spacing under GENESIS as the stacked one.',
+    ],
+
+    stack: [
+      'Python, with NumPy, SciPy and scikit-image, to measure the Canva file: circle fits for the ring and line fits for the R\'s legs',
+      'Python and fontTools to draw the mark as geometry and set the lettering from the Century Gothic font files',
+      'Century Gothic Bold for GENESIS and Century Gothic for REALTY GROUP, converted to outlines',
+      'Node and sharp: one script builds all 92 files and the read-me from the three SVG masters',
+      'PDFs written as plain vector paths, with no fonts or pictures inside',
+      'Every print PDF read back after the build to check it uses only the agency\'s CMYK values',
+    ],
+
+    integrations: [],
+    performance: [],
+    challenges: [],
+    improvements: [],
+  },
 };
 
 /* A hidden entry (taken down for rework) is treated as if it did not exist. */
@@ -3160,6 +3282,8 @@ export const BUILD_ORDER = [
   'wooster-core', 'barrys-drink', 'jk-plumbing-solutions', 'iopa',
   'sgr-prestige', 'eurochem', 'cmc-lawns',
   'quotr',
+  // logo design (the fourth arm from 9 Oct 2026); Genesis's files went out 25 Oct 2026
+  'genesis-realty-group',
 ];
 
 /* Lower `seq` = built earlier. Unknown slugs sort to the end (treated newest). */

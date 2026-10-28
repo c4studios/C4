@@ -56,6 +56,7 @@ person building it.
 - [Sharp Bricklaying](https://c4studios.com.au/CaseStudy/sharp-bricklaying): Website for a Perth bricklayer, with drone aerials and a multi-job gallery.
 - [Brady Electrical](https://c4studios.com.au/CaseStudy/brady-electrical): Website for a Neerabup electrician, built around a live single-line diagram of the Perth metro.
 - [Aqua-Safe Plumbing & Maintenance](https://c4studios.com.au/CaseStudy/aqua-safe-plumbing): Website for a Perth plumbing and gas fitting business, organised by problem and by suburb.
+- [Genesis Realty Group](https://c4studios.com.au/CaseStudy/genesis-realty-group): Logo redraw for a Perth real estate agency, its Canva logo rebuilt as true vector with print files in the agency's own CMYK colours.
 
 ## Contact
 

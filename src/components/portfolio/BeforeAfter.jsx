@@ -5,6 +5,10 @@
  * only once Caleb has approved showing it (`approved` in the manifest),
  * because it puts a client's old site on show.
  *
+ * A before that isn't an archived site (since 28 Oct 2026, a client's own
+ * logo file against its redraw) brings its own words: tags, alt text, the
+ * slider's label and the two captions. Without them it reads as a website.
+ *
  * The seam is a native range input stretched over the frame, so a drag, a
  * tap and the arrow keys all move it, and a screen reader hears a slider.
  */
@@ -14,6 +18,11 @@ import './motion.css';
 
 export default function BeforeAfter({ study, before, capturedOn }) {
   const [pos, setPos] = useState(50);
+  const archived = Boolean(before.archiveUrl);
+  const tagBefore = before.tagBefore || 'Before';
+  const tagAfter = before.tagAfter || 'After';
+  const nameBefore = before.valueBefore || 'earlier site';
+  const nameAfter = before.valueAfter || 'C4 build';
   return (
     <figure className="ba">
       <div className="ba-frame" style={{ '--pos': `${pos}%` }}>
@@ -22,7 +31,7 @@ export default function BeforeAfter({ study, before, capturedOn }) {
           src={before.after}
           width={before.w}
           height={before.h}
-          alt={`${study.name}'s site now, as C4 built it`}
+          alt={before.altAfter || `${study.name}'s site now, as C4 built it`}
           loading="lazy"
           decoding="async"
         />
@@ -31,12 +40,12 @@ export default function BeforeAfter({ study, before, capturedOn }) {
           src={before.src}
           width={before.w}
           height={before.h}
-          alt={`${study.name}'s earlier site, as archived on ${shortDate(before.archivedOn)}`}
+          alt={before.altBefore || `${study.name}'s earlier site, as archived on ${shortDate(before.archivedOn)}`}
           loading="lazy"
           decoding="async"
         />
-        <span className="ba-tag ba-tag--before" aria-hidden="true">Before</span>
-        <span className="ba-tag ba-tag--after" aria-hidden="true">After</span>
+        <span className="ba-tag ba-tag--before" aria-hidden="true">{tagBefore}</span>
+        <span className="ba-tag ba-tag--after" aria-hidden="true">{tagAfter}</span>
         <input
           className="ba-range"
           type="range"
@@ -45,18 +54,27 @@ export default function BeforeAfter({ study, before, capturedOn }) {
           step="1"
           value={pos}
           onChange={(e) => setPos(Number(e.target.value))}
-          aria-label={`Drag between ${study.name}'s earlier site and the C4 build`}
-          aria-valuetext={`${pos}% earlier site, ${100 - pos}% C4 build`}
+          aria-label={before.rangeLabel || `Drag between ${study.name}'s earlier site and the C4 build`}
+          aria-valuetext={`${pos}% ${nameBefore}, ${100 - pos}% ${nameAfter}`}
         />
         <span className="ba-seam" aria-hidden="true"><span className="ba-grip" /></span>
       </div>
       <figcaption className="ba-cap">
-        <span>
-          Before: archived on{' '}
-          <a href={before.archiveUrl} target="_blank" rel="noopener noreferrer">{shortDate(before.archivedOn)}</a>
-          {' '}by the Wayback Machine
-        </span>
-        <span>After: the C4 build, captured {shortDate(capturedOn)}</span>
+        {archived ? (
+          <>
+            <span>
+              Before: archived on{' '}
+              <a href={before.archiveUrl} target="_blank" rel="noopener noreferrer">{shortDate(before.archivedOn)}</a>
+              {' '}by the Wayback Machine
+            </span>
+            <span>After: the C4 build, captured {shortDate(capturedOn)}</span>
+          </>
+        ) : (
+          <>
+            <span>{before.captionBefore}</span>
+            <span>{before.captionAfter}</span>
+          </>
+        )}
       </figcaption>
     </figure>
   );
