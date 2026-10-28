@@ -125,7 +125,7 @@ const PILLARS = [
     slug: 'photo-video-perth', type: 'pillar', status: 'live', phase: 2,
     name: 'Photo & Video Perth', serviceType: 'Commercial photography and videography',
     title: 'Photographer & Videographer Perth — Prices | C4 Studios',
-    description: 'Commercial photographer and videographer in Perth: photos from $200, photo and video from $1,200. Each package says how many edited files you get.',
+    description: 'Commercial photographer and videographer in Perth: photos from $250, photo and video from $2,600. Each package says how many edited files you get.',
     priority: 0.9, changefreq: 'monthly',
     links: {
       pillars: ['branding-perth', 'web-design-perth'],

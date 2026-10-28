@@ -43,6 +43,12 @@
  * want either ("i dont wanna take all the credit", as on the posts), so it
  * now says what the work is: the portraits are "part of the work", Sharp's is
  * "high-quality photography", his own wording. Don't put "we shot" back.
+ *
+ * 28 Oct 2026: prices follow pricing.js, repriced at Caleb's request after
+ * the photographers C4 Lens books said the old ones didn't cover their
+ * rates. Core $200 to $250, Content Creation $1,200 to $2,600, Full
+ * Production $2,500+ to $5,000+, the add-on $750 to $2,600. Nothing else
+ * changed.
  */
 export default {
   hero: {
@@ -50,7 +56,7 @@ export default {
     // Three lines so it breaks cleanly from 375 to 1440 wide (measured 16 Oct).
     title: ['Photography and video', 'in Perth, with the prices', 'on the page.'],
     intro: [
-      'C4 Lens shoots photos and video for Perth businesses, mostly on site, and every package has a published price. A 30-minute shoot with five edited photos is $200. A full day of photo and video, with 60-plus edited photos and five finished videos, starts at $2,500.',
+      'C4 Lens shoots photos and video for Perth businesses, mostly on site, and every package has a published price. A 30-minute shoot with five edited photos is $250. A full day of photo and video, with 60-plus edited photos and five finished videos, starts at $5,000.',
       'The edit is included in every package, and each one says how many files you’ll get back.',
     ],
   },
@@ -60,8 +66,8 @@ export default {
       label: 'Photo or video',
       heading: 'Do you need video, or just photos?',
       body: [
-        'If it’s photos for a website or a Google Business Profile, one of the first three packages will cover it. They’re photography only, from a 30-minute session at $200 to a two-hour Brand Shoot at $650 with 30 edited images.',
-        'Video starts with Content Creation at $1,200: a half-day shoot with 40 edited photos and two short videos cut for social. For a longer film as well, Full Production is a full day from $2,500, with four short videos and a long-form film of up to three minutes.',
+        'If it’s photos for a website or a Google Business Profile, one of the first three packages will cover it. They’re photography only, from a 30-minute session at $250 to a two-hour Brand Shoot at $650 with 30 edited images.',
+        'Video starts with Content Creation at $2,600: a half-day shoot with 40 edited photos and two short videos cut for social. For a longer film as well, Full Production is a full day from $5,000, with four short videos and a long-form film of up to three minutes.',
       ],
     },
     {
@@ -83,11 +89,11 @@ export default {
       heading: 'Packages and exactly what you receive',
       head: ['Package', 'Price', 'You receive'],
       rows: [
-        ['Core', '$200', 'A 30-minute shoot at one location and 5 edited images, delivered by online gallery.'],
+        ['Core', '$250', 'A 30-minute shoot at one location and 5 edited images, delivered by online gallery.'],
         ['Portrait Session', '$350', 'A one-hour shoot and 15 edited images — personal brand, professional profiles, team additions.'],
         ['Brand Shoot', '$650', 'Two hours across up to two locations: headshots plus workspace and lifestyle shots, 30 edited images.'],
-        ['Content Creation', '$1,200', 'A half-day photo and video shoot: 40 edited photos plus two short-form videos cut for social.'],
-        ['Full Production', '$2,500+', 'A full day: 60-plus edited photos, four short-form videos and one long-form film with grading, sound design and motion graphics.'],
+        ['Content Creation', '$2,600', 'A half-day photo and video shoot: 40 edited photos plus two short-form videos cut for social.'],
+        ['Full Production', '$5,000+', 'A full day: 60-plus edited photos, four short-form videos and one long-form film with grading, sound design and motion graphics.'],
       ],
     },
     {
@@ -133,14 +139,14 @@ export default {
       label: 'Pair it',
       heading: 'Shot for the places it’ll live',
       body: [
-        'Because the same studio builds websites and brands, Lens shoots are planned around where the images will actually sit — hero banners shot with space for headlines, team photos framed for the layouts they’ll fill, verticals cut for reels. A $750 photography and videography add-on can also ride along with any website build.',
+        'Because the same studio builds websites and brands, Lens shoots are planned around where the images will actually sit — hero banners shot with space for headlines, team photos framed for the layouts they’ll fill, verticals cut for reels. The Content Creation shoot can also ride along with any website build, as a $2,600 add-on.',
       ],
     },
   ],
   faqs: [
     {
       q: 'What does commercial photography cost in Perth?',
-      a: 'Lens packages run from $200 for a 30-minute session with 5 edited images, through $650 for a two-hour Brand Shoot with 30 images, up to full-day productions from $2,500. Every package lists exactly how many edited files you receive.',
+      a: 'Lens packages run from $250 for a 30-minute session with 5 edited images, through $650 for a two-hour Brand Shoot with 30 images, up to full-day productions from $5,000. Every package lists exactly how many edited files you receive.',
     },
     {
       q: 'How many photos do we actually get?',

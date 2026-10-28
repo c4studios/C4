@@ -274,7 +274,7 @@ export const webDesignAddOns = [
   { name: '5-page pack', price: 400 },
   { name: 'Copywriting package', price: 500 },
   { name: 'Branding add-on', price: 400, detail: 'A logo designed alongside your new website: 2 initial concepts, 2 revision rounds, a colour palette and font pairing used across the site, and the favicon and social profile image. Final files: SVG + PNG.' },
-  { name: 'Photography + videography add-on', price: 750 },
+  { name: 'Photography + videography add-on', price: 2600, detail: 'The C4 Lens Content Creation shoot alongside your website build: a half-day photo and video shoot, 40 edited photos and two short videos.' },
   { name: 'Online booking / appointments', price: 400 },
   { name: 'Client portal / login area', price: 1000 },
   { name: 'Advanced form', price: 300 },
@@ -392,12 +392,17 @@ export const brandingPackages = [
 ];
 
 /* ── C4 Lens Packages ── */
+/* Repriced 28 Oct 2026 at Caleb's request, after the photographers C4 Lens
+   books said the old prices didn't cover their rates: Core $250 (a 30-minute
+   shoot still books an hour), Content Creation $2,600, Full Production $5,000+.
+   Portrait and Brand Shoot already covered them. The photography and
+   videography add-on below follows Content Creation. */
 export const c4LensPackages = [
   {
     key: 'mini-session',
     name: 'Core',
-    price: 200,
-    priceLabel: '$200',
+    price: 250,
+    priceLabel: '$250',
     popular: false,
     description: 'A quick headshot or product shoot for essentials.',
     features: [
@@ -439,8 +444,8 @@ export const c4LensPackages = [
   {
     key: 'content-creation',
     name: 'Content Creation',
-    price: 1200,
-    priceLabel: '$1,200',
+    price: 2600,
+    priceLabel: '$2,600',
     popular: false,
     description: 'Photo and video content for social media and marketing.',
     features: [
@@ -454,8 +459,8 @@ export const c4LensPackages = [
   {
     key: 'full-production',
     name: 'Full Production',
-    price: 2500,
-    priceLabel: '$2,500+',
+    price: 5000,
+    priceLabel: '$5,000+',
     popular: false,
     description: 'Complete photo and video production for campaigns and launches.',
     features: [
