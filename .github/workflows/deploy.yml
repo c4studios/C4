@@ -27,7 +27,12 @@ concurrency:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    # Pinned on 28 Oct 2026. ubuntu-latest moved to Ubuntu 26.04, and the
+    # Playwright 1.52 that prerenders the site won't install Chromium there
+    # ("Playwright does not support chromium on ubuntu26.04-x64"), so the
+    # Lens price deploy failed in 43 s. Every deploy before it ran on 24.04.
+    # Unpin only after upgrading Playwright to a release that supports 26.04.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
