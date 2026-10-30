@@ -1,0 +1,169 @@
+{
+  "version": 3,
+  "sourceUrl": "https://c4site.com.au",
+  "slug": "c4site-com-au",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 8,
+      "captures": [
+        {
+          "id": "01-home",
+          "caption": "Home. A chalk word-search film fills the top of the board, with the heading under it and the two actions beside it",
+          "route": "/",
+          "bytes": 895812,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-home.png"
+        },
+        {
+          "id": "02-schools",
+          "caption": "Schools. Three picture cards pinned to the board, and the machine’s wrong answer chalked beside them",
+          "route": "/ai-training-for-schools/",
+          "bytes": 174474,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-schools.png"
+        },
+        {
+          "id": "03-rules",
+          "caption": "The safety rules in a chalk frame, straight on the board",
+          "route": "/ai-training-for-schools/",
+          "bytes": 83938,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-rules.png"
+        },
+        {
+          "id": "04-library",
+          "caption": "The library. Each activity is a paper card held to the board by a magnet",
+          "route": "/library/",
+          "bytes": 493089,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-library.png"
+        },
+        {
+          "id": "05-folder",
+          "caption": "What a team keeps: the take-home sheets in a glass folder, listed beside it",
+          "route": "/ai-training-for-business/",
+          "bytes": 235062,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-folder.png"
+        },
+        {
+          "id": "06-folder-open",
+          "caption": "Open the folder and the sheets rise and fan out, and each one opens full size",
+          "route": "/ai-training-for-business/",
+          "bytes": 275562,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-folder-open.png"
+        },
+        {
+          "id": "07-packs",
+          "caption": "The free packs page. Every cover is in the list, and the first pack is in the first screen",
+          "route": "/free-packs/",
+          "bytes": 206886,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/07-packs.png"
+        },
+        {
+          "id": "08-look-inside",
+          "caption": "Look inside opens two real pages of a pack in place",
+          "route": "/free-packs/",
+          "bytes": 314820,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/08-look-inside.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 5,
+      "captures": [
+        {
+          "id": "01-home",
+          "caption": "Home. A chalk word-search film fills the top of the board, with the heading under it and the two actions beside it",
+          "route": "/",
+          "bytes": 808495,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-home.png"
+        },
+        {
+          "id": "02-schools",
+          "caption": "Schools. Three picture cards pinned to the board, and the machine’s wrong answer chalked beside them",
+          "route": "/ai-training-for-schools/",
+          "bytes": 256214,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-schools.png"
+        },
+        {
+          "id": "04-library",
+          "caption": "The library. Each activity is a paper card held to the board by a magnet",
+          "route": "/library/",
+          "bytes": 977146,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-library.png"
+        },
+        {
+          "id": "06-folder-open",
+          "caption": "Open the folder and the sheets rise and fan out, and each one opens full size",
+          "route": "/ai-training-for-business/",
+          "bytes": 373794,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-folder-open.png"
+        },
+        {
+          "id": "07-packs",
+          "caption": "The free packs page. Every cover is in the list, and the first pack is in the first screen",
+          "route": "/free-packs/",
+          "bytes": 249038,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/07-packs.png"
+        }
+      ]
+    }
+  }
+}

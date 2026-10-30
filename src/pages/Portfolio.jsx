@@ -6,7 +6,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import PortfolioHero from '../components/portfolio/PortfolioHero';
 import PortfolioSortMenu from '../components/portfolio/PortfolioSortMenu';
-import { getAllCaseStudies } from '../components/portfolio/caseStudyData';
+import { getAllCaseStudies, CONCEPT_LEAD } from '../components/portfolio/caseStudyData';
 import { FeaturedCardSkeleton } from '../components/portfolio/PortfolioCardSkeleton';
 import PortfolioMedia, { WebpImg } from '../components/portfolio/PortfolioMedia';
 import PlayLayer from '../components/portfolio/PlayLayer';
@@ -306,11 +306,20 @@ function CategoryChooser({ active, onChange, counts }) {
   );
 }
 
-function CategoryGroup({ groupKey, studies, showHeader }) {
+function CategoryGroup({ groupKey, studies, showHeader, sort }) {
   if (!studies.length) return null;
   const meta = SECTION_META[groupKey];
-  const feat = studies.filter((study) => study.featured);
-  const rest = studies.filter((study) => !study.featured);
+  /* Concepts lead with CONCEPT_LEAD (caseStudyData.jsx), the four Caleb
+     picked on 31 Oct 2026, as featured cards. The default sort keeps his
+     order; a sort the visitor picks orders the four as it does the rest. */
+  const isLead = groupKey === 'concept'
+    ? (study) => CONCEPT_LEAD.includes(study.slug)
+    : (study) => study.featured;
+  const feat = studies.filter(isLead);
+  if (groupKey === 'concept' && sort === 'featured') {
+    feat.sort((a, b) => CONCEPT_LEAD.indexOf(a.slug) - CONCEPT_LEAD.indexOf(b.slug));
+  }
+  const rest = studies.filter((study) => !isLead(study));
   return (
     <div>
       {showHeader && meta && (
@@ -439,6 +448,7 @@ export default function Portfolio() {
                   groupKey={groupKey}
                   studies={sorted.filter((study) => matchCategory(study, groupKey))}
                   showHeader={filter === 'all'}
+                  sort={sort}
                 />
               ))}
             </div>

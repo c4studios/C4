@@ -8,9 +8,15 @@
  * /Portfolio. JK Plumbing, SGR Prestige, EuroChem and CMC Lawns stay on
  * the portfolio and are not shown here.
  *
+ * The order, 31 Oct 2026. Wooster Core, Barry's Drink, S1XTEEN and IOPA
+ * lead, in that order ("wooster, barry, sixteen and iopa are probs the
+ * best"), read from CONCEPT_LEAD in caseStudyData.jsx so /Portfolio's
+ * Concepts view and this drum agree. The WA Police face follows them.
+ *
  * What the faces may say. Every face has a Live site link. Only a concept
  * with a real case study entry (caseStudyData.jsx) gets a Case study link:
- * the WA Police and S1XTEEN concepts have none. Every face carries the
+ * the WA Police concept has none (S1XTEEN got its entry on 31 Oct 2026).
+ * Every face carries the
  * same notice: "Unofficial concept. Not affiliated with…" (S1XTEEN's own
  * site says "not made with or for", and its face keeps those words). Caleb
  * asked for the notice on all five on 15 Oct 2026. The Wooster and IOPA
@@ -42,6 +48,7 @@
  */
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
+import { CONCEPT_LEAD } from '../portfolio/caseStudyData';
 
 import cptWapf from './assets/cpt-wapf.webp';
 import cptWapfAvif from './assets/cpt-wapf.avif';
@@ -56,20 +63,24 @@ import cptIopaAvif from './assets/cpt-iopa.avif';
 
 const ALL_CONCEPTS = '/Portfolio?filter=concept';
 
-const CONCEPTS = [
+/* `slug` is the concept's case study entry, if it has one. */
+const CONCEPT_FACES = [
   {
-    key: 'wapf',
-    name: 'WA Police Force',
-    standing: 'Unofficial concept. Not affiliated with WA Police.',
-    line: 'A front door for WA Police services. Every number and link on it was taken from the official pages.',
-    img: cptWapf,
-    avif: cptWapfAvif,
-    live: 'https://wapf-concept.vercel.app',
-    caseStudy: null,
-    alt: 'The unofficial WA Police Force concept: the concept banner and the force’s crest above a police motorcyclist at a street event, beside the line “Every way in, on one page.”',
+    key: 'wooster',
+    slug: 'wooster-core',
+    name: 'Wooster Core',
+    /* Arty Design makes the Wooster Core handle (the case study entry). */
+    standing: 'Unofficial concept. Not affiliated with Arty Design.',
+    line: 'A storefront built as the product’s own box. The lid is the hero, and a live 3D print is its line drawing.',
+    img: cptWooster,
+    avif: cptWoosterAvif,
+    live: 'https://wooster-henna.vercel.app',
+    caseStudy: '/CaseStudy/wooster-core',
+    alt: 'The unofficial Wooster Core concept storefront: the kitesurf handle drawn as a 3D print in white lines on a charcoal box lid.',
   },
   {
     key: 'barrys',
+    slug: 'barrys-drink',
     name: 'Barry’s Drink',
     /* Straight apostrophe: the tag is set in B612 Mono, whose curly one
        reads as a backtick at this size. */
@@ -82,30 +93,20 @@ const CONCEPTS = [
     alt: 'The unofficial Barry’s Drink concept: three founders cut by white slashes, beside a cyan field and the Barry logo as a sticker.',
   },
   {
-    key: 'wooster',
-    name: 'Wooster Core',
-    /* Arty Design makes the Wooster Core handle (the case study entry). */
-    standing: 'Unofficial concept. Not affiliated with Arty Design.',
-    line: 'A storefront built as the product’s own box. The lid is the hero, and a live 3D print is its line drawing.',
-    img: cptWooster,
-    avif: cptWoosterAvif,
-    live: 'https://wooster-henna.vercel.app',
-    caseStudy: '/CaseStudy/wooster-core',
-    alt: 'The unofficial Wooster Core concept storefront: the kitesurf handle drawn as a 3D print in white lines on a charcoal box lid.',
-  },
-  {
     key: 's1xteen',
+    slug: 's1xteen',
     name: 'S1XTEEN',
     standing: 'Unofficial concept. Not made with or for S1XTEEN.',
     line: 'A home for The S1XTEEN Show. A black-and-white cut of their own sessions and concert reels runs under the name.',
     img: cptS1xteen,
     avif: cptS1xteenAvif,
     live: 'https://s1xteen-concept.vercel.app',
-    caseStudy: null,
+    caseStudy: '/CaseStudy/s1xteen',
     alt: 'The unofficial S1XTEEN concept: the S1XTEEN name over a black-and-white shot of a performer with both arms raised.',
   },
   {
     key: 'iopa',
+    slug: 'iopa',
     name: 'IOPA Apparel',
     standing: 'Unofficial concept. Not affiliated with IOPA.',
     line: 'Streetwear staged as a live broadcast. A tuner along the bottom edge scrubs the whole site like a radio dial.',
@@ -115,7 +116,26 @@ const CONCEPTS = [
     caseStudy: '/CaseStudy/iopa',
     alt: 'The unofficial IOPA Apparel concept: “CHOP LIFE.” in bone type over a dithered transmission orb.',
   },
+  {
+    key: 'wapf',
+    slug: null,
+    name: 'WA Police Force',
+    standing: 'Unofficial concept. Not affiliated with WA Police.',
+    line: 'A front door for WA Police services. Every number and link on it was taken from the official pages.',
+    img: cptWapf,
+    avif: cptWapfAvif,
+    live: 'https://wapf-concept.vercel.app',
+    caseStudy: null,
+    alt: 'The unofficial WA Police Force concept: the concept banner and the force’s crest above a police motorcyclist at a street event, beside the line “Every way in, on one page.”',
+  },
 ];
+
+/* The faces in CONCEPT_LEAD's order, then any others as listed above. */
+const leadRank = (item) => {
+  const i = CONCEPT_LEAD.indexOf(item.slug);
+  return i === -1 ? CONCEPT_LEAD.length : i;
+};
+const CONCEPTS = [...CONCEPT_FACES].sort((a, b) => leadRank(a) - leadRank(b));
 
 /* The five concepts and the "And more…" face. */
 const FACES = CONCEPTS.length + 1;

@@ -9,6 +9,12 @@
  *
  * Usage: node recapture.mjs <slug>
  * Configs live in ./recapture.config.mjs
+ *
+ * Two optional settings per site (30 Oct 2026):
+ *   channel: 'chrome'  shoots with installed Chrome instead of Playwright's
+ *                      Chromium, for sites whose film or WebGL needs it.
+ *   block: [RegExp]    requests to abort, such as the site's own analytics, so
+ *                      a capture run isn't counted as visits to a client's site.
  */
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -123,6 +129,7 @@ async function runDevice(browser, kind, vp) {
     hasTouch: kind === 'mobile',
   });
   await preConsent(context);
+  for (const pattern of cfg.block || []) await context.route(pattern, (route) => route.abort());
   /* cfg.storage seeds the site's own saved answers before its scripts run (e.g. an age
      gate). A target can opt out for one load by setting sessionStorage 'cm-no-seed'. */
   if (cfg.storage) await context.addInitScript((kv) => { try { if (sessionStorage.getItem('cm-no-seed')) return; for (const [k, v] of Object.entries(kv)) localStorage.setItem(k, v); } catch (_) {} }, cfg.storage);
@@ -182,7 +189,11 @@ async function runDevice(browser, kind, vp) {
 
 async function main() {
   console.log(`Recapture: ${slug} (${cfg.site})`);
-  const browser = await chromium.launch({ headless: true, args: ['--autoplay-policy=no-user-gesture-required'] });
+  const browser = await chromium.launch({
+    headless: true,
+    ...(cfg.channel ? { channel: cfg.channel } : {}),
+    args: ['--autoplay-policy=no-user-gesture-required'],
+  });
   const manifest = { version: 3, sourceUrl: cfg.site, slug: cfg.outSlug || slug, curated: true, devices: {} };
 
   manifest.devices.desktop = await runDevice(browser, 'desktop', { width: 1440, height: 900 });

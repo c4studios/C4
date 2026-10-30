@@ -129,11 +129,25 @@ export default function CaseStudy() {
       navLabel: titled('screenshots', 'Screenshots'),
       title: titled('screenshots', 'Screenshots'),
       content: (
-        <CaseStudyGallery
-          screenshots={study.screenshots}
-          desktopScreenshots={study.desktopScreenshots}
-          mobileScreenshots={study.mobileScreenshots}
-        />
+        <>
+          <CaseStudyGallery
+            screenshots={study.screenshots}
+            desktopScreenshots={study.desktopScreenshots}
+            mobileScreenshots={study.mobileScreenshots}
+          />
+          {/* Where the screenshots show a client's own photos, one line of
+              fine print says so (Caleb, 18 Oct 2026: client photos show with
+              a fine-print line, and nobody gatekeeps on credit). It sits
+              outside the gallery so the prerendered page carries it too. */}
+          {study.photoCredit && (
+            <p
+              className="mt-4 max-w-[640px] font-mono text-[11.5px] leading-[1.55] tracking-[0.02em]"
+              style={{ color: 'var(--c4-text-muted)' }}
+            >
+              {study.photoCredit}
+            </p>
+          )}
+        </>
       ),
     },
     study.delivered?.length > 0 && {

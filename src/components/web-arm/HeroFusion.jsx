@@ -63,6 +63,9 @@ import plxCia from './assets/plx-cia.webp';
 import plxSgr from './assets/plx-sgr.webp';
 import plxEurochem from './assets/plx-eurochem.webp';
 import plxCmc from './assets/plx-cmc.webp';
+import plxS1xteen from './assets/plx-s1xteen.webp';
+import plxC4site from './assets/plx-c4site.webp';
+import plxZaza from './assets/plx-zaza.webp';
 
 /* slug → derived 1200w webp. One line per portfolio entry. */
 const PLX_IMG = {
@@ -88,6 +91,9 @@ const PLX_IMG = {
   'sgr-prestige': plxSgr,
   eurochem: plxEurochem,
   'cmc-lawns': plxCmc,
+  s1xteen: plxS1xteen,
+  c4site: plxC4site,
+  'zaza-silks': plxZaza,
 };
 
 /* Every portfolio entry, newest build first, split into three rows.

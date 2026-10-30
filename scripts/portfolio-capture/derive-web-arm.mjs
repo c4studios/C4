@@ -50,6 +50,8 @@ export const DERIVE = {
   'aqua-safe-plumbing': 'aquasafeplumbing-com-au/desktop/01-hero.png',
   'brady-electrical': 'bradyelectrical-com-au/desktop/01-hero.png',
   'cia-solutions': 'ciasolutions-com-au/desktop/01-hero.png',
+  c4site: 'c4site-com-au/desktop/01-home.png',
+  'zaza-silks': 'zazasilks-site/desktop/01-hero.png',
   // concepts
   'sgr-prestige': 'sgr-prestige-concept-vercel-app/desktop/01-hero.png',
   eurochem: 'eurochem-concept-vercel-app/desktop/01-hero.png',
@@ -58,6 +60,7 @@ export const DERIVE = {
   // at the q=60 floor, against a 72KB budget every other tile meets. The
   // before/after frame is more representative anyway and fits at q=82.
   'cmc-lawns': 'cmc-lawns-concept-vercel-app/desktop/04-work.png',
+  s1xteen: 's1xteen-concept-vercel-app/desktop/01-hero.png',
 };
 
 /** slug -> the import name used in HeroFusion.jsx (file is plx-<key>.webp). */
@@ -83,9 +86,12 @@ export const KEY = {
   'aqua-safe-plumbing': 'aquasafe',
   'brady-electrical': 'brady',
   'cia-solutions': 'cia',
+  c4site: 'c4site',
+  'zaza-silks': 'zaza',
   'sgr-prestige': 'sgr',
   eurochem: 'eurochem',
   'cmc-lawns': 'cmc',
+  s1xteen: 's1xteen',
 };
 
 const args = process.argv.slice(2);

@@ -1,0 +1,180 @@
+{
+  "version": 3,
+  "sourceUrl": "https://s1xteen-concept.vercel.app",
+  "slug": "s1xteen-concept-vercel-app",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 9,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "The name breaks up every second or two, over a black-and-white cut of the crew’s own sessions and concert reels",
+          "route": "/",
+          "bytes": 421000,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-hero.png"
+        },
+        {
+          "id": "02-show",
+          "caption": "The Show. Both series in one quiet list, each episode with Watch, and Just listen where there’s audio",
+          "route": "/",
+          "bytes": 201481,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-show.png"
+        },
+        {
+          "id": "03-listen",
+          "caption": "Just listen plays the episode from the podcast feed, drawn as a voice-memo waveform",
+          "route": "/",
+          "bytes": 196192,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-listen.png"
+        },
+        {
+          "id": "04-nights",
+          "caption": "Nights. Every night S1XTEEN hosted, powered, supported or was part of, newest first",
+          "route": "/",
+          "bytes": 65363,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-nights.png"
+        },
+        {
+          "id": "05-room",
+          "caption": "In the room since 2022: the crew’s own photos from Perth’s big nights, each with its credit",
+          "route": "/",
+          "bytes": 439712,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-room.png"
+        },
+        {
+          "id": "06-book",
+          "caption": "Book the crew. As a concept, the form sends nothing, and says so",
+          "route": "/",
+          "bytes": 97593,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-book.png"
+        },
+        {
+          "id": "07-night",
+          "caption": "A night’s own page. The name glitches in over smoke, with the date and venue set large",
+          "route": "/nights/jeleel",
+          "bytes": 322358,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/07-night.png"
+        },
+        {
+          "id": "08-night-photo",
+          "caption": "The lead photo runs full width and drifts as you scroll, with the crew’s own words as white caption boxes",
+          "route": "/nights/jeleel",
+          "bytes": 495484,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/08-night-photo.png"
+        },
+        {
+          "id": "09-not-on-the-list",
+          "caption": "The 404: Not on the list",
+          "route": "/nope",
+          "bytes": 60558,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/09-not-on-the-list.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 5,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "The name breaks up every second or two, over a black-and-white cut of the crew’s own sessions and concert reels",
+          "route": "/",
+          "bytes": 500529,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-hero.png"
+        },
+        {
+          "id": "02-show",
+          "caption": "The Show. Both series in one quiet list, each episode with Watch, and Just listen where there’s audio",
+          "route": "/",
+          "bytes": 333988,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-show.png"
+        },
+        {
+          "id": "04-nights",
+          "caption": "Nights. Every night S1XTEEN hosted, powered, supported or was part of, newest first",
+          "route": "/",
+          "bytes": 116325,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-nights.png"
+        },
+        {
+          "id": "06-book",
+          "caption": "Book the crew. As a concept, the form sends nothing, and says so",
+          "route": "/",
+          "bytes": 143157,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-book.png"
+        },
+        {
+          "id": "07-night",
+          "caption": "A night’s own page. The name glitches in over smoke, with the date and venue set large",
+          "route": "/nights/jeleel",
+          "bytes": 566514,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/07-night.png"
+        }
+      ]
+    }
+  }
+}

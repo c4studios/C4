@@ -3057,6 +3057,133 @@ export const CASE_STUDIES = {
       'Flip the build to a crawlable robots file only if the supplier approves a real launch.',
     ],
   },
+
+  /* S1XTEEN, added 31 Oct 2026 at Caleb's request ("wooster, barry, sixteen
+     and iopa are probs the best"). An unpaid concept to pitch to the crew
+     (brain clients row s1xteen). Facts come from that row, its work_log rows
+     (679, 699, 700, 954, 955, 958, 959), the concept's own research/FACTS.md
+     and the live site, read on 30 Oct 2026. No person is named here. The
+     crew's photos and footage are theirs, credited on the site. */
+  's1xteen': {
+    slug: 's1xteen',
+    name: 'S1XTEEN',
+    oneLiner: 'An unofficial concept site for S1XTEEN, the Perth crew behind The S1XTEEN Show, in their own black and white, where any episode can be watched or just listened to on the page.',
+    client: 'Concept. Perth culture show and media crew',
+    location: 'Perth, WA',
+    timeline: '',
+    budget: '',
+    role: 'Solo (concept, design, development, film edit, deployment)',
+    liveUrl: 'https://s1xteen-concept.vercel.app',
+    year: '2026',
+    /* Vercel project s1xteen-concept, oldest deployment
+       dpl_94bnfyJ1cN4sd1Nijqd4ne6PEZVU, 2026-10-09 12:06 UTC. The site as
+       described here is the third round, deployed 26 Oct 2026. */
+    firstDeployed: '2026-10-09',
+    category: 'web_design',
+    tags: ['Website', 'Concept', 'Media & Nightlife', 'Web Audio', 'Next.js', 'Perth'],
+    featured: false,
+    concept: true,
+    budgetOrder: 0,
+
+    cover: null,
+    brandColor: '#0D0D0D',
+    backdropStyle: { backgroundColor: '#0d0d0d' },
+    thumbnail: '/captures/s1xteen-concept-vercel-app/desktop/01-hero.png',
+    /* Straight apostrophes in photoCredit: it's set in B612 Mono, whose
+       curly one reads as an accent at that size. */
+    photoCredit: 'The photos and footage on the concept are S1XTEEN\'s own, credited on the site to whoever their posts name.',
+
+    overview: 'S1XTEEN is the Perth crew behind The S1XTEEN Show, and their cameras have been at the city’s big nights since 2022. They had no working website, so C4 built this unofficial concept to show them one. The notice at the top of every page says it isn’t made with or for S1XTEEN, and that nothing on it is for sale. The site is in their own black and white. Their name breaks up every second or two over a cut of their own sessions and concert reels, and colour shows only on a broken frame. The Show is one quiet list across both of their series. Any episode can be watched in a player on the page, and where there’s audio it can be played from their own podcast feed as a voice-memo waveform. Each of their nights gets its own page, with their photos credited to whoever their posts name. The booking form is styled like the rest of the site and sends nothing. Every fact traces to the crew’s own posts and channels, and anything unknown shows as a visible placeholder. The concept is hidden from search. Available to license or commission.',
+
+    screenshots: [
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/01-hero.png', caption: 'The name breaks up every second or two, over a black-and-white cut of the crew’s own sessions and concert reels' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/02-show.png', caption: 'The Show. Both series in one quiet list, each episode with Watch, and Just listen where there’s audio' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/03-listen.png', caption: 'Just listen plays the episode from the podcast feed, drawn as a voice-memo waveform' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/04-nights.png', caption: 'Nights. Every night S1XTEEN hosted, powered, supported or was part of, newest first' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/05-room.png', caption: 'In the room since 2022: the crew’s own photos from Perth’s big nights, each with its credit' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/06-book.png', caption: 'Book the crew. As a concept, the form sends nothing, and says so' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/07-night.png', caption: 'A night’s own page. The name glitches in over smoke, with the date and venue set large' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/08-night-photo.png', caption: 'The lead photo runs full width and drifts as you scroll, with the crew’s own words as white caption boxes' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/09-not-on-the-list.png', caption: 'The 404: Not on the list' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/01-hero.png', caption: 'The name breaks up every second or two, over a black-and-white cut of the crew’s own sessions and concert reels' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/02-show.png', caption: 'The Show. Both series in one quiet list, each episode with Watch, and Just listen where there’s audio' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/03-listen.png', caption: 'Just listen plays the episode from the podcast feed, drawn as a voice-memo waveform' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/04-nights.png', caption: 'Nights. Every night S1XTEEN hosted, powered, supported or was part of, newest first' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/05-room.png', caption: 'In the room since 2022: the crew’s own photos from Perth’s big nights, each with its credit' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/06-book.png', caption: 'Book the crew. As a concept, the form sends nothing, and says so' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/07-night.png', caption: 'A night’s own page. The name glitches in over smoke, with the date and venue set large' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/08-night-photo.png', caption: 'The lead photo runs full width and drifts as you scroll, with the crew’s own words as white caption boxes' },
+      { url: '/captures/s1xteen-concept-vercel-app/desktop/09-not-on-the-list.png', caption: 'The 404: Not on the list' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/s1xteen-concept-vercel-app/mobile/01-hero.png', caption: 'The name breaks up over the crew’s own footage, with the concept notice above it' },
+      { url: '/captures/s1xteen-concept-vercel-app/mobile/02-show.png', caption: 'The Show on a phone, with Watch and Just listen under each episode' },
+      { url: '/captures/s1xteen-concept-vercel-app/mobile/04-nights.png', caption: 'Nights, newest first, each to its own page' },
+      { url: '/captures/s1xteen-concept-vercel-app/mobile/06-book.png', caption: 'Book the crew. As a concept, the form sends nothing, and says so' },
+      { url: '/captures/s1xteen-concept-vercel-app/mobile/07-night.png', caption: 'A night’s own page, with the date and venue set large over the lead photo' },
+    ],
+
+    delivered: [
+      'A one-page home, and a page for each of eight nights',
+      'A 21-second black-and-white hero film, cut from the crew’s own sessions and concert reels',
+      'An episode list across both series, with a player on the page and a listen-only mode',
+      'A booking form in the site’s own style that sends nothing',
+      'A 404 page that reads Not on the list',
+      'The concept notice at the top of every page, linking to the real S1XTEEN on Instagram',
+    ],
+
+    features: [
+      'The name centred and breaking up every second or two, split into red, green and blue only while it’s broken',
+      'A smoke haze, drawn live in WebGL',
+      'Watch opens a player that grows out of the episode’s thumbnail and closes back into it',
+      'Just listen streams the episode from the crew’s podcast feed and draws it as a voice-memo waveform while it plays',
+      'Night pages where the title glitches in once over smoke, with the date and venue set large',
+      'A full-width lead photo on each night that drifts as you scroll, with the crew’s own words in white caption boxes',
+      'Escape closes the player even after a click inside the video, and focus goes back to where it was',
+      'A Pause control, and reduced motion leaves the name still',
+    ],
+
+    stack: [
+      'Next.js 16.4 (App Router)',
+      'React 19.3',
+      'TypeScript',
+      'Mona Sans, self-hosted',
+      'Canvas for the breaking name and WebGL for the smoke',
+      'The Web Audio API for the waveform',
+      'YouTube’s no-cookie player, driven over its IFrame API messages',
+      'Vercel hosting',
+    ],
+
+    integrations: [
+      'Episodes play in YouTube’s no-cookie player inside the page',
+      'Audio from the crew’s public podcast feed',
+      'Links out to their YouTube, Spotify, Instagram and TikTok',
+      'No form service and no analytics: the booking form sends nothing',
+    ],
+
+    performance: [
+      'A content security policy that allows frames only from YouTube’s no-cookie player and audio only from the podcast host',
+      'Every page sends noindex in a header and in the page',
+      'No sideways scroll at 375, 768 or 1280 px',
+      'The hero film screened for flashing: at most two flashes a second',
+    ],
+
+    challenges: [
+      'Making sure nobody could take it for the real thing: a notice on every page, and the site kept out of search',
+      'Keeping every fact traceable to the crew’s own posts and channels, with anything unknown shown as a visible placeholder',
+      'Building for a nightlife crowd while keeping the film’s flashing under the safe limit',
+      'The YouTube player kept the Escape key after a click inside it. Focus is now handed back, so Escape closes it',
+    ],
+
+    improvements: [
+      'Upcoming nights, which show as a placeholder until they’re known',
+      'Episodes published since 26 October 2026',
+    ],
+  },
   'quotr': {
     slug: 'quotr',
     name: 'Quotr',
@@ -3259,6 +3386,276 @@ export const CASE_STUDIES = {
     challenges: [],
     improvements: [],
   },
+
+  /* C4Site's website (Caleb, 30 Oct 2026: "and the c4 site website"). C4Site
+     is the sister business, and its HQ is the source of truth for its offers,
+     prices and team, so none of them is stated here: this describes the
+     website C4 built. Facts come from the c4site-website repo (README,
+     DESIGN.md, PRODUCT.md, docs/PRE-LAUNCH-REPORT.md), the brain's work_log
+     (443, 614, 628, 643) and the live site, read on 30 Oct 2026. No person
+     is named, and the About page (it shows the co-founder) isn't shown. */
+  'c4site': {
+    slug: 'c4site',
+    name: 'C4Site',
+    oneLiner: 'A website for C4Site, our sister business teaching Perth schools and workplaces to use AI, set on a green chalkboard with real sheets of paper pinned to it.',
+    client: 'C4Site, our sister business, which runs AI training',
+    location: 'Perth, WA',
+    timeline: 'First preview 30 Sep 2026, live on its domain 9 Oct 2026',
+    budget: '',
+    role: 'Solo (design, development, forms, deployment)',
+    liveUrl: 'https://c4site.com.au',
+    year: '2026',
+    /* No Vercel or GitHub deployment record: the site is a Cloudflare Worker
+       on C4Site's own account, which this repo's credentials don't reach.
+       The date is the brain's record of the first deploy, work_log 443: the
+       Worker "website" went up as a preview on 2026-09-30 at 09:19 UTC. It
+       went live on c4site.com.au at 19:41 UTC on 8 Oct, 9 Oct in Perth
+       (work_log 643). */
+    firstDeployed: '2026-09-30',
+    category: 'web_design',
+    tags: ['Website', 'Training', 'Astro', 'Cloudflare Workers', 'Perth'],
+    featured: false,
+    budgetOrder: 0,
+
+    cover: null,
+    brandColor: '#16352C',
+    thumbnail: '/captures/c4site-com-au/desktop/01-home.png',
+
+    overview: 'C4Site is our sister business. It teaches Perth schools and workplaces to use AI tools on their real work, and C4 designed and built its website. The pages move between white paper, which carries the detail, and a green chalkboard for the statements and the rules. Real documents sit on the board as sheets of paper held by green magnets. The home page opens on a chalk word-search film. On the schools page, three picture cards are pinned up beside the answer a machine gave in a test run, chalked on the board with the wrong word struck through in red. The sheets a team takes home sit in a glass folder that opens and fans them out, and each pack on the packs page opens to two of its real pages in place. Colour is kept for meaning: yellow marks a claim that was checked and held, and red marks one that failed. The site is static pages served by a Cloudflare Worker on C4Site’s own account, and the Worker runs the forms. It went live on c4site.com.au on 9 October 2026.',
+
+    screenshots: [
+      { url: '/captures/c4site-com-au/desktop/01-home.png', caption: 'Home. A chalk word-search film fills the top of the board, with the heading under it and the two actions beside it' },
+      { url: '/captures/c4site-com-au/desktop/02-schools.png', caption: 'Schools. Three picture cards pinned to the board, and the machine’s wrong answer chalked beside them' },
+      { url: '/captures/c4site-com-au/desktop/03-rules.png', caption: 'The safety rules in a chalk frame, straight on the board' },
+      { url: '/captures/c4site-com-au/desktop/04-library.png', caption: 'The library. Each activity is a paper card held to the board by a magnet' },
+      { url: '/captures/c4site-com-au/desktop/05-folder.png', caption: 'What a team keeps: the take-home sheets in a glass folder, listed beside it' },
+      { url: '/captures/c4site-com-au/desktop/06-folder-open.png', caption: 'Open the folder and the sheets rise and fan out, and each one opens full size' },
+      { url: '/captures/c4site-com-au/desktop/07-packs.png', caption: 'The free packs page. Every cover is in the list, and the first pack is in the first screen' },
+      { url: '/captures/c4site-com-au/desktop/08-look-inside.png', caption: 'Look inside opens two real pages of a pack in place' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/c4site-com-au/desktop/01-home.png', caption: 'Home. A chalk word-search film fills the top of the board, with the heading under it and the two actions beside it' },
+      { url: '/captures/c4site-com-au/desktop/02-schools.png', caption: 'Schools. Three picture cards pinned to the board, and the machine’s wrong answer chalked beside them' },
+      { url: '/captures/c4site-com-au/desktop/03-rules.png', caption: 'The safety rules in a chalk frame, straight on the board' },
+      { url: '/captures/c4site-com-au/desktop/04-library.png', caption: 'The library. Each activity is a paper card held to the board by a magnet' },
+      { url: '/captures/c4site-com-au/desktop/05-folder.png', caption: 'What a team keeps: the take-home sheets in a glass folder, listed beside it' },
+      { url: '/captures/c4site-com-au/desktop/06-folder-open.png', caption: 'Open the folder and the sheets rise and fan out, and each one opens full size' },
+      { url: '/captures/c4site-com-au/desktop/07-packs.png', caption: 'The free packs page. Every cover is in the list, and the first pack is in the first screen' },
+      { url: '/captures/c4site-com-au/desktop/08-look-inside.png', caption: 'Look inside opens two real pages of a pack in place' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/c4site-com-au/mobile/01-home.png', caption: 'Home on a phone. The film above, then the heading and the two actions' },
+      { url: '/captures/c4site-com-au/mobile/02-schools.png', caption: 'Schools. The picture cards and the chalked answer sit under the heading' },
+      { url: '/captures/c4site-com-au/mobile/04-library.png', caption: 'The library on a phone: the activities on one sheet pinned to the board' },
+      { url: '/captures/c4site-com-au/mobile/06-folder-open.png', caption: 'The glass folder, open, above the list of what a team keeps' },
+      { url: '/captures/c4site-com-au/mobile/07-packs.png', caption: 'The free packs page, with the download button held at the foot of the screen' },
+    ],
+
+    delivered: [
+      'The website, designed and built: white paper chapters and a green chalkboard, with real sheets pinned to the board',
+      'The chalk word-search film on the home page',
+      'A page for each kind of team the training is for',
+      'A library of articles and activities, and the free packs page',
+      'A glass folder for the take-home sheets, and Look inside for every pack',
+      'An enquiry form and a packs form behind Cloudflare Turnstile, with the records kept in Cloudflare D1',
+      'A record of consent kept with every pack download, in the words the visitor saw',
+      'Build checks that stop a release if a placeholder is left in, or if wording the business has ruled out comes back',
+      'The move from c4studios.com.au, with a permanent redirect from every old address',
+    ],
+
+    features: [
+      'Two actions, named the same way on every page, with the first one always in reach',
+      'Sheets of paper held to the board by green magnets, lit from the top left and turned a little',
+      'A chalk word-search film on the home page, with a pause control',
+      'Three picture cards pinned in the schools hero, with the machine’s answer chalked beside them',
+      'A glass folder that leans under the pointer and opens to fan the sheets out, each one opening full size',
+      'Look inside: two real pages of each pack, opened in place',
+      'Yellow only for a claim that was checked and held, and red only for one that failed',
+      'Scroll reveals at the same strength as c4studios.com.au, with chalk marks drawing on as each block lands',
+    ],
+
+    stack: [
+      'Astro 7, built to static HTML',
+      'A Cloudflare Worker that serves the pages and runs the forms',
+      'Cloudflare D1 for enquiries and pack downloads',
+      'Cloudflare Turnstile on both forms',
+      'Bricolage Grotesque, self-hosted',
+      'GSAP only for the film and two interactive lessons',
+      'Vitest, running the Worker’s tests in the Workers runtime against a local D1',
+      'GitHub Actions running the type checks, the build, the build checks and the tests on every push',
+    ],
+
+    integrations: [
+      'Cloudflare Turnstile, checked on the server for success, action and hostname, and failing closed',
+      'Cloudflare D1, reached only through the Worker, with no public database API',
+      'A limit of five posts a minute per IP address on each form',
+      'A health check that passes only when both forms can do their whole job',
+    ],
+
+    performance: [
+      'Lighthouse mobile on the final design before launch (8 Oct 2026, seven pages): performance 98 to 100, largest paint 1.4 to 2.2 s, no layout shift',
+      'A content security policy that allows no inline script or style, enforced by a build check',
+      'One self-canonical address per page, and a robots file that never blocks a crawler, both checked at build',
+      'Security headers on every page, HSTS included',
+    ],
+
+    challenges: [
+      'Moving a business’s pages off c4studios.com.au to its own domain without breaking the old addresses',
+      'Keeping a training site simple to use, with two actions named the same way everywhere',
+      'Saying only what can be checked: build checks stop a release that still holds a placeholder or wording the business has ruled out',
+    ],
+
+    improvements: [],
+  },
+
+  /* ZaZa Silks (Caleb, 30 Oct 2026: "can we get the zaza silks site up on the
+     web design page and portfolio entry"). Launched on zazasilks.site on
+     30 Oct 2026 (brain work_log 1023). Facts come from the brain's clients
+     row zazasilks and its work_log (108, 254, 610, 669, 901, 903, 909, 917,
+     920, 922, 923, 1022, 1023), the site repo's PRODUCT.md and code, and the
+     live store, read on 30 Oct 2026. The photos and film are the brand's own,
+     so the gallery carries a credit line. The owner isn't named, and there's
+     no testimonial: none has been approved. */
+  'zaza-silks': {
+    slug: 'zaza-silks',
+    name: 'ZaZa Silks',
+    oneLiner: 'An online store for a Perth bonnet brand, dressed in its own photos and film, where every bonnet turns over on a lit switch to show its other side.',
+    client: 'ZaZa Silks, a hair bonnet brand',
+    location: 'Perth, WA',
+    timeline: 'First demo 17 Sep 2026, launched 30 Oct 2026',
+    budget: '',
+    role: 'Solo (design, development, payments, order emails, deployment)',
+    liveUrl: 'https://zazasilks.site',
+    year: '2026',
+    /* Vercel project zazasilks, oldest deployment
+       dpl_FZ6cSEhDjEb6GgRcBcCQXfavtjAV, 2026-09-17 14:35 UTC: the first
+       demo, on zazasilks.vercel.app. The store went live on zazasilks.site on
+       30 Oct 2026. */
+    firstDeployed: '2026-09-17',
+    category: 'ecommerce',
+    tags: ['E-Commerce', 'Hair & Beauty', 'Stripe', 'Supabase', 'Next.js', 'Perth'],
+    featured: true,
+    budgetOrder: 0,
+
+    cover: null,
+    brandColor: '#462E2C',
+    thumbnail: '/captures/zazasilks-site/desktop/01-hero.png',
+    photoCredit: 'The photos and the film in these screenshots are ZaZa Silks\' own.',
+
+    overview: 'ZaZa Silks is a Perth brand of hair bonnets, sold online, and C4 built its store. There are three bonnets. Each one is reversible, with a print on one side and a solid colour on the other. The site is dressed in the brand’s own shoot, and its film fills the first screen, with ZAZA across it in the colour of whichever bonnet is on screen. Each bonnet gets a screen to itself, and a lit Print and Solid switch turns its photo over. The words are the brand’s own, from the product facts to the care and returns lines. Checkout is Stripe’s hosted page, on the owner’s own Stripe account, so card details never touch the site and payouts go to the business. Orders and stock live in a Supabase database in Sydney. Every order is checked to the cent against the shelf price, and a job matches Stripe’s payments to saved orders every 15 minutes. The order emails match the store, set out like a hotel’s turndown card. Shipping is free Australia-wide. The store went live on its own domain on 30 October 2026.',
+
+    screenshots: [
+      { url: '/captures/zazasilks-site/desktop/01-hero.png', caption: 'The home page opens on ZaZa’s own film, with ZAZA across it in the colour of whichever bonnet is on screen' },
+      { url: '/captures/zazasilks-site/desktop/02-bonnets.png', caption: 'Three bonnets, two sides each, with a swatch card of all six sides beside the heading' },
+      { url: '/captures/zazasilks-site/desktop/03-cherry-on-top.png', caption: 'One bonnet to a screen. A lit Print and Solid switch turns the photo over' },
+      { url: '/captures/zazasilks-site/desktop/04-turned.png', caption: 'The switch on Solid: Cherry on top turned over to its wine red side' },
+      { url: '/captures/zazasilks-site/desktop/05-crew.png', caption: 'The crew photo, with a tag on every bonnet that goes straight to it' },
+      { url: '/captures/zazasilks-site/desktop/06-question.png', caption: 'Do I need a bonnet? The brand’s own answer, row by row' },
+      { url: '/captures/zazasilks-site/desktop/07-wake-up.png', caption: 'The brand’s line, “wake up. Slay. Repeat.”, in the handwriting from its cards' },
+      { url: '/captures/zazasilks-site/desktop/08-wear-it.png', caption: 'For sleeping, lounging or out and about, with a photo for each' },
+      { url: '/captures/zazasilks-site/desktop/09-fine-print.png', caption: 'The fine print, in big letters, set as woven labels' },
+      { url: '/captures/zazasilks-site/desktop/10-shop.png', caption: 'The shop: all three bonnets, each with its own switch' },
+      { url: '/captures/zazasilks-site/desktop/11-up-close.png', caption: 'Up close: a gallery of the bonnet’s photos, with the facts folded under Description' },
+      { url: '/captures/zazasilks-site/desktop/12-bag.png', caption: 'The bag, with one bonnet in it. Shipping is free, and checkout goes to Stripe’s own page' },
+    ],
+
+    desktopScreenshots: [
+      { url: '/captures/zazasilks-site/desktop/01-hero.png', caption: 'The home page opens on ZaZa’s own film, with ZAZA across it in the colour of whichever bonnet is on screen' },
+      { url: '/captures/zazasilks-site/desktop/02-bonnets.png', caption: 'Three bonnets, two sides each, with a swatch card of all six sides beside the heading' },
+      { url: '/captures/zazasilks-site/desktop/03-cherry-on-top.png', caption: 'One bonnet to a screen. A lit Print and Solid switch turns the photo over' },
+      { url: '/captures/zazasilks-site/desktop/04-turned.png', caption: 'The switch on Solid: Cherry on top turned over to its wine red side' },
+      { url: '/captures/zazasilks-site/desktop/05-crew.png', caption: 'The crew photo, with a tag on every bonnet that goes straight to it' },
+      { url: '/captures/zazasilks-site/desktop/06-question.png', caption: 'Do I need a bonnet? The brand’s own answer, row by row' },
+      { url: '/captures/zazasilks-site/desktop/07-wake-up.png', caption: 'The brand’s line, “wake up. Slay. Repeat.”, in the handwriting from its cards' },
+      { url: '/captures/zazasilks-site/desktop/08-wear-it.png', caption: 'For sleeping, lounging or out and about, with a photo for each' },
+      { url: '/captures/zazasilks-site/desktop/09-fine-print.png', caption: 'The fine print, in big letters, set as woven labels' },
+      { url: '/captures/zazasilks-site/desktop/10-shop.png', caption: 'The shop: all three bonnets, each with its own switch' },
+      { url: '/captures/zazasilks-site/desktop/11-up-close.png', caption: 'Up close: a gallery of the bonnet’s photos, with the facts folded under Description' },
+      { url: '/captures/zazasilks-site/desktop/12-bag.png', caption: 'The bag, with one bonnet in it. Shipping is free, and checkout goes to Stripe’s own page' },
+    ],
+
+    mobileScreenshots: [
+      { url: '/captures/zazasilks-site/mobile/01-hero.png', caption: 'On a phone the film gets its own tall cut, with ZAZA at the foot of the screen' },
+      { url: '/captures/zazasilks-site/mobile/02-bonnets.png', caption: 'Three bonnets, two sides each, and the swatch card under the heading' },
+      { url: '/captures/zazasilks-site/mobile/03-cherry-on-top.png', caption: 'One bonnet to a screen, with the Print and Solid switch under its name' },
+      { url: '/captures/zazasilks-site/mobile/05-crew.png', caption: 'The crew photo, with a tag on every bonnet' },
+      { url: '/captures/zazasilks-site/mobile/11-up-close.png', caption: 'Up close on a phone: the photos, then the name and the switch' },
+      { url: '/captures/zazasilks-site/mobile/12-bag.png', caption: 'The bag on a phone. Shipping is free, and checkout goes to Stripe’s own page' },
+    ],
+
+    delivered: [
+      'The store: a home page, a shop page, a page for each bonnet, the bag, and pages for shipping, returns and care, and privacy',
+      'Checkout on Stripe’s hosted page, on the owner’s own Stripe account',
+      'Orders and stock in a Supabase database in Sydney, with stock taken as each order is saved',
+      'Order emails for the customer, the owner and C4, set out like a hotel’s turndown card in the store’s own look',
+      'A job every 15 minutes that matches Stripe’s payments to saved orders',
+      'Free shipping Australia-wide, shown on the site and at Stripe’s checkout',
+      'A privacy page written from what the site actually does, approved by the owner',
+      'Product data for Google on each bonnet’s page, with live stock',
+      'Link previews for the store and for each bonnet',
+    ],
+
+    features: [
+      'The brand’s own film on the first screen, with ZAZA across it in the colour of the bonnet on screen, changing on every cut',
+      'A lit Print and Solid switch on every bonnet that turns its photo over',
+      'Print side first, everywhere a bonnet appears',
+      'A swatch card of all six sides beside the range',
+      'Each bonnet’s photo flicks through a burst of frames as it scrolls into place',
+      'A crew photo with a tag on every bonnet, each one linking to it',
+      'Live satin under every page, drawn in WebGL once the page is idle and lit low so the type keeps its contrast',
+      'Up close pages with a photo gallery, and the facts folded under Description',
+      'A bonnet that sells out is marked in the bag, and checkout waits until it’s taken out',
+      'Names in Prata and controls in Oswald, the two faces of the brand’s logo, with Sofia Sans for reading',
+      'When a phone won’t autoplay the film, the first tap starts it',
+    ],
+
+    stack: [
+      'Next.js 16 (App Router)',
+      'React 19',
+      'TypeScript',
+      'Tailwind CSS v4 and shadcn/ui',
+      'Stripe Checkout and the Stripe Node SDK',
+      'Supabase (Postgres) in Sydney',
+      'Resend for the order emails',
+      'GSAP only in the C4 footer credit',
+      'Vercel hosting, with the server functions pinned to Sydney',
+    ],
+
+    integrations: [
+      'Stripe Checkout, created on the server from the store’s own catalogue prices',
+      'A signed Stripe webhook that saves each order and takes its stock in one database function, and has Stripe retry if anything fails',
+      'Refunds and disputes recorded against the order',
+      'Supabase with row level security on every table, written to only through server-side functions',
+      'Resend, sending from the store’s own domain',
+      'A health check that covers the whole path an order takes',
+      'Vercel Web Analytics',
+      'C4 Studios footer credit',
+    ],
+
+    performance: [
+      'Lighthouse mobile on the live home page, 30 Oct 2026: 87 performance, 100 accessibility, 100 best practices, largest paint 3.3 s, no layout shift',
+      'axe found no accessibility violations on eight pages at 375 and 1280 px in the launch rehearsal',
+      'Security headers on every response, HSTS and a frame ban included',
+      '13 store tests, run against the database migration with Stripe-signed events',
+      'A real order on a real card before launch, then a refund, with the total matched to the shelf price to the cent',
+    ],
+
+    challenges: [
+      'Making sure payments and orders can’t drift apart: Stripe retries until each order is saved, and a job checks payments against orders every 15 minutes',
+      'Keeping tax out of the code: prices are entered as the shelf price, and nothing is added on top',
+      'Making the brand’s photos do more than sit on the page: bursts of frames flick by as each bonnet arrives, and the crew photo works as a shop window',
+      'A store the owner never has to log into. C4 runs it, and the owner packs and posts each order',
+      'Launching without reviews. None have been collected yet, so the store shows none',
+    ],
+
+    improvements: [
+      'A journal section for the monthly articles',
+      'Tracking emails when an order is posted',
+      'Reviews, word for word and with each reviewer’s permission, once customers send them',
+    ],
+  },
 };
 
 /* A hidden entry (taken down for rework) is treated as if it did not exist. */
@@ -3270,7 +3667,10 @@ export function getCaseStudy(slug) {
 /* Build chronology, oldest → newest — the single source of truth for portfolio
    ordering. Every entry's `year` is 2026, so date sorts can't separate them;
    this does. Client sites first in the order they were built, then apps/SaaS,
-   then the self-initiated concepts (which came after the client work). */
+   then the self-initiated concepts (which came after the client work). Work
+   finished after the concepts is added at the end, in the order it was
+   finished. The list also sets the social posting order
+   (Downloads/C4-social-assets/SCHEDULE.md). */
 export const BUILD_ORDER = [
   'transform-fremantle', 'jurassic-pt', 'gocc', 'transform-hakea', 'rocksstream',
   'groverz-tax', 'sharp-bricklaying', 'hvn-gym', 'ds-racing-karts',
@@ -3278,13 +3678,25 @@ export const BUILD_ORDER = [
   'cia-solutions', 'as-he-leads',
   // apps
   'people-power',
-  // concepts (self-initiated, built after the client work)
+  // concepts (self-initiated, built after the client work); S1XTEEN's first
+  // deploy was 9 Oct 2026
   'wooster-core', 'barrys-drink', 'jk-plumbing-solutions', 'iopa',
-  'sgr-prestige', 'eurochem', 'cmc-lawns',
+  'sgr-prestige', 'eurochem', 'cmc-lawns', 's1xteen',
   'quotr',
+  // C4Site's website, live on c4site.com.au 9 Oct 2026
+  'c4site',
   // logo design (the fourth arm from 9 Oct 2026); Genesis's files went out 25 Oct 2026
   'genesis-realty-group',
+  // ZaZa Silks' store, launched on zazasilks.site 30 Oct 2026
+  'zaza-silks',
 ];
+
+/* The concepts /Portfolio shows first, as featured cards and in this order,
+   then the rest (Caleb, 31 Oct 2026: "wooster, barry, sixteen and iopa are
+   probs the best so display them primarily, then the rest"). Kept apart from
+   BUILD_ORDER, which is the build chronology and the posting order.
+   ConceptCarousel on /ServiceWeb leads with the same four, read from here. */
+export const CONCEPT_LEAD = ['wooster-core', 'barrys-drink', 's1xteen', 'iopa'];
 
 /* Lower `seq` = built earlier. Unknown slugs sort to the end (treated newest). */
 function buildSeq(slug) {

@@ -274,4 +274,94 @@ export const CONFIGS = {
       { id: '06-contact', route: '/contact', caption: 'Contact — the real representatives and districts, sourced and dated in the config' },
     ],
   },
+
+  // ZaZa Silks, first shot 30 Oct 2026, the day the store launched on its own
+  // domain. The bag shot adds one bonnet (the bag lives in the browser) and
+  // never presses Checkout. Vercel Web Analytics is blocked so a capture run
+  // isn't counted as visits in the owner's monthly report.
+  'zazasilks-site': {
+    site: 'https://zazasilks.site',
+    channel: 'chrome',
+    block: [/\/_vercel\/(insights|speed-insights)\//],
+    targets: [
+      { id: '01-hero', route: '/', settle: 4500, caption: 'The home page opens on ZaZa’s own film, with ZAZA across it in the colour of whichever bonnet is on screen' },
+      { id: '02-bonnets', route: '/', selector: '#bonnets', caption: 'Three bonnets, two sides each, with a swatch card of all six sides beside the heading' },
+      { id: '03-cherry-on-top', route: '/', selector: '#bonnet-cherry-on-top', caption: 'One bonnet to a screen. A lit Print and Solid switch turns the photo over' },
+      { id: '04-turned', route: '/', selector: '#bonnet-cherry-on-top', desktopOnly: true, caption: 'The switch on Solid: Cherry on top turned over to its wine red side', action: async (page) => {
+        await page.locator('#bonnet-cherry-on-top label', { hasText: 'Solid' }).first().click();
+        await page.waitForTimeout(1200);
+      } },
+      { id: '05-crew', route: '/', selector: 'figure.crew', caption: 'The crew photo, with a tag on every bonnet that goes straight to it' },
+      { id: '06-question', route: '/', selector: '#words-title', desktopOnly: true, caption: 'Do I need a bonnet? The brand’s own answer, row by row' },
+      { id: '07-wake-up', route: '/', selector: '.words__close', desktopOnly: true, caption: 'The brand’s line, “wake up. Slay. Repeat.”, in the handwriting from its cards', action: async (page) => {
+        await page.evaluate(() => {
+          const r = document.querySelector('.words__close').getBoundingClientRect();
+          scrollTo(0, scrollY + r.top + r.height / 2 - innerHeight / 2);
+        });
+        await page.waitForTimeout(900);
+      } },
+      { id: '08-wear-it', route: '/', selector: '#eve-title', desktopOnly: true, caption: 'For sleeping, lounging or out and about, with a photo for each' },
+      { id: '09-fine-print', route: '/', selector: 'section.fine', desktopOnly: true, caption: 'The fine print, in big letters, set as woven labels' },
+      { id: '10-shop', route: '/shop', desktopOnly: true, caption: 'The shop: all three bonnets, each with its own switch' },
+      { id: '11-up-close', route: '/shop/cherry-on-top', caption: 'Up close: a gallery of the bonnet’s photos, with the facts folded under Description' },
+      { id: '12-bag', route: '/shop/cherry-on-top', caption: 'The bag, with one bonnet in it. Shipping is free, and checkout goes to Stripe’s own page', action: async (page) => {
+        await page.locator('main button', { hasText: 'Add to bag' }).first().click();
+        await page.waitForTimeout(900);
+        await page.goto('https://zazasilks.site/cart', { waitUntil: 'networkidle', timeout: 45000 });
+        await page.waitForTimeout(2500);
+      } },
+    ],
+  },
+
+  // C4Site's website, first shot 30 Oct 2026. No frame shows a price, the
+  // footer (it names the operator) or the About page (it shows the co-founder):
+  // C4Site's own HQ owns its offers, prices and team.
+  'c4site-com-au': {
+    site: 'https://c4site.com.au',
+    channel: 'chrome',
+    targets: [
+      { id: '01-home', route: '/', settle: 4500, caption: 'Home. A chalk word-search film fills the top of the board, with the heading under it and the two actions beside it' },
+      { id: '02-schools', route: '/ai-training-for-schools/', caption: 'Schools. Three picture cards pinned to the board, and the machine’s wrong answer chalked beside them' },
+      { id: '03-rules', route: '/ai-training-for-schools/', selector: '#safety', desktopOnly: true, caption: 'The safety rules in a chalk frame, straight on the board' },
+      { id: '04-library', route: '/library/', selector: '#lib-try-h', caption: 'The library. Each activity is a paper card held to the board by a magnet' },
+      { id: '05-folder', route: '/ai-training-for-business/', selector: '#keep', desktopOnly: true, caption: 'What a team keeps: the take-home sheets in a glass folder, listed beside it' },
+      { id: '06-folder-open', route: '/ai-training-for-business/', selector: '#keep', caption: 'Open the folder and the sheets rise and fan out, and each one opens full size', action: async (page) => {
+        await page.locator('#keep button.gf-hit').first().click();
+        await page.waitForTimeout(2200);
+      } },
+      { id: '07-packs', route: '/free-packs/', caption: 'The free packs page. Every cover is in the list, and the first pack is in the first screen' },
+      { id: '08-look-inside', route: '/free-packs/', selector: '#pk-head', desktopOnly: true, caption: 'Look inside opens two real pages of a pack in place', action: async (page) => {
+        await page.locator('summary', { hasText: 'Look inside' }).first().click();
+        await page.waitForTimeout(1500);
+        await page.evaluate(() => {
+          const open = document.querySelector('details[open]');
+          if (open) scrollTo(0, open.getBoundingClientRect().top + scrollY - 140);
+        });
+        await page.waitForTimeout(900);
+      } },
+    ],
+  },
+
+  // S1XTEEN, an unofficial concept, first shot 30 Oct 2026 for its case study.
+  // Its concept notice stays in the frame on purpose, as with the others.
+  // Just listen streams an episode from the crew's own podcast feed.
+  's1xteen-concept-vercel-app': {
+    site: 'https://s1xteen-concept.vercel.app',
+    channel: 'chrome',
+    block: [/\/_vercel\/(insights|speed-insights)\//],
+    targets: [
+      { id: '01-hero', route: '/', settle: 4500, caption: 'The name breaks up every second or two, over a black-and-white cut of the crew’s own sessions and concert reels' },
+      { id: '02-show', route: '/', selector: '#show', caption: 'The Show. Both series in one quiet list, each episode with Watch, and Just listen where there’s audio' },
+      { id: '03-listen', route: '/', selector: '#show', desktopOnly: true, caption: 'Just listen plays the episode from the podcast feed, drawn as a voice-memo waveform', action: async (page) => {
+        await page.locator('#show button', { hasText: 'Just listen' }).first().click();
+        await page.waitForTimeout(7000);
+      } },
+      { id: '04-nights', route: '/', selector: '#nights', caption: 'Nights. Every night S1XTEEN hosted, powered, supported or was part of, newest first' },
+      { id: '05-room', route: '/', selector: '#room-title', desktopOnly: true, caption: 'In the room since 2022: the crew’s own photos from Perth’s big nights, each with its credit' },
+      { id: '06-book', route: '/', selector: '#book', caption: 'Book the crew. As a concept, the form sends nothing, and says so' },
+      { id: '07-night', route: '/nights/jeleel', caption: 'A night’s own page. The name glitches in over smoke, with the date and venue set large' },
+      { id: '08-night-photo', route: '/nights/jeleel', scrollTo: 700, desktopOnly: true, caption: 'The lead photo runs full width and drifts as you scroll, with the crew’s own words as white caption boxes' },
+      { id: '09-not-on-the-list', route: '/nope', desktopOnly: true, caption: 'The 404: Not on the list' },
+    ],
+  },
 };

@@ -1,0 +1,224 @@
+{
+  "version": 3,
+  "sourceUrl": "https://zazasilks.site",
+  "slug": "zazasilks-site",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 12,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "The home page opens on ZaZa’s own film, with ZAZA across it in the colour of whichever bonnet is on screen",
+          "route": "/",
+          "bytes": 664367,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-hero.png"
+        },
+        {
+          "id": "02-bonnets",
+          "caption": "Three bonnets, two sides each, with a swatch card of all six sides beside the heading",
+          "route": "/",
+          "bytes": 1244660,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-bonnets.png"
+        },
+        {
+          "id": "03-cherry-on-top",
+          "caption": "One bonnet to a screen. A lit Print and Solid switch turns the photo over",
+          "route": "/",
+          "bytes": 1256552,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-cherry-on-top.png"
+        },
+        {
+          "id": "04-turned",
+          "caption": "The switch on Solid: Cherry on top turned over to its wine red side",
+          "route": "/",
+          "bytes": 1104564,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-turned.png"
+        },
+        {
+          "id": "05-crew",
+          "caption": "The crew photo, with a tag on every bonnet that goes straight to it",
+          "route": "/",
+          "bytes": 864752,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-crew.png"
+        },
+        {
+          "id": "06-question",
+          "caption": "Do I need a bonnet? The brand’s own answer, row by row",
+          "route": "/",
+          "bytes": 1310256,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-question.png"
+        },
+        {
+          "id": "07-wake-up",
+          "caption": "The brand’s line, “wake up. Slay. Repeat.”, in the handwriting from its cards",
+          "route": "/",
+          "bytes": 1310404,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/07-wake-up.png"
+        },
+        {
+          "id": "08-wear-it",
+          "caption": "For sleeping, lounging or out and about, with a photo for each",
+          "route": "/",
+          "bytes": 1117115,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/08-wear-it.png"
+        },
+        {
+          "id": "09-fine-print",
+          "caption": "The fine print, in big letters, set as woven labels",
+          "route": "/",
+          "bytes": 1182257,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/09-fine-print.png"
+        },
+        {
+          "id": "10-shop",
+          "caption": "The shop: all three bonnets, each with its own switch",
+          "route": "/shop",
+          "bytes": 1171355,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/10-shop.png"
+        },
+        {
+          "id": "11-up-close",
+          "caption": "Up close: a gallery of the bonnet’s photos, with the facts folded under Description",
+          "route": "/shop/cherry-on-top",
+          "bytes": 1250697,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/11-up-close.png"
+        },
+        {
+          "id": "12-bag",
+          "caption": "The bag, with one bonnet in it. Shipping is free, and checkout goes to Stripe’s own page",
+          "route": "/shop/cherry-on-top",
+          "bytes": 1099450,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/12-bag.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 6,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "The home page opens on ZaZa’s own film, with ZAZA across it in the colour of whichever bonnet is on screen",
+          "route": "/",
+          "bytes": 701416,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-hero.png"
+        },
+        {
+          "id": "02-bonnets",
+          "caption": "Three bonnets, two sides each, with a swatch card of all six sides beside the heading",
+          "route": "/",
+          "bytes": 1330230,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-bonnets.png"
+        },
+        {
+          "id": "03-cherry-on-top",
+          "caption": "One bonnet to a screen. A lit Print and Solid switch turns the photo over",
+          "route": "/",
+          "bytes": 1338886,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-cherry-on-top.png"
+        },
+        {
+          "id": "05-crew",
+          "caption": "The crew photo, with a tag on every bonnet that goes straight to it",
+          "route": "/",
+          "bytes": 1345265,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/05-crew.png"
+        },
+        {
+          "id": "11-up-close",
+          "caption": "Up close: a gallery of the bonnet’s photos, with the facts folded under Description",
+          "route": "/shop/cherry-on-top",
+          "bytes": 1383369,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/11-up-close.png"
+        },
+        {
+          "id": "12-bag",
+          "caption": "The bag, with one bonnet in it. Shipping is free, and checkout goes to Stripe’s own page",
+          "route": "/shop/cherry-on-top",
+          "bytes": 1298977,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/12-bag.png"
+        }
+      ]
+    }
+  }
+}

@@ -57,6 +57,8 @@ person building it.
 - [Brady Electrical](https://c4studios.com.au/CaseStudy/brady-electrical): Website for a Neerabup electrician, built around a live single-line diagram of the Perth metro.
 - [Aqua-Safe Plumbing & Maintenance](https://c4studios.com.au/CaseStudy/aqua-safe-plumbing): Website for a Perth plumbing and gas fitting business, organised by problem and by suburb.
 - [Genesis Realty Group](https://c4studios.com.au/CaseStudy/genesis-realty-group): Logo redraw for a Perth real estate agency, its Canva logo rebuilt as true vector with print files in the agency's own CMYK colours.
+- [C4Site](https://c4studios.com.au/CaseStudy/c4site): Website for C4Site, our sister business, which teaches Perth schools and workplaces to use AI.
+- [ZaZa Silks](https://c4studios.com.au/CaseStudy/zaza-silks): Online store for a Perth hair bonnet brand, with Stripe Checkout on the owner's own account and its orders and stock in Supabase.
 
 ## Contact
 
