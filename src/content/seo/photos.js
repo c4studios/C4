@@ -178,6 +178,27 @@ export const PHOTOS = [
     use: 'the hero of /google-business-profile-rules/',
     downloaded: '16 October 2026',
   },
+  /* Added 2 November 2026 for the Canva trade mark article. It's the same
+     photograph /logo-design shows under "Stamped and sealed"
+     (src/components/logo-design/photos.js), downloaded on 10 Oct 2026. Nothing
+     new was downloaded: the master in C4-Internal/logo-masters/ was copied to
+     article-masters/ under this list's naming. Its page was read again on
+     2 Nov 2026 and still said "Free to use under the Unsplash License". The
+     seal carries a letter and no business name, so nothing is blurred. */
+  {
+    ...UNSPLASH,
+    key: 'wax-seal',
+    master: 'unsplash-HC2R5chgLMw-boev-seal.jpg',
+    page: 'https://unsplash.com/photos/round-gold-colored-coin-on-white-surface-HC2R5chgLMw',
+    photographer: 'Aleksey Boev',
+    profile: 'https://unsplash.com/@alanveob',
+    subject: 'A brass seal stamp with the letter T, on white.',
+    alt: 'A brass seal stamp on a turned wooden handle, standing on its end on a white table. Its face is cut with a capital T among leaves.',
+    crop: { left: 0, top: 0, width: 3525, height: 2350 },
+    ogPosition: 'centre',
+    use: 'the hero of /can-you-trademark-a-canva-logo/',
+    downloaded: '10 October 2026',
+  },
 ].map((p) => ({ downloaded: DOWNLOADED, widths: WIDTHS, size: [p.crop.width, p.crop.height], ...p }));
 
 export function photo(key) {

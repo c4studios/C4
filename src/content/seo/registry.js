@@ -108,7 +108,7 @@ const PILLARS = [
     links: {
       pillars: ['web-design-perth', 'photo-video-perth'],
       industries: ['websites-for-cafes', 'websites-for-gyms', 'ecommerce-for-retail-and-makers'],
-      comparisons: ['diy-website-vs-hiring-a-designer', 'how-much-does-a-website-cost-perth'],
+      comparisons: ['can-you-trademark-a-canva-logo', 'diy-website-vs-hiring-a-designer', 'how-much-does-a-website-cost-perth'],
     },
   },
   /* Retitled 16 Oct 2026 as the plain buyer's page for "photographer" and
@@ -527,6 +527,26 @@ const SUBURB_PAGES = SUBURB_SERVICES.flatMap((service) =>
 // SeoPage.jsx lazy-loads every file in pages/, so a module there ships as a
 // public chunk whether or not its entry is live.
 const ARTICLES = [
+  /* Written 2 Nov 2026 for the fortnight due 5 Nov (brain commitments row
+     113), on a topic Caleb approved that day. Every quote was read at
+     Canva's and IP Australia's own pages that day; the content module's
+     header lists them and what must not be added. If it ships later than
+     2 Nov, move `published` and `updated` to the day it goes live, and move
+     `verified` only once the quotes have been read again that day.
+     readMinutes is the reading text (hero, sections bar the source list,
+     FAQs and CTA) over 200, rounded up. */
+  {
+    slug: 'can-you-trademark-a-canva-logo', type: 'article', status: 'live', phase: 7,
+    name: 'Can you trademark a Canva logo?',
+    title: 'Can You Trademark a Canva Logo? Canva’s Answer | C4 Studios',
+    description: 'Canva says its templates and library graphics can’t go in a trade mark, but its fonts can. Its own words, and IP Australia’s steps and fees.',
+    dek: 'Canva’s own help page says you can’t register a logo made from one of its templates as a trade mark. Every Canva user can use the same template.',
+    photo: 'wax-seal',
+    image: '/insights/can-you-trademark-a-canva-logo-og.jpg',
+    published: '2026-11-02', updated: '2026-11-02', verified: '2026-11-02', readMinutes: 8,
+    priority: 0.7, changefreq: 'monthly',
+    links: { pillars: ['branding-perth', 'diy-website-vs-hiring-a-designer'] },
+  },
   /* Written 16 Oct 2026, the second fortnightly piece and a new address: Caleb
      ruled that day that a rewrite at an old address doesn't count as the
      fortnight's new piece. Every quote was re-read at Google's and the ACCC's

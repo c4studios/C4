@@ -242,6 +242,13 @@ export function Process() {
             When a {money(FROM)} logo is enough, and when you need a brand identity:{' '}
             <Link to="/branding-perth/">Branding Perth</Link>.
           </p>
+          {/* The article for anyone whose logo started in Canva (2 Nov 2026),
+              linked from the arm's own page the way /seo-and-copywriting
+              links its articles. */}
+          <p className="ld-more">
+            What Canva and IP Australia say about trade marking a logo made in Canva:{' '}
+            <Link to="/can-you-trademark-a-canva-logo/">Can you trademark a Canva logo?</Link>
+          </p>
         </div>
         <figure className="ld-wf-frame">
           <Workfile state={wide ? steps[on].key : 'all'} formats={FORMATS} />
