@@ -104,6 +104,19 @@ export const TESTIMONIALS = [
     caseStudySlug: 'as-he-leads',
     featured: true,
   },
+  /* A five-star review from Genesis Realty Group after the logo rebuild,
+     relayed by Caleb on 2 Nov 2026. Verbatim. The line break inside "C4
+     Studios" was a wrap in the paste and is joined; the client's paragraph
+     break is kept. The reviewer's name wasn't given, so it is attributed to
+     the agency, the way The Rocks' and DS Racing's are. */
+  {
+    id: 13,
+    quote: "We couldn't be happier with our experience with C4 Studios! Caleb was an absolute pleasure to deal with from start to finish. His professionalism, communication and attention to detail made the entire process seamless and stress-free. He really took the time to understand what we were after, and the final product was exactly what we had envisioned! It's so refreshing to work with someone who genuinely cares about delivering a great result.\n\nWe couldn't recommend Caleb and C4 Studios highly enough. Thank you again for such a fantastic experience!",
+    name: 'Genesis Realty Group',
+    role: 'Perth',
+    caseStudySlug: 'genesis-realty-group',
+    featured: true,
+  },
 ];
 
 export function getFeaturedTestimonials() {
