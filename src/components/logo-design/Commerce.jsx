@@ -11,6 +11,11 @@
  * this page owns "logo design Perth" (SEO audit H4). The two links to it
  * below name it that way, so they stop telling search engines it's the logo
  * design page.
+ *
+ * Since 2 Nov 2026 the ledger carries one client's own words: Genesis Realty
+ * Group's review, under the Logo Rebuild price it was for (Caleb approved it
+ * that day). The words are read from testimonialData.jsx, the verbatim
+ * source, and never typed in here.
  */
 import { useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
@@ -19,6 +24,7 @@ import { brandingPackages, webDesignAddOns, GST_NOTE, logoTimeline } from '@/dat
 import { createPageUrl } from '@/utils';
 import { tightFigure } from '@/components/c4/figure';
 import { getAllCaseStudies } from '@/components/portfolio/caseStudyData';
+import { getTestimonialForCaseStudy } from '@/components/testimonials/testimonialData';
 import guide from '@/content/seo/pages/branding-perth';
 import Workfile from './Workfile';
 import useWide, { useReadingLine } from './useWide';
@@ -58,11 +64,50 @@ const GROUPS = [
 
 /* Client work on /Portfolio sold as one of these packages (`logoPackage` in
    caseStudyData.jsx), linked under its package's group. Since 28 Oct 2026
-   that's Genesis Realty Group, a Logo Rebuild. A hidden study drops out. */
+   that's Genesis Realty Group, a Logo Rebuild. A hidden study drops out.
+   Since 2 Nov 2026 Genesis is linked from its review instead (below). */
 const DONE = getAllCaseStudies().filter((s) => s.logoPackage);
 
-function Done({ keys }) {
-  const studies = DONE.filter((s) => keys.includes(s.logoPackage));
+/* One client's own words, under the price of the job they were for: Genesis
+   Realty Group's review of their Logo Rebuild, relayed by Caleb on 2 Nov
+   2026. It sits under the package its study was sold as (`logoPackage`), and
+   it links the study itself, so the "One we've done" line leaves that study
+   out rather than link it twice. The study's own page carries the same words
+   in its Client note. If the study is hidden, the review stays and the link
+   goes. */
+const REVIEWED = 'genesis-realty-group';
+const REVIEW = getTestimonialForCaseStudy(REVIEWED);
+const REVIEWED_STUDY = DONE.find((s) => s.slug === REVIEWED) || null;
+const REVIEW_PACKAGE = REVIEWED_STUDY ? REVIEWED_STUDY.logoPackage : 'logo-rebuild';
+
+/* The paragraphs as the client wrote them, a blank line between each. */
+const paragraphs = (quote) => String(quote || '').trim().split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+
+function Review({ review, study }) {
+  const paras = paragraphs(review.quote);
+  if (!paras.length) return null;
+  const href = study ? createPageUrl(`CaseStudy/${study.slug}`) : null;
+  return (
+    <figure className="ld-review">
+      <blockquote className="ld-review-q">
+        {paras.map((p, i) => <p key={i}>{p}</p>)}
+      </blockquote>
+      <figcaption className="ld-review-src">
+        <b className="ld-review-name">{review.name}</b>
+        {review.role ? <span className="ld-review-role">{review.role}</span> : null}
+        {href ? <span className="ld-review-job">We redrew their Canva logo.</span> : null}
+        {href ? (
+          <Link to={href} className="ld-review-link">
+            {study.compare?.approved ? 'See it before and after' : `See ${study.name}’s logo`}
+          </Link>
+        ) : null}
+      </figcaption>
+    </figure>
+  );
+}
+
+function Done({ keys, skip = null }) {
+  const studies = DONE.filter((s) => keys.includes(s.logoPackage) && s.slug !== skip);
   if (!studies.length) return null;
   return (
     <p className="ld-addon">
@@ -123,13 +168,17 @@ export function Prices() {
           </p>
         </div>
         <div className="ld-ledger">
-          {groups.map((g) => (
-            <div className="ld-ledger-group" key={g.key} role="group" aria-labelledby={`ld-g-${g.key}`}>
-              <h3 className="ld-ledger-h" id={`ld-g-${g.key}`}>{g.title}</h3>
-              {g.items.map((p) => <PriceRow key={p.key} p={p} />)}
-              <Done keys={g.items.map((p) => p.key)} />
-            </div>
-          ))}
+          {groups.map((g) => {
+            const reviewed = REVIEW && g.items.some((p) => p.key === REVIEW_PACKAGE);
+            return (
+              <div className="ld-ledger-group" key={g.key} role="group" aria-labelledby={`ld-g-${g.key}`}>
+                <h3 className="ld-ledger-h" id={`ld-g-${g.key}`}>{g.title}</h3>
+                {g.items.map((p) => <PriceRow key={p.key} p={p} />)}
+                {reviewed ? <Review review={REVIEW} study={REVIEWED_STUDY} /> : null}
+                <Done keys={g.items.map((p) => p.key)} skip={reviewed ? REVIEWED : null} />
+              </div>
+            );
+          })}
           {ADDON ? (
             <div className="ld-ledger-group ld-ledger-addon" role="group" aria-labelledby="ld-g-web">
               <h3 className="ld-ledger-h" id="ld-g-web">With a website</h3>
