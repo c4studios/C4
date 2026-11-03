@@ -543,7 +543,7 @@ const ARTICLES = [
     dek: 'Canva’s own help page says you can’t register a logo made from one of its templates as a trade mark. Every Canva user can use the same template.',
     photo: 'wax-seal',
     image: '/insights/can-you-trademark-a-canva-logo-og.jpg',
-    published: '2026-11-02', updated: '2026-11-02', verified: '2026-11-02', readMinutes: 8,
+    published: '2026-11-03', updated: '2026-11-03', verified: '2026-11-02', readMinutes: 8,
     priority: 0.7, changefreq: 'monthly',
     links: { pillars: ['branding-perth', 'diy-website-vs-hiring-a-designer'] },
   },
