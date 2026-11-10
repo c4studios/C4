@@ -13,9 +13,9 @@
       "captures": [
         {
           "id": "01-about",
-          "caption": "TBD",
+          "caption": "The name as the ministry writes it, lowercase with an ellipsis at each end, over three photographs of Fremantle with shaded boxes between them",
           "route": "/",
-          "bytes": 471181,
+          "bytes": 470800,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -24,9 +24,9 @@
         },
         {
           "id": "02-vision",
-          "caption": "TBD",
+          "caption": "The vision statement, set large, with the ministry described in its own words underneath",
           "route": "/index.html",
-          "bytes": 132157,
+          "bytes": 125477,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -35,9 +35,9 @@
         },
         {
           "id": "03-statement",
-          "caption": "TBD",
+          "caption": "Statement of Faith. Every page opens the same way: masthead, title, then the row of photographs and shaded boxes",
           "route": "/what-we-believe.html",
-          "bytes": 434316,
+          "bytes": 434432,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -46,9 +46,9 @@
         },
         {
           "id": "04-creed",
-          "caption": "TBD",
+          "caption": "The Apostles’ Creed, each line with its scripture references, all reproduced from the ministry’s own document",
           "route": "/what-we-believe.html",
-          "bytes": 162316,
+          "bytes": 162313,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -57,9 +57,9 @@
         },
         {
           "id": "05-policy",
-          "caption": "TBD",
+          "caption": "Ministry policy and procedure, in the ministry’s own words, section by section",
           "route": "/ministry-policy.html",
-          "bytes": 420717,
+          "bytes": 420662,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -68,9 +68,9 @@
         },
         {
           "id": "06-worker-agreement",
-          "caption": "TBD",
+          "caption": "The worker agreement, which prints for signing by hand, so nothing personal is collected online",
           "route": "/worker-agreement.html",
-          "bytes": 363126,
+          "bytes": 365298,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -79,9 +79,9 @@
         },
         {
           "id": "07-resources",
-          "caption": "TBD",
+          "caption": "Resources: the ministry’s booklets as PDFs, each with its page count and size",
           "route": "/resources.html",
-          "bytes": 425109,
+          "bytes": 425410,
           "dimensions": {
             "width": 1440,
             "height": 900
@@ -99,9 +99,9 @@
       "captures": [
         {
           "id": "01-about",
-          "caption": "TBD",
+          "caption": "The name as the ministry writes it, lowercase with an ellipsis at each end, over three photographs of Fremantle with shaded boxes between them",
           "route": "/",
-          "bytes": 324535,
+          "bytes": 311230,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -110,9 +110,9 @@
         },
         {
           "id": "02-vision",
-          "caption": "TBD",
+          "caption": "The vision statement, set large, with the ministry described in its own words underneath",
           "route": "/index.html",
-          "bytes": 184814,
+          "bytes": 174152,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -121,9 +121,9 @@
         },
         {
           "id": "03-statement",
-          "caption": "TBD",
+          "caption": "Statement of Faith. Every page opens the same way: masthead, title, then the row of photographs and shaded boxes",
           "route": "/what-we-believe.html",
-          "bytes": 343500,
+          "bytes": 344003,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -132,9 +132,9 @@
         },
         {
           "id": "04-creed",
-          "caption": "TBD",
+          "caption": "The Apostles’ Creed, each line with its scripture references, all reproduced from the ministry’s own document",
           "route": "/what-we-believe.html",
-          "bytes": 277626,
+          "bytes": 277625,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -143,9 +143,9 @@
         },
         {
           "id": "05-policy",
-          "caption": "TBD",
+          "caption": "Ministry policy and procedure, in the ministry’s own words, section by section",
           "route": "/ministry-policy.html",
-          "bytes": 337938,
+          "bytes": 338320,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -154,9 +154,9 @@
         },
         {
           "id": "06-worker-agreement",
-          "caption": "TBD",
+          "caption": "The worker agreement, which prints for signing by hand, so nothing personal is collected online",
           "route": "/worker-agreement.html",
-          "bytes": 304167,
+          "bytes": 313409,
           "dimensions": {
             "width": 860,
             "height": 1864
@@ -165,9 +165,9 @@
         },
         {
           "id": "07-resources",
-          "caption": "TBD",
+          "caption": "Resources: the ministry’s booklets as PDFs, each with its page count and size",
           "route": "/resources.html",
-          "bytes": 313081,
+          "bytes": 313552,
           "dimensions": {
             "width": 860,
             "height": 1864
