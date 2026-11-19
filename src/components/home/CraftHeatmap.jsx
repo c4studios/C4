@@ -346,6 +346,31 @@ function CanvasHeatmap() {
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerdown', onPointerDown);
 
+    /* Hero touch-up option C (20 Nov 2026 draft): the hero sends 'c4:heat' with
+       a client rect while the start button is hovered or focused, and the cells
+       under it warm towards the start red, the colour that means start. */
+    const onHeat = (e) => {
+      const r = e.detail;
+      if (!r || prefersReducedMotion()) return;
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const box = canvas.getBoundingClientRect();
+      const { cell } = gridRef.current;
+      const x0 = Math.floor((r.left - box.left) / cell);
+      const x1 = Math.floor((r.right - box.left) / cell);
+      const y0 = Math.floor((r.top - box.top) / cell);
+      const y1 = Math.floor((r.bottom - box.top) / cell);
+      for (let y = y0; y <= y1; y++) {
+        for (let x = x0; x <= x1; x++) {
+          // strongest at the middle of the button, softer at its ends
+          const mid = (x0 + x1) / 2;
+          const spread = Math.max(1, (x1 - x0) / 2);
+          activateCell(x, y, 0.62 - 0.3 * Math.min(1, Math.abs(x - mid) / spread));
+        }
+      }
+    };
+    window.addEventListener('c4:heat', onHeat);
+
     const onResize = () => {
       cancelAnimationFrame(rafRef.current);
       setupCanvas();
@@ -379,6 +404,7 @@ function CanvasHeatmap() {
       window.removeEventListener('resize', onResize);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('c4:heat', onHeat);
       cancelAnimationFrame(setupId);
       cancelAnimationFrame(rafRef.current);
       observer.disconnect();

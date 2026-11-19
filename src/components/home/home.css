@@ -897,3 +897,54 @@
   }
   .hm-visit, .hm-tally { display: none !important; }
 }
+
+/* ── "View recent work", the hero's black button (20 Nov 2026) ──
+   Black, and white floods in from the point the pointer or a finger first
+   touched (HeroSection.jsx sets --hv-x/--hv-y there), then drains back out
+   where it leaves. The white is a second copy of the label on white, clipped
+   to a circle whose radius is a registered property so it animates; 150% of
+   the clip's reference length covers the whole button from any point inside
+   it. The 1px edge stays ink, so the white button still reads on the bench. */
+@property --hv-r {
+  syntax: '<length-percentage>';
+  inherits: true;
+  initial-value: 0%;
+}
+.hh-fill {
+  --hv-x: 50%;
+  --hv-y: 50%;
+  --hv-r: 0%;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #1a1a1a;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: --hv-r 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hh-fill.is-lit { --hv-r: 150%; }
+/* without the script's class (no JavaScript yet), a mouse hover still fills it, from the middle */
+@media (hover: hover) {
+  .hh-fill:hover { --hv-r: 150%; }
+}
+.hh-fill__label { display: inline-flex; align-items: center; gap: 0.5rem; }
+.hh-fill__ink {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  background: #ffffff;
+  color: #1a1a1a;
+  clip-path: circle(var(--hv-r) at var(--hv-x) var(--hv-y));
+  pointer-events: none;
+}
+.hh-fill:active { transform: scale(0.98); }
+/* on the dark bench the black button keeps a light edge so its shape reads */
+:root.dark-mode .hh-fill { border-color: rgba(236, 231, 222, 0.55); }
+@media (prefers-reduced-motion: reduce) {
+  .hh-fill { transition: none; }
+}
