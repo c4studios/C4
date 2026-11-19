@@ -200,6 +200,18 @@ header[data-c4-chrome="header"] {
    every sub-page (measured 8 Sep 2026: button
    at x 373 to 402 on a 375px viewport). The mobile-menu instance sets
    its own display class. */
+/* 19 Nov 2026 draft: the bar's links in plain mixed case, Archivo at reading
+   weight, where they were 11px tracked capitals (the "tiny uppercase tracked"
+   tell). The start button keeps its capitals: it's the house button. */
+.c4-nav-link {
+  font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14.5px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1;
+  padding-top: 15px;
+  padding-bottom: 15px; /* 44.5px tall, a full tap target in the 72px bar */
+}
 .c4-nav-cta {
   align-items: center;
   white-space: nowrap;
@@ -433,7 +445,7 @@ export default function NavHeader() {
                       aria-haspopup="true"
                       aria-expanded={servicesOpen}
                       aria-controls="c4-services-panel"
-                      className="flex items-center gap-1 whitespace-nowrap text-[11px] uppercase tracking-[0.13em] transition-colors duration-300 font-medium bg-transparent border-0 p-0"
+                      className="c4-nav-link flex items-center gap-1 whitespace-nowrap transition-colors duration-300 bg-transparent border-0 px-0"
                       style={{ color: servicesOpen ? 'var(--c4-link-hover)' : 'var(--c4-text-muted)', cursor: 'pointer' }}
                     >
                       {link.label}
@@ -494,7 +506,7 @@ export default function NavHeader() {
                   <Link
                     key={link.page}
                     to={link.to || createPageUrl(link.page)}
-                    className="whitespace-nowrap text-[11px] uppercase tracking-[0.13em] transition-colors duration-300 font-medium"
+                    className="c4-nav-link whitespace-nowrap transition-colors duration-300"
                     style={{ color: 'var(--c4-text-muted)', cursor: 'pointer' }}
                     onMouseEnter={e => e.currentTarget.style.color = 'var(--c4-link-hover)'}
                     onMouseLeave={e => e.currentTarget.style.color = 'var(--c4-text-muted)'}

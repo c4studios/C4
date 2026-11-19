@@ -99,7 +99,7 @@ export default function ThemeToggle({ compact = false }) {
   return (
     <div className="flex items-center gap-2.5" style={chrome.forced ? { cursor: 'not-allowed' } : undefined}>
       <span
-        className="text-[10px] uppercase tracking-[0.12em] select-none transition-all duration-300"
+        className="text-[13px] tracking-[-0.005em] select-none transition-all duration-300"
         style={{
           color: !shownDark ? 'var(--c4-text)' : 'var(--c4-text-subtle)',
           fontWeight: !shownDark ? 600 : 400,
@@ -141,7 +141,7 @@ export default function ThemeToggle({ compact = false }) {
         />
       </button>
       <span
-        className="text-[10px] uppercase tracking-[0.12em] select-none transition-all duration-300"
+        className="text-[13px] tracking-[-0.005em] select-none transition-all duration-300"
         style={{
           color: shownDark ? 'var(--c4-text)' : 'var(--c4-text-subtle)',
           fontWeight: shownDark ? 600 : 400,
