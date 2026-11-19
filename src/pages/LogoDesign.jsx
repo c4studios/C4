@@ -69,6 +69,7 @@ import OneOrTwo from '@/components/logo-design/OneOrTwo';
 import Run from '@/components/logo-design/Run';
 import Shapes from '@/components/logo-design/Shapes';
 import Colours from '@/components/logo-design/Colours';
+import Work from '@/components/logo-design/Work';
 import {
   Prices, Process, Close, PRICED, FROM, REBUILD, FULL, ADDON, START, money,
 } from '@/components/logo-design/Commerce';
@@ -150,6 +151,8 @@ export default function LogoDesign() {
       <Run />
       <Colours />
       <Shapes />
+      {/* 19 Nov 2026: the finished logo jobs on the warp ring, proof before the prices */}
+      <Work />
       <Prices />
       <Process />
       <Close />

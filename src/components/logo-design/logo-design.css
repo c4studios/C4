@@ -363,6 +363,67 @@
   .ld-spec + .ld-spec { border-left: 0; border-top: 1px solid rgba(236, 231, 222, 0.08); }
 }
 
+/* ── four logos we've handed over: the jobs on the warp ring (19 Nov 2026) ──
+   The ring runs edge to edge on the bench and paints the bench itself (Work.jsx
+   reads the section's ground), so its glow bands land on the page's own paper.
+   The stage keeps one height whether it holds the ring or the flat plates, so
+   nothing moves when the ring takes over from the prerendered page. */
+.ld-work { background: var(--c4-bg); padding-bottom: clamp(3.5rem, 8vw, 6rem); }
+.ld-work-head { display: grid; gap: 1rem; max-width: 46rem; margin-bottom: clamp(0.6rem, 1.6vw, 1.2rem); }
+.ld-work-stage { position: relative; height: clamp(470px, 52vw, 680px); }
+.ld-work-ring { position: absolute; inset: 0; }
+.ld-work-ring:focus-visible { outline-offset: -6px; }
+.ld-work-flat {
+  display: flex; align-items: center; justify-content: center; gap: clamp(0.8rem, 2vw, 1.6rem);
+  height: 100%; margin: 0; padding: 0 1.5rem; list-style: none; overflow: hidden;
+}
+.ld-work-plate {
+  flex: 0 0 auto; display: grid; place-items: center;
+  width: clamp(150px, 19vw, 256px); aspect-ratio: 4 / 5; border-radius: 4px;
+  box-shadow: var(--ld-contact), var(--ld-lift);
+}
+.ld-work-plate img { display: block; width: 72%; height: auto; }
+
+.ld-jobs-bar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem 1.2rem;
+  min-height: 44px; /* the pause button arrives after load; its room is kept so the list never moves */
+  margin: clamp(0.4rem, 1.4vw, 1rem) 0 1rem;
+}
+.ld-jobs-hint { margin: 0; font-size: 14px; line-height: 1.5; color: var(--c4-text-muted); }
+.ld-jobs-pause {
+  display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; padding: 0 1.1rem;
+  border: 1px solid var(--c4-border); border-radius: 999px; background: transparent; color: var(--c4-text);
+  font: 500 14px/1 'Archivo', 'Helvetica Neue', Arial, sans-serif; cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.ld-jobs-pause:hover { border-color: var(--c4-text); }
+.ld-jobs {
+  display: grid; gap: 0 clamp(1.2rem, 2.6vw, 2.2rem); margin: 0; padding: 0; list-style: none;
+}
+@media (min-width: 640px) { .ld-jobs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .ld-jobs { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.ld-job { display: flex; flex-direction: column; gap: 0.45rem; border-top: 1px solid var(--c4-border); padding-bottom: 1.4rem; }
+.ld-job.is-front { border-top-color: var(--c4-text); box-shadow: inset 0 1px 0 var(--c4-text); }
+.ld-job-pick {
+  display: flex; align-items: flex-end; width: 100%; min-height: 44px; margin: 0; padding: 0.7rem 0 0;
+  border: 0; background: none; color: inherit; text-align: left; cursor: pointer;
+}
+.ld-job-name { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.012em; line-height: 1.25; }
+.ld-job-what { margin: 0; font-size: 15px; line-height: 1.55; color: var(--prose, var(--c4-text)); text-wrap: pretty; }
+.ld-job-meta { margin: 0; font-size: 13px; line-height: 1.5; color: var(--c4-text-muted); }
+.ld-job-colours { margin: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: 12.5px; line-height: 1.5; color: var(--c4-text-muted); }
+.ld-job-colour { display: inline-flex; align-items: center; gap: 0.45rem; white-space: nowrap; }
+.ld-job-chip { width: 11px; height: 11px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(26, 26, 26, 0.22); }
+:root.dark-mode .ld-job-chip { box-shadow: inset 0 0 0 1px rgba(236, 231, 222, 0.32); }
+.ld-job-pick:hover .ld-job-name { text-decoration: underline; text-decoration-color: var(--c4-border); text-underline-offset: 3px; }
+.ld-job-link {
+  display: inline-flex; align-items: center; gap: 0.4rem; align-self: flex-start; min-height: 44px; margin-top: 0.2rem;
+  font-size: 15px; color: var(--c4-text);
+  text-decoration: underline; text-decoration-color: var(--c4-border); text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+.ld-job-link:hover { text-decoration-color: currentColor; }
+
 /* ── what it costs: the price list on proof stock ── */
 .ld-prices-head { display: grid; gap: 1rem; max-width: 46rem; margin-bottom: clamp(1.8rem, 3.4vw, 2.6rem); }
 .ld-ledger {
