@@ -42,12 +42,27 @@ const mixRgb = (c1, c2, t) => ({
   b: Math.round(c1.b + (c2.b - c1.b) * t),
 });
 
+/* One seed per visit, so a rebuild (a resize, the theme switch) lays out the
+   same tiles. Kept in memory too: where storage is blocked, a fresh seed on
+   every rebuild would reshuffle the whole pattern. */
+let seedCache = 0;
 function getSeed() {
-  let seed = Number(sessionStorage.getItem('c4_heatmap_seed'));
+  if (seedCache) return seedCache;
+  let seed = 0;
+  try {
+    seed = Number(sessionStorage.getItem('c4_heatmap_seed'));
+  } catch {
+    /* storage blocked */
+  }
   if (!seed || Number.isNaN(seed)) {
     seed = Math.floor(Math.random() * 1e9);
-    sessionStorage.setItem('c4_heatmap_seed', String(seed));
+    try {
+      sessionStorage.setItem('c4_heatmap_seed', String(seed));
+    } catch {
+      /* storage blocked */
+    }
   }
+  seedCache = seed;
   return seed;
 }
 
@@ -59,7 +74,7 @@ function CanvasHeatmap() {
   const parentRef = useRef(null);
   const rafRef = useRef(0);
   const gridRef = useRef({ cols: 0, rows: 0, cell: 26, intensities: [], taus: [], activatedAt: [], baseColors: [] });
-  const stateRef = useRef({ last: 0, isMobile: false, dpr: 1, width: 0, height: 0, driftT: 0, idleT: 0, lastPointerT: 0, palette: null, seed: 0 });
+  const stateRef = useRef({ last: 0, isMobile: false, dpr: 1, width: 0, height: 0, dark: false, onScreen: true, driftT: 0, idleT: 0, palette: null, seed: 0 });
   /* ── Premium: parallax offset ── */
   const parallaxRef = useRef({ ox: 0, oy: 0, tx: 0, ty: 0 }); // current & target
 
@@ -106,57 +121,52 @@ function CanvasHeatmap() {
     }
   }
 
-  function setupCanvas() {
+  /* Sizes the canvas to the hero and lays the grid out. A cell in both the
+     old grid and the new one keeps its heat, so a resize carries on from the
+     frame on screen instead of starting the trail again. */
+  function setupCanvas(rect, dpr) {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const parent = canvas.parentElement;
-    stateRef.current.isMobile = window.innerWidth < 768;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    stateRef.current.dpr = dpr;
-
-    const rect = parentRef.current
-      ? parentRef.current.getBoundingClientRect()
-      : parent.getBoundingClientRect();
-    /* The hero may not be laid out yet (Firefox/Opera are slower than a
-       single rAF). Sizing the canvas to 0 here left it permanently blank
-       — bail and let the ResizeObserver rebuild once the size is real. */
-    if (rect.width < 1 || rect.height < 1) return;
-    stateRef.current.width = rect.width;
-    stateRef.current.height = rect.height;
+    const s = stateRef.current;
+    s.isMobile = window.innerWidth < 768;
+    s.dpr = dpr;
+    s.width = rect.width;
+    s.height = rect.height;
     canvas.width = Math.round(rect.width * dpr);
     canvas.height = Math.round(rect.height * dpr);
     canvas.style.width = rect.width + 'px';
     canvas.style.height = rect.height + 'px';
 
     // Grid sizing
-    const cell = stateRef.current.isMobile ? 28 : 26;
+    const cell = s.isMobile ? 28 : 26;
     const cols = Math.ceil(rect.width / cell);
     const rows = Math.ceil(rect.height / cell);
 
     // Session seed + RNG
-    let seed = Number(sessionStorage.getItem('c4_heatmap_seed'));
-    if (!seed || Number.isNaN(seed)) {
-      seed = Math.floor(Math.random() * 1e9);
-      sessionStorage.setItem('c4_heatmap_seed', String(seed));
-    }
-    stateRef.current.seed = seed;
+    const seed = getSeed();
+    s.seed = seed;
     const rng = makeRNG(seed);
 
+    s.dark = isDark();
     const currentPalettes = getPalettes();
     const palette = currentPalettes[Math.floor(rng() * currentPalettes.length) % currentPalettes.length];
-    stateRef.current.palette = palette;
+    s.palette = palette;
 
     const intensities = new Array(rows).fill(0).map(() => new Float32Array(cols));
     const taus = new Array(rows).fill(0).map(() => new Float32Array(cols));
     const activatedAt = new Array(rows).fill(0).map(() => new Float64Array(cols));
     const baseColors = new Array(rows).fill(0).map(() => new Array(cols));
+    /* Same cell size, so cell (x, y) still covers the same patch of hero. */
+    const prev = gridRef.current.cell === cell ? gridRef.current : null;
 
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         taus[y][x] = 0.6 + rng() * 0.6; // 0.6–1.2s decay
         const neutralHex = pick(rng, palette.neutrals);
         baseColors[y][x] = hexToRgb(neutralHex);
-        intensities[y][x] = 0;
+        if (prev && y < prev.rows && x < prev.cols) {
+          intensities[y][x] = prev.intensities[y][x];
+          activatedAt[y][x] = prev.activatedAt[y][x];
+        }
       }
     }
 
@@ -172,8 +182,7 @@ function CanvasHeatmap() {
     const lzX1 = Math.min(cols - 1, Math.ceil((logoLeft + 110) / cell) + 1);
     const lzY0 = Math.max(0, Math.floor(logoTop / cell) - 1);
     const lzY1 = Math.min(rows - 1, Math.ceil((logoTop + 48) / cell) + 1);
-    const dark = isDark();
-    const lightenTarget = dark ? { r: 30, g: 35, b: 45 } : { r: 250, g: 247, b: 243 };
+    const lightenTarget = s.dark ? { r: 30, g: 35, b: 45 } : { r: 250, g: 247, b: 243 };
     for (let zy = lzY0; zy <= lzY1; zy++) {
       for (let zx = lzX0; zx <= lzX1; zx++) {
         const c = baseColors[zy][zx];
@@ -188,12 +197,38 @@ function CanvasHeatmap() {
     gridRef.current = { cols, rows, cell, intensities, taus, activatedAt, baseColors };
   }
 
-  function activateAt(clientX, clientY) {
+  /* Re-lays the grid only when the hero's drawn size has changed (or, with
+     force, the theme), then paints at once. Reported 23 Nov 2026 ("Heat map
+     breaks in phone when I scroll"): a phone browser fires resize as its
+     toolbar hides and shows, and every resize used to wipe the trail; where
+     the hero itself changed height, the ResizeObserver cleared the canvas
+     after that frame's drawing, so the frame was painted with no heatmap at
+     all. Painting here, inside the same callback, means no frame goes out
+     empty. */
+  function fit(force) {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
+    const parent = parentRef.current;
+    if (!canvas || !parent) return;
+    const rect = parent.getBoundingClientRect();
+    /* The hero may not be laid out yet (Firefox/Opera are slower than a
+       single rAF). Sizing the canvas to 0 here left it permanently blank
+       — bail and let the ResizeObserver rebuild once the size is real. */
+    if (rect.width < 1 || rect.height < 1) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const s = stateRef.current;
+    if (
+      !force &&
+      s.palette &&
+      dpr === s.dpr &&
+      Math.round(rect.width * dpr) === canvas.width &&
+      Math.round(rect.height * dpr) === canvas.height
+    ) return;
+    setupCanvas(rect, dpr);
+    paint(performance.now());
+  }
+
+  /* Warms a soft patch round a point given in the canvas's own pixels. */
+  function activateLocal(x, y) {
     const { cell } = gridRef.current;
     const cx = Math.floor(x / cell);
     const cy = Math.floor(y / cell);
@@ -206,6 +241,16 @@ function CanvasHeatmap() {
         activateCell(cx + i, cy + j, boost);
       }
     }
+  }
+
+  /* The same from a pointer, whose position is on the screen. */
+  function activateAt(clientX, clientY) {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    activateLocal(x, y);
 
     /* ── Premium: set parallax target ── */
     const { width, height } = stateRef.current;
@@ -216,10 +261,9 @@ function CanvasHeatmap() {
   }
 
   function loop(ts) {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const { dpr, isMobile, width, height } = stateRef.current;
+    rafRef.current = 0;
+    if (!canvasRef.current || !stateRef.current.palette) return;
+    const { isMobile } = stateRef.current;
     const grid = gridRef.current;
 
     if (!stateRef.current.last) stateRef.current.last = ts;
@@ -228,13 +272,16 @@ function CanvasHeatmap() {
 
     const reduced = prefersReducedMotion();
 
-    // Ambient drift for mobile
+    // Ambient drift for mobile, in the grid's own pixels. It used to go
+    // through activateAt, which reads a screen position, so once the page
+    // scrolled the patch stayed put on the screen while the tiles moved
+    // under it, and a scroll dragged it down the hero as a streak.
     if (!reduced && isMobile) {
       stateRef.current.driftT += dt;
       const t = stateRef.current.driftT;
       const ax = (grid.cols / 2) + Math.sin(t * 0.6) * (grid.cols * 0.25) + Math.sin(t * 0.23) * (grid.cols * 0.1);
       const ay = (grid.rows / 2) + Math.cos(t * 0.45) * (grid.rows * 0.22) + Math.cos(t * 0.17) * (grid.rows * 0.08);
-      activateAt(ax * grid.cell, ay * grid.cell);
+      activateLocal(ax * grid.cell, ay * grid.cell);
     } else if (!reduced) {
       // Desktop idle breathing — subtle pulse when cursor is idle
       stateRef.current.idleT += dt;
@@ -255,6 +302,33 @@ function CanvasHeatmap() {
       }
     }
 
+    /* ── Premium: parallax — smooth lerp toward target ── */
+    const px = parallaxRef.current;
+    px.ox += (px.tx - px.ox) * Math.min(1, dt * 4);
+    px.oy += (px.ty - px.oy) * Math.min(1, dt * 4);
+
+    paint(performance.now());
+    // When the visitor prefers reduced motion, render a single static
+    // frame and stop the animation loop entirely. Off screen it stops too,
+    // and the IntersectionObserver starts it again on the way back.
+    if (!reduced && stateRef.current.onScreen) rafRef.current = requestAnimationFrame(loop);
+  }
+
+  /* Keeps the loop running, unless it already is or the hero is off screen. */
+  function start() {
+    if (rafRef.current || !stateRef.current.onScreen) return;
+    stateRef.current.last = 0;
+    rafRef.current = requestAnimationFrame(loop);
+  }
+
+  /* Draws the grid as it stands at `now`. */
+  function paint(now) {
+    const canvas = canvasRef.current;
+    if (!canvas || !stateRef.current.palette) return;
+    const ctx = canvas.getContext('2d');
+    const { dpr, isMobile, width, height, dark } = stateRef.current;
+    const grid = gridRef.current;
+
     /* ── Premium: scroll-reactive intensity ── */
     const parentEl = parentRef.current;
     let scrollBoost = 0;
@@ -265,13 +339,7 @@ function CanvasHeatmap() {
       scrollBoost = progress * 0.18; // up to 18% extra intensity as you scroll
     }
 
-    /* ── Premium: parallax — smooth lerp toward target ── */
     const px = parallaxRef.current;
-    px.ox += (px.tx - px.ox) * Math.min(1, dt * 4);
-    px.oy += (px.ty - px.oy) * Math.min(1, dt * 4);
-
-    // Draw
-    const now = performance.now();
     ctx.save();
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, width, height);
@@ -281,7 +349,6 @@ function CanvasHeatmap() {
 
     const { intensities, taus, activatedAt, baseColors, cols, rows, cell } = grid;
     const acc = hexToRgb(stateRef.current.palette.accent);
-    const dark = isDark();
     const highlight = dark ? { r: 60, g: 65, b: 78 } : { r: 255, g: 252, b: 248 };
     const fadeStart = 0.55;
 
@@ -313,9 +380,6 @@ function CanvasHeatmap() {
     ctx.globalAlpha = 1;
 
     ctx.restore();
-    // When the visitor prefers reduced motion, render a single static
-    // frame and stop the animation loop entirely.
-    if (!reduced) rafRef.current = requestAnimationFrame(loop);
   }
 
   useEffect(() => {
@@ -324,8 +388,8 @@ function CanvasHeatmap() {
 
     // Defer setup by one frame for Firefox layout timing
     const setupId = requestAnimationFrame(() => {
-      setupCanvas();
-      rafRef.current = requestAnimationFrame(loop);
+      fit(false);
+      start();
     });
 
     // Pointer interactions (desktop)
@@ -371,19 +435,20 @@ function CanvasHeatmap() {
     };
     window.addEventListener('c4:heat', onHeat);
 
+    /* A window resize rebuilds only if the hero's size changed with it
+       (fit checks); a phone toolbar hiding or showing leaves it alone. */
     const onResize = () => {
-      cancelAnimationFrame(rafRef.current);
-      setupCanvas();
-      rafRef.current = requestAnimationFrame(loop);
+      fit(false);
+      start();
     };
     window.addEventListener('resize', onResize);
 
-    // Watch for theme changes on <html> class list
+    // Watch for theme changes on <html> class list (any other class change
+    // on <html> leaves the grid alone)
     const observer = new MutationObserver(() => {
-      cancelAnimationFrame(rafRef.current);
-      stateRef.current.last = 0;
-      setupCanvas();
-      rafRef.current = requestAnimationFrame(loop);
+      if (stateRef.current.palette && isDark() === stateRef.current.dark) return;
+      fit(true);
+      start();
     });
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
@@ -393,12 +458,23 @@ function CanvasHeatmap() {
        the canvas blank until an unrelated window resize. The observer
        catches the late layout on every engine. */
     const ro = new ResizeObserver(() => {
-      cancelAnimationFrame(rafRef.current);
-      stateRef.current.last = 0;
-      setupCanvas();
-      rafRef.current = requestAnimationFrame(loop);
+      fit(false);
+      start();
     });
     if (parentRef.current) ro.observe(parentRef.current);
+
+    /* Nothing to draw while the hero is off screen, so the loop stops there
+       instead of redrawing every frame for the rest of the page. */
+    const io = new IntersectionObserver((entries) => {
+      const entry = entries[entries.length - 1];
+      stateRef.current.onScreen = entry.isIntersecting;
+      if (entry.isIntersecting) start();
+      else {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = 0;
+      }
+    });
+    if (parentRef.current) io.observe(parentRef.current);
 
     return () => {
       window.removeEventListener('resize', onResize);
@@ -407,8 +483,10 @@ function CanvasHeatmap() {
       window.removeEventListener('c4:heat', onHeat);
       cancelAnimationFrame(setupId);
       cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
       observer.disconnect();
       ro.disconnect();
+      io.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -443,6 +521,8 @@ function FirefoxHeatmap() {
 
     let currentRaf = 0;
     let gridState = null;
+    /* what the tiles were last laid out for */
+    let built = { w: 0, h: 0, dark: null };
 
     function build() {
       cancelAnimationFrame(currentRaf);
@@ -457,7 +537,10 @@ function FirefoxHeatmap() {
       const rect = container.getBoundingClientRect();
       const w = rect.width;
       const h = rect.height;
-      if (w === 0 || h === 0) return { activateAt() {} };
+      if (w === 0 || h === 0) {
+        built = { w: 0, h: 0, dark: null };
+        return { activateAt() {} };
+      }
 
       const cols = Math.ceil(w / cell);
       const rows = Math.ceil(h / cell);
@@ -465,6 +548,7 @@ function FirefoxHeatmap() {
       const seed = getSeed();
       const rng = makeRng(seed);
       const dark = isDarkMode();
+      built = { w, h, dark };
       const palettes = dark ? DARK_PALETTES : LIGHT_PALETTES;
       const palette = palettes[Math.floor(rng() * palettes.length) % palettes.length];
       const acc = hexToRgb(palette.accent);
@@ -708,10 +792,18 @@ function FirefoxHeatmap() {
       return { activateAt };
     }
 
-    // Initial build (deferred one frame for layout)
-    const setupId = requestAnimationFrame(() => {
+    /* Rebuilds only for a real change of size. A phone browser fires
+       resize as its toolbar hides and shows, and each rebuild redrew every
+       tile and dropped the trail (the canvas path's fault, reported 23 Nov
+       2026 and fixed 25 Nov). */
+    const rebuildIfResized = () => {
+      const r = container.getBoundingClientRect();
+      if (Math.abs(r.width - built.w) < 0.5 && Math.abs(r.height - built.h) < 0.5) return;
       gridState = build();
-    });
+    };
+
+    // Initial build (deferred one frame for layout)
+    const setupId = requestAnimationFrame(rebuildIfResized);
 
     // Pointer listeners
     const onPointerMove = (e) => {
@@ -729,13 +821,12 @@ function FirefoxHeatmap() {
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerdown', onPointerDown);
 
-    const onResize = () => {
-      gridState = build();
-    };
+    const onResize = rebuildIfResized;
     window.addEventListener('resize', onResize);
 
-    // Watch for theme changes
+    // Watch for theme changes (any other class change on <html> leaves the tiles alone)
     const observer = new MutationObserver(() => {
+      if (built.dark === isDarkMode()) return;
       gridState = build();
     });
     observer.observe(document.documentElement, {
@@ -744,12 +835,10 @@ function FirefoxHeatmap() {
     });
 
     /* Same cross-browser guard as the canvas path: build() bails when the
-       container is 0×0 (line ~416), and on Firefox/Opera it often is after
-       one rAF — leaving the tiles empty. Rebuild the moment the hero gets
-       a real size. */
-    const ro = new ResizeObserver(() => {
-      gridState = build();
-    });
+       container is 0×0, and on Firefox/Opera it often is after one rAF,
+       leaving the tiles empty. Rebuild the moment the hero gets a real
+       size. */
+    const ro = new ResizeObserver(rebuildIfResized);
     ro.observe(container);
 
     return () => {

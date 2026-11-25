@@ -8,6 +8,23 @@ import { WebpImg } from '../portfolio/PortfolioMedia';
 import { usePrerenderedState } from '@/lib/hydration';
 
 const AUTOPLAY_INTERVAL = 7000;
+/* The row of bars, one per testimonial, needs this much room: the two
+   arrows and the gaps beside them (6rem: two 2.25rem buttons, a 0.5rem gap
+   and the row's 1rem gap, so a bigger browser font moves the line with
+   them), a 24px target for each bar and 44px for the current one. In a
+   column narrower than that (a phone, or a tablet's half width) the row
+   shows the count and the current bar instead. A container query picks one
+   from the first paint (barsQuery, below), so the prerendered page is right
+   before any script runs; a browser without container queries gets the
+   count. Reported 23 Nov 2026 ("not centred and testimonials cut off"):
+   with 13 testimonials the bars came to 428px, wider than a phone, and
+   stretched the column, which pushed the ring right and cut every quote
+   off at the screen's edge. */
+const BAR_W = 24;
+const BAR_ON_W = 44;
+const barsQuery = (total) =>
+  `.c4-reel-bars{display:none}.c4-reel-count{display:flex}` +
+  `@container (min-width: calc(6rem + ${BAR_W * (total - 1) + BAR_ON_W}px)){.c4-reel-bars{display:flex}.c4-reel-count{display:none}}`;
 const RING_SLOTS = 5;
 const RING_RADIUS = 37; // percent of stage
 const ease = [0.22, 1, 0.36, 1];
@@ -142,7 +159,10 @@ export default function TestimonialReel({ testimonials = [] }) {
       aria-roledescription="carousel"
       aria-label="Client testimonials"
     >
-      <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-6 pb-8 pt-6 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] md:gap-14 md:px-12 md:pb-10 md:pt-8">
+      {/* One column on a phone, held to the screen's width (minmax(0, 1fr)):
+          an auto column grows to fit its widest content, which is how the
+          bars pushed the ring off centre. */}
+      <div className="mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1fr)] items-center gap-10 px-6 pb-8 pt-6 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] md:gap-14 md:px-12 md:pb-10 md:pt-8">
         {/* ── Reel stage: centre project mark + orbiting screenshots ── */}
         <div
           className="order-1 flex justify-center"
@@ -300,8 +320,9 @@ export default function TestimonialReel({ testimonials = [] }) {
 
           {/* controls */}
           {total > 1 && (
-            <div className="mt-8 flex items-center gap-4">
-              <div className="flex items-center gap-2">
+            <div className="relative mt-8 flex min-w-0 items-center gap-4" style={{ containerType: 'inline-size' }}>
+              <style>{barsQuery(total)}</style>
+              <div className="flex shrink-0 items-center gap-2">
                 <button
                   onClick={prev}
                   aria-label="Previous testimonial"
@@ -322,8 +343,13 @@ export default function TestimonialReel({ testimonials = [] }) {
 
               {/* Each button is a 24px-tall target, at least 24px wide, round a
                   3px bar that looks as it did. The bars were the buttons, so
-                  the target was 3px tall (found 9 Oct 2026). */}
-              <div className="flex items-center">
+                  the target was 3px tall (found 9 Oct 2026). Where they don't
+                  fit, the count in the instrument face and the current bar
+                  stand in for them (barsQuery picks one; both are rendered and
+                  the other is display: none, so assistive tech gets one). The
+                  bars only show where they fit, so nothing clips them, and the
+                  keyboard's focus ring shows whole round each. */}
+              <div className="c4-reel-bars shrink-0 items-center">
                 {testimonials.map((t, index) => (
                   <button
                     key={t.id}
@@ -350,7 +376,34 @@ export default function TestimonialReel({ testimonials = [] }) {
                   </button>
                 ))}
               </div>
+              <p
+                className="c4-reel-count min-w-0 items-center gap-3 font-mono text-[12.5px] tracking-[0.02em] tabular-nums"
+                style={{ color: 'var(--c4-proof-muted)' }}
+              >
+                <span className="whitespace-nowrap">
+                  <span className="sr-only">Testimonial </span>
+                  {current + 1}
+                  <span aria-hidden="true"> / </span>
+                  <span className="sr-only"> of </span>
+                  {total}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="relative block h-[3px] w-[30px] shrink-0 overflow-hidden rounded-full"
+                  style={{ backgroundColor: 'var(--c4-proof-border)' }}
+                >
+                  {!reduced && (
+                    <span
+                      className="absolute inset-y-0 left-0 rounded-full"
+                      style={{ width: `${progress * 100}%`, backgroundColor: 'var(--c4-proof-accent)' }}
+                    />
+                  )}
+                </span>
+              </p>
 
+              {/* Under the arrows, out of the row's flow: beside the bars it
+                  took about 80px they need, and squeezed the last of them out
+                  of sight between 944 and about 1100px wide. */}
               <AnimatePresence>
                 {paused && !reduced && (
                   <motion.span
@@ -358,7 +411,7 @@ export default function TestimonialReel({ testimonials = [] }) {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 4 }}
                     transition={{ duration: 0.2 }}
-                    className="ml-1 hidden items-center gap-1.5 text-[9px] uppercase tracking-[0.12em] sm:inline-flex"
+                    className="absolute left-0 top-full mt-2 hidden items-center gap-1.5 text-[9px] uppercase tracking-[0.12em] sm:inline-flex"
                     style={{ color: 'var(--c4-proof-faint)' }}
                   >
                     <Pause size={9} strokeWidth={2.5} />

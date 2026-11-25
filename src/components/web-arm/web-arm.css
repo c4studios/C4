@@ -1203,8 +1203,16 @@
   background: var(--lv-page);
 }
 
+/* Lowered 25 Nov 2026. Caleb, 23 Nov: "Web design service page title needs
+   to be lowered". The first line sat 31px under the nav at 1280 by 800 and
+   23 to 26px on a phone, where the site's other pages leave 50 to 90px, so
+   the block read as pushed up against the bar with a band of empty page
+   under it. It now clears the nav by 71px at 1280 by 800 (63px on an
+   upright phone and 67px on an upright tablet, below). A short window
+   keeps the old minimum here, and a phone on its side gets the old values
+   too (below), so "Start a brief" stays on its first screen. */
 .lv-fusion-head {
-  padding-top: clamp(88px, 13vh, 148px);
+  padding-top: clamp(88px, 18vh, 184px);
   padding-bottom: clamp(28px, 4.5vh, 52px);
   text-align: center;
   display: flex;
@@ -2167,8 +2175,14 @@
     height: 260vh;
   }
 
+  /* Fixed on an upright phone, so it doesn't move as the toolbar comes and
+     goes: the nav is 61px tall below 768px, so the first line sits 63px
+     under it. Not a share of svh: on a real phone that is the height with
+     the browser's bars showing, about 664px on an iPhone 12 to 15 and 553px
+     on an SE, which brought the line back up to 41px and 24px. The tablet
+     rule and the rule for a phone on its side follow this block. */
   .lv-fusion-head {
-    padding-top: clamp(72px, 10vh, 104px);
+    padding-top: 124px;
     padding-bottom: 20px;
   }
 
@@ -2246,6 +2260,30 @@
 
   .lv-reel-head {
     margin-bottom: 8px;
+  }
+}
+
+/* A tablet's nav is 73px tall, so an upright tablet's head clears it by
+   67px. */
+@media (min-width: 768px) and (max-width: 899.98px) {
+  .lv-fusion-head {
+    padding-top: 140px;
+  }
+}
+
+/* A phone on its side is under 500px tall, and an upright phone never is.
+   There the head keeps its old, tighter top so "Start a brief" stays on the
+   first screen (844 by 390, 896 by 414, 667 by 375). From 768px wide the
+   nav is 73px tall, so 78px leaves the first line clear of it. */
+@media (max-width: 899.98px) and (max-height: 500px) {
+  .lv-fusion-head {
+    padding-top: 72px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 899.98px) and (max-height: 500px) {
+  .lv-fusion-head {
+    padding-top: 78px;
   }
 }
 

@@ -14,8 +14,9 @@
  * reads what they can hold him to, then starts a conversation.
  * FIRST VIEWPORT: h1 and lede on the left; in the free space, the bench from
  * above: the portrait print, lit, with the notebook and a stack of real site
- * captures beside it. On a phone the bench is a band pinned under the nav
- * and the words scroll beneath it.
+ * captures beside it. On a phone the page is flat: each object a still above
+ * its own words, nothing pinned (25 Nov 2026; it was a band pinned over the
+ * top of the screen).
  * FORM: the bench tour, third of my seven, dealt second. Seed 85d9931f.
  * FINISH: unreviewed and undocumented is unfinished; this build ends with the
  * finish review, the verdict, DESIGN.md, and every shipping raster carrying
@@ -24,17 +25,15 @@
  * Static first: the prerender and reduced motion get a composed flat page,
  * every word in the column and each object as a still beside its own
  * section. Motion arms only outside both, and never hides content that the
- * static page shows. Armed and wide, the objects carry what they show at
- * reading size (the notes, each promise, each step, the verse), so the
- * column keeps those for screen readers only; in the band the column keeps
- * everything except the verse, which the band reads close.
+ * static page shows. Armed, the objects carry what they show at reading
+ * size (the notes, each promise, each step, the verse), so the column keeps
+ * those for screen readers only.
  *
  * Windowed (9 Oct 2026): the camera is chosen by the room the window has,
  * not its width alone (layoutFor, below). Side by side from 1000px wide and
  * 560px tall, with a narrower column under 1180px; the objects carry words
  * only while the camera keeps them at reading size (CARRY_MIN), and
- * otherwise the column keeps every word. The band is for portrait screens
- * tall enough to read under it. Anything else gets the flat page.
+ * otherwise the column keeps every word. Anything else gets the flat page.
  *
  * Copy: the facts of the previous page, rewritten to the house voice. Caleb's
  * rulings of 29 Sep 2026 bind: C4 Studios is just Caleb (sole operator), and
@@ -50,7 +49,7 @@ import Lenis from 'lenis';
 import { createPageUrl } from '@/utils';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import useStaticMode from '@/hooks/useStaticMode';
-import { useWasPrerendered } from '@/lib/hydration';
+import { PRERENDER, useWasPrerendered } from '@/lib/hydration';
 import { breadcrumbSchema, entitySchemas, profilePageSchema } from '@/lib/schema';
 import { NOTEBOOK, CARD, SHEET, BIBLE } from '../components/about/plates';
 import { DANIEL_3, DANIEL_4 } from '../components/about/daniel';
@@ -106,23 +105,19 @@ const VERSE = `“${DANIEL_3[24]}”`;
 
 /* Which camera the window has room for (9 Oct 2026, after Caleb's report of
    the band in a windowed browser). Side by side from SIDE_MIN wide: the
-   words take a column and the camera works the free space beside it. Below
-   that, on a screen that's portrait or close to it and tall enough to read
-   under it, the bench is a band pinned over the words; the nav slides away
-   as you scroll down there, so the band gets the top of the screen. Anywhere
-   else (a short window, or a landscape one too narrow for a column and a
-   camera) the band was a letterbox of tiny objects with a strip of words
-   under it, so the page goes flat: every word in the column, each object as
-   a still beside its own section, nothing pinned. */
+   words take a column and the camera works the free space beside it.
+   Anywhere narrower or shorter the page is flat: every word in the column,
+   each object as a still beside its own section, nothing pinned.
+
+   Phones and upright tablets used to get the band, a camera view pinned
+   over the top 46% of the screen with the words scrolling under it. Caleb,
+   23 Nov 2026: "The about page scroll animation is not great as it takes up
+   top half of the screen on mobile view". His standing rule is that no
+   stage is pinned to fill space and every section works at rest, so those
+   screens get the flat page too. */
 const SIDE_MIN = 1000;
 const SIDE_MIN_H = 560;
-const BAND_MIN_H = 620;
-const BAND_MAX_ASPECT = 1.15;
-const layoutFor = (vw, vh) => {
-  if (vw >= SIDE_MIN && vh >= SIDE_MIN_H) return 'wide';
-  if (vw < SIDE_MIN && vh >= BAND_MIN_H && vw <= vh * BAND_MAX_ASPECT) return 'band';
-  return 'flat';
-};
+const layoutFor = (vw, vh) => (vw >= SIDE_MIN && vh >= SIDE_MIN_H ? 'wide' : 'flat');
 /* Side by side, the objects carry the notes, each promise, each step and
    the verse only while the camera's scale (k in measure) keeps them at
    reading size: at 0.78 the notebook's notes land near 12px, the smallest
@@ -166,50 +161,35 @@ const SHEET_AT = { x: 2980, y: 1650, r: -1 };
 const BIBLE_AT = { x: 4300, y: 700, r: 1.2 };
 
 /* Poses are framed for a reference view (the 692x900 clear space right of
-   the column's fade at 1440 wide; 375 x 46svh for the band) and scaled to
-   the real one in measure(). The run-sheet rows and verse 25 are found on
-   the page at measure time. */
+   the column's fade at 1440 wide) and scaled to the real one in measure().
+   The run-sheet rows and verse 25 are found on the page at measure time. */
 const POSES = {
-  wide: {
-    open: { x: 595, y: 57, z: 0.36, tilt: 8, rot: -2 },
-    who: { x: 980, y: -420, z: 0.64, tilt: 20, rot: 1.5 },
-    workA: { x: 2620, y: 17, z: 0.5, tilt: 22, rot: -2 },
-    workB: { x: 3420, y: 17, z: 0.5, tilt: 22, rot: 1.5 },
-    promise: { x: 1765, y: 1890, z: 0.66, tilt: 16, rot: -1 },
-    step: { x: 3420, y: 1900, z: 0.74, tilt: 18, rot: 0.6 },
-    verse: { x: 5500, y: 1000, z: 1.02, tilt: 12, rot: -0.8 },
-    out: { x: 5100, y: 1290, z: 0.42, tilt: 6, rot: 0 },
-  },
-  band: {
-    open: { x: 595, y: 57, z: 0.19, tilt: 6, rot: -2 },
-    who: { x: 980, y: -420, z: 0.34, tilt: 14, rot: 1.5 },
-    workA: { x: 2620, y: 17, z: 0.26, tilt: 16, rot: -2 },
-    workB: { x: 3370, y: 17, z: 0.25, tilt: 16, rot: 1.5 },
-    promise: { x: 1770, y: 1890, z: 0.35, tilt: 12, rot: -1 },
-    step: { x: 3420, y: 1900, z: 0.4, tilt: 12, rot: 0.6 },
-    verse: { x: 5500, y: 1000, z: 1.0, tilt: 8, rot: -0.8 },
-    out: { x: 5100, y: 1290, z: 0.21, tilt: 4, rot: 0 },
-  },
+  open: { x: 595, y: 57, z: 0.36, tilt: 8, rot: -2 },
+  who: { x: 980, y: -420, z: 0.64, tilt: 20, rot: 1.5 },
+  workA: { x: 2620, y: 17, z: 0.5, tilt: 22, rot: -2 },
+  workB: { x: 3420, y: 17, z: 0.5, tilt: 22, rot: 1.5 },
+  promise: { x: 1765, y: 1890, z: 0.66, tilt: 16, rot: -1 },
+  step: { x: 3420, y: 1900, z: 0.74, tilt: 18, rot: 0.6 },
+  verse: { x: 5500, y: 1000, z: 1.02, tilt: 12, rot: -0.8 },
+  out: { x: 5100, y: 1290, z: 0.42, tilt: 6, rot: 0 },
 };
 
-/* Where each pose is reached: [element, point within it]. Wide holds a pose
-   while that point sits mid-screen; the band arrives as the element's top
-   reaches the reading area. */
+/* Where each pose is reached: [element, point within it]. The camera holds
+   a pose while that point sits mid-screen (FOCUS). */
 const STOPS = [
-  { pose: 'open', wide: ['[data-ch="0"]', 0], band: ['[data-ch="0"]', 0] },
-  { pose: 'who', wide: ['[data-ch="1"]', 0.5], band: ['#bt-who', 0] },
-  { pose: 'workA', wide: ['[data-ch="2"]', 0.3], band: ['#bt-where', 0] },
-  { pose: 'workB', wide: ['[data-ch="2"]', 0.76], band: ['.bt-worklist', 0] },
-  { pose: 'promise', wide: ['[data-ch="3"]', 0.5], band: ['#bt-promise', 0] },
-  ...STEPS.map((_, i) => ({ pose: `step${i}`, wide: [`.bt-steps > li:nth-child(${i + 1})`, 0.5], band: [`.bt-steps > li:nth-child(${i + 1})`, 0] })),
-  { pose: 'verse', wide: ['[data-ch="5"]', 0.5], band: ['#bt-name', 0] },
-  { pose: 'out', wide: ['.bt-close', 0.25], band: ['.bt-close', 0] },
+  { pose: 'open', at: ['[data-ch="0"]', 0] },
+  { pose: 'who', at: ['[data-ch="1"]', 0.5] },
+  { pose: 'workA', at: ['[data-ch="2"]', 0.3] },
+  { pose: 'workB', at: ['[data-ch="2"]', 0.76] },
+  { pose: 'promise', at: ['[data-ch="3"]', 0.5] },
+  ...STEPS.map((_, i) => ({ pose: `step${i}`, at: [`.bt-steps > li:nth-child(${i + 1})`, 0.5] })),
+  { pose: 'verse', at: ['[data-ch="5"]', 0.5] },
+  { pose: 'out', at: ['.bt-close', 0.25] },
 ];
-const FOCUS = { wide: 0.5, band: 0.8 };
-/* The share of each leg the camera spends travelling: wide moves between
-   chapters, the band waits until the words it is showing are read. Down the
-   run sheet the band's steps sit close together, so it glides instead. */
-const TRAVEL = { wide: [0.12, 0.88], band: [0.4, 1], bandSteps: [0, 1] };
+const FOCUS = 0.5;
+/* The share of each leg the camera spends travelling: it moves between
+   chapters and holds while one is read. */
+const TRAVEL = [0.12, 0.88];
 
 /* The flat page's stills: which objects, and the patch of bench to frame. */
 /* Each frame leaves room round its object for the shadow to fade out. */
@@ -423,17 +403,33 @@ function Still({ still, open }) {
     const world = worldRef.current;
     if (!frame || !world) return undefined;
     const fit = () => {
-      const z = Math.min(frame.clientWidth / still.fw, frame.clientHeight / still.fh);
-      const x = still.minLeft == null ? still.x : Math.max(still.x, still.minLeft + frame.clientWidth / (2 * z));
+      const w = frame.clientWidth;
+      const h = frame.clientHeight;
+      /* A hidden frame (the side-by-side first paint hides stills 2 to 6)
+         has no size to fit, so its bench is shrunk out of sight until it
+         shows, and then framed. The Bible's used to come out as an
+         -Infinity, which browsers ignore, so a page read without
+         JavaScript drew it at full size. */
+      if (!w || !h) {
+        world.style.transform = 'scale(0)';
+        return;
+      }
+      const z = Math.min(w / still.fw, h / still.fh);
+      const x = still.minLeft == null ? still.x : Math.max(still.x, still.minLeft + w / (2 * z));
       world.style.transform = toTransform({ x, y: still.y, z, tilt: still.tilt, rot: still.rot });
+      /* The prerender frames each still in a 1280px window, which is wrong
+         in any other, so bench-tour.css keeps a still empty until the
+         visitor's own page has framed it (never marked in the prerender). */
+      if (!PRERENDER) frame.dataset.fit = '';
     };
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(frame);
     return () => ro.disconnect();
   }, [still]);
+  /* below 900px the frame takes its subject's own shape (bench-tour.css) */
   return (
-    <div className="bt-still" ref={frameRef} aria-hidden="true">
+    <div className="bt-still" ref={frameRef} aria-hidden="true" style={{ '--still-ar': `${still.fw} / ${still.fh}` }}>
       <div className="bt-lens">
         <div className="bt-world" ref={worldRef}>
           <Bench open={open} hot={-1} only={still.show} />
@@ -559,64 +555,50 @@ export default function About() {
     }
     root.classList.add('bt-armed');
 
+    root.classList.add('bt-wide');
+
     let anchors = [];
-    let layout = 'wide';
     let verseY = 0;
     let stepRange = [0, 0];
     let vh = window.innerHeight;
     let frameW = 812;
     let colPx = -1;
     let lxPx = 0;
+    /* A window too small for the camera unmounts it through the resize
+       state (room); until then this keeps measuring the camera it has. */
     const measure = () => {
       vh = window.innerHeight;
       const vw = window.innerWidth;
-      /* 'flat' unmounts the camera through the resize state; until then
-         the last camera holds */
-      const fits = layoutFor(vw, vh);
-      if (fits !== 'flat') layout = fits;
-      root.classList.toggle('bt-wide', layout === 'wide');
-      root.classList.toggle('bt-band', layout === 'band');
-      let k;
-      if (layout === 'wide') {
-        const col = root.querySelector('.bt-chapters');
-        const cs = getComputedStyle(col);
-        /* the column is 34rem from 1180px and narrower below it, so it is
-           measured rather than assumed */
-        const colW = Math.max(...Array.from(root.querySelectorAll('.bt-ch-in'), (el) => el.getBoundingClientRect().width));
-        const colRight = col.getBoundingClientRect().left + parseFloat(cs.paddingLeft) + colW;
-        /* the camera frames the clear space past the column's fade */
-        const clear = vw - colRight - 120;
-        stage.style.setProperty('--col', `${Math.round(colRight)}px`);
-        stage.style.setProperty('--lx', `${Math.round(colRight + 120 + clear / 2)}px`);
-        k = clamp(Math.min(clear / 692, vh / 900), 0.62, 1.25);
-        frameW = clear;
-        colPx = colRight;
-        lxPx = colRight + 120 + clear / 2;
-        root.classList.toggle('bt-carry', k >= CARRY_MIN);
-      } else {
-        root.classList.remove('bt-carry');
-        stage.style.removeProperty('--col');
-        stage.style.removeProperty('--lx');
-        k = clamp(Math.min(vw / 375, stage.offsetHeight / 373), 0.45, 1.6);
-        /* a tablet's band is wide and short: focus by what it can hold */
-        frameW = Math.min(vw, stage.offsetHeight * 1.2);
-        colPx = -1;
-      }
+      const col = root.querySelector('.bt-chapters');
+      const cs = getComputedStyle(col);
+      /* the column is 34rem from 1180px and narrower below it, so it is
+         measured rather than assumed */
+      const colW = Math.max(...Array.from(root.querySelectorAll('.bt-ch-in'), (el) => el.getBoundingClientRect().width));
+      const colRight = col.getBoundingClientRect().left + parseFloat(cs.paddingLeft) + colW;
+      /* the camera frames the clear space past the column's fade */
+      const clear = vw - colRight - 120;
+      stage.style.setProperty('--col', `${Math.round(colRight)}px`);
+      stage.style.setProperty('--lx', `${Math.round(colRight + 120 + clear / 2)}px`);
+      const k = clamp(Math.min(clear / 692, vh / 900), 0.62, 1.25);
+      frameW = clear;
+      colPx = colRight;
+      lxPx = colRight + 120 + clear / 2;
+      root.classList.toggle('bt-carry', k >= CARRY_MIN);
       /* the run sheet's rows and verse 25, found where they actually set */
-      const set = { ...POSES[layout] };
+      const set = { ...POSES };
       root.querySelectorAll('.bt-stage .bt-sheet-row').forEach((row, i) => {
         const p = worldPoint(row);
         if (p) set[`step${i}`] = { ...set.step, x: set.step.x, y: p.y };
       });
       const v25 = root.querySelector('.bt-stage [data-v="25"]');
       const vp = v25 && worldPoint(v25);
-      /* wide keeps the left page under the column's fade: verse 25 sits left of centre */
-      if (vp) set.verse = { ...set.verse, x: vp.x + (layout === 'wide' ? 170 : 0), y: vp.y };
+      /* keeps the left page under the column's fade: verse 25 sits left of centre */
+      if (vp) set.verse = { ...set.verse, x: vp.x + 170, y: vp.y };
       anchors = STOPS.map((s) => {
-        const [sel, at] = s[layout];
+        const [sel, at] = s.at;
         const el = root.querySelector(sel);
         const r = el.getBoundingClientRect();
-        const y = Math.max(0, r.top + window.scrollY + at * r.height - vh * FOCUS[layout]);
+        const y = Math.max(0, r.top + window.scrollY + at * r.height - vh * FOCUS);
         const base = set[s.pose] || set.step;
         return { y, name: s.pose, pose: { ...base, z: base.z * k } };
       });
@@ -654,8 +636,7 @@ export default function About() {
           const a = anchors[i];
           const b = anchors[i + 1];
           if (y >= a.y && y < b.y) {
-            const glide = layout === 'band' && a.name.startsWith('step') && b.name.startsWith('step');
-            const [lo, hi] = TRAVEL[glide ? 'bandSteps' : layout];
+            const [lo, hi] = TRAVEL;
             const u = (y - a.y) / Math.max(1, b.y - a.y);
             const e = smoother(clamp01((u - lo) / (hi - lo)));
             const dist = Math.hypot(b.pose.x - a.pose.x, b.pose.y - a.pose.y);
@@ -712,7 +693,7 @@ export default function About() {
       const span = frameW / cam.z;
       const r0 = span * 0.2;
       const r1 = span * 0.35;
-      const maxBlur = layout === 'wide' ? 6 : 5;
+      const maxBlur = 6;
       /* dark mode dims paper with a CSS filter; the blur has to carry it too */
       const dim = document.documentElement.classList.contains('dark-mode');
       objsRef.current.forEach((o) => {
@@ -724,7 +705,7 @@ export default function About() {
           o.dim = dim;
           o.el.style.filter = b ? `blur(${b}px)${dim ? ' brightness(0.93)' : ''}` : '';
         }
-        /* on wide, whatever slides under the words goes with the fade */
+        /* whatever slides under the words goes with the fade */
         let op = 1;
         if (colPx > 0) {
           const right = lxPx + (o.x + o.w - cam.x) * cam.z;
@@ -741,19 +722,14 @@ export default function About() {
     };
     gsap.ticker.add(tick);
 
-    /* Keyboard focus never lands off screen or under the pinned band. Only
-       the column needs it: the band never covers the close or the footer,
-       and the nav is fixed. The band's clear line is its
-       height, not its live bottom edge: coming back up from the close, the
-       band is still scrolled away with the track, and its edge sat far above
-       the screen (9 Oct 2026: Tab round from the footer on a phone put the
-       first work link 900px above the screen). */
+    /* Keyboard focus never lands off screen or under the nav. Only the
+       column needs it: the stage never covers the close or the footer. */
     const onFocus = (e) => {
       const el = e.target;
       const lenis = window.__c4Lenis;
       if (!lenis || !(el instanceof HTMLElement) || !el.closest('.bt-chapters')) return;
       const r = el.getBoundingClientRect();
-      const top = layout === 'band' ? stage.offsetHeight + 16 : 96;
+      const top = 96;
       const bottom = window.innerHeight - 96;
       if (r.top < top || r.bottom > bottom) lenis.scrollTo(el, { immediate: true, offset: -(top + 24) });
     };
@@ -777,7 +753,7 @@ export default function About() {
       ro.disconnect();
       window.removeEventListener('resize', measure);
       if (fine) window.removeEventListener('pointermove', onMove);
-      root.classList.remove('bt-armed', 'bt-wide', 'bt-band', 'bt-carry');
+      root.classList.remove('bt-armed', 'bt-wide', 'bt-carry');
       stage.style.removeProperty('--col');
       stage.style.removeProperty('--lx');
     };
@@ -897,11 +873,21 @@ export default function About() {
                   const isOpen = flat || open === i;
                   return (
                     <li key={p.t}>
-                      <button type="button" className="bt-promise-btn" aria-expanded={isOpen} aria-controls={`bt-pr-${i}`} onClick={() => toggle(i)}>
-                        <strong>{p.t}</strong>
-                        <span>{p.s}</span>
-                        <i className="bt-promise-x" aria-hidden="true" />
-                      </button>
+                      {/* The flat page shows every promise open, so there its
+                          titles aren't buttons: a tap used to do nothing
+                          (found 25 Nov 2026, now that every phone is flat). */}
+                      {flat ? (
+                        <div className="bt-promise-btn bt-promise-head">
+                          <strong>{p.t}</strong>
+                          <span>{p.s}</span>
+                        </div>
+                      ) : (
+                        <button type="button" className="bt-promise-btn" aria-expanded={isOpen} aria-controls={`bt-pr-${i}`} onClick={() => toggle(i)}>
+                          <strong>{p.t}</strong>
+                          <span>{p.s}</span>
+                          <i className="bt-promise-x" aria-hidden="true" />
+                        </button>
+                      )}
                       <div className="bt-promise-body" id={`bt-pr-${i}`} data-open={isOpen ? 'true' : 'false'}>
                         <div><p>{p.d}</p></div>
                       </div>
