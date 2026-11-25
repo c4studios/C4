@@ -584,13 +584,16 @@ export const seoPackages = [
    replies, photos and the performance figures work; the "Google Business
    Profile setup" add-on above covers that.
 
-   price is null until Caleb sets it, which renders as TBC and keeps the plan
-   out of the schema's offers. */
+   Priced by Caleb on 25 Nov 2026, choosing the first of two options in chat
+   ("1: $149 a month"): $149 a month, three-month minimum, with the $200
+   setup above as the one-off for a profile that isn't set up or needs
+   sorting out. A null price would render as TBC and keep the plan out of
+   the schema's offers. */
 export const gbpPlan = {
   key: 'gbp',
   name: 'Local',
-  price: null,
-  priceLabel: '',
+  price: 149,
+  priceLabel: '$149/mo',
   priceSuffix: 'min. 3 months',
   popular: false,
   description: 'Your profile kept current every month, on its own or beside an SEO plan.',
