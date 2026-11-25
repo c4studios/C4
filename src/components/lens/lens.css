@@ -33,7 +33,15 @@
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
 }
-body.cursor-on, body.cursor-on * { cursor: none !important; }
+/* The browser's own surfaces, in the page's colours (23 Nov 2026). The
+   reticle cursor that hid the system pointer went the same day. */
+.lens-page ::selection { background: var(--amber); color: #000; }
+:where(.lens-page) :where(a, button, summary, [tabindex]):focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+/* Every section lands clear of the bar (LensNav.jsx) from a # link. */
+.lens-page :is(#top, #work, #capture, #services, #packages, #contact) { scroll-margin-top: 64px; }
+/* A control reached by Tab scrolls clear of the bar too, with its ring and
+   a frame's edge number in view (review, 25 Nov 2026). */
+.lens-page :is(a[href], button, input, summary, [tabindex]) { scroll-margin-top: 84px; scroll-margin-bottom: 16px; }
 
 /* Screen-reader-only h1 — zero visual delta */
 .lens-sr-only {
@@ -43,164 +51,47 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   white-space: nowrap; border: 0;
 }
 
-/* ── NAV ── */
-.lens-page nav {
+/* ── THE BAR (LensNav.jsx, 23 Nov 2026) ──
+   One fixed bar, 64 px tall (56 on a phone), with no blend mode. Clear over
+   the very top of the page, then solid from 8 px of scroll (.is-solid) with
+   a hairline under it and no blur, so nothing ever shows through. The name
+   sits dead centre wherever there's room for it. */
+.lens-page > .lens-nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 60;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 22px 40px; mix-blend-mode: difference; color: #fff;
+  height: 64px; padding: 0 40px;
+  display: grid; grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr); align-items: center; column-gap: 24px;
+  color: var(--ink); background: transparent; border-bottom: 1px solid transparent;
+  transition: background-color .25s ease, border-color .25s ease;
 }
-.brand { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: .14em; display: flex; align-items: center; gap: 10px; }
-.logo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ink); }
-.nav-links { display: flex; gap: 26px; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; font-family: 'Geist Mono', monospace; }
-.nav-links a { color: inherit; text-decoration: none; opacity: .82; transition: opacity .25s; }
-.nav-links a:hover { opacity: 1; }
-.nav-links .book { color: var(--amber) !important; opacity: 1; }
+.lens-page > .lens-nav.is-solid { background: #050505; border-bottom-color: var(--line); }
+.nav-left { grid-column: 1; grid-row: 1; display: flex; align-items: center; }
+.brand { grid-column: 2; grid-row: 1; font-family: 'Bebas Neue', sans-serif; font-size: 22px; line-height: 1; letter-spacing: .14em; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+.nav-eye { display: block; flex: none; overflow: visible; }
+.nav-links { grid-column: 3; grid-row: 1; justify-self: end; display: flex; align-items: center; gap: 26px; }
+.nav-links a:not(.btn) {
+  position: relative; display: inline-flex; align-items: center; min-height: 44px;
+  font-family: 'Geist', sans-serif; font-weight: 500; font-size: 14.5px; letter-spacing: 0;
+  color: var(--ink-2); text-decoration: none; transition: color .2s ease;
+}
+/* The section on screen: ink, with an amber line under it. */
+.nav-links a:not(.btn)::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 9px; height: 2px; background: var(--amber);
+  transform: scaleX(0); transform-origin: left; transition: transform .3s cubic-bezier(.22,1,.36,1);
+}
+.nav-links a:not(.btn):hover,
+.nav-links a[aria-current="true"] { color: var(--ink); }
+.nav-links a[aria-current="true"]::after { transform: scaleX(1); }
+.nav-links .nav-book { margin-left: 4px; padding: 0 18px; }
 
-/* ── HERO ── (200vh = 100vh of scroll-driven animation — slower, more deliberate) */
-.hero-scroll { position: relative; height: 240vh; contain: layout style paint; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-.hero-sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #000; transform: translateZ(0); contain: strict; -webkit-backface-visibility: hidden; backface-visibility: hidden; isolation: isolate; }
-.hero-stage { position: absolute; inset: 0; display: grid; place-items: center; transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-.studio-light {
-  position: absolute; inset: 0; pointer-events: none; z-index: 1;
-  background: radial-gradient(ellipse 55% 45% at 28% 36%, rgba(107,123,214,.03), transparent 60%),
-              radial-gradient(ellipse 50% 45% at 76% 68%, rgba(232,166,88,.02), transparent 60%);
-}
-.vignette {
-  position: absolute; inset: 0; pointer-events: none; z-index: 5;
-  background: radial-gradient(ellipse at center, transparent 32%, rgba(0,0,0,.9) 100%);
-}
-.grain {
-  position: absolute; inset: 0; pointer-events: none; opacity: .065; z-index: 7; mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='.95'/></svg>");
-}
+/* The old hero (the scroll-pinned aperture, its camera readouts, viewfinder
+   brackets, shutter and flare) and its styles came off on 23 Nov 2026. The
+   hero is components/lens/hero/LensHero.jsx, with its own lh- styles. */
 
-/* LENS
-   Lens.jsx measures the copy and the button block and sets --lens-d and
-   --lens-top, so the lens takes exactly the room between them at any window
-   size. Before that script runs (and for anything that never runs it) the
-   lens sits where it always did. */
-.hero-stage { perspective: 1200px; padding-top: 9vh; }
-.lens-wrap { position: relative; width: var(--lens-d, min(66vh, 78vw)); aspect-ratio: 1; will-change: transform; transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-.hero-sticky.is-fitted .hero-stage { place-items: start center; padding-top: var(--lens-top); }
-.hero-sticky.is-fitted .lens-flare { top: calc(var(--lens-top) + var(--lens-d) / 2); }
-.barrel-anchor {
-  position: absolute; inset: 0; border-radius: 50%; background: #000;
-  box-shadow: 0 80px 160px -30px rgba(0,0,0,.96), 0 40px 80px -10px rgba(0,0,0,.9);
-  transform: translateZ(0);
-}
-.lens-layer { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden; z-index: 3; }
-.lens-svg { width: 100%; height: 100%; display: block; transform: translateZ(0); will-change: contents; }
-.lens-eye { position: absolute; inset: 11.5%; border-radius: 50%; overflow: hidden; background: #020203; z-index: 1; transform: translateZ(0); will-change: filter, transform; }
-.eye-svg { width: 100%; height: 100%; display: block; }
-
-/* HUD — camera telemetry */
-.hud { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
-.hud-c { position: absolute; font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: rgba(245,245,240,.5); }
-.hud-c.tl { top: 90px; left: 40px; max-width: 280px; }
-.hud-c.tr { top: 90px; right: 40px; text-align: right; white-space: nowrap; }
-.hud-c.bl { bottom: 42px; left: 40px; }
-.hud-c.br { bottom: 42px; right: 40px; text-align: right; }
-.hud-c > span { display: block; white-space: nowrap; }
-.hud-c .v { color: var(--ink); opacity: .9; }
-.hud-c .k { color: var(--ink-3); margin-bottom: 2px; }
-.rec-wrap { display: inline-flex !important; align-items: center; gap: 8px; }
-.rec-dot { width: 7px; height: 7px; border-radius: 50%; background: #e53939; box-shadow: 0 0 10px rgba(229,57,57,.55); animation: lens-blink 1.4s ease-in-out infinite; }
-@keyframes lens-blink { 0%,70%{opacity:1} 85%,100%{opacity:.2} }
-.hud-grid-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 8; opacity: 0; display: none; }
-.hud-grid-overlay.on { opacity: 1; }
-
-/* Viewfinder corner brackets */
-.vf-bracket { position: absolute; pointer-events: none; z-index: 9; }
-.vf-bracket svg { display: block; }
-/* --vf is driven by the hero engine: 14% at rest, tightening as focus locks.
-   They never come closer to the edge than the HUD's readouts reach, so in a
-   short or narrow window they stop short instead of landing on the numbers. */
-.vf-bracket.tl { top: max(var(--vf, 14%), 136px); left: max(var(--vf, 14%), 150px); }
-.vf-bracket.tr { top: max(var(--vf, 14%), 136px); right: max(var(--vf, 14%), 150px); }
-.vf-bracket.bl { bottom: max(var(--vf, 14%), 92px); left: max(var(--vf, 14%), 150px); }
-.vf-bracket.br { bottom: max(var(--vf, 14%), 92px); right: max(var(--vf, 14%), 150px); }
-/* On a phone the HUD's own corners frame the shot; the brackets only crowd
-   the tagline and the buttons. */
-@media (max-width: 640px) { .vf-bracket { display: none; } }
-
-/* Shutter flash */
-.shutter-flash {
-  position: absolute; inset: 0; background: #fff; pointer-events: none; z-index: 50;
-  opacity: 0;
-}
-
-/* Shutter release button — top-right, like a DSLR body. Beside the menu
-   button on a tablet; under the HUD's readouts wherever the nav links take
-   the top right (it sat on top of About and Book at every desktop width). */
-.shutter-btn {
-  position: absolute; top: 22px; right: 90px; z-index: 15; display: flex; align-items: center; gap: 10px; pointer-events: none; opacity: .35;
-  transition: opacity .4s ease;
-}
-@media (min-width: 769px) {
-  .shutter-btn { top: 142px; right: 40px; }
-}
-.shutter-btn-outer {
-  width: 38px; height: 38px; border-radius: 50%; background: #1a1a1c;
-  border: 2px solid #333; display: grid; place-items: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.06);
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-.shutter-btn-inner {
-  width: 22px; height: 22px; border-radius: 50%; background: #2a2a2e;
-  border: 1.5px solid #444;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,.5), 0 1px 0 rgba(255,255,255,.04);
-  transition: background .15s ease;
-}
-.shutter-btn-label {
-  font-family: 'Geist Mono', monospace; font-size: 9px; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--ink-3);
-}
-.shutter-btn.pressed .shutter-btn-outer {
-  transform: scale(.92);
-  box-shadow: 0 1px 4px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.03);
-}
-.shutter-btn.pressed .shutter-btn-inner {
-  background: #e8a658;
-}
-
-/* HERO COPY — one line, in the page's own display voice, over the barrel.
-   It never reaches the iris: the lens is fitted below it (Lens.jsx) so the
-   title stops above the glass at every size. The copy starts clear of the
-   nav, and the title scales with the window's height as well as its width. */
-.hero-copy { position: absolute; left: 0; right: 0; top: max(76px, 8.5vh); top: max(76px, 8.5svh); z-index: 11; pointer-events: none; padding: 0 6vw; display: grid; justify-items: center; text-align: center; gap: 12px; }
-.hero-kick { margin: 0; font-family: 'Geist', sans-serif; font-weight: 300; font-size: clamp(14px, 1.2vw, 17px); letter-spacing: .01em; color: var(--ink-2); }
-.hero-title { margin: 0; font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, min(5.6vw, 9vh), 84px); font-size: clamp(40px, min(5.6vw, 9svh), 84px); line-height: .92; letter-spacing: .012em; color: var(--ink); max-width: 15ch; text-wrap: balance; text-shadow: 0 2px 30px rgba(0,0,0,.75); }
-/* A wide, short window: the title runs on one line, so the lens keeps its size. */
-@media (min-width: 1180px) and (max-height: 820px) {
-  .hero-title { max-width: none; white-space: nowrap; }
-}
-/* 641 to 820 wide, the tagline would sit on the same line as the HUD's
-   readouts in the top corners: start the copy under them. */
-@media (min-width: 641px) and (max-width: 820px) {
-  .hero-copy { top: max(140px, 12vh); top: max(140px, 12svh); }
-}
-.hero-title em { font-family: 'Caveat', cursive; font-style: normal; font-weight: 600; color: var(--amber); font-size: 1.04em; letter-spacing: 0; }
-
-/* HERO BOTTOM */
-.hero-bottom { position: absolute; left: 0; right: 0; bottom: 30px; display: flex; flex-direction: column; align-items: center; gap: 18px; z-index: 12; }
-.h-cta { display: flex; gap: 14px; }
-/* A short window: the scroll hint sits beside the buttons, not under them,
-   and gives its height back to the lens. */
-@media (min-width: 700px) and (max-height: 760px) {
-  .hero-bottom { flex-direction: row; justify-content: center; bottom: 24px; gap: 26px; }
-}
-/* The pin threshold. A window shorter than this can't hold the lens, the
-   copy and the buttons and still scroll the focus pull: the hero stops
-   pinning, lays out at this height and rests in focus (Lens.jsx). */
-@media (max-height: 460px) {
-  .hero-scroll { height: auto; }
-  .hero-sticky { position: relative; height: 460px; }
-}
-
-/* ── BUTTONS — premium interactive ── */
+/* ── BUTTONS — premium interactive ──
+   13 px type and a 48 px floor since 23 Nov 2026 (they were 11 px). */
 .btn {
-  display: inline-flex; align-items: center; gap: 10px; padding: 13px 20px;
-  font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 13px 20px; min-height: 48px;
+  font-family: 'Geist Mono', monospace; font-size: 13px; letter-spacing: .1em; text-transform: uppercase;
   color: var(--ink); background: transparent; border: 1px solid var(--line-2); text-decoration: none;
   /* named, not `all`: the focus ring has to appear at once, not fade in */
   transition: background-color .35s cubic-bezier(.4,0,.2,1), color .35s cubic-bezier(.4,0,.2,1), border-color .35s cubic-bezier(.4,0,.2,1), transform .35s cubic-bezier(.4,0,.2,1), box-shadow .35s cubic-bezier(.4,0,.2,1); cursor: pointer;
@@ -228,14 +119,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 .btn:hover .d { transform: scale(1.5); }
 .btn .btn-arrow { display: inline-block; transition: transform .35s ease; }
 .btn:hover .btn-arrow { transform: translateX(3px); }
-
-.scroll-ind { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .06em; color: var(--ink-2); }
-.scroll-ind .arr { display: inline-block; margin-right: 8px; animation: lens-nudge 2.2s ease-in-out infinite; }
-@keyframes lens-nudge { 0%,100%{transform:translateY(0)} 50%{transform:translateY(4px)} }
-.tick-flash { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; border-radius: 50%; background: var(--amber); transform: translate(-50%,-50%); opacity: 0; pointer-events: none; z-index: 20; filter: blur(5px); }
-
-/* RETICLE — hidden by default; JS shows it on fine pointers only */
-.reticle { position: fixed; top: 0; left: 0; width: 40px; height: 40px; pointer-events: none; transform: translate(-50%,-50%); z-index: 999; mix-blend-mode: difference; display: none; }
 
 /* ── CAPTURE SECTION ──
    The paint's field (paintWord.js): at least a full screen, so the visitor
@@ -353,9 +236,16 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 .pkg-ul li::before { content: '·'; position: absolute; left: 0; color: var(--ink-3); }
 .pkg-ul li strong { color: var(--ink); font-weight: 500; }
 .pkg-cta { margin-top: 18px; }
-.pkg-cta .btn { width: 100%; justify-content: center; padding: 10px 16px; font-size: 10px; }
+.pkg-cta .btn { width: 100%; justify-content: center; padding: 10px 16px; font-size: 13px; }
+.pkg-plus { font-size: .38em; color: var(--ink-3); font-family: 'Geist Mono', monospace; }
+/* The phone row's parts (below, under 641 px); hidden everywhere else. */
+.pkg-sum, .pkg-more { display: none; }
+/* For anyone who can't pick: one line, straight to the start page. */
+.pkg-help { margin: 36px 0 0; font-size: 16px; line-height: 1.6; color: var(--ink-2); }
+.pkg-help a { color: var(--amber); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; transition: color .2s ease; }
+.pkg-help a:hover { color: #f2c98c; }
 /* Body-size copy: ink-2 (#9a9a95 on #000 ≈ 7.4:1) — ink-3 computed 2.29:1, under the 4.5:1 floor */
-.pkg-note { margin-top: 44px; padding: 24px 28px; border: 1px solid var(--line); font-size: 13px; color: var(--ink-2); line-height: 1.65; }
+.pkg-note { margin-top: 28px; padding: 24px 28px; border: 1px solid var(--line); font-size: 13px; color: var(--ink-2); line-height: 1.65; }
 .pkg-note strong { color: var(--ink); }
 
 
@@ -413,7 +303,8 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 
 /* ── Hamburger (hidden on desktop) ── */
 .lens-hamburger {
-  display: none; background: none; border: none; color: #fff; cursor: pointer;
+  grid-column: 3; grid-row: 1; justify-self: end;
+  display: none; background: none; border: none; color: var(--ink); cursor: pointer;
   /* 12px pad + 20px icon = 44×44 target; negative margin keeps the nav's rendered metrics unchanged */
   padding: 12px; margin: -4px; -webkit-tap-highlight-color: transparent;
 }
@@ -430,28 +321,29 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   to   { opacity: 1; }
 }
 .lens-mobile-menu a {
-  font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: .12em;
+  display: inline-flex; align-items: center; min-height: 48px;
+  font-family: 'Bebas Neue', sans-serif; font-size: 36px; line-height: 1; letter-spacing: .12em;
   color: #fff; text-decoration: none; text-transform: uppercase;
   transition: color .25s;
 }
 .lens-mobile-menu a.book { color: var(--amber); }
 .lens-mobile-back {
   font-family: 'Geist Mono', monospace !important;
-  font-size: 14px !important; letter-spacing: .1em;
+  font-size: 18px !important; letter-spacing: .08em;
   color: var(--amber) !important; text-transform: uppercase; /* #e8a658 on #000 ≈ 10:1 */
   transition: color .25s !important;
-  display: inline-flex; align-items: center; min-height: 44px;
 }
+/* The menu is a phone's; a window widened past it gets the bar's links. */
+@media (min-width: 769px) { .lens-mobile-menu { display: none; } }
 .lens-mobile-back:hover { color: #f2c98c !important; }
 .lens-mobile-sep {
   width: 36px; height: 1px; background: rgba(245,245,240,.1);
 }
 
-/* ── Site nav (back to main site) ── */
-.nav-left-wrap { position: relative; display: flex; align-items: center; gap: 16px; }
-/* The Exit Sign — direct one-click escape, in the page's own HUD register.
-   A boxed tab (reads as a control, not a caption); the difference blend
-   keeps it legible over anything the page scrolls beneath it. */
+/* ── Back to the main site ──
+   The Exit Sign: a direct one-click escape, a boxed tab that reads as a
+   control rather than a caption. The bar under it turns solid as soon as
+   the page scrolls, so it stays legible over anything. */
 .site-back {
   position: relative; display: inline-flex; align-items: center; gap: 7px;
   min-height: 44px; min-width: 44px;
@@ -473,48 +365,10 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 }
 .site-back:hover { border-color: var(--amber); background: rgba(255, 255, 255, 0.12); }
 .site-back:hover::after { transform: scaleX(1); }
-.site-nav-btn {
-  display: grid; place-items: center;
-  width: 44px; height: 44px; margin: -15px 0; padding: 0;
-  background: none; border: none; color: inherit;
-  cursor: pointer; opacity: .72;
-  transition: opacity .25s ease;
-  -webkit-tap-highlight-color: transparent;
-}
-.site-nav-btn:hover { opacity: 1; }
-.site-nav-btn svg { flex-shrink: 0; }
 .site-back:focus-visible,
-.site-nav-btn:focus-visible,
 .lens-mobile-back:focus-visible {
   outline: 2px solid var(--amber); outline-offset: 3px; opacity: 1;
 }
-.site-nav-overlay {
-  position: fixed; inset: 0; z-index: 65;
-}
-.site-nav-drop {
-  position: fixed; top: 68px; left: 40px; z-index: 70;
-  background: rgba(5,5,5,.97); border: 1px solid rgba(245,245,240,.12);
-  backdrop-filter: blur(20px); padding: 6px;
-  min-width: 200px;
-  display: flex; flex-direction: column;
-  animation: site-drop-in .22s cubic-bezier(.4,0,.2,1) both;
-}
-@keyframes site-drop-in {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.site-nav-drop a {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 14px;
-  font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
-  color: rgba(245,245,240,.6); text-decoration: none;
-  transition: color .2s ease, background .2s ease;
-}
-.site-nav-drop a:hover { color: rgba(245,245,240,.95); background: rgba(245,245,240,.04); }
-.site-nav-drop .site-nav-cta {
-  color: var(--amber); border-top: 1px solid rgba(245,245,240,.08); margin-top: 4px; padding-top: 12px;
-}
-.site-nav-drop .site-nav-cta:hover { background: rgba(232,166,88,.07); }
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {
@@ -538,7 +392,8 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 @media (max-width: 640px) {
   .lens-page .svc-grid { grid-template-columns: 1fr; }
   .lens-page .pkg-grid { grid-template-columns: 1fr; }
-  .lens-page nav { padding: 16px 20px; }
+  .lens-page > .lens-nav { height: 56px; padding: 0 20px; column-gap: 12px; }
+  .lens-page :is(#top, #work, #capture, #services, #packages, #contact) { scroll-margin-top: 56px; }
   .lens-page section.slab { padding: 80px 20px; }
   .capture { padding: 80px 20px 100px; }
   .lens-page > footer { flex-direction: column; gap: 20px; text-align: center; padding: 30px 20px; }
@@ -547,32 +402,41 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   .cs-stat-num { font-size: 36px; }
   .cs-img-pair { grid-template-columns: 1fr; }
 
-  /* HUD — reduce footprint on small screens */
-  .hud-c.tl { top: 68px; left: 20px; font-size: 9px; max-width: 180px; }
-  .hud-c.tl .k { white-space: normal; letter-spacing: .1em; }
-  .hud-c.tr { top: 68px; right: 20px; font-size: 9px; }
-  .hud-c.bl { bottom: 14px; left: 20px; }
-  .hud-c.br { bottom: 14px; right: 20px; font-size: 9px; }
-  .shutter-btn { display: none; }
-
-  /* Hero copy: under the HUD's two-line readout on the right */
-  .hero-copy { top: max(112px, 15vh); top: max(112px, 15svh); padding: 0 5vw; gap: 8px; }
-  .hero-kick { font-size: 13px; }
-  .hero-title { font-size: clamp(38px, 11.5vw, 48px); }
-  .hero-stage { padding-top: 13vh; }
-
-  /* Hero bottom CTAs */
-  .hero-bottom { bottom: 22px; gap: 12px; }
-  .h-cta { flex-direction: column; align-items: center; gap: 10px; }
-  .scroll-ind { font-size: 10px; }
-
   /* Word stage */
   .word-stage { height: clamp(130px, 38vw, 210px); }
 
-  /* Site nav drop */
-  .site-nav-drop { left: 20px; top: 60px; }
-  .nav-left-wrap { gap: 10px; }
   .site-back-tail { display: none; } /* escape reads "← C4" on small screens */
+
+  /* Packages as compact rows (23 Nov 2026): the five stacked cards ran to
+     nearly three screens. The name and price share a line, then the first
+     three lines of the list, Select, and the full list behind a native
+     disclosure. The marked package keeps its flag. */
+  .lens-page .pkg-card { padding: 18px 18px 6px; }
+  .lens-page .pkg-card.pop { padding-top: 44px; }
+  .lens-page .pkg-card:hover { transform: none; }
+  .pkg-top { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+  .pkg-top h3 { margin-bottom: 0; font-size: 24px; }
+  .pkg-top .pkg-price { font-size: 36px; flex: none; }
+  .pkg-card > .pkg-div,
+  .pkg-card > .pkg-ul { display: none; }
+  .pkg-sum { display: block; margin: 10px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+  .pkg-sum strong { color: var(--ink); font-weight: 500; }
+  .lens-page .pkg-cta { margin-top: 14px; }
+  .pkg-more { display: block; margin-top: 4px; }
+  .pkg-more summary {
+    display: flex; align-items: center; justify-content: space-between; min-height: 48px;
+    font-size: 14px; font-weight: 500; color: var(--ink-2); cursor: pointer; list-style: none;
+  }
+  .pkg-more summary::-webkit-details-marker { display: none; }
+  /* A drawn plus that loses its upright when open, as on the films' word lists. */
+  .pkg-more summary::after {
+    content: ''; width: 11px; height: 11px; flex: none;
+    background: linear-gradient(var(--amber), var(--amber)) center / 11px 1px no-repeat, linear-gradient(var(--amber), var(--amber)) center / 1px 11px no-repeat;
+  }
+  .pkg-more[open] summary::after { background-size: 11px 1px, 1px 0; }
+  .pkg-more[open] summary { color: var(--ink); }
+  .pkg-more .pkg-ul { padding: 0 0 14px; }
+  .pkg-help { margin-top: 28px; font-size: 15px; }
 }
 
 /* ═══════════════════════════════════════════
@@ -611,25 +475,6 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
 .lens-page .lr-fade { transform: none; }
 .lens-page .lr-fade.in { transform: none; }
 
-/* ── Anamorphic glass flare — fades as the iris closes ── */
-.lens-flare {
-  position: absolute; top: 50%; left: 50%; z-index: 4;
-  width: min(150vh, 96vw); height: 2px; pointer-events: none;
-  transform: translate(-50%, -50%);
-  background: linear-gradient(90deg,
-    transparent 0%, rgba(120,170,255,.22) 16%,
-    rgba(176,212,255,.85) 50%,
-    rgba(120,170,255,.22) 84%, transparent 100%);
-  filter: blur(1.5px);
-  opacity: 0;
-  mix-blend-mode: screen;
-}
-.lens-flare::after {
-  content: ''; position: absolute; inset: -16px 8%;
-  background: radial-gradient(ellipse at center, rgba(130,180,255,.22), transparent 70%);
-  filter: blur(12px);
-}
-
 /* ── Service cards — viewfinder focus-frame on hover ── */
 .svc-card { position: relative; }
 .svc-card::before, .svc-card::after {
@@ -659,8 +504,12 @@ body.cursor-on, body.cursor-on * { cursor: none !important; }
   .lens-page .lr,
   .lens-page .lr-fade { opacity: 1; transform: none; transition: none; }
   .lens-page .sec-num .bar { transform: scaleX(1); transition: none; }
-  .lens-flare { display: none; }
   .site-back::after { transition: none; }
+  .lens-page > .lens-nav,
+  .nav-links a:not(.btn),
+  .nav-links a:not(.btn)::after,
+  .lens-mobile-menu { transition: none; animation: none; }
+  .lens-page .pkg-card:hover, .btn:hover { transform: none; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════

@@ -7,7 +7,7 @@
    Pass only the flags for what changed: after a re-render, run that film alone.
    Needs ffmpeg and ffprobe on PATH (or FFMPEG / FFPROBE set to their paths).
 
-   For each film, into public/lens-motion/ (beside lens-tex and lens-posters;
+   For each film, into public/lens-motion/ (beside lens-posters;
    never public/lens/, which a Windows build would merge with the prerendered
    /Lens/ page):
      <id>.mp4        H.264 High@4.0 at the master's own size, x264 slow with

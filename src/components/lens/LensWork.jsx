@@ -42,9 +42,12 @@
  * a row would put two headings and two buttons between the paint and the
  * services. The studies stay in the HTML under hidden="until-found", so
  * crawlers read them and the browser's find-in-page opens them; nothing inside
- * is rendered, and no poster, still or video is fetched, until they open. The
- * nav's Our Work, a #work link (or a link to any one study) and find-in-page
- * all open them. Opening is a focus pull: the first frames arrive soft and
+ * is rendered, and no poster, still or video is fetched, until they open. A
+ * link to any one study (#work-<id>), a link to the site group and
+ * find-in-page all open them. The section's own #work, which the bar's Work
+ * link uses, only scrolls to the section (23 Nov 2026): the contact sheet
+ * (LensContactSheet.jsx) shows there without a click now, so the link no
+ * longer needs to unfold the studies. Opening is a focus pull: the first frames arrive soft and
  * sharpen, the way the lens hunts and locks. "Hide case studies" at the foot
  * folds them away and hands the visitor back to the button.
  *
@@ -68,12 +71,15 @@ import useStaticMode from '@/hooks/useStaticMode';
 import { isHydrating, useMediaQuery, useWasPrerendered } from '@/lib/hydration';
 import MotionFilm, { FilmWords } from './MotionFilm';
 import LensLoop from './LensLoop';
+import LensContactSheet from './LensContactSheet';
 import { WORK_FILM, WORK_SITE, HVN, SHARP, DSR, AQUA, EA, TIDY, BRADY, GROVERZ, ROCKS } from './lensStudies';
 import './lens-work.css';
 
 const STUDIES_ID = 'work-studies';
-/* A link that points into the studies: the section, one study, or the site group. */
-const INTO_STUDIES = /^#(work|in-the-site)(-|$)/;
+/* A link that points into the studies: one study, or the site group. Since
+   23 Nov 2026 the section's own #work only scrolls to it: the contact sheet
+   shows there now, and the bar's Work link shouldn't unfold fourteen screens. */
+const INTO_STUDIES = /^#(work-|in-the-site(-|$))/;
 const askedForStudies = () => typeof window !== 'undefined' && INTO_STUDIES.test(window.location.hash);
 
 const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
@@ -458,8 +464,8 @@ const SITE_STUDIES = { ea: EaStudy, tidy: TidyStudy, brady: BradyStudy, groverz:
 export default function LensWork() {
   const log = useMemo(() => [...WORK_FILM, ...WORK_SITE], []);
   const staticMode = useStaticMode();
-  /* Open from the first render when the visitor arrived on #work, so the
-     studies never flash shut; the prerenderer has no hash, so its HTML is shut.
+  /* Open from the first render when the visitor arrived on a study's own
+     address (#work-<id>), so the studies never flash shut; the prerenderer has no hash, so its HTML is shut.
      A hydrating page renders shut to match that HTML, then opens before it
      paints (the layout effect below). */
   const prerendered = useWasPrerendered();
@@ -518,8 +524,7 @@ export default function LensWork() {
       setOpen(true);
     };
     if (region) region.addEventListener('beforematch', onMatch);
-    /* The nav's Our Work, the reel log, any in-page link into the studies:
-       open them first, then let the browser make its own jump. */
+    /* The reel log, any in-page link to a study: open them first, then let the browser make its own jump. */
     const onClick = (e) => {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const a = e.target instanceof Element ? e.target.closest('a[href^="#"]') : null;
@@ -541,9 +546,10 @@ export default function LensWork() {
     };
   }, [reveal]);
 
-  /* Arriving on /Lens#work is PageTransition's job since 10 Oct 2026: it lands
-     on any fragment and holds it while the page settles. The studies open from
-     the first render (useState above), so the target is already in place. */
+  /* Arriving on /Lens#work-<id> is PageTransition's job since 10 Oct 2026: it
+     lands on any fragment and holds it while the page settles. The studies open
+     from the first render for those addresses (useState above), so the target
+     is already in place. /Lens#work alone lands on the section, studies shut. */
 
   /* the focus pull runs once per opening */
   useEffect(() => {
@@ -558,6 +564,21 @@ export default function LensWork() {
   const reelBtnRef = useRef(null);
   const reelLanding = useRef(null);
   const reelWasOpen = useRef(false);
+  /* A frame on the contact sheet opens the reel on its own project and
+     picture, and gets focus back when it closes; the button opens it where
+     it was last left. */
+  const [reelStart, setReelStart] = useState(null);
+  const reelOpener = useRef(null);
+  const openReelAt = useCallback((project, image, el) => {
+    reelOpener.current = el || null;
+    setReelStart({ project, image });
+    setReelOpen(true);
+  }, []);
+  const openReel = () => {
+    reelOpener.current = null;
+    setReelStart(null);
+    setReelOpen(true);
+  };
   const closeReel = useCallback((studyHash) => {
     reelLanding.current = typeof studyHash === 'string' ? studyHash : null;
     setReelOpen(false);
@@ -568,7 +589,7 @@ export default function LensWork() {
     closeReel();
   }, [closeReel]);
   /* The reload comes back to this section and opens the reel by itself. Not
-     through a #work address: that opens the case studies, and their films
+     through a study's address: that opens the case studies, and their films
      would start loading on the connection that just failed. */
   const reloadForReel = () => {
     try { window.sessionStorage.setItem(REEL_AGAIN, '1'); } catch { /* the reload still works; press the button again */ }
@@ -591,7 +612,7 @@ export default function LensWork() {
     if (!hash) {
       /* Focus back on the button, and the button on screen: after the reload
          that reopens the reel, the page behind it starts at the top. */
-      const btn = reelBtnRef.current;
+      const btn = (reelOpener.current && reelOpener.current.isConnected ? reelOpener.current : null) || reelBtnRef.current;
       if (btn) {
         btn.focus({ preventScroll: true });
         const r = btn.getBoundingClientRect();
@@ -619,6 +640,14 @@ export default function LensWork() {
         </h2>
         <div className="lw-head-side">
           <p className="lw-lede">These are examples of what C4 Lens can do. Each was made for a client, and each one says where it runs.</p>
+        </div>
+      </header>
+
+      {/* Real pictures without a click (23 Nov 2026): one frame per project
+          in the reel, each opening the reel on itself. */}
+      <LensContactSheet onOpen={openReelAt} />
+
+      <div className="lw-head-actions">
           <div className="lw-actions">
             <button
               ref={toggleRef}
@@ -639,7 +668,7 @@ export default function LensWork() {
               className="lw-reveal lw-reveal--reel"
               aria-haspopup="dialog"
               aria-describedby={reelFailed ? 'work-reel-note' : undefined}
-              onClick={() => setReelOpen(true)}
+              onClick={openReel}
             >
               <span className="lw-reveal-label">Flick through the pictures</span>
               <GalleryVerticalEnd aria-hidden="true" size={16} strokeWidth={1.5} />
@@ -652,13 +681,12 @@ export default function LensWork() {
               {' '}to try again.
             </p>
           )}
-        </div>
-      </header>
+      </div>
 
       {reelOpen && (
         <ReelBoundary onFail={failReel}>
           <Suspense fallback={<ReelCurtain />}>
-            <LensReel onClose={closeReel} />
+            <LensReel onClose={closeReel} startAt={reelStart ? reelStart.project : undefined} startImage={reelStart ? reelStart.image : undefined} />
           </Suspense>
         </ReelBoundary>
       )}

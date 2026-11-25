@@ -1,0 +1,22 @@
+<!doctype html>
+<!-- Dev harness for the /Lens hero, served by Vite at
+     /src/components/lens/hero/harness.html. Not part of the site build.
+     ?nav draws the 64 px (56 px on phones) nav band the real page puts above
+     the hero. ?poster renders the poster stills instead (make-poster.mjs). -->
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lens hero harness</title>
+    <link rel="icon" href="data:," />
+    <style>
+      html, body { margin: 0; background: #000; }
+      .lh-harness-nav { position: fixed; top: 0; left: 0; right: 0; height: 64px; border-bottom: 1px dashed rgba(255, 60, 60, 0.6); z-index: 10; pointer-events: none; }
+      @media (max-width: 767px) { .lh-harness-nav { height: 56px; } }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./harness.jsx"></script>
+  </body>
+</html>

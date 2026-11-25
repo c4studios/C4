@@ -14,6 +14,7 @@
        --dsr <dsracingkarts/public> \
        --aqua <Clients/Aqua> --tidy "<Clients/Tidy Gardens Australia>" \
        --brady "<Clients/Bradey Electrical>" \
+       --brady-shoot "<Clients/Brady Electrical/photos-2026-11-17>" \
        [--only hvn-film,sharp-aerial-plan]
 
    Where each folder is on Caleb's PC (9 Oct 2026):
@@ -36,6 +37,9 @@
                  reel shows (src/components/lens/reelProjects.js). A still
                  the client supplied says so in its EXIF ImageDescription
                  instead of "C4 Lens", and so does the reel, on screen.
+     --brady-shoot
+                 the branding shoot Brady Electrical shared on 17 Nov 2026
+                 (its originals/ and cull.md), a different folder from --brady.
 
    What it writes:
      public/lens-motion/<id>[-desktop|-phone].mp4
@@ -141,6 +145,11 @@ const JOBS = [
   { kind: 'still', id: 'brady-underground', study: 'brady', name: 'underground', root: 'brady', src: 'public/images/work-underground.jpg', widths: [640, 1350], about: 'A switchboard lit up underground, a Brady Electrical job. Photo supplied by the client.' },
   { kind: 'still', id: 'brady-workshop', study: 'brady', name: 'workshop', root: 'brady', src: 'OneDrive_2026-07-23/new webpage photos july 2026/new format photos/20240430_081941388_iOS.jpg', widths: [640, 1440, 1920], about: 'Red machinery in a workshop, a Brady Electrical job. Photo supplied by the client.' },
   { kind: 'still', id: 'brady-platform', study: 'brady', name: 'platform', root: 'brady', src: 'OneDrive_2026-07-23/new webpage photos july 2026/new format photos/20240103_020101665_iOS.jpg', widths: [640, 1440, 1920], about: 'An electrician on a steel platform, a Brady Electrical job. Photo supplied by the client.' },
+  /* 23 Nov 2026: three frames from the branding shoot Brady shared on 17 Nov
+     (--brady-shoot), all without a face: frames #66, #11 and #26 of cull.md. */
+  { kind: 'still', id: 'brady-head-unit', study: 'brady', name: 'head-unit', root: 'brady-shoot', src: 'originals/Your_gallery/SamanthaLianaPhotography-66.jpg', widths: [640, 1440, 1920], about: 'A Brady Electrical technician at a split-system head unit, seen from behind. Photo supplied by the client.' },
+  { kind: 'still', id: 'brady-gauges', study: 'brady', name: 'gauges', root: 'brady-shoot', src: 'originals/Your_gallery/SamanthaLianaPhotography-11.jpg', widths: [640, 1440, 1920], about: 'Refrigerant gauges on a split-system outdoor unit, a Brady Electrical job. Photo supplied by the client.' },
+  { kind: 'still', id: 'brady-crimping', study: 'brady', name: 'crimping', root: 'brady-shoot', src: 'originals/Your_gallery/SamanthaLianaPhotography-26.jpg', widths: [640, 1440, 1920], about: 'Hands crimping a cable at a split-system outdoor unit, a Brady Electrical job. Photo supplied by the client.' },
 
   /* DS Racing Karts: the header film, the chassis clip, the game, the tachometer. */
   { id: 'dsr-header', root: 'dsr', src: 'videos/Site Header.mp4', poster: 6.4, crf: 30, tune: 'film',
@@ -319,7 +328,7 @@ for (let i = 0; i < args.length; i += 2) {
   const value = args[i + 1];
   if (!value) { console.error(`Missing value for ${args[i]}`); process.exit(1); }
   if (key === 'only') { only = new Set(value.split(',')); continue; }
-  if (!['captures', 'hvn', 'sharp', 'dsr', 'aqua', 'tidy', 'brady'].includes(key)) { console.error(`Unknown flag ${args[i]}. Flags: --captures --hvn --sharp --dsr --aqua --tidy --brady --only`); process.exit(1); }
+  if (!['captures', 'hvn', 'sharp', 'dsr', 'aqua', 'tidy', 'brady', 'brady-shoot'].includes(key)) { console.error(`Unknown flag ${args[i]}. Flags: --captures --hvn --sharp --dsr --aqua --tidy --brady --brady-shoot --only`); process.exit(1); }
   if (!fs.existsSync(value)) { console.error(`No such folder: ${value}`); process.exit(1); }
   roots[key] = value;
 }

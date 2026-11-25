@@ -1,0 +1,221 @@
+/* The /Lens hero: one human eye, set into the black page, that follows the
+   visitor. Every class in this folder starts with lh- so nothing collides
+   with lens.css.
+
+   The layout decides where the eye goes. --lh-cx, --lh-cy and --lh-iris (the
+   iris radius) are worked out here from the viewport, the nav height, the
+   headline's line count and the button row. The canvas reads them through
+   .lh-probe (getComputedStyle, again on every resize) and the poster image
+   is placed from the same three values, so the two always line up. */
+.lh {
+  --lh-nav: 64px;
+  --lh-h: max(100svh, 560px);
+  --lh-fs: clamp(44px, 6.2vw, 92px);
+  --lh-title-h: calc(var(--lh-fs) * 0.95 * 2);
+  --lh-lede-h: 26px;
+  --lh-pad-top: calc(var(--lh-nav) + 26px);
+  --lh-top: calc(var(--lh-pad-top) + var(--lh-title-h) + 12px + var(--lh-lede-h));
+  --lh-btn-h: 48px; /* one row of .btn (48 px floor in lens.css) */
+  --lh-sw-h: 48px; /* the eye-style switch's row under the buttons, below 900 px */
+  --lh-bot: calc(var(--lh-h) - 32px - var(--lh-btn-h) - var(--lh-sw-h));
+  --lh-iris: min(calc(var(--lh-h) * 0.23), 30vw, calc((var(--lh-bot) - var(--lh-top)) * 0.42));
+  --lh-cx: 50%;
+  --lh-cy: calc((var(--lh-top) + var(--lh-bot)) / 2 - var(--lh-iris) * 0.04);
+
+  position: relative;
+  min-height: var(--lh-h);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: var(--lh-pad-top) 24px 32px;
+  background: #000;
+  overflow: hidden;
+  isolation: isolate;
+}
+@media (min-width: 1180px) {
+  .lh { --lh-title-h: calc(var(--lh-fs) * 0.95); }
+}
+@media (max-width: 767px) {
+  .lh { --lh-nav: 56px; padding-left: 20px; padding-right: 20px; }
+}
+@media (max-width: 520px) {
+  .lh { --lh-lede-h: 52px; }
+}
+@media (max-width: 389px) {
+  /* the two buttons stack below about 390 px */
+  .lh { --lh-btn-h: 108px; }
+}
+
+/* the eye: poster underneath, live canvas over it once it has a frame */
+.lh-eye { position: absolute; inset: 0; z-index: 0; }
+
+/* Two looks of the eye, one layer each, crossfaded on opacity when the switch
+   changes. The colour layer holds the poster, its canvas and the viewfinder
+   marks; the engraved layer gets its canvas only once that look is chosen. */
+.lh-layer {
+  position: absolute;
+  inset: 0;
+  transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.lh-layer.is-off { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  /* no fade at all: !important beats the site's 120 ms opacity rule in marks.css */
+  .lh-layer { transition: none !important; }
+}
+/* The engraved eye fills the room between the lede and the buttons, with the
+   mock-up's 6 px and 8 px of air (engravedEye.js fits the drawing to it). */
+.lh-eng {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  top: calc(var(--lh-top) + 6px);
+  height: calc(var(--lh-bot) - var(--lh-top) - 14px);
+  display: block;
+}
+.lh-probe {
+  position: absolute;
+  left: var(--lh-cx);
+  top: var(--lh-cy);
+  width: var(--lh-iris);
+  height: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.lh-poster {
+  position: absolute;
+  left: calc(var(--lh-cx) - var(--lh-iris) * 3.6);
+  top: calc(var(--lh-cy) - var(--lh-iris) * 2.25);
+  width: calc(var(--lh-iris) * 7.2);
+  height: calc(var(--lh-iris) * 4.5);
+  max-width: none;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.lh-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 90ms linear;
+}
+.lh-canvas.is-live { opacity: 1; }
+
+/* viewfinder corner marks around the eye, from 900 px wide */
+.lh-mark {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 0 solid rgba(245, 245, 240, 0.3);
+  pointer-events: none;
+  display: none;
+}
+.lh-mark-tl { left: calc(var(--lh-cx) - var(--lh-iris) * 2.6); top: calc(var(--lh-cy) - var(--lh-iris) * 1.1); border-top-width: 1px; border-left-width: 1px; }
+.lh-mark-tr { left: calc(var(--lh-cx) + var(--lh-iris) * 2.6 - 18px); top: calc(var(--lh-cy) - var(--lh-iris) * 1.1); border-top-width: 1px; border-right-width: 1px; }
+.lh-mark-bl { left: calc(var(--lh-cx) - var(--lh-iris) * 2.6); top: calc(var(--lh-cy) + var(--lh-iris) * 1.1 - 18px); border-bottom-width: 1px; border-left-width: 1px; }
+.lh-mark-br { left: calc(var(--lh-cx) + var(--lh-iris) * 2.6 - 18px); top: calc(var(--lh-cy) + var(--lh-iris) * 1.1 - 18px); border-bottom-width: 1px; border-right-width: 1px; }
+
+/* the words */
+.lh-copy { position: relative; z-index: 1; text-align: center; }
+.lh-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  font-size: var(--lh-fs);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  text-wrap: balance;
+  max-width: 11.5em;
+  margin: 0 auto;
+}
+.lh-title em { font-family: 'Caveat', cursive; font-weight: 700; font-style: normal; color: var(--amber); text-transform: none; margin-right: 0.08em; }
+.lh-lede { margin: 12px auto 0; max-width: 34em; font-family: 'Geist', sans-serif; font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+.lh-actions { position: relative; z-index: 1; grid-row: 3; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+@media (min-width: 1180px) {
+  .lh-title { max-width: none; white-space: nowrap; }
+}
+
+/* camera readouts: the eye's real state, from 900 px wide */
+.lh-readout {
+  position: absolute;
+  z-index: 1;
+  bottom: 32px;
+  margin: 0;
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  line-height: 48px;
+  letter-spacing: 0.08em;
+  white-space: pre;
+  color: var(--ink-3);
+  pointer-events: none;
+  display: none;
+}
+.lh-readout-l { left: 24px; }
+.lh-readout-r { right: 24px; }
+@media (min-width: 900px) {
+  .lh-mark, .lh-readout { display: block; }
+}
+
+/* The eye-style switch: two radios, Colour and Engraved. Below 900 px a
+   centred row under the buttons; from 900 px at the left of the bottom
+   strip, sitting on the exposure readout and left-aligned with it. */
+.lh-sw {
+  position: relative;
+  z-index: 1;
+  grid-row: 4;
+  justify-self: center;
+  display: flex;
+  gap: 22px;
+  margin-top: 4px; /* with the 44 px row, --lh-sw-h */
+}
+.lh-sw-opt {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.lh-sw-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.lh-sw-face {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.08em;
+  color: var(--ink-2);
+  transition: color 0.2s ease;
+  pointer-events: none;
+}
+.lh-sw-glyph { flex: none; display: block; opacity: 0.45; transition: opacity 0.2s ease; }
+.lh-sw-disc { fill: var(--amber); }
+.lh-sw-line { fill: none; stroke: var(--ink); }
+.lh-sw-input:checked + .lh-sw-face { color: var(--ink); }
+.lh-sw-input:checked + .lh-sw-face .lh-sw-glyph { opacity: 1; }
+.lh-sw-opt:hover .lh-sw-face { color: var(--ink); }
+.lh-sw-input:focus-visible + .lh-sw-face { outline: 2px solid var(--amber); outline-offset: 3px; }
+@media (min-width: 900px) {
+  .lh { --lh-sw-h: 0px; }
+  .lh-sw { position: absolute; grid-row: auto; left: 24px; bottom: 80px; margin: 0; }
+}
+
+/* the shutter's flash */
+.lh-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}

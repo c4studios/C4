@@ -60,6 +60,13 @@
    its code arrives. */
 .lw-actions { display: grid; row-gap: 16px; width: max-content; max-width: 100%; margin-top: 30px; }
 .lw-actions .lw-reveal { margin-top: 0; width: auto; justify-content: space-between; }
+/* Since 23 Nov 2026 the two buttons sit under the contact sheet
+   (lens-sheet.css), side by side where there's room and still equal in
+   width, so they keep reading as a pair. */
+.lw-head-actions { max-width: 1400px; margin: clamp(40px, 4.5vw, 60px) auto 0; }
+.lw-head-actions .lw-actions { margin-top: 0; }
+.lw-head-actions .lw-reveal { display: flex; }
+@media (min-width: 700px) { .lw-head-actions .lw-actions { grid-auto-flow: column; grid-auto-columns: 1fr; column-gap: 22px; } }
 .lw-reel-curtain { position: fixed; inset: 0; z-index: 900; background: #000; }
 /* On a slow connection the wait gets a line of its own, after a beat, so a
    fast load never shows it. */

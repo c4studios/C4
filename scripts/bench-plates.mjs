@@ -1,7 +1,7 @@
 /* Paper plates for the /About bench, rendered once from SVG authored here and
    stored as JPEG. No image model is involved: every fibre, rule, crease and
    page edge is drawn in this file, the same way scripts/lens-textures.mjs
-   makes the /Lens metal. The plates carry no words; the page sets its own
+   made the old /Lens hero's metal (both deleted on 23 Nov 2026). The plates carry no words; the page sets its own
    type on them, and the geometry both sides share lives in
    src/components/about/plates.js.
    Run: node scripts/bench-plates.mjs   (playwright and sharp are already present)

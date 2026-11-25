@@ -27,13 +27,26 @@
    - The clients': Sharp's breeze-block wall (one of the hero photos it
      supplied in September), three of HVN's gym photos (its own gallery), Tidy
      Gardens' lawn job and its dog, Aqua-Safe's vans, a bathroom and a gas fit,
-     DS Racing's kart and car photos, and four of Brady Electrical's job
-     photos. Each was cut with the settings in scripts/lens-work.mjs, its EXIF
-     saying it was supplied by the client.
+     DS Racing's kart and car photos, and Brady Electrical's job photos (the
+     conveyor, the switchboard underground, the workshop, the platform). Each
+     was cut with the settings in scripts/lens-work.mjs, its EXIF saying it
+     was supplied by the client.
+   - Brady's branding shoot. Caleb, 23 Nov 2026: "you also have photos from
+     brady now as well you can throw in there". Three frames from the shoot
+     Tom Brady shared on 17 Nov 2026 are cut and ready (a head unit, the
+     gauges on an outdoor unit, hands crimping a cable). They differ from
+     Brady's job photos and from each other in subject and distance, and none
+     of them has a face. They show while BRADY_SHOOT_CLEARED (below) is true.
+     Review on 25 Nov 2026 held them back, because Caleb's preview of Brady's
+     own site had gone to Tom on 19 Nov saying nothing goes live until he's
+     happy and Tom hadn't answered. Caleb's call the same day, asked to push
+     with them held or in: "Push with Brady photos". With them, Brady's run is
+     six pictures and the workshop photo stands down.
    People appear only in photos already on that client's own site (HVN's
    gallery and its About page, Tidy Gardens' lawn job, DS Racing's karts), or
-   seen from behind where nobody could be recognised (Brady's electrician on
-   the platform), and nobody is named.
+   where nobody could be recognised: Brady's electrician on the platform and
+   its technician at the head unit are seen from behind, and the other two
+   shoot frames show only hands. Nobody is named.
 
    Left out. ZaZa Silks has the strongest studio photos on file, but its site
    isn't launched (30 Oct 2026, brain work_log 898), the people in them aren't
@@ -53,8 +66,9 @@
    Order. Sharp opens on C4's own aerial, the sharpest master. Warm projects
    take turns with cool ones: Sharp's brick and late sun, HVN's dark gym,
    Tidy Gardens' grass, Aqua-Safe's blue, DS Racing's red and green, then
-   Brady's sky and steel. Inside a project, a wide picture takes turns with a
-   close one, and Tidy Gardens' lawn goes in the order it was done.
+   Brady's blue sky (with the shoot, its white wall first). Inside a project, a wide picture takes
+   turns with a close one, and Tidy Gardens' lawn goes in the order it was
+   done.
 
    Tones. Each picture's `tone` is its file averaged to one colour (sharp's
    channel means, 18 Oct 2026). While a picture loads, its layer shows that
@@ -72,6 +86,13 @@ const AQUASAFE = AQUA.film;
 
 /* The fine print, shown on the card only while a client's picture is. */
 export const CLIENT_PHOTO = 'Photo supplied by the client. It’s here because it shows what good photography does for a brand.';
+/* The same line for the work section's contact sheet (LensContactSheet.jsx),
+   where more than one frame at once can be a client's. */
+export const CLIENT_PHOTOS = 'Photos marked “Client’s photo” were supplied by those clients. They’re here because they show what good photography does for a brand.';
+
+/* Brady's branding shoot on the page: on at Caleb's word, 25 Nov 2026 (see the
+   header). False puts Brady's four job photos back. */
+const BRADY_SHOOT_CLEARED = true;
 
 /* The last line a film puts on screen, and the last scene it describes, at or
    before second `t` (motionFilms.js `words`). */
@@ -96,6 +117,25 @@ const theirs = (id, picture, tone, focus, focusShort) => ({ id, picture, tone, f
 
 const sharpStill = (key) => SHARP.bricks[key].still;
 const fromStudy = (s) => still(s.base.split('/')[2], s.base.split('/')[3], s.width, s.height, s.widths, s.alt);
+
+/* Brady Electrical's pictures. The last three are from the branding shoot. */
+const BRADY_PICS = {
+  conveyor: theirs('brady-conveyor', still('brady', 'conveyor', 1900, 1425, [640, 1440, 1900],
+    'A long conveyor stacker on a dirt site under a blue sky, a ute parked beside it.'), '#546472', '35% 50%'),
+  underground: theirs('brady-underground', still('brady', 'underground', 1350, 1800, [640, 1350],
+    'A switchboard lit up on the rock wall of an underground tunnel.'), '#4f4142', '50% 45%'),
+  workshop: theirs('brady-workshop', still('brady', 'workshop', 5712, 4284, [640, 1440, 1920],
+    'Red machinery on stands in a big workshop.'), '#644d45', '45% 50%'),
+  // 50% 70% keeps the electrician above the reel's card (23 Nov 2026).
+  platform: theirs('brady-platform', still('brady', 'platform', 3024, 4032, [640, 1440, 1920],
+    'An electrician in hi-vis on a steel platform high on a plant, under a blue sky.'), '#75727e', '50% 70%'),
+  headUnit: theirs('brady-head-unit', still('brady', 'head-unit', 2919, 4382, [640, 1440, 1920],
+    'A technician in a Brady shirt, seen from behind, working on an air conditioner high on a white wall.'), '#8a8a85', '50% 30%', '50% 24%'),
+  gauges: theirs('brady-gauges', still('brady', 'gauges', 2853, 4283, [640, 1440, 1920],
+    'Two refrigerant gauges on an air conditioner’s outdoor unit, their coloured hoses running down its front, and hands holding crimping pliers and a cable.'), '#71655d', '50% 16%', '50% 14%'),
+  crimping: theirs('brady-crimping', still('brady', 'crimping', 5366, 8056, [640, 1440, 1920],
+    'Hands crimping the end of a cable beside an air conditioner’s outdoor unit.'), '#796257', '70% 75%', '70% 80%'),
+};
 
 export const REEL_PROJECTS = [
   {
@@ -158,8 +198,11 @@ export const REEL_PROJECTS = [
         'A finished bathroom with a timber vanity, two round mirrors and a walk-in shower.'), '#85837a', '55% 40%'),
       theirs('aquasafe-gas', still('aquasafe', 'gas', 3024, 4032, [640, 1440, 1920],
         'A gas burner lit blue in the middle of a black cooktop grate.'), '#83827d', '50% 45%'),
-      ours('aquasafe-call', artStills('aquasafe', 'call',
-        `${lastAt(AQUASAFE, 'scene', 13)} On screen: “${lastAt(AQUASAFE, 'say', 13)}”`), '#3f6778', '6% 22%', '6% 100%'),
+      /* `sheet` is its crop on the work section's contact sheet (3:2): a third
+         of the way across keeps the words and the whole phone inside the
+         frame with the same margin each side (23 Nov 2026). */
+      { ...ours('aquasafe-call', artStills('aquasafe', 'call',
+        `${lastAt(AQUASAFE, 'scene', 13)} On screen: “${lastAt(AQUASAFE, 'say', 13)}”`), '#3f6778', '6% 22%', '6% 100%'), sheet: '33% 50%' },
     ],
   },
   {
@@ -187,15 +230,18 @@ export const REEL_PROJECTS = [
     kind: 'Website and motion',
     year: '2026',
     note: 'Their jobs, for the site we built them.',
-    images: [
-      theirs('brady-conveyor', still('brady', 'conveyor', 1900, 1425, [640, 1440, 1900],
-        'A long conveyor stacker on a dirt site under a blue sky, a ute parked beside it.'), '#546472', '35% 50%'),
-      theirs('brady-underground', still('brady', 'underground', 1350, 1800, [640, 1350],
-        'A switchboard lit up on the rock wall of an underground tunnel.'), '#4f4142', '50% 45%'),
-      theirs('brady-workshop', still('brady', 'workshop', 5712, 4284, [640, 1440, 1920],
-        'Red machinery on stands in a big workshop.'), '#644d45', '45% 50%'),
-      theirs('brady-platform', still('brady', 'platform', 3024, 4032, [640, 1440, 1920],
-        'An electrician in hi-vis on a steel platform high on a plant, under a blue sky.'), '#75727e', '50% 32%'),
+    images: BRADY_SHOOT_CLEARED ? [
+      BRADY_PICS.headUnit,
+      BRADY_PICS.underground,
+      BRADY_PICS.conveyor,
+      BRADY_PICS.gauges,
+      BRADY_PICS.platform,
+      BRADY_PICS.crimping,
+    ] : [
+      BRADY_PICS.conveyor,
+      BRADY_PICS.underground,
+      BRADY_PICS.workshop,
+      BRADY_PICS.platform,
     ],
   },
 ];

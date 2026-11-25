@@ -1,0 +1,75 @@
+/* ═══ The contact sheet — LensContactSheet.jsx (23 Nov 2026) ═══
+   A 35 mm contact sheet on the page's black: frames side by side with a thin
+   black rebate between them, the edge number printed over each frame, the
+   project under it. The grease pencil is the amber ring a photographer draws
+   round the frame they want. It is drawn in over about 250 ms under the
+   pointer or the keyboard, and shown whole and still under reduced motion.
+   Nothing here hides before a script runs. */
+
+.lcs { max-width: 1400px; margin: clamp(44px, 5vw, 72px) auto 0; }
+.lcs-sheet {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 6px;
+}
+@media (min-width: 900px) { .lcs-sheet { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 8px; } }
+
+.lcs-frame { min-width: 0; }
+.lcs-hit {
+  display: block; width: 100%; margin: 0; padding: 0;
+  font: inherit; color: inherit; text-align: left;
+  background: none; border: 0; border-radius: 0; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+/* The ring is this control's focus mark (below), so the page-wide outline
+   stays off it rather than boxing the frame and its caption as well. */
+.lens-page .lcs-hit:focus-visible { outline: none; }
+
+/* The film's edge: the frame number, printed small in the rebate. */
+.lcs-edge {
+  display: block; padding: 0 0 7px 2px;
+  font-family: 'Geist Mono', monospace; font-size: 11px; line-height: 1; letter-spacing: .08em;
+  color: var(--ink-3); font-variant-numeric: tabular-nums;
+}
+
+.lcs-shot { position: relative; display: block; aspect-ratio: 3 / 2; background: #0d0d0c; }
+.lcs-shot picture,
+.lcs-shot img { display: block; width: 100%; height: 100%; }
+.lcs-shot img { object-fit: cover; object-position: var(--lcs-focus, 50% 50%); }
+
+/* The grease pencil. A little bigger than the frame, so it rides over the
+   rebate the way a ring on a real sheet does. */
+.lcs-ring {
+  position: absolute; left: -5%; top: -8%; width: 110%; height: 116%;
+  overflow: visible; pointer-events: none;
+}
+.lcs-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.lcs-ring path {
+  filter: url(#lcs-wax);
+  fill: none; stroke: var(--amber); stroke-width: 4.2; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0;
+  transition: stroke-dashoffset 250ms cubic-bezier(.3, .7, .3, 1), opacity 0s;
+}
+.lcs-hit:focus-visible .lcs-ring path { stroke-dashoffset: 0; opacity: 1; }
+@media (hover: hover) {
+  .lcs-hit:hover .lcs-ring path { stroke-dashoffset: 0; opacity: 1; }
+  .lcs-hit:hover .lcs-client { color: var(--amber); }
+}
+.lcs-hit:focus-visible .lcs-client { color: var(--amber); }
+
+.lcs-cap { display: block; padding: 14px 2px 0; }
+.lcs-client { display: block; font-size: 15.5px; font-weight: 500; line-height: 1.3; color: var(--ink); transition: color .2s ease; }
+.lcs-kind { display: block; margin-top: 3px; font-size: 14px; line-height: 1.4; color: var(--ink-2); }
+.lcs-theirs { display: block; margin-top: 6px; font-size: 12.5px; line-height: 1.4; color: var(--ink-3); }
+.lcs-note { margin: 30px 0 0; max-width: 40rem; font-size: 13.5px; line-height: 1.55; color: var(--ink-2); }
+
+@media (max-width: 640px) {
+  .lcs-cap { padding-top: 10px; }
+  .lcs-client { font-size: 14.5px; }
+  .lcs-kind { font-size: 13px; }
+  .lcs-ring path { stroke-width: 5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lcs-ring path { transition: none; }
+  .lcs-client { transition: none; }
+}

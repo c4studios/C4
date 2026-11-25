@@ -234,8 +234,15 @@ function Line({ name, lineRef }) {
   );
 }
 
-export default function LensReel({ onClose }) {
+export default function LensReel({ onClose, startAt, startImage }) {
   const still = useStaticMode();
+  /* Where it opens (23 Nov 2026): a frame on the contact sheet (LensWork.jsx)
+     names its project and picture; otherwise where it was last left. */
+  const [start] = useState(() => {
+    if (!Number.isInteger(startAt) || startAt < 0 || startAt >= N) return resumeAt;
+    if (Number.isInteger(startImage)) resumeImage[startAt] = clamp(startImage, 0, REEL_PROJECTS[startAt].images.length - 1);
+    return startAt;
+  });
   const rootRef = useRef(null);
   const plateRef = useRef(null);
   const cardRef = useRef(null);
@@ -244,7 +251,7 @@ export default function LensReel({ onClose }) {
   const countRef = useRef(null);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
-  const [nearest, setNearest] = useState(() => resumeAt);
+  const [nearest, setNearest] = useState(start);
   const [landed, setLanded] = useState(null);
   const [paused, setPaused] = useState(false);
   /* Which pictures may load: the picture on show in the project on screen
@@ -267,7 +274,7 @@ export default function LensReel({ onClose }) {
       lastInput: 0, dir: 0, snapping: false, snapFrom: 0, snapTo: 0, snapT0: 0,
       pointer: null, dragging: false, dragY0: 0, dragTarget0: 0, samples: [], press: null,
       wheelT: 0, wheelAcc: 0, wheelSpent: false, lineBase: null,
-      nearest: resumeAt, settledIdx: null, moved: false, popped: false, landing: null,
+      nearest: start, settledIdx: null, moved: false, popped: false, landing: null,
     };
     /* The trickle: each project's picture, the timer that moves the current
        project on, and what's holding it. */

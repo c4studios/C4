@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lens hero mock-up: pull focus</title>
+<link rel="stylesheet" href="/src/styles/fonts.css">
+<link rel="preload" as="image" type="image/avif" imagesrcset="/lens-work/sharp/aerial-oblique-640.avif 640w, /lens-work/sharp/aerial-oblique-1280.avif 1280w, /lens-work/sharp/aerial-oblique-2048.avif 2048w" imagesizes="100vw" fetchpriority="high">
+<style>
+  /* Mock-up of the /Lens first screen. Tokens copied from
+     src/components/lens/lens.css so it can be judged beside the page. */
+  :root {
+    --ink: #f5f5f0; --ink-2: #9a9a95; --ink-3: #7a7a76; --amber: #e8a658;
+    --line: rgba(245,245,240,.08); --line-2: rgba(245,245,240,.16);
+    --gut: 40px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: #000; color-scheme: dark; }
+  body { background: #000; color: var(--ink); font-family: 'Geist', sans-serif; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--amber); color: #000; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+  .hero { height: 100vh; height: 100svh; min-height: 560px; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* Stand-in nav, 64px */
+  .nav { position: relative; z-index: 5; height: 64px; flex: none; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 32px; font: 500 14.5px/1 'Geist', sans-serif; }
+  .nav a { text-decoration: none; }
+  .nav .back { justify-self: start; display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-2); transition: color .2s; }
+  .nav .back:hover { color: var(--ink); }
+  .nav .back .short { display: none; }
+  .nav .brand { font-family: 'Bebas Neue', sans-serif; font-weight: 400; font-size: 24px; letter-spacing: .14em; line-height: 1; padding-left: .14em; }
+  .nav .links { justify-self: end; display: flex; align-items: center; gap: 24px; }
+  .nav .links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-2); transition: color .2s; }
+  .nav .links a:hover { color: var(--ink); }
+  .nav .links a.book { color: var(--ink); border: 1px solid var(--line-2); padding: 0 16px; transition: border-color .2s; }
+  .nav .links a.book:hover { border-color: var(--ink); }
+  .nav .menu { display: none; justify-self: end; width: 44px; height: 44px; background: none; border: 0; color: var(--ink); cursor: pointer; align-items: center; justify-content: center; }
+  .nav .menu svg { width: 22px; height: 22px; }
+  .nav .panel { position: absolute; top: 64px; right: 16px; display: none; flex-direction: column; min-width: 200px; padding: 8px 0; background: #050505; border: 1px solid var(--line-2); }
+  .nav .panel a { display: flex; align-items: center; min-height: 44px; padding: 0 18px; color: var(--ink); }
+  .nav .panel.open { display: flex; }
+  .nav .links a { white-space: nowrap; }
+  @media (max-width: 760px) { :root { --gut: 16px; } }
+  @media (max-width: 900px) {
+    .nav { padding: 0 12px 0 16px; }
+    .nav .links { display: none; }
+    .nav .menu { display: inline-flex; }
+    .nav .back .long { display: none; }
+    .nav .back .short { display: inline; }
+  }
+
+  /* The viewfinder */
+  .vf { --f: .5; position: relative; flex: none; margin: 14px var(--gut) 0; height: clamp(220px, 60svh, calc(100svh - 64px - 242px)); cursor: crosshair; outline-offset: 8px; touch-action: pan-y; }
+  .vf-img { position: absolute; inset: 0; overflow: hidden; background: #0b0b0a; }
+  .shot { position: absolute; inset: 0; visibility: hidden; }
+  .shot.on { visibility: visible; }
+  .shot picture { position: absolute; inset: 0; display: block; }
+  /* Both copies overhang the frame by the same amount, so they line up and
+     the blur's soft rim falls outside the frame: the edges stay clean. */
+  .shot img { position: absolute; left: -40px; top: -40px; width: calc(100% + 80px); height: calc(100% + 80px); object-fit: cover; display: block; user-select: none; -webkit-user-drag: none; }
+  .shot .soft img { filter: blur(12px); transform: translateZ(0); }
+  .shot .sharp {
+    -webkit-mask-image: linear-gradient(to bottom,
+      transparent calc(var(--f) * 100% - 27%), rgba(0,0,0,.12) calc(var(--f) * 100% - 21%), rgba(0,0,0,.42) calc(var(--f) * 100% - 15%),
+      rgba(0,0,0,.8) calc(var(--f) * 100% - 9%), #000 calc(var(--f) * 100% - 4%), #000 calc(var(--f) * 100% + 4%),
+      rgba(0,0,0,.8) calc(var(--f) * 100% + 9%), rgba(0,0,0,.42) calc(var(--f) * 100% + 15%), rgba(0,0,0,.12) calc(var(--f) * 100% + 21%), transparent calc(var(--f) * 100% + 27%));
+    mask-image: linear-gradient(to bottom,
+      transparent calc(var(--f) * 100% - 27%), rgba(0,0,0,.12) calc(var(--f) * 100% - 21%), rgba(0,0,0,.42) calc(var(--f) * 100% - 15%),
+      rgba(0,0,0,.8) calc(var(--f) * 100% - 9%), #000 calc(var(--f) * 100% - 4%), #000 calc(var(--f) * 100% + 4%),
+      rgba(0,0,0,.8) calc(var(--f) * 100% + 9%), rgba(0,0,0,.42) calc(var(--f) * 100% + 15%), rgba(0,0,0,.12) calc(var(--f) * 100% + 21%), transparent calc(var(--f) * 100% + 27%));
+  }
+  .vf-black { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+  .vf-black.on { opacity: 1; }
+  /* Corner marks */
+  .vf i { position: absolute; width: 18px; height: 18px; pointer-events: none; border-color: var(--ink); border-style: solid; border-width: 0; }
+  .vf i.tl { left: -7px; top: -7px; border-left-width: 1.5px; border-top-width: 1.5px; }
+  .vf i.tr { right: -7px; top: -7px; border-right-width: 1.5px; border-top-width: 1.5px; }
+  .vf i.bl { left: -7px; bottom: -7px; border-left-width: 1.5px; border-bottom-width: 1.5px; }
+  .vf i.br { right: -7px; bottom: -7px; border-right-width: 1.5px; border-bottom-width: 1.5px; }
+  /* Where the plane of focus sits, marked in the margin */
+  .vf-tick { position: absolute; left: -14px; width: 8px; height: 1.5px; background: var(--amber); top: calc(var(--f) * 100%); transform: translateY(-50%); pointer-events: none; }
+  @media (max-width: 760px) { .vf-tick { left: -12px; width: 6px; } }
+  /* Phone camera focus square */
+  .fsq { position: absolute; width: 68px; height: 68px; margin: -34px 0 0 -34px; border: 1px solid var(--amber); opacity: 0; pointer-events: none; }
+
+  .vf-strip { flex: none; display: flex; justify-content: space-between; align-items: center; height: 34px; margin: 0 var(--gut); padding-top: 4px; font: 400 11.5px/1 'Geist Mono', monospace; letter-spacing: .08em; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .vf-strip b { font-weight: 500; color: var(--ink); }
+
+  /* Copy, on the black under the picture */
+  .below { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; margin: 0 var(--gut); padding: 6px 0 24px; }
+  .title { font-family: 'Bebas Neue', sans-serif; font-weight: 400; text-transform: uppercase; font-size: clamp(40px, 5.6vw, 104px); line-height: .95; letter-spacing: .01em; text-wrap: balance; }
+  .title em { font-family: 'Caveat', cursive; font-weight: 700; font-style: normal; text-transform: none; color: var(--amber); font-size: 1.04em; letter-spacing: 0; margin-right: .1em; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 16px 28px; margin-top: 12px; flex-wrap: wrap; }
+  .lede { font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+  .cta { display: flex; flex-wrap: wrap; gap: 14px; }
+
+  /* .btn and .btn.primary as in lens.css, with a 48px floor */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 13px 22px;
+    font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ink); background: transparent; border: 1px solid var(--line-2); text-decoration: none;
+    transition: background-color .35s cubic-bezier(.4,0,.2,1), color .35s cubic-bezier(.4,0,.2,1), border-color .35s cubic-bezier(.4,0,.2,1), transform .35s cubic-bezier(.4,0,.2,1), box-shadow .35s cubic-bezier(.4,0,.2,1);
+    cursor: pointer; position: relative; overflow: hidden;
+  }
+  .btn:hover { background: var(--ink); color: #000; border-color: var(--ink); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(245,245,240,.08); }
+  .btn:active { transform: translateY(0); }
+  .btn.primary { background: var(--ink); color: #000; border-color: var(--ink); }
+  .btn.primary:hover { background: var(--amber); border-color: var(--amber); color: #000; box-shadow: 0 4px 24px rgba(232,166,88,.2); }
+  .btn .d { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  .btn .btn-arrow { display: inline-block; transition: transform .35s ease; }
+  .btn:hover .btn-arrow { transform: translateX(3px); }
+  @media (max-width: 760px) {
+    .vf { height: clamp(220px, 60svh, calc(100svh - 64px - 310px)); }
+    .row { margin-top: 10px; }
+    .cta { width: 100%; }
+    .cta .btn { flex: 1 1 0; padding: 13px 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .shot .soft { display: none; }
+    .shot .sharp { -webkit-mask-image: none; mask-image: none; }
+    .vf-tick { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="hero">
+  <header class="nav">
+    <a class="back" href="/"><span class="long">← C4 Studios</span><span class="short">← C4</span></a>
+    <div class="brand">C4 LENS</div>
+    <nav class="links" aria-label="Lens">
+      <a href="#work">Work</a>
+      <a href="#packages">Packages</a>
+      <a href="#services">Services</a>
+      <a class="book" href="#book">Book a call</a>
+    </nav>
+    <button class="menu" type="button" aria-label="Menu" aria-expanded="false" aria-controls="panel">
+      <svg viewBox="0 0 22 22" aria-hidden="true"><path d="M2 7h18M2 15h18" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+    </button>
+    <div class="panel" id="panel">
+      <a href="#work">Work</a>
+      <a href="#packages">Packages</a>
+      <a href="#services">Services</a>
+      <a href="#book">Book a call</a>
+    </div>
+  </header>
+
+  <div class="vf" tabindex="0" role="button" aria-label="Show the next photograph">
+    <div class="vf-img"></div>
+    <i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i>
+    <span class="vf-tick" aria-hidden="true"></span>
+    <span class="fsq" aria-hidden="true"></span>
+  </div>
+  <div class="vf-strip" aria-hidden="true">
+    <span>FOCUS <b class="focus-v">3 M</b></span>
+    <span>FRAME <b class="frame-v">01 / 04</b></span>
+  </div>
+
+  <main class="below">
+    <h1 class="title">Stock is <em>someone else’s</em> business.</h1>
+    <div class="row">
+      <p class="lede">Photography, film and drone work for Perth businesses.</p>
+      <div class="cta">
+        <a href="#packages" class="btn primary"><span class="d"></span>View packages</a>
+        <a href="#book" class="btn">Book a call <span class="btn-arrow">→</span></a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+/* Nav menu (phone) */
+const menuBtn = document.querySelector('.menu');
+const panel = document.getElementById('panel');
+const setMenu = (open) => { panel.classList.toggle('open', open); menuBtn.setAttribute('aria-expanded', String(open)); };
+menuBtn.addEventListener('click', () => setMenu(!panel.classList.contains('open')));
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel.classList.contains('open')) { setMenu(false); menuBtn.focus(); } });
+
+/* ───────────── Pull focus ─────────────
+   C4's own photographs only (reelProjects.js, the ones marked ours()).
+   Sizes, widths, alt text and focus points are copied from
+   src/components/lens/lensStudies.js and reelProjects.js. */
+const SHOTS = [
+  { base: '/lens-work/sharp/aerial-oblique', widths: [640, 1280, 2048], focus: '45% 50%',
+    alt: 'A brick house shell from the air, walls up, late sun throwing long shadows.' },
+  { base: '/lens-work/sharp/corner', widths: [640, 1280, 2048], focus: '40% 40%',
+    alt: 'A face-brick corner in low sun, with a shadow cut across it.' },
+  { base: '/lens-work/sharp/dusk', widths: [480, 960, 1152], focus: '45% 18%',
+    alt: 'A block wall at dusk under an orange sky.' },
+  { base: '/lens-work/hvn/coach-full', widths: [720, 1440, 1819], focus: '50% 24%',
+    alt: 'An HVN coach smiling with hands relaxed, in the black team shirt.' },
+];
+const MARKS = ['0.7', '1', '1.5', '3', '5', '10', '30', '∞'];   // the old hero's focus ring, near to far
+
+const vf = document.querySelector('.vf');
+const box = vf.querySelector('.vf-img');
+const tick = vf.querySelector('.vf-tick');
+const fsq = vf.querySelector('.fsq');
+const focusV = document.querySelector('.focus-v');
+const frameV = document.querySelector('.frame-v');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const srcset = (s, ext) => s.widths.map((w) => `${s.base}-${w}.${ext} ${w}w`).join(', ');
+const pic = (s, cls, sizes, alt, priority) => {
+  const p = document.createElement('picture'); p.className = cls;
+  const src = document.createElement('source'); src.type = 'image/avif'; src.srcset = srcset(s, 'avif'); src.sizes = sizes;
+  const img = document.createElement('img'); img.srcset = srcset(s, 'webp'); img.sizes = sizes; img.alt = alt;
+  img.src = `${s.base}-${s.widths[1]}.webp`; img.decoding = 'async'; img.draggable = false;
+  img.style.objectPosition = s.focus;
+  if (priority) img.fetchPriority = 'high'; else img.fetchPriority = 'low';
+  if (!alt) img.setAttribute('aria-hidden', 'true');
+  p.append(src, img);
+  return p;
+};
+const shots = SHOTS.map((s, i) => {
+  const d = document.createElement('div'); d.className = 'shot' + (i === 0 ? ' on' : '');
+  d.append(pic(s, 'soft', '40vw', '', i === 0), pic(s, 'sharp', '100vw', s.alt, i === 0));
+  if (i) d.setAttribute('aria-hidden', 'true');
+  box.append(d);
+  return d;
+});
+const black = document.createElement('div'); black.className = 'vf-black'; box.append(black);
+
+let cur = 0;
+const pad = (n) => String(n).padStart(2, '0');
+const showFrame = () => { frameV.textContent = `${pad(cur + 1)} / ${pad(SHOTS.length)}`; };
+showFrame();
+
+/* The plane of focus: an underdamped spring, so when the pointer stops the
+   band runs a little past it and comes back, settling in about 250 ms. */
+const band = { f: 0.5, v: 0, t: 0.5 };
+const OMEGA = 27, ZETA = 0.58;
+let mode = 'idle', idleSince = performance.now(), lastMark = '';
+const setF = (f) => {
+  vf.style.setProperty('--f', f.toFixed(4));
+  const m = MARKS[Math.round(clamp(1 - f, 0, 1) * (MARKS.length - 1))];
+  if (m !== lastMark) { lastMark = m; focusV.textContent = m === '∞' ? '∞' : `${m} M`; }
+};
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const toF = (clientY) => { const r = vf.getBoundingClientRect(); return clamp((clientY - r.top) / r.height, 0, 1); };
+
+let last = performance.now(), phase = 0;
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  if (mode === 'idle') {
+    // drifts from near to far and back, about twelve seconds a round trip
+    phase += dt * (Math.PI * 2 / 12);
+    band.t = 0.5 + 0.4 * Math.cos(phase);
+  }
+  const steps = Math.ceil(dt / (1 / 240)) || 1, h = dt / steps;
+  const omega = mode === 'idle' ? 6 : OMEGA, zeta = mode === 'idle' ? 1 : ZETA;
+  for (let i = 0; i < steps; i++) {
+    band.v += (-omega * omega * (band.f - band.t) - 2 * zeta * omega * band.v) * h;
+    band.f += band.v * h;
+  }
+  setF(clamp(band.f, -0.05, 1.05));
+  requestAnimationFrame(frame);
+}
+
+let idleTimer = 0;
+const follow = (clientY) => {
+  if (mode === 'idle') phase = Math.acos(clamp((band.f - 0.5) / 0.4, -1, 1));
+  mode = 'follow'; band.t = toF(clientY);
+  clearTimeout(idleTimer);
+};
+const goIdle = (delay = 1500) => {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => { phase = Math.acos(clamp((band.f - 0.5) / 0.4, -1, 1)); mode = 'idle'; }, delay);
+};
+
+/* The shutter: 80 ms of black, then the next frame. */
+let busy = false;
+function shutter() {
+  if (busy) return; busy = true;
+  const next = (cur + 1) % SHOTS.length;
+  const swap = () => {
+    shots[cur].classList.remove('on'); shots[cur].setAttribute('aria-hidden', 'true');
+    cur = next;
+    shots[cur].classList.add('on'); shots[cur].removeAttribute('aria-hidden');
+    showFrame();
+  };
+  if (reduce) { swap(); busy = false; return; }
+  black.classList.add('on');
+  setTimeout(() => { swap(); black.classList.remove('on'); busy = false; }, 80);
+}
+
+function focusSquare(x, y) {
+  const r = vf.getBoundingClientRect();
+  fsq.style.left = `${x - r.left}px`; fsq.style.top = `${y - r.top}px`;
+  fsq.getAnimations().forEach((a) => a.cancel());
+  fsq.animate([
+    { opacity: 1, transform: 'scale(1.32)' },
+    { opacity: 1, transform: 'scale(1)', offset: 0.14 },
+    { opacity: 1, transform: 'scale(1)', offset: 0.8 },
+    { opacity: 0, transform: 'scale(1)' },
+  ], { duration: 1600, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'forwards' });
+  fsq.dataset.x = x; fsq.dataset.y = y; fsq.dataset.until = performance.now() + 1300;
+}
+
+if (reduce) {
+  setF(0.5);
+  vf.addEventListener('click', shutter);
+} else {
+  setF(band.f);
+  requestAnimationFrame((t) => { last = t; frame(t); });
+  window.addEventListener('pointermove', (e) => {
+    if (e.pointerType === 'touch') return;
+    const r = vf.getBoundingClientRect();
+    const inside = e.clientX > r.left - 40 && e.clientX < r.right + 40 && e.clientY > r.top - 40 && e.clientY < r.bottom + 40;
+    if (inside) follow(e.clientY); else if (mode === 'follow') goIdle();
+  }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', () => goIdle(600));
+  let downType = 'mouse';
+  vf.addEventListener('pointerdown', (e) => { downType = e.pointerType; });
+  vf.addEventListener('click', (e) => {
+    if (downType === 'touch') {
+      // A tap focuses there. A second tap inside the square takes the picture.
+      const until = Number(fsq.dataset.until || 0);
+      if (performance.now() < until && Math.hypot(e.clientX - fsq.dataset.x, e.clientY - fsq.dataset.y) < 48) { fsq.getAnimations().forEach((a) => a.finish()); fsq.dataset.until = 0; shutter(); return; }
+      follow(e.clientY); focusSquare(e.clientX, e.clientY); goIdle(5000);
+      return;
+    }
+    shutter();
+  });
+  vf.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); shutter(); }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault(); mode = 'follow'; clearTimeout(idleTimer);
+      band.t = clamp(band.t + (e.key === 'ArrowUp' ? -0.1 : 0.1), 0, 1);
+    }
+  });
+  vf.addEventListener('blur', () => goIdle(1500));
+}
+window.__pf = { band, shutter, get mode() { return mode; } };
+</script>
+</body>
+</html>
