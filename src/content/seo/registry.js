@@ -562,7 +562,10 @@ const ARTICLES = [
     dek: 'Add your suburb or trade to the name on your Business Profile and Google says it could be suspended. The rest of its rules are just as specific.',
     photo: 'groceries-sign',
     image: '/insights/google-business-profile-rules-og.jpg',
-    published: '2026-10-16', updated: '2026-10-16', verified: '2026-10-16', readMinutes: 10,
+    /* updated: the offer lines in "If someone else manages it for you" and
+       the CTA now name the Local plan (25 Nov 2026). Google's quotes weren't
+       re-read for that, so verified stays. Move updated to the day it ships. */
+    published: '2026-10-16', updated: '2026-11-25', verified: '2026-10-16', readMinutes: 10,
     priority: 0.7, changefreq: 'monthly',
     links: { pillars: ['seo-perth', 'do-small-businesses-need-seo', 'diy-website-vs-hiring-a-designer'] },
   },

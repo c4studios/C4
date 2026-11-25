@@ -366,6 +366,30 @@
 .sc-gbp-quote--reply { width: 82%; margin-left: 0.9rem; }
 .sc-gbp-fig .sc-cap { flex-direction: column; gap: 0.2rem; }
 
+/* the plan that keeps a profile current (25 Nov 2026): the words under the
+   example card, the price list's own row on proof stock under the keys, so
+   the two halves of the section line up with the two columns above */
+.sc-local-plan {
+  display: grid; gap: 2rem;
+  margin-top: clamp(3rem, 6vw, 5rem);
+  /* the hairline runs the width of the words, inside the frame's gutters,
+     so it reads as a break inside the section rather than a new one */
+  background: linear-gradient(var(--c4-border), var(--c4-border)) top / 100% 1px no-repeat content-box;
+  scroll-margin-top: 96px; /* the GBP article links here (#gbp); clears the nav */
+}
+.sc-local-plan > :first-child { padding-top: clamp(2.2rem, 4vw, 3rem); }
+@media (min-width: 1024px) {
+  .sc-local-plan > * { padding-top: clamp(2.2rem, 4vw, 3rem); }
+}
+@media (min-width: 1024px) {
+  .sc-local-plan { grid-template-columns: minmax(0, 0.82fr) minmax(0, 1fr); gap: clamp(3rem, 6vw, 6.5rem); align-items: start; }
+}
+.sc-local-plan-h { margin-bottom: 1rem; font-size: clamp(1.5rem, 1.25rem + 0.8vw, 1.9rem); line-height: 1.12; letter-spacing: -0.022em; text-wrap: balance; }
+.sc-local-plan-text .sc-say { max-width: 32rem; }
+.sc-local-plan-buy .sc-step-who { margin-top: 1rem; }
+.sc-local-plan-buy .sc-step-who + .sc-step-who { margin-top: 0.55rem; }
+.sc-ledger--solo .sc-row { padding-top: 1.6rem; }
+
 /* ── month by month ─────────────────────────────────────────────────── */
 
 .sc-months-head { max-width: 44rem; }

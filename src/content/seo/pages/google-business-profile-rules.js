@@ -154,9 +154,15 @@
  *     whether the reviewer leaves a positive or negative review" and "clearly
  *     disclosed so consumers know the review was incentivised."
  * Prices: src/data/pricing.js. webDesignAddOns "Google Business Profile setup"
- * $200, which /seo-and-copywriting words as "a $200 add-on when we build your
- * website"; seoPackages Dominate $1,000/mo, "min. 6 months", with "Local SEO
- * optimisation (GBP management)".
+ * $200, offered since 25 Nov 2026 for setting up or sorting out a profile with
+ * or without a website build; gbpPlan "Local" (added 25 Nov 2026, Caleb: "I
+ * want to add google business profile management as an option in my seo
+ * section on my website"), "min. 3 months", whose list of work is traced to
+ * Google's help pages in the header of src/components/seo-copy/Profile.jsx;
+ * seoPackages Dominate $1,000/mo, "min. 6 months", with "Google Business
+ * Profile management (everything in Local)". The section "If someone else
+ * manages it for you" names Local and links to its price rather than quoting
+ * it, so the figure lives in one place.
  *
  * The example name is "Your Business", the made-up business /seo-and-copywriting
  * uses (src/components/seo-copy/examples.js), so no real Perth business is named.
@@ -319,7 +325,7 @@ export default {
       heading: 'If someone else manages it for you',
       body: [
         'Google has rules for anyone who manages a profile for a business they don’t own, and its first example is an SEO company. They must never claim a profile without the owner’s express consent. Wherever possible, they’re meant to encourage you to own the profile yourself and add them as a manager, and they have to transfer ownership to you immediately when you ask.',
-        'If we’re building your website, setting up a profile from scratch is a $200 add-on. Our [SEO and copywriting](/seo-and-copywriting) page shows what a complete one looks like. Dominate, our biggest SEO plan at $1,000 a month with a six-month minimum, includes managing it.',
+        'Setting up a profile, or sorting out one that’s gone wrong, is $200, once. After that our Local plan keeps it current every month, on a three-month minimum, with you adding us as a manager the way Google asks. Its price is on our [SEO and copywriting](/seo-and-copywriting#gbp) page, beside an example of a complete profile. Dominate, our biggest SEO plan at $1,000 a month with a six-month minimum, includes the same work.',
       ],
     },
 
@@ -378,6 +384,6 @@ export default {
 
   cta: {
     heading: 'Want help with yours?',
-    text: 'If we’re building your website, setting up the profile is a $200 add-on. Start a project with a link to your profile as it stands, and we’ll tell you what we’d change.',
+    text: 'Setting up or sorting out a profile is $200, once, and our Local plan keeps it current after that. Start a project with a link to your profile as it stands, and we’ll tell you what we’d change.',
   },
 };

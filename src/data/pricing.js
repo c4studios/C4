@@ -557,11 +557,52 @@ export const seoPackages = [
       '4 blog posts/month',
       'Active backlink building',
       'Competitor analysis (quarterly)',
-      'Local SEO optimisation (GBP management)',
+      /* Was "Local SEO optimisation (GBP management)" until 25 Nov 2026. Same
+         work, named the way gbpPlan below names it. If Local is renamed,
+         rename it here too. */
+      'Google Business Profile management (everything in Local)',
       'Bi-weekly strategy calls',
     ],
   },
 ];
+
+/* ── Google Business Profile management ──
+   Caleb, 25 Nov 2026: "I want to add google business profile management as
+   an option in my seo section on my website." Until then it came only inside
+   Dominate.
+
+   It sits beside the SEO plans on purpose, not in seoPackages. Those are the
+   SEO plans, and the home page's SEO door, Quotr and fifteen articles all say
+   "monthly plans from $249" by counting them. This one looks after a profile
+   and nothing else, so it can be taken without an SEO plan or next to one.
+   /seo-and-copywriting shows it in its profile section and in its price list,
+   and StartProject registers it under seo.
+
+   Every line on the list is something Google's help pages say a profile
+   manager can do. The pages, read 25 Nov 2026, are in the header of
+   src/components/seo-copy/Profile.jsx. A profile has to be verified before
+   replies, photos and the performance figures work; the "Google Business
+   Profile setup" add-on above covers that.
+
+   price is null until Caleb sets it, which renders as TBC and keeps the plan
+   out of the schema's offers. */
+export const gbpPlan = {
+  key: 'gbp',
+  name: 'Local',
+  price: null,
+  priceLabel: '',
+  priceSuffix: 'min. 3 months',
+  popular: false,
+  description: 'Your profile kept current every month, on its own or beside an SEO plan.',
+  features: [
+    'Added as a manager. You stay the owner',
+    'Opening hours and holiday hours kept right',
+    'Photos of your work added as you send them',
+    'Posts when you have news or an offer',
+    'A reply to every review',
+    'Monthly performance report',
+  ],
+};
 
 /* ── Automation & AI Packages ──
    Gone on 9 Oct 2026. Automation and AI systems are C4i's, and C4i is

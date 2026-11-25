@@ -62,7 +62,7 @@
 import { useMemo } from 'react';
 import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema, entitySchemas, serviceSchema } from '@/lib/schema';
-import { seoPackages } from '@/data/pricing';
+import { seoPackages, gbpPlan } from '@/data/pricing';
 import Climb from '@/components/seo-copy/Climb';
 import OnPhone from '@/components/seo-copy/OnPhone';
 import Audit from '@/components/seo-copy/Audit';
@@ -93,7 +93,10 @@ export default function SeoCopy() {
       serviceType: 'Search engine optimisation',
       offers: seoPackages
         .filter((p) => typeof p.price === 'number')
-        .map((p) => ({ name: `SEO ${p.name} (${p.priceLabel}${p.priceSuffix ? `, ${p.priceSuffix}` : ''})`, price: p.price })),
+        .map((p) => ({ name: `SEO ${p.name} (${p.priceLabel}${p.priceSuffix ? `, ${p.priceSuffix}` : ''})`, price: p.price }))
+        .concat(gbpPlan && typeof gbpPlan.price === 'number'
+          ? [{ name: `Google Business Profile management, ${gbpPlan.name} (${gbpPlan.priceLabel}, ${gbpPlan.priceSuffix})`, price: gbpPlan.price }]
+          : []),
     }),
     serviceSchema({
       name: 'Copywriting',

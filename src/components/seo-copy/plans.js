@@ -4,9 +4,16 @@
  * through here, so a feature line that changes or disappears takes the
  * sentence with it.
  */
-import { seoPackages } from '@/data/pricing';
+import { seoPackages, gbpPlan, webDesignAddOns } from '@/data/pricing';
 
 export const byKey = Object.fromEntries(seoPackages.map((p) => [p.key, p]));
+
+/* Google Business Profile management, the plan beside the SEO plans (see
+   gbpPlan in pricing.js), and the one-off setup it may need first. Either
+   can be missing, and every sentence that names one checks for it. */
+export const GBP = gbpPlan || null;
+export const GBP_SETUP = webDesignAddOns.find((a) => /google business profile/i.test(a.name)) || null;
+export const isPriced = (p) => Boolean(p) && typeof p.price === 'number';
 
 export const isMonthly = (p) => /\/mo/.test(p.priceLabel || '') || /month/.test(p.priceSuffix || '');
 export const MONTHLY = seoPackages.filter(isMonthly);

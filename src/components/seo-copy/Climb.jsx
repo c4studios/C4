@@ -23,7 +23,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import useStaticMode from '@/hooks/useStaticMode';
 import { PRERENDER, useHydrated, useMediaQuery } from '@/lib/hydration';
-import { seoPackages } from '@/data/pricing';
+import { seoPackages, gbpPlan } from '@/data/pricing';
 import { createPageUrl } from '@/utils';
 import Results, { ordinal } from './Results';
 import { EXAMPLES, RANKS } from './examples';
@@ -135,6 +135,8 @@ const WHO = {
     has('growth', /backlink opportunit/i) && 'Growth finds the link opportunities.',
     has('dominate', /active backlink building/i) && has('dominate', /gbp|business profile/i)
       && 'Dominate builds the links and manages your Google Business Profile.',
+    /* the GBP plan beside the SEO plans (gbpPlan, 25 Nov 2026) */
+    gbpPlan && `${gbpPlan.name} looks after just the profile${typeof gbpPlan.price === 'number' ? `, for $${Math.round(gbpPlan.price).toLocaleString('en-AU')} a month` : ''}.`,
   ],
 };
 

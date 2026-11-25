@@ -25,6 +25,7 @@ import { FirstSheet } from './Results';
 import { EXAMPLES } from './examples';
 import { PHOTOS, Photo, Credit } from './photos';
 import { PRERENDER, useHydrated } from '@/lib/hydration';
+import { GBP, isPriced } from './plans';
 
 const START = createPageUrl('StartProject');
 const money = (n) => `$${Math.round(n).toLocaleString('en-AU')}`;
@@ -99,12 +100,15 @@ export function Guarantee() {
 
 /* ── What it costs ───────────────────────────────────────────────────── */
 
-function PriceRow({ p }) {
+/* One plan's row. The profile section shows the GBP plan's row as well as
+   the price list, so ids take a base: "price" here, "local" there. */
+export function PriceRow({ p, idBase = 'price' }) {
   const { figure, unit, tbc } = priceParts(p);
+  const id = `${idBase}-${p.key}`;
   return (
-    <article className="sc-row" id={`price-${p.key}`} aria-labelledby={`price-${p.key}-h`}>
+    <article className="sc-row" id={id} aria-labelledby={`${id}-h`}>
       <div className="sc-row-id">
-        <h4 className="sc-row-name" id={`price-${p.key}-h`}>{p.name}</h4>
+        <h4 className="sc-row-name" id={`${id}-h`}>{p.name}</h4>
         {p.description ? <p className="sc-row-desc">{p.description}</p> : null}
       </div>
       <ul className="sc-row-list">
@@ -128,7 +132,12 @@ function PriceRow({ p }) {
 }
 
 export function Prices() {
-  const intro = `${cap(word(ONE_OFF.length))} one-off packages fix the foundations. ${cap(word(MONTHLY.length))} monthly plans keep the work going, from ${money(FROM_MONTHLY)} a month, and none of them locks you in past its minimum term.`;
+  /* The GBP plan isn't one of the SEO plans (see gbpPlan in pricing.js), so
+     it doesn't change the count or the "from" figure. It gets its own line. */
+  const gbp = GBP
+    ? ` ${GBP.name} looks after just your Google Business Profile${isPriced(GBP) ? `, for ${money(GBP.price)} a month` : ''}.`
+    : '';
+  const intro = `${cap(word(ONE_OFF.length))} one-off packages fix the foundations. ${cap(word(MONTHLY.length))} monthly plans keep the work going, from ${money(FROM_MONTHLY)} a month, and none of them locks you in past its minimum term.${gbp}`;
   return (
     <section className="sc-sec sc-prices" id="prices" aria-labelledby="sc-prices-h">
       <div className="sc-frame sc-prices-grid">
@@ -146,6 +155,12 @@ export function Prices() {
             <h3 className="sc-ledger-h" id="sc-monthly-h">Every month</h3>
             {MONTHLY.map((p) => <PriceRow key={p.key} p={p} />)}
           </div>
+          {GBP ? (
+            <div className="sc-ledger-group" aria-labelledby="sc-gbp-h">
+              <h3 className="sc-ledger-h" id="sc-gbp-h">Your Google Business Profile</h3>
+              <PriceRow p={GBP} />
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

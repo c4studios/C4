@@ -8,6 +8,7 @@ import {
   brandingPackages,
   c4LensPackages,
   seoPackages,
+  gbpPlan,
   socialMediaPackages,
   bundlePackages,
   supportPlans,
@@ -35,7 +36,9 @@ register('web_design', 'Web & Applications', webDesignPackages);
 // on this form; see SERVICE_ALIASES below for links that still carry the
 // old key.
 register('logo_design', 'Logo Design', brandingPackages);
-register('seo', 'SEO & Search', seoPackages);
+// The Google Business Profile plan sits beside the SEO plans in pricing.js
+// (gbpPlan, 25 Nov 2026) and starts from the same form.
+register('seo', 'SEO & Search', [...seoPackages, gbpPlan]);
 register('social', 'Social Media & Content', socialMediaPackages);
 // 'automation' (AI & Software) and its packages went to C4Site with C4i on
 // 9 Oct 2026. Custom Software has no packages; it's scoped on the call.
@@ -51,7 +54,7 @@ function buildRichDescription(serviceKey, pkgKey, pricing) {
   const lines = [];
   lines.push(`--- SELECTED PACKAGE ---`);
   lines.push(`Service: ${entry.serviceName}`);
-  lines.push(`Package: ${entry.name} (${entry.priceLabel}${entry.priceSuffix ? ' — ' + entry.priceSuffix : ''})`);
+  lines.push(`Package: ${entry.name} (${entry.priceLabel || 'price to be confirmed'}${entry.priceSuffix ? ' — ' + entry.priceSuffix : ''})`);
   if (pricing === 'subscription' && entry.monthlyLabel) {
     lines.push(`Pricing model: Monthly subscription at ${entry.monthlyLabel}`);
   }
@@ -110,7 +113,10 @@ const SERVICE_ADDONS = {
     'Location scouting',
   ],
   seo: [
-    'Local SEO / GBP management',
+    // Was 'Local SEO / GBP management' until 25 Nov 2026, when managing a
+    // profile became its own plan (Local, ?package=gbp). The one-off setup
+    // is offered here instead, so it can be asked for without a build.
+    'Google Business Profile setup',
     'Additional page optimisation',
     'Content writing (per page)',
     'Competitor analysis',
