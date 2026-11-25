@@ -1165,7 +1165,10 @@ export function createSiteMosaic(host, { autoplay = true, onDone } = {}) {
   const tick = () => render();
   function bootClear() {
     const boot = document.getElementById('c4-boot');
-    if (!boot || boot.classList.contains('is-done')) return Promise.resolve();
+    /* only the full-screen sheet ('intro' or 'wait', index.html) covers the
+       page; the header build ('mark') covers nothing, so nothing waits for it */
+    const sheet = /^(intro|wait)$/.test(document.documentElement.getAttribute('data-c4-boot') || '');
+    if (!boot || !sheet || boot.classList.contains('is-done')) return Promise.resolve();
     return new Promise((resolve) => {
       const mo = new MutationObserver(() => {
         if (!document.getElementById('c4-boot') || boot.classList.contains('is-done')) { mo.disconnect(); setTimeout(resolve, 280); }

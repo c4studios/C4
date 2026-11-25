@@ -52,20 +52,29 @@
       })();
     </script>
 
-    <!-- The boot overlay, decided before first paint. It shows on the first
-         page load of a visit only (Caleb, 15 Oct 2026: "keep it, but only
-         for that first load in"); sessionStorage remembers the visit. The
-         page underneath is the prerendered one and paints at once, and the
-         app hydrates it in place (src/main.jsx), so the overlay waits for
-         nothing but its own animation. A page whose HTML wasn't prerendered
-         for its own address (a 404, /welcome, the dev server) is drawn from
-         scratch over what's there, so on those the overlay still covers the
-         swap until the app has mounted, as it always did. No attribute, no
-         overlay: the prerenderer, a browser without JavaScript, and every
-         later load in the visit. -->
+    <!-- The boot, decided before first paint. A visit's first page load
+         plays the C4 mark building itself (Caleb, 15 Oct 2026: "keep it, but
+         only for that first load in"); sessionStorage remembers the visit.
+         FIRST_LOAD says how (commitment 503, 25 Nov 2026):
+           'mark'  the page shows at first paint, and the mark in the site
+                   header draws itself in place, then rests (data-c4-boot
+                   "mark")
+           'intro' the full-screen sheet with the mark on it, lifted after
+                   the build, which hides the page until then (data-c4-boot
+                   "intro", the look from 29 Sep 2026)
+           'none'  no intro: the page shows at first paint
+         The page underneath is the prerendered one and the app hydrates it
+         in place (src/main.jsx), so none of these waits for the app. A page
+         whose HTML wasn't prerendered for its own address (a 404, /welcome,
+         the dev server) is drawn from scratch over what's there, so on those
+         the sheet still covers the swap until the app has mounted, as it
+         always did ("wait"). No attribute, no boot: the prerenderer, a
+         browser without JavaScript, every later load in the visit, and
+         reduced motion with 'mark'. -->
     <script>
       (function () {
         try {
+          var FIRST_LOAD = 'mark';
           if (/Prerender/i.test(navigator.userAgent)) return;
           var route = null;
           var record = document.getElementById('c4-prerender');
@@ -77,8 +86,10 @@
             first = !sessionStorage.getItem('c4_boot_seen');
             sessionStorage.setItem('c4_boot_seen', '1');
           } catch (e) { first = false; }
+          var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
           if (!own) document.documentElement.setAttribute('data-c4-boot', 'wait');
-          else if (first) document.documentElement.setAttribute('data-c4-boot', 'intro');
+          else if (first && FIRST_LOAD === 'intro') document.documentElement.setAttribute('data-c4-boot', 'intro');
+          else if (first && FIRST_LOAD === 'mark' && !still) document.documentElement.setAttribute('data-c4-boot', 'mark');
           /* The stylesheets' @media (scripting: enabled) rules pose the
              prerendered page for the app that's about to hydrate it: the
              experience pages take their armed layout and the FAQ answers are
@@ -166,10 +177,38 @@
       #c4-boot .c4-boot__fbuild { animation: c4-boot-off 0.06s linear 1.02s both; }
       #c4-boot .c4-boot__sheen { opacity: 0; animation: c4-boot-on 0.3s ease 1s both; }
       #c4-boot .c4-boot__peak { stop-opacity: var(--boot-sheen); }
+      /* the sweep: the glint's band crosses the mark in 1.43 s, every 2.6 s
+         from 1 s. It was SVG animation (animateTransform on the gradient),
+         and Chrome starts that clock only at the page's load event, seconds
+         late on a slow phone, so the band sat still across the mark until
+         then (found 26 Nov 2026). The same band now rides a wide rect,
+         clipped to the mark, that CSS moves on the build's own clock. */
+      #c4-boot .c4-boot__sweep { transform: translateX(-760px); animation: c4-boot-sweep 2.6s linear 1s infinite backwards; }
+      @keyframes c4-boot-sweep { 0% { transform: translateX(-760px); } 55%, 100% { transform: translateX(760px); } }
       @keyframes c4-boot-on { to { opacity: 1; } }
       @keyframes c4-boot-off { to { opacity: 0; } }
       #c4-boot.is-done { opacity: 0; transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
       #c4-boot.is-done .c4-boot__mark { transform: scale(1.06); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+      /* 'mark': the same build and one pass of the sheen, drawn over the
+         header's own mark at its size, with no sheet, so the page is there
+         from first paint. The script after the boot lays it over the
+         header's logo and starts its clock; until then it is hidden and
+         every beat waits. The header's own mark is hidden while its double draws, then
+         shows again under it (C4Logo.jsx: the header's resting C, body and
+         arm colours below, and its C's shadow), and the double fades off it
+         in 0.2 s ("mark-out"): the two are the same shapes, but a straight
+         swap flicks their anti-aliased edges. */
+      html[data-c4-boot^="mark"] #c4-boot {
+        display: block; inset: auto; left: 0; top: 0; width: 0; height: 0;
+        z-index: 60;
+        background: none; pointer-events: none; visibility: hidden;
+        --boot-c: #d0cecc; --boot-body: #606264; --boot-arm: #707274; --boot-sheen: 0.5;
+      }
+      html[data-c4-boot^="mark"] #c4-boot.is-placed { visibility: visible; }
+      html[data-c4-boot^="mark"] #c4-boot .c4-boot__mark { width: 100%; height: 100%; will-change: auto; }
+      html[data-c4-boot^="mark"] #c4-boot:not(.is-placed) * { animation-play-state: paused !important; }
+      html[data-c4-boot="mark"] .c4-header-logo-lockup svg > g > :not(ellipse) { visibility: hidden !important; }
+      html[data-c4-boot="mark-out"] #c4-boot { opacity: 0; transition: opacity 0.2s linear; }
       @media (prefers-reduced-motion: reduce) {
         #c4-boot .c4-boot__cbuild, #c4-boot .c4-boot__fbuild, #c4-boot .c4-boot__sheen { display: none; }
         /* important, because the site's own reduced-motion rule
@@ -188,8 +227,11 @@
           <filter id="c4-boot-shadow" filterUnits="userSpaceOnUse" x="24" y="72" width="636" height="418"><feDropShadow dx="0" dy="1" stdDeviation="4" flood-color="#000000" flood-opacity="0.3" /></filter>
           <linearGradient id="c4-boot-glint" gradientUnits="userSpaceOnUse" x1="24" y1="72" x2="660" y2="230">
             <stop offset="0.38" stop-color="#ffffff" stop-opacity="0" /><stop class="c4-boot__peak" offset="0.5" stop-color="#ffffff" /><stop offset="0.62" stop-color="#ffffff" stop-opacity="0" />
-            <animateTransform attributeName="gradientTransform" type="translate" values="-760 0; 760 0; 760 0" keyTimes="0; 0.55; 1" dur="2.6s" begin="1s" repeatCount="indefinite" />
           </linearGradient>
+          <!-- the whole finished mark, for the sheen to cross inside -->
+          <clipPath id="c4-boot-kall">
+            <path d="M393.33,381.58l46.14.22c-37.51,42.67-88.07,71.58-143.72,82.18-89.37,18.53-180.59-21.95-227.2-100.84-38.21-64.03-30.59-145.6,18.81-201.36,33.03-37.88,79.33-61.47,129.25-65.83,54.95-7.69,110.91-3.19,163.94,13.2l-37.35,52.04c-31.06-6.51-62.95-8.01-94.47-4.41-43.91,2.38-84.08,25.62-108.21,62.59-14,27.78-16.89,59.9-8.08,89.75,13.18,47.07,49.8,83.83,96.63,97.01,55.92,11.27,114.01,2.59,164.26-24.56Z" /><polygon points="554.78 94.43 554.78 292.91 485.93 292.91 485.93 177.58 395.65 308.72 485.93 308.72 453.55 357.3 304.78 357.3 304.78 323.95 470.27 94.43 554.78 94.43" /><polygon points="639.36 308.72 606.98 357.3 554.78 357.3 554.78 469.58 485.93 469.58 485.93 357.3 472.55 357.3 504.93 308.72 639.36 308.72" />
+          </clipPath>
           <!-- The pieces each stroke is drawn inside. Each stands 8 units
                clear of the line its stroke lands on, so the finished edge
                there is the ink's own front, drawn the same as the finished
@@ -234,8 +276,8 @@
         </g>
         <polygon class="c4-boot__body" points="554.78 94.43 554.78 292.91 485.93 292.91 485.93 177.58 395.65 308.72 485.93 308.72 453.55 357.3 304.78 357.3 304.78 323.95 470.27 94.43 554.78 94.43" fill="var(--boot-body)" />
         <polygon class="c4-boot__arm" points="639.36 308.72 606.98 357.3 554.78 357.3 554.78 469.58 485.93 469.58 485.93 357.3 472.55 357.3 504.93 308.72 639.36 308.72" fill="var(--boot-arm)" />
-        <g class="c4-boot__sheen" fill="url(#c4-boot-glint)">
-          <path d="M393.33,381.58l46.14.22c-37.51,42.67-88.07,71.58-143.72,82.18-89.37,18.53-180.59-21.95-227.2-100.84-38.21-64.03-30.59-145.6,18.81-201.36,33.03-37.88,79.33-61.47,129.25-65.83,54.95-7.69,110.91-3.19,163.94,13.2l-37.35,52.04c-31.06-6.51-62.95-8.01-94.47-4.41-43.91,2.38-84.08,25.62-108.21,62.59-14,27.78-16.89,59.9-8.08,89.75,13.18,47.07,49.8,83.83,96.63,97.01,55.92,11.27,114.01,2.59,164.26-24.56Z" /><polygon points="554.78 94.43 554.78 292.91 485.93 292.91 485.93 177.58 395.65 308.72 485.93 308.72 453.55 357.3 304.78 357.3 304.78 323.95 470.27 94.43 554.78 94.43" /><polygon points="639.36 308.72 606.98 357.3 554.78 357.3 554.78 469.58 485.93 469.58 485.93 357.3 472.55 357.3 504.93 308.72 639.36 308.72" />
+        <g class="c4-boot__sheen" clip-path="url(#c4-boot-kall)">
+          <rect class="c4-boot__sweep" x="-600" y="40" width="1900" height="500" fill="url(#c4-boot-glint)" />
         </g>
       </svg>
     </div>
@@ -248,6 +290,100 @@
         if (/Prerender/i.test(navigator.userAgent)) return;
         var mode = document.documentElement.getAttribute('data-c4-boot');
         window.__c4BootReady = function () {};
+        /* The header build ('mark'). This script runs once the stylesheet is
+           in, just before the parser reaches the page. As soon as the parser
+           has put the header in (a MutationObserver, so it happens before the
+           frame that first shows the header), the boot's mark is laid exactly
+           over the header's logo, and its clock starts with the next frame
+           drawn. The viewBox is
+           the header SVG's (50 100 880 400) taken back through C4Logo.jsx's
+           LOCKUP_TRANSFORM and markBuild.js's LOCKUP_MATRIX into the boot's
+           units (x' = 0.71357745 x + 77.9375, y' = 0.71357745 y + 115.496),
+           and the C's shadow is the header's (dy 1, blur 3.5, 22%) in those
+           units. A ResizeObserver on the header fits it again if the header's
+           width changes (a desktop page growing its scrollbar). After the
+           build and one sheen pass (2.5 s) the header's own mark shows again
+           and the double fades off it. A scroll, a resize, a tap or click
+           anywhere, or a pointer over the logo ends it at once instead, since
+           the header may be about to move. No header logo by the end of the
+           parse, or anything throwing, and it's simply removed. */
+        if (mode === 'mark') {
+          var html = document.documentElement;
+          var done = false, logo = null, mo = null, ro = null;
+          var drop = function () {
+            done = true;
+            if (mo) mo.disconnect();
+            if (ro) ro.disconnect();
+            if (boot.parentNode) boot.parentNode.removeChild(boot);
+            html.removeAttribute('data-c4-boot');
+          };
+          var end = function (e) {
+            if (done) return;
+            done = true;
+            window.removeEventListener('scroll', end);
+            window.removeEventListener('resize', end);
+            window.removeEventListener('pointerdown', end, true);
+            if (ro) ro.disconnect();
+            if (e) { drop(); return; }
+            html.setAttribute('data-c4-boot', 'mark-out');
+            setTimeout(drop, 250);
+          };
+          var fit = function () {
+            var r = logo.getBoundingClientRect();
+            if (!r.width || !r.height) return false;
+            var s = boot.style;
+            s.left = r.left + 'px';
+            s.top = r.top + 'px';
+            s.width = r.width + 'px';
+            s.height = r.height + 'px';
+            return true;
+          };
+          var place = function () {
+            if (!fit()) { drop(); return; }
+            var svg = boot.querySelector('svg');
+            svg.setAttribute('viewBox', '-39.151 -21.716 1233.223 560.556');
+            var f = boot.querySelector('filter');
+            f.setAttribute('x', '-60'); f.setAttribute('y', '40');
+            f.setAttribute('width', '760'); f.setAttribute('height', '500');
+            var d = f.querySelector('feDropShadow');
+            d.setAttribute('dy', '2.102'); d.setAttribute('stdDeviation', '7.357'); d.setAttribute('flood-opacity', '0.22');
+            window.addEventListener('scroll', end, { passive: true });
+            window.addEventListener('resize', end);
+            window.addEventListener('pointerdown', end, true);
+            logo.addEventListener('pointerenter', end);
+            if (window.ResizeObserver) {
+              ro = new ResizeObserver(function () { if (!done) fit(); });
+              ro.observe(logo.closest('header'));
+            }
+            /* The clock starts with the next frame drawn, the one that first
+               shows the header (measured 26 Nov 2026 within 0.03 s of the
+               page's first paint on a throttled phone, 0.05 s on a fast
+               one). Waiting for the parse to end, or for Chrome's report of
+               the first paint, left the logo spot empty for up to half a
+               second on a slow phone. A tab opened in the background draws
+               no frames, so there the build waits until it is looked at. */
+            requestAnimationFrame(function () {
+              if (done) return;
+              boot.classList.add('is-placed');
+              setTimeout(function () { end(); }, 2500);
+            });
+          };
+          try {
+            mo = new MutationObserver(function () {
+              if (done || logo) return;
+              try {
+                logo = document.querySelector('header .c4-header-logo-lockup svg');
+                if (!logo) return;
+                mo.disconnect();
+                mo = null;
+                place();
+              } catch (err) { drop(); }
+            });
+            mo.observe(html, { childList: true, subtree: true });
+            document.addEventListener('DOMContentLoaded', function () { if (!logo && !done) drop(); });
+          } catch (err) { drop(); }
+          return;
+        }
         /* Not this load's to show: take it out before it can ever paint. */
         if (mode !== 'intro' && mode !== 'wait') {
           boot.parentNode.removeChild(boot);

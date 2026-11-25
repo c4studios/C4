@@ -36,9 +36,10 @@
  * staticMode (prerender / prefers-reduced-motion): no motion styles;
  * CSS [data-static] lays the scene flat and full-bleed.
  */
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from '@/components/c4/SiteLink';
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
+import { PRERENDER } from '@/lib/hydration';
 import { BUILD_ORDER, getCaseStudy } from '../portfolio/caseStudyData';
 
 import plxDsr from './assets/plx-dsr.webp';
@@ -131,6 +132,25 @@ export default function HeroFusion({ header, staticMode = false }) {
   const stickyRef = useRef(null);
   const bezelRef = useRef(null);
   const rectRef = useRef({ t: 20, r: 16, b: 20, l: 16, rad: 22, cx: 50, cy: 50, mini: 0.44, shift: 560 });
+
+  /* The tiles load after the page has painted and the app is up, then all
+     at once (commitment 503, 25 Nov 2026). Loaded eagerly from the HTML,
+     the 24 of them (about 1.2 MB) downloaded alongside the stylesheet that
+     first paint waits for: on a throttled phone the page painted nothing
+     for about 8 seconds (site issue 275). So the prerendered HTML says
+     loading="lazy", which keeps them out of the browser's first requests,
+     and web-arm.css keeps them out of layout until the app has mounted
+     (html[data-c4-mount]), so the bundle downloads first. Once the motion
+     is armed, every tile switches to eager and fetches straight away, long
+     before the dive reaches it: lazy-loading alone left rows 2 and 3
+     fetching mid-dive, blank as the camera passed through the screen.
+     Static mode (reduced motion) keeps lazy, since there the record is a
+     plain grid the visitor scrolls through. */
+  const [warm, setWarm] = useState(false);
+  useEffect(() => {
+    if (PRERENDER || staticMode) return;
+    setWarm(true);
+  }, [staticMode]);
 
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] });
   /* Device + dive run on a smoothed progress; the SCENE springs feed on
@@ -303,19 +323,14 @@ export default function HeroFusion({ header, staticMode = false }) {
                           to={`/CaseStudy/${card.slug}`}
                           aria-label={`${card.name} — open the case study`}
                         >
-                          {/* All three rows load eagerly. Lazy-loading rows 2
-                              and 3 saved nothing (the whole set is ~690KB) and
-                              cost the one thing that matters: they only began
-                              fetching as they intersected, which is mid-dive,
-                              so a slow connection showed blank tiles at the
-                              exact moment the camera passes through the screen.
-                              fetchpriority keeps them behind row 1 in the queue
-                              so the LCP tile still lands first. */}
+                          {/* Lazy until the app is up, then eager (warm,
+                              above). fetchpriority keeps rows 2 and 3 behind
+                              row 1, which is nearest the screen. */}
                           <img
                             src={card.img}
                             width={1200}
                             height={750}
-                            loading="eager"
+                            loading={warm ? 'eager' : 'lazy'}
                             fetchPriority={ri === 0 ? 'high' : 'low'}
                             decoding="async"
                             alt={`${card.name} — a C4 Studios build`}

@@ -1328,6 +1328,20 @@
   display: block;
 }
 
+/* The tiles wait for the app (commitment 503, 25 Nov 2026). Their HTML says
+   loading="lazy", but a lazy image within reach of the screen still starts
+   at first layout and would take bandwidth from the bundle. Out of layout,
+   it doesn't start at all, so the tiles sit on their grey card until the
+   app has mounted (main.jsx sets data-c4-mount), and HeroFusion.jsx then
+   fetches them all. The card keeps its size, so nothing moves. Without
+   JavaScript, or if the bundle fails (index.html drops these rules), the
+   tiles lazy-load as usual. */
+@media (scripting: enabled) {
+  html:not([data-c4-mount]) .lv-plx-card img {
+    display: none;
+  }
+}
+
 /* The reference hover: lift −20, dark scrim, title reveals. */
 .lv-plx-card::after {
   content: '';
