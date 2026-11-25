@@ -263,6 +263,8 @@ export default function NavHeader() {
   // does it slide away on scroll. It used to vanish on any downward scroll,
   // which read as the nav disappearing in a windowed browser.
   const desktopRef = useRef(false);
+  const menuButtonRef = useRef(null);
+  const sheetRef = useRef(null);
 
   /* Cloudflare 308-normalises prerendered paths to their slash form (/Lens
      becomes /Lens/), so every route test here compares without it. */
@@ -276,9 +278,15 @@ export default function NavHeader() {
   useEffect(() => {
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return undefined;
     const mq = window.matchMedia('(min-width: 1024px)');
+    // The menu sheet belongs to the narrow bar, so widening past lg closes
+    // it. It used to stay up with the page scroll-locked and its close
+    // button gone with the rest of the narrow bar (25 Nov 2026).
     const sync = () => {
       desktopRef.current = mq.matches;
-      if (mq.matches) setHidden(false);
+      if (mq.matches) {
+        setHidden(false);
+        setMobileOpen(false);
+      }
     };
     sync();
     mq.addEventListener('change', sync);
@@ -294,6 +302,31 @@ export default function NavHeader() {
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
+  // While the sheet is open it covers the page, so the page leaves the tab
+  // order (inert) and Escape closes the sheet and hands focus back to the
+  // menu button. Until 25 Nov 2026 Tab ran from the theme switch into the
+  // hidden page and Escape did nothing.
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+    const sheet = sheetRef.current;
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return;
+      setMobileOpen(false);
+      menuButtonRef.current?.focus();
+    };
+    window.addEventListener('keydown', onKey);
+    const covered = sheet?.parentElement
+      ? Array.from(sheet.parentElement.children).filter((el) => (
+        el !== sheet && el.getAttribute('data-c4-chrome') !== 'header' && !el.inert
+      ))
+      : [];
+    covered.forEach((el) => { el.inert = true; });
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      covered.forEach((el) => { el.inert = false; });
+    };
   }, [mobileOpen]);
 
   // Close menus when navigating.
@@ -529,6 +562,7 @@ export default function NavHeader() {
               </div>
 
               <button
+                ref={menuButtonRef}
                 onClick={() => setMobileOpen(o => !o)}
                 className="lg:hidden w-11 h-11 flex items-center justify-center"
                 style={{ color: 'var(--c4-text)' }}
@@ -546,6 +580,7 @@ export default function NavHeader() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            ref={sheetRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

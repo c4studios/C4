@@ -83,7 +83,9 @@ export default function ThemeToggle({ compact = false }) {
         >
           <motion.span
             initial={false}
-            animate={{ rotate: shownDark ? 0 : 180 }}
+            /* A full turn, so the letter rests upright in both states. At
+               180 the light state showed an upside-down L (25 Nov 2026). */
+            animate={{ rotate: shownDark ? 0 : 360 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             className="text-[9px] font-bold leading-none select-none"
             style={{ color: 'var(--c4-bg)' }}
