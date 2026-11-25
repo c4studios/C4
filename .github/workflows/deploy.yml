@@ -33,17 +33,21 @@ jobs:
     # Lens price deploy failed in 43 s. Every deploy before it ran on 24.04.
     # Unpin only after upgrading Playwright to a release that supports 26.04.
     runs-on: ubuntu-24.04
+    # Actions and the build moved to Node 24 on 25 Nov 2026. checkout@v4 and
+    # setup-node@v4 ran on Node 20 (deprecated on Actions runners), and Node
+    # 20 itself reached end of life on 30 Apr 2026 (nodejs/Release
+    # schedule.json). v7 of both runs on node24 per their action.yml.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # Full history so scripts/prerender.mjs can read real per-file commit
           # dates for sitemap <lastmod> (a shallow checkout collapses them all
           # to the latest commit).
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
