@@ -34,7 +34,7 @@ import { ArrowRight } from 'lucide-react';
 import { trackEvent } from '@/lib/track';
 import SeoDoorFace from '@/components/seo-copy/DoorFace';
 import LogoDoorFace from '@/components/logo-design/DoorFace';
-import { seoPackages, brandingPackages, logoTimeline } from '@/data/pricing';
+import { seoPackages, brandingPackages, logoTimeline, c4LensPackages } from '@/data/pricing';
 import { gsap, EASE, onScreen, revealHeading, useStaticMode, useWasPrerendered } from './homeMotion';
 
 // The SEO door quotes the published card, so it follows pricing.js.
@@ -46,6 +46,11 @@ const SEO_MONTHLY_FROM = Math.min(...seoPackages.filter((p) => /\/mo$/.test(p.pr
    revisions)"). A rebuild redraws a logo you already have, so it offers no
    concepts and doesn't count. */
 const LOGO_FROM = Math.min(...brandingPackages.filter((p) => typeof p.price === 'number').map((p) => p.price));
+
+/* And the C4 Lens door: its cheapest published package. It was typed in as
+   $200 and stayed there after Lens was repriced on 28 Oct 2026 (site issue
+   271, fixed 26 Nov 2026). */
+const LENS_FROM = Math.min(...c4LensPackages.filter((p) => typeof p.price === 'number').map((p) => p.price));
 
 /* The two raster faces. scripts/door-faces.mjs makes every file, with its
    origin in the EXIF; the widths are the ones it writes. */
@@ -114,8 +119,9 @@ const DOORS = [
     word: 'Photography & video',
     outcome:
       'Photography and short-form video, a coherent visual system for Perth businesses ready to retire stock.',
-    fromPrice: 'From $200',
-    timeframe: 'Half / full-day shoots',
+    fromPrice: `From $${LENS_FROM}`,
+    // The shortest and longest shoots on the Lens card in pricing.js.
+    timeframe: '30-minute to full-day shoots',
     primary: { label: 'Visit C4 Lens', to: '/Lens' },
     secondary: { label: 'or book a shoot', to: '/start?service=lens' },
   },
