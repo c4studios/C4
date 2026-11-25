@@ -237,7 +237,7 @@ export const webScopeNotes = [
   {
     title: 'Project terms',
     points: [
-      'Most projects use a deposit to book the work, then progress or final payment before launch.',
+      'There’s no deposit. We invoice once the work is finished and you’re happy with it.',
       'Launch warranties cover fixes to agreed scope. New content, new features, and ongoing changes move to support plans or add-ons.',
     ],
   },

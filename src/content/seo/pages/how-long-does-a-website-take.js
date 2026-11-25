@@ -65,7 +65,7 @@ export default {
     },
     {
       q: 'When does the timeline officially start?',
-      a: 'At kickoff: deposit paid, scope signed, and the critical content in hand. We don’t start the clock — or the build — on “the copy’s nearly done”, because that’s precisely the project that delivers in week eleven instead of week four.',
+      a: 'At kickoff: scope signed and the critical content in hand. We don’t start the clock — or the build — on “the copy’s nearly done”, because that’s precisely the project that delivers in week eleven instead of week four.',
     },
     {
       q: 'Do revision rounds extend the timeline?',

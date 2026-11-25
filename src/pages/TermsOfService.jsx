@@ -3,7 +3,7 @@ import useDocumentHead from '@/hooks/useDocumentHead';
 import { breadcrumbSchema } from '@/lib/schema';
 import LegalDocument from '@/components/legal/LegalDocument';
 
-const EFFECTIVE_DATE = '3 July 2026';
+const EFFECTIVE_DATE = '25 November 2026';
 
 const sections = [
   {
@@ -32,13 +32,13 @@ const sections = [
     title: '4. Services, quotes and scope',
     content: [
       'Prices shown on the Site are indicative starting points based on a defined scope. The final price, timeline and deliverables for your project are set out in a written quote or proposal after we understand what you need.',
-      'A quote is valid for the period stated in it. Work begins once you accept the quote and, where applicable, pay the deposit. Changes to scope after work begins may affect the price and timeline and will be agreed in writing.',
+      'A quote is valid for the period stated in it. Work begins once you accept the quote. Changes to scope after work begins may affect the price and timeline and will be agreed in writing.',
     ],
   },
   {
-    title: '5. Fees, deposits and payment',
+    title: '5. Fees and payment',
     content: [
-      'Unless your engagement document says otherwise, most projects require a deposit to book the work, with the balance payable at agreed milestones or before launch. Invoices are payable by the date stated on them.',
+      'Unless your engagement document says otherwise, we invoice once the work is finished and you’re happy with it, with no deposit up front. Invoices are payable by the date stated on them.',
       'Prices are in Australian dollars. Third-party costs such as domains, hosting or platform subscriptions, paid plugins, stock assets and payment processing fees are your responsibility unless we expressly include them.',
     ],
   },
