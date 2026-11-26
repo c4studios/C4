@@ -82,14 +82,18 @@ export default function FinalCTA() {
               Each link takes you to the right starting point. Founder-led reply, usually within a business day.
             </p>
 
-            <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
-              <Link id="hm-start-verdict" to={createPageUrl('StartProject')} className="hm-verdict group">
+            {/* Each label stays on one line. Where the two don't fit side by
+                side (768 to about 1035 wide, beside the doors), the link
+                wraps under the button whole, the same 24px off it, where it
+                used to break both labels in two (27 Nov 2026). */}
+            <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-6">
+              <Link id="hm-start-verdict" to={createPageUrl('StartProject')} className="hm-verdict group whitespace-nowrap">
                 Start a project
                 <ArrowRight size={14} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
               </Link>
               <Link
                 to={createPageUrl('Contact')}
-                className="hm-textlink group"
+                className="hm-textlink group whitespace-nowrap"
               >
                 Or just send a message
                 <ArrowRight size={12} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
