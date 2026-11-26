@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useHydrated } from '@/lib/hydration';
 
 /* ── Firefox detection ────────────────────────────────────── */
 const isFirefox =
@@ -384,7 +385,10 @@ function CanvasHeatmap() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    /* In Firefox this canvas is only there while the page hydrates, to match
+       the prerendered HTML, and CraftHeatmap swaps in the tiles straight
+       after. It never sizes, listens or starts its loop there. */
+    if (!canvas || isFirefox) return;
 
     // Defer setup by one frame for Firefox layout timing
     const setupId = requestAnimationFrame(() => {
@@ -865,6 +869,13 @@ function FirefoxHeatmap() {
 /* ══════════════════════════════════════════════════════════
    Export – auto-selects renderer based on browser
    ══════════════════════════════════════════════════════════ */
+/* The prerendered HTML is written by Chromium, so it holds the canvas. Firefox
+   gets the tiles (the canvas didn't answer the pointer there, 24 Jul 2026),
+   but only once hydration is done: choosing them in the first render didn't
+   match the HTML, so React threw 418 and 423 and redrew the whole page
+   (27 Nov 2026, src/lib/hydration.js). On a page React draws itself,
+   useHydrated is true from the start and Firefox gets the tiles at once. */
 export default function CraftHeatmap() {
-  return isFirefox ? <FirefoxHeatmap /> : <CanvasHeatmap />;
+  const hydrated = useHydrated();
+  return isFirefox && hydrated ? <FirefoxHeatmap /> : <CanvasHeatmap />;
 }
