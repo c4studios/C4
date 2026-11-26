@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url';
 import { liveSeoPages, validateSeoEntry } from '../src/content/seo/registry.js';
 import { STATIC_ROUTES } from '../src/lib/prerenderRoutes.js';
 import { sitePath } from '../src/lib/sitePath.js';
-import { generateOgImage } from './og-card.mjs';
+import { generateOgImage, SIZES as OG_SIZES } from './og-card.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(__dirname, '..', 'dist');
@@ -315,13 +315,14 @@ async function main() {
     }
   }
 
-  // The default share card (1200×630), drawn in Archivo from dist/fonts.
+  // The default share card (1200×630), drawn in Archivo and B612 Mono from dist/fonts.
   console.log('  ⏳ og-image.png');
   {
     const card = await generateOgImage(browser, baseUrl, path.join(DIST, 'og-image.png'));
     if (!card.archivo) console.warn('  ⚠️  og-image.png: Archivo did not load, so the card used a fallback face.');
+    if (!card.b612) console.warn('  ⚠️  og-image.png: B612 Mono did not load, so the address used a fallback face.');
     if (!card.fits) console.warn('  ⚠️  og-image.png: the text overran the card even at its smallest sizes.');
-    else if (card.h1Size !== 92 || card.subSize !== 22) console.warn(`  ⚠️  og-image.png: stepped the type down to fit (headline ${card.h1Size}px, paragraph ${card.subSize}px).`);
+    else if (card.h1Size !== OG_SIZES.h1 || card.subSize !== OG_SIZES.addr) console.warn(`  ⚠️  og-image.png: stepped the type down to fit (headline ${card.h1Size}px, address ${card.subSize}px).`);
   }
   console.log('  ✅ og-image.png');
 

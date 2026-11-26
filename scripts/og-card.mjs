@@ -3,85 +3,81 @@
  * no card of its own. scripts/prerender.mjs calls it after the pages, while
  * its static server is still serving dist/.
  *
- * Repaired 15 Oct 2026 (SEO audit H5), with the design kept as it was:
+ * Redesigned 4 Nov 2026. Caleb wanted the tile that shows when he shares a
+ * link "lighter, more minimalistic, better designed, less ai looking", and
+ * chose option B of three. It's the bench's own paper (#F7F5F2), the real C4
+ * mark on the left, and the line the old card led with, stacked in Archivo,
+ * with the address under it in B612 Mono. The old card's dark ground, red
+ * glow, dot grain, hairline frame, small tracked label and paragraph are gone.
  *
- *  - The type is Archivo, the site's own face, loaded from the build's /fonts/.
- *    The card used to ask for system fonts (-apple-system, Segoe UI, Inter).
- *    The GitHub Actions runner appears to have none of them: production drew
- *    the card in a much wider face (it looks like DejaVu Sans), the headline
- *    ran to three lines and printed over the paragraph. On Windows, in Segoe
- *    UI, it had fitted.
- *  - The card is served from the prerender's own origin, so /fonts/ resolves
- *    there, and the shot waits for document.fonts.ready.
- *  - The text sits in normal flow, one block under the next, so no face can put
- *    one line of it on top of another. The old layout pinned the headline to
- *    the top and the paragraph to the bottom with absolute positions. If a
- *    fallback face ever lands anyway and the stack runs out of room, the
- *    headline, then the paragraph, steps down until it fits, and the build log
- *    says so.
- *  - The footer says Est. 2025. It said 2022 until Caleb's call on 9 Oct 2026
- *    that every founding date reads December 2025.
+ * The mark is the site's own: the C, the 4 and the T come straight from
+ * src/components/c4/markBuild.js (trued 17 Oct 2026), so a redraw there
+ * reaches the card too. The C is the printed card's pale "ghost" C, set as a
+ * blind emboss on the paper (a white edge up and left, a shade down and
+ * right) so it still reads at link-preview size.
+ *
+ * Kept from the 15 Oct 2026 repair (SEO audit H5): the type loads from the
+ * build's own /fonts/, because the GitHub Actions runner has none of the
+ * system faces; the card is served from the prerender's origin so /fonts/
+ * resolves; the shot waits for document.fonts.ready; and the words sit in
+ * normal flow, so no fallback face can stack one line on another. If a wider
+ * face ever lands and the words run past the right margin, the headline, then
+ * the address, steps down until they fit, and the build log says so.
  *
  * To look at it without a full build: serve dist/ and call generateOgImage().
  */
 
-const FRAME = { width: 1200, height: 630, inset: 88 };
+import { MARK_BODY, MARK_ARM, MARK_C } from '../src/components/c4/markBuild.js';
+
+const FRAME = { width: 1200, height: 630, right: 64 };
+
+/** The sizes the card is drawn at. prerender.mjs warns if they had to step down. */
+export const SIZES = { h1: 60, addr: 22 };
+
+/* The mark's own bounds (getBBox of the C, the 4 and the T), 4 units clear. */
+const VIEWBOX = { x: 40.36, y: 88.3, w: 603.0, h: 385.28 };
+const MARK_HEIGHT = 232;
+const MARK_WIDTH = Math.round((MARK_HEIGHT * VIEWBOX.w) / VIEWBOX.h);
+const points = (pts) => pts.map(([x, y]) => `${x},${y}`).join(' ');
+
+const MARK = `<svg class="mark" viewBox="${VIEWBOX.x} ${VIEWBOX.y} ${VIEWBOX.w} ${VIEWBOX.h}" width="${MARK_WIDTH}" height="${MARK_HEIGHT}" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" role="img" aria-label="C4 Studios">
+    <path d="${MARK_C}" fill="#FFFFFF" transform="translate(-2.2 -2.2)"/>
+    <path d="${MARK_C}" fill="#C9C3BA" transform="translate(2.2 2.4)"/>
+    <path d="${MARK_C}" fill="#E7E3DC"/>
+    <polygon points="${points(MARK_BODY)}" fill="#A30000"/>
+    <polygon points="${points(MARK_ARM)}" fill="#22632F"/>
+  </svg>`;
 
 const HTML = `<!doctype html>
 <html><head><meta charset="utf-8" /><style>
   @font-face { font-family: 'Archivo'; font-style: normal; font-weight: 100 900; font-stretch: 62% 125%;
     font-display: block; src: url(/fonts/archivo-latin-3.woff2) format('woff2'); }
+  @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 400;
+    font-display: block; src: url(/fonts/b612-mono-latin-1.woff2) format('woff2'); }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { width: ${FRAME.width}px; height: ${FRAME.height}px; }
   body {
-    background: #0F1115;
-    color: #ECE7DE;
+    background: #F7F5F2;
+    color: #1A1A1A;
     font-family: 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     position: relative;
     overflow: hidden;
   }
-  .grain { position: absolute; inset: 0; opacity: 0.06; pointer-events: none;
-    background-image: radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px);
-    background-size: 3px 3px; }
-  .glow { position: absolute; bottom: -200px; left: 50%; transform: translateX(-50%);
-    width: 900px; height: 600px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(179,58,58,0.18), transparent 60%);
-    filter: blur(60px); }
-  .frame { position: absolute; inset: 56px; border: 1px solid rgba(236,231,222,0.08); border-radius: 14px; }
-  /* Everything with words in it, in flow. The measures below put each block
-     where the pinned layout had it: the label at 88px, the headline at 178px,
-     the paragraph ending at 450px and the footer ending at 542px. */
-  .card { position: absolute; inset: ${FRAME.inset}px; display: flex; flex-direction: column; }
-  .label { font-size: 14px; line-height: 20px; letter-spacing: 0.32em; text-transform: uppercase;
-    color: rgba(236,231,222,0.45); font-weight: 500; }
-  .label::before { content: ""; display: inline-block; width: 36px; height: 1px;
-    background: #B33A3A; margin-right: 14px; transform: translateY(-4px); }
-  h1 { margin-top: 70px;
-    font-size: 92px; font-weight: 600; letter-spacing: -0.045em; line-height: 0.98;
-    max-width: 980px; }
-  .accent { color: #B33A3A; }
-  /* margin-top: auto takes up the slack above the paragraph, and the padding
-     keeps 28px clear under the headline's descenders when there is none. */
-  .sub { margin-top: auto; padding-top: 28px;
-    font-size: 22px; line-height: 1.45; color: rgba(236,231,222,0.65);
-    font-weight: 400; max-width: 820px; letter-spacing: -0.005em; }
-  .footer { margin-top: 64px;
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: 16px; line-height: 28px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: rgba(236,231,222,0.5); font-weight: 500; }
-  .brand { font-size: 22px; letter-spacing: -0.02em; text-transform: none; color: #ECE7DE; font-weight: 600; }
+  /* The mark and the words side by side, centred on the card's height. */
+  .card { position: absolute; inset: 0; display: flex; align-items: center; padding-left: 100px; gap: 76px; }
+  .mark { flex: none; display: block; }
+  h1 { font-size: ${SIZES.h1}px; font-weight: 660; font-variation-settings: 'wdth' 97;
+    letter-spacing: -0.035em; line-height: 1; white-space: nowrap; }
+  .addr { margin-top: 30px; font-family: 'B612 Mono', ui-monospace, Menlo, monospace;
+    font-size: ${SIZES.addr}px; font-feature-settings: 'tnum', 'zero'; letter-spacing: 0.02em;
+    color: #6B6A64; white-space: nowrap; }
 </style></head><body>
-  <div class="glow"></div>
-  <div class="grain"></div>
-  <div class="frame"></div>
   <main class="card">
-    <div class="label">C4 Studios — Perth</div>
-    <h1>Websites, photography, SEO <span class="accent">&amp;</span> logos.</h1>
-    <p class="sub">A Perth design and development studio building flagship websites and software, with brand-led photography, SEO and logo design, for ambitious founders.</p>
-    <div class="footer">
-      <span class="brand">c4studios.com.au</span>
-      <span>Founder-led · Est. 2025</span>
+    ${MARK}
+    <div class="words">
+      <h1>Websites,<br />photography,<br />SEO &amp; logos.</h1>
+      <p class="addr">c4studios.com.au · Perth</p>
     </div>
   </main>
 </body></html>`;
@@ -101,39 +97,35 @@ export async function generateOgImage(browser, baseUrl, outputPath) {
     await page.route(cardUrl, (route) => route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: HTML }));
     await page.goto(cardUrl, { waitUntil: 'load' });
 
-    const result = await page.evaluate(async (bottomLimit) => {
-      await Promise.all(['500 14px', '600 92px', '400 22px', '600 22px'].map((f) => document.fonts.load(`${f} Archivo`))).catch(() => {});
+    const result = await page.evaluate(async ({ rightLimit, sizes }) => {
+      await Promise.all([`660 ${sizes.h1}px Archivo`, `400 ${sizes.addr}px "B612 Mono"`].map((f) => document.fonts.load(f))).catch(() => {});
       await document.fonts.ready;
-      const archivo = [...document.fonts].some((f) => f.family.replace(/["']/g, '') === 'Archivo' && f.status === 'loaded');
+      const loaded = (family) => [...document.fonts].some((f) => f.family.replace(/["']/g, '') === family && f.status === 'loaded');
 
-      // A safety net for a face the layout wasn't drawn for. With Archivo
-      // loaded it never moves anything.
+      // A safety net for a face the layout wasn't drawn for. With Archivo and
+      // B612 Mono loaded it never moves anything.
+      const words = document.querySelector('.words');
       const h1 = document.querySelector('h1');
-      const sub = document.querySelector('.sub');
-      const footer = document.querySelector('.footer');
-      const over = () => footer.getBoundingClientRect().bottom > bottomLimit + 0.5;
-      let h1Size = 92;
-      while (over() && h1Size > 60) { h1Size -= 2; h1.style.fontSize = `${h1Size}px`; }
-      let subSize = 22;
-      while (over() && subSize > 18) { subSize -= 1; sub.style.fontSize = `${subSize}px`; }
+      const addr = document.querySelector('.addr');
+      const over = () => words.getBoundingClientRect().right > rightLimit + 0.5;
+      let h1Size = sizes.h1;
+      while (over() && h1Size > 40) { h1Size -= 2; h1.style.fontSize = `${h1Size}px`; }
+      let addrSize = sizes.addr;
+      while (over() && addrSize > 16) { addrSize -= 1; addr.style.fontSize = `${addrSize}px`; }
 
-      // Where the words themselves sit (a range, so the paragraph's padding
-      // isn't counted as text).
-      const ink = (el) => {
-        const range = document.createRange();
-        range.selectNodeContents(el);
-        const r = range.getBoundingClientRect();
-        return { top: Math.round(r.top), bottom: Math.round(r.bottom) };
+      const box = (el) => {
+        const r = el.getBoundingClientRect();
+        return { left: Math.round(r.left), top: Math.round(r.top), right: Math.round(r.right), bottom: Math.round(r.bottom) };
       };
       return {
-        archivo,
+        archivo: loaded('Archivo'),
+        b612: loaded('B612 Mono'),
         h1Size,
-        subSize,
+        subSize: addrSize,
         fits: !over(),
-        headlineLines: Math.round(h1.getBoundingClientRect().height / parseFloat(getComputedStyle(h1).lineHeight)),
-        text: { h1: ink(h1), sub: ink(sub), footer: ink(footer) },
+        text: { mark: box(document.querySelector('.mark')), h1: box(h1), addr: box(addr) },
       };
-    }, FRAME.height - FRAME.inset);
+    }, { rightLimit: FRAME.width - FRAME.right, sizes: SIZES });
 
     await page.screenshot({ path: outputPath, type: 'png', clip: { x: 0, y: 0, width: FRAME.width, height: FRAME.height } });
     return result;
