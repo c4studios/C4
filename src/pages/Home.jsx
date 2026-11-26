@@ -32,8 +32,9 @@ export default function Home() {
           {/* Hero carries the live CraftHeatmap work-proof surface. */}
           <HeroSection />
           <FourDoors />
-          {/* Quotr: the studio's own estimator, every figure from pricing.js. */}
-          <Quotr />
+          {/* Quotr: the studio's own estimator, every figure from pricing.js.
+              #prices is where /pricing lands (public/_redirects). */}
+          <Quotr id="prices" />
           <TestimonialsProof />
           <FinalCTA />
         </div>

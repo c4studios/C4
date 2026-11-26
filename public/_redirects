@@ -20,6 +20,10 @@
 /Services   /  301
 /Services/  /  301
 
+# /pricing never had a page and 404'd (Caleb, 1 Sep 2026), so since 27 Nov 2026 it lands on the home page's price tool.
+/pricing   /#prices  301
+/pricing/  /#prices  301
+
 # Retired legacy paths — server-side mirrors of the client redirects in
 # src/App.jsx, so old links 301 without booting the SPA first.
 # The old brand service page. Brand work sat under C4 Lens until logo design

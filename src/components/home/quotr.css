@@ -14,6 +14,11 @@
   --qt-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --qt-gutter: 1.5rem;
 }
+/* An anchored instance (the home page's #prices, where /pricing lands since
+   27 Nov 2026) lands with its top under the fixed header, 73px tall. Below
+   about 1040 wide the section's top padding is shorter than the header, so
+   without this the heading landed behind it. */
+.qt[id] { scroll-margin-top: 73px; }
 .qt-frame { max-width: 1400px; margin: 0 auto; padding: 0 var(--qt-gutter); }
 @container qt (min-width: 768px) { .qt-frame { --qt-gutter: 3rem; } }
 

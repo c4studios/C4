@@ -204,12 +204,13 @@ function Choices({ labelledBy, items, value, onSelect, onCommit, render, classNa
   );
 }
 
-export default function Quotr({ compact = false, heading = 'Price it yourself.' }) {
+export default function Quotr({ compact = false, heading = 'Price it yourself.', id }) {
   /* Named, not useId(): the prerendered HTML keeps the ids its own render
      made, which aren't the ones a hydrating page makes, and every question
      after the first mounts later and points back at them (15 Oct 2026). One
      Quotr per page: the full one on the home page, the compact one on
-     /welcome. */
+     /welcome. `id` is the section's own anchor, given by the page that
+     mounts it: the home page's is #prices, where /pricing lands. */
   const uid = compact ? 'qt-compact' : 'qt';
   const still = useStaticMode();
   const buzz = useBuzz(still);
@@ -601,6 +602,7 @@ export default function Quotr({ compact = false, heading = 'Price it yourself.' 
   return (
     <section
       ref={rootRef}
+      id={id}
       className={`qt${compact ? ' qt--compact' : ''}${isFinal ? ' is-final' : ''}${still ? ' is-still' : ''}${live && !still ? ' is-live' : ''}`}
       aria-labelledby={`${uid}-h`}
     >
