@@ -1,0 +1,312 @@
+{
+  "version": 3,
+  "sourceUrl": "https://www.jurassicpt.com",
+  "slug": "jurassic-pt-vercel-app",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 13,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "Welcome to Jurassic PT. Shelley’s own badge is the crest, set on the red of the team’s singlets",
+          "route": "/",
+          "bytes": 235371,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-hero.png"
+        },
+        {
+          "id": "02-start",
+          "caption": "Where are you starting from? The first of two questions, asked one at a time with three plain answers",
+          "route": "/",
+          "bytes": 340979,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-start.png"
+        },
+        {
+          "id": "03-huskies",
+          "caption": "Bring the baby. Meet the huskies. Photos from Shelley’s Instagram, framed like a clubroom wall",
+          "route": "/",
+          "bytes": 994442,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-huskies.png"
+        },
+        {
+          "id": "04-owner",
+          "caption": "Owner-led, from the very first hello. Shelley’s background, and a member’s line quoted exactly, with an ellipsis where words are cut",
+          "route": "/",
+          "bytes": 351484,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-owner.png"
+        },
+        {
+          "id": "05-member-words",
+          "caption": "The honour board: twelve members’ testimonials in full and word for word, narrowed by the situations a visitor picks",
+          "route": "/",
+          "bytes": 164568,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-member-words.png"
+        },
+        {
+          "id": "06-classes",
+          "caption": "Find your class. Seven coached classes in one column, each opening to say what it involves. Here, Big Bang Circuit",
+          "route": "/",
+          "bytes": 100438,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-classes.png"
+        },
+        {
+          "id": "07-join",
+          "caption": "Ways to join: three memberships priced by the week, and the two-week intro offer underneath",
+          "route": "/",
+          "bytes": 106061,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/07-join.png"
+        },
+        {
+          "id": "08-find",
+          "caption": "Find the studio: the shopfront on Federation Ln, with the address beside it",
+          "route": "/",
+          "bytes": 477368,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/08-find.png"
+        },
+        {
+          "id": "09-memberships",
+          "caption": "Memberships and prices, with the first-two-weeks offer in its own band",
+          "route": "/memberships",
+          "bytes": 204049,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/09-memberships.png"
+        },
+        {
+          "id": "10-personal-training",
+          "caption": "Personal training: one-on-one coaching around your schedule",
+          "route": "/personal-training",
+          "bytes": 389358,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/10-personal-training.png"
+        },
+        {
+          "id": "11-massage",
+          "caption": "Remedial massage, with the four treatments listed underneath",
+          "route": "/remedial-massage",
+          "bytes": 440189,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/11-massage.png"
+        },
+        {
+          "id": "12-contact",
+          "caption": "The consult request. Visitors choose how Shelley gets in touch, and their finder answers come with them",
+          "route": "/contact",
+          "bytes": 159109,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/12-contact.png"
+        },
+        {
+          "id": "13-finder",
+          "caption": "Two answers later: the classes that suit and one button to book the consult, where Shelley checks the fit",
+          "route": "/",
+          "bytes": 85240,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/13-finder.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 13,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "Welcome to Jurassic PT. Shelley’s own badge is the crest, set on the red of the team’s singlets",
+          "route": "/",
+          "bytes": 675833,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-hero.png"
+        },
+        {
+          "id": "02-start",
+          "caption": "Where are you starting from? The first of two questions, asked one at a time with three plain answers",
+          "route": "/",
+          "bytes": 210801,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-start.png"
+        },
+        {
+          "id": "03-huskies",
+          "caption": "Bring the baby. Meet the huskies. Photos from Shelley’s Instagram, framed like a clubroom wall",
+          "route": "/",
+          "bytes": 1029771,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-huskies.png"
+        },
+        {
+          "id": "04-owner",
+          "caption": "Owner-led, from the very first hello. Shelley’s background, and a member’s line quoted exactly, with an ellipsis where words are cut",
+          "route": "/",
+          "bytes": 518437,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-owner.png"
+        },
+        {
+          "id": "05-member-words",
+          "caption": "The honour board: twelve members’ testimonials in full and word for word, narrowed by the situations a visitor picks",
+          "route": "/",
+          "bytes": 189909,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/05-member-words.png"
+        },
+        {
+          "id": "06-classes",
+          "caption": "Find your class. Seven coached classes in one column, each opening to say what it involves. Here, Big Bang Circuit",
+          "route": "/",
+          "bytes": 160646,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-classes.png"
+        },
+        {
+          "id": "07-join",
+          "caption": "Ways to join: three memberships priced by the week, and the two-week intro offer underneath",
+          "route": "/",
+          "bytes": 150801,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/07-join.png"
+        },
+        {
+          "id": "08-find",
+          "caption": "Find the studio: the shopfront on Federation Ln, with the address beside it",
+          "route": "/",
+          "bytes": 699109,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/08-find.png"
+        },
+        {
+          "id": "09-memberships",
+          "caption": "Memberships and prices, with the first-two-weeks offer in its own band",
+          "route": "/memberships",
+          "bytes": 635432,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/09-memberships.png"
+        },
+        {
+          "id": "10-personal-training",
+          "caption": "Personal training: one-on-one coaching around your schedule",
+          "route": "/personal-training",
+          "bytes": 577039,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/10-personal-training.png"
+        },
+        {
+          "id": "11-massage",
+          "caption": "Remedial massage, with the four treatments listed underneath",
+          "route": "/remedial-massage",
+          "bytes": 794944,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/11-massage.png"
+        },
+        {
+          "id": "12-contact",
+          "caption": "The consult request. Visitors choose how Shelley gets in touch, and their finder answers come with them",
+          "route": "/contact",
+          "bytes": 121635,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/12-contact.png"
+        },
+        {
+          "id": "13-finder",
+          "caption": "Two answers later: the classes that suit and one button to book the consult, where Shelley checks the fit",
+          "route": "/",
+          "bytes": 160449,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/13-finder.png"
+        }
+      ]
+    }
+  }
+}

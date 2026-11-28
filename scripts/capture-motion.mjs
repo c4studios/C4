@@ -38,9 +38,8 @@
  *   like a wheel, so Chrome's scroll anchoring can absorb a slider changing height above the fold.
  *   A hero video that plays once and has already ended is rewound for the clip (DS Racing).
  *
- * Not in SITES on purpose: jurassic-pt (until its redesign is live on jurassicpt.com; the stills
- * were shot from the preview, and the motion note prints the host it was captured from),
- * people-power (hidden), rocksstream (behind a login). sgr-prestige, wooster-core, jk-plumbing-solutions and barrys-drink were added
+ * Not in SITES on purpose: people-power (hidden), rocksstream (behind a login). jurassic-pt was
+ * added 29 Nov 2026, once its redesign was live on jurassicpt.com (27 Nov 2026). sgr-prestige, wooster-core, jk-plumbing-solutions and barrys-drink were added
  * 4 Oct 2026, after their redesigns shipped.
  */
 import { spawnSync } from 'node:child_process';
@@ -178,6 +177,9 @@ const SITES = {
     storage: { 'barry-concept-age': 'ok' },
   },
   'as-he-leads': { url: 'https://www.asheleads.com.au/', folder: 'asheleads-com-au' },
+  /* No before: the archive has not been searched yet for the site she had before C4's March 2026
+     build. The folder keeps the name of the October preview it was first shot from. */
+  'jurassic-pt': { url: 'https://www.jurassicpt.com/', folder: 'jurassic-pt-vercel-app' },
 };
 
 /* ---------- arguments ---------- */

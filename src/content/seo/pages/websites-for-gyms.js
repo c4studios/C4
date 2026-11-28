@@ -3,8 +3,14 @@
  * Proof: HVN Gym (full build per brief, plus a C4 Lens home page film:
  * aerial footage and a walk through the gym), Jurassic PT (Cannington
  * studio, case study).
- * Unique detail: the timetable-as-screenshot pain and Jurassic PT's
- * dual timetable (image + structured weekly summary).
+ * Unique detail: the timetable-as-screenshot pain.
+ *
+ * Corrected 29 Nov 2026: the page said C4 shipped Jurassic PT's timetable
+ * two ways and that the site has direct booking. Jurassic retired its
+ * timetable image and PT Mate booking on 13 Jul 2026 (jurassic-pt commit
+ * 9b6fc05), and the redesign live since 27 Nov 2026 leads every visitor to
+ * a free consult instead, so the Jurassic lines now say what the live site
+ * does. Do not add the timetable claim back.
  *
  * Corrected 9 Oct 2026 (no figure added): HVN's line said "drone and
  * full-show event coverage through C4 Lens". The work on file is the home
@@ -37,7 +43,7 @@ export default {
       label: 'What we build',
       heading: 'What does a gym website actually need to do?',
       body: [
-        'Three jobs, in order: show the timetable clearly, make joining or booking a trial effortless, and prove the community is real. Everything else is decoration. So we build timetables as structured, phone-first layouts — when we built Jurassic PT’s site we shipped the timetable two ways, the familiar image version and a responsive weekly summary, so it works for the regular glancing at tomorrow and the newcomer planning a first visit.',
+        'Three jobs, in order: show the timetable clearly, make joining or booking a trial effortless, and prove the community is real. Everything else is decoration. So we build timetables as structured, phone-first layouts that work for the regular glancing at tomorrow and the newcomer planning a first visit.',
         'Joining flows connect to whatever runs your floor — your booking app, your membership system, or a simple lead form that lands in your inbox with the trial request pre-qualified. And because half the battle is proof, the build is planned around real imagery: your space, your coaches, your members mid-session.',
       ],
     },
@@ -47,7 +53,7 @@ export default {
       heading: 'Fitness work we can point to',
       cases: [
         { name: 'HVN Gym', summary: 'A full website build, plus a home page film through C4 Lens: aerial footage of the building and a walk through the gym. Site and content came from the same studio, so they match.', tag: 'Build + content' },
-        { name: 'Jurassic PT', summary: 'A Cannington fitness studio site covering memberships, classes, personal training and remedial massage — with direct booking and a dual-format timetable.', href: '/CaseStudy/jurassic-pt', tag: 'Live build' },
+        { name: 'Jurassic PT', summary: 'A Cannington fitness studio site with prices in the open and a two-question finder that suggests classes for people starting out or coming back.', href: '/CaseStudy/jurassic-pt', tag: 'Live build' },
       ],
     },
     {

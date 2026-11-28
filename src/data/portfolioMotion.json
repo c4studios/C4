@@ -605,5 +605,32 @@
     "frameable": false,
     "frameHeader": "content-security-policy: frame-ancestors 'none'",
     "before": null
+  },
+  "jurassic-pt": {
+    "liveUrl": "https://www.jurassicpt.com/",
+    "capturedOn": "2026-11-29",
+    "scroll": {
+      "desktop": {
+        "src": "/captures/jurassic-pt-vercel-app/motion/scroll-desktop.webp",
+        "w": 1440,
+        "h": 5400
+      },
+      "mobile": {
+        "src": "/captures/jurassic-pt-vercel-app/motion/scroll-mobile.webp",
+        "w": 560,
+        "h": 8483
+      }
+    },
+    "play": {
+      "mp4": "/captures/jurassic-pt-vercel-app/motion/play.mp4",
+      "webm": "/captures/jurassic-pt-vercel-app/motion/play.webm",
+      "poster": "/captures/jurassic-pt-vercel-app/motion/play-poster.webp",
+      "w": 960,
+      "h": 600,
+      "seconds": 7
+    },
+    "frameable": false,
+    "frameHeader": "content-security-policy: frame-ancestors 'none'",
+    "before": null
   }
 }

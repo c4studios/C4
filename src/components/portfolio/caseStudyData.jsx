@@ -649,7 +649,7 @@ export const CASE_STUDIES = {
     brandColor: '#D3171F',
     thumbnail: '/captures/jurassic-pt-vercel-app/desktop/01-hero.png',
 
-    overview: 'Jurassic PT is a small group training studio in Cannington, run by Shelley, a midwife and nurse who is also a specialist personal trainer. C4 built the studio’s site in early 2026, then redesigned it in October in a direction called the Home kit, which dresses the site like the club. The red comes from the team’s singlets. The ink, cream and gold come from Shelley’s badge, and the badge itself is the crest. The photos are hers, from her Instagram, each recorded with the post it came from. Two quick questions suggest classes, and the answers follow the visitor through the site and into the consult form. Member testimonials appear in full and word for word, and the build fails if a shorter excerpt stops matching its source. Every page ships as real HTML for search engines, and every page leads to the same first step, a free consult with Shelley.',
+    overview: 'Jurassic PT is a small group training studio in Cannington, run by Shelley, a registered health professional who is also a specialist personal trainer. C4 built the studio’s site in early 2026, then redesigned it in October to dress it like the club. The red comes from the team’s singlets. The ink, cream and gold come from Shelley’s badge, and the badge itself is the crest. The photos are hers, from her Instagram, each recorded with the post it came from. Two quick questions suggest classes, and the answers follow the visitor through the site and into the consult form. Member testimonials appear in full and word for word, and the build fails if a shorter excerpt stops matching its source. Every page ships as real HTML for search engines, and every page leads to the same first step, a free consult with Shelley.',
 
     screenshots: [
       { url: '/captures/jurassic-pt-vercel-app/desktop/01-hero.png', caption: 'Welcome to Jurassic PT. Shelley’s own badge is the crest, set on the red of the team’s singlets' },
@@ -700,14 +700,14 @@ export const CASE_STUDIES = {
     ],
 
     delivered: [
-      'A redesign of every page in the Home kit direction, with Shelley’s own badge as the crest',
+      'A redesign of every page, dressed like the club, with Shelley’s own badge as the crest',
       'Photos from Shelley’s Instagram, framed like a clubroom wall, each recorded with its source post',
       'A two-question finder that suggests classes and carries the answers into the consult form',
       'An honour board of twelve member testimonials, in full and word for word, filtered by situation',
       'A class list where each class opens to say what it involves, with a consult link that names the class',
       'Build-time prerendering, so every page ships real HTML with one h1 and its own title, description and canonical',
       'vercel.json rewritten so its security headers take effect, plus a real 404 page',
-      'A share image made from the badge',
+      'A share image with the badge beside the team at a fun run',
     ],
 
     features: [
@@ -745,7 +745,7 @@ export const CASE_STUDIES = {
       'One h1 per page in the prerendered HTML, no heading skips, no unnamed controls and no missing alt text',
       'Keyboard pass through the home page, the finder and the consult form',
       'Reduced motion turns off the crest settle and the panel transitions',
-      'Every security header in vercel.json present on the deployed preview',
+      'Every security header in vercel.json present on the live site',
     ],
 
     challenges: [
