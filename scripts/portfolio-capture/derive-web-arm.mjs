@@ -31,7 +31,11 @@ import path from 'node:path';
 export const DERIVE = {
   'ds-racing-karts': 'dsracingkarts-com-au/desktop/01-hero.png',
   'evidence-advisory': 'evidenceadvisory-com-au/desktop/01-hero.png',
-  'tidy-gardens-australia': 'tidygardens-com-au/desktop/01-hero.png',
+  // Not 01-hero since the refurbish (28 Nov 2026): that first screen is two
+  // yard photos of soil and grass and lands at 132KB at the q=60 floor. The
+  // Why us frame fits at q=70 and shows Mark's trailer, the sign the site's
+  // whole look is taken from.
+  'tidy-gardens-australia': 'tidygardens-com-au/desktop/09-why-choose-us.png',
   'hvn-gym': 'thehvncrossfit-com/desktop/01-hero.png',
   'sharp-bricklaying': 'sharpbricklaying-com-au/desktop/01-hero.png',
   'groverz-tax': 'groverztax-com-au/desktop/01-hero.png',

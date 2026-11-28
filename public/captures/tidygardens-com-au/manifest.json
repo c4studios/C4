@@ -1,0 +1,224 @@
+{
+  "version": 3,
+  "sourceUrl": "https://tidygardens.com.au",
+  "slug": "tidygardens-com-au",
+  "curated": true,
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "captureCount": 12,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "The home page opens on Mark’s photos of one back yard, before and after, and the line between the two slides across once as it loads. The headline is the tagline on his trailer sign",
+          "route": "/",
+          "bytes": 1612214,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/01-hero.png"
+        },
+        {
+          "id": "02-prices",
+          "caption": "The price list: one row per service, each with Mark’s photo of the work and how it’s priced. See prices on the first screen comes straight here",
+          "route": "/",
+          "bytes": 298056,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/02-prices.png"
+        },
+        {
+          "id": "03-install",
+          "caption": "The one-stop shop as a ruled list, then one front yard going from the old reticulation to new turf in seven of Mark’s photos, in the order the job happened",
+          "route": "/",
+          "bytes": 656920,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/03-install.png"
+        },
+        {
+          "id": "11-quote",
+          "caption": "The quote form sits on a white board inside the brown strip. The trailer sign carries Mark’s email and website in the same strip along its foot",
+          "route": "/",
+          "bytes": 112613,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/11-quote.png"
+        },
+        {
+          "id": "04-reticulation",
+          "caption": "Reticulation. Each service page opens like the sign, with the lettering on a white board and the brown strip underneath, and the poly pipe runs down the margin",
+          "route": "/reticulation",
+          "bytes": 836684,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/04-reticulation.png"
+        },
+        {
+          "id": "05-reticulation-pipe",
+          "caption": "Three reticulation jobs as before and after photos, each with a line to drag. In the margin, the poly pipe fills with water as you scroll",
+          "route": "/reticulation",
+          "bytes": 1151423,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/05-reticulation-pipe.png"
+        },
+        {
+          "id": "06-lawn-care",
+          "caption": "Lawn care. The mower cuts the long grass in the margin as you scroll, beside the before and after of a new lawn",
+          "route": "/lawn-care",
+          "bytes": 980789,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/06-lawn-care.png"
+        },
+        {
+          "id": "07-garden-maintenance",
+          "caption": "Garden maintenance, set out in ruled lists where the old site had icon cards. The vine grows down the margin as you read",
+          "route": "/garden-maintenance",
+          "bytes": 159378,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/07-garden-maintenance.png"
+        },
+        {
+          "id": "12-mini-loader",
+          "caption": "Mini loader and clean-ups, with Mark’s photo of the UHI mini loader, which comes with an operator",
+          "route": "/cleanups-machinery",
+          "bytes": 474847,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/12-mini-loader.png"
+        },
+        {
+          "id": "08-gallery",
+          "caption": "The gallery, in Mark’s photos from his jobs",
+          "route": "/gallery",
+          "bytes": 1478959,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/08-gallery.png"
+        },
+        {
+          "id": "09-why-choose-us",
+          "caption": "Why us, beside a photo of Mark’s trailer, the sign the whole look is taken from",
+          "route": "/why-choose-us",
+          "bytes": 547932,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/09-why-choose-us.png"
+        },
+        {
+          "id": "10-contact",
+          "caption": "Contact: the quote form, with the phone number and email beside it",
+          "route": "/contact",
+          "bytes": 99899,
+          "dimensions": {
+            "width": 1440,
+            "height": 900
+          },
+          "filePath": "desktop/10-contact.png"
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "captureCount": 6,
+      "captures": [
+        {
+          "id": "01-hero",
+          "caption": "The home page opens on Mark’s photos of one back yard, before and after, and the line between the two slides across once as it loads. The headline is the tagline on his trailer sign",
+          "route": "/",
+          "bytes": 1235369,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/01-hero.png"
+        },
+        {
+          "id": "06-prices",
+          "caption": "The price list on a phone",
+          "route": "/",
+          "bytes": 406160,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/06-prices.png"
+        },
+        {
+          "id": "02-reticulation",
+          "caption": "Reticulation on a phone: Mark’s photo first, then the lettering",
+          "route": "/reticulation",
+          "bytes": 844165,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/02-reticulation.png"
+        },
+        {
+          "id": "03-lawn-care",
+          "caption": "Lawn care on a phone",
+          "route": "/lawn-care",
+          "bytes": 963891,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/03-lawn-care.png"
+        },
+        {
+          "id": "04-gallery",
+          "caption": "The gallery on a phone",
+          "route": "/gallery",
+          "bytes": 1066527,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/04-gallery.png"
+        },
+        {
+          "id": "05-contact",
+          "caption": "Contact on a phone, with the call button above the form",
+          "route": "/contact",
+          "bytes": 121994,
+          "dimensions": {
+            "width": 860,
+            "height": 1864
+          },
+          "filePath": "mobile/05-contact.png"
+        }
+      ]
+    }
+  }
+}

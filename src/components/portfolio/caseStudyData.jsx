@@ -2277,10 +2277,13 @@ export const CASE_STUDIES = {
   'tidy-gardens-australia': {
     slug: 'tidy-gardens-australia',
     name: 'Tidy Gardens Australia',
-    oneLiner: 'A motion-led marketing site for a Perth garden & reticulation business — with a living scroll motif that grows as you read.',
+    oneLiner: 'The website for a Perth reticulation and garden business, refurbished in November 2026 in the look of the owner’s trailer sign.',
     client: 'Tidy Gardens Australia',
     location: 'Perth, WA',
-    timeline: '',
+    /* Refurbished 27 to 28 Nov 2026 in the look of Mark's trailer sign, live on
+       28 Nov (brain rows 433 and 537; the Tidy repo's DESIGN.md records the
+       look). Captures retaken from the live site the same day. */
+    timeline: 'First deployed 23 Jun 2026, refurbished 27–28 Nov 2026',
     budget: '',
     role: 'Solo (design, development, domain recovery & migration, deployment)',
     liveUrl: 'https://tidygardens.com.au',
@@ -2291,104 +2294,136 @@ export const CASE_STUDIES = {
        deployment from before the 23rd is kept. */
     firstDeployed: '2026-06-23',
     category: 'web_design',
-    tags: ['Website', 'Landscaping', 'Scroll Animation', 'Next.js', 'Local Business', 'SEO'],
+    tags: ['Website', 'Gardens & Reticulation', 'Refurbishment', 'Scroll Animation', 'Next.js', 'Perth'],
     featured: true,
     budgetOrder: 3,
 
+    /* The cover is the live first screen at 1600 x 1000, shot by
+       portfolio-capture/recapture.mjs with the captures. brandColor is the
+       sign's brown strip (brown-strip in the Tidy repo's lib/theme.ts). */
     cover: '/covers/tidy-gardens-australia.png',
-    brandColor: '#1e3a2a',
+    brandColor: '#5F4330',
     thumbnail: '/captures/tidygardens-com-au/desktop/01-hero.png',
+    /* Straight apostrophe: photoCredit is set in B612 Mono. */
+    photoCredit: 'The photos in these screenshots are Tidy Gardens Australia\'s own.',
 
-    overview: 'A complete marketing site for Tidy Gardens Australia, a Perth garden, lawn and reticulation business. Its signature is a route-aware "scroll spine" down the left gutter — a vine that grows and sprouts leaves on the home page, a poly-pipe that fills with water and triggers pop-up sprinklers on the reticulation page, and a lawn mower that mows tall grass into a clean striped lawn on the lawn-care page — all scroll-linked and pinned to real page geometry. Around it sit four service pages, a gallery with a drag-to-compare before/after slider, a quote form that emails leads straight to the owner, full SEO and accessibility, and a slim scaled-down version of the motif on mobile. Delivered end-to-end — real photography, branded email, automatic SSL, and a live domain migrated off a defunct provider.',
+    overview: 'Tidy Gardens Australia is Mark’s reticulation and garden business, based in Applecross and working south of the river and in the South West. C4 built the site in June 2026, and in November 2026 brought every page into the look of Mark’s trailer sign: a white board with brown lettering, and a brown strip along the foot. The home page opens on Mark’s photos of one back yard, before and after, and the line between the two slides across once as the page loads. The headline is the tagline on his trailer. Each service page opens the way the sign is laid out, and a price list on the home page shows how every service is priced, with See prices going straight to it. The motion from the first build is still there. A vine grows down the margin of most pages as you scroll. On the reticulation page it’s a poly pipe that fills with water, and on lawn care a mower cuts the grass. The before and after sliders stay too, and so does the quote form, which emails each enquiry to Mark.',
 
+    /* Captions match portfolio-capture/recapture.config.mjs. The portfolio
+       card shows the cover, which is the first screen, beside the first three
+       of `screenshots`, so this list starts past it. The case study's own
+       gallery reads desktopScreenshots, in the order of the pages. */
     screenshots: [
-      { url: '/captures/tidygardens-com-au/desktop/01-hero.png', caption: 'Hero — "Reticulation, lawns & gardens" over a real Perth backyard lawn, with the climbing-vine scroll motif down the left gutter' },
-      { url: '/captures/tidygardens-com-au/desktop/02-home-vine.png', caption: 'Home — "Four services, one trusted team" as the vine grows on scroll' },
-      { url: '/captures/tidygardens-com-au/desktop/03-home-services.png', caption: 'Home — "Trained across Perth & the South West" service overview' },
-      { url: '/captures/tidygardens-com-au/desktop/04-reticulation.png', caption: 'Reticulation — repairs, installations and controller replacement' },
-      { url: '/captures/tidygardens-com-au/desktop/05-reticulation-pipe.png', caption: 'Reticulation — scheduling and before/after pump & sprinkler work' },
-      { url: '/captures/tidygardens-com-au/desktop/06-lawn-care.png', caption: 'Lawn Care — the scroll-driven lawnmower motif cutting tall grass into a clean striped lawn' },
-      { url: '/captures/tidygardens-com-au/desktop/07-garden-maintenance.png', caption: 'Garden Maintenance — ongoing care plans' },
-      { url: '/captures/tidygardens-com-au/desktop/08-gallery.png', caption: 'Gallery — real client photography with drag-to-compare before/after sliders' },
-      { url: '/captures/tidygardens-com-au/desktop/09-why-choose-us.png', caption: 'Why Choose Us — "six reasons to call us first"' },
-      { url: '/captures/tidygardens-com-au/desktop/10-contact.png', caption: 'Contact — "Tell us about your garden" quote-request form' },
+      { url: '/captures/tidygardens-com-au/desktop/02-prices.png', caption: 'The price list: one row per service, each with Mark’s photo of the work and how it’s priced. See prices on the first screen comes straight here' },
+      { url: '/captures/tidygardens-com-au/desktop/04-reticulation.png', caption: 'Reticulation. Each service page opens like the sign, with the lettering on a white board and the brown strip underneath, and the poly pipe runs down the margin' },
+      { url: '/captures/tidygardens-com-au/desktop/06-lawn-care.png', caption: 'Lawn care. The mower cuts the long grass in the margin as you scroll, beside the before and after of a new lawn' },
+      { url: '/captures/tidygardens-com-au/desktop/01-hero.png', caption: 'The home page opens on Mark’s photos of one back yard, before and after, and the line between the two slides across once as it loads. The headline is the tagline on his trailer sign' },
+      { url: '/captures/tidygardens-com-au/desktop/03-install.png', caption: 'The one-stop shop as a ruled list, then one front yard going from the old reticulation to new turf in seven of Mark’s photos, in the order the job happened' },
+      { url: '/captures/tidygardens-com-au/desktop/11-quote.png', caption: 'The quote form sits on a white board inside the brown strip. The trailer sign carries Mark’s email and website in the same strip along its foot' },
+      { url: '/captures/tidygardens-com-au/desktop/05-reticulation-pipe.png', caption: 'Three reticulation jobs as before and after photos, each with a line to drag. In the margin, the poly pipe fills with water as you scroll' },
+      { url: '/captures/tidygardens-com-au/desktop/07-garden-maintenance.png', caption: 'Garden maintenance, set out in ruled lists where the old site had icon cards. The vine grows down the margin as you read' },
+      { url: '/captures/tidygardens-com-au/desktop/12-mini-loader.png', caption: 'Mini loader and clean-ups, with Mark’s photo of the UHI mini loader, which comes with an operator' },
+      { url: '/captures/tidygardens-com-au/desktop/08-gallery.png', caption: 'The gallery, in Mark’s photos from his jobs' },
+      { url: '/captures/tidygardens-com-au/desktop/09-why-choose-us.png', caption: 'Why us, beside a photo of Mark’s trailer, the sign the whole look is taken from' },
+      { url: '/captures/tidygardens-com-au/desktop/10-contact.png', caption: 'Contact: the quote form, with the phone number and email beside it' },
     ],
 
     desktopScreenshots: [
-      { url: '/captures/tidygardens-com-au/desktop/01-hero.png', caption: 'Hero with the climbing-vine scroll motif' },
-      { url: '/captures/tidygardens-com-au/desktop/02-home-vine.png', caption: '"Four services, one trusted team"' },
-      { url: '/captures/tidygardens-com-au/desktop/04-reticulation.png', caption: 'Reticulation — repairs & installations' },
-      { url: '/captures/tidygardens-com-au/desktop/05-reticulation-pipe.png', caption: 'Reticulation — scheduling & before/after' },
-      { url: '/captures/tidygardens-com-au/desktop/06-lawn-care.png', caption: 'Lawn Care — the scroll-driven lawnmower motif' },
-      { url: '/captures/tidygardens-com-au/desktop/08-gallery.png', caption: 'Gallery — before/after photography' },
-      { url: '/captures/tidygardens-com-au/desktop/09-why-choose-us.png', caption: '"Six reasons to call us first"' },
-      { url: '/captures/tidygardens-com-au/desktop/10-contact.png', caption: 'Quote-request form' },
+      { url: '/captures/tidygardens-com-au/desktop/01-hero.png', caption: 'The home page opens on Mark’s photos of one back yard, before and after, and the line between the two slides across once as it loads. The headline is the tagline on his trailer sign' },
+      { url: '/captures/tidygardens-com-au/desktop/02-prices.png', caption: 'The price list: one row per service, each with Mark’s photo of the work and how it’s priced. See prices on the first screen comes straight here' },
+      { url: '/captures/tidygardens-com-au/desktop/03-install.png', caption: 'The one-stop shop as a ruled list, then one front yard going from the old reticulation to new turf in seven of Mark’s photos, in the order the job happened' },
+      { url: '/captures/tidygardens-com-au/desktop/11-quote.png', caption: 'The quote form sits on a white board inside the brown strip. The trailer sign carries Mark’s email and website in the same strip along its foot' },
+      { url: '/captures/tidygardens-com-au/desktop/04-reticulation.png', caption: 'Reticulation. Each service page opens like the sign, with the lettering on a white board and the brown strip underneath, and the poly pipe runs down the margin' },
+      { url: '/captures/tidygardens-com-au/desktop/05-reticulation-pipe.png', caption: 'Three reticulation jobs as before and after photos, each with a line to drag. In the margin, the poly pipe fills with water as you scroll' },
+      { url: '/captures/tidygardens-com-au/desktop/06-lawn-care.png', caption: 'Lawn care. The mower cuts the long grass in the margin as you scroll, beside the before and after of a new lawn' },
+      { url: '/captures/tidygardens-com-au/desktop/07-garden-maintenance.png', caption: 'Garden maintenance, set out in ruled lists where the old site had icon cards. The vine grows down the margin as you read' },
+      { url: '/captures/tidygardens-com-au/desktop/12-mini-loader.png', caption: 'Mini loader and clean-ups, with Mark’s photo of the UHI mini loader, which comes with an operator' },
+      { url: '/captures/tidygardens-com-au/desktop/08-gallery.png', caption: 'The gallery, in Mark’s photos from his jobs' },
+      { url: '/captures/tidygardens-com-au/desktop/09-why-choose-us.png', caption: 'Why us, beside a photo of Mark’s trailer, the sign the whole look is taken from' },
+      { url: '/captures/tidygardens-com-au/desktop/10-contact.png', caption: 'Contact: the quote form, with the phone number and email beside it' },
     ],
 
     mobileScreenshots: [
-      { url: '/captures/tidygardens-com-au/mobile/01-hero.png', caption: 'Mobile — hero with the scaled-down scroll motif' },
-      { url: '/captures/tidygardens-com-au/mobile/02-reticulation.png', caption: 'Mobile — reticulation services' },
-      { url: '/captures/tidygardens-com-au/mobile/03-lawn-care.png', caption: 'Mobile — lawn care' },
-      { url: '/captures/tidygardens-com-au/mobile/04-gallery.png', caption: 'Mobile — gallery before/after' },
-      { url: '/captures/tidygardens-com-au/mobile/05-contact.png', caption: 'Mobile — request-a-quote form' },
+      { url: '/captures/tidygardens-com-au/mobile/01-hero.png', caption: 'On a phone, the before and after sit on top, with the headline under them. Call now and Get a free quote stay along the foot of the screen' },
+      { url: '/captures/tidygardens-com-au/mobile/06-prices.png', caption: 'The price list on a phone' },
+      { url: '/captures/tidygardens-com-au/mobile/02-reticulation.png', caption: 'Reticulation on a phone: Mark’s photo first, then the lettering' },
+      { url: '/captures/tidygardens-com-au/mobile/03-lawn-care.png', caption: 'Lawn care on a phone' },
+      { url: '/captures/tidygardens-com-au/mobile/04-gallery.png', caption: 'The gallery on a phone' },
+      { url: '/captures/tidygardens-com-au/mobile/05-contact.png', caption: 'Contact on a phone, with the call button above the form' },
     ],
 
+    /* Checked against the live site and the Tidy repo at 04c7a0e on
+       28 Nov 2026: ten pages in the sitemap, every one served from Vercel's
+       cache; the form's honeypot and reply-to in app/api/lead/route.ts;
+       AVIF and WebP in next.config.mjs; the margin motifs' reduced-motion
+       paths; Google mail records on the domain. The widths checked come from
+       C4-Internal/ops/second-account/refurbish-STATE.md. */
     delivered: [
-      'Full marketing website — design and build (multi-page)',
-      'Custom scroll-linked SVG animation system (signature brand motifs)',
-      'Lead-capture quote form with server-side validation and email delivery',
-      'Real photography pipeline — client phone photos optimised and art-directed',
-      'Before/after interactive image comparisons across services',
-      'SEO foundation — metadata, sitemap, robots, Open Graph images',
-      'Privacy policy and cookieless analytics',
-      'Domain recovery from a defunct provider + DNS migration to Vercel (email preserved)',
-      "Production deployment with SSL on the client's own domain",
+      'The website: a home page, four service pages, a gallery, testimonials, why us, contact and a privacy page',
+      'A refurbishment in November 2026 that brought every page into the look of Mark’s trailer sign',
+      'A price list on the home page, which the See prices button goes to',
+      'Motion in the margin, drawn in SVG and driven by scroll, with its own motif on the reticulation and lawn care pages',
+      'Before and after sliders you can drag, or move with the arrow keys',
+      'A quote form that emails each enquiry to Mark, with replies going straight to the customer',
+      'Mark’s own photos, sized for every screen and served as AVIF or WebP',
+      'Page titles and descriptions, structured data, a sitemap and share images',
+      'A privacy page, and analytics that set no cookies',
+      'The domain recovered from a defunct provider and its DNS moved to Vercel, with Mark’s Google Workspace email kept running',
+      'Hosting on Vercel, with SSL on Mark’s own domain',
     ],
 
     features: [
-      'Scroll-linked motifs (climbing vine, reticulation sprinkler, lawnmower) that animate in lockstep with scroll position',
-      'Scale-aware, responsive animation engine that adapts the motifs across breakpoints',
-      'Accessible before/after slider (pointer, touch and keyboard) used on lawn, reticulation and pump galleries',
-      "Quote-request form with inline validation, spam honeypot, and transactional email to the client's inbox (reply-to set to the enquirer)",
-      'Dedicated service pages (reticulation, lawn care, garden maintenance, cleanups & machinery), plus gallery, testimonials and why-choose-us',
-      'Full prefers-reduced-motion support — animations degrade gracefully',
-      'Optimised, art-directed real client photography (AVIF/WebP)',
+      'Mark’s photos of one back yard, before and after, on the first screen. The line between them slides across once as the page loads, then rests for the visitor to drag',
+      'Service pages that open like the sign, with the lettering on a white board and the brown strip underneath',
+      'A price list with a row and a photo for each service',
+      'Ruled lists where the old site had icon cards',
+      'Reviews set as lettering under a heavy rule, word for word, with no star ratings',
+      'Lime from the sign kept rare: one main button on a screen, and the ring on each slider grip',
+      'Aleo, a slab serif, for the name and headings, with Source Sans 3 for reading',
+      'The mower only cuts forward, so a stretch once mown stays mown',
+      'The margin motifs hold still when a device asks for reduced motion',
+      'A call bar along the foot of the screen on phones',
+      'A honeypot on the quote form to catch spam bots',
     ],
 
     stack: [
       'Next.js 14 (App Router)',
       'React 18',
       'TypeScript',
-      'Tailwind CSS 3 (custom design tokens)',
-      'GSAP 3 + ScrollTrigger (@gsap/react)',
-      'Lenis (smooth scroll)',
-      'next/image + next/font (Inter + Fraunces)',
+      'Tailwind CSS 3, with the sign’s colours as the only palette',
+      'GSAP 3 and ScrollTrigger for the margin motifs',
+      'Lenis for smooth scrolling',
+      'next/image, and next/font for Aleo and Source Sans 3',
     ],
 
     integrations: [
-      'Resend — transactional lead email delivery',
-      'Vercel — hosting, CI/CD, DNS and domain',
-      'Vercel Analytics (cookieless)',
-      'Google Workspace email (preserved through the DNS migration)',
+      'Resend, for the quote form’s emails',
+      'Vercel, for hosting and DNS',
+      'Vercel Web Analytics, which sets no cookies',
+      'Google Workspace email, kept running through the DNS move',
+      'C4 Studios footer credit',
     ],
 
     performance: [
-      'Statically prerendered routes (16 pages)',
-      '~87–107 kB First Load JS per route',
-      'AVIF/WebP imagery, pipeline-optimised from source photos',
-      'Cookieless analytics — no consent banner needed',
-      'Smooth 60fps scroll animation via transform/clip-path (non-scaling-stroke), respecting reduced-motion',
+      'Every page prerendered as static HTML and served from Vercel’s cache, checked on all ten on 28 Nov 2026',
+      'Photos served as AVIF or WebP at the size each screen needs',
+      'Cookieless analytics, and no cookie banner',
+      'Every page checked at widths from 320 to 2560 px before launch, then live at 375 and 1280',
+      'The margin motifs and the sliding line hold still under reduced motion',
+      'Security headers that stop the site being framed',
     ],
 
     challenges: [
-      "Domain recovery: the previous 'host' turned out to be a defunct rent-a-website reseller that only managed DNS and never owned the domain. We traced ownership to the client's own GoDaddy account, recovered control, and migrated DNS to Vercel nameservers — all without interrupting the client's Google Workspace email.",
-      'Making the brand motifs read as genuinely scroll-driven — the lawnmower had to look like it was actively cutting grass (static page-anchored grass revealed via clip-path) rather than dragging an asset down the page.',
-      'Keeping the scroll animations correct across breakpoints with a scale-aware engine, and stable across client-side route changes.',
+      'The domain’s previous “host” was a rent-a-website reseller that had gone under. It only ever managed the DNS, and the domain was in Mark’s own GoDaddy account all along. C4 took back control and moved the DNS to Vercel without interrupting his Google Workspace email.',
+      'Bringing every page into the sign’s look while keeping the margin motifs and the quote form working as they did',
+      'Making the mower look like it’s really cutting the grass. The cut lawn is fixed to the page and uncovered as the mower passes, and the cut only moves forward.',
+      'Keeping the motifs in step with the page at every screen size and across page changes',
     ],
 
     improvements: [
-      'Copy, pricing and testimonials are currently client-templated and pending final sign-off from the client.',
-      'Optional CMS layer if the client wants to self-manage gallery/testimonials over time.',
+      'A Quotr price guide behind See prices, in place of the price list',
+      'A pass with a real screen reader, and checks on a real phone',
+      'A way for Mark to add gallery photos himself, if he wants one',
     ],
   },
 

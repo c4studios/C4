@@ -4,6 +4,35 @@
  * `anchor` scrolls the first element containing that text to near the top.
  */
 
+/* Puts an element `gap` px down from the top of the screen, for a heading that
+   the selector scroll would leave tight under a fixed header (Tidy Gardens). */
+const lift = (selector, gap) => async (page) => {
+  await page.evaluate(([sel, g]) => {
+    const el = document.querySelector(sel);
+    if (el) scrollTo(0, el.getBoundingClientRect().top + scrollY - g);
+  }, [selector, gap]);
+  await page.waitForTimeout(900);
+};
+
+/* Tidy Gardens' mower only ever cuts forward: once a stretch is mown it stays
+   mown, so the capture's run to the foot of the page leaves the whole lawn cut
+   and the mower gone. This reloads and scrolls down to the section in steps, the
+   way a reader would, and stops there. */
+const readTo = (selector, gap) => async (page) => {
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForTimeout(1500);
+  const target = await page.evaluate(([sel, g]) => {
+    const el = document.querySelector(sel);
+    return el ? Math.max(0, Math.round(el.getBoundingClientRect().top + scrollY - g)) : 0;
+  }, [selector, gap]);
+  for (let y = 0; y < target; y += 300) {
+    await page.evaluate((yy) => scrollTo(0, yy), y);
+    await page.waitForTimeout(150);
+  }
+  await page.evaluate((yy) => scrollTo(0, yy), target);
+  await page.waitForTimeout(1500);
+};
+
 const ring = async (page) => {
   for (const zone of ['Bonnet and front bar', 'Off-side front wheel', "Driver's door"]) {
     const btn = page.locator('#condition-report button', { hasText: zone }).first();
@@ -362,6 +391,40 @@ export const CONFIGS = {
       { id: '07-night', route: '/nights/jeleel', caption: 'A night’s own page. The name glitches in over smoke, with the date and venue set large' },
       { id: '08-night-photo', route: '/nights/jeleel', scrollTo: 700, desktopOnly: true, caption: 'The lead photo runs full width and drifts as you scroll, with the crew’s own words as white caption boxes' },
       { id: '09-not-on-the-list', route: '/nope', desktopOnly: true, caption: 'The 404: Not on the list' },
+    ],
+  },
+
+  // Tidy Gardens Australia, re-shot 28 Nov 2026 from the refurbished site, which
+  // went live that day in a look taken from Mark's trailer sign. Names that still
+  // fit a page are kept (01-hero, desktop 04 to 10, mobile 02 to 05). The home
+  // page's sections are new, so are its frames, and the old 02-home-vine and
+  // 03-home-services were retired. The margin motifs show part-way down a page,
+  // so the frames that name one are shot there. Vercel Web Analytics is blocked
+  // so a capture run isn't counted as visits in Mark's report. `cover` also
+  // shoots the first screen at 1600 x 1000 for the case study's cover and share
+  // image. Captions match caseStudyData.jsx.
+  'tidygardens-com-au': {
+    site: 'https://tidygardens.com.au',
+    block: [/\/_vercel\/(insights|speed-insights)\//],
+    cover: { file: 'tidy-gardens-australia.png', width: 1600, height: 1000 },
+    targets: [
+      { id: '01-hero', route: '/', caption: 'The home page opens on Mark’s photos of one back yard, before and after, and the line between the two slides across once as it loads. The headline is the tagline on his trailer sign' },
+      { id: '02-prices', route: '/', selector: '#prices', desktopOnly: true, action: lift('#prices-title', 130), caption: 'The price list: one row per service, each with Mark’s photo of the work and how it’s priced. See prices on the first screen comes straight here' },
+      { id: '06-prices', route: '/', selector: '#prices', mobileOnly: true, caption: 'The price list on a phone' },
+      { id: '03-install', route: '/', selector: '#one-stop-title', desktopOnly: true, action: lift('#one-stop-title', 100), caption: 'The one-stop shop as a ruled list, then one front yard going from the old reticulation to new turf in seven of Mark’s photos, in the order the job happened' },
+      { id: '11-quote', route: '/', selector: '#quote', desktopOnly: true, caption: 'The quote form sits on a white board inside the brown strip. The trailer sign carries Mark’s email and website in the same strip along its foot' },
+      { id: '04-reticulation', route: '/reticulation', desktopOnly: true, caption: 'Reticulation. Each service page opens like the sign, with the lettering on a white board and the brown strip underneath, and the poly pipe runs down the margin' },
+      { id: '02-reticulation', route: '/reticulation', mobileOnly: true, caption: 'Reticulation on a phone: Mark’s photo first, then the lettering' },
+      { id: '05-reticulation-pipe', route: '/reticulation', selector: 'section[aria-labelledby="ba-title"]', desktopOnly: true, caption: 'Three reticulation jobs as before and after photos, each with a line to drag. In the margin, the poly pipe fills with water as you scroll' },
+      { id: '06-lawn-care', route: '/lawn-care', selector: 'section[aria-labelledby="ba-title"]', desktopOnly: true, action: readTo('section[aria-labelledby="ba-title"]', 80), caption: 'Lawn care. The mower cuts the long grass in the margin as you scroll, beside the before and after of a new lawn' },
+      { id: '03-lawn-care', route: '/lawn-care', mobileOnly: true, caption: 'Lawn care on a phone' },
+      { id: '07-garden-maintenance', route: '/garden-maintenance', selector: 'section[aria-labelledby="group-0"]', desktopOnly: true, caption: 'Garden maintenance, set out in ruled lists where the old site had icon cards. The vine grows down the margin as you read' },
+      { id: '12-mini-loader', route: '/cleanups-machinery', selector: 'section[aria-labelledby="group-0"]', desktopOnly: true, action: lift('#group-0', 130), caption: 'Mini loader and clean-ups, with Mark’s photo of the UHI mini loader, which comes with an operator' },
+      { id: '08-gallery', route: '/gallery', scrollTo: 420, desktopOnly: true, caption: 'The gallery, in Mark’s photos from his jobs' },
+      { id: '04-gallery', route: '/gallery', mobileOnly: true, caption: 'The gallery on a phone' },
+      { id: '09-why-choose-us', route: '/why-choose-us', desktopOnly: true, caption: 'Why us, beside a photo of Mark’s trailer, the sign the whole look is taken from' },
+      { id: '10-contact', route: '/contact', desktopOnly: true, caption: 'Contact: the quote form, with the phone number and email beside it' },
+      { id: '05-contact', route: '/contact', mobileOnly: true, caption: 'Contact on a phone, with the call button above the form' },
     ],
   },
 };

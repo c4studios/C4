@@ -69,7 +69,7 @@ const STRIP_W = 2756;
 const STRIPS = [
   { name: 'strip-aquasafe', h: 816 },
   { name: 'strip-brady', h: 876 },
-  { name: 'strip-tidy', h: 668 },
+  { name: 'strip-tidy', h: 680 },
 ];
 const STRIP_SIZES = [480, 720, 960];
 const LENS_SIZES = [360, 540, 720, 960];

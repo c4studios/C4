@@ -4,8 +4,10 @@
  *
  * The titles and descriptions are word for word from each live home page's
  * <title> and <meta name="description">, read on 10 October 2026 (the date
- * is on the page). The case studies record the metadata as part of each
- * build: "SEO foundation — metadata, sitemap, robots, Open Graph images"
+ * is on the page). Tidy Gardens' were read again on 28 November 2026, after
+ * its refurbishment, and hadn't changed; its screenshot is the new first
+ * screen. The case studies record the metadata as part of each build: "Page
+ * titles and descriptions, structured data, a sitemap and share images"
  * (Tidy Gardens), "Local SEO structure — metadata, sitemap and structured
  * data" (Aqua-Safe), "Every page is statically rendered with its own
  * metadata and structured data" (Brady), all in

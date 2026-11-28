@@ -86,6 +86,9 @@ const MOBILE_UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (
  *                           site, or omitted. Only a snapshot that clearly shows a different, older
  *                           site and renders properly qualifies; say why in a comment when none does.
  *   skip                    assets not to produce (e.g. ['play']), with the reason in a comment
+ *   block                   requests to abort, such as the site's own analytics, so a capture run
+ *                           isn't counted as visits to a client's site (as in
+ *                           portfolio-capture/recapture.config.mjs)
  */
 const SITES = {
   'evidence-advisory': {
@@ -136,7 +139,9 @@ const SITES = {
     url: 'https://tidygardens.com.au',
     folder: 'tidygardens-com-au',
     /* The vine in the left gutter is fixed to the screen and grows with scroll progress, so the strip
-       shows only its first sprig. Stitching was tried: it invents a page-long vine, with breaks. */
+       shows only its first sprig. Stitching was tried: it invents a page-long vine, with breaks.
+       Re-shot 28 Nov 2026 from the refurbished site; Mark's Vercel Web Analytics is blocked. */
+    block: [/\/_vercel\/(insights|speed-insights)\//],
     before: { ts: '20251105164937', url: 'http://tidygardens.com.au/' },
   },
   'brady-electrical': {
@@ -205,7 +210,7 @@ const CAPTURE_CSS = `
   html[data-cm-hide-top] [data-cm-top] { visibility: hidden !important; opacity: 0 !important; }
 `;
 
-async function newPage(browser, device, { clock = false, storage = null } = {}) {
+async function newPage(browser, device, { clock = false, storage = null, block = [] } = {}) {
   const ctx = await browser.newContext({
     viewport: { width: device.width, height: device.height },
     deviceScaleFactor: device.scale,
@@ -226,6 +231,7 @@ async function newPage(browser, device, { clock = false, storage = null } = {}) 
     HTMLElement.prototype.focus = function f(opts) { return focus.call(this, { ...(opts || {}), preventScroll: true }); };
   });
   if (storage) await ctx.addInitScript((kv) => { try { for (const [k, v] of Object.entries(kv)) localStorage.setItem(k, v); } catch (_) { /* storage blocked */ } }, storage);
+  for (const pattern of block) await ctx.route(pattern, (route) => route.abort());
   if (clock) await ctx.clock.install();
   const page = await ctx.newPage();
   return { ctx, page };
@@ -401,7 +407,7 @@ async function fadedBelowFold(page, limit) {
 
 /* ---------- strips ---------- */
 async function captureStrip(browser, slug, site, device, outFile) {
-  const { ctx, page } = await newPage(browser, device, { clock: !!site.freeze, storage: site.storage });
+  const { ctx, page } = await newPage(browser, device, { clock: !!site.freeze, storage: site.storage, block: site.block });
   try {
     await load(page, site, slug);
     if (site.stripCss) await page.addStyleTag({ content: site.stripCss });
@@ -505,7 +511,7 @@ async function stitch(page, slug, device, H, h, freeze = false) {
 const easeInOutSine = (t) => (1 - Math.cos(Math.PI * t)) / 2;
 
 async function captureClip(browser, slug, site, dir, tmp) {
-  const { ctx, page } = await newPage(browser, CLIP, { clock: true, storage: site.storage });
+  const { ctx, page } = await newPage(browser, CLIP, { clock: true, storage: site.storage, block: site.block });
   const frames = path.join(tmp, 'frames');
   rmSync(frames, { recursive: true, force: true });
   mkdirSync(frames, { recursive: true });
@@ -758,7 +764,7 @@ async function runSite(browser, slug) {
       await captureBefore(browser, slug, site, beforeFile);
       if (!afterPng) {
         /* No strip this run: shoot the live top screen the same way the desktop strip would. */
-        const { ctx, page } = await newPage(browser, DESKTOP, { clock: !!site.freeze });
+        const { ctx, page } = await newPage(browser, DESKTOP, { clock: !!site.freeze, storage: site.storage, block: site.block });
         try {
           await load(page, site, slug);
           await declineCookies(page, slug);

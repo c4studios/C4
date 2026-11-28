@@ -15,6 +15,13 @@
  *                      Chromium, for sites whose film or WebGL needs it.
  *   block: [RegExp]    requests to abort, such as the site's own analytics, so
  *                      a capture run isn't counted as visits to a client's site.
+ *
+ * And one more (28 Nov 2026):
+ *   cover: { file, width, height, route? }
+ *                      also shoots that route's first screen (default '/') at
+ *                      width x height into public/covers/<file>, by the same
+ *                      rules as the desktop frames. The case study's cover is
+ *                      its portfolio card, its hero and its share image.
  */
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -120,8 +127,7 @@ async function selectorScroll(page, selector) {
   }, selector);
 }
 
-async function runDevice(browser, kind, vp) {
-  console.log(`\n=== ${kind.toUpperCase()} (${vp.width}x${vp.height}) ===`);
+async function openContext(browser, kind, vp) {
   const context = await browser.newContext({
     viewport: { width: vp.width, height: vp.height },
     deviceScaleFactor: kind === 'mobile' ? 2 : 1,
@@ -133,6 +139,43 @@ async function runDevice(browser, kind, vp) {
   /* cfg.storage seeds the site's own saved answers before its scripts run (e.g. an age
      gate). A target can opt out for one load by setting sessionStorage 'cm-no-seed'. */
   if (cfg.storage) await context.addInitScript((kv) => { try { if (sessionStorage.getItem('cm-no-seed')) return; for (const [k, v] of Object.entries(kv)) localStorage.setItem(k, v); } catch (_) {} }, cfg.storage);
+  return context;
+}
+
+async function loadPage(page, url, settle) {
+  try { await page.goto(url, { waitUntil: 'networkidle', timeout: 45000 }); }
+  catch { await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 }); }
+  await page.waitForTimeout(settle ?? 2500);
+  await dismissOverlays(page);
+  await freezeMotion(page);
+  await preScroll(page);
+  await dismissOverlays(page);
+}
+
+/** The first screen at the cover's own size, into public/covers/. */
+async function runCover(browser) {
+  const { file, width, height, route = '/', settle } = cfg.cover;
+  console.log(`\n=== COVER (${width}x${height}) ===`);
+  const context = await openContext(browser, 'desktop', { width, height });
+  const page = await context.newPage();
+  const filePath = path.resolve('public', 'covers', file);
+  try {
+    await loadPage(page, `${cfg.site}${route}`, settle);
+    await page.evaluate(() => scrollTo(0, 0));
+    await page.waitForTimeout(900);
+    await dismissOverlays(page);
+    await page.screenshot({ path: filePath, type: 'png' });
+    const v = await validatePng(filePath);
+    console.log(`     ok cover ${file} ${v.width}x${v.height} ${Math.round(v.size / 1024)}KB`);
+  } catch (err) {
+    console.error(`     FAIL cover: ${err.message}`);
+  }
+  await context.close();
+}
+
+async function runDevice(browser, kind, vp) {
+  console.log(`\n=== ${kind.toUpperCase()} (${vp.width}x${vp.height}) ===`);
+  const context = await openContext(browser, kind, vp);
   const page = await context.newPage();
   const deviceDir = path.join(OUT_ROOT, kind);
   await ensureDir(deviceDir);
@@ -146,13 +189,7 @@ async function runDevice(browser, kind, vp) {
     try {
       if (url !== lastUrl) {
         console.log(`  -> ${t.route}`);
-        try { await page.goto(url, { waitUntil: 'networkidle', timeout: 45000 }); }
-        catch { await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 }); }
-        await page.waitForTimeout(t.settle ?? 2500);
-        await dismissOverlays(page);
-        await freezeMotion(page);
-        await preScroll(page);
-        await dismissOverlays(page);
+        await loadPage(page, url, t.settle);
         lastUrl = url;
       }
 
@@ -198,6 +235,10 @@ async function main() {
 
   manifest.devices.desktop = await runDevice(browser, 'desktop', { width: 1440, height: 900 });
   manifest.devices.mobile = await runDevice(browser, 'mobile', { width: 430, height: 932 });
+  if (cfg.cover) {
+    await ensureDir(path.resolve('public', 'covers'));
+    await runCover(browser);
+  }
 
   await fs.writeFile(path.join(OUT_ROOT, 'manifest.json'), JSON.stringify(manifest, null, 2));
   await browser.close();

@@ -807,13 +807,16 @@
   border: 1px solid var(--c4-border);
 }
 /* C1: Aqua-Safe, Brady and Tidy Gardens stacked under the ink band, each
-   with its headline (band colours sampled from the face's own strips) */
+   with its headline (band colours sampled from the face's own strips).
+   Tidy's were sampled again on 28 Nov 2026 from its refurbished slice: the
+   foot of its photos, then the white board with the brown headline, then
+   the brown strip along the bottom. */
 .hm-chip--web {
   background:
     linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)) 3px 9px / 13px 2px no-repeat,
     linear-gradient(#1d1d1f, #1d1d1f) 3px 18px / 13px 2px no-repeat,
-    linear-gradient(#efe9d6, #efe9d6) 3px 28px / 13px 2px no-repeat,
-    linear-gradient(180deg, #131316 0 6px, #3f525d 6px 15px, #131316 15px 16px, #e9ebe8 16px 24px, #131316 24px 25px, #2b3529 25px 100%);
+    linear-gradient(#4b3526, #4b3526) 3px 30px / 13px 2px no-repeat,
+    linear-gradient(180deg, #131316 0 6px, #3f525d 6px 15px, #131316 15px 16px, #e9ebe8 16px 24px, #131316 24px 25px, #545a50 25px 28px, #e9e8e3 28px 34px, #654a37 34px 100%);
 }
 /* C2: the Sharp brick corner itself, under the ink band */
 .hm-chip--lens { background: #131316; }

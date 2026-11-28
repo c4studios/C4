@@ -2,7 +2,7 @@
    (src/components/home/FourDoors.jsx). The SEO and Logo Design faces are
    drawn in code and carry none.
 
-     node scripts/door-faces.mjs --masters <door-masters> --sharp "<Sharp Bricklaying/images>" [--capture]
+     node scripts/door-faces.mjs --masters <door-masters> --sharp "<Sharp Bricklaying/images>" [--capture] [--only tidy]
 
    --masters  where the hero captures of the three client sites live. They're
               kept outside the repo and never committed. On Caleb's PC:
@@ -14,6 +14,9 @@
    --sharp    the Sharp Bricklaying site repo's images/ folder, as for
               scripts/lens-work.mjs. The Lens face is the "number 4" corner
               photo, the same April 2026 file /Lens shows as corner-*.
+   --only     a comma list of site keys (aquasafe, brady, tidy) to capture
+              and cut, leaving the others' masters and strips as they are.
+              Added 28 Nov 2026, when only Tidy Gardens changed its hero.
 
    What it writes, into src/components/home/assets/doors/:
      strip-<site>-<w>.avif and .webp
@@ -47,7 +50,15 @@ const OUT = path.join(ROOT, 'src', 'components', 'home', 'assets', 'doors');
    and title start) while Brady's map card and switch stay whole: Aqua-Safe
    and Tidy Gardens set their h1 at x 160 and Brady at x 112 (site px), so
    the lefts differ. Boxes measured from the live DOM at 1440 x 900 on
-   9 Oct 2026, doubled here for the 2x capture. */
+   9 Oct 2026, doubled here for the 2x capture.
+
+   Tidy Gardens' hero was refurbished on 28 Nov 2026 and measured again that
+   day. Its photos now sit above the headline (y 73 to 641), with the h1 at
+   x 160, y 666 to 726, the intro and buttons side by side to y 798, a price
+   note to 823 and the brown strip from 850 to the foot of the screen. So its
+   slice is the foot of the two photos, then the headline, the intro and the
+   strip whole: y 560 to 900. At 680 tall the stack still ends where it did
+   with the old 668, clear of the door's title. */
 const SITES = [
   {
     key: 'aquasafe', url: 'https://aquasafeplumbing.com.au/', master: 'aquasafeplumbing-com-au.png',
@@ -61,7 +72,8 @@ const SITES = [
   },
   {
     key: 'tidy', url: 'https://tidygardens.com.au', master: 'tidygardens-com-au.png',
-    crop: { left: 122, top: 470, width: 2756, height: 668 },
+    block: [/\/_vercel\/(insights|speed-insights)\//],
+    crop: { left: 122, top: 1120, width: 2756, height: 680 },
     about: 'Tidy Gardens Australia home page hero (tidygardens.com.au), a site C4 Studios built.',
   },
 ];
@@ -81,6 +93,8 @@ const args = process.argv.slice(2);
 const opt = (name) => { const i = args.indexOf(name); return i < 0 ? null : args[i + 1]; };
 const MASTERS = opt('--masters');
 const SHARP = opt('--sharp');
+const ONLY = opt('--only') ? new Set(opt('--only').split(',')) : null;
+const CHOSEN = SITES.filter((s) => !ONLY || ONLY.has(s.key));
 if (!MASTERS && !SHARP) {
   console.error('Pass --masters <door-masters> and/or --sharp "<Sharp Bricklaying/images>".');
   process.exit(1);
@@ -94,11 +108,13 @@ async function capture() {
   const { chromium } = await import('playwright');
   fs.mkdirSync(MASTERS, { recursive: true });
   const browser = await chromium.launch({ args: ['--hide-scrollbars', '--mute-audio', '--force-color-profile=srgb'] });
-  for (const site of SITES) {
+  for (const site of CHOSEN) {
     const ctx = await browser.newContext({
       viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2, locale: 'en-AU',
       timezoneId: 'Australia/Perth', colorScheme: 'light', bypassCSP: true,
     });
+    /* The site's own analytics, so a capture isn't counted as a visit. */
+    for (const pattern of site.block || []) await ctx.route(pattern, (route) => route.abort());
     const page = await ctx.newPage();
     await page.goto(site.url, { waitUntil: 'load', timeout: 90000 }).catch((e) => console.log(site.key, e.message.split('\n')[0]));
     await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
@@ -143,7 +159,7 @@ async function cut(input, crop, widths, name, about) {
 
 if (MASTERS) {
   if (args.includes('--capture')) await capture();
-  for (const site of SITES) {
+  for (const site of CHOSEN) {
     const master = path.join(MASTERS, site.master);
     if (!fs.existsSync(master)) { console.error(`missing ${master}; run with --capture`); process.exit(1); }
     const taken = fs.statSync(master).mtime;
